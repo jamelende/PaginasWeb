@@ -1,0 +1,301 @@
+
+
+
+<br>
+</br>
+
+
+
+
+<center> ![](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Imagenes/Foto2022.png){width=30%} </center>
+
+
+
+<br>
+</br>
+
+
+#  {.tabset .tabset-pills}
+Un cordial saludo, trabajo en la [Escuela Colombiana de Ingeniería](https://www.escuelaing.edu.co/es/) en el [Departamento de Matemáticas](https://www.escuelaing.edu.co/es/programas/matematicas/). Soy Ingeniero de Sistemas y Matemático de la [Universidad de los Andes](https://uniandes.edu.co/), con Maestría en Ingeniería de Sistemas  de la misma Universidad.
+ <br>
+</br>
+
+
+## Áreas de Interés
+
+ <br> </br>
+
+
+ <br>
+</br>
+Modelación y Análisis de Redes ([Network Science](http://networksciencebook.com/)).
+
+Modelación Basada en Agentes ([NetLogo](https://ccl.northwestern.edu/netlogo/)).
+
+Modelación de Sistemas Complejos ([AnyLogic](https://es.wikipedia.org/wiki/AnyLogic))
+
+
+Educación Matemática con Tecnología ([GeoGebra](https://www.geogebra.org/))
+
+<br>
+</br>
+
+## Títulos
+
+<br>
+  </br>
+
+Matematico Universidad de los Andes  1978-1984.
+[Diploma](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.1 Diplomas/DiplomaPregradoMat.pdf)
+
+Ingeniero De Sistemas y Computación Universidad de los Andes  1978- 1984.
+[Diploma](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.1 Diplomas/DiplomaPregradoSist.pdf)
+
+Magister  Ing de Sistemas y Computación  Universidad de los Andes  1994-1996.
+[Diploma](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.2 Diplomas Posgrado/DiplomaMagister.pdf)
+
+
+  
+  Precálculo (Práctica I)  1983
+
+Asesor: [Dr Xavier Caicedo](https://math.uniandes.edu.co/webxcaicedo/) , Universidad de los Andes Matemáticas
+
+Matemáticas Básicas para Ciencias Sociales (03)  1984
+
+Asesor: [Mat. Leonardo Venegas](https://www.youtube.com/watch?v=qhIh7Ouzxeo),  Universidad de los Andes Matemáticas
+
+
+<br>
+  </br>
+  <center> <h3>Tesis Pregrado Sistemas</h3> </center> 
+  <br>
+  </br>
+  Trabajo de Tesis de Pregrado (1984):  "Ajedrez por Computador"
+
+Asesor: [Dr Rodrigo Cardoso](https://profesores.virtual.uniandes.edu.co/rcardoso/es/inicio/), Universidad de los Andes  Bogotá
+
+<br>
+  </br>
+  <center> <h3>Tesis Magister Sistemas</h3> </center> 
+  <br>
+  </br>
+
+Trabajo de Tesis de Magister (1994): "Plan Estratégico para el Centro de Estudios en Informática Educativa
+
+   de la Escuela Colombiana de Ingeniería"
+
+
+Asesor:  [Dr Alvaro Galvis Panqueva](https://sites.google.com/site/galvaro50/), Concord Consortium  Estados Unidos
+
+Jurados:  Dr Roberto Zarama, Ingeniería Industrial, Universidad de los Andes Bogotá
+
+Dr Humberto Serna, Administración, Universidad de los Andes Bogotá
+
+Dr Ernesto Lleras, Ingeniería de Sistemas  Universidad de los Andes Bogotá
+
+<br>
+  </br>
+  <br>
+  </br>
+  <br>
+  </br>
+
+## Cronología
+
+<br>
+  </br>
+
+  
+[2022-2018](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Cronologia2021-2018.html)
+
+[2017-2014](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Cronologia2017-2014.html)
+
+[2013-2010](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Cronologia2013-2010.html)
+
+[Ántes de 2010](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/CronologiaAntes2010.html)
+
+<br>
+  </br>
+  <br>
+  </br>
+  <br>
+  </br>
+
+## Visitas 
+
+<br>
+  </br>
+ 
+[Internacionales](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/VisitasInternacionales.html)
+
+
+[Alta Calidad](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/VisitasAltaCalidad.html)
+
+[Registro Calificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/VisitasRegistro.html)
+
+## Capacitación
+
+<br>
+  </br>
+  
+  <center> <h4>2021</h4> </center> 
+<br>
+</br>
+
+Curso Network Science and Machine Learning on Graphs <br>
+Curso Internacional de Verano ECI <br>
+6 al 12 de julio de 2021 <br>
+Prof: [Leonardo Gutierrez Gómez](https://www.linkedin.com/in/leonardo-guti%C3%A9rrez-g%C3%B3mez-b2211320/?originalSubdomain=lu)
+
+[Certificado](https://www.dropbox.com/s/kpydwkmlkbqfxe9/Jorge%20Alfonso%20Mel%C3%A9ndez%20Acu%C3%B1a%20-%20Network%20science%20and%20machine%20learning%20on%20graphs.pdf?dl=1)
+
+<center> <h4>2018</h4> </center> 
+<br>
+</br>
+  
+Curso MOOC  "Introduction to Agent Based Modelling" profesor William Rand 
+Julio-Octubre de 2018.
+
+  [Certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/RandCurso.PNG)
+  
+  <br>
+</br>
+<center> <h4>2013</h4> </center> 
+<br>
+</br> 
+  
+Mayo: Curso Introduction to Complexity Santafé Institute,  Prof Melanie Mitchell.
+
+[Certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/Complexity.jpeg)
+
+  
+  <br>
+</br>
+<center> <h4>2003</h4> </center> 
+<br>
+</br> 
+
+
+ Moderación de Ambientes Virtuales de Aprendizaje (MAIA),   Ene-Abr 2003, Concord Consortium
+ 
+[Certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/DiplomaCAVA.pdf)
+
+<br>
+</br>
+<center> <h4>2002</h4> </center> 
+<br>
+</br> 
+
+Creación de Ambientes Virtuales de Aprendizaje (CAVA)   Sept-Dic 2002,Concord Consortium.
+
+[Certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/DiplomaCAVA.pdf)
+
+<br>
+</br>
+<center> <h4>1987</h4> </center> 
+<br>
+</br> 
+
+
+Seminario de Programación Funcional , Universidad de los Andes 1987.
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+
+## Docencia
+
+<br>
+</br> 
+
+
+[Docencia Escuela](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/DocenciaEscuela.html)
+
+[Docencia Otras Universidades](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/DocenciaOtras.html)
+
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+
+
+## Publicaciones
+
+<br>
+</br> 
+
+
+[Libros](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Libros.html)
+
+[Artículos de Investigación](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/ArtículosInv.html)
+
+<br>
+</br> 
+<br>
+</br> 
+<br>
+</br> 
+
+
+
+## Proyectos
+
+<br>
+</br> 
+
+
+[Proyectos de Investigación](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/ProyectosInv.html)
+
+[Proyectos y Propuestas](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/ProyectosyPropuestas.html)
+
+[Proyectos de Grado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/ProyectosDeGrado.html)
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+<br>
+</br> 
+
+
+
+## Otros
+<br>
+</br> 
+
+
+[Seminarios](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Seminarios.html)
+
+[Conferencias](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Conferencias.html)
+
+[Herramientas Tecnológicas](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/HerramientasTecnológicas.html)
+
+[Premios](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Premios.html)
+
+[Jurado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Jurado.html)
+
+
+[Información de Contacto](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/InfAdicional.html)
+
+<br>  </br>
+<br>  </br>
+<br>  </br>
+
+<br>  </br>

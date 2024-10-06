@@ -1,0 +1,131 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+<center> <h4>2022-2</h4> </center> 
+<br>
+</br>
+
+Curso de Maestría en Ciencia de redes en Conjunto con la Universidad Nacional (2023-1):
+
+[enlace a la Página Web del Curso](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/P%C3%A1ginaWebNetworkSciencePosgrado2023-1.html)
+
+Visita Par Académico MEN Barranquilla, Universidad Javeriana
+
+[Invitación](https://www.dropbox.com/s/kfyx4cocw2oojge/OficioInvitaci%C3%B3n.pdf?dl=1)
+
+MasterClass: El poder del Network Science
+
+[Video](https://www.youtube.com/watch?v=ysv0bw9cY6I&t=1259s)
+
+<center> <h4>2022-1</h4> </center> 
+<br>
+</br>
+
+
+
+Visita Par Académico Acreditación de Alta Calidad del progemaa de Ingeniería de Sistamas, Universidad Santiago de Cali
+Mayo 18-20 de 2022
+  [Invitación](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/5. Visitas/SantiagoCali2022.PNG)
+
+
+<center> <h4>2021-2</h4> </center> 
+<br>
+</br>
+Taller Regional de Formación de Pares Evaluadores de Carreras de Grado. Sistema [ARCU-SUR](http://capacitaciones.arcusur.org:8002/course/view.php?id=3)
+  1 de Noviembre al 8 de Diciembre
+  
+[certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/Arcu-Sur-Dic-2021.pdf)
+
+Curso Formación Integral de Pares de Acreditación (CNA Colombia)
+Julio- Oct 2021 120 Horas
+  
+[certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/CertificaciónCursoCNAOct2021.png)
+
+  
+Congreso Latinoamericano de Pensamiento Sistémico.
+  Julio 21-23 de 2021
+  Ponencia: “Modelación Basada en Agentes como complemento al enfoque sistémico”. [Enlace al video](https://www.youtube.com/watch?v=UuZ8PZ21I-k)
+  
+<br>
+</br>
+<center> <h4>2021-1</h4> </center> 
+<br>
+</br>
+    
+[Curso Network Science and Machine Learning on Graphs](https://www.escuelaing.edu.co/es/programas/curso-network-science-and-machine-learning-on-graphs-data-analysis-methods-and-applications/) (Escuela Internacional de Verano) Prof: Dr [Leonardo Gutierrez Gómez](https://www.linkedin.com/in/leonardo-guti%C3%A9rrez-g%C3%B3mez-b2211320/?originalSubdomain=lu)
+  6 al 12 de julio de 2021
+  
+Libro Modelación Basada en Agentes  [Enlace al Libro](http://profesores.is.escuelaing.edu.co/~amelendez/_book/index.html)
+  
+Libro Introd Interactiva al Álgebra Lineal [Enlace al libro](https://www.geogebra.org/m/vmeqdn4u)
+  (Co Autor  [Profesor Mario Gama](https://www.linkedin.com/in/mario-gama-diaz-4914911b/?originalSubdomain=co)  )
+  
+<br>
+</br>
+<center> <h4>2020-2</h4> </center> 
+<br>
+</br>
+    
+Conversatorio: Imaginar futuros (Im)posibles organizado por CARMA (Colombian Artistic Research MAgazine), Revista de la Escuela Colombiana de Ingeniería, Octubre 8 de 2020.
+  [Enlace al video](https://www.facebook.com/177046169506645/videos/960654031088087)
+  
+  
+  
+<br>
+</br>
+<center> <h4>2020-1</h4> </center> 
+<br>
+</br>
+    
+Visita Par evaluador Registro Calificado del programa Tecnología en Análisis y Desarrollo de Software , SENA, Sede Fonseca Guajira.
+  [Invitación](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/5. Visitas/Guajira2020.PNG)
+  
+  
+<br>
+</br>
+<center> <h4>2019-1</h4> </center> 
+<br>
+</br>
+    
+Visita Par evaluador CORPORACION UNIVERSITARIA REPUBLICANA, Programa Pregrado MATEMÁTICAS ,Bogotá en la fecha 16-18 Mayo de 2019.
+  [Invitación](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/5. Visitas/Republicana2019.PNG)
+  
+  
+  
+<br>
+</br>
+<center> <h4>2018-2</h4> </center> 
+<br>
+</br>
+    
+Curso MOOC  "Introduction to Agent Based Modelling" profesor William Rand 
+  Julio-Octubre de 2018.
+  [Certificado](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/2.3 Cursos Complementarios/RandCurso.PNG)
+  
+  Ponencia EIEI Acofi 2018 Reunión Internacional de Educación en Ingeniería, 18 -21 de Septiembre de 2018
+  Metodología de Diseño de Actividades de Aula que fomentan el uso del error y el fracaso en el aprendizaje y solución de problemas en Matemáticas e Ingeniería
+  [Artículo](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/4.3 Artículos/AcofiSept2018.pdf)
+  
+  Visita Par Coordinador Acreditación de Alta Calidad Facultad de Ingeniería de Sistemas Universidad Autónoma de Occidente, Cali Colombia 9-10 de Agosto de 2018
+  [Visita](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/5. Visitas/AutónomaOct2017.PNG)
+<br>
+</br>
+<center> <h4>2018-1</h4> </center> 
+<br>
+</br>
+    
+    
+Ponencia Congreso Latinoamericano de Educación Matemática RELME 32, Julio 2 a Julio 7 de 2018.
+  Actividades Aleatoria Autocorregibles en GeoGebraGroups
+  [Artículo](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/4.3 Artículos/Relme32Junio2018.docx)
+  
+Visita Par Coordinador Acreditación Internacional ARCUSUR Facultad de Ingeniería de Sistemas Universidad del Valle 10,11 ,12 de Mayo de 2018
+  [Carta de Invitación](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/Anexos/5. Visitas/ArcusurCaliAgo2018.PNG)
+  
+  Artículo Revista de la Escuela Colombiana de Ingeniería # 107 Oct-Dic de 2017
+  co-Autor : Felipe Rodríguez Gómez
+  Título: Todas las definiciones son un Promedio.
+  [Artículo](https://revistas.escuelaing.edu.co/index.php/reci/article/view/23)
