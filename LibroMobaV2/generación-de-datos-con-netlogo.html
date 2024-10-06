@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>A Generación de Datos con NetLogo` | Modelación Basada en Agentes</title>
+  <meta name="description" content="A Generación de Datos con NetLogo` | Modelación Basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="A Generación de Datos con NetLogo` | Modelación Basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="A Generación de Datos con NetLogo` | Modelación Basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="redes.html"/>
+<link rel="next" href="bibliografía.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El Ciclo de Modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>IV Aspectos Metodológicos</b></span></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>7</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="7.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>7.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="7.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>7.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="7.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>7.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-mobas"><i class="fa fa-check"></i><b>7.3.1</b> Análisis estadístico de MOBAs:</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo Actual</b></span></li>
+<li class="chapter" data-level="8" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html"><i class="fa fa-check"></i><b>8</b> Modelo de Infección</a><ul>
+<li class="chapter" data-level="8.1" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>8.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>8.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="8.1.2" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>8.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="8.1.3" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#pregunta"><i class="fa fa-check"></i><b>8.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="8.1.4" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i><b>8.1.4</b> Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>8.2</b> Análisis del Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>9</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="9.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>9.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="9.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>9.2</b> Verificación</a></li>
+<li class="chapter" data-level="9.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>9.3</b> Comunicación</a></li>
+<li class="chapter" data-level="9.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>9.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>9.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>9.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="9.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>9.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="9.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>9.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="9.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>9.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="9.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>9.9</b> Validación</a></li>
+<li class="chapter" data-level="9.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>9.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="10" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html"><i class="fa fa-check"></i><b>10</b> Modelo de Negocio</a><ul>
+<li class="chapter" data-level="10.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#especificación-del-modelo"><i class="fa fa-check"></i><b>10.1</b> Especificación del Modelo</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>10.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="10.1.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#descripción-del-modelo-protocolo-odd"><i class="fa fa-check"></i><b>10.1.2</b> Descripción del Modelo ( Protocolo ODD)</a></li>
+<li class="chapter" data-level="10.1.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>10.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="10.1.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>10.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="10.1.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>10.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="10.1.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>10.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="10.1.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>10.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="10.1.8" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>10.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="10.1.9" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#datos-de-entrada"><i class="fa fa-check"></i><b>10.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="10.1.10" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#submodelos"><i class="fa fa-check"></i><b>10.1.10</b> Submodelos</a></li>
+<li class="chapter" data-level="10.1.11" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#video"><i class="fa fa-check"></i><b>10.1.11</b> Video</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>10.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#configuración-del-mundo"><i class="fa fa-check"></i><b>10.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="10.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>10.2.2</b> Procedimiento Setup</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procedimiento-go"><i class="fa fa-check"></i><b>10.3</b> Procedimiento Go</a></li>
+<li class="chapter" data-level="10.4" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>10.4</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#introduccion"><i class="fa fa-check"></i><b>10.4.1</b> Introduccion</a></li>
+<li class="chapter" data-level="10.4.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#modificando-el-modelo"><i class="fa fa-check"></i><b>10.4.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="10.4.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#deslizadores"><i class="fa fa-check"></i><b>10.4.3</b> Deslizadores</a></li>
+<li class="chapter" data-level="10.4.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procedimientos"><i class="fa fa-check"></i><b>10.4.4</b> Procedimientos</a></li>
+<li class="chapter" data-level="10.4.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#el-experimento"><i class="fa fa-check"></i><b>10.4.5</b> El Experimento</a></li>
+<li class="chapter" data-level="10.4.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#rstudio"><i class="fa fa-check"></i><b>10.4.6</b> Rstudio</a></li>
+<li class="chapter" data-level="10.4.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#preguntas"><i class="fa fa-check"></i><b>10.4.7</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>11</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="11.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>11.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="11.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>11.2</b> Partículas</a></li>
+<li class="chapter" data-level="11.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>11.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="11.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>11.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>12</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>12.1</b> Majority model</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>12.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>12.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>12.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>13</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>13.1</b> Simple economy</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>13.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>13.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>13.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-infección.html"><a href="modelo-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>14</b> Redes</a><ul>
+<li class="chapter" data-level="14.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>14.1</b> Introducción</a></li>
+<li class="chapter" data-level="14.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>14.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="14.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>14.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="14.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>14.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="14.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>14.5</b> Redes sin escala</a></li>
+</ul></li>
+<li class="appendix"><span><b>Apendices</b></span><ul>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#qué-es-netlogo"><i class="fa fa-check"></i>¿Qué es NetLogo?</a></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#terminología-de-netlogo"><i class="fa fa-check"></i>Terminología de NetLogo</a></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#el-mundo-netlogo"><i class="fa fa-check"></i>El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="redes.html"><a href="redes.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+</ul></li>
+<li class="chapter" data-level="A" data-path="generación-de-datos-con-netlogo.html"><a href="generación-de-datos-con-netlogo.html"><i class="fa fa-check"></i><b>A</b> Generación de Datos con NetLogo`</a><ul>
+<li class="chapter" data-level="A.1" data-path="generación-de-datos-con-netlogo.html"><a href="generación-de-datos-con-netlogo.html#un-ejemplo-ilustrativo"><i class="fa fa-check"></i><b>A.1</b> Un Ejemplo Ilustrativo</a></li>
+<li class="chapter" data-level="A.2" data-path="generación-de-datos-con-netlogo.html"><a href="generación-de-datos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>A.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="A.2.1" data-path="generación-de-datos-con-netlogo.html"><a href="generación-de-datos-con-netlogo.html#abra-behaviorspace-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>A.2.1</b> Abra BehaviorSpace desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="A.2.2" data-path="generación-de-datos-con-netlogo.html"><a href="generación-de-datos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>A.2.2</b> Nota Importante</a></li>
+<li class="chapter" data-level="A.2.3" data-path="generación-de-datos-con-netlogo.html"><a href="generación-de-datos-con-netlogo.html#analizando-los-resultados-del-experimetno-en-rstudio"><i class="fa fa-check"></i><b>A.2.3</b> Analizando los resultados del experimetno en Rstudio</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>B</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación Basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="generación-de-datos-con-netlogo" class="section level1">
+<h1><span class="header-section-number">A</span> Generación de Datos con NetLogo`</h1>
+<div id="un-ejemplo-ilustrativo" class="section level2">
+<h2><span class="header-section-number">A.1</span> Un Ejemplo Ilustrativo</h2>
+<p>La categoría Biología de la Biblioteca de modelos de NetLogo incluye un modelo llamado “Simple Birth Rates”. Es un modelo muy simple, diseñado para simular cómo la diferencia en las tasas de natalidad entre dos especies coexistentes (tortugas rojas y azules) afectan el número de individuos en cada población . Las dos especies difieren solo en el número de descendientes que cada individuo produce cada hora de caminar; la probabilidad de muerte es la misma para ambas especies y se ajusta para que el total el número de individuos es aproximadamente constante. (Si estudia negocios, piense en ellos como dos cadenas de restaurantes de comida rápida que cierran al mismo ritmo pero difieren en la frecuencia con la que abren nuevas tiendas.)
+Abra este modelo, lea su pestaña Información y juegue un poco con él.</p>
+<iframe src="./GrafAnalComportamiento/SimpleBirthRates.html" width="95%" height="600px">
+</iframe>
+<p>Centrémonos en una cuestión que este modelo puede abordar:</p>
+<ul>
+<li>¿Cómo el tiempo hasta la exticnción de una espacie depende de la tasa de natalidad relativa de las dos especies?</li>
+</ul>
+<p>Si mantenemos al tasa de nacimiento de la especie roja constante en 2.0 y variamos la fertilidad azul de 2.1 a 5.0, ¿cómo cambia el número de ticks hasta la extinción de la especie roja?En otras palabras,</p>
+<ul>
+<li>¿qué forma esperamos que tenga la siguiente gráfica ?</li>
+</ul>
+<p><img src="GrafAnalComportamiento/BlueFert.png" /></p>
+<p>Este modelo incluye un botón y un procedimiento llamado run-experimenter&quot; diseñado para ayudar a resolver este problema: ejecuta el modelo hasta que una especie se extingue, nos dice cuánto tiempo tomó y luego comienza otra ejecución.
+Si pensamos en este problema por un minuto, podemos formarnos una expectativa bastante fuerte dela respuesta. Cuando las tasas de natalidad de las dos especies son cercanas, deberían coexistir durante mucho tiempo.A medida que aumenta la diferencia en las tasas de natalidad, el tiempo hasta la extinción del rojo debería disminuir rápidamente. Pero no importa qué tan rápido se reproduzca el azul, parece poco probable que los rojos se extingan inmediatamente (el modelo se inicializa con 500 de ellos), Por lo tanto, esperamos que la curva de la figura sea alta
+cuando la fertilidad azul es 2.1, cae rápidamente, luego se aplana a un valor superior a 1 a medida que aumenta la fertiolidad azul.</p>
+<ul>
+<li>¿Son correctas estas expectativas?</li>
+</ul>
+<p>Para averiguarlo, necesitamos hacer un experimento de simulación.</p>
+</div>
+<div id="experimentos-de-simulación-analizador-de-comportamiento" class="section level2">
+<h2><span class="header-section-number">A.2</span> Experimentos de Simulación (Analizador de Comportamiento)</h2>
+<p>Para ver cómo el tiempo de extinción de los agentes rojos en el modelo varía con
+el parámetro de fertilidad de los agentes azules, necesitamos ejecutar el modelo en una amplia gama de valores de fertilidad y registrar el tiempo (ticks) en el que el número de agentes rojos llega a cero. Pero hay una complicación: este modelo, como la mayoría de los MOBAs, es estocástico y produce resultados diferentes cada vez que lo ejecutamos porque las tortugas que mueren en cada tick se eligen al azar.
+Debido a que el modelo produce resultados diferentes en cada ejecución, para comprenderlo necesitamos calcular los resultados promedio y la variabilidad en torno a esos promedios. Los modeladores a menudo hacen esto de la misma manera que los científicos estudian sistemas reales que son muy variables: ejecutando experimentos
+que incluyen réplicas de varios escenarios diferentes (los estadísticos a menudo usan la palabra tratamiento , nosotros usamos escenario). En el modelado de simulación, un escenario se define mediante un modelo y un conjunto de parámetros, entradas y condiciones iniciales; si un modelo no tiene elementos estocásticos, produce
+exactamente los mismos resultados cada vez que ejecuta el mismo escenario. Las réplicas son ejecuciones de modelos en que solo cambian los elementos estocásticos del modelo.
+Para analizar cómo la fertilidad azul afecta el tiempo de extinción de las tortugas rojas, usaremos un experimento de simulación que varía la fertilidad azul de 2,1 a 5,0 en incrementos de 0,1, produciendo un total de 30 escenarios. Además, ejecutaremos 10 réplicas de cada escenario, la ejecución del modelo continuará hasta que no haya más agentes rojos y se producirá como resultado el tiempo (tick) en el que se produce esta extinción. Estos resultados se registrarán en un archivo que luego podamos importar a R para un análisis estadístico, finalmente,se debe calcular la media y la desviación estándar del tiempo hasta la extinción del rojo y graficar cómo varía la fertilidad del azul.</p>
+<p>(Nota: Analizar los resultados en forma gráfica y calcular estadísticas es una parte esencial de modelado que no se puede hacer convenientemente en NetLogo, pór eso usaremos R y Rstudio para ralizar estos análisis).</p>
+<p>Este es un ejemplo de un experimento de sensibilidad: un experimento de simulación en el que variamos un parámetro en una amplia gama de valores y luego se ve cómo responde el modelo a él, este diseño experimental es muy útil para comprender cómo un modelo y el sistema que representa, responde a un factor a la vez.
+Hacer un procedimiento en NetLogo para generar estos datos y que luego se escriban a un archivo tomaría mucho tiempo, y si deseamos hacer un análisis parecido a otro modelo tocaría volver a escribir un procedimiento, es por sto que NetLOgo tiene una herramienta muy útil llamada Analizador de Comportamiento (BehaviorSpace)que nos permite efectuar esots experimentos muy fácilmente. En este punto, debe leer la Guía del <a href="https://ccl.northwestern.edu/netlogo/docs/behaviorspace.html">Analizador de Comportamiento</a>.
+Puede pensar en el Analizador de Comportamiento (BehaviorSpace) como un programa separado, integrado en NetLogo, que ejecuta experimentos de simulación en su modelo y guarda los resultados en un archivo para que usted los analice. Completando
+un cuadro de diálogo simple, puede programarlo para realizar cualquiera o todas estas funciones:</p>
+<ul>
+<li>Crear escenarios cambiando el valor de las variables globales;</li>
+<li>Generer réplicas (llamadas repeticiones en NetLogo) de cada escenario;</li>
+<li>Recopilar los resultados de cada ejecución del modelo y escríbalos en un archivo;</li>
+<li>Determinar cuándo detener la ejecución de cada modelo, utilizando un límite de<br />
+tiempo (por ejemplo, detener después de 1000
+ticks) o una condición lógica (por ejemplo, detenerse si el número de tortugas<br />
+rojas es cero); y</li>
+<li>Ejecutar algunos comandos de NetLogo al final de cada ejecución del modelo.</li>
+</ul>
+<p>La información que ingresa en el Analizador de Comportamiento para ejecutar experimentos se guarda como parte del archivo NetLogo del modelo. Por lo tanto, lo primero que debe hacer es guardar su propia copia de este modelo con un nombre único, y de esta manera usar su propia versiones del modelo en lugar de la de la Biblioteca de modelos.</p>
+<div id="abra-behaviorspace-desde-el-menú-herramientas-de-netlogo." class="section level3">
+<h3><span class="header-section-number">A.2.1</span> Abra BehaviorSpace desde el menú Herramientas de NetLogo.</h3>
+<p>El cuadro de diálogo del Analizador de Comportamiento se abre y le permite crear nuevos experimentos, editar previamente guardados, o copiar o eliminar experimentos. Los términos experimento y configuración del experimento se refieren a un conjunto
+de instrucciones que definen los escenarios, réplicas, salidas y otras características que desee.Puede crear y guardar varias configuraciones de experimentos diferentes para el mismo modelo.Esto abrirá el cuadro de diálogo Experimento, que ahora completará modificando los valores predeterminados. A medida que completa el cuadro de diálogo Experimento, puede guardar su configuración haciendo clic en Aceptar en la parte inferior (para reanudar el trabajo en el cuadro de diálogo, vuelva a abrir el experimento haciendo clic en Editar en el cuadro de diálogo del Analizador de Comportamiento).</p>
+<ul>
+<li>Lo primero que debe hacer en el cuadro de diálogo del Experimento es darle al experimento un nuevo nombre. El nombre debe describir el experimento, por lo que debe ser algo como “Efecto-Fertilidad-Azul-Sobre-Fertilidad-Roja”.</li>
+<li>A continuación, puede especificar los escenarios a ejecutar completando el campo etiquetado “Variar las variables de la siguiente manera” Tenga en cuenta que NetLogo inserta automáticamente las variables globales que están definidas en los elementos de la interfaz, como deslizadores, interruptores y entradas. Desde el
+Documentación de BehaviorSpace (y el ejemplo proporcionado justo debajo del campo),
+Puede crear escenarios que varíen la fertilidad azul de 2.1 a 5.0 en
+incrementos de 0.1 ingresando:</li>
+</ul>
+<pre><code>
+[&quot;blue-fertility&quot; [2.1 0.1 5.0]]
+</code></pre>
+<ul>
+<li>En el campo “Variar las variables de la siguiente manera”, es una muy buena idea incluir las variables que desea mantener constantes, fijando sus valores para que no se modifiquen accidentalmente moviendo un control deslizante:</li>
+</ul>
+<pre><code>
+[&quot;red-fertility&quot; 2]
+[&quot;carrying-capacity&quot; 1000]</code></pre>
+<ul>
+<li>Establezca el valor de “Repeticiones” en 10.</li>
+</ul>
+<p>Ahora puede decirle a NetLogo qué resultados desea completando el campo etiquetado “Evaluar las ejecucuones usando estos indicadores”. En este campo, hay que colocar declaraciones de NetLogo que describan los resultados que queremso medir; estas declaraciones se ejecutarán y los resultados se escribirán en el archivo de salida. En este caso, el resultado que desea es el número de ticks en el que los agentes rojos se extinguen. Para hacer esto, puedes decirlae al Analizados de Comportamiento que pare el modelo cuando el número de agentes rojos sea cero y que generar el tick
+(tiempo) cuando esto sucede. El reportero que da el número de ticks es simplemente “ticks” as+i que:</p>
+<ul>
+<li>Coloque la palabra ticks en el cuadro “Evaluar las ejecucuones usando estos indicadores” y desmarque la casilla “Evaluar las ejecuciones a cada paso”</li>
+</ul>
+<p>¿Cómo se le dice al Analizador de Comportamiento que detenga el modelo cuando los agentes rojos se extinguen? Se Necesita poner una condición en el campo “Condición de fin de ejecución” que sea verdadera cuando el modelo debe detenerse:</p>
+<ul>
+<li>Haga clic en el botón “Condición de fin de ejecución” y coloque la condición:</li>
+</ul>
+<pre><code>red_count=0
+</code></pre>
+<p><img src="GrafAnalComportamiento/VentAnal.png" /></p>
+<p>No es necesario cambiar nada más en el cuadro de diálogo del Experimento, pero asegúrese de entender el significado de los diferentes cuadros (ventanas) de la pantalla
+* Ahora haga clic en Aceptar para cerrar el cuadro de diálogo del esperimento, Cierre el cuadro de diálogo del Analizador de Comportamiento y Guarde el archivo.
+Ahora está listo para ejecutar el experimento.</p>
+<ul>
+<li>Abra el Analizador de Comportamiento nuevamente desde el menú Herramientas, seleccione su experimento y haga clic en “Ejecutar”.</li>
+</ul>
+<p>Pruebe los formatos de salida de hoja de cálculo y tabla; cada uno de ellos produce archivos en formato .csv diseñados para ser importado en hojas de cálculo u otro software. También tiene la opción de cuántos de los procesadores de su computadora usar, si tiene varios procesadores. También puede anular la selección de las actualizaciones de Vista y gráficos y monitores para acelerar la ejecución.</p>
+</div>
+<div id="nota-importante" class="section level3">
+<h3><span class="header-section-number">A.2.2</span> Nota Importante</h3>
+<p>El Analizador de Comportamiento es una herramienta extremadamente importante, pero si no comprende exactamente cómo funciona, lo encontrará frustrante y puede malinterpretar sus resultados. Necesitaentender varios detalles:</p>
+<ul>
+<li>Al comienzo de cada ejecución, El Analizador de Comportamiento cambia los valores de las variables como se especifica en su caja “Variar las variables de la siguiente manera..” El Analizador de Comportamiento establece estos valores antes de ejecutar el prcedimiento <strong>setup</strong>. Por lo tanto, si el setup establece el valor de una variable que se supone que El Analizador de Comportamiento va a controlar., el valor dado por El Analizador de Comportamiento será sobrescrito por el valor establecido en el setup. Además, el setup generalmente comienza con el comando clear-all, que establece el valor de todos las variables en cero, excepto las variables globales que se definen en un deslizador, selector, interruptor o
+entrada en la interfaz. En consecuencia, cualquier variable que desee que El Analizador de Comportamiento controle debe ser definido e inicializado solo por uno de estos elementos de interfaz.</li>
+<li><p>Cuando la casilla “Evaluar las ejecuciones a cada paso” no está seleccionada, los resultados se calculan y se escriben en el archivo de salida solo después de que se haya detenido la ejecución del modelo. La corrida puede ser detenida por un
+stop en el procedimiento go (como en muchos MOBAs), o usando la
+“Condición de Fin de Ejecución” ó la opción “Límite de Tiempo”</p></li>
+<li><p>Cuando la casilla “Evaluar las ejecuciones a cada paso” está seleccionada,El Analizador de Comportamiento evalúa las ejecuciones a cada paso y produce su primer
+resultado cuando se completa el procedimiento setup. Esto informa el estado del modelo después de inicializado y antes de que comiencen las simulaciones. El Analizador de Comportamiento luego produce resultados cada vez que termina el procedimiento go.</p></li>
+</ul>
+</div>
+<div id="analizando-los-resultados-del-experimetno-en-rstudio" class="section level3">
+<h3><span class="header-section-number">A.2.3</span> Analizando los resultados del experimetno en Rstudio</h3>
+<p>Cuando El Analizador de Comportamiento ha terminado de ejecutar el experimento, puede importar los resultados al software de su elección y calcular la desviación estándar y media de las 10 repeticiones del experimento ( tiempo hasta la extinción del rojo para cada valor de fertilidad azul) y además dibujar un gráfico ilustrativo.La menera de hacerlo es la siguiente:</p>
+<p>Abra el Programa RStudio:</p>
+<p><img src="GrafAnalComportamiento/Rstudio.png" /></p>
+<p>Cree Un Archivo Nuevo (Script) en R-Studio :</p>
+<p><img src="GrafAnalComportamiento/RScript.png" /></p>
+<p>Guárdelo con el nombre Fertilidad.R en el mismo directorio donde se encuentra el archivo generado por el Analizador de Comportamiento:</p>
+<p><img src="GrafAnalComportamiento/Fertilidad.png" /></p>
+<p>Definamos ahora el directorio de trabajo como el directorio donde se encuentran tanto el Archivo del Experimento como el script que acabamos de crear, paara ello hay que seleccionar la opción:</p>
+<p><img src="GrafAnalComportamiento/Source.png" /></p>
+<p>La primera linea del Archivo de R será el comando que importe la librería de R que usaremso para hacer el análisis del experimento, coloque lo siguiente y luego oprima el botón Run:</p>
+<pre><code>library(tidyverse)
+</code></pre>
+<p>La libreria se debe cargar, esta nos permite gráficar y hacer análisis estadísticos</p>
+<p>Ahora vamos a importar a R los datos del experimento, usaremos la función read_csv para leer el archivo del experimento, coloque lo siguiente y luego oprima el botón Run:</p>
+<pre><code>data &lt;- read_csv(&quot;Simple Birth Rates Efecto-Fertilidad-Azul-Sobre-Fertilidad-Roja-table.csv&quot;,skip=6)</code></pre>
+<p>En la parte derecha superior de la pantalla debe aparecer lo siguiente:</p>
+<p><img src="GrafAnalComportamiento/data.png" /></p>
+<p>Esto indica que el experimento se cargó a Rstudio, si hace clic en data puede observar los datos del experimento generado por NetLogo:</p>
+<p><img src="GrafAnalComportamiento/tabla.png" /></p>
+<p>Lo primero que haremos con esta tabla de datos es cambiar los nombres de las columnas a nombre más sencillos, coloque en el Archivo de R lo siguiente y oprima el botón Run:</p>
+<pre><code>colnames(data)&lt;- c(&quot;corrida&quot;,&quot;capacidad&quot;,&quot;fertRoja&quot;,&quot;fertAzul&quot;,&quot;paso&quot;,&quot;ticks&quot;)
+</code></pre>
+<p>Debe aparecer la tabla con los nuevos nombres:</p>
+<p><img src="GrafAnalComportamiento/nombres.png" /></p>
+<p>Dejaremos en la tabla solo las columnas que necesitamos, que son tres:</p>
+<ul>
+<li>fert-roja</li>
+<li>fert-azul</li>
+<li>ticks</li>
+</ul>
+<p>(Nota: bserve que paso y ticiks son la misma columna)</p>
+<p>Coloque el comando siguiente y oprima el botón Run:</p>
+<pre><code>data %&gt;% select(fertRoja,fertAzul,ticks) -&gt; datas
+</code></pre>
+<p>Tenemos entonces una tabla con solo las 3 columnas que necesitamos:</p>
+<p><img src="GrafAnalComportamiento/select.png" /></p>
+<p>¿Este gráfico se ve como esperabas? Si bien parece tranquilizador que el modelo
+produjo resultados que fueron exactamente los que esperábamos, también nos hace preguntarnos cuál es el valor de
+La construcción de un ABM fue si produce resultados que podríamos anticipar fácilmente. De hecho, elegimos este
+modelo para examinar primero porque es un claro ejemplo de un ABM cuya dinámica es fuertemente
+impuestos por sus comportamientos de agente muy simples y rígidos: los agentes no toman decisiones, tienen
+no hay variables de estado individuales, y sus muy pocos comportamientos (reproducción, muerte) son estrictamente
+especificado, o impuesto, por los parámetros globales. (El modelo también es no espacial porque el agente
+ubicaciones no tienen ningún efecto en absoluto, ¿puede pensar en una manera de confirmar esto?) Si los agentes en
+este modelo adaptó su fertilidad a (por ejemplo) la densidad local de otras tortugas o alimento, o tuvo
+Enviar comentarios
+Historial
+Guardadas
+Comunidad</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="redes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bibliografía.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

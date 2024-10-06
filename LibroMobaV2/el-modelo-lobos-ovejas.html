@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 El Modelo Lobos-Ovejas | Modelación Basada en Agentes</title>
+  <meta name="description" content="7 El Modelo Lobos-Ovejas | Modelación Basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 El Modelo Lobos-Ovejas | Modelación Basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 El Modelo Lobos-Ovejas | Modelación Basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="construyendo-modelos-basados-en-agentes.html"/>
+<link rel="next" href="analizando-modelos-basados-en-agentes.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El Ciclo de Modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html"><i class="fa fa-check"></i><b>7</b> El Modelo Lobos-Ovejas</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#introduccion"><i class="fa fa-check"></i>Introduccion</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#siete-criterios-de-diseno"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseno:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#construcción-de-los-modelos"><i class="fa fa-check"></i><b>7.3</b> Construcción de los modelos</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo.html"><a href="el-modelo.html"><i class="fa fa-check"></i><b>9</b> El Modelo</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo.html"><a href="el-modelo.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo.html"><a href="el-modelo.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo.html"><a href="el-modelo.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo.html"><a href="el-modelo.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo.html"><a href="el-modelo.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo.html"><a href="el-modelo.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo.html"><a href="el-modelo.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo.html"><a href="el-modelo.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo.html"><a href="el-modelo.html#un-segundo-análisis"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html"><i class="fa fa-check"></i><b>11</b> Modelo de Negocio</a><ul>
+<li class="chapter" data-level="11.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#especificación-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Especificación del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo.html"><a href="el-modelo.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo.html"><a href="el-modelo.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo.html"><a href="el-modelo.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo.html"><a href="el-modelo.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apendices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación Basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="el-modelo-lobos-ovejas" class="section level1">
+<h1><span class="header-section-number">7</span> El Modelo Lobos-Ovejas</h1>
+<div id="descripcion-del-modelo" class="section level2">
+<h2><span class="header-section-number">7.1</span> Descripcion del Modelo</h2>
+<div id="introduccion" class="section level3 unnumbered">
+<h3>Introduccion</h3>
+<p>Este taller tiene la intención de llevarlo desde el primer paso de diseñar una pregunta (hipótesis) de un área que se desea explorar, a través del diseño y la construcción del modelo y finalmente a refinar la pregunta revisar el modelo y analizar estadísticamente el modelo para responder a la pregunta (hiṕótesis).<br />
+Esta secuencia se presenta en este documento en orden lineal, pero en realidad estos pasos se entremezclan entre sí y forman parte de una exploración iterativa de refinamiento del modelo y de la pregunta (hipótesis) motivadora inicial.
+Trabajaremos todo lo anterior dentro del contexto de un modelo particular, pero al mismo tiempo discutiremos cuestiones generales relacionadas con el diseño y construcción de modelos. Para facilitar el proceso, este taller está dividido en tres secciones principales:</p>
+<ul>
+<li>El diseño : que lo llevará a través del proceso de determinar qué elementos incluir en su modelo.</li>
+<li>La construcción : le mostrará cómo tomar un modelo conceptual y crear un objeto computacional</li>
+<li>El análisis: se ocupará de cómo ejecutar su modelo, crear algunos resultados y analizar esos resultados para proporcionar una respuesta a su pregunta inicial.</li>
+</ul>
+</div>
+<div id="pregunta-básica" class="section level3 unnumbered">
+<h3>Pregunta Básica</h3>
+<p>A lo largo de este taller estaremos diseñando, construyendo y examinando un modelo simple de un sistema ecológico. La pregunta básica que vamos a abordar es:</p>
+<p><strong>“¿Cómo los niveles de población de dos especies animales que comparten un hábitat cambian con el tiempo?”</strong></p>
+<p>Llamaremos a este modelo el modelo Predador-Presa. Aunque discutiremos este modelo en el contexto de dos especies biológicas, el modelo podría ser generalizado a otras situaciones como empresas que compiten por los consumidores, partidos políticos que compiten por los votos, o virus que evolucionan en un sistema informático. Más importante aún, los conceptos y componentes que vamos a desarrollar en este modelo son fundamentales y de hecho son utilizados en la mayoría de los modelos basados en agentes (ABM)</p>
+</div>
+<div id="diseñando-el-modelo" class="section level3 unnumbered">
+<h3>Diseñando el Modelo</h3>
+<p>Hay muchas maneras de diseñar un modelo basado en agentes. La que se elija depende de muchos factores incluyendo el tipo de fenómeno a ser modelado, el nivel de conocimiento del dominio de contenido, su comodidad con la codificación y su personal estilo de modelado.
+Consideramos dos grandes categorías de modelos:</p>
+<pre><code>* Modelación basada en el fenómeno 
+*  Modelación exploratoria. </code></pre>
+<p>En la modelación basada en el fenómeno, se comienza con un fenómeno conocido que tiene un comportamiento característico. Algunos ejemplos podrían incluir patrones comunes de segregación de vivienda en las ciudades, galaxias en forma de espiral en el espacio, patrones de disposición de las hojas en las plantas, o niveles oscilantes de población en especies que interactúan. El objetivo de la modelación basada en el fenómeno es crear un modelo que capture de alguna manera el comportamiento. En ABM, esto se traduce a encontrar un conjunto de agentes, y reglas para esos agentes, que lo generan. Una vez constituido el modelo , se tiene un mecanismo para explorar el comportamiento. Variando los parámetros del modelo , se puede observar si emergen otros patrones o comportamientos encontrando esos nuevos patrones en un conjunto específico de valores de los parámetros del modelo o realizando experimentos con los datos.</p>
+<p>La segunda categoría es la modelación exploratoria, en esta categoría la idea es crear un conjunto de agentes, definir su comportamiento y explorar los patrones o comportamientos que emergen. Pero para que tenga sentido este tipo de modelado, debemos encontrar similitudes de nuestro modelo con algunos fenómenos en el mundo. A continuación, refinamos nuestro modelo con destino a las similitudes percibidas con estos fenómenos y de esa manera llegamos a converger hacia un modelo explicativo del fenómeno.</p>
+<p>Una distinción importnate entre ambas metodologías es hasta qué punto especificamos una pregunta a ser contestada por un modelo. En un extremo del espectro (Modelación basada en el fenómeno) , formulamos una investigación específica, pregunta (o conjunto de preguntas) como:</p>
+<p>“¿Cómo una colonia de hormigas hace para buscar alimentación?”¿Cómo una bandada de estroninos hace para volar en forma de V? &quot;</p>
+<p>En el otro extremo (Modelación exploratoria) simplemente comenzamos con una noción básica de querer modelar hormigas o comportamiento de aves, pero sin una pregunta clara a ser contestada. A medida que exploramos a través del modelo, gradualmente vamos refinando nuestra pregunta hacia una que pueda ser abordado por un modelo específico.</p>
+<p>Sin embargo, una tercera dimensión tiene que ver con el el grado en que el proceso de diseño del Modelo se combina con la codificación del modelo. En algunos casos, es aconsejable realizar todo el diseño del modelo conceptual antes de cualquier codificación del modelo. Esto es la metodología de arriba hacia abajo (top-down), el diseñador del modelo decide los tipos de agentes del modelo, el entorno en el que residen y sus reglas de interacción antes de escribir una sola línea de código. En otros casos, el diseño del modelo conceptual y la codificación del modelo co-evolucionan, influyendo cada uno en la evolución del otro. Esto es a menudo referido como diseño de abajo hacia arriba.(bottom-up) . En el diseño de abajo hacia arriba, se selecciona un dominio o fenómeno de interés con o sin especificar una pregunta formal, Utilizando este enfoque, se comenzaría a escribir el código relevante a ese dominio, construyendo el modelo conceptual de abajo para arriba, acumulando los mecanismos, las características y las entidades necesarias, y quizás formulando algunas preguntas formales de la investigación a lo largo del camino. Por ejemplo, en un diseño de abajo hacia arriba, puede comenzar con una pregunta sobre cómo evolucionaría un mercado económico,se podrían codificar comportamientos de algunos compradores y vendedores y, al hacerlo, darse cuenta de que se tendrían que agregar corredores como agentes en el modelo.</p>
+<p>Estas dimensiones de diseño del modelo se pueden combinar . Usted podría comenzar con una pregunta de investigación muy específica y diseñar todos los agentes y reglas antes de codificar, o puede comenzar con algunos agentes, jugar con varias reglas para ellos y sólo obtener su pregunta de modelado cerca del final del proceso. En la práctica, los autores de modelos rara vez usan exclusivamente un estilo al construir sus modelos, pero usan una combinación de estilos, y a menudo cambian entre formas y estilos a medida que cambian sus necesidades e intereses de investigación. En los casos en que un investigador está colaborando con un programador que codifique el modelo, el estilo de diseño de arriba hacia abajo es normalmente el que se emplea, ya que separa los roles de los dos miembros del equipo. NetLogo fue diseñado para facilitar a los científicos la codificación de sus propios modelos.
+A menudo, a medida que los constructores de modelos se sienten más cómodos con la codificación, usan el código NetLogo como una herramienta para construir el modelo conceptual, presentaremos nuestro modelo de construcción utilizando una mezcla de enfoques, pero para mayor claridad de la exposición, haremos hincapié en el enfoque de arriba hacia abajo. El proceso de diseño de arriba hacia abajo comienza eligiendo un fenómeno o situación que desea modelar o proponiendo una pregunta que quiera responder, y luego diseñar agentes y reglas de comportamiento que modelan los elementos de la situación. A continuación, se refina ese modelo conceptual y se revisar hasta que esté en un nivel de detalle lo suficientemente adecuado para que se puede comanzar a escribir el código para el modelo.
+A lo largo del proceso de diseño hay un principio muy importante que usaremos. Llamamos a este el principio de diseño de ABM:</p>
+<p><strong>Comienza simple y construye hacia la pregunta que deseas contestar</strong></p>
+<p>Hay dos componentes principales de este principio. La primera es comenzar con el conjunto más simple de agentes y reglas de comportamiento que pueden usarse para explorar el sistema que se desea modelar. Esta parte del principio se ilustra con una cita de Albert Einstein:</p>
+<p>“El objetivo supremo de toda teoría es hacer que los elementos básicos irreductibles sean tan simples y pocos como sea posible sin tener que dejar de representar adecuadamente ningún dato de experiencia” (1933),</p>
+<p>O en otra frase que se dice que también dijo:</p>
+<p>“Todo debe ser lo más simple posible, pero no más simple.”</p>
+<p>En el caso de ABM, esto significa hacer el modelo tan simple como sea posible dado que debe proporcionarle un escalón hacia su destino final. El estadístico George Box proporciona una cita que ilustra este punto:</p>
+<p>“Todos los Modelos son incorrectos, pero algunos modelos son útiles”(1979).</p>
+<p>Lo que quería decir Box era que todos los modelos son por necesidad incompletos porque simplifican aspectos del mundo. Sin embargo, algunos de ellos son útiles porque están diseñados para responder a preguntas particulares y las simplificaciones en el modelo no interfieren con la obtención de esa respuesta.
+Este principio básico de diseño ABM es útil de varias maneras. En primer lugar, nos obliga a examinar cada agente y cada regla y eliminar elementos si el progreso se puede hacer sin ella. No es raro que los modeladores principiantes construyan un modelo en el que ciertos componentes no tengan ningún efecto. Al comenzar simple y lentamente agregar elementos a su modelo, puede asegurarse de que estos componentes extraños nunca se desarrollan. Al examinar la necesidad de cada componente adicional con respecto a la pregunta que se está persiguiendo, se reduce la tentación de, parafraseando a Guillermo de Occam, “multiplicar las entidades innecesariamente”Al hacerlo, se reduce la posibilidad de introducir ambigüedades, redundancias e inconsistencias en el modelo.
+Otra virtud del principio de diseño es que, al mantener el modelo simple, lo hace más comprensible y más fácil de verificar. La verificación es el proceso de asegurar que un modelo computacional implemente fielmente su modelo conceptual objetivo. Un modelo conceptual más simple conduce a una implementación más sencilla del modelo, lo que facilita la verificación del modelo. En cada punto del proceso de desarrollo del modelo, el modelo debe ser capaz de proporcionarle algunas respuestas a su pregunta de investigación. Esto no solo le ayuda a hacer un uso productivo de su modelo desde el principio, sino que también le permite empezar a cuestionar las suposiciones de modelo y examinar sus resultados desde el principio en el proceso de modelado. Esto puede evitar que usted vaya demasiado lejos por un camino improductivo. Menos componentes también significan menos combinaciones para “validar”.</p>
+</div>
+<div id="predador-presa" class="section level3 unnumbered">
+<h3>Predador-Presa</h3>
+<p>Para aplicar nuestro principio al contexto del modelo Predador-Presa , debemos comenzar nuestro diseño reflexionando sobre dos especies animales que comparten un hábitat e identificando agentes y comportamientos simples para nuestro modelo. Comenzaremos identificando una pregunta que queremos explorar, Después de eso vamos a discutir que agentes debemos definir y cómo pueden interactuar. Luego nos trasladamos al medio ambiente y a sus características. Como parte de este proceso, necesitamos discutir lo que sucede con el modelo a lo largo del tiempo. Finalmente, discutimos qué medidas vamos a utilizar para responder a nuestra pregunta.</p>
+<p>Comencemos reflexionando sobre dos especies animales que comparten un hábitat e identificando agentes y comportamientos simples para nuestro modelo. Comenzaremos identificando una pregunta que queremos explorar, Después de eso vamos a discutir que agentes debemos definir y cómo pueden interactuar. Luego nos trasladamos al medio ambiente y a sus características. Como parte de este proceso, necesitamos discutir lo que sucede con el modelo a lo largo del tiempo. Finalmente, discutimos qué medidas vamos a utilizar para responder a nuestra pregunta</p>
+<p>** Encontrando las preguntas</p>
+<p>La elección de una pregunta puede parecer una cuestión aparte del diseño del modelo. Después de todo, la progresión natural parece ser: primero escoja una pregunta y construya un modelo para responder a esa pregunta. A veces, ese puede ser el procedimiento que seguimos, pero en muchos casos <strong>tendremos que refinar nuestras preguntas</strong> cuando comencemos a pensar en ello de una manera basada en agentes. Nuestra pregunta original para el modelo Lobos-Ovejas puede ser:</p>
+<p><strong>“¿Cómo cambian los niveles de población de dos especies con el tiempo cuando coexisten en un hábitat compartido?”</strong></p>
+<p>Ahora vamos a evaluar si esta pregunta es una que es susceptible para usar ABM y en caso afirmativo tendremos que refinar nuestra pregunta dentro del paradigma ABM.
+El modelado basado en agentes es particularmente útil para dar sentido a los sistemas que tienen un número de entidades que interactúan, y por lo tanto tienen resultados impredecibles. Hay ciertos problemas y preguntas que son más susceptibles a las soluciones ABM. Si nuestra pregunta principal de interés viola nuestras directrices, puede ser una indicación de que debemos considerar un método de modelado diferente. Por ejemplo, podríamos estar interesados en examinar la dinámica de dos poblaciones muy grandes bajo el supuesto de que las especies son homogéneas y bien mezcladas (sin componentes espaciales o propiedades heterogéneas) y que el nivel de población de cada especie depende simplemente del nivel de población de las otras especies.
+Si este es el caso entonces podríamos haber usado un modelo basado en ecuaciones en lugar de un modelo basado en agentes ya que el trabajo de EBM (Modelos basados en ecuaciones ) es bueno para grupos homogéneos grandes y existe un EBM clásico para esta situación conocida como as ecuaciones diferenciales de <strong>Lotka-Volterra</strong> (Lotka, 1925, Volterra, 1926) ABM será más útil para nosotros si pensamos en los agentes como <strong>heterogéneos y con ubicaciones espaciales.</strong>
+Un aspecto de los animales que es probable que sea relevante para nuestra pregunta es cómo hacen uso de sus recursos. Los animales hacen uso de los recursos al convertirlos en energía, por lo que queremos asegurarnos de que nuestros agentes tienen diferentes cantidades de energía y ocupan diferentes lugares en el mundo. Una tercera directriz es considerar si los resultados “agregados” dependen de las interacciones de los agentes y de la interacción de los agentes con su entorno. Por ejemplo, si una especie está consumiendo otra, entonces los resultados dependerán de la interacción del agente. Las interacciones predador-presa suelen establecerse en ambientes abundantes. Manteniendo el principio de diseño ABM en mente, comenzamos con el ambiente <strong>más simple</strong>:</p>
+<p>Enriquecemos el ambiente un poco más allá de los depredadores y las presas e incluyendo los recursos del medio ambiente que consumen las especies de presa de nivel más bajo. Otra directriz es que el modelado basado en agentes es más útil para modelar procesos dependientes del tiempo. En el modelo Predador-Presa, nuestro interés central radica en examinar cómo los niveles de población cambian con el tiempo. Por lo tanto, podemos refinar nuestra pregunta para centrarnos en las condiciones que conducen a las dos especies a coexistir durante algún tiempo. De esta forma, nuestras pautas nos ayudan a evaluar si nuestra pregunta es adecuada para ABM y, en caso afirmativo, enfocar nuestra pregunta y nuestro modelo conceptual.
+Habiendo evaluado la relevancia de nuestra pregunta para ABM, estamos ahora en posición de decirlo más formalmente:</p>
+<p>** “¿Podemos encontrar parámetros del modelo para dos especies tal que sostengan niveles de población positivos en un área geográfica limitada cuando una especie es un depredador del otro y la segunda especie consume recursos del medio ambiente?”**</p>
+<p>Ahora, teniendo en cuenta esta pregunta, procederemos a diseñar el modelo conceptual.</p>
+</div>
+</div>
+<div id="diseño-del-modelo" class="section level2">
+<h2><span class="header-section-number">7.2</span> Diseño del Modelo</h2>
+<div id="concretando-el-modelo" class="section level3 unnumbered">
+<h3>Concretando el Modelo</h3>
+<p>Ahora que hemos identificado nuestra pregunta de investigación en detalle, puede ser útil considerar un contexto particular para esta pregunta de investigación.<br />
+Anteriormente, discutimos los patrones de referencia como una fuente de modelos basados en fenómenos A veces ese patrón de referencia es la inspiración original para el modelo. Otras veces, como ahora, hemos refinado nuestra pregunta de investigación lo suficiente como para buscar un patrón de referencia que nos ayude a probar si nuestro modelo es una respuesta válida a la pregunta. En el caso de las relaciones depredador-presa, hay un caso famoso de cohabitación de pequeñas poblaciones de depredadores-presas en un área geográfica pequeña. Este es el caso de poblaciones fluctuantes de lobos y alces en Isle Royale, Michigan.</p>
+</br>
+<center>
+<img src="./GrafDescOvejas/Michigan.png" />
+</center>
+<p></br></p>
+<p>La figura muestra las poblaciones de lobos y alces en la Isla Royale desde 1959 hasta 2009. Esta gráfica puede servir como patrón de referencia para nuestro modelo. Nuestro modelo ya completado deberá ser capaz de generar un gráfico “similar” como posible comportamiento del Modelo.<br />
+Como podemos ver en los datos de la Isla Royale, las poblaciones de lobos y alces de la Isla Royale se han mantenido durante más de cincuenta años sin que ninguna de las especies se extinga. Las poblaciones también exhiben una oscilación, con el alce en un punto bajo cuando los lobos están en altos y viceversa. Estos datos pueden servir como patrón de referencia para nuestro modelado y nos permite refinar aún más nuestra pregunta de investigación:</p>
+<p><strong>“¿Podemos encontrar parámetros de modelo para dos especies que sostengan los niveles poblacionales positivos oscilantes en un área geográfica limitada cuando una especie es un depredador del otro y la segunda especie consume recursos del medio ambiente?”</strong></p>
+<p>Para nuestro modelo en vez de modelar lobo y alce, modelaremos lobos y ovejas. El conjunto de datos de lobos y alces está bien establecido, pero nuestro objetivo en este capítulo no es coincidir con estos datos en particular, sino presentarles ejemplos clásicos del modelado predador-presa y tratar de reproducir el patrón sostenido oscilante de los niveles poblacionales.</p>
+</div>
+<div id="seleccionando-los-agentes" class="section level3 unnumbered">
+<h3>Seleccionando los Agentes</h3>
+<p>Ahora que hemos identificado nuestra pregunta de investigación, podemos comenzar a diseñar los componentes que nos ayudarán a responderla. La primera pregunta que debemos hacernos es: ¿Cuáles son los agentes en el modelo? Al diseñar nuestros agentes, queremos elegir aquellos componentes de nuestro modelo que sean autónomos y que tengan propiedades, estados y comportamientos que puedan tener relación con nuestra pregunta. Pero debemos tener cuidado de evitar la sobrecarga del agente. Dependiendo de la perspectiva que se tome, casi cualquier componente del modelo podría ser considerado un agente. Sin embargo, un modelo que está diseñado con un exceso de clases de agentes puede llegar a ser rápidamente inmanejable. Al elegir los agentes en un modelo, es importante concentrarse en aquellas entidades autónomas que son más relevantes para nuestra pregunta de investigación.<br />
+Un problema relacionado es la “granularidad” del agente. Cada entidad está compuesta de múltiples entidades más pequeñas. ¿Cuál es el nivel adecuado de entidad para elegir? ¿Deberían nuestros agente ser moléculas o átomos? ¿Órganos o células del cuerpo? . Si queremos modelar un campo de pasto, tal vez no queramos modelar cada hoja de pasto, sino que en lugar de eso, elegir “grumos” de pasto como nuestros agentes. Es importante que la granularidad de cada agente esté aproximadamente al mismo nivel.</p>
+<p>Teniendo en cuenta lo anterior, comenzamos eligiendo tres tipos de agente. Modelamos los depredadores, que llamaremos lobos, las presas que llamaremos ovejas, y los recursos que las ovejas consumen, el pasto.</p>
+<p>Nosotros podríamos tener muchos otros agentes en este modelo. Por ejemplo, podríamos modelar un cazador o los niveles de precipitación o de nutrición del suelo. Sin embargo, al elegir sólo lobos, ovejas y pasto, nos atenemos al principio de diseño ABM (keep it simple). Tenemos dos tipos de agentes móviles simples y un tipo de agente estacionario para modelar el ambiente, y éstos son el conjunto mínimo de agentes necesarios para responder a nuestra pregunta de qué parámetros permitirán que coexistan dos poblaciones en un área geográfica limitada.</p>
+</div>
+<div id="seleccionando-propiedades-de-los-agentes" class="section level3 unnumbered">
+<h3>Seleccionando Propiedades de los Agentes</h3>
+<p>Los agentes tienen propiedades que los distinguen de otros agentes. Es importante determinar estas propiedades con antelación para que podamos conceptualizar el agente y diseñar las interacciones entre ellos y con el medio ambiente.
+En el modelo Predador-Presa damos a las ovejas y a los lobos tres propiedades :</p>
+<ol style="list-style-type: decimal">
+<li>un nivel de energía, que define el nivel de energía del agente.</li>
+<li>un lugar, que es un lugar en el área geográfica donde el agente está-</li>
+<li>una dirección, que indica hacia donde está mirando y la dirección que el agente tomaría en caso de que se mueva.</li>
+</ol>
+<p>La propiedad energética no describe meramente energía temporal (como si un animal está fresco o fatigado). Más bien, la “energía” incorpora alguna noción de la cantidad de “vitalidad” en una criatura, abstrayendo los detalles del metabolismo, el almacenamiento de calorías o el hambre y condensándolo todo en una sola medida. Podríamos agregar propiedades adicionales y algunas de ellas podrían ser útiles para futuras extensiones, por ejemplo, podríamos añadir una velocidad de movimiento y permitir que agentes se muevan a distintas velocidades, o una capacidad de ofensa / defensa que afecte la capacidad del individuo resistirse a la depredación. Sin embargo, estas propiedades adicionales no parecen necesarias para responder a nuestra pregunta más simple, y por lo tanto, resistimos a la tentación de incluirlas innecesariamente. Si las ovejas y los lobos tienen exactamente las mismas propiedades, ¿qué los hace diferentes unos de otros? Discutiremos esto más adelante, donde hablamos sobre el comportamiento que cada uno de estos dos tipos de agentes exhiben.</p>
+</div>
+<div id="características-del-ambiente-y-parcelas" class="section level3 unnumbered">
+<h3>Características del ambiente y parcelas</h3>
+<p>Ahora que definimos los agentes móviles y sus comportamientos ,pensemos en elñentorno en el que vivirán estos agentes móviles y cómo pueden interactuar con ese entorno. En el modelo Predador-Presa, el primer atributo ambiental obvio es la presencia o ausencia de pasto, ya que es lo que consumen las ovejas. Podríamos modelar muchos otros atributos tales como la elevación, el agua, los bosques y otras características que podrían afectar el movimiento de los animales o la depredación de las ovejas. Sin embargo, de acuerdo con nuestro principio de diseño, comenzamos con un entorno que consiste en un gran campo de pasto. Usamos los tipos de agente llamados parcelas (típicas de Modelos Basados en Agentes) para modelar el pasto.</p>
+<p>Como se mencionó, no tendría sentido modelar cada hoja de pasto, por lo que el modelo podría dar a las parcelas una propiedad “cantidad de pasto” que tendrá un valor numérico. Esto es efectivamente utilizar las parcelas para modelar montones de pasto, que es nuestro tipo de agente estacionario. El valor numérico de esta propiedad debe ser proporcional al comportamiento alimenticio de las ovejas, ya que así lo utilizaremos en el modelo.
+Con el fin de evitar tratar con las condiciones de frontera (como lobos que superan los límites del mundo modelado), el mundo se “envolverá” horizontal y verticalmente, por lo que un lobo saliendo del borde derecho del mundo aparecerá a la izquierda. Esta topología en forma de toro es a menudo muy conveniente para ABMs. También vale la pena señalar que en algunas ABMs el entorno también controla los procesos de nacimiento y muerte de los agentes. En este modelo el nacimiento y la muerte serán modelados endógenamente dentro de las acciones de los agentes, pero es posible tener nacimiento y muerte de agentes controlados por el ambiente . Esta es una forma menos “emergente” de modelar el ciclo de vida, pero a veces es una simplificación útil.</p>
+</div>
+<div id="comportamiento-de-los-agentes" class="section level3 unnumbered">
+<h3>Comportamiento de los agentes</h3>
+<p>Además de definir las <strong>propiedades</strong> de los agentes es importante determinar qué tipo de <strong>comportamiento</strong> pueden exhibir los agentes. Estos comportamientos son necesarios para describir cómo los agentes interactúan entre sí y con el medio ambiente.<br />
+En el modelo Predador-Presa, las ovejas y los lobos comparten muchos comportamientos comunes, ambos tienen la capacidad de girar al azar, avanzar, reproducirse y morir. Sin embargo, ovejas y lobos <strong>difieren</strong> en que las ovejas tienen la capacidad de consumir pasto y lobos tienen la capacidad de consumir ovejas. Esto diferencia las dos especies (breeds) ó tipos de agente entre sí. Por supuesto, una vez más hay muchos otros comportamientos que podríamos prescribir para estos agentes. Por ejemplo, podríamos dar a las ovejas la capacidad de esconderse en los rebaños para defenderse contra ataques de lobo, o la capacidad de luchar. Los lobos podrían tener la capacidad de moverse a diferentes velocidades para perseguir ovejas. Lobos y ovejas también pueden tener comportamientos comunes como: dormir, digerir los alimentos y buscar refugio durante una tormenta. Sin embargo, nuevamente los comportamientos que hemos descrito (Mover, reproducir, comer y morir) son opciones razonables para un modelo simple que pueden abordar nuestra pregunta de investigación. Para los agentes herbáceos (pasto) , damos un simple comportamiento, la capacidad de crecer.</p>
+</div>
+<div id="manejo-del-tiempo" class="section level3 unnumbered">
+<h3>Manejo del Tiempo</h3>
+<p>Ahora que hemos establecido los componentes básicos del modelo,podemos diseñar el paso de tiempo en el modelo. Para ello necesitamos pensar en los comportamientos que serán exhibidos por los agentes de nuestro modelo y decidir cómo y en qué orden se deben realizar. En el mundo real, los animales se comportan concurrentemente y el tiempo parece continuo. Para construir nuestro ABM, simplificaremos esto dividiendo el tiempo en pasos discretos <strong>ticks</strong>, además dividimos cada paso en fases ordenadas y serializadas. Haciéndolo de esta manera, estamos haciendo un supuesto implícito de que al definir un orden para realizar las acciones esto no afectará sustancialmente nuestros resultados. Esto es un supuesto de trabajo y puede que tenga que ser reexaminado más tarde.<br />
+<strong>En general, la determinación del orden en que los agentes muestran comportamientos puede ser complicado.</strong></p>
+<p>En el modelo hay cuatro comportamientos animales básicos:</p>
+<ul>
+<li>mover</li>
+<li>morir</li>
+<li>comer</li>
+<li>reproducir</li>
+</ul>
+<p>y un comportamiento del pasto:</p>
+<ul>
+<li>crecer</li>
+</ul>
+<p>Otra hipótesis de trabajo que podemos mirar, es decidir qué el orden en que los animales realizan estos comportamientos puede ser arbitrario. Cualquier orden para los comportamientos sería razonable y es mucho más fácil trabajar con unorden fijo de comportamientos. Elegimos ordenar los comportamientos como en la primera oración de este párrafo (mover, morir, comer,reproducir), podríamos chequear y asegurarnos si este orden tiene sentido.</p>
+<p>El movimiento es el acto de girar y luego dar un paso adelante. Dado que la acción de movimiento cambia la ubicación de los agentes y por lo tanto cambia el entorno local de cada agente, tiene sentido moverse primero, el movimiento cuesta energía y así programaremos la muerte a continuación, porque debemos comprobar para ver si alguno de los agentes ha gastado tanta energía mientras se mueve que ya se queda sin energía. Después de esto, programaremos a los agentes para que intenten obtener nueva energía, si hay algo en su entorno local que puedan comer. Ya que ahora tienen nueva energía y los agentes pueden reproducirse (ya que esto también requiere energía).Por lo tanto, cada agente verifica si tienen suficiente energía para crear un nuevo agente. Finalmente, dado que el modelo ha hecho todo lo demás, los agentes de pasto crecen. Y el ciclo de la vida termina</p>
+</div>
+<div id="seleccionando-los-parámetros-del-modelo" class="section level3 unnumbered">
+<h3>Seleccionando los parámetros del modelo</h3>
+<p>Podríamos decidir escribir un conjunto de reglas completamente especificas para controlar el comportamiento de todos estos agentes y sus interacciones ambientales durante un paso de tiempo, pero tiene más sentido <strong>crear algunos parámetros</strong> que nos permitan controlar el modelo, para que podamos fácilmente examinar diferentes condiciones. Un paso siguiente es definir qué atributos del modelo podremos controlar a través de parámetros.</p>
+<p>Existen varios parámetros posibles de interés en el modelo, por ejemplo, queremos ser capaces de controlar el número de ovejas y lobos iniciales. Esto nos permitirá ver cómo los diferentes valores de los niveles de población inicial afectan los niveles finales de población. Otro factor a controlar es la cantidad de energía que cuesta a un agente para moverse. Usando este parámetro, podemos hacer que el paisaje sea más o menos difícil de recorrer, y así simular diferentes tipos de terreno. Relacionado con el costo de movimiento tenemos la energía que cada especie gana de lo que consume. Así, elegimos tener parámetros para controlar la energía que se obtiene del pasto.</p>
+<p>Por último, dado que las ovejas consumen pasto, para mantener a la población en el tiempo queremos que el pasto vuelva a crecer. Así que necesitaremos un parámetro para la tasa de rebrote del pasto.<br />
+Hay muchos otros parámetros que podríamos haber incluido en este modelo. Por ejemplo, los parámetros que elegimos son homogéneos en todo el modelo. En otras palabras, una oveja ganará la misma energía del pasto que cualquier otra oveja. Sin embargo, podríamos hacer este modelo más heterogéneo al extraer la ganancia de energía para cada oveja de una <strong>distribución estadística</strong> y tener dos parámetros de modelo que controlan la media y la varianza. También podríamos agregar parámetros para controlar aspectos que actualmente estamos considerando como valores constantes, Por ejemplo, no creamos un parámetro para controlar la velocidad de los agentes. Tener la capacidad de modificar esas velocidades y (particularmente la relación entre las tasas de movimiento de lobos y ovejas) podría afectar <strong>dramáticamente</strong> al modelo. Sin embargo, guiado por nuestro principio de diseño ABM (KISS), esta complicación no parece necesaria en esta etapa del proceso de modelado. Permitir diferentes velocidades de movimiento para lobos y ovejas es una expansión en este modelo que se deja para que el estudiante avanzado.</p>
+</div>
+<div id="las-mediciones" class="section level3 unnumbered">
+<h3>Las mediciones</h3>
+<p>Siimplementamos todos los componentes anteriores, tendríamos un primer modelo de trabajo. Sin embargo, todavía no tendríamos nada para responder a nuestra pregunta. Para ello debemos decidir qué medidas recogeremos del modelo. Crear medidas puede ser muy simple a veces, pero a menudo algunas de los resultados más interesantes de un modelo no se perciben hasta después de que se hayan diseñado las mediciones del modelo, cuando se considera qué medidas incorporar en el modelo es entonces útil revisar la pregunta de investigación.<br />
+Es aconsejable incluir sólo las medidas más relevantes, porque un exceso de medidas puede ser abrumador y asfixiante y puede hacer lenta la ejecución del modelo. En nuestro modelo, las medidas más relevantes son:</p>
+<p><strong>la población de lobos y ovejas en el tiempo</strong></p>
+<p>ya que lo que nos interesa es qué conjuntos de parámetros nos permitirá mantener niveles positivos de ambas poblaciones a lo largo del tiempo. Podríamos construir medidas de muchos otros datos en este modelo, tales como la energía promedio de ovejas o lobos. Esto podría afectar a nuestra pregunta, ya que podría indicar la probabilidad de que persistan las poblaciones actuales, pero no se dirige directamente a la pregunta y entonces esta medida no la incluiremos. A veces es útil incluir medidas como ésta para propósitos de depuración. Por ejemplo, si vemos que los niveles de energía de ovejas estaban aumentando a pesar de que no había crecimiento de pasto, entonces nos gustaría ver si hubo un error en la parte donde convertimos pasto en energía para la oveja.</p>
+</div>
+<div id="resumen" class="section level3 unnumbered">
+<h3>Resumen</h3>
+<ol style="list-style-type: decimal">
+<li>Pregunta Orientadora:</li>
+</ol>
+<p><strong>“¿Bajo que condiciones dos especies pueden mantener niveles poblacionales positivos oscilantes en un área geográfica limitada cuando una especie es un depredador del otro y la segunda especie consume recursos del medio ambiente?”</strong></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Tipos de agentes Ovejas, lobos, pasto</p></li>
+<li><p>Propiedades de los agentes:</p></li>
+</ol>
+<ul>
+<li>Energía, ubicación, dirección (lobos y ovejas), cantidad de pasto (pasto).</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Comportamiento de los agentes:</li>
+</ol>
+<ul>
+<li>Mover, morir, reproducir (lobos y ovejas), comer ovejas (solo lobos),
+comer pasto (solo ovejas), Reproducir (pasto).</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Parámetros</li>
+</ol>
+<p>Número de ovejas, Número de lobos, Costo del movimiento, Ganancia de energía del pasto,
+Ganancia de energía de las ovejas, tasa de crecimiento del pasto</p>
+<ol start="6" style="list-style-type: decimal">
+<li>Tiempo</li>
+</ol>
+<p>En cada tick :</p>
+<ol style="list-style-type: decimal">
+<li>Movimiento de ovejas y lobos</li>
+<li>Ovejas y lobos mueren</li>
+<li>Las ovejas y los lobos comen</li>
+<li>Las ovejas y los lobos se reproducen</li>
+<li><p>El pasto vuelve a crecer</p></li>
+<li><p>Mediciones:</p></li>
+</ol>
+<ul>
+<li>población de ovejas versus tiempo</li>
+<li>población de lobos versus tiempo.</li>
+</ul>
+<p>Al diseñar un modelo es bastante útil escribir notas para usted mismo, como lo hemos hecho
+en esta sección. Encontrará estas notas invaluables después de haber dejado el modelo por un tiempo, ya que usted podrá regresar y recordar por qué tomó ciertas decisiones y
+opciones alternativas. Además, para explicar su modelo a otras personas, es muy útil tener dicha documentación sobre el modelo. Finalmente, se recomienda poner fechas a sus notas a medida que las crea para poder seguirle el paso a su modelo.<br />
+Por ejemplo, si está utilizando el proceso de diseño de arriba hacia abajo (top-down) que acabamos de discutir, entonces puede revisar el siguiente conjunto de preguntas y escribir las respuestas a ellas como guía provisional sobre cómo construir su modelo:</p>
+</div>
+<div id="siete-criterios-de-diseno" class="section level3">
+<h3><span class="header-section-number">7.2.1</span> Siete Criterios de Diseno:</h3>
+<p><strong>1. ¿De qué parte de tu fenómeno te gustaría construir un modelo? (Alcance / Pregunta)</strong><br />
+<strong>2. ¿Cuáles son los principales tipos de agentes involucrados en este fenómeno? (Agentes)</strong><br />
+<strong>3. ¿Qué propiedades tienen estos agentes (por tipo de agente)? (Propiedades)</strong><br />
+<strong>4. ¿Qué acciones o comportamientos pueden tomar estos agentes (por tipo de agente)? ¿Como interactúan entre sí o con el medio ambiente? (Comportamientos)</strong><br />
+<strong>5. ¿En qué tipo de entorno operan estos agentes? Hay agentes estacionarios? (Ambiente)</strong><br />
+<strong>6. Si tuviera que definir el fenómeno como pasos de tiempo discretos(ticks), qué eventos ocurrirían en cada paso de tiempo y en qué orden? </strong><br />
+<strong>7. ¿Qué esperas observar de este modelo? (Entradas y salidas)</strong></p>
+</div>
+</div>
+<div id="construcción-de-los-modelos" class="section level2">
+<h2><span class="header-section-number">7.3</span> Construcción de los modelos</h2>
+<div id="version-uno" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> Version Uno</h3>
+<div id="introducción" class="section level4 unnumbered">
+<h4>Introducción</h4>
+<p>Concluido el proceso de diseño conceptual debemos ahora entrar en el proceso de construcción del modelo, en esta etapa continuaremos aplicando los principios de diseño de un MOBA. Aunque nuestro modelo es bastante simple, lo dividiremos en una serie de submodelos que implementaremos en cinco iteraciones. Los submodelos serán <strong>ejecutables</strong> y nos permitirán construir y completar el modelo paso por paso, verificando nuestro progreso en el camino y asegurándonos de que el modelo funciona como lo esperamos.<br />
+Muchas veces, en modelos basados en agentes (MOBAs), los resultados finales no son los que esperamos, esto puede suceder por un error la implementación del modelo pero a menudo no es nuestra implementación ni que nuestro diseño esté mal, sino que surge de una propiedad fundamental de los sistemas complejos: el comportamiento <strong>emergente</strong> que es difícil de predecir. Al construir nuestro modelo de manera gradual, podremos observar comportamientos inusuales pronto y determinar más fácilmente su causa que si hubiéramos construido el modelo completo de una vez. Por lo tanto, el principio de diseño MOBAs (<em>KISS:Keep It Simple Stupid</em>) todavía se aplica a lo largo de toda la construcción del modelo.</p>
+</div>
+<div id="primera-versión" class="section level4 unnumbered">
+<h4>Primera Versión</h4>
+<p>¿Cuál es el modelo más simple que podemos crear que muestre algún tipo de comportamiento?</p>
+<p>Una simplificación que podemos hacer del modelo total es mirar solo <strong>una especie</strong> e ignorar la otra especie y el medio ambiente. Dadas estas simplificaciones,el modelo más simple tendría, por ejemplo, algunas ovejas deambulando por el paisaje.
+Para hacer esto, vamos a crear dos procedimientos, un procedimiento de <strong>setup</strong>, que crea las ovejas, y un Procedimiento <strong>go</strong> que las hace moverse en el paisaje.</p>
+<p>Antes de ello, crearemos una raza de ovejas :</p>
+<pre><code>breed[ovejas oveja]</code></pre>
+<p>Esto define una clase de agentes móviles (en NetLogo, tortugas) llamada ovejas, Primero se da la forma plural “ovejas”, seguida de la forma singular “oveja”. Casi siempre se usará la forma plural (ovejas), pero es útil proporcionar la forma singular para poder referirse a una oveja en particular y además para que NetLogo pueda darle mensajes de error más significativos, entre otras cosas. Una última cosa a tener en cuenta es que, aunque estamos creando la raza “ovejas”, el conjunto de agentes turtles todavía existe. Todos los agentes móviles en un modelo NetLogo petenecen a la calse “turtles” independiente de su raza. Entonces, si desea pedir a todos los tipos de agentes de un modelo que hagan algo,es decir, tanto OVEJAS como LOBOS, entonces puedes colocar “ask turtles”. Si solo quieres que hagan algo las ovejas, entonces coloca “ask ovejas”.</p>
+<pre><code>  to setup
+  clear-all
+  ask patches [ ;; colorea de verde el mundo
+   set pcolor green
+  ]
+  create-ovejas 100 [ ;; crea algunas ovejas
+   setxy random-xcor random-ycor
+   set color white
+   set shape “sheep”
+  ]
+  reset-ticks
+  end</code></pre>
+</div>
+<div id="descripción-del-setup" class="section level4 unnumbered">
+<h4>Descripción del setup</h4>
+<p>Este procedimiento setup terminará siendo el procedimiento más largo del modelo terminado, pero su descripción es bastante sencilla. Primero, se limpia el mundo. El mundo de nuestro modelo es la representación de todos los agentes, incluidos los agentes móviles (por ejemplo, tortugas, ovejas,lobos), así como los agentes estáticos (por ejemplo, parcelas, pasto), el comando <strong>clear-all</strong> relimpia el mundo y lo prepara para una nueva ejecución.<br />
+Después de esto, se les pide a todas las parcelas que establezcan su color de parcela (<strong>pcolor</strong>) a verde para representar el pasto. Aunque nuestro modelo aún no incluye ninguna propiedad para el pasto ni ninguna regla para que las ovejas interactúen con el, cambiar el color ayuda a la visualización.<br />
+Finalmente, creamos cien ovejas, uando creamos las ovejas les definimos algunas propiedades iniciales:
+* Les asignamos una coordenada x aleatoria y un coordenada y aleatoria para extenderlas por todo el mundo.
+* Establecemos su color en blanco y su forma a la forma de “oveja” (“sheep”) para que se vean un poco más como ovejas reales.</p>
+<p>La linea final,(<strong>reset-ticks</strong>) , inicia el reloj en 0 para que el modelo esté listo para comenzar su ejecución.</p>
+</div>
+<div id="documentación" class="section level4 unnumbered">
+<h4>Documentación</h4>
+<p>Documentar los procedimientos dentro de su modelo (use punto y coma para comentar el código) es muy útil. Cualquier texto escrito después de un punto y coma se ignora cuando el modelo se encuentra en ejecución, agregar texto de esta manera se llama “comentar” su código. Sin estos comentarios,no solo es bastante difícil para otra persona leer y entender el modelo, sino que también se volverá cada vez más difícil, a medida que pasa el tiempo, que ud mismo entienda su propio código. Un modelo sin comentarios (u otra documentación) no es muy útil, ya que será difícil que otros descubran el comportamiento del modelo.</p>
+</div>
+<div id="validando-el-setup" class="section level4 unnumbered">
+<h4>Validando el setup</h4>
+<p>Para verificar que el procedimiento setup hace lo que esperamos, vamos a correr el modelo, para ello vaya a la pestaña interfaz, cree un botón llamado “setup” y oprima el botón debe observar lo siguiente:</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/Ovejas.png" />
+</center>
+<p></br></p>
+</div>
+<div id="procedimiento-go" class="section level4">
+<h4><span class="header-section-number">7.3.1.1</span> Procedimiento go</h4>
+<p>Después de haber creado las ovejas, pasamos a escribir el procedimiento “go” que indicará a las ovejas como deben comportarse en el mundo Mirando hacia atrás en nuestro documento de diseño, uno de los principales comportamientos de las ovejas es su movimiento, así que haremos simplemente que se muevan. Dividiremos el movimiento en dos partes giro y avance. Creemos los dos procedimeintos (<strong>wiggle</strong>) y (<strong>muevase</strong>):</p>
+<pre><code>to go
+ ask ovejas [
+  wiggle ;; gire al azar en cierta dirección
+  muevase  ;; luego muevase
+ ]
+ tick
+end</code></pre>
+<p>Esto pide a todas las ovejas (<strong>ask</strong>) que realicen dos acciones:</p>
+<ul>
+<li>wiggle</li>
+<li>luego muevase</li>
+</ul>
+<p>El orden en el que las ovejas realizan estos dos comandos, uno después del otro, es aleatorio, cada oveja completará ambas acciones antes de que la próxima oveja tome su turno. Después de que todas las ovejas hayan terminado, el comando (<strong>tick</strong>) incrementa el reloj del modelo , lo que indica que ha pasado una unidad de tiempo. Por supuesto, para que el código funcione, debemos definir wiggle y muevase.</p>
+<pre><code>;; procedimiento de ovejas, la oveja cambia de dirección
+to wiggle    ;; gira derecha luego izquierda,  pero en promedio apunta hacia adelante
+ right random 90
+ left random 90
+end
+
+;; procedimiento de ovejas, la oveja se mueve una unidad 
+to muevase
+ forward 1
+end
+</code></pre>
+<p>Estos dos procedimientos los documentaremos como “procedimientos de ovejas”, es decir que están escritos con el supuesto implícito de que el procedimiento que los llame solicitará al conjunto de agentes adecuado (en este caso las ovejas) que los realice.</p>
+<div id="wiggle" class="section level5 unnumbered">
+<h5>wiggle</h5>
+<p>El primer procedimiento simplemente gira a la derecha una cantidad aleatoria entre 0 y 90, y
+luego de vuelta a la izquierda una cantidad aleatoria entre 0 y 90. La idea detrás de este giro
+es hacer que las ovejas cambien la dirección en que se dirigen, sin sesgos de izquierda o derecha. Este tipo de giro aleatorio es muy común en los MOBAS,y el nombre adoptado en la comunidad MOBA es este.</p>
+</div>
+<div id="muevase" class="section level5 unnumbered">
+<h5>muevase</h5>
+<p>El segundo procedimiento simplemente mueve la oveja hacia adelante una unidad (el ancho de una parcela)</p>
+<p>La distancia a la que se mueve la oveja podría controlarse más tarde por un parámetro , pero por ahora lo mantendremos en una sola unidad constante, puede ejecutar este modelo ahora mismo.Cree un botón llamado go activela opción “continuamente” del botón y oprimalo. Debe observar a las ovejas moviendose de manera continua, sin cansarse, dentro del paisaje verde.</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/OvejasGo.png" />
+</center>
+<p></br></p>
+<center>
+<strong>Ovejas luego de 5435 ticks</strong>
+</center>
+</div>
+</div>
+</div>
+<div id="version-dos" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Version dos</h3>
+<div id="introducción-versión-dos" class="section level4 unnumbered">
+<h4>Introducción versión dos</h4>
+<p>Ahora que tenemos nuestras ovejas moviéndose, tenemos una primera verificación de que nuestro modelo funciona como pretendemos que funcione, es muy importante verificar los MOBAs tan frecuentemente como sea posible.</p>
+</div>
+<div id="parametrizando-el-modelo-deslizadores" class="section level4 unnumbered">
+<h4>Parametrizando el Modelo (Deslizadores)</h4>
+<p>En la versión Uno el número de ovejas es 100. Sin embargo para poder responder nuestra pregunta de investigación deberíamos poder considerar diferentes poblaciones de ovejas, la mejor manera para variar el número de ovejas es creando un deslizador (que llamaremos <strong>num-ovejas</strong>) Esto nos permitirá cambiar el número de ovejas en el modelo fácilmente desde la interfaz.Al crear el deslizador, necesitamos darle algunas propiedades, un valor mínimo , un valor máximo y un incremento, que es la cantidad que el deslizador cambiará cuando se haga clic en él. En este caso, podemos establecer el mínimo en 1 (ya que menos de una oveja no tiene sentido), el número máximo en 1,000 y el incremento a 1, ya que no tiene sentido tener, por ejemplo, 2.1 ovejas.</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/numOvejas.png" />
+</center>
+<p></br></p>
+<p>Ahora debemos cambiar el procedimiento <strong>setup</strong> para amarrar el deslizador al procedimiento, el cambio es el siguiente:</p>
+<pre><code>to setup
+ clear-all
+ ask patches [ ;; colorea el mundo de verde 
+ set pcolor green
+ ]
+   ;; crea ovejas y sus porpiedades iniciales
+create-ovejas num-ovejas [  ; Nuevo número de ovejas controladas por  deslizador
+ setxy random-xcor random-ycor
+ set color white
+ set shape “sheep”
+ ]
+ reset-ticks
+end
+</code></pre>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/DeslizadorNumOvejas.png" />
+</center>
+<p></br></p>
+</div>
+<div id="extendiendo-el-modelo" class="section level4 unnumbered">
+<h4>Extendiendo el Modelo</h4>
+<p>A continuación, debemos considerar cuál es la extensión más simple que podemos hacerle a nuestro modelo. Mmmmmmm!!! Ok, Tenemos a las ovejas moviéndose….. pero …. !!! el movimiento no les cuesta nada !!!, En el mundo real, el movimiento requiere energía. por lo tanto, el siguiente paso es incluir un “costo” al movimiento. Recordemos que las ovejas tienen tres propiedades:</p>
+<ul>
+<li>dirección, ubicación y energía.</li>
+</ul>
+<p>En la primera versión ya las dotamos de dirección y ubicación ( de hecho estas propiedades son
+inherentes a cualquier agente de NetLogo), pero la propiedad de energía de un agente no es una propiedad predefinida de un agente (existen muchos MOBAs donde no es obligatorio definir la energía de un agente como una propiedad de estos).
+¿Cómo podemos dotar de energía a cada oveja? muy sencillo, tenemos que definir una nueva propiedad (variable) para la energía, esto lo podemos hacer agregando la siguiente linea al modelo:</p>
+<pre><code>ovejas-own [ energía ]  ;; las ovejas tienen una propiedad llamada energía
+</code></pre>
+<p>Con esta linea estamos declarando que las ovejas tienen una nueva propiedad (su energía) pero simplemente declarar que las ovejas tienen energía no es suficiente, necesitamos inicializar dotar a cada oveja de una energía inicial y también hacer que cambie (de hecho que disminuya) cuando las ovejas se mueven.</p>
+<p>El procedimiento setup modificado es el siguiente:</p>
+<pre><code>to setup
+ clear-all
+ ask patches [ ;; colorea el mundo de verde 
+  set pcolor green
+ ]
+    ;; crea ovejas y sus porpiedades iniciales
+ create-ovejas num-ovejas [
+  setxy random-xcor random-ycor
+  set color white
+  set shape “sheep”
+  set energía 100  ; Nuevo energía inicial para cada oveja
+ ]
+ reset-ticks
+ end</code></pre>
+<p>También necesitamos modificar (añadiendo una linea) el procedimiento muevase para asignarle un costo energético al movimiento:</p>
+<pre><code>
+to muevase
+  forward 1
+  set energía energía - 1 ; Nuevo reducir una unidad de energía en cada movimiento
+end</code></pre>
+<p>El costo es de una unidad de energía, pero es posible que a medida que ampliamos el modelo,este costo se convierta en un parámetro del modelo. Agregar un costo para moverse no significa nada si no hay penalidad por gastar energía.</p>
+<p><strong>¿En que penalidad se podría pensar?&quot; (Mmmmm!!)</strong></p>
+<p>….En una drástica, queremos que las ovejas mueran si tienen muy poca energía, por lo tanto debemos verificar si las ovejas han gastado toda su energía, para ello usaremos un procedimiento
+llamado <strong>verifique-si-hay-muertes</strong>:</p>
+<pre><code>to go
+ ask ovejas [
+ wiggle ;; gire al azar en cierta dirección
+ muevase ;; luego muevase
+ verifique-si-hay-muertes ; Nuevo elimina ovejas sin energía
+]
+tick
+end
+
+to verifique-si-hay-muertes   ; procedimiento oveja : mínima energía --&gt; al papayo
+  if energía &lt; 0 [die]
+end</code></pre>
+<p>Vayamos a la pestaña interfaz y oprimamos <strong>setup</strong> y luggo <strong>go</strong> el modelo se ejecutará por un tiempo y en cierto instante todas las ovejas desaparecerán al mismo tiempo.(¿Por qué?) Lamentablemente, el modelo seguirá funcionando ad-eternum (visualmente esto es cierto usted porque el botón go sigue presionado y los ticks siguen aumentando).
+Sería muy bueno si nuestro modelo se detiene cuando ya no hay seres vivientes en el paisaje. implementarlo es muy fácil, se agrega una linea al comienzo del <strong>go</strong>:
+P</p>
+<pre><code>to go
+ if not any? ovejas [stop]  ;; Nuevo si noa hay ovejas pare el modelo
+ ask ovejas [
+  wiggle ;; gire al azar en cierta dirección
+  muevase ;; luego muevase
+  verifique-si-hay-muertes
+ ]
+ tick
+end</code></pre>
+<p>Ahora, si vuelve a ejecutar el modelo, cuando desaparezcan todas las ovejas, el modelo deja de funcionar.</p>
+</div>
+<div id="construyendo-las-gráficas" class="section level4 unnumbered">
+<h4>Construyendo las Gráficas</h4>
+<p>Será muy útil saber cuántas ovejas hay en cada instante de tiempo (tick), por lo que podemos agregar una gráfica que muestre cuál es la población de ovejas en cualquier momento.Hay dos formas de manejar gráficas (plots):</p>
+<ol style="list-style-type: decimal">
+<li>El método basado en widgets, ya que hace uso de un widget gráfico.</li>
+<li>El método programático o basado en código.</li>
+</ol>
+<p>En ambos métodos, el código es escrito para actualizar las gráficas, pero en el método basado en código, el código se encuentra en la pestaña Código de NetLogo. En el método basado en widgets, el código se encuentra dentro del widget que hará el trazado de la gráfica.<br />
+Los dos métodos son equivalentes, por lo que depende del modelador decidir qué método usar. Ambos tienen ventajas y desventajas. La ventaja de usar widgets es que no se necesita “saturar” la pestaña de Código con código adicional para trazar las gráficas, y que para trazados simples, es más rápido de configurar, sinembargo para gráficas complejas puede ser más difícil configurar un diagrama con el método de widgets. Además, si hay errores en la gráfica del widget, puede ser difícil darse cuenta, ya que no se mostrará como un error en la pestaña de Código. El método de trazado de la pestaña Código tiene las ventajas y desventajas inversas.<br />
+Nuestra recomendación general es usar widgets para gráficos relativamente simples y la pestaña de código para gráficos complejos.</p>
+<p>Usaremos para nuestro modelo, el método basado en la pestaña de Código. Todo lo que haremos aquí también puede ser realizado usando el método de widgets:</p>
+<ul>
+<li>primero se crea un diagrama (Widget) en la interfaz y se establecen sus propiedades</li>
+</ul>
+<p>En este caso colocaremos solo el título al Widget, ver la siguiente figura:</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/Widget.png" />
+</center>
+<p></br></p>
+<ul>
+<li>luego agregamos una llamada al diagrama desde el <strong>go</strong></li>
+</ul>
+<pre><code>to go
+ if not any? ovejas [stop]
+ ask ovejas [
+ wiggle ;; gire al azar en cierta dirección
+ muevase ;; luego muevase
+ verifique-si-hay-muertes
+]
+tick
+actualice-gráficas   ; Nuavo llamado a actualizar gráficas
+end</code></pre>
+<p>Necesitamos definir el procedimiento actualice-gráficas:</p>
+<pre><code>;; actualica gráficas en la interfaz
+to actualice-gráficas  
+  plot count ovejas  ; Gráfica el número de ovejas dado el tiempo (tick)
+end</code></pre>
+<p><strong>(Nota Importante: Podríamos haber usado “plot count ovejas” directamente al final del procedimiento </strong>go<strong>, pero sabemos que es probable que tengamos que trazar otras gráficas (por ejemplo más adelante de número de lobos y de cantidad de pasto), Entonces podemos usar este procedimiento para otras gráficas también)</strong></p>
+<p>Ejecutemos el modelo (setup luego go):</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/Plot.png" />
+</center>
+<p></br></p>
+<p>la gráfica nos muestra que hubo un población completa de ovejas hasta el final y luego todas murieron al tiempo, la muerte de todas las ovejas en el tick 101 es el resultado de la energía inicial y el costo del movimiento que le hemos definido a las ovejas.</p>
+</div>
+<div id="costo-del-movimiento-como-parámetro" class="section level4 unnumbered">
+<h4>Costo del Movimiento como parámetro</h4>
+<p>Recordemos que queríamos que el costo del movimiento fuera un parámetro del modelo. Necesitamos entonces:</p>
+<ul>
+<li>Agregar otro deslizador para controlar el costo del movimiento</li>
+<li>Modificar el procedimiento muevase para tomar en cuenta el valor del deslizador.</li>
+</ul>
+<p>Entonces:
+1. Cree un deslizador llamado costo-movimiento de la siguiente manera:</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/DeslCosto.png" />
+</center>
+<p></br></p>
+<p>Modifique el procedimiento muevase:</p>
+<pre><code>to muevase
+ forward 1
+ set energía energía - costo-movimiento ; Nuevo reducir energía por deslizador
+end</code></pre>
+<p>¡¡¡ ufff !!!!
+Listo tenemos la versión 2 de nuestro modelo!!!</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/ModeloFinalV2.png" />
+</center>
+<p></br></p>
+<center>
+<strong>Modelo Versión Dos, con dos deslizadores,una Gráfica y Ovejas muertas</strong>
+</center>
+</div>
+</div>
+<div id="version-tres" class="section level3">
+<h3><span class="header-section-number">7.3.3</span> Version tres</h3>
+<div id="introducción-versión-tres" class="section level4 unnumbered">
+<h4>Introducción versión tres</h4>
+<p>En este momento, el modelo exhibe un comportamiento muy predecible. Cada vez el modelo funciona durante <strong>(100 / costo-movimiento) ticks</strong>, luego todas las ovejas desaparecen y el modelo se detiene. La razón es porque las ovejas actualmente gastan energía (moviéndose) pero no tienen forma de adquirir energía. Por lo tanto, necesitamos dar a las ovejas la capacidad de comer pasto y de esta manera ganar energía. Sin embargo, primero debemos crear el pasto!!!</p>
+<p><strong>¿Cómo hacer esto?</strong></p>
+<p>Vamos a definirle a las parcelas (que funcionaran como manojos de pasto para este modelo), una propiedad llamada <strong>cantidad-de-pasto</strong>, que mide la cantidad de pasto que hay
+disponible en esa parcela, debemos entonces agregar a nuestro modelo la siguiente línea
+(después de la línea ovejas-own[energía]):</p>
+<pre><code>patches-own[cantidad-de-pasto]  ;; las parcelas contienen pasto, cantidad variable</code></pre>
+<p>Ahora tenemos que colocar el pasto, pero mientras estamos en ello, modificaremos el color de
+las parcelas para que indiquen cuánto pasto tienen. Hacemos esto configurando la cantidad inicial de pasto a un número aleatorio real entre 0.0 y 10.0.Usaremos números reales para el pasto, ya que a diferencia de las ovejas, que son individuos, cada parcela contiene un “manojo” de pasto, no hojas individuales. Esto asegura cierta variabilidad en la cantidad de pasto y crea cierta heterogeneidad. Luego establecemos el color del pasto a un tono verde tal que si no hay pasto en absoluto, la parcela será negra, y si hay mucho pasto en la parcela, está será de color verde brillante.</p>
+<pre><code>to setup
+ clear-all
+
+ ask patches [
+ ;; parcelas se habitan con un  número aleatorio de pasto
+ set cantidad-de-pasto random-float 10.0  ;; colorear las parcelas  con la cantidad de pasto
+ set pcolor scale-color green cantidad-de-pasto 0 20
+]
+
+ create-ovejas num-ovejas [ ;; crea ovejas y sus propiedades iniciales
+  setxy random-xcor random-ycor
+  set color white
+  set shape &quot;sheep&quot;
+  set energía 100
+ ]
+ reset-ticks
+end
+</code></pre>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/Pasto.png" />
+</center>
+<p></br></p>
+<p>Ahora necesitamos modificar el procedimiento <strong>go</strong> para que las ovejas puedan comer pasto.
+Como mencionamos en el diseño, colocamos este procedimiento después del procedimiento de verificación de muerte, llamaremos al procedimiento <strong>comer</strong>:</p>
+<pre><code>to go
+ if not any? ovejas [stop]
+ ask ovejas [
+ wiggle ;; gire al azar en cierta dirección
+ muevase ;; luego muevase
+ verifique-si-hay-muertes
+ comer ; Nuevo las ovejas comen pasto
+ ]
+ tick
+ actualice-gráficas
+end
+
+to comer
+ if cantidad-de-pasto &gt;= 1 [
+  set energía energía + 1  ; incremente energía de la oveja
+  set cantidad-de-pasto cantidad-de-pasto - 1  ; reduzca el pasto de la parcela donde está
+  set pcolor scale-color green cantidad-de-pasto 0 20  ; actualiza el color del pasto
+ ]
+end</code></pre>
+<p>Se verifica, para cada oveja, si hay suficiente pasto en la parcela donde está. Si hay suficiente para comer, la oveja convierte el pasto en energía , y se disminuye la cantidad de pasto en la parcela.Al mismo tiempo, recoloreamos la parcela para reflejar la nueva cantidad de pasto, el comportamiento del modelo todavía no es muy interesante. Las ovejas deambulan, comen tanto
+pasto como pueden, y eventualmente todos se extinguen. La única variación en el modelo es el nivel
+de pasto en las parcelas. Debido a la distribución aleatoria de pasto originalmente y debido a que las ovejas se muevan al azar alrededor del paisaje, habrá algunas áreas de pasto que son completamente consumidas por las ovejas y otras áreas que serán solo parcialmente consumidas.</p>
+<p>Para que el modelo sea un poco más interesante, agregaremos un procedimiento para que el pasto vuelva a crecer. Al permitir que el pasto vuelva a crecer, <strong>debería ser posible mantener la población de ovejas a lo largo del tiempo</strong>, ya que existirá una fuente renovable de energía para ellos. Empezamos modificando el procedimiento <strong>go</strong>, añadiendo el procedimiento renace-pasto:</p>
+<pre><code>to go
+ if not any? ovejas [stop]
+ ask ovejas [
+ wiggle ;; gire al azar en cierta dirección
+ muevase ;; luego muevase
+ verifique-si-hay-muertes
+ comer
+ ]
+ renace-pasto   ; nuevo  el pasto vuelve a crecer
+ tick
+ actualice-gráficas
+end
+
+;; renace el pasto
+to renace-pasto
+ ask patches [
+  set cantidad-de-pasto cantidad-de-pasto + 0.1
+  if cantidad-de-pasto &gt; 10 [
+  set cantidad-de-pasto 10
+ ]
+  set pcolor scale-color green cantidad-de-pasto 0 20
+ ]
+end</code></pre>
+<p>Este procedimiento dice a todos las parcelas que aumenten la cantidad de pasto que tienen en una décima parte. También nos aseguramos de que el pasto nunca exceda de 10 unidades, que sería la cantidad máxima para cualquier parcela. Luego se recolorea el pasto, con este pequeño cambio las oveja deberían sobrevivir a una corrida del modelo. ¡¡¡¡pruébelo!!!!!</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/Sobreviven.png" />
+</center>
+<p></br></p>
+<p>Ahora tenemos recoloración de pastoen tres lugares diferentes del modelo, por lo que también sería bueno colocar un procedimiento. A menudo, cuando comenzamos a duplicar código, vale la pena colocarlo en un procedimiento separado; de esa manera tenemos que modificar el código en una sola ubicación si necesitamos cambiarlo más tarde (por ejemplo, si queremos que el césped sea de color amarillo en lugar de verde).Mantener el código más conciso y colocar nombres apropiados ayuda a que su código sea más legible para otros. Entonces definimos un procedimiento <strong>recolorear-pasto</strong>:</p>
+<pre><code>to recolorear-pasto
+set pcolor scale-color green cantidad-de-pasto 0 20
+end
+</code></pre>
+<p><strong>(Nota:Coloque este procedimiento en el modelo y coloque en los sitios donde se recolorea el pasto el nombre de este procedimiento)</strong></p>
+</div>
+<div id="reflexion-en-torno-al-modelo" class="section level4 unnumbered">
+<h4>Reflexion en torno al modelo</h4>
+<p>Al ejecutar el modelo varias veces con cien ovejas iniciales, queda claro que cien ovejas no pueden consumir todo el pasto y, por lo tanto, eventualmente todo el mundo se convierte en un sólido tono verde. Sin embargo, si aumenta el número de ovejas iniciales a un número mayor, digamos setecientos, y luego se corre el modelo, las ovejas consumirán casi todo el pasto en el modelo, y luego muchas de ellos morirán. Sin embargo, algunas de ellas, que tenían una gran cantidad de energía antes de que desapareciera todo el pasto sobrevivirán y eventualmente el pasto volverá a crecer, lo que les permitirá persistir, ya que ya hay muchas ovejas compitiendo por el pasto.
+Otro parámetro que queremos introducir y que puede afectar la dinámica del modelo es la velocidad a la que el pasto vuelve a crecer. Vamos a agregar un deslizador llamado <strong>rata-crecimiento-pasto</strong>, le damos valores límite de 0 y 2 y un incremento de 0.1:</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/DeslizadorCrecimientoPasto.png" />
+</center>
+<p></br></p>
+<p>modifiquemos el procedimiento <strong>renace-pasto</strong> para reflejar el uso de este nuevo parámetro:</p>
+<pre><code>;; renace el pasto
+to renace-pasto
+  ask patches [
+   set cantidad-de-pasto cantidad-de-pasto + rata-crecimiento-pasto  ;; Nuevo : deslizador
+   if cantidad-de-pasto &gt; 10 [
+   set cantidad-de-pasto 10
+ ]
+ recolorear-pasto
+ ]
+end
+</code></pre>
+<p>Si colocamos <strong>rata-crecimiento-pasto</strong> en un valor lo suficientemente alto (por ejemplo 2.0), entonces incluso con setecientas ovejas en el modelo, se puede mantener la población total de ovejas. Esto se debe a que las ovejas pueden obtener una unidad completa de energía del pasto, y
+si este vuelve a crecer esta cantidad en un solo tick, las ovejas gastan esa energía cuando se mueven, pero esa energía se reemplaza inmediatamente. Sin embargo, si se cambia el deslizador <strong>costo-movimiento</strong> a un valor mayor que uno, las ovejas eventualmente morirán, esto se debe a que están gastando energía más rápido de lo que pueden recolectar del medio ambiente( incluso si no hay escasez de pasto).</p>
+<p>Para que nuestro modelo sea más flexible,podemos agregar otro parametro (deslizador), llamado <strong>cantidad-energía-pasto</strong>, que controla la cantidad de energía que las ovejas pueden obtener al comer pasto, al igual que con los deslizadores anteriores, tendremos que establecer límites razonables y un incremento para este nuevo deslizador.</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/DeslizadorEnergiaPasto.png" />
+</center>
+<p></br></p>
+<p>Para usar este nuevo deslizador necesitamos modificar el procedimiento comer:</p>
+<pre><code>to comer  ; Nuevo : Deslizador cantidad-energía-pasto
+ if cantidad-de-pasto &gt;= cantidad-energía-pasto [
+  set energía energía + cantidad-energía-pasto  ; incremente energía oveja
+  set cantidad-de-pasto cantidad-de-pasto - cantidad-energía-pasto  ; decrementa el pasto de la   parcela donde está
+ recolorear-pasto  ; actualiza color del pasto
+]
+end
+</code></pre>
+<p>Tenga en cuenta que utilizamos el parámetro <strong>cantidad-energía-pasto</strong> tanto para incrementar la enegía de las ovejas como para disminuir el valor del pasto. Podríamos haber usado dos
+diferentes parámetros para estas dos funciones, pero podemos pensar en el sistema &quot; ovejas / pasto&quot; como un sistema de conversión de energía, donde la energía del pasto fluye hacia las ovejas.<br />
+En este momento podemos observar una dinámica interesante:</p>
+<p>Comenzando con setecientas ovejas, duran alrededor de trescientos ticks, Pero luego hay una hambruna masiva, que se hace cada vez más más gradual, hasta que alrededor de quinientos ticks, la población se mantiene estable con un poco más de cuatrocientas ovejas. Luego de que han muerto suficientes ovejas, el pasto se regenera, mantiene a las ovejas vivas y el sistema alcanza un estado de <strong>equilibrio</strong>. Como el movimiento de las ovejas es aleatorio,es posible que una gran cantidad de ovejas se agrupen en las mismas pocas parcelas durante mucho tiempo, y por lo tanto mueran de hambre, pero esto no es probable.</p>
+<p>Dependiendo de la selección de los parámetros del modelo, también son posibles muchos otros comportamientos.</p>
+<p><strong>¡¡ Siéntase libre de experimentar y explorar antes de pasar a la próxima versión del modelo!!</strong></p>
+</div>
+</div>
+<div id="version-cuatro" class="section level3">
+<h3><span class="header-section-number">7.3.4</span> Version cuatro</h3>
+<div id="introducción-versión-cuatro" class="section level4 unnumbered">
+<h4>Introducción versión cuatro</h4>
+<p>El modelo tiene ovejas moviéndose en un paisaje, consumiendo recursos y muriendo. Sin embargo, no hay forma de que la población de ovejas <strong>aumente</strong>!!!, de hecho solo puede bajar. Por lo tanto, para que vuelva a subir, agregaremos reproducción al modelo.Construir un modelo reproductivo completo con parejas sexuales y tener una oveja embarazada tomaría mucho tiempo, y no está claro de que seviría para responder nuestra pregunta inicial.<br />
+En cambio, haremos dos simplificaciones:</p>
+<ol style="list-style-type: decimal">
+<li><p>Una sola oveja puede producir nuevas ovejas!!!. Se puede ver esto como reproducción asexual o se puede pensar que cada oveja representa a un par de ovejas macho y hembra unidas. Esta suposición puede parecer extraña al principio y ciertamente es obviamente contraria a la realidad. Este es un buen momento para recordar las palabras de George Box: “todos los modelos están equivocados, pero algunos son útiles”. Está bien errar en nuestro modelo sobre un hecho tan básico <strong>si el modelo simplificado sigue siendo útil para nuestros propósitos</strong>. Pero si luego vemos que con esta simplificación se ha perdido alguna utilidad del modelo, siempre podremos agregar verdadera reproducción sexual más tarde.</p></li>
+<li><p>La segunda simplificación es esta: en lugar de preocuparse por el proceso de gestación, asumiremos que las ovejas dan a luz de manera inmediata a una ovejita, <strong>cuando alcanzan un cierto nivel de energía</strong>. Esta energia puede verse como una aproximación a tener la capacidad de reunir suficientes recursos para sobrevivir durante todo el período de gestación.
+Para implementar esto, comenzamos agregando código al procedimiento <strong>go</strong>:</p></li>
+</ol>
+<pre><code>to go
+ if not any? ovejas [stop]
+ask ovejas [
+  wiggle ;; gire al azar en cierta dirección
+  muevase ;; luego muevase
+  verifique-si-hay-muertes
+  comer
+  reproducirse  ; Nuevo: procedimiento de reproducción de las ovejas
+ ]
+ renace-pasto   ; nuevo  el pasto vuelve a crecer
+ tick
+ actualice-gráficas
+end
+
+to reproducirse
+ if energía  &gt; 200 [
+  set energía energía - 100  ;; reproducción transfiere energía
+  hatch 1 [ set energía 100 ] ;; energía de la nueva oveja
+ ]
+ end</code></pre>
+<p>Se verifica si la oveja actual tiene suficiente energía para reproducirse (dos veces la
+cantidad original de energía (100)). Si la oveja lo cumple, entonces disminuye su energía en 100, y crea una nueva ovejita (<strong>hatch</strong> crea un clon del agente en la misma parcela) y establece su energía también a 100.<br />
+Ahora, si ejecutamos el modelo con un bajo <strong>costo-movimiento</strong> en comparación con la <strong>cantidad-energía-pasto</strong>, y lo arrancamos con 700 ovejas, la población aumenta con el tiempo, y
+finalmente se nivela cerca de 1.300 ovejas, como se muestra en la figura :</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/de700a1300.png" />
+</center>
+<p></br></p>
+<center>
+<strong>Modelo con Reproducción (Aumento de 700 a 1300 ovejas)</strong>
+</center>
+</div>
+</div>
+<div id="version-cinco" class="section level3">
+<h3><span class="header-section-number">7.3.5</span> Version cinco</h3>
+</div>
+<div id="introducción-versión-cinco" class="section level3 unnumbered">
+<h3>Introducción versión cinco</h3>
+<p>Tenemos a las ovejas comportándose de la manera que describimos en nuestro diseño pero nuestro objetivo original era tener dos especies. Entonces ahora necesitamos agregar a los lobos. Lo primero que debemos hacer es crear una segunda raza (breed) llamada lobos. Al mismo tiempo necesitamos dar a loslobos energía.<br />
+Podríamos hacer esto agregando un comando lobos-own como nuestro ovejas-own, pero dado que los únicos agentes de tortuga en el modelo son ovejas y lobos, podemos hacer de energía una propiedad <strong>genérica</strong> de todas las tortugas. Hacemos esto cambiando la declaración: <strong>ovejas-own[energía]</strong> por <strong>turtles-own[energía]</strong>, entonces añadamos la nueva raza lobos y hagamos esta modificación
+:</p>
+<pre><code>breed[ovejas oveja]
+breed[lobos lobo]
+
+turtles-own[energía]</code></pre>
+<p>Después de esto, necesitamos crear los lobos, tal como lo hicimos con las ovejas. Primero, agregamos un deslizador llamado <strong>num-lobos</strong>:</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/DeslizadorLobos.png" />
+</center>
+<p></br></p>
+<p>Ahora modificamos el procedimiento SETUP:</p>
+<pre><code>to setup
+ clear-all
+
+ ask patches [
+  set cantidad-de-pasto random-float 10.0 ;; parcelas se habitan con num aleatorio de pasto
+  recolorear-pasto ;; colorear las parcelas de acuerdo con la cantidad de pasto
+ ]
+
+
+ create-ovejas num-ovejas [ ;; crea ovejas y sus propiedades iniciales
+  setxy random-xcor random-ycor
+  set color white
+  set shape &quot;sheep&quot;
+  set energía 100
+ ]
+
+;; NUEVO : CREACIÓN DE LOBOS
+ create-lobos num-lobos [ ;; crea lobos y sus propiedades básicas
+  setxy random-xcor random-ycor
+  set color brown
+  set shape &quot;wolf&quot;
+  set size 1.5
+  set energía 100
+ ]
+  
+ reset-ticks
+end</code></pre>
+<p>Ahora que hemos agregado lobos al modelo, también necesitamos agregar sus comportamientos. Observe que todos los comportamientos son comunes tanto para los lobos como para las ovejas, incluso si
+los detalles exactos difieren (por ejemplo, los lobos comen ovejas, mientras que las ovejas comen pasto, pero ambos “comen”). Entonces simplemente debemos reemplazar “ovejas” por “turtles” en las dos primeras lineas de nuestro procedimiento <strong>go</strong> :</p>
+<pre><code>to go
+ if not any? turtles [stop]   ;; NUEVO: CAMBIAR ovejas POR turtles
+ ask turtles [    ; cambiar ovejas por turtles
+  wiggle ;; gire al azar en cierta dirección
+  muevase ;; luego muevase
+  verifique-si-hay-muertes
+  comer
+  reproducirse  
+ ]
+ renace-pasto   ; nuevo  el pasto vuelve a crecer
+ tick
+ actualice-gráficas
+end
+</code></pre>
+<p>Todos los comportamientos que le dimos a las ovejas se aplican igualmente bien a los lobos,
+entonces el modelo correrá como está. Sin embargo:</p>
+<p><strong>¡¡¡los lobos comen pasto en este modelo tal y como está!!!!!!</strong></p>
+<p>Pero el comportamiento alimenticio de los lobos es diferente del comportamiento alimenticio de las ovejas, por lo que tendremos que modificar nuestro procedimiento de “comer”:</p>
+<pre><code>to comer
+ifelse breed = ovejas [
+  comer-pasto
+]
+[
+  comer-oveja
+]
+end</code></pre>
+<p>Ahora nuestro comportamiento alimentario será diferente para las ovejas y los lobos. Las ovejas comerán pasto y los lobos comerán ovejas</p>
+<ul>
+<li><p>Cambiemos el nombre de nuestro antiguo procedimiento “comer” por “comer-pasto” ya que
+ese es el comportamiento que definimos para las ovejas. Ahora falta definir el comportamiento de “comer-ovejas”.</p></li>
+<li><p>Agregue un deslizador <strong>cantidad-energía-oveja</strong></p></li>
+</ul>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/Cantidad-Energía-Oveja.png" />
+</center>
+<p></br></p>
+<p>coloquemos el procedimiento <strong>comer-oveja</strong>:</p>
+<pre><code>  to comer-oveja
+  if any? ovejas-here [ ;; si hay ovejas coma
+  let target one-of ovejas-here ;; seleccione una oveja al azar de la parcela
+  ask target [ ;; coma la oveja seleccionada
+  die
+  ]
+  ;; incremente energía de acuerdo con deslizador
+  set energía energía + cantidad-energía-oveja
+  ]
+  end
+</code></pre>
+<p>En este procedimiento, el lobo primero verifica si hay ovejas disponibles para comer en la parcela donde se encuentra. Si las hay, entonces consume a una de ellas (elige una al azar de
+la parcela) y obtiene un aumento de energía de acuerdo con el deslizador de energía que acabamos de definir.</p>
+<div id="actualizando-las-graficas" class="section level4 unnumbered">
+<h4>Actualizando las graficas</h4>
+<p>Ahora nuestro modelo tiene todos los agentes, comportamientos e interacciones que nos propusimos crear. Sin embargo, nuestro gráfica (plot) aún no contiene toda la información. Seria útil si también el gráfico muestra la población de lobos, y al mismo tiempo podemos agregar una visualización de cantidad de pasto en el mundo. Para hacer esto, primero agregamos dos “esferos”(pen) adicionales a la gráfica (lobos y pasto). También cambiamos el nombre del lápiz de trazado predeterminado a oveja.<br />
+Para que quede claro, la modificación al procedimiento actualice-gráficas es la siguiente:</p>
+<pre><code>to actualice-gráficas
+set-current-plot-pen &quot;ovejas&quot;
+plot count sheep
+set-current-plot-pen &quot;lobos&quot;
+plot count wolves * 10 ;; se escala para que se vea bien la gráfica
+set-current-plot-pen &quot;pasto&quot;
+plot sum [cantidad-de-pasto] of patches / 50
+;; se escala para que se vea bien la gráfica
+end
+</code></pre>
+<p>Este código es bastante sencillo. El “* 10” y “/ 50” son solo factores de escala para que la gráfica sea legible cuando todos los datos se trazan en el mismo eje. (Pero tenga en cuenta que al leer el número de lobos fuera de la gráfica, el recuento real de la población es diez veces más pequeño.)
+A menudo también es útil agregar <strong>monitores</strong> para estas variables para poder leer por fuera de la gráfica los valores exactos.<br />
+Ahora podemos experimentar el modelo con una variedad de configuraciones de parámetros. Muchos ajustes de parámetros provocarán la extinción de una o ambos especies. Pero podemos encontrar parámetros que den como resultado un ecosistema autosostenible ( en donde los niveles de población de las especies varían de manera cíclica) Se muestra uno de estos conjuntos de parámetros en la siguiente figura:</p>
+</br>
+<center>
+<img src="./GrafTallerOvejas1/EstabilidadCíclica.png" />
+</center>
+<p></br></p>
+<p>Con esos parámetros, las poblaciones de lobos y ovejas se mantienen en el tiempo de manera cíclica.</p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="construyendo-modelos-basados-en-agentes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analizando-modelos-basados-en-agentes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

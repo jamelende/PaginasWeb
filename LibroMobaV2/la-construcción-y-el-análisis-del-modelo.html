@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>8 La Construcción y el Análisis del Modelo | Modelación basada en Agentes</title>
+  <meta name="description" content="8 La Construcción y el Análisis del Modelo | Modelación basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="8 La Construcción y el Análisis del Modelo | Modelación basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="8 La Construcción y el Análisis del Modelo | Modelación basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="analizando-modelos-basados-en-agentes.html"/>
+<link rel="next" href="verificación-validación-replicación.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El Ciclo de Modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Siete Modelos Clásicos</a><ul>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i>Un descubrimiento importante</a></li>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i>El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i>Modelo del Fuego</a></li>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i>Bar El Farol</a></li>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i>Tortugas y Ranas</a></li>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i>El Moho</a></li>
+<li class="chapter" data-level="" data-path="siete-modelos-clásicos.html"><a href="siete-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i>Trancones de Tráfico</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html"><i class="fa fa-check"></i><b>5</b> Construcción y Análisis del Modelo</a><ul>
+<li class="chapter" data-level="5.1" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="construcción-y-análisis-del-modelo.html"><a href="construcción-y-análisis-del-modelo.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>IV Aspectos Metodológicos</b></span></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.1.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.1.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.1.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.1.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.1.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.1.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.1.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.2</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>7</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="7.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>7.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="7.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>7.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="7.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>7.3</b> Un Ejemplo de Análisis</a></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="8" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html"><i class="fa fa-check"></i><b>8</b> La Construcción y el Análisis del Modelo</a><ul>
+<li class="chapter" data-level="8.1" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html#construcción-del-modelo"><i class="fa fa-check"></i><b>8.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html#descripción-del-modelo"><i class="fa fa-check"></i><b>8.1.1</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="8.1.2" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html#pregunta"><i class="fa fa-check"></i><b>8.1.2</b> Pregunta</a></li>
+<li class="chapter" data-level="8.1.3" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html#implementando-el-modelo"><i class="fa fa-check"></i><b>8.1.3</b> Implementando el Modelo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>9</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="9.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>9.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="9.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>9.2</b> Verificación</a></li>
+<li class="chapter" data-level="9.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>9.3</b> Comunicación</a></li>
+<li class="chapter" data-level="9.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>9.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>9.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>9.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="9.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>9.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="9.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>9.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="9.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>9.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="9.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>9.9</b> Validación</a></li>
+<li class="chapter" data-level="9.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>9.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI T3: Construcción y Análisis de un Modelo Avanzado</b></span></li>
+<li class="chapter" data-level="10" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html"><i class="fa fa-check"></i><b>10</b> Un Modelo Avanzado (Investor Model)</a><ul>
+<li class="chapter" data-level="10.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>10.1</b> Introducción</a></li>
+<li class="chapter" data-level="10.2" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#descripción-del-modelo-protocolo-odd"><i class="fa fa-check"></i><b>10.2</b> Descripción del Modelo ( Protocolo ODD)</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>10.2.1</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="10.2.2" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>10.2.2</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="10.2.3" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>10.2.3</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="10.2.4" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>10.2.4</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="10.2.5" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>10.2.5</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="10.2.6" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#inicialización"><i class="fa fa-check"></i><b>10.2.6</b> Inicialización</a></li>
+<li class="chapter" data-level="10.2.7" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#datos-de-entrada"><i class="fa fa-check"></i><b>10.2.7</b> Datos de entrada</a></li>
+<li class="chapter" data-level="10.2.8" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#submodelos"><i class="fa fa-check"></i><b>10.2.8</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#actividad"><i class="fa fa-check"></i><b>10.3</b> Actividad</a></li>
+<li class="chapter" data-level="10.4" data-path="un-modelo-avanzado-investor-model.html"><a href="un-modelo-avanzado-investor-model.html#video"><i class="fa fa-check"></i><b>10.4</b> Video</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>11</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i>La Hormiga Atomica</a></li>
+<li class="chapter" data-level="" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i>Partículas</a></li>
+<li class="chapter" data-level="" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i>El modelo de paridad</a></li>
+<li class="chapter" data-level="" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i>El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>12</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i>Majority model</a></li>
+<li class="chapter" data-level="" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i>Patron Misterioso</a></li>
+<li class="chapter" data-level="" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i>Heroes y Cobardes</a></li>
+<li class="chapter" data-level="" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i>Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>13</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i>Simple economy</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i>Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#toy-trader"><i class="fa fa-check"></i>Toy Trader</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i>Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="la-construcción-y-el-análisis-del-modelo.html"><a href="la-construcción-y-el-análisis-del-modelo.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apendices</b></span></li>
+<li class="chapter" data-level="A" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>A</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i>¿Qué es NetLogo?</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i>Terminología de NetLogo</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i>El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>B</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="la-construcción-y-el-análisis-del-modelo" class="section level1">
+<h1><span class="header-section-number">8</span> La Construcción y el Análisis del Modelo</h1>
+<div id="construcción-del-modelo" class="section level2">
+<h2><span class="header-section-number">8.1</span> Construcción del Modelo</h2>
+<div id="descripción-del-modelo" class="section level3">
+<h3><span class="header-section-number">8.1.1</span> Descripción del Modelo</h3>
+<p>Se tiene un número de personas en un espacio cerrado, una de ellas con una enfermedad infecciosa y las otras sanas.
+las personas se mueven al azar dentro del espacio cerrado todas a una misma velocidad.
+Cuando una persona sana se encuentra “cerca” de una persona infectada, estaadquiere inmediatamente la infección,
+se asume que una persona infectada no vuelve a quedar sana.
+Inicialmente solo <strong>una</strong> persona se encuentra infectada
+Se quiere analizar como evoluciona la gripa en este espacio cerrado
+Las dimensiones del espacio cerrado son fijas (por eejmplo 32mts x32mts) y también es fijo el número de personas infectadas inicialmente
+(en este caso una).
+El número de personas en el cuarto varía (digamos de 50 a 200 personas) y lo que se quiere medir es el tiempo
+que transcurre hasta que <strong>todas</strong> las personas quedan infectadas</p>
+</div>
+<div id="pregunta" class="section level3">
+<h3><span class="header-section-number">8.1.2</span> Pregunta</h3>
+<p>¿Qué relación hay entre el tiempo para la infección total y el número de personas en el cuarto?</p>
+<p>(¿más personas en el cuarto se demoran más en infectarse todas que si hay menos personas? )</p>
+</div>
+<div id="implementando-el-modelo" class="section level3">
+<h3><span class="header-section-number">8.1.3</span> Implementando el Modelo</h3>
+<p>Abra el Programa NetLogo:</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/NetLogo.png" />
+<br>
+</br>
+</center>
+<p>Haga clic en la pestaña código y coloque lo siguiente:</p>
+<pre><code>to setup
+  clear-all     ; limpia el mundo
+create-turtles num-personas
+ [setxy random-xcor random-ycor  ; coloque al agente al azar en el mundo
+  set shape &quot;person&quot;      ;forma del  agente
+   set color green]       ; color del agente 
+   ask one-of turtles [ set color red]   ; infecte una persona al azar
+   reset-ticks   ; inicialize tiempo en 0
+ end</code></pre>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/GraficaSetup.png" />
+<br>
+</br>
+</center>
+<p>Oprima el botón comprobar, aparece el siguiente error en amarillo:</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/Error1.png" />
+<br>
+</br>
+</center>
+<p>Oprima el botón Ejecutar, y seleccione la opción deslizador:</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/Deslizador.png" />
+<br>
+</br>
+</center>
+<p>Haga clic a la izquierda de la pantalla negra, aparece una ventana, llénela de la siguiente manera y oprima ok.</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/VentanaDeslizador.png" />
+<br>
+</br>
+</center>
+<p>Haga clic en la pestaña código de nuevo y coloque lo siguiente:</p>
+<pre><code> to go
+   if all? turtles [color = red ] [stop]
+   ask turtles with [color = red]
+   [infect]
+   ask turtles [move]
+   tick
+ end
+ 
+ to infect
+   ask turtles-here with [color = green]
+   [set color red]
+ end
+ 
+ to move
+   move-to one-of neighbors
+ end</code></pre>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/SetupGo.png" />
+<br>
+</br>
+</center>
+<p>Oprima el botón Ejecutar, y seleccione la opción Botón:</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/Boton.png" />
+<br>
+</br>
+</center>
+<p>Haga clic arriba del deslizador num-personas , aparece una ventan llénela de la siguinte manera:</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/VentanaSetup.png" />
+<br>
+</br>
+</center>
+<p>Seleccione de nuevo la opción botón y haga clic a la derecha del botón setup, aparece una ventana llénela de la siguiente manera:</p>
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/VentanaGo.png" />
+<br>
+</br>
+</center>
+Listo, ya podemos observar el comportamiento del modelo, la interfaz es la siguiente:
+<center>
+<br>
+</br>
+<img src="GrafTallerInf/ModeloUno.png" />
+<br>
+</br>
+</center>
+<p>Puede ensayar la funcionalidad del modelo en el siguiente applet:</p>
+<iframe src="./GrafTallerInf/ModeloUno.html" width="100%" height="900px">
+</iframe>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="analizando-modelos-basados-en-agentes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="verificación-validación-replicación.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

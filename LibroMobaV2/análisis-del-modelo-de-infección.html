@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>10 Análisis del Modelo de Infección | Modelación Basada en Agentes</title>
+  <meta name="description" content="10 Análisis del Modelo de Infección | Modelación Basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="10 Análisis del Modelo de Infección | Modelación Basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="10 Análisis del Modelo de Infección | Modelación Basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="el-modelo.html"/>
+<link rel="next" href="verificación-validación-replicación.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El Ciclo de Modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html"><i class="fa fa-check"></i><b>7</b> El Modelo Lobos-Ovejas</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#descripcion"><i class="fa fa-check"></i><b>7.1</b> Descripcion</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#introduccion"><i class="fa fa-check"></i>Introduccion</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#diseño"><i class="fa fa-check"></i><b>7.2</b> Diseño</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#siete-criterios-de-diseno"><i class="fa fa-check"></i><b>7.3</b> Siete Criterios de Diseno:</a></li>
+<li class="chapter" data-level="7.4" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-uno"><i class="fa fa-check"></i><b>7.4</b> Version Uno</a></li>
+<li class="chapter" data-level="7.5" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-dos"><i class="fa fa-check"></i><b>7.5</b> Version dos</a></li>
+<li class="chapter" data-level="7.6" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-tres"><i class="fa fa-check"></i><b>7.6</b> Version tres</a></li>
+<li class="chapter" data-level="7.7" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-cuatro"><i class="fa fa-check"></i><b>7.7</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.8" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#version-cinco"><i class="fa fa-check"></i><b>7.8</b> Version cinco</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo.html"><a href="el-modelo.html"><i class="fa fa-check"></i><b>9</b> El Modelo</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo.html"><a href="el-modelo.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo.html"><a href="el-modelo.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo.html"><a href="el-modelo.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo.html"><a href="el-modelo.html#implementando-el-modelo"><i class="fa fa-check"></i><b>9.2</b> Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="análisis-del-modelo-de-infección.html"><a href="análisis-del-modelo-de-infección.html"><i class="fa fa-check"></i><b>10</b> Análisis del Modelo de Infección</a><ul>
+<li class="chapter" data-level="10.1" data-path="análisis-del-modelo-de-infección.html"><a href="análisis-del-modelo-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>10.1</b> La pregunta</a></li>
+<li class="chapter" data-level="10.2" data-path="análisis-del-modelo-de-infección.html"><a href="análisis-del-modelo-de-infección.html#diseñando-el-experimentoar"><i class="fa fa-check"></i><b>10.2</b> Diseñando el experimentoar</a></li>
+<li class="chapter" data-level="10.3" data-path="análisis-del-modelo-de-infección.html"><a href="análisis-del-modelo-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>10.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="10.4" data-path="análisis-del-modelo-de-infección.html"><a href="análisis-del-modelo-de-infección.html#un-segundo-análisis"><i class="fa fa-check"></i><b>10.4</b> Un Segundo Análisis</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>11</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="11.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>11.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="11.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>11.2</b> Verificación</a></li>
+<li class="chapter" data-level="11.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>11.3</b> Comunicación</a></li>
+<li class="chapter" data-level="11.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>11.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>11.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>11.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="11.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>11.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="11.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>11.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="11.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>11.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="11.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>11.9</b> Validación</a></li>
+<li class="chapter" data-level="11.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>11.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="12" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html"><i class="fa fa-check"></i><b>12</b> Modelo de Negocio</a><ul>
+<li class="chapter" data-level="12.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#especificación-del-modelo"><i class="fa fa-check"></i><b>12.1</b> Especificación del Modelo</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>12.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="12.1.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>12.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="12.1.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>12.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="12.1.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>12.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="12.1.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>12.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="12.1.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>12.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="12.1.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>12.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="12.1.8" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>12.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="12.1.9" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#datos-de-entrada"><i class="fa fa-check"></i><b>12.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="12.1.10" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#submodelos"><i class="fa fa-check"></i><b>12.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="el-modelo.html"><a href="el-modelo.html#construcción-del-modelo"><i class="fa fa-check"></i><b>12.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#configuración-del-mundo"><i class="fa fa-check"></i><b>12.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="12.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>12.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="12.2.3" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#procedimiento-go"><i class="fa fa-check"></i><b>12.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html"><i class="fa fa-check"></i><b>13</b> Análisis del Modelo de Negocio</a><ul>
+<li class="chapter" data-level="13.1" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#análisis-básico"><i class="fa fa-check"></i><b>13.1</b> Análisis Básico</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#modificando-el-modelo"><i class="fa fa-check"></i><b>13.1.1</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="13.1.2" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#generando-el-experimento"><i class="fa fa-check"></i><b>13.1.2</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="13.1.3" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#análisis-en-r"><i class="fa fa-check"></i><b>13.1.3</b> Análisis en R</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>13.2</b> Un Estudio Bivariado</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="el-modelo-lobos-ovejas.html"><a href="el-modelo-lobos-ovejas.html#introduccion"><i class="fa fa-check"></i><b>13.2.1</b> Introduccion</a></li>
+<li class="chapter" data-level="13.2.2" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#modificando-el-modelo-1"><i class="fa fa-check"></i><b>13.2.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="13.2.3" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#deslizadores"><i class="fa fa-check"></i><b>13.2.3</b> Deslizadores</a></li>
+<li class="chapter" data-level="13.2.4" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#procedimientos"><i class="fa fa-check"></i><b>13.2.4</b> Procedimientos</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#el-experimento"><i class="fa fa-check"></i><b>13.3</b> El Experimento</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#rstudio"><i class="fa fa-check"></i><b>13.3.1</b> Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#preguntas"><i class="fa fa-check"></i><b>13.4</b> Preguntas</a></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="14" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>14</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>14.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>14.2</b> Partículas</a></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>14.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>14.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>15</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="15.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>15.1</b> Majority model</a></li>
+<li class="chapter" data-level="15.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>15.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="15.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>15.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="15.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>15.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>16</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="16.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>16.1</b> Simple economy</a></li>
+<li class="chapter" data-level="16.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>16.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>16.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>16.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo.html"><a href="el-modelo.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo.html"><a href="el-modelo.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apendices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="análisis-del-modelo-de-negocio.html"><a href="análisis-del-modelo-de-negocio.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación Basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="análisis-del-modelo-de-infección" class="section level1">
+<h1><span class="header-section-number">10</span> Análisis del Modelo de Infección</h1>
+<div id="la-pregunta" class="section level2">
+<h2><span class="header-section-number">10.1</span> La pregunta</h2>
+<p>Recordemos la pregunta planteada que queremos investigar:</p>
+<p>*¿Entre más densidad de personas en el cuarto, el tiempo que transcurre hasta una infección de todas las personas es mayor o menor?</p>
+<p>Por ejemplo si tengo 200 personas, estas se demorarán más en infectarse comparado con 50 personas, o por el contrario las 50 personas demoran más en infectarse.
+Recuerde también que inicialmente hay solo <strong>una</strong> persona contagiada.</p>
+</div>
+<div id="diseñando-el-experimentoar" class="section level2">
+<h2><span class="header-section-number">10.2</span> Diseñando el experimentoar</h2>
+<p>Vamos entonces a definir el eperimento que nos permitirá responder a la pregunta</p>
+<p>Abra el modelo de infección que acabamos de construir y seleccione la opción Analizador de Comportamiento del Menú Herramientas</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/AnalComp.png" /></p>
+<p>(Nota: Para mayor información del Analizador de Comportamiento puede leer el tutorial en el siguiente enlace: <a href="#un-ejemplo-basico"><strong>??</strong></a></p>
+<p>Se necesita calcular para diferentes densidades (Número de personas en el cuarto) el tiempo de infección total, entonces vamos a seleccionar
+cuatro valores de densidad (509,100,150,200) y para cada una de estas densidades vamos a calcular el tiempo de infección total, realizaremos para cada una de estas densisdades 10 experimentos, entonces la ventana del analizador de comportamiento la llenamos de la forma siguiente:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/VentAnal.png" /></p>
+<ul>
+<li><p>Observe que le dimos un nombre al experimento, en este caso “Densidad-vs-InfeccionTotal”.</p></li>
+<li><p>las variables a medir se colocan en la ventana “Evaluar las ejecucioes utilizando estos indicadores”, en este caso vamos a medir el tiempo para la infección total,este tiempo será el valor de la variable ticks cuando el modelo deja de correr, es el número de ticks que aparece en la parte superior central de NetLogo debajo de Velocidad Normal, cuando el modelo termina de correr.</p></li>
+</ul>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/ticksFinal.png" /></p>
+<ul>
+<li>Al deshabilitar la opción “Evaluar las ejecuciones a cada paso” solo se registraran los datos cuando el modelo termina de correr y no en cada tick del modelo ya que lo que queremos es el tiempo final cuando todas las personas se infectan.</li>
+</ul>
+<p>Listo, ahora hay que ejecutar el experimento ooprima el botón Ejecutar aparece:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/TableOutput.png" /></p>
+<p>Seleccione la opción Table Output y Oprima Ok.</p>
+<p>(Nota: La opción “Simultaneous runs in paralell” indica cuántos porcesadores tiene su computador y ayuda a acelerar el proceso de generación de experimentos, la recomendación es no modificar este número)</p>
+<p>Aparece la siguiente ventana:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/VentArch.png" /></p>
+<p>Es conveniente que guarde este archivo en el mismo disrectorio donde se enceutra el Modelo de Infección NetLogo, también es conveniente que <strong>no le cambie</strong> el nombre al archivo.
+Una vez guardado este archivo de datos que contiene el resultado de los experimentos definidos vamos a importarlo a R (Rstudio) para realizar el análisis de los datos generados:</p>
+</div>
+<div id="análisis-del-modelo-en-rstudio" class="section level2">
+<h2><span class="header-section-number">10.3</span> Análisis del Modelo en Rstudio</h2>
+<div id="configurando-r-studio" class="section level4">
+<h4><span class="header-section-number">10.3.0.1</span> Configurando R studio</h4>
+<p>Abra el programa RStudio:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/Rstudio.png" /></p>
+<p>Cree un Nuevo archivo en Rstudio (Script):</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/RScript.png" /></p>
+<p>Guardelo en el mismo directorio donde se encuentran el Archivo NetLogo y el archivo de datos que se acaba de generar, llame el archivo Densidad-InfTotal.R:</p>
+<p>Ahora hay que definir el directorio de trabajo, para ello seleccione del Menú “Session”, la opción To “Source File Location” de “Set Working Directory”:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/Source.png" /></p>
+<p>Todos los archivos que usemos, Rstudio supondrá que están en este directorio.</p>
+</div>
+<div id="leyendo-los-datos-de-netlogo-a-r" class="section level4">
+<h4><span class="header-section-number">10.3.0.2</span> Leyendo los datos de NetLogo a R</h4>
+<p>Coloquemos en la Primera linea del Archivo Script que acabamos de crear lo siguiente:</p>
+<pre><code>library(tidyverse)
+</code></pre>
+<p>Coloque el cursor en esta ,linea y oprima el botón Run situado en la parte derecha de la ventana de Rstudio:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/BotonRun.png" /></p>
+<p>(Nota: Si la librería tidyverse no carga debe instalar previamnete el paquete tidyverse, para ello hay que colocar en la ventana inferior izquierda de R studio (Consola) el
+comando:install.packages(“tidyverse”))</p>
+<p>Con esta linea se carga la librería que usaremos para el análisis
+Vamos ahora a importar los datos del experimento, coloque
+la siguiente linea:</p>
+<pre><code>data &lt;- read_csv(&quot;ModeloBasicoInfeccionAnBas Densidad-vs-InfeccionTotal-table.csv&quot;,skip=6)
+</code></pre>
+<p>Observe que:</p>
+<ul>
+<li>“ModeloBasicoInfeccionAnBas Densidad-vs-InfeccionTotal-table.csv”, es el nombre del archivo de datos que generamos.</li>
+<li><p>la opción skip=6 hay que usarla en R para todos los archuivos que importemos de NetLogo ya que NetLogo coloca an las primeras cinco lineas de los archivos quem genera la infoamción del Archivo (MetaDatos) y esta información no la usaremos en nuestro análisis.</p></li>
+<li>data es el nombre que tendra el archivo en R de los datos que vamso a importar</li>
+<li><p>read_csv es el comando para leer archivos de datos este comando es un comando muy potente para leer datos y es parte de la librería tidyverse.</p></li>
+</ul>
+<p>Coloque el cursor en la linea que acabamos de escribir y oprima el botón Run.</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/data.png" /></p>
+<p>Si todo salió bien, Rstudio lee el archivo NetLogo (data) y lo coloca en la parte derecha de la pantalla (data, 40 obs of 4 variables).
+Si hace clic en data, puede visulizar en la parte izquierda el archivo de datos:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/data2.png" /></p>
+<p>Listo!! Ya tenemos los datos en Rstudio, puede observar los datos en la tabla y comenzar a ver cuál puede ser la respuesta a nuestra pregunta, pero es mejor usar unos pocos comandos de la librería tidyverse para analizar y visualizar los datos de una mejor manera.</p>
+</div>
+<div id="limpiando-los-datos" class="section level4">
+<h4><span class="header-section-number">10.3.0.3</span> Limpiando los datos</h4>
+<p>Cambiemos los nombres de las columnas, coloquemos en R y oprimanos el botón Run:</p>
+<pre><code>colnames(data) &lt;- c(&quot;corrida&quot;,&quot;personas&quot;,&quot;paso&quot;,&quot;ticks&quot;)
+</code></pre>
+<p>El nombre de las columnas cambia:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/nombres.png" /></p>
+<p>Agrupemos nuestros datos de acuerdo al número de personas y generemos los promedios de infección total y las desviaciones:</p>
+<pre><code>data %&gt;% group_by(personas) %&gt;%
+         summarise(promInf=mean(ticks),
+                   desvInf=sd(ticks)) -&gt; datag
+</code></pre>
+<ul>
+<li>group_by agrupa los datos de acuerdo al número de personas</li>
+<li>summarise calcula promedio y desviaciones de los datos agrupados</li>
+<li>estos nuevos datos se colocan en una nueva tabla (datag)</li>
+</ul>
+<p>La tabla datag contiene la información que necessitamos graficar:</p>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/datag.png" /></p>
+<p>Construyamos un gráfico de estos datos:</p>
+<pre><code>ggplot(datag)+
+ geom_point(aes(personas,promInf))+
+ geom_errorbar(aes(personas,promInf,ymax=promInf + desvInf,ymin=promInf - desvInf))
+</code></pre>
+<p><img src="GrafTallerInf/Analisis/1.AnalisisBasico/Graf.png" /></p>
+<p>En esta gráfica observamos claramente que a mayor densidad menor tiempo de infección (O sea entre más personas hay en el cuarto más rápido se infectan)</p>
+</div>
+</div>
+<div id="un-segundo-análisis" class="section level2">
+<h2><span class="header-section-number">10.4</span> Un Segundo Análisis</h2>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb55-2" data-line-number="2"><span class="kw">library</span>(plotly)</a>
+<a class="sourceLine" id="cb55-3" data-line-number="3"><span class="kw">library</span>(reshape2)</a></code></pre></div>
+<p>leer datos</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;ModeloInfeccionEspacialAmbiental Ambiental-vs-Espacial-table.csv&quot;</span>,<span class="dt">skip=</span><span class="dv">6</span>)</a></code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   `[run number]` = col_double(),
+##   variant = col_character(),
+##   `disease-decay` = col_double(),
+##   `num-infected` = col_double(),
+##   `num-people` = col_double(),
+##   `connections-per-node` = col_double(),
+##   `[step]` = col_double(),
+##   ticks = col_double()
+## )</code></pre>
+<p>renombras</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw">colnames</span>(data)&lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;run&quot;</span>,<span class="st">&quot;v&quot;</span>,<span class="st">&quot;decay&quot;</span>,<span class="st">&quot;w&quot;</span>,<span class="st">&quot;personas&quot;</span>,<span class="st">&quot;z&quot;</span>,<span class="st">&quot;b&quot;</span>,<span class="st">&quot;ticks&quot;</span>)</a></code></pre></div>
+<p>filtrar</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1">data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(decay,personas,ticks) -&gt;<span class="st"> </span>data</a></code></pre></div>
+<p>agrupar</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1">data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(decay,personas) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-2" data-line-number="2"><span class="st">         </span><span class="kw">summarise</span>(<span class="dt">pticks=</span><span class="kw">mean</span>(ticks)) -&gt;<span class="st"> </span>datag</a></code></pre></div>
+<p>Contour 2D</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">mat &lt;-<span class="st"> </span><span class="kw">acast</span>(datag,decay <span class="op">~</span><span class="st"> </span>personas,<span class="dt">value.var=</span><span class="st">&quot;pticks&quot;</span>)</a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb61-3" data-line-number="3">  ejey &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">rownames</span>(mat))</a>
+<a class="sourceLine" id="cb61-4" data-line-number="4">  ejex &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">colnames</span>(mat))</a>
+<a class="sourceLine" id="cb61-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb61-6" data-line-number="6">    fig &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(</a>
+<a class="sourceLine" id="cb61-7" data-line-number="7">      <span class="dt">x=</span>ejex,<span class="dt">y=</span>ejey,<span class="dt">z=</span>mat,<span class="dt">type=</span><span class="st">&quot;contour&quot;</span> )</a>
+<a class="sourceLine" id="cb61-8" data-line-number="8">      </a>
+<a class="sourceLine" id="cb61-9" data-line-number="9">    fig</a></code></pre></div>
+<div id="htmlwidget-ad7106a0b4628ad9b918" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ad7106a0b4628ad9b918">{"x":{"visdat":{"235e1861699c":["function () ","plotlyVisDat"]},"cur_data":"235e1861699c","attrs":{"235e1861699c":{"x":[50,100,150,200],"y":[0,1,2,3,4,5,6,7,8,9,10],"z":[[406.9,216.1,155.1,129.5],[199,110.7,91.5,76.1],[151.8,90,69.8,58.8],[111.2,77.1,59.9,53.5],[101.3,70.5,56.3,48.8],[89.5,65.1,53.6,44.3],[85.9,58.8,50.6,46.8],[86.8,55.5,49.9,47.3],[72.5,54.2,48.2,45.7],[66.5,53.8,48.5,45.3],[71.9,52.6,47.7,44.8]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"contour"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":[]},"yaxis":{"domain":[0,1],"automargin":true,"title":[]},"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"x":[50,100,150,200],"y":[0,1,2,3,4,5,6,7,8,9,10],"z":[[406.9,216.1,155.1,129.5],[199,110.7,91.5,76.1],[151.8,90,69.8,58.8],[111.2,77.1,59.9,53.5],[101.3,70.5,56.3,48.8],[89.5,65.1,53.6,44.3],[85.9,58.8,50.6,46.8],[86.8,55.5,49.9,47.3],[72.5,54.2,48.2,45.7],[66.5,53.8,48.5,45.3],[71.9,52.6,47.7,44.8]],"type":"contour","line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>Contour 3D</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="kw">library</span>(reshape2)</a>
+<a class="sourceLine" id="cb62-2" data-line-number="2"><span class="kw">library</span>(plotly)</a>
+<a class="sourceLine" id="cb62-3" data-line-number="3">mat &lt;-<span class="st"> </span><span class="kw">acast</span>(datag,decay <span class="op">~</span><span class="st"> </span>personas,<span class="dt">value.var=</span><span class="st">&quot;pticks&quot;</span>)</a>
+<a class="sourceLine" id="cb62-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb62-5" data-line-number="5">  ejey &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">rownames</span>(mat))</a>
+<a class="sourceLine" id="cb62-6" data-line-number="6">  ejex &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">colnames</span>(mat))</a>
+<a class="sourceLine" id="cb62-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb62-8" data-line-number="8">    fig &lt;-<span class="st"> </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-9" data-line-number="9"><span class="st">      </span><span class="kw">add_surface</span>(<span class="dt">x=</span><span class="op">~</span>ejex, <span class="dt">y =</span> <span class="op">~</span>ejey, <span class="dt">z =</span> <span class="op">~</span>mat) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-10" data-line-number="10"><span class="st">      </span><span class="kw">layout</span>(<span class="dt">title=</span><span class="st">&quot;decay-personas vs ticks&quot;</span>,</a>
+<a class="sourceLine" id="cb62-11" data-line-number="11">             <span class="dt">scene=</span><span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb62-12" data-line-number="12">               <span class="dt">xaxis=</span><span class="kw">list</span>(<span class="dt">title=</span><span class="st">&quot;personas&quot;</span>),</a>
+<a class="sourceLine" id="cb62-13" data-line-number="13">               <span class="dt">yaxis=</span><span class="kw">list</span>(<span class="dt">title=</span><span class="st">&quot;decay&quot;</span>),</a>
+<a class="sourceLine" id="cb62-14" data-line-number="14">               <span class="dt">zaxis=</span><span class="kw">list</span>(<span class="dt">title=</span><span class="st">&quot;ticks&quot;</span>)</a>
+<a class="sourceLine" id="cb62-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb62-16" data-line-number="16">             ))</a>
+<a class="sourceLine" id="cb62-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb62-18" data-line-number="18">    fig</a></code></pre></div>
+<div id="htmlwidget-a174aeb600387c3abf22" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a174aeb600387c3abf22">{"x":{"visdat":{"235e367ce7d3":["function () ","plotlyVisDat"]},"cur_data":"235e367ce7d3","attrs":{"235e367ce7d3":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"type":"surface","x":{},"y":{},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"decay-personas vs ticks","scene":{"xaxis":{"title":"personas"},"yaxis":{"title":"decay"},"zaxis":{"title":"ticks"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"mat","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[406.9,216.1,155.1,129.5],[199,110.7,91.5,76.1],[151.8,90,69.8,58.8],[111.2,77.1,59.9,53.5],[101.3,70.5,56.3,48.8],[89.5,65.1,53.6,44.3],[85.9,58.8,50.6,46.8],[86.8,55.5,49.9,47.3],[72.5,54.2,48.2,45.7],[66.5,53.8,48.5,45.3],[71.9,52.6,47.7,44.8]],"type":"surface","x":[50,100,150,200],"y":[0,1,2,3,4,5,6,7,8,9,10],"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="el-modelo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="verificación-validación-replicación.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

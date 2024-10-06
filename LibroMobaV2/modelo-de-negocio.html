@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>11 Modelo de Negocio | Modelación Basada en Agentes</title>
+  <meta name="description" content="11 Modelo de Negocio | Modelación Basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="11 Modelo de Negocio | Modelación Basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="11 Modelo de Negocio | Modelación Basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="verificación-validación-replicación.html"/>
+<link rel="next" href="proyectos-básicos.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El Ciclo de Modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html"><i class="fa fa-check"></i><b>7</b> El Modelo Predador Presa</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#siete-criterios-de-diseño"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseño:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#construcción-de-los-modelos"><i class="fa fa-check"></i><b>7.3</b> Construcción de los modelos</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html"><i class="fa fa-check"></i><b>9</b> El Modelo SI de Infección</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#un-segundo-análisis"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html"><i class="fa fa-check"></i><b>11</b> Modelo de Negocio</a><ul>
+<li class="chapter" data-level="11.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Descripción del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apendices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-negocio.html"><a href="modelo-de-negocio.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación Basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="modelo-de-negocio" class="section level1">
+<h1><span class="header-section-number">11</span> Modelo de Negocio</h1>
+<div id="descripción-del-modelo" class="section level2">
+<h2><span class="header-section-number">11.1</span> Descripción del Modelo</h2>
+<div id="introducción" class="section level3">
+<h3><span class="header-section-number">11.1.1</span> Introducción</h3>
+<p>Este modelo simula cómo las personas deciden en qué negocio invertir cuando las alternativas de inversión que se eligen difieren en sus ganancias anuales (profit) y en su riesgo de fracaso (risk). Estas alternativas comerciales (podían pensarse que son bancos) se van a modelar como parcelas.(Observe que este es un uso distinto a representar parcelas como espacios geograficos).<br />
+En esta primera versión, los inversores (agentes) perciben la información financiera de maera local, sólo de las parcelas vecinas (en posteriores versiones ampliaremos el “alcance” de los agentes).</p>
+</div>
+<div id="descripción-del-modelo-odd-protocol" class="section level3">
+<h3><span class="header-section-number">11.1.2</span> Descripción del Modelo <a href="http://jasss.soc.surrey.ac.uk/23/2/7.html">Odd Protocol</a></h3>
+<p>Especificaremos nuestro modelo de Negocio Simple usando el Protocolo ODD (RailsBack, Grimm), protocolo muy usado para especificar o definir MOBAs.
+La siguiente es la descripción ODD del modelo:</p>
+</div>
+<div id="objetivo-del-modelo" class="section level3">
+<h3><span class="header-section-number">11.1.3</span> Objetivo del Modelo</h3>
+<p>El objetivo principal es explorar los efectos de la “Adquisición de Información” (qué información tienen los agentes y cómo la obtienen), y como se toman decisiones y se “adaptan” estas al utilizar la información adquirida. El modelo tiene que ver con decisiones de inversión, pero no pretende representar ningún enfoque de inversión real o sector empresarial, se podría considerar que este modelo representa aproximadamente a personas que compran y operan en negocios “locales”, en este caso los inversores están familiarizados con oportunidades de inversión dentro de un rango limitado (las parcelas vecinas) y asumiremos que seleccionar una alternativa de decisión de inversión no acarrea ningún costo (podría asemejarse por ejemplo a cambiar de banco).</p>
+</div>
+<div id="tipos-de-agentes-variables-y-escalas" class="section level3">
+<h3><span class="header-section-number">11.1.4</span> Tipos de Agentes, Variables y escalas</h3>
+<p>Los agentes en este modelo son;</p>
+<p><em>Agentes inversores (tortugas) y
+</em> Alternativas comerciales ó bancos (parcelas)</p>
+<p>Las alternativas comerciales reciben dinero de sus clientes y varían en la <em>ganancia</em> que brindan a sus clientes y en el <em>riesgo</em> que tiene esa inversión, para ser específicos El Mundo es una cuadrícula de parcelas comerciales, cada uno de los cuales tiene dos variables:</p>
+<ul>
+<li>La ganancia anual que se proporciona allí (P, en unidades monetarias como dólares por año).<br />
+</li>
+<li>el riesgo anual de que el negocio falle y el inversor pierda toda su riqueza (F, como probabilidad anual).</li>
+</ul>
+<p>Los inversores tienen una riqueza actual (W, en unidades monetarias).</p>
+</div>
+<div id="escalas-espacio-temporales" class="section level3">
+<h3><span class="header-section-number">11.1.5</span> Escalas Espacio Temporales</h3>
+<ul>
+<li>Escala de Espacio: El Mundo tiene un tamaño de 19 × 19 parcelas y tiene bordes.</li>
+<li>Escala de tiempo : los ticks corresponden a un año, y las simulaciones del modelo se realizaran por 50 años.</li>
+</ul>
+</div>
+<div id="procesos-y-ordenación-temporal-scheduling" class="section level3">
+<h3><span class="header-section-number">11.1.6</span> Procesos y ordenación temporal (scheduling)</h3>
+<p>El modelo incluye las siguientes acciones que se realizarán en el siguiente orden en cada tick:</p>
+<ul>
+<li><p>Reposicionamiento: Los inversores deciden si un negocio similar (parcela adyacente) les ofrece una mejor opción que la actual; si es así, “reposicionan” y transfieren su inversión a esa parcela o banco, moviéndose allí. <strong>Solo un inversor puede ocupar un parcela a la vez</strong>.</p></li>
+<li><p>Contabilidad. Los inversores actualizan sus variables de riqueza, esta se calcula incrementando la riqueza actual más el beneficio anual que le aporta la parcela (“banco” ) a donde se desplazó.</p></li>
+</ul>
+<p><em>(Nota: El fracaso inesperado del negocio también está incluido en la acción contable. La variable F en las parcelas miden el riesgo de quiebra, en este caso el negocio falla y la riqueza W del inversor queda en cero, sin embargo el inversor permanece en el modelo)</em></p>
+</div>
+<div id="conceptos-de-diseño" class="section level3">
+<h3><span class="header-section-number">11.1.7</span> Conceptos de diseño</h3>
+<ul>
+<li><p>Principios básicos. El tema básico de este modelo es cómo los agentes toman decisiones que involucran compensaciones (trade-offs) entre varios objetivos: en este caso aumentar las ganancias y disminuir el riesgo.</p></li>
+<li><p>Emergencia: El resultado importante que se queire mirar del modelo es que riqueza promedio tendrán los inversores luego de 25 años, tiempo en el cual se correrá el modelo</p></li>
+</ul>
+<p><em>(Nota: Otros tipos de resultado podrían ser la máxima ganancia obtenida ó el número de inversores que han sufrido un fracaso. Estos resultados surgen de cómo los inversores individuales balancean (trade-off) sus beneficios y el riesgo involucrado, pero también del “clima de negocios”)</em></p>
+<ul>
+<li><p>Comportamiento adaptativo. este es la decisión de a qué parcela vecina deben moverse (o quedarse en su parcela), considerando el beneficio y el riesgo de las diferentes alternativas. En esta versión del modelo, los inversores utilizan un sistema simplificado de análisis microeconómico para tomar su decisión, moviéndose a la parcela que proporciona el valor más alto de una función objetivo, que se describe a continuación.</p></li>
+<li><p>Objetivo: En economía, el término “utilidad” se utiliza como sinónimo del objetivo que buscan los agentes, los inversores califican las alternativas mediante una medida de utilidad que represente su riqueza futura esperada al final de un horizonte temporal (T), en este caso se usaran “5 años”. Esta riqueza futura es una función de la riqueza actual y del riesgo que ofrece la alternativa.
+La función objetivo es la siguiente:</p></li>
+</ul>
+<p><br>
+</br></p>
+<center>
+<p><span class="math display">\[ U=(W+T.P)(1-F)^T \]</span></p>
+P: ganancia anual.<br />
+F : probabilidad de riesgo.<br />
+W : riqueza del agente.<br />
+T: Horizonte (5 años).
+</center>
+<p><br>
+</br></p>
+<ul>
+<li><p>Detección(Sensing): Los agentes inversores conocen la ganancia y el riesgo en la parcela donde se encuentra y en las parcelas vecinas adyacentes <strong>sin error</strong>.</p></li>
+<li>Interacción. Los inversores interactúan entre sí indirectamente a través de la “competencia” por las parcelas:
+<ol style="list-style-type: decimal">
+<li>Un inversor no puede hacerse cargo de un negocio (pasar a una parcela) si está ya está ocupada por otro inversor.</li>
+<li>Los inversores ejecutan su acción de reposicionamiento en orden aleatorio, por lo que no hay
+preferencias (por ejemplo los inversores con mayor riqueza no tienen ventaja sobre otros)</li>
+</ol></li>
+<li><p>Aleatoriedad (Estocasticidad) : El estado inicial del modelo es estocástico: los valores de P y F de cada parcela y las ubicaciones iniciales de los inversores, se establecen al azar (ver más adelante). No hay correlación entre ganancia y riesgo (P y F), son independientes.</p></li>
+</ul>
+</div>
+<div id="inicialización-del-modelo" class="section level3">
+<h3><span class="header-section-number">11.1.8</span> Inicialización del modelo</h3>
+<p>Se utilizan cuatro parámetros del modelo para inicializar este mundo inversionista. Estos definen:</p>
+<ul>
+<li>Los valores de P Distribución Exponencial con media 5000.</li>
+<li>Los valores de F, Dsttribución Uniforme (desde 0.01 y 0.1).</li>
+<li>100 agentes inversores se colocan en parcelas al azar en el mundo, evitando que dos invesores queden en una misma parcela. Las variable de riqueza W de cada inversor se coloca en cero.</li>
+</ul>
+</div>
+<div id="datos-de-entrada" class="section level3">
+<h3><span class="header-section-number">11.1.9</span> Datos de entrada</h3>
+<p>No se utilizan datos de entrada.</p>
+</div>
+<div id="submodelos" class="section level3">
+<h3><span class="header-section-number">11.1.10</span> Submodelos</h3>
+<ul>
+<li>Reposicionamiento: Un agente identifica todas las empresas en las que podría invertir, las parcelas vecinas (ocho o menos si el agente está en el borde del mundo) que están desocupados, más su parcela actual. El agente determina cuál de estas alternativas proporciona el valor más alto de función de utilidad,y se mueve a esta parcela (o permanece en su parcela si no hay una mejor utilidad en las parcelas vecinas).</li>
+</ul>
+<p>*Contabilidad. Esta acción se describió en un apartado anterior (Procesos y ordenación temporal (scheduling)).</p>
+</div>
+</div>
+<div id="construcción-del-modelo" class="section level2">
+<h2><span class="header-section-number">11.2</span> Construcción del Modelo</h2>
+<p>Abra Netlogo y Guarde el Archivo vacío como ModeloNegocio.nlogo</p>
+<div id="configuración-del-mundo" class="section level3">
+<h3><span class="header-section-number">11.2.1</span> Configuración del Mundo:</h3>
+Definiremos el mundo del Modelo de Negocio como un mundo e 19x19 parcelas conmlímites tanto horizontales como verticales
+</br>
+<center>
+<strong>19 x 19 con límites horizontales y verticales</strong>
+</center>
+</br>
+<center>
+<img src="GrafTallerNegocio/Mundo.png" />
+</center>
+<p></br></p>
+</div>
+<div id="procedimiento-setup" class="section level3">
+<h3><span class="header-section-number">11.2.2</span> Procedimiento Setup</h3>
+<p></br>
+1. Modelación de las parcelas ( Bancos)</p>
+<p>Cada parcela(banco) tendrá dos atributos asociados:</p>
+<ul>
+<li>la ganancia anual que ofrece esta parcela para los inversores</li>
+<li>El riesgo anual que tiene la inversión</li>
+</ul>
+<pre><code> patches-own
+  [
+   profit       ;  ganancia anual que da cada parcela (banco)
+   annual-risk  ; ganancia anual que tiene cada parcela (banco)
+  ]</code></pre>
+<p>Oprimamos botón comprobar</p>
+<p>El procedimiento setup:</p>
+<ul>
+<li>limpia el mundo clear-all</li>
+<li>Configura las parcelas (bancos): procedimiento setup-patches.</li>
+<li>cronómetros en 0 : reset-ticks</li>
+</ul>
+<pre><code> to setup
+   clear-all
+   ask patches   [setup-patches]
+   reset-ticks
+ end
+ 
+ to setup-patches
+ end</code></pre>
+<p></font></p>
+<p>setup-patches (profit annual-risk):</p>
+<p>El procedimiento setup-patches:</p>
+<ul>
+<li>Inicializa la ganancia anual de cada parcela (aleatorio entre 1000 y 10000)</li>
+<li>inicializa el riesgo de cada parcela (probabilidad entre 0.01 y 0.1)</li>
+</ul>
+<pre><code> to setup-patches
+   set profit random-exponential 5000
+   set risk 0.01 + random-float ( 0.1 - 0.01)
+ end</code></pre>
+<p>Para una mejor visualización del modelo cada parcela mostrará:</p>
+<ul>
+<li>el riesgo como un número</li>
+<li>la utiilidad de color verde (entre más claro el verde, mayor la utilidasd)</li>
+</ul>
+<p>Estas dos lineas se añaden a setup-patches</p>
+<pre><code>  set plabel (precision risk 2)
+  set pcolor scale-color green profit 1000 10000</code></pre>
+</br>
+<center>
+<img src="GrafTallerNegocio/Parcelas.png" />
+</center>
+<p></br></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Modelación de los agentes ( Inversores)</li>
+</ol>
+<p>Añadir al setup la linea:</p>
+<pre><code>  setup-inversores</code></pre>
+<p>y colocar debajo del setup:</p>
+<pre><code> to setup-inversores
+ end</code></pre>
+<p>Inicialmente se usaran 25 inversores, cada uno con un monto de dinero (wealth) inicialmente en 0:</p>
+<p>Crear la variable global num-investors y la propiedad de riqueza (wealth) de
+los agentes, colocar en la parte superior de la pestaña de código lo siguente:</p>
+<pre><code> globals
+ [
+ num-investors   ; variable global número de inversores
+ ]
+ turtles-own
+ [
+ wealth   ; riqueza de l agente inicialmente en cero
+ ]</code></pre>
+<p>Definir dentro de setup el número de inversores:</p>
+<pre><code> set num-investors 25</code></pre>
+<p>y ahora colocar dentro de setup-inversores lo siguiente:</p>
+<pre><code>  create-turtles  num-investors
+   [
+    move-to one-of patches with [not any? turtles-here] ; ocupen una parcela no ocupada!!!!
+    set wealth 0.0     ; riqueza en cero
+    pen-down    ; activar rastro de agentes para observar su trayectoria
+   ]</code></pre>
+</br>
+<center>
+<img src="GrafTallerNegocio/Inversores.png" />
+</center>
+<p></br></p>
+<center>
+<font size="3"> <strong>Este es el procedimiento setup total:</strong> </font>
+</center>
+<p></br></p>
+<pre><code>  globals
+ [
+ num-investors   ; variable global número de inversores
+ ]
+
+turtles-own
+ [
+ wealth   ; riqueza de l agente inicialmente en cero
+ ]
+patches-own
+  [
+   profit       ;  ganancia anual que da cada parcela (banco)
+   risk         ; ganancia anual que tiene cada parcela (banco)
+  ]
+
+to setup
+  clear-all
+   set num-investors 25
+  ask patches [setup-patches]
+  setup-inversores
+  reset-ticks
+end
+
+to setup-patches
+  set profit 1000 + random ( 10000 - 1000 )    ; profit entre 1000 y 10000
+  set risk 0.01 + random-float ( 0.1 - 0.01 )  ; risk entre 0.01 y 0.1
+  ; para visualización
+  set plabel precision risk 2   ; visualizar numéricamente el riesgo en cada 
+  set pcolor scale-color green profit 1000 10000 ; visualizar por color la ganancia
+                                                 ; verde más claro más ganancia
+end
+
+to setup-inversores
+  create-turtles  num-investors
+   [
+    move-to one-of patches with [not any? turtles-here] ; ocupen una parcela no ocupada!!!!
+    set wealth 0.0     ; riqueza en cero
+    pen-down    ; activar rastro de agentes para observar su trayectoria
+   ]
+end
+</code></pre>
+</div>
+<div id="procedimiento-go" class="section level3">
+<h3><span class="header-section-number">11.2.3</span> Procedimiento Go</h3>
+<p>Lo primero es determinar cuando el modelo para, usaremos una variable global years-simulated:</p>
+<pre><code> globals
+ [
+ num-investors   ; variable global número de inversores
+ years-simulated  ; número  de años en que el modelo se va a correr
+ ]</code></pre>
+<p>inicializamos en el setup la variable years-simulated:</p>
+<pre><code> set years-simulated 50</code></pre>
+<p>y construimos la primera versión del procedimiento go:</p>
+<pre><code>
+ to go
+ if ticks &gt;= years-simulated [stop]
+ tick
+ end
+
+</code></pre>
+<p>Antes de continuar debemos acordarnos que el cálculo de la utilidad de un agente:
+<span class="math display">\[ U=(W+T.P)(1-F)^T \]</span></p>
+<p>requiere de un “horizonte-de-tiempo” T, que nos dará el horizonte de tiempo en el que estamos considerando la inversión, entonces la definiremos definiremos como variable global:</p>
+<pre><code>  globals
+ [
+ num-investors   ; variable global número de inversores
+ years-simulated  ; número  de años en que el modelo se va a correr
+ time-horizon   ; horizonte de tiempo paara el calculo de la utilidad
+ ]</code></pre>
+<p>el valor que le daremos a esta variable es 5 años, coloquemos en el setup la siguiente linea:</p>
+<pre><code> set time-horizon 5   ; horizonte de tiempo 5 años</code></pre>
+<p>Ahora si podemos continuar, El procedimiento go va a tener dos subprocedimientos:</p>
+<ol style="list-style-type: decimal">
+<li><p>reposition: determina cual parcela, no ocupada , vecina me proporciona mejor inversión para moverme a ella (en caso de que no exista esa mejor parcela me quedo quieto.</p></li>
+<li><p>do-accounting: una vez me muevo actualizo mi dinero (wealth)</p></li>
+</ol>
+<p>Para determinar que inversión es la mejor debo calcular para cada parcela vecina no ocupada la utilidad de la inversión, para ello definiremos un reportero (que usaran las parcelas) que hace esta cálculo dado un agente (que tiene determinada cantidad de dinero), el reportero es el siguiente:</p>
+<pre><code> to-report utilidad-para [un-inversor]
+  let riqueza-inversor [wealth] of un-inversor ; riqueza del inversor
+  let utilidad 
+    riqueza-inversor + (profit * time-horizon) * ((1 - risk) ^ time-horizon)
+    ; aplica fórmula de utilidad al inversor
+  report utilidad    ; reporta la utilidad
+ end</code></pre>
+<p>finalmente definimos las funciones repositioning y accounting de la siguiente manera:</p>
+<p>Finalmente definamos las funciones : reposition y do-accounting.<br />
+coloquemos en el go lo siguiente, antes de tick:</p>
+<pre><code>
+   ask turtles [reposition]
+   ask turtles [do-accounting]
+ 
+</code></pre>
+<p>y definamos estos dos procedimientos:</p>
+<pre><code> to reposition 
+  let potential-destinations neighbors with [not any? turtles-here]
+  set potential-destinations (patch-set potential-destinations patch-here)
+  let best-patch max-one-of potential-destinations [utility-for myself]
+  move-to best-patch
+ end
+ 
+to do-accounting
+  set wealth (wealth + profit)  ; Primero , añada ganancia anual
+  if random-float 1.0 &lt; risk   ; Mire si la inversión  quiebra
+  [
+    set wealth 0
+  ]
+ end</code></pre>
+<p>El texto completo del go es el siguiente:</p>
+<pre><code> to go
+   if ticks &gt;= years-simulated [stop]
+   ask turtles [reposition]
+   ask turtles [do-accounting]
+   tick
+ end
+ 
+ to reposition 
+  let potential-destinations neighbors with [not any? turtles-here]
+  set potential-destinations (patch-set potential-destinations patch-here)
+  let best-patch max-one-of potential-destinations [utilidad-para myself]
+  move-to best-patch
+ end
+ 
+ to do-accounting
+  set wealth (wealth + profit)  ; Primero , añada ganancia anual
+  if random-float 1.0 &lt; risk   ; Mire si la inversión  quiebra
+  [
+    set wealth 0
+  ]
+ end
+ 
+ to-report utilidad-para [un-inversor]
+  let riqueza-inversor [wealth] of un-inversor ; riqueza del inversor
+  let utilidad 
+    riqueza-inversor + (profit * time-horizon) * ((1 - risk) ^ time-horizon)
+    ; aplica fórmula de utilidad al inversor
+  report utilidad    ; reporta la utilidad
+ end
+ 
+</code></pre>
+<p>El texto completo del modelo es el siguiente:</p>
+<pre><code>globals
+ [
+ num-investors   ; variable global número de inversores
+ years-simulated  ; número  de años en que el modelo se va a correr
+ time-horizon   ; horizonte de tiempo paara el calculo de la utilidad
+ ]
+ 
+turtles-own
+ [
+ wealth   ; riqueza de l agente inicialmente en cero
+ ]
+patches-own
+  [
+   profit       ;  ganancia anual que da cada parcela (banco)
+   risk  ; ganancia anual que tiene cada parcela (banco)
+  ]
+ 
+ to setup
+   ca
+   set num-investors 25
+   set years-simulated 50
+   set time-horizon 5
+   ask patches   [setup-patches]
+   setup-inversores
+   reset-ticks
+ end
+ 
+ to setup-inversores
+   crt num-investors
+   [
+    move-to one-of patches with [not any? turtles-here]
+    set wealth 0.0
+    pen-down
+   ]
+ end
+ 
+ 
+ to setup-patches
+   set profit random-exponential 5000
+   set risk 0.01 + random-float ( 0.1 - 0.01)
+   set plabel (precision risk 2)
+  set pcolor scale-color green profit 1000 10000
+ end
+ 
+ to go
+   if ticks &gt;= years-simulated [stop]
+   ask turtles [reposition]
+   ask turtles [do-accounting]
+   tick
+ end
+ 
+ to reposition 
+  let potential-destinations neighbors with [not any? turtles-here]
+set potential-destinations (patch-set potential-destinations patch-here)
+  let best-patch max-one-of potential-destinations [utilidad-para myself]
+  move-to best-patch
+ end
+ 
+to do-accounting
+  set wealth (wealth + profit)  ; Primero , añada ganancia anual
+  if random-float 1.0 &lt; risk   ; Mire si la inversión  quiebra
+  [
+    set wealth 0
+  ]
+end
+ 
+ 
+to-report utilidad-para [un-inversor]
+  let riqueza-inversor [wealth] of un-inversor ; riqueza del inversor
+  let utilidad 
+    riqueza-inversor + (profit * time-horizon) * ((1 - risk) ^ time-horizon)
+    ; aplica fórmula de utilidad al inversor
+  report utilidad    ; reporta la utilidad
+end</code></pre>
+<p>Finalmente coloquemos un botón go y corramos el modelo:</p>
+</br>
+<center>
+<img src="GrafTallerNegocio/Go.png" />
+</center>
+<p></br></p>
+<p>El modelo lo puede correr en el siguiente applet:</p>
+<iframe src="./GrafTallerNegocio/ModeloNegocio.html" width="100%" height="600px">
+</iframe>
+
+</div>
+</div>
+<div id="análisis-del-modelo" class="section level2">
+<h2><span class="header-section-number">11.3</span> Análisis del Modelo</h2>
+<div id="análisis-básico" class="section level3">
+<h3><span class="header-section-number">11.3.1</span> Análisis Básico</h3>
+<p>¿Tienen más éxito los inversores (promedio de riqueza) si pueden percibir más oportunidades de negocio en un radio más amplio que el de sus parcelas vecinas?. Podemos abordar esta cuestión con un experimento de simulación que varíe el radio sobre el cual los inversores pueden detectar parcelas (bancos).
+Para ampliar esta noción de vecindad, definiremos una variable (en forma de deslizador) que nos defina el radio que los inversores pueden detectar y entonces podemos usar El Analizador de Comportamiento para simular un experimento que varíe este parámetro para ver el efecto del radio sobre la riqueza merdia de los inversores.
+Uasremos el comando <strong>in-radius</strong> (puede ver lo que este comando hace en el diccionario de NetLogo <a href="http://ccl.northwestern.edu/netlogo/docs/dict/in-radius.html">in-radius</a>) para crear un conjunto de parcelas dentro de un radio determinado.
+Si variamos el parámetro radio-detección, obtenemos resultados como los que se muestran en la figura:</p>
+<br>
+</br>
+<center>
+<img src="GrafTallerNegocio/GrafRadio.png" />
+</center>
+<p><br>
+</br></p>
+<p>Estos resultados indican que ser capaz de detectar y ocupar oportunidades en una parcela es mucho mejor que no poder reposicionar en absoluto, pero que a medida que el radio de detección aumenta cada vez existe menos beneficio adicional.</p>
+<ul>
+<li>¿Qué hace que la variación de la riqueza entre los inversores individuales aumente con el radio de acción pero no aumenta tanto como lo hace la riqueza media?</li>
+<li>¿ Cómo podemos construir este gráfica en RStudio?</li>
+</ul>
+</div>
+<div id="modificando-el-modelo" class="section level3">
+<h3><span class="header-section-number">11.3.2</span> Modificando el Modelo</h3>
+Modifiquemos nuestro modelo básico de acuerdo a lo anterior , lo primero es definir una nueva variable global radio-detección, la definiremos a través de un deslizador:
+<br>
+</br>
+<center>
+<img src="GrafTallerNegocio/DeslizRadio.png" />
+</center>
+<p><br>
+</br></p>
+<p>Ahora debemos cambiar el procedimiento go, para calcular las parcelas potenciales donde los inversores buscarán su mejor utilidad:</p>
+<pre>
+<code> to reposition
+<b> let potential-destinations patches in-radius radio-detección with [not any? turtles-here]
+; ¡¡Nuevo!! posibles destinos dependen del radio de detección </b>
+set potential-destinations (patch-set potential-destinations patch-here)
+let best-patch max-one-of potential-destinations [utilidad-para myself]
+move-to best-patch
+end </code>
+<pre>
+</div>
+<div id="generando-el-experimento" class="section level3">
+<h3><span class="header-section-number">11.3.3</span> Generando el Experimento</h3>
+<p>Usaremos el Analizador de Comportamiento para definir el experimento que nos permitirá observar la sensibilidad de la utilidad de los inversores al radio de detección de las parcelas (BANCOS)</p>
+<p>Abramos el analizador de Comportamiento de NetLogo y definamos el siguiente experimento:</p>
+<br>
+</br>
+<center>
+<img src="GrafTallerNegocio/Exp50.png" />
+</center>
+<p><br>
+</br></p>
+<p>Observe que:</p>
+<ul>
+<li>El nombre del Experimento es: “Sensib-Radio-RiquezaMedia”</li>
+<li>Los radios de deteccón toman 5 valores diferentes: 0,1,2,5,y 10</li>
+<li>Para cada radio de detección realizaremos 50 experimentos, o sea que en total son 250 experimentos</li>
+<li>Mediremos la riqueza media de los inversores (<strong>mean [wealth] of turtles</strong>)</li>
+<li>Mediremos la riqueza media de los agentes en cada paso (tick), ya que la opción “Evaluar las ejecuciones a cada paso” está activada.</li>
+</ul>
+<p>(Nota: cada corrida del experimento terminará después de 50 iteraciones esto está especificado dentro del procedimiento Go de NetLogo y no hace parte de la definición del experimento, pero podríamos definirlo colocando en la ventana &quot;Condición de fin de ejecución: <strong>ticks &gt;= years-simulated</strong>)</p>
+</div>
+<div id="análisis-en-r" class="section level3">
+<h3><span class="header-section-number">11.3.4</span> Análisis en R</h3>
+<p>Abramos R y definamos un Archivo Script, llamémolo “Sens-Radio-RiquezaMedia.R”,
+coloque este archivo en el mismo directorio donde se encuentre el Modelo NetLogo y el archivo de datos generado por eol analizador de comportamiento.</p>
+<p>Defina como directorio de Trabajo en Rstudio el Directorio donde se encuentran estos tres archivos, usando el menu Session y la opción “To Source Fil Location” de la opción “Set Working Directory”</p>
+<p>Coloque las dos primeras lineas del archivo Script la siguiente manera:</p>
+<pre><code>library(tidyverse)
+
+data &lt;- read_csv(&quot;ModeloNegocioRadioDeteccion Sensib-Radio-RiquezaMedia-table.csv&quot;,skip=6)
+</code></pre>
+<p>Debe aparecer en la parte derecha de Rstudio, el Archivo de Datos leido y con nombre “data”:</p>
+<br>
+</br>
+<center>
+<img src="GrafTallerNegocio/ArchData.png" />
+</center>
+<p><br>
+</br></p>
+<p>Renombre las columnas de la tabls de datos:</p>
+<pre><code>colnames(data) &lt;- c(&quot;corrida&quot;,&quot;radio&quot;,&quot;años&quot;,&quot;riqueza&quot;)
+</code></pre>
+<p>Agrupe los datos por paso y radio y calcule los promedios de riqueza de los datos agrupados:</p>
+<pre><code>data %&gt;% group_by(años,radio) %&gt;%
+         summarise(promRiqueza=mean(riqueza)) -&gt; datag
+</code></pre>
+<p>La nueva agrupada y con la riqueza promediada (datag) debe verse de la siguiente manera:</p>
+<br>
+</br>
+<center>
+<img src="GrafTallerNegocio/datagRiqueza.png" />
+</center>
+<p><br>
+</br></p>
+<p>Con esta tabla podemos graficar para cada valor del radio de detección como evoluciona la riqueza promedio de los inversores:</p>
+<pre><code>ggplot(datag)+
+      geom_line(aes(años,promRiqueza,color=factor(radio)))</code></pre>
+<p>La gráfica es la siguiente:</p>
+<br>
+</br>
+<center>
+<img src="GrafTallerNegocio/GrafRadio.png" />
+</center>
+<p><br>
+</br></p>
+<p>Se observa que:</p>
+<ul>
+<li>A mayor radio de detección mayor riqueza promedio de los inversores, pero..</li>
+<li>A medida que aumenta el radio el aumento de riqueza promedio es cada vez menor.</li>
+</ul>
+</div>
+<div id="un-estudio-bivariado" class="section level3">
+<h3><span class="header-section-number">11.3.5</span> Un Estudio Bivariado</h3>
+<div id="introduccion" class="section level4">
+<h4><span class="header-section-number">11.3.5.1</span> Introduccion</h4>
+<p>Vamos a estudiar el efecto de dos variables claves del modelo que hasta ahora no hemos tomado en cuenta:</p>
+<ul>
+<li>El número de inversores</li>
+<li>El tamaño del mundo</li>
+</ul>
+<p>¿Que efecto tiene estas dos variables (de manera simultanea) sobre la riqueza de los inversores después de 25 años?</p>
+<p>(El modelo básico lo puede bajar del siguiente enlace:</p>
+<p><a href="https://www.dropbox.com/s/sr3760uqb00p5e5/ModeloNegocioSimpleGo.nlogo?dl=0">Enlace al modelo</a> )</p>
+</div>
+<div id="modificando-el-modelo-1" class="section level4">
+<h4><span class="header-section-number">11.3.5.2</span> Modificando el Modelo</h4>
+</div>
+<div id="deslizadores" class="section level4">
+<h4><span class="header-section-number">11.3.5.3</span> Deslizadores</h4>
+<p>Definamos dos deslizadores:</p>
+<ul>
+<li>num-inversores: para variar el número de inversores</li>
+<li>tam-mundo: para variar el tamaño del mundo</li>
+</ul>
+<br>
+<center>
+<img src="GrafMundoInversores/DeslizadorInversores.PNG" />
+</center>
+<p></br></p>
+<br>
+<center>
+<img src="GrafMundoInversores/DeslizadorMundo.PNG" />
+</center>
+<p></br></p>
+</div>
+<div id="procedimientos" class="section level4">
+<h4><span class="header-section-number">11.3.5.4</span> Procedimientos</h4>
+<p>Ahora modifiquemos el modelo, primero modifiquemos setup-inversores para incluir el deslizador:</p>
+<pre><code>to setup-inversores
+<b>  ask n-of num-inversores patches [   ; Nuevo:  Inversores controlados por deslizador num-inversores </b>
+    sprout-inversores 1
+  ]
+  ask inversores [
+    set W 0             ; dinero en 0
+    pen-down           ; rastro para visualizar como cada agente busca inversiones
+  ]
+end
+</code></pre>
+<p>Ahora modifiquemos el setup, añadiendo un procedimiento setup-mundo para poder cambiar con el deslizador construido el tamaño del mundo</p>
+<pre><code>to setup
+  clear-all
+ <b> setup-mundo   ; Nuevo Proc setup-mundo </b>
+  setup-parcelas
+  setup-inversores
+  interruptores     ; ayudas de visualización del modelo
+  reset-ticks
+end
+
+
+<b> to setup-mundo   ; Nuevo se crea mundo de acuerdo al deslizador tam-mundo
+resize-world (- tam-mundo / 2) tam-mundo / 2 (- tam-mundo / 2) tam-mundo / 2
+set-patch-size 216 * 2.2  / tam-mundo   ;  el tamaño de la parcela se cuadra para que el mundo siempre se vea de un tamaño adecuado
+end </b>
+</code></pre>
+<p>setup-mundo cambia tanto el tamaño del mundo (resize-world) como el de las parcelas (set-patch-size) de tal manera que el mundo se visualize correctamente.
+El modelo con un tamaño de 8 y 50 inversores sería el siguiente:</p>
+<br>
+<center>
+<img src="GrafMundoInversores/Mundo850.PNG" />
+</center>
+<p></br></p>
+</div>
+</div>
+<div id="el-experimento" class="section level3">
+<h3><span class="header-section-number">11.3.6</span> El Experimento</h3>
+<p>Creemos el experimento para poder analizar el efecto del número de inversores y el tamaño del mundo sobre la riqueza:</p>
+<br>
+<center>
+<img src="GrafMundoInversores/Exp3D.PNG" />
+</center>
+<p></br></p>
+<p>Solo variamos los deslizadores que definimos y deascativamos “Evaluar las ejecuciones a cada paso”
+ya que solo queremos observar resultados finales ( a los 25 años).
+Corra el experiemnto y guarde los datos resuiltantes.</p>
+</div>
+<div id="rstudio" class="section level3">
+<h3><span class="header-section-number">11.3.7</span> Rstudio</h3>
+<p>Importemos los datos a Rstudio</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">data &lt;-<span class="st">  </span><span class="kw">read.csv</span>(<span class="st">&quot;ModeloNegocioSimpleMundoVsInversores 3D-table.csv&quot;</span>,<span class="dt">skip=</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb96-2" data-line-number="2"><span class="kw">head</span>(data)</a></code></pre></div>
+<pre><code>##   X.run.number. num.inversores tam.mundo X.step. mean..W..of.inversores
+## 1             4             50        15      25               135951.9
+## 2             3             50        15      25               128363.4
+## 3             1             50        15      25               122975.7
+## 4             6             50        15      25               124873.4
+## 5             5             50        15      25               134091.1
+## 6             7             50        15      25               163788.2</code></pre>
+<p>Seleccionemos las tres columnas que nos interesan:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb98-2" data-line-number="2">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(num.inversores,tam.mundo,mean..W..of.inversores)</a>
+<a class="sourceLine" id="cb98-3" data-line-number="3"><span class="kw">colnames</span>(data)&lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;inversores&quot;</span>,<span class="st">&quot;mundo&quot;</span>,<span class="st">&quot;riqueza&quot;</span>)</a>
+<a class="sourceLine" id="cb98-4" data-line-number="4"><span class="kw">head</span>(data)</a></code></pre></div>
+<pre><code>##   inversores mundo  riqueza
+## 1         50    15 135951.9
+## 2         50    15 128363.4
+## 3         50    15 122975.7
+## 4         50    15 124873.4
+## 5         50    15 134091.1
+## 6         50    15 163788.2</code></pre>
+<p>Agrupemos los datos por inversores y tamaño del mundo:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">datag &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(inversores,mundo) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb100-2" data-line-number="2"><span class="st">         </span><span class="kw">summarise</span>(<span class="dt">riquezaP=</span><span class="kw">mean</span>(riqueza))</a>
+<a class="sourceLine" id="cb100-3" data-line-number="3"><span class="kw">head</span>(datag)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+## # Groups:   inversores [1]
+##   inversores mundo riquezaP
+##        &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;
+## 1         50    15  135799.
+## 2         50    20  141836.
+## 3         50    25  139714.
+## 4         50    30  155572.
+## 5         50    35  147588.
+## 6         50    40  157463.</code></pre>
+<p>Con los datos agrupados podemos construir una matriz con :</p>
+<ul>
+<li>filas(y) : tamaño del mundo</li>
+<li>columnas (x) : número de inversores</li>
+<li>valores matriciales (z): riqueza</li>
+</ul>
+<p>Usaremos la librería plotly para visualizar la matriz en 2D:</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1"><span class="kw">library</span>(reshape2)</a>
+<a class="sourceLine" id="cb102-2" data-line-number="2"><span class="kw">library</span>(plotly)</a>
+<a class="sourceLine" id="cb102-3" data-line-number="3">riqueza &lt;-<span class="st"> </span><span class="kw">acast</span>(datag,mundo <span class="op">~</span><span class="st"> </span>inversores,<span class="dt">value.var=</span><span class="st">&quot;riquezaP&quot;</span>)</a>
+<a class="sourceLine" id="cb102-4" data-line-number="4"> ejey &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">rownames</span>(riqueza))</a>
+<a class="sourceLine" id="cb102-5" data-line-number="5">  ejex &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">colnames</span>(riqueza))</a>
+<a class="sourceLine" id="cb102-6" data-line-number="6">fig &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(</a>
+<a class="sourceLine" id="cb102-7" data-line-number="7">  <span class="dt">x=</span>ejex,<span class="dt">y=</span>ejey,<span class="dt">z=</span>riqueza, </a>
+<a class="sourceLine" id="cb102-8" data-line-number="8">  <span class="dt">type =</span> <span class="st">&quot;contour&quot;</span> </a>
+<a class="sourceLine" id="cb102-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb102-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb102-11" data-line-number="11">fig</a></code></pre></div>
+<div id="htmlwidget-06e5a6ed6c4c4ca71b53" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-06e5a6ed6c4c4ca71b53">{"x":{"visdat":{"24f521c20ec3":["function () ","plotlyVisDat"]},"cur_data":"24f521c20ec3","attrs":{"24f521c20ec3":{"x":[50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150],"y":[15,20,25,30,35,40,45,50,55,60,65],"z":[[135799.234,126624.854545455,133005.268333333,127166.318461538,124861.748571429,120296.057333333,125370.85875,114251.562352941,117256.675555556,114931.163157895,113980.552,111863.960952381,111220.646363636,107960.077391304,111507.479166667,102411.124,104740.084615385,103063.534814815,99548.3707142857,100593.806206897,98378.066],[141836.22,145269.074545455,142719.828333333,141595.235384615,147456.307142857,138124.770666667,138449.38875,138108.041176471,132940.816666667,136493.854736842,133558.883,132893.113333333,131901.458181818,131159.724347826,130654.555,124600.9208,124325.146153846,125621.898518519,126581.613571429,122823.822068966,122879.522666667],[139713.67,152634.618181818,151544.103333333,144166.86,149322.767142857,143702.266666667,143995.2875,142869.164705882,142652.451111111,140236.355789474,142470.681,142200.695238095,138573.713636364,140574.245217391,136071.165833333,132773.2736,131007.555384615,136775.240740741,131766.258571429,132506.584827586,133401.488666667],[155572.352,151490.030909091,157245.481666667,157640.693846154,154408.114285714,150741.948,146971.85625,147292.775294118,149823.571111111,145857.807368421,148209.679,146776.956190476,144216.094545455,145855.925217391,145081.113333333,146241.996,143605.935384615,145529.76962963,139356.320714286,142409.223448276,142974.758666667],[147588.442,154971.494545455,158230.343333333,154825.878461538,152767.418571429,148806.232,153451.45125,151349.634117647,152198.47,150919.204210526,149037.104,146154.920952381,153019.191818182,147879.44173913,143679.045,148455.4104,148497.413076923,144048.196296296,146700.798571429,146483.873793103,147959.692666667],[157462.868,160991.934545455,156688.606666667,157000.843076923,156909.21,157430.826666667,150458.37,155278.003529412,155979.947777778,147401.946315789,154481.618,158414.126666667,150259.398181818,150148.949565217,153256.436666667,151694.7688,150249.091538462,153382.305925926,149618.522142857,145713.514482759,149339.604],[156183.552,159942.136363636,161089.763333333,157145.956923077,154693.501428571,155664.293333333,157706.2475,159037.6,151970.111111111,151935.502105263,155973.693,149672.120952381,154635.964545455,152017.583478261,153908.378333333,156021.0824,154151.654615385,155259.131111111,152892.824285714,150871.970344828,151631.302666667],[160678.198,157349.770909091,153686.971666667,156132.853846154,158113.508571429,152680.225333333,155369.23375,156925.457647059,153648.431111111,157051.822105263,158076.793,152050.747619048,156940.420909091,155175.56173913,153519.558333333,151557.3376,154270.684615385,156565.354074074,150836.148571429,154874.690344828,153378.731333333],[153172.226,159331.878181818,156773.671666667,155322.063076923,154416.334285714,156055.750666667,151007.715,163483.342352941,152898.082222222,156251.565263158,158944.308,151271.487619048,154193.23,157681.4,158089.776666667,158305.7416,155782.444615385,154478.012592593,154631.127857143,153660.49862069,154890.421333333],[154380.974,155850.463636364,159816.23,162501.841538462,159648.728571429,156757.410666667,158842.63375,159717.656470588,159542.665555556,161433.515789474,160404.346,159500.571428571,157823.062727273,159504.726086957,155246.391666667,156964.3312,154497.015384615,157535.003703704,156792.974285714,151110.688965517,155745.688],[153414.076,157221.496363636,157444.665,160915.253846154,161265.195714286,156700.654666667,157067.1125,162186.725882353,157874.422222222,155913.012631579,151336.138,156514.111428571,158232.773636364,157579.549565217,159419.470833333,158081.8384,160279.856923077,159256.974074074,159012.829285714,152036.608275862,152977.253333333]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"contour"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":[]},"yaxis":{"domain":[0,1],"automargin":true,"title":[]},"scene":{"zaxis":{"title":[]}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333334","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"x":[50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150],"y":[15,20,25,30,35,40,45,50,55,60,65],"z":[[135799.234,126624.854545455,133005.268333333,127166.318461538,124861.748571429,120296.057333333,125370.85875,114251.562352941,117256.675555556,114931.163157895,113980.552,111863.960952381,111220.646363636,107960.077391304,111507.479166667,102411.124,104740.084615385,103063.534814815,99548.3707142857,100593.806206897,98378.066],[141836.22,145269.074545455,142719.828333333,141595.235384615,147456.307142857,138124.770666667,138449.38875,138108.041176471,132940.816666667,136493.854736842,133558.883,132893.113333333,131901.458181818,131159.724347826,130654.555,124600.9208,124325.146153846,125621.898518519,126581.613571429,122823.822068966,122879.522666667],[139713.67,152634.618181818,151544.103333333,144166.86,149322.767142857,143702.266666667,143995.2875,142869.164705882,142652.451111111,140236.355789474,142470.681,142200.695238095,138573.713636364,140574.245217391,136071.165833333,132773.2736,131007.555384615,136775.240740741,131766.258571429,132506.584827586,133401.488666667],[155572.352,151490.030909091,157245.481666667,157640.693846154,154408.114285714,150741.948,146971.85625,147292.775294118,149823.571111111,145857.807368421,148209.679,146776.956190476,144216.094545455,145855.925217391,145081.113333333,146241.996,143605.935384615,145529.76962963,139356.320714286,142409.223448276,142974.758666667],[147588.442,154971.494545455,158230.343333333,154825.878461538,152767.418571429,148806.232,153451.45125,151349.634117647,152198.47,150919.204210526,149037.104,146154.920952381,153019.191818182,147879.44173913,143679.045,148455.4104,148497.413076923,144048.196296296,146700.798571429,146483.873793103,147959.692666667],[157462.868,160991.934545455,156688.606666667,157000.843076923,156909.21,157430.826666667,150458.37,155278.003529412,155979.947777778,147401.946315789,154481.618,158414.126666667,150259.398181818,150148.949565217,153256.436666667,151694.7688,150249.091538462,153382.305925926,149618.522142857,145713.514482759,149339.604],[156183.552,159942.136363636,161089.763333333,157145.956923077,154693.501428571,155664.293333333,157706.2475,159037.6,151970.111111111,151935.502105263,155973.693,149672.120952381,154635.964545455,152017.583478261,153908.378333333,156021.0824,154151.654615385,155259.131111111,152892.824285714,150871.970344828,151631.302666667],[160678.198,157349.770909091,153686.971666667,156132.853846154,158113.508571429,152680.225333333,155369.23375,156925.457647059,153648.431111111,157051.822105263,158076.793,152050.747619048,156940.420909091,155175.56173913,153519.558333333,151557.3376,154270.684615385,156565.354074074,150836.148571429,154874.690344828,153378.731333333],[153172.226,159331.878181818,156773.671666667,155322.063076923,154416.334285714,156055.750666667,151007.715,163483.342352941,152898.082222222,156251.565263158,158944.308,151271.487619048,154193.23,157681.4,158089.776666667,158305.7416,155782.444615385,154478.012592593,154631.127857143,153660.49862069,154890.421333333],[154380.974,155850.463636364,159816.23,162501.841538462,159648.728571429,156757.410666667,158842.63375,159717.656470588,159542.665555556,161433.515789474,160404.346,159500.571428571,157823.062727273,159504.726086957,155246.391666667,156964.3312,154497.015384615,157535.003703704,156792.974285714,151110.688965517,155745.688],[153414.076,157221.496363636,157444.665,160915.253846154,161265.195714286,156700.654666667,157067.1125,162186.725882353,157874.422222222,155913.012631579,151336.138,156514.111428571,158232.773636364,157579.549565217,159419.470833333,158081.8384,160279.856923077,159256.974074074,159012.829285714,152036.608275862,152977.253333333]],"type":"contour","line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>Usaremos la librerpia plotly para visualizar la matriz en 3D:</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw">library</span>(reshape2)</a>
+<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="kw">library</span>(plotly)</a>
+<a class="sourceLine" id="cb103-3" data-line-number="3">riqueza &lt;-<span class="st"> </span><span class="kw">acast</span>(datag,mundo <span class="op">~</span><span class="st"> </span>inversores,<span class="dt">value.var=</span><span class="st">&quot;riquezaP&quot;</span>)</a>
+<a class="sourceLine" id="cb103-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb103-5" data-line-number="5">  ejey &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">rownames</span>(riqueza))</a>
+<a class="sourceLine" id="cb103-6" data-line-number="6">  ejex &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">colnames</span>(riqueza))</a>
+<a class="sourceLine" id="cb103-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb103-8" data-line-number="8">    fig &lt;-<span class="st"> </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb103-9" data-line-number="9"><span class="st">      </span><span class="kw">add_surface</span>(<span class="dt">x=</span><span class="op">~</span>ejex, <span class="dt">y =</span> <span class="op">~</span>ejey, <span class="dt">z =</span> <span class="op">~</span>riqueza) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb103-10" data-line-number="10"><span class="st">      </span><span class="kw">layout</span>(<span class="dt">title=</span><span class="st">&quot;mundo-inversores vs riqueza&quot;</span>,</a>
+<a class="sourceLine" id="cb103-11" data-line-number="11">             <span class="dt">scene=</span><span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb103-12" data-line-number="12">               <span class="dt">xaxis=</span><span class="kw">list</span>(<span class="dt">title=</span><span class="st">&quot;Inversores&quot;</span>),</a>
+<a class="sourceLine" id="cb103-13" data-line-number="13">               <span class="dt">yaxis=</span><span class="kw">list</span>(<span class="dt">title=</span><span class="st">&quot;mundo&quot;</span>),</a>
+<a class="sourceLine" id="cb103-14" data-line-number="14">               <span class="dt">zaxis=</span><span class="kw">list</span>(<span class="dt">title=</span><span class="st">&quot;riqueza&quot;</span>)</a>
+<a class="sourceLine" id="cb103-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb103-16" data-line-number="16">             ))</a>
+<a class="sourceLine" id="cb103-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb103-18" data-line-number="18">    fig</a></code></pre></div>
+<div id="htmlwidget-7edaeaefec4bd4635781" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7edaeaefec4bd4635781">{"x":{"visdat":{"24f5225480b2":["function () ","plotlyVisDat"]},"cur_data":"24f5225480b2","attrs":{"24f5225480b2":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":{},"type":"surface","x":{},"y":{},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"mundo-inversores vs riqueza","scene":{"xaxis":{"title":"Inversores"},"yaxis":{"title":"mundo"},"zaxis":{"title":"riqueza"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"riqueza","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333334","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[135799.234,126624.854545455,133005.268333333,127166.318461538,124861.748571429,120296.057333333,125370.85875,114251.562352941,117256.675555556,114931.163157895,113980.552,111863.960952381,111220.646363636,107960.077391304,111507.479166667,102411.124,104740.084615385,103063.534814815,99548.3707142857,100593.806206897,98378.066],[141836.22,145269.074545455,142719.828333333,141595.235384615,147456.307142857,138124.770666667,138449.38875,138108.041176471,132940.816666667,136493.854736842,133558.883,132893.113333333,131901.458181818,131159.724347826,130654.555,124600.9208,124325.146153846,125621.898518519,126581.613571429,122823.822068966,122879.522666667],[139713.67,152634.618181818,151544.103333333,144166.86,149322.767142857,143702.266666667,143995.2875,142869.164705882,142652.451111111,140236.355789474,142470.681,142200.695238095,138573.713636364,140574.245217391,136071.165833333,132773.2736,131007.555384615,136775.240740741,131766.258571429,132506.584827586,133401.488666667],[155572.352,151490.030909091,157245.481666667,157640.693846154,154408.114285714,150741.948,146971.85625,147292.775294118,149823.571111111,145857.807368421,148209.679,146776.956190476,144216.094545455,145855.925217391,145081.113333333,146241.996,143605.935384615,145529.76962963,139356.320714286,142409.223448276,142974.758666667],[147588.442,154971.494545455,158230.343333333,154825.878461538,152767.418571429,148806.232,153451.45125,151349.634117647,152198.47,150919.204210526,149037.104,146154.920952381,153019.191818182,147879.44173913,143679.045,148455.4104,148497.413076923,144048.196296296,146700.798571429,146483.873793103,147959.692666667],[157462.868,160991.934545455,156688.606666667,157000.843076923,156909.21,157430.826666667,150458.37,155278.003529412,155979.947777778,147401.946315789,154481.618,158414.126666667,150259.398181818,150148.949565217,153256.436666667,151694.7688,150249.091538462,153382.305925926,149618.522142857,145713.514482759,149339.604],[156183.552,159942.136363636,161089.763333333,157145.956923077,154693.501428571,155664.293333333,157706.2475,159037.6,151970.111111111,151935.502105263,155973.693,149672.120952381,154635.964545455,152017.583478261,153908.378333333,156021.0824,154151.654615385,155259.131111111,152892.824285714,150871.970344828,151631.302666667],[160678.198,157349.770909091,153686.971666667,156132.853846154,158113.508571429,152680.225333333,155369.23375,156925.457647059,153648.431111111,157051.822105263,158076.793,152050.747619048,156940.420909091,155175.56173913,153519.558333333,151557.3376,154270.684615385,156565.354074074,150836.148571429,154874.690344828,153378.731333333],[153172.226,159331.878181818,156773.671666667,155322.063076923,154416.334285714,156055.750666667,151007.715,163483.342352941,152898.082222222,156251.565263158,158944.308,151271.487619048,154193.23,157681.4,158089.776666667,158305.7416,155782.444615385,154478.012592593,154631.127857143,153660.49862069,154890.421333333],[154380.974,155850.463636364,159816.23,162501.841538462,159648.728571429,156757.410666667,158842.63375,159717.656470588,159542.665555556,161433.515789474,160404.346,159500.571428571,157823.062727273,159504.726086957,155246.391666667,156964.3312,154497.015384615,157535.003703704,156792.974285714,151110.688965517,155745.688],[153414.076,157221.496363636,157444.665,160915.253846154,161265.195714286,156700.654666667,157067.1125,162186.725882353,157874.422222222,155913.012631579,151336.138,156514.111428571,158232.773636364,157579.549565217,159419.470833333,158081.8384,160279.856923077,159256.974074074,159012.829285714,152036.608275862,152977.253333333]],"type":"surface","x":[50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150],"y":[15,20,25,30,35,40,45,50,55,60,65],"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="preguntas" class="section level3">
+<h3><span class="header-section-number">11.3.8</span> Preguntas</h3>
+<p>Estas gráficas (contour 3D plots) son muy útiles para analizar modelos basados en agnetes cuando queremos ver la influencia simultanea de dos diferentes variables sobre una tercera.
+A partir de esta gráfica se pueden responder muchas preguntas como:</p>
+<ul>
+<li>¿Para que valores de tamaño del mundo e inversores la riqueza de estos es máxima?</li>
+<li>¿Para que valores de tamaño del mundo e inversores la riqueza de estos es mínima?</li>
+<li>¿ En donde hay mayor y menor variación de la riqueza?</li>
+</ul>
+<center>
+<em>¿Qué otras preguntas se podrían formular? ¿Se le ocurren algunas?</em>
+</center>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="verificación-validación-replicación.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="proyectos-básicos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

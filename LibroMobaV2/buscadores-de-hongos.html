@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Buscadores de Hongos | Modelación basada en Agentes</title>
+  <meta name="description" content="5 Buscadores de Hongos | Modelación basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Buscadores de Hongos | Modelación basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Buscadores de Hongos | Modelación basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="algo-de-historia.html"/>
+<link rel="next" href="construyendo-modelos-basados-en-agentes.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El ciclo de modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html"><i class="fa fa-check"></i><b>7</b> El Modelo Predador Presa</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#siete-criterios-de-diseño"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseño:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#cinco-modelos-incrementales"><i class="fa fa-check"></i><b>7.3</b> Cinco modelos incrementales</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html"><i class="fa fa-check"></i><b>9</b> El Modelo SI de Infección</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#un-segundo-análisis-infección-ambiental"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis (Infección Ambiental)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html"><i class="fa fa-check"></i><b>11</b> Modelo de Inversión</a><ul>
+<li class="chapter" data-level="11.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Descripción del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apéndices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a><ul>
+<li class="chapter" data-level="A.6.1" data-path="redes.html"><a href="redes.html#intervención-de-políticas"><i class="fa fa-check"></i><b>A.6.1</b> Intervención de políticas</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+<li class="chapter" data-level="B.3.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#conjunto-de-agentes-agentset"><i class="fa fa-check"></i><b>B.3.1</b> Conjunto de agentes (agentset)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="buscadores-de-hongos" class="section level1">
+<h1><span class="header-section-number">5</span> Buscadores de Hongos</h1>
+<p>Estamos listos para construir nuestro primer modelo, este es el modelo de búsqueda de hongos que discutimos en la sección <a href="qué-es-un-modelo.html#un-primer-ejemplo">1.2</a> en este momento es conveniente volver a leer la sección 1.2 para recordar en que consiste.</p>
+<div id="construyendo-el-modelo" class="section level2">
+<h2><span class="header-section-number">5.1</span> Construyendo el Modelo</h2>
+<div id="preliminares-instalando-y-abriendo-netlogo" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Preliminares: Instalando y Abriendo NetLogo</h3>
+<p>El programa NetLogo (Versión 6.1) lo puede bajar del siguiente enlace:</p>
+<p><a href="https://ccl.northwestern.edu/netlogo/download.shtml">enlace para bajar NetLogo</a></p>
+<p>Usaremos la versión 6.1 Una vez lo instale, abra el programa en su computadora debe aparecer lo siguiente:
+<br>
+</br>
+<img src="GrafTallerBuscador/NetLogo.png" />
+<br>
+</br></p>
+<ul>
+<li>Crear, a través de Archivo / Nuevo en el menú de NetLogo, un nuevo archivo de NetLogo. Guárdelo a través de Archivo /Guardar como, en un directorio de su elección y con el nombre de archivo BusHongos.nlogo.</li>
+<li><p>Haga clic en el botón Configuración, el botón Configuración abre el cuadro de diálogo de configuración del modelo, donde puede verificar la geometría del mundo.Usaremos la geometría predeterminada con:</p></li>
+<li>el origen (parcela 0,0) en el centro del mundo.</li>
+<li><p>la coordenada máxima en x (max-pxcor) y coordenada máxima en y(max-pycor) en 16.
+<br>
+</br>
+<img src="GrafTallerBuscador/Mundo.png" />
+<br>
+</br></p></li>
+</ul>
+<p>Esto forma un cuadrado de 33 × 33 parcelas Haga clic en Aceptar para cerrar el cuadro de diálogo Configuración.</p>
+<p>Para nuestro modelo de búsqueda de hongos , queremos crear un mundo con parcelas negras, con algunos grupos de parcelas rojas (que representan hongos) distribuidas al azar, también crearemos dos agentes (turtles) que serán nuestros buscadores y luego haremos que los buscadores encuentren las parcelas rojas.
+Por lo tanto, necesitamos :</p>
+<ul>
+<li>setup: inicializar el Mundo y los buscadores , y luego</li>
+<li>go: modelar las acciones que realizarán los buscadores para encontrar los hongos.</li>
+</ul>
+</div>
+<div id="procedimiento-setup" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Procedimiento setup</h3>
+<p>Seguiremos la convención en NetLogo de usar el nombre <strong>setup</strong> para el procedimiento que inicializa el mundo y los agentes (buscadores), y el nombre <strong>go</strong> para el procedimiento que realiza las acciones que realiza el modelo. A estas alturas ya debía saber que un procedimiento comienza y termine con las palabras clave <strong>to</strong> y <strong>end</strong> respectivamente.( al leer <a href="https://ccl.northwestern.edu/netlogo/docs/programming.html">la guía de programación de NetLogo</a>)
+Antes de construir los procedimientos de inicio (<strong>setup</strong>) y de acciones (<strong>go</strong>) vamos a crear dos botones en la interfaz de NetLogo (pestaña Interfaz) que se utilizarán para activar estos procedimientos, active la pestaña interfaz de NetLogo.</p>
+<ul>
+<li><p>En la pestaña Interfaz, hay un menú desplegable, generalmente etiquetado como “Botón”, que le permite seleccionar uno de los elementos de interfaz proporcionados por NetLogo (botón, deslizador, interruptor, etc.).</p></li>
+<li>Haga clic en este selector, que abre una lista de estos elementos, luego haga clic en Botón.
+<br>
+</br>
+<img src="GrafTallerBuscador/Boton.png" />
+<br>
+</br></li>
+<li><p>Coloque el cursor del mouse en la parte en blanco de la interfaz, a la izquierda de la ventana negra del mundo y haga clic Esto pone un nuevo botón en la interfaz y abre una ventana que le permite colocar las características de este nuevo botón:
+<br>
+</br>
+<img src="GrafTallerBuscador/VentBoton.png" />
+<br>
+</br></p></li>
+<li><p>En el campo Instrucciones de la ventana que apareció, escriba “setup” y haga clic en Aceptar, hemos creado un botón que ejecutará un procedimiento llamado setup, la etiqueta del botón está en rojo, lo que indica que:</p></li>
+</ul>
+<p>no hay un comando o procedimiento correspondiente llamado de esa manera, esto lo arreglaremos en un minuto.A continuación, escribamos el procedimiento de setup</p>
+<ul>
+<li>Haga clic en la pestaña Código, donde encontrará un espacio en blanco para ingresar su código.Al inicio escriba:</li>
+</ul>
+<pre><code>to setup
+end</code></pre>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/DefSetup.png" />
+<br>
+</br></p>
+<ul>
+<li><p>Haga clic en el botón Comprobar (el que tiene un chulito).Este botón activa el verificador de sintaxis de NetLogo, que busca errores en su código como :</p></li>
+<li>¿faltan paréntesis?</li>
+<li>¿Los comandos tienen el número correcto de entradas?</li>
+<li><p>¿el procedimiento no existe?, etc.</p></li>
+</ul>
+<p>Es importante usar el verificador de sintaxis <strong>con frecuencia</strong>, después de cada declaración que escriba, de esta manera se encuentran errores de inmediato y se sabe exactamente donde están. Sin embargo, este verificador no encuentra todos los errores; más adelante veremos otras formas de encontrar errores.
+Ahora no debería haber ningún mensaje de error. Si vuelve a la pestaña Interfaz, la etiqueta del botón <strong>setup</strong> debe estar en negro, lo que indica que ahora el procedimiento ya está definido y se puede ejecutar (a pesar de que este procedimiento todavía está vacío y no hace nada.)</p>
+<ul>
+<li><p>Regrese a la pestaña Código y elimine la palabra <em>end</em> Haga clic en el botón Verificar nuevamente. Se obtendrá un mensaje de error que dice <strong>End expected</strong> o sea que se esperaba un end.</p></li>
+<li><p>Deshaga la eliminación de end usando CTRL-Z .</p></li>
+<li><p>Regrese a la pestaña Interfaz y cree un segundo botón, colque en la ventana de instrucciones la palabra “go” y luego haga clic en la casilla que dice “Continuamente”:</p></li>
+</ul>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/BotonGo.png" />
+<br>
+</br></p>
+<ul>
+<li><p>Haga clic en Aceptar.Este segundo botón, go, ahora tiene un par de flechas circulares que indican que es un botón que al oprimirlo se ejecutará continuamente (“Para siempre”) significa que cuando se hace clic en el botón, se ejecutará su procedimiento (go) una y otra vez hasta que se vuelva a hacer clic en el botón.</p></li>
+<li><p>De la misma manera que creamos el procedimiento de setup enla pestaña de código (con dos líneas que dicen setup y end), escriba el procedimiento go de la misma manera.</p></li>
+</ul>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/EsqueletoSetupGo.png" />
+<br>
+</br></p>
+</div>
+<div id="construyendo-las-parcelas." class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Construyendo las parcelas.</h3>
+<ul>
+<li>Ahora, le diremos al procedimiento <strong>setup</strong> que cambie el color de las parcelas.</li>
+<li>Cambie el procedimiento de configuración a lo siguiente:</li>
+</ul>
+<pre><code>to setup
+ask patches
+ [
+  set pcolor red
+ ]
+end
+</code></pre>
+<p>ask es el comando más importante y poderoso de NetLogo. Hace que los agentes seleccionados (aquí, todos las parcelas) efectuen las acciones especificadas dentro de los paréntesis cuadrados. Estos paréntesis cuadrados siempre definen un bloque de acciones que se ejecutan juntas. Las declaraciones que acabamos de escribir “preguntan” (ask) a todos las parcelas que cambien su color a rojo ( pcolor = red), Las parcelas por defecto tienen su color (pcolor) configurado en negro (por eso el mundo se ve así al comienzo como un gran cuadrado negro),en nuestro nuevo procedimiento de setup usaremos el comando “set” para cambiar el color a rojo, este comando es un operador de asignación: asigna un valor (rojo) a una variable, en este caso pcolor. (En muchos lenguajes de programación, esta declaración se escribiría pcolor=rojo, que no funciona en NetLogo!)</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/SetupParcelas.png" />
+<br>
+</br></p>
+<ul>
+<li>Pruebe el nuevo procedimiento de setup yendo a la pestaña Interfaz y haciendo clic en el botón, Todas los parcelas deben ponerse rojas.Sin embargo, queremos que solo unos pocos grupos de parcelas se vuelvan rojas (los hongos). Hagamos que NetLogo seleccione cuatro parcelas aleatorias, y luego pida a esas cuatro parcelas que vuelvan rojas a veinte parcelas cercanas. la modificación del procedimiento setup es la siguiente:</li>
+</ul>
+<pre><code>to setup
+  ask n-of 4 patches [
+    ask n-of 20 patches in-radius 5 [
+      set pcolor red
+    ]
+  ]
+end
+</code></pre>
+<p>Los comandos n-of y in-radius son nuevos.</p>
+<ul>
+<li>Busque n-of y in-radius en el Diccionario NetLogo. Puede encontrarlos en el Diccionario de Netlogo, haciendo clic en la categoría Agentset (lugar donde se encuentran todos los comandos que tienen que ver con grupos de agentes).</li>
+</ul>
+<p>(Nota: un truco importante para ir directamente a la definición de cualquier comando es haciendo clic en la palabra y presionar F1.)</p>
+<p>El <a href="https://ccl.northwestern.edu/netlogo/docs/dictionary.html">Diccionario de NetLogo</a> explica que n-of selecciona un subconjunto aleatorio de un grupo de agentes, in-radius selecciona todos los agentes (en este caso parcelas) dentro de un radio especificado ( cinco ). Por lo tanto, nuestro nuevo código de setup identifica cuatro parcelas aleatorias y les pide a cada una de ellas que identifique aleatoriamente veinte parcelas dentro de un radio de cinco, y que les cambie el color a rojo.</p>
+<ul>
+<li>Vaya a la pestaña Interfaz y presione el botón de setup. Si todos las parcelas siguen en rojo ¡no pasa nada! ¿Hay algún error? En realidad no, porque solo le dijo al programa que pusiera algunas parcelas en rojo, <strong>pero todos las parcelas ya estaban en rojo</strong>, así que no se ve ningún cambio. Para evitar este tipo de problema, asegurémonos de que el mundo siempre sea restablecido a su estado inicial ( o sea las parcelas en negro) Esto se hace con el comando clear-all que se debe agregar como primera línea al procedimiento setup:</li>
+</ul>
+<pre><code>to setup
+  clear-all
+  ask n-of 4 patches [
+    ask n-of 20 patches in-radius 5 [
+      set pcolor red
+    ]
+  ]
+end
+</code></pre>
+<p>Olvidar poner clear-all al comienzo del procedimiento de setup es un error muy común. Casi siempre necesitamos comenzar el proceso de setup borrando todo lo que quedaba desde la última vez que ejecutamos el modelo.Si se hace clic en el botón de setup ahora, verá un mundo en negro con algo de rojo. Si se hace clic en el botón de setup varias veces, verá que cuatro grupos aleatorios de manchas rojas se crean, de hecho a veces parece que se crean menos grupos porque los grupos se superponen. Otras veces parece que parte de un grupo se crea en el borde del mundo; para entender por qué, vaya a la sección de la <a href="https://ccl.northwestern.edu/netlogo/docs/interface.html">Guía de interfaz de NetLogo</a> en las Vistas y lea sobre “World Wrapping”, y vea la sección de la Guía de programación llamada “Topología”. Comprender la noción de “World Wrapping” de NetLogo que es muy importante!</p>
+</div>
+<div id="variables-globales" class="section level3">
+<h3><span class="header-section-number">5.1.4</span> Variables globales</h3>
+<ul>
+<li><p>Desde el menú principal de NetLogo, presione Archivo / Guardar. ¡Guarde su trabajo a menudo! NetLogo no lo hará!!
+Ahora hagamos que el número de grupos de parcelas rojas sea un parámetro del modelo, para hacer esto necesitamos :</p></li>
+<li>crear una variable global numérica llamada num-clusters (número de grupos de hongos)<br />
+</li>
+<li><p>darle un valor de 4 (usando el comando set)</p></li>
+<li><p>En la pestaña de Código, vaya a la parte superior de todo su código e inserte
+arriba del procedimiento setup lo siguiente:</p></li>
+</ul>
+<pre><code>globals [
+num-clusters
+]
+</code></pre>
+<ul>
+<li>Coloque:</li>
+</ul>
+<pre><code>set num-clusters 4</code></pre>
+<p>luego de la instrucción clear-all en el setup.</p>
+<ul>
+<li>reemplace el 4 en la instrucción ask n-of 4 patches por num-clusters.
+Ahora, si queremos cambiar el número de grupos, sabemos exactamente dónde encontrar y cambiar el valor del parámetro sin modificar nada más en el modelo. (Más tarde, usaremos deslizadores para cambiar los parámetros desde la interfaz</li>
+</ul>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/NumClusters.png" />
+<br>
+</br></p>
+</div>
+<div id="creando-los-agentes-buscadores" class="section level3">
+<h3><span class="header-section-number">5.1.5</span> Creando los agentes (buscadores)</h3>
+<p>Ahora que hemos construido el “mundo” del modelo, necesitamos crear los agentes, en nuestro caso dos buscadores. Esto se hace con el comando create-turtles, La declaración create-turtles 2 [] crea dos tortugas (agentes) y les hace ejecutar el código dentro de los corchetes
+Agregue el siguiente código al final del procedimiento de setup Haga clic en Comprobar para buscar errores, luego pruébelo usando el botón de setup en la interfaz:</p>
+<pre><code>create-turtles 2 [
+    set size 2
+    set color yellow
+  ]
+</code></pre>
+<p><br>
+</br><img src="GrafTallerBuscador/Turtles.png" />
+<br>
+</br></p>
+<p>El tamaño y el color son variables predefinidas de los agentes (turtles) por esta razón podemos definir sus valores sin definirlas. Si se hace clic en el botón setup varias veces, verá que dos buscadores se colocan en el centro del mundo (por defecto)y su dirección varía al azar:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/SetupTodo.png" />
+<br>
+</br></p>
+</div>
+<div id="comportamiento-de-los-agentes-procedimiento-go" class="section level3">
+<h3><span class="header-section-number">5.1.6</span> Comportamiento de los agentes (Procedimiento go)</h3>
+<p>Ahora vamos a construir el procedimiento go. El procedimiento go define el “comportamiento” del modelo, o sea los procesos que se realizarán una y otra vez, y su orden. Para mantener el procedimiento go simple y fácil de entender, lo cual es muy importante porque es el corazón del programa: casi nunca programamos procesos o acciones reales dentro del go. En cambio, definimos procedimientos auxiliares y se programa cada acción.
+En nuestro modelo de búsqueda de hongos, solo tenemos una acción, la búsqueda de los agentes, por lo tanto el procedimiento go necesita incluir solo un prodcedimiento, que le dice a todas las tortugas (nuestros dos buscadores) que ejecuten un procedimiento de búsqueda:</p>
+<pre><code>ask turtles [search]</code></pre>
+<p>Para que esto funcione, por supuesto, necesitamos escribir el procedimiento llamado “search” para los buscadores.</p>
+<ul>
+<li>Agregue la linea, ask turtles [search] al procedimiento go. Luego cree un procedimiento vacio para que pueda verificar el código :</li>
+</ul>
+<pre><code>to search
+end</code></pre>
+<p><br>
+</br><img src="GrafTallerBuscador/EsqueletoGo.png" />
+<br>
+</br></p>
+<p>Ahora programemos como buscan los agentes (buscadores) Cada vez que se ejecuta la búsqueda, queremos que los cazadores giren, <strong>un poco</strong> si no han encontrado nada recientemente (por ejemplo, en las últimos veinte parcelas recorridas), o <strong>bruscamente</strong> para seguir buscando en la misma área si encontraron un hongo recientemente. Luego de girar los buscadores deben avanzar hacia una parcela vecina.
+* Agregue el siguiente código al procedimiento de búsqueda, cualquier parte que no entienda búsquela en el diccionario de NetLogo:</p>
+<pre><code>ifelse time-since-last-found &lt;= 20
+ [right (random 181) - 90]
+ [right (random 21) - 10]
+ forward 1</code></pre>
+<p>Puede deducir buscando en el Diccionario de NetLogo que la declaración
+right (random 181 - 90) hace que los buscadores (turtles) giren un ángulo aleatorio entre -90 y +90 grados. Observe cómo usamos la instrución <strong>ifelse</strong> para modelar decisiones. Si la condición booleana que sigue a ifelse es verdadera, entonces el código en el primer conjunto de corchetes se ejecuta; si es falso, se ejecuta el código en el segundo conjunto de corchetes.Una condición booleana es una declaración que es verdadera o falsa. Aquí, la condición es:</p>
+<p>time-since-last-found &lt;= 20</p>
+<p>consiste en una comparación: es cierto si el valor de time-since-last-found es menor o igual a 20. Si presiona el botón Comprobar saldrá un error:</p>
+<p>“Nothing named time-since-last-found has been defined”</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/ErrorVarNoDefinida.png" />
+<br>
+</br></p>
+</div>
+<div id="variables-locales-de-agentes" class="section level3">
+<h3><span class="header-section-number">5.1.7</span> Variables locales de agentes</h3>
+<p>No hemos definido esta variable, queremos que sea una variable que registre cuánto tiempo ha pasado desde que cada buscador encontró el último hongo Eso significa tres cosas.</p>
+<ul>
+<li>Primero, Cada cazador debe tener su propio <strong>valor único</strong> para esta variable, por lo que debe ser una variable de tipo turtle (agente), justo después de la declaración global al comienzo de su programa, agregue:</li>
+</ul>
+<pre><code>turtles-own [
+  time-since-last-found
+  ]</code></pre>
+<p>En segundo lugar, necesitamos establecer el valor inicial de esta variable cuando creamos los buscadores Estableceremos,asumiendo que los cazadores aún no han encontrado un hongo,un valor mayor que 20.</p>
+<ul>
+<li>En el procedimiento de setup, cambie la instrucción create-turtles a esto:</li>
+</ul>
+<pre><code>create-turtles 2 [
+   set size 2
+   set color yellow
+   set time-since-last-found 999
+  ]</code></pre>
+<p>Finalmente, los cazadores deben actualizar time-since-last-found cada vez que se mueven. Si encuentran un hongo, necesitan restablecer time-since-last-found a cero (¡y recoger el hongo!); de lo contrario, necesitan agregar uno a time-since-last-found.</p>
+<ul>
+<li>Agregue estas declaraciones al final del procedimiento search:</li>
+</ul>
+<pre><code>ifelse pcolor = red [
+   set time-since-last-found 0
+   set pcolor yellow
+   ][
+   set time-since-last-found time-since-last-found + 1
+   ]
+   </code></pre>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/ModeloComp.png" />
+<br>
+</br></p>
+<p>Tenga en cuenta que estas declaraciones funcionan porque NetLogo permite a los agentes leer y cambiar variables de la parcela en la que están (en este caso set pcolor yellow).También tenga en cuenta que para agregar un uno a time-since-last-found tuvimos que usar set para asignar su nuevo valor a su antiguo valor más uno. (Tenga en cuenta que en NetLogo <strong>debe usar espacios alrededor de operadores aritméticos</strong> como “+”; de lo contrario, NetLogo cree que son parte del nombre de la variable).</p>
+<p>Asegúrese de comprender que las coordenadas de la parcela son variables discretas: solo tienen valores enteros, en unidades de ancho de parcela. En contraste, las coordenadas de tortuga son variables continuas:pueden tomar cualquier valor dentro de una parcela, por ejemplo, 13.11 unidades. Por eso es importante distinguir entre instrucciones que se refieren a coordenadas de tortuga y aquellas que se refieren a parcelas. Por ejemplo la instrucción <strong>move-to</strong> mueve un agente (turtle) al centro de una parcela, pero <strong>forward</strong> puede colocar un agente en cualquier lugar de esta.Si ahora prueba el programa haciendo clic en el botón go, es posible que no pueda ver mucho porque los agentes buscadores se mueven demasiado rápido Si es así, ajuste el controlador de velocidad de ejecución en la interfaz.</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Velocidad.png" />
+<br>
+</br></p>
+<p>(Haga clic en go por segunda vez para detener la ejecución).Voila! ¡Aquí tenemos nuestro primer programa completo de NetLogo! (¡Asegúrese de guardarlo!)
+Al correr el modelo , oprimiendo setup y luego go debe aparecer lo siguiente:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/ModeloCompleto.png" />
+<br>
+</br></p>
+<p><strong>Sorprendentemente</strong>, a pesar de su simplicidad, este modelo contiene los elementos más importantes de cualquier modelo basado en agentes.
+Pero antes de mirar de manera más detallada nuestro modelo detengámonos un momento para echar un vistazo a tres herramientas muy importantes de NetLogo</p>
+</div>
+<div id="tres-herramientas-importantes" class="section level3">
+<h3><span class="header-section-number">5.1.8</span> Tres Herramientas Importantes</h3>
+<p>Las herramientas son:</p>
+<ul>
+<li>Monitores de agentes</li>
+<li>el Centro de Comandos y</li>
+<li>los ticks (Manejo del tiempo)</li>
+</ul>
+</div>
+<div id="monitor-de-agentes" class="section level3">
+<h3><span class="header-section-number">5.1.9</span> Monitor de Agentes</h3>
+<p>Los monitores de agentes son herramientas para ver y cambiar las variables de un agente (tortuga, parcela o enlace).
+* Mueva el cursor sobre uno de los buscadores y haga clic derecho. Aparece un panel en el que aprece al final “turtle 0”; mueva el cursor a turtle 0 y seleccione “inspect turtle 0”.</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Inspect.png" />
+<br>
+</br></p>
+<p>Se abre un Monitor de agente que incluye dos paneles: una vista ampliada de donde se encuentra el agente (turtle 0) y su entorno y una lista de todas las variables del agente:</p>
+<p>su posición, color, dirección, etc.</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Turtle0.png" />
+<br>
+</br></p>
+<p>Observe que aparece la variable que definimos a los agentes buscadores (time-since-last-found) (Cada panel se puede cerrar y se vuelve a abrir haciendo clic en el pequeño triángulo negro en su esquina superior izquierda). Sin cerrar esta ventana, puede reiniciar el modelo haciendo clic en go y observe cómo cambian las variables del agente, también puede cambiar sus valores siempre que lo desee, simplemente ingresando un nuevo valor en el monitor.</p>
+<ul>
+<li>Detenga el programa y cambie el tamaño de la tortuga a 5, y su tiempo desde la última vez que se encontró a -99 (Sus cambios se activan cuando presiona la tecla Enter o mueve el cursor fuera del cuadro de diálogo donde se ingresan los valores).</li>
+</ul>
+<p>Hay más cosas que puede hacer con los monitores de agentes, incluido dar comandos directamente al agente seleccionado escribiendo los mismos tipos de declaraciones de NetLogo que usaría en su código. Lea la sección Monitores de agentes de la Guía de interfaz del Manual del usuario.</p>
+</div>
+<div id="centro-de-comandos" class="section level3">
+<h3><span class="header-section-number">5.1.10</span> Centro de Comandos</h3>
+<p>El Centro de Comandos aparece en la parte inferior de la pestaña Interfaz. Aquí se pueden colocar comandos para el observador o para todos los parcelas, tortugas(agentes) o enlaces. Lea la sección del Centro de comandos del Manual del usuario y pruebe algunos comandos, como decirle a las parcelas que cambien su color a azul, el Centro de Comandos no parece útil al principio, pero a medida que se convierta en un mejor modelador basado en agentes con NetLogo, encontrará estas herramientas extremadamente útiles. Como ejemplo divertido, use el Centro de comando para hacer lo siguiente:</p>
+<ul>
+<li>Después de configurar el modelo y dejar que se ejecute por un segundo o dos,parelo. Haga clic en el texto “observador&gt;” en el Centro de Comandos. De la lista que aparece seleccione “tortugas&gt;” para que ahora pueda emitir un comando a todas las tortugas. En la ventana adyacente, ingrese “hatch 1 [right 160]”, que le dice a cada buscador que cree un segundo buscador, que luego gira 160 grados:</li>
+</ul>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Hatch.png" />
+<br>
+</br></p>
+<ul>
+<li><p>Ejecute el programa y vea cómo los cuatro buscadores buscan parcelas rojas. Usted puede repetir el comando para crear aún más buscadores: simplemente coloque el cursor en la línea de comando y presione la flecha hacia arriba para recuperar el comando anterior, luego teclee enter</p></li>
+<li><p>Después de crear más buscadores , haga que el Centro de Comando le diga cuántos buscadores hay Seleccione observador&gt; para enviar comandos e ingrese “show count turtles”</p></li>
+</ul>
+</div>
+<div id="manejo-del-tiempo" class="section level3">
+<h3><span class="header-section-number">5.1.11</span> Manejo del tiempo</h3>
+<p>Hasta ahora, nuestro modelo no maneja el tiempo explícitamente: no hacemos un seguimiento de cuántas veces se ejecuta el procedimiento, por lo que no podemos determinar cuánto tiempo ha transcurrido si por ejemplo, que cada vez que los buscadores de hongos se mueven representa un minuto.Para modelar el tiempo, hay que usar la instrucción <strong>tick</strong> cada vez que se ejecuta el procedimiento go. (Lea en la guía de programación la sección contador de ticks (tick counter)) y se dará cuenta que:</p>
+<ul>
+<li>Al final del procedimiento setup, se debe insertar una línea con la instrucción <strong>reset-ticks</strong>.Al comienzo del procedimiento go, inserte una línea con la instrucción <strong>tick</strong></li>
+</ul>
+<p>Si ahora hace clic en setup y luego en go va, puede observar el contador de ticks en la parte superior de la Vista; este muestra cuántas veces se ha ejecutado el procedimiento go. Finalmente, ¿no sería útil ver el camino de cada buscador?:</p>
+<ul>
+<li>En el procedimiento setup, agregue la instrucción pen-down, luego de la instrucción create-turtles.</li>
+</ul>
+<p>UUUfff Listo!!!!! El modelo completo de buscador de hongos es el siguente:</p>
+<pre><code>globals [
+  num-clusters
+]
+
+turtles-own [
+  time-since-last-found
+  ]
+
+to setup
+  clear-all
+  set num-clusters 4
+  ask n-of num-clusters patches [
+    ask n-of 20 patches in-radius 5 [
+      set pcolor red
+    ]
+  ]
+ create-turtles 2 [
+   pen-down
+   set size 2
+   set color yellow
+   set time-since-last-found 999
+  ]
+  reset-ticks
+end
+ 
+to go
+  ask turtles [search]
+  tick
+end
+
+to search
+  ifelse time-since-last-found &lt;= 20
+ [right (random 181) - 90]
+ [right (random 21) - 10]
+ forward 1
+  
+ ifelse pcolor = red [
+   set time-since-last-found 0
+   set pcolor yellow
+   ][
+   set time-since-last-found time-since-last-found + 1
+   ]
+end
+
+</code></pre>
+<p>Puede ensayarlo en el siguiente applet:</p>
+<iframe src="./GrafTallerBuscador/BusHongos.html" width="100%" height="600px">
+</iframe>
+
+</div>
+</div>
+<div id="análizando-el-modelo" class="section level2">
+<h2><span class="header-section-number">5.2</span> Análizando el Modelo</h2>
+<div id="introducción" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Introducción</h3>
+<p>Antes de realizar análisis específicos, me gustaría hablar de la exploración de un modelo de manera general, cuando no se tiene una pregunta o meta concreta de exploración de un modelo, es útil simplemente sondear las profundidades de lo que es posible en el comportamiento de un modelo.
+Los modeladores comúnmente exploran el comportamiento del modelo a su manera, haciendo variar los parámetros del modelo, probando diferentes combinaciones, ejecutando el modelo varias veces y mirando que pasa.
+Los modeladores podrían describir esta actividad simplemente como “jugar”
+con el modelo o familiarizarse con las cosas . Este proceso informal es natural (y diría que necesario) como parte del la comprensión del modelo, a través de retoques, los modeladores están sondeando el sistema para aprender algo al respecto. Es un proceso iterativo de desarrollar pequeñas hipótesis (o quizás simplemente “corazonadas”) sobre el modelo y su comportamiento, y probándolos.
+Cada vez que alguien juega y experiemnta con el modelo de esta manera, está intentando responder a la pregunta</p>
+<p><em>“¿qué comportamiento del modelo producen estas configuraciones de parámetros?”</em></p>
+</div>
+<div id="cambios-el-modelo-para-el-análisis-deslizadores" class="section level3">
+<h3><span class="header-section-number">5.2.2</span> Cambios el modelo para el análisis (deslizadores)</h3>
+<p>Modificaremos el modelo construido en el taller anterior con el objetivo de efectuar un análisis básico de nuestro modelo.El Modelo Netlogo lo puede bajar del siguiente enlace (Dropbox):</p>
+<p><a href="https://www.dropbox.com/s/8whol0qeiufyibi/BusHongos.nlogo?dl=0">Modelo Buscador de Hongos</a></p>
+<p>El modelo , a pesar de su simplicidad, se presta a efectuar disferentes análisis, nos concentraremos a analizar el modelo con base en la pregunta o propósito inicial que tuvimos al construirlo:</p>
+<p>“¿Qué estrategia de búsqueda maximiza el número de hongos encontrados en un tiempo específico?”</p>
+<p>Si conservamos fijo el mundo de nuestro modelo, su tamaño al igual que el número de hongos del bosque (80 hongos) y nos concentramos en los dos agentes que buscan hongos, su estrategia de búsqueda está determinada por dos parámetros del modelo:</p>
+<ul>
+<li>El tiempo de espera para cambiar de modo de búsqueda</li>
+<li>Los ángulos de giro que efectuan los buscadores</li>
+</ul>
+<p>Dejaremos “fijos” los ángulos y variaremos el tiempo de espera de los agentes para poder responder la siguiente pregunta:</p>
+<p>&quot;¿Cuál es el tiempo de espera que maximiza el número de hongos encontrados?</p>
+<p>(Nota: Si se mantienen “fijos” el número de hongos y los ángulos de giro)</p>
+<p>Antes de realizar el análisis hagamos los siguentes cambios al modelo:</p>
+<ul>
+<li>Fijar el ángulo amplio de búsqueda en : 85 + (random 5)</li>
+<li>Fijar el ángulo corto de búsqueda en : 5 + (random 5)</li>
+</ul>
+<p>Cambie las tres primeras lineas del procedimiento search por:</p>
+<pre><code>ifelse time-since-last-found &lt;= tiempo-espera
+  [right 85 + (random 5) ]
+ [right 5 + (random 5)]
+</code></pre>
+<ul>
+<li>crear un deslizador para variar el tiempo de espera.</li>
+</ul>
+<p>Para crear un deslizador, seleccione del menú de elementos de interfaz de NetLogo
+(Aparece con el nombre botón) la opción deslizador:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/OpcDeslizador.png" />
+<br>
+</br></p>
+<p>Haga clic debajo de los botones setup y go y aparece una ventana para llenar los datos del deslizador, llénela de la siguiente manera:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/DeslizadorTiempoEspera.png" />
+<br>
+</br></p>
+<p>El Modelo se debe ver de la siguiente manera:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/ModeloConDesl.png" />
+<br>
+</br></p>
+<p>Listo!!!! Ya modificamos el modelo, consideremos un tiempo específico, por ejemplo 800 unidades de tiempo (ticks), entonces la pregunta traducida a nuestro modelo modificado sería la siguiente:</p>
+<p>“¿Qué valor de tiempo-espera produce que los buscadores optimizen el número de hongos encontrados si tienen 800 unidades de tiempo para encontrar los hongos?”</p>
+</div>
+<div id="posibles-preguntas" class="section level3">
+<h3><span class="header-section-number">5.2.3</span> Posibles Preguntas</h3>
+<ul>
+<li>¿Existirá un único valor para este tiempo?</li>
+<li>¿Será un tiempo pequeño? (por ejemplo menor que 20)</li>
+<li>¿Será un tiempo grande? (por ejemplo mayor que 70)</li>
+<li>¿Qué número máximo de hongos se pueden encontrar en estos 800 ticks?
+( 24, 45, 57, 66)</li>
+<li>¿Podran encontrar los buscadores más de 100 hongos en este periodo de tiempo?</li>
+</ul>
+<p>Nuestra pregunta inicial de búsqueda nos ha llevado a construir un modelo y a modificarlo con el fin de intentar responder a la pregunta, hemos decidido (de pronto arbitrariamente) que el parámetro clave del modelo es el tiempo de espera de los buscadores para pasar de una búsqueda local a una búsqueda más global</p>
+</div>
+<div id="reporteros" class="section level3">
+<h3><span class="header-section-number">5.2.4</span> Reporteros</h3>
+<p>Es importante contabilizar en cada momento el número de hongos encontrados, así que vamos a definir una función que reporte este valor, escriba al final de la Pestaña de Código del modelo lo siguiente</p>
+<pre><code>to-report hongos-encontrados
+ report  patches with [pcolor = yellow]
+end
+ 
+</code></pre>
+<p>el reporter hongos-encontrados entrega el conjunto de hongos encontrados ( parcelas de color amarillo)
+Para ver este reportero en acción vamos a definir un monitor que nos permita visualizar en la interfaz de NetLogo el número de hongos-encontrados a medida que el modelo está corriendo.</p>
+<p>Vaya a la pestaña interfaz, del menú botón seleccione el elemento monitor:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/Monitor.png" />
+<br>
+</br>
+Haga clic debajo del deslizador tiempo-espera, aparece una ventana llénela de la siguiente manera:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/DefMonitor.png" />
+<br>
+</br></p>
+<p>El monitor usa una función importante <strong>count</strong> que cuenta el número de elementos de un conjunto de agentes (en este caso de parcelas amarillas)
+Corra el modelo (setup y luego go) y observe como el monitor muestra los hongos encontrados a medida que los buscadores los encuentran:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/ModMonitor.png" />
+<br>
+</br></p>
+<p>Al jugar y experimentar con el modelo podríamos descubrir valores de tiempo de espera que pueden conducir a optimizar los hongos encontrados, pero muy pronto nos damos cuenta que:</p>
+<ul>
+<li>Los valores posibles de tiempo-espera son muchos</li>
+<li>Recolectar información de hongos encontrados para diferentes valores puede ser dispendioso y demorado.</li>
+</ul>
+<p>Podríamos correr el modelo con diferentes valores de tiempo-espera y registrar los hongos encontrados luego de 800 ticks y luego llevar eso a una hoja electrónica para analizar la información, pero esto es muy dispendioso y hay una manera mucho mejor de hacerlo en NetLogo y es usar el <strong>Analizador de Comportamiento</strong> de NetLogo.</p>
+</div>
+<div id="el-analizador-de-comportamiento" class="section level3">
+<h3><span class="header-section-number">5.2.5</span> El Analizador de Comportamiento</h3>
+<p>La funcionalidad que ofrece el Analizdor de Comportamiento (BehaviorSpace) es la de ejecutar muchas veces un modelo, modificando para cada ejecución sus parámetros y grabando los resultados que el usuario decida. Proporciona una forma de explorar secciones del espacio de posibles comportamientos y determinar, por ejemplo, qué combinaciones de configuraciones definen comportamientos interesantes o compararlas entre sí para ver la influencia de los parámetros en la dinámica
+BehaviorSpace ofrece así una forma ordenada y metódica de rea-
+lizar la exploración del espacio de parámetros. Una exploración que, aunque la mayoría de las veces no podrá ser exhaustiva, si se diseña adecuadamente permitirá una aproximación más eficiente a la comprensión del modelo.Además, los datos almacenados en cada experimento se graban en formatos que permiten ser analizados posteriormente con herramientas específicas de análisis de datos, en nuestro caso usaremos R y Rstudio
+Para abrir el Analizador de Comportamiento, vaya al menu Herramientas y seleccione la opción Analizador de Comportamiento:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/AnalComp.png" />
+<br>
+</br>
+Aparece la siguiente ventana:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/VentExper.png" />
+<br>
+</br></p>
+<p>Haga Clic en Nuevo, al hacer clic aparece una ventana que nos permitirá definir lo que se denomina un experimento, que es simplemente una manera de decirla a NetLogo que datos y cuantos datos quiero generar del modelo:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/InterfAnComp.png" />
+<br>
+</br>
+Llenemos esta ventana de la siguiente manera:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/VentAnal1.png" />
+<br>
+</br></p>
+<ul>
+<li>La primera ventana nos indica que vamos a variar los valores de tiempo-espera entre 10 y 50 en incrementos de 20 ([10 20 50])</li>
+</ul>
+<p>Oprima el botón Ok, aparece la siguiente ventana:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/EjecAnal1.png" />
+<br>
+</br></p>
+<p>Oprima el botón Ejecutar, aparecen las opciones para generar los datos:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/OpcDatosAnal1.png" />
+<br>
+</br></p>
+<p>Seleccione la opción Table Output y oprima Ok, aparece un cuadro de diálogo para guardar los datos, guarde los datos en el mismo directorio odnde se encuentra el modelo NetLlogo, no le cambie el nombre al archivo exportado:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/ExportAnal1.png" />
+<br>
+</br></p>
+<p>Listo!!! Ya guardamos el archivo de datos generado por nuestro modelo</p>
+</div>
+<div id="analizando-los-datos-en-r" class="section level3">
+<h3><span class="header-section-number">5.2.6</span> Analizando los datos en R</h3>
+<p>Ahora vamos a abrir Rstudio-Cloud para importar los datos y analizarlos
+Vaya a Rstudio cloud ( si no esta registrado registrese y cree una cuenta), al entrar verá lo siguiente:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/Rcloud.png" />
+<br>
+</br></p>
+<p>Haga clic en New Project y cuando aparezca la interfaz de Rstudio, coloque en la parte superior el nombre al proyecto : BuscHongos:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/RProyecto.png" />
+<br>
+</br></p>
+<p>Cree un Nuevo Script (un Script de R es un archivo donde colocaremos los diferentes comandos para imoportar los datos y analizarlos):</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/NewScript.png" />
+<br>
+</br></p>
+<p>Salve el Archivo con Nombre,BuscHongos.Rmd:
+<br>
+</br>
+<img src="GrafTallerBuscador/Analisis/RSaveas.png" />
+<br>
+</br></p>
+<p>Vamos a importar la libreria que usaremos para nuestro analisis (tiduverse),
+para ello seleccionemos la opción insert chunk del menu code, esto crea un espacio dentro del archivo para colocar codigo R:
+<br>
+</br>
+<img src="GrafTallerBuscador/Analisis/InsertChunk.png" />
+<br>
+</br></p>
+<p>Coloque las siguientes lineas dentro del chunk de código:</p>
+<pre><code>install.packages(tidyverse)
+library(tidyverse)</code></pre>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/Tidyverse.png" />
+<br>
+</br></p>
+<p>Sale el mensaje que el paquete tidyverse no está instalado haga clic en install y espere unos minutos que Rstudio instale los paquetes.</p>
+<p>Finalmente hay que cargar el archivo de datos netLogo al proyecto Rstudio para ello haga clic en el botón Upload situado en la vbentana inferior derecha de Rstudio:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/Upload.png" />
+<br>
+</br></p>
+<p>Busque el Archivo que generamos en Netlogo en su computador (“BusHongosAnalisis Anal1SerieTiempo-table.csv”) y carguelo, debe aparecer en Rstudio el archivo cargado:
+<br>
+</br>
+<img src="GrafTallerBuscador/Analisis/Cargado.png" />
+<br>
+</br>
+Ahora coloquemos en el Archivo Script lo siguiente:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/ImpDatos.png" />
+<br>
+</br></p>
+<p>Oprima el botón Play situado en la parte derecha del chunk que lle os datos, debe aparecer a la derecha el archivo de datos (data), con la información : 2403 obs. of 4 variables, si oprima la fila donde aparece data puede observar los datos generados por NetLogo:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/Datos.png" />
+<br>
+</br></p>
+<p>Renombremos las columnas con el comando:</p>
+<pre><code>colnames(data)&lt;- c(&quot;run&quot;,&quot;tiempoEspera&quot;,&quot;ticks&quot;,&quot;encontrados&quot;)
+</code></pre>
+<p>finalmente grafiquemos los datos:</p>
+<pre><code>ggplot(data)+
+  geom_point(aes(ticks,encontrados,
+             group=tiempoEspera,
+             color=factor(tiempoEspera)))</code></pre>
+<p>Debe aparecer la siguiente gráfica:</p>
+<p><br>
+</br>
+<img src="GrafTallerBuscador/Analisis/GrafColores.png" />
+<br>
+</br></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="algo-de-historia.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="construyendo-modelos-basados-en-agentes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

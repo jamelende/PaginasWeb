@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Algo de Historia | Modelación basada en Agentes</title>
+  <meta name="description" content="4 Algo de Historia | Modelación basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Algo de Historia | Modelación basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Algo de Historia | Modelación basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ocho-modelos-clásicos.html"/>
+<link rel="next" href="buscadores-de-hongos.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El ciclo de modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html"><i class="fa fa-check"></i><b>7</b> El Modelo Predador Presa</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#siete-criterios-de-diseño"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseño:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#cinco-modelos-incrementales"><i class="fa fa-check"></i><b>7.3</b> Cinco modelos incrementales</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html"><i class="fa fa-check"></i><b>9</b> El Modelo SI de Infección</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#un-segundo-análisis-infección-ambiental"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis (Infección Ambiental)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html"><i class="fa fa-check"></i><b>11</b> Modelo de Inversión</a><ul>
+<li class="chapter" data-level="11.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Descripción del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apéndices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a><ul>
+<li class="chapter" data-level="A.6.1" data-path="redes.html"><a href="redes.html#intervención-de-políticas"><i class="fa fa-check"></i><b>A.6.1</b> Intervención de políticas</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+<li class="chapter" data-level="B.3.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#conjunto-de-agentes-agentset"><i class="fa fa-check"></i><b>B.3.1</b> Conjunto de agentes (agentset)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="algo-de-historia" class="section level1">
+<h1><span class="header-section-number">4</span> Algo de Historia</h1>
+<p>Muchos campos diferentes han aportado ideas y métodos a MOBA, nos centraremos en los antecedentes claves de las tecnologías MOBA de la informática y campos computacionales asociados. Además de los campos computacionales, notamos que también ha habido fuertes contribuciones de biología, física, ingeniería y ciencias sociales. En biología, estas contribuciones vinieron en gran parte de la ecología, el comportamiento individual de animales o plantas en un ecosistema, en lugar de trabajar con variables de nivel de población (DeAngelis y Mooij, 2005) trabajon con modelaje de lo individual, los modelos a menudo se ubican dentro de paisajes o entornos particulares, y los modeladores de MOBA se centran en cómo los paisajes pueden afectar en gran medida los resultados de un modelo (Grimm &amp; Railsback, 2005). Gran parte de la metodología de MOBA se ha incorporado al trabajo en física, para describir el magnetismo y mostraron que modelos simples podrían producir transición de fase. Estos modelos también fueron precursores de la telefonía celular.
+el físico Per Bak creó el clásico modelo de las montañas de arena, que usó para ilustrar el concepto de autoorganización crítica,
+pasó a aplicar métodos basados en fenómenos complejos(como el <a href="https://bookdown.org/jamelende/LibroMoba2020-i/modelos-cl%C3%A1sicos.html#modelo-del-fuego">modelo del Fuego</a> y varios modelos bursátiles)</p>
+<p><br>
+</br>
+<img src="GrafHistoria/PerBak.jpeg" />
+Per Bak
+<br>
+</br>
+En ingeniería, ingeniería de procesos y cibernética, entre otras áreas de investigación, se ha contribuido al desarrollo de MOBAS En ingeniería de procesos, el objetivo es diseñar un óptimo resultados dados comportamientos de bajo nivel, que pueden considerarse como un marco similar al de los modelos basados en agentes, pero con un objetivo diferente, algunas de las herramientas y métodos de ingeniería de procesos también son útiles en el contexto de MOBA, Esto lleva a las nociones de cambios de fase de un sistema, es decir, áreas de espacio de parámetros donde pequeños cambios pueden tener consecuencias desproporcionadas (Wiener, 1961). Los modelos tienen que lidiar con la estocasticidad, lo que llevó a la técnicas de simulación de Monte Carlo (Metropolis &amp; Ulam, 1949), al igual que con los ingenieros de procesos y cibernéticos, los científicos sociales se dieron cuenta de que las complejidades de las organizaciones sociales no eran capturadas suficientemente por los modelos y herramientas disponibles como resultado, los científicos sociales comenzaron a usar modelos algorítmicos y computacionales para describir los fenómenos sociales, con un método para comparar datos empíricos con datos por predecir similares a los de científicos naturales (Lave y marzo de 1975). Los modelos de teoría de juegos de Nash (1950) fueron algunos de los primeros intentos de capturar el comportamiento humano en ecuaciones matemáticas. La mayoría de estos modelos iniciales de ciencias sociales utilizaron datos agregados promediados entre individuos. por
+Por ejemplo, el famoso modelo del Club de Roma hizo suposiciones muy simples sobre cómo el mundo y la población aumentaría y cómo se consumirían los recursos (Meadows, 1972).</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Nash.jpeg" />
+John Nash
+<br>
+</br>
+Estos esfuerzos dieron lugar con el tiempo al modelado dinámico de sistemas (SDM; Forrester, 1961), que propuso crear modelos utilizando existencias ( cantidades de bienes, entidades u objetos en ubicaciones particulares) y flujos (las tasas de aumento o disminución de estas existencias).los modeladores hicieron contribuciones importantes a los sistemas complejos, pero los elementos granulares de estos modelos eran cantidades agregadas, un paso lógico era bajar un nivel, modelando los individuos que componen estos agregados. Por lo tanto, el modelado basado en agentes fue una progresión natural que permitió un examen más profundo
+del comportamiento de individuos heterogéneos. De hecho, en parte debido a esta necesidad de
+ciencia para comprender el comportamiento individual en un marco cada vez más rico, algunas de los primeros modelos basados en agentes surgieron en las ciencias sociales. El modelo de segregación de Schelling (discutido en el capítulo 3) es considerado por muchos como uno de los primeros modelos basados en agentes que se creó, a pesar de que se realizó manualmente usando un tablero de ajedrez y monedas (Schelling, 1971). El libro de Schelling Micromotives and Macrobehavior (1978) demostró cómo las acciones a nivel individual podrían dar lugar a sorprendentes patrones sociales. Su modelo de segregación mostró que la segregación de la vivienda ocurriría incluso si ningún individuo lo quiere, siempre y cuando las personas tengan preferencia y no pertenezcan a una minoría extrema en su barrio.</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Schelling.jpeg" />
+Thomas Schelling
+<br>
+</br></p>
+<p>En la última década, hemos sido testigos de un tremendo crecimiento en el campo de la teoría de redes y la incorporación de soporte para redes como un elemento central en el modelado basado en agentes. Este trabajo en redes (grafos) fue iniciado por el matemático Euler en el siglo XIX para resolver el problema de los <a href="https://es.wikipedia.org/wiki/Problema_de_los_puentes_de_K%C3%B6nigsberg">siete puentes de Konigsberg</a> (ver Newman, 2010). En la década de 1950 y principios de los 60, los matemáticos Erdosy Renyi caracterizaron las redes aleatorias (1960), y esto fue seguido por el modelo de red preferencial de Albert Barabasi(1999). Los trabajos de psicólogos como Stanley Milgram sugirieron que la longitud de camino promedio en humanos en las redes sociales son cortas (<a href="https://es.wikipedia.org/wiki/Seis_grados_de_separaci%C3%B3n">seis grados de separación</a>) (1967), una idea que luego formaliaron Duncan Watts y Stevan Strogatz con las redes de mundos pequeños Small Worlds,1998). Este tipo de redes y sus métodos de análisis asociados se han convertido en elementos básicos del modelado basado en agentes.
+Una historia completa de las raíces de MOBA en otros campos y el papel de dichos campos en el
+orígen de los MOBA está más allá del alcance de este capítulo, aquí, sin embargo, exploraremos
+algunos descubrimientos clave que dieron forma al desarrollo de MOBA, Presentamos aquí seis áreas importantes que describen varios de los principales antecedentes de las tecnologías asociadas a los MOBA</p>
+<div id="autómatas-celulares-y-modelado-basado-en-agentes" class="section level2">
+<h2><span class="header-section-number">4.1</span> Autómatas celulares y modelado basado en agentes</h2>
+<p>John von Neumann contribuyó en gran medida a una gran cantidad de campos científicos, incluidos mecánica cuántica, teoría de juegos económicos y ciencias de la computación. De este matemático húngaro se dice que fue “el último de los grandes matemáticos” poseía el “intelecto más centelleante de este siglo.”A finales de la década de 1940, von Neumann, inventó la arquitectura moderna de la computadora (Máquina de VonNeumann), se interesó en tratar de crear
+máquinas artificiales que podrían reproducirse de forma autónoma,influenciado por su trabajo en la primera computadora (ENIAC; von Neumann et al., 1987), creo una máquina autoreproducible que el llamó un autómata celular que usaba veintinueve estados diferentes (¡usando lápiz y papel cuadriculado!) que llamó una máquina universal (Burks, 1970). Aunque una máquina física aún no había sido construida, esta máquina fue prueba del concepto de que una máquina auto-reproductora podría ser construida, no solo construyó una máquina capaz de autorreplicarse, sino también una que podía evoluciónar, ya que las instrucciones podrían modificarse y agregarse al comienzo de cada generación sucesiva para proporcionar más y más capacidades.</p>
+<p><br>
+</br>
+<img src="GrafHistoria/VonNeumann.jpeg" />
+John Von Neumann
+<br>
+</br>
+Sin embargo, en 1970, John Conway creó un celular mucho más simple un autómata que llamó el “Juego de la vida”, Debido a la falta de suficiente poder computacional, Conway utilizó un tablero físico para llevar a cabo sus experimentos y no una computadora. “Life” se hizo popular cuando Martin Gardner publicó el juego en su popular columna Scientific American (Gardner, 1970). El juego de la vida de Conway tiene tres reglas:</p>
+<ol style="list-style-type: decimal">
+<li>Si una celda tenía exactamente tres vecinos (de sus ocho vecinos inmediatos),
+pasaría de estar muerto a estar vivo (nacimiento).</li>
+<li>Si tuviera dos o tres vecinos y
+estaba vivo, permanecería vivo (sin cambios)</li>
+<li>Si tuviera alguna otra combinación de vecinos, iría al estado muerto (soledad o hacinamiento).</li>
+</ol>
+<p>Cuando Conway alimentó el juego con un conjunto aleatorio de células vivas y muertas, el sistema comenzó a producir patrones hermosos e intrincados de objetos interesantes.Notablemente, aunque las regla de Conway requería solo dos estados,
+(vivos o muertos) y nueve entradas (la celda y sus ocho vecinos), Conway probó que sus regla de “Vida” (Berlekamp et al., 1982) contenían el material necesario para la auto-reproducción, es decir, el sistema podría crear una entidad computacional que podría crearentidades computacionales adicionales. Sin embargo, el poder del Juego de la Vida no termina ahí. En 2009, Adam Goucher construyó una computadora / constructor universal dentro
+del juego de la vida de Conway y demostró que las reglas del juego de la vida eran suficientes
+calcular todos los posibles problemas (Hutton, 2010).</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Conway.jpg" />
+John Conway
+<br>
+</br></p>
+<p>Casi al mismo tiempo que algunos de los primeros trabajos de Conway, y después del trabajo de von Neumann fallecido en 1957, Arthur W. Burks, uno de los colaboradores de von Neumann, siguió examinando los autómatas celulares como parte del grupo Logic of Computers de la Universidad de Michigan. Eventualmente editó una colección de la mayoría de los documentos originales sobre autómatas celulares en un libro titulado Theory of Self-Reproducción (von Neumann y Burks, 1966). Burks también fue asesor de John H. Holland, del cual hablaremos más adelante. El trabajo de Burks preservó el estudio de los AC hasta que Stephen Wolfram lo revivió a principios de la década de 1980 (Wolfram, 1983). Wolfram hizo varias contribuciones notables al campo de los autómatas celulares, Por ejemplo, él realizó un estudio exhaustivo de todas las reglas unidimensionales para mundos bidimensionales, celdas que tienen solo vecinos izquierdo y derecho . Incluso esta simple clase de AC exhiben un comportamiento sorprendentemente complejo. Wolfram los dividió en cuatro clases:</p>
+<ul>
+<li>De estado final uniforme</li>
+<li>De estado final cíclico.</li>
+<li>De estado final aleatorio.</li>
+<li>Deestado final complejo.</li>
+</ul>
+<p>Wolfram demostró que estos cuatro tipos de patrones pueden generar muchos patrones encontrados en la naturaleza. Wolfram y Ed Fredkin del MIT despertaron mucha controversia cuando hicieron la afirmación de que todo el universo puede modelarse utilizando AC o, aún más sorprendente, la posibilidad de que el universo mismo es un automata celular (Wolfram, 2002; Fredkin, 1990).</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Wolfram.jpg" />
+Stephen Wolfram
+<br>
+</br></p>
+<p>La relación histórica entre AC y MOBAs es algo desordenada. Muchos autores han escrito que las AC condujeron directamente al desarrollo de los MOBA De hecho, las AC se pueden ver
+como MOBAs simples donde todos los agentes son estacionarios: en contraste con los AC, más generales Los MOBA también pueden incluir agentes que se mueven explícitamente. Su capacidad de tener agentes móviles, permite a los investigadores representar y modelar objetos en movimiento de forma más natural. Como resultado de esta similitud, se podría suponer que los MOBAs fueron una evolución natural de los autómatas celulares, Sin embargo, hay poca evidencia de que los desarrolladores de los primeros MOBAs; por ejemplo, Schelling y sus colegas comenzaron con una AC a partir de la cual hallan desarrollado un modelo basado en agentes, estos investigadores estaban al tanto del trabajo de AC, pero, a juzgar por entrevistas con varios de ellos, parece que desarrollaron la noción de modelado basado en agentes independiente del trabajo en curso de la teoría de AC. En muchos sentidos, las AC (y el Juego de la vida de Conway en particular) exhiben muchas de las propiedades de los modelos modernos basados en agentes. Cada celda se puede ver como un agente con una descripción simple del estado. Las acciones que toma para cambiar su estado en función de sus vecinos son similares a las acciones que los agentes toman en respuesta a las interacciones locales. Los AC de Von Neumann estuvieron entre los primeros intentos de crear modelos computacionales de un sistema biologico. Además, la escala de tiempo discreta de los ACes muy similar a la
+a los ticks de un MOBA, el modelo “Life” de Conway también exhibe muchos comportamientos que a menudo se ven en los Moba (<strong>El resultado final del modelo es difícil de predecir sobre la base de las entradas iniciales, y son patrones emergentes que solo pueden describirse a un nivel superios</strong>). Por último, el trabajo de Wolfram para clasificar las reglas de los AC en clases de comportamiento fue un ejemplo temprano de los intentos de la ciencia de la complejidad de entender nuestro mundo tomando grandes cantidades de fenómenos dispares y clasificándolos en grupos para ayudar a entender las similitudes entre sistemas que, a primera vista, parecen completamente no relacionados.</p>
+</div>
+<div id="algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos" class="section level2">
+<h2><span class="header-section-number">4.2</span> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</h2>
+<p>En informática, los algoritmos se han diseñado tradicionalmente como artefactos de ingeniería. La inspiración para estos algoritmos provino de aplicaciones de ingeniería como el ensamblaje
+de líneas de producción, construcción de puentes e incluso sistemas de alcantarillado. A finales de la década de 1960, un joven ingeniero eléctrico lamado John Holland se topó con el trabajo de Donald Hebb. En el libro de Hebb, Organización del comportamiento (1949), el psicólogo había escrito sus ideas sobre cómo las neuronas pueden considerarse algoritmos simples. Frank Rosenblatt (1962) fue influenciado mediante estas ideas para construir un modelo computacional de neuronas humanas, al que llamó perceptrón, Rosenblatt utilizó este modelo para resolver problemas informáticos convencionales de modos que él afirmó eran similares a como la mente humana resuelve los problemas. Esta técnica eventualmente resultaría desembocando en el campo moderno de las redes neuronales. En este naciente campo, Holland tuvo una idea poderosa:</p>
+<p>se dio cuenta de que un perceptrón era esencialmente un modelo de cómo una neurona se adapta a sus entradas y salidas. Por lo tanto, el perceptrón no era solo un modelo estático de la mente, pero también, uno de <strong>adaptación mental al mundo</strong>. Holland comenzó a
+prguntarse si era posible hacer más universal este modelo de adaptación, específicamente,
+comenzó a pensar en la adaptación evolutiva y cómo podría una computadora modelar la evolución. Presagiando un principio general de sistemas complejos, Holland intentó generalizar su modelo teórico de un dominio computacional y lo aplico ampliamente a otros dominios. La adaptación parecía (al menos en algún nivel) existir en, por ejemplo, tanto en las neuronas en el cerebro , como en las especies se adaptan a los cambios climáticos. Mediante la extracción de la esencia de la adaptación a un principio universal, Holland arrojó nueva luz sobre como entender muchos sistemas adaptativos, encontrando una perspectiva muy importante, y hoy en día central, de los sistemas complejos.
+En 1975, John Holland publicó su monografía Adaptation in Natural and Artificial
+Systems, Este trabajo fue la culminación de sus primeros años en la investigación de la adaptación. y resultó en la idea del <strong>algoritmo genético (AG)</strong>. En esencia, los AG crean una población de soluciones a un problema, y evaluan qué tan efectivas son las soluciones para resolver el problema, luego combinan y mutan las mejores soluciones para crear una nueva población. Esta nueva población vuelve a ser evaluada y el proceso es repetido. El AG fue un desarrollo único en informática ya que postuló el uso de modelos biológicos para resolver problemas computacionales, evolucionando poblaciones de soluciones a problemas de búsqueda.</p>
+<p>Holland usó los AG para programar computadores para jugar. Sus pensamientos sobre las computadoras y el juego estuvieron muy influenciados por el trabajo de Samuel en el aprendizaje automático y el juego de damas (Samuel, 1959). Holland pensó que las computadoras podrían resolver problemas aún más complejas si los programas para jugar no solo pudieran cambiar sus acciones sino también sus estrategias a lo largo del tiempo, imagino la evolución de estrategias para jugar. Estas ideas condujeron naturalmente a la construcción de agentes adaptativos que pueden cambiar y adaptarse a sus alrededores. Holland comenzó su estudio de los agentes adaptativos con tanto ahinco a como anteriormente había estudiado la evolución, comenzó con datos del mundo real y luego desarrolló modelos informáticos de estos sistemas, desde el principio (alrededor de 1985) comenzó a trabajar con el Instituto Santa Fe (SFI), un instituto de investigación dedicado al estudio de sistemas complejos. En una reunión en el Instituto Santa Fe en septiembre 1987, Holland presentó sus ideas de cómo la economía entera podría ser vista como un sistema adaptativo complejo compuesto por agentes adaptativos (Holland, 1995) y conoció a <a href="https://es.wikipedia.org/wiki/W._Brian_Arthur">Brian Arthur</a>, y influenciado por el trabajo de Holland desarrolló uno de los primeros modelos en economía que empleaban la miodelación basada en agentes Durante este tiempo, muchos investigadores del Instituto Santa Fe, como Holland, Arthur, Anderson, Arrow y Pines, se interesaron en modelar la economía como un complejo sistema evolutivo. Este esfuerzo de investigación resultaría en uno de los primeros modelos clásicos basados en agentes, el Mercado de Valores Artificiales del Instituto Santa Fe (Arthur et al,1997).</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Holland.jpeg" />
+John Holland</p>
+<p>Holland también influenció desde el principio a un grupo de sus compañeros de la Universidad de Michigan: Burks, Axelrod, Cohen y Hamilton. Todos estos investigadores (que juntos se llamaronellos mismos, el grupo BACH) serían influyentes en el campo de los sistemas complejos,
+y algunos incluso incursionaron en el modelado basado en agentes. Axelrod creó el famoso dilema del prisionero (<a href="https://www.youtube.com/watch?v=t9Lo2fgxWHw">Prisoner Dilemma</a>) (Axelrod, 1984) Holland comenzó a investigar una generalización del algoritmo genético,
+El <strong>sistema clasificador</strong>, basado en el principio de una jerarquía predeterminada, el sistema clasificador evolucionaría reglas o “clasificadores” que traducirían entradas en salidas para satisfacer un objetivo. El sistema clasificador contenía una población de reglas simples que funcionaban juntas para modelar fenómenos complejos Esto es similar a la forma en que un MOBA contiene una población de agentes simples que trabajan juntos para modelar un fenómeno complejo. Por otra parte, el sistema clasificador fue un primer intento de crear agentes verdaderamente adaptativos, ya que contenía un algoritmo para que los agentes desarrollaran estrategias arbitrariamente complejas.
+En los años siguientes, Holland trabajó con dos estudiantes de posgrado, Melanie Mitchell.
+y Stephanie Forrest. Juntos, comenzaron a explorar el uso del algoritmo genético en
+diversos escenarios relacionados con la vida artificial (Mitchell y Forrest, 1994). Mitchell demostró (1998) que los algoritmos genéticos podrían encontrar mejores soluciones para los problemas de autómatas celulares clásicos. Luego realizó una investigación básica y escribió un libro de texto introductorio sobre sistemas complejos (2009) que describe la relación entre complejidad y computación, evolución e inteligencia artificial, Forrest continuaría expandiéndose sobre estas ideas y creando sistemas inmunes artificiales
+(AIS; Hofmeyr y Forrest, 2000).</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Mitchell.jpeg" />
+Melanie Mitchell</p>
+</div>
+<div id="seymour-papert-logo-y-la-tortuga" class="section level2">
+<h2><span class="header-section-number">4.3</span> Seymour Papert, Logo y la tortuga</h2>
+<p>A fines de la década de 1960, Seymour Papert fue nombrado codirector del laboratorio Inteligencia Artificial del MIT junto con su colega Marvin Minsky. Papert había llegado al MIT después de terminar su doctorado en matemáticas en Cambridge y pasó varios años estudiando
+el pensamiento matemático de los niños con Piaget en el Instituto Jean Piaget en Ginebra,
+Suiza. Poco después de su llegada al MIT, comenzó a colaborar con científicos y crearon un lenguaje de programación, Logo, diseñado para ser utilizado por niños. Logo heredó gran parte de su forma y sintaxis del lenguaje Lisp, que se usó prominentemente en el trabajo de Inteligencia Artificial.Papert creía que dar acceso a los niños a la programación les permitiría convertirse en pensadores y darles acceso a ideas poderosas (Papert,
+1980). Llamó a este enfoque educativo construccionismo. Después de trabajar con Logo por
+un año, Papert inventó la “tortuga”, un objeto que estaba controlado por el lenguaje Logo.
+Algunas tortugas tempranas eran mecánicas (Walter, 1950) y estaban atadas a la computadora.
+pero pronto la tortuga se volvió virtual. Las tortugas tenían propiedades como la ubicación en la pantalla, una “cabeza” (dirección) a la que estaban mirando y una pluma para dejar huellas. Cada tortuga obedeció comandos, como “avanzar”, “girar a la izquierda”, etc. Al emitir comandos a la tortuga, los niños podían dibujar figuras geométricas clásicas, así como repetitivas y recursivas (fractales) Posteriormente, el lenguaje LOGO se introdujo en las escuelas, con la participación de millones de niños en todo el mundo, mucho del éxito de LOGO se atribuyó a la tortuga. Papert describió a la tortuga como un “cuerpo sintonico” (1980): un usuario podría “proyectarse” en la tortuga y de esta manera descubrir qué comandos la tortuga debe efectuar, los usuarios podrían imaginar lo que harían con sus cuerpos para lograr el efecto deseado. Entonces, para dibujar un cuadrado, el usuario avanzaría, giraría a la derecha,
+avanzar la misma cantidad, y así sucesivamente. En miles de aulas LOGO, niño jugaron con la tortuga y aprendieron mucho sobre figuras geométricas y de paso sobre cómo programar computadoras de esta manera.
+La tortuga LOGO puede haber sido el primer agente computacional en el sentido en el que pensamos hoy a los agentes de un MOBA. Al igual que los agentes de NetLogo, la tortuga Logo tiene una ubicación y dirección, y su poder se basa en que los usuarios puedan proyectarse en él, que es imaginar ser una tortuga.
+NetLogo tomó gran parte de su sintaxis de Logo y la expandió a miles de tortugas. Las tortugas NetLogo suelen “dibujar” con sus cuerpos en lugar de con sus bolígrafos, y es la configuración de sus cuerpos lo que crea una visualización de NetLogo (Wilensky, 2001). NetLogo también tomó prestado el eslogan <strong>“umbral bajo, techo alto”</strong> de LOGO, lo que significa que debería ser lo suficientemente simple para que los principiantes sean capaz de trabajar con él de inmediato y, sin embargo, lo suficientemente potente como para que los expertos realicen sus investigaciones con él (Tisue y Wilensky, 2004). Además, NetLogo se basó en la sintaxis de LOGO
+hacer que su lectura sea lo más cercana posible al lenguaje natural.
+La influencia de Papert y Logo puede verse no solo en NetLogo, sino también en la forma que muchas plataformas de modelado basadas en agentes conceptualizan a los agentes como entidades con sus propias propiedades y acciones. La mayoría de las primeras plataformas de modelado basadas en agentes, como Swarm (Minar et al., 1996) y Repast (Collier, 2001), consideraron dada la necesidad de visualizar agentes en una pantalla 2D, de la misma manera que la tortuga Logo se proyectó en una pantalla 2D.</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Papert.jpeg" />
+Mitch Resnick, Seymour Papert y la tortuga
+<br>
+</br></p>
+</div>
+<div id="paralelismo-de-datos" class="section level2">
+<h2><span class="header-section-number">4.4</span> Paralelismo de datos</h2>
+<p>A mediados de la década de 1980, Danny Hillis completó su tesis doctoral en el MIT sobre arquitectura de una computadora paralela que él llamó una “máquina de conexión.”A diferencia de la arquitectura clásica de Von Neumann, arquitectura de la mayoría de las otras computadoras en ese momento, la máquina de conexión (o CM) no
+manejaba todos sus cálculos a través de una sola unidad central de procesamiento (Hillis, 1989). En lugar de eso hacía uso de miles de procesadores de bajo costo y baja capacidad conectados entre sí de tal manera que cada procesador pudiera comunicarse con cualquier otro, el CM empleó una arquitectura que se llamaba, “Instrucción única, datos múltiples”, generalmente abreviado SIMD, que daba una misma instrucción a cada uno de los miles de procesadores, cada uno de los cuales contenía elementos de datos. Hillis fundó una empresa, Thinking Machines, para fabricar y vender la computadora. Al principio, la máquina se percibía como difícil de programar, ya que los lenguajes de programación estándar no funcionaban eficientemente en la máquina. A finales de la década de 1980, se crearon lenguajes paralelos como StarLisp (una versión paralela de Lisp) y C-Star para programar el CM. El CM-2 tenía 65.536 procesadores, y para usarlos eficientemente era importante no tener algunos procesadores esperando a otros. La forma más fácil de hacer esto era utilizar métodos de“paralelismo de datos”, en los que los datos se distribuían de manera uniforme en los procesadores, cada uno de los cuales ejecutaba simultáneamente la misma instrucción en sus datos.
+El físico Richard Feynman, junto con Stephen Wolfram, desarrollaron una aplicación de mecánica de fluidos de en un autómata celular (Tucker y Robertson, 1988), Feynman había demostrado que casi todos los flujos de fluidos podían modelarse independientemente del tipo de partícula, usando una red hexagonal. Entonces Feynman y Wolfram eligieron partículas esféricas
+para calcular el cambio en cada hexágono de la red usando paralelismo de datos, l resultado fue una hermosa visualización de fluidos turbulentos, este y otros ejemplosmparecidos han sido tomados por modeladores basados en agentes y pueden ejecutarse en
+hardware en serie utilizando métodos MOBA El paradigma paralelo de datos SIMD en última instancia no tuvo éxito en el mercado de hardware, pero, sus métodos de dar la misma instrucción a múltiples procesadoresinfluyeronen los lenguajes para MOBAs, que también daban instrucciones únicas a múltiples agentes distribuidos En esencia, el modelo paralelo de datos fue adoptado por MOBA.</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Hillis.jpeg" />
+Danny Hillis
+<br>
+</br></p>
+</div>
+<div id="gráficos-por-computadora-sistemas-de-partículas-y-boids" class="section level2">
+<h2><span class="header-section-number">4.5</span> Gráficos por computadora, sistemas de partículas y boids</h2>
+<p>Los gráficos por computadora han avanzado notablemente con el resto de la informática,a medida que las computadoras se han vuelto cada vez más rápidas, las pantallas de las computadoras han mejorado para renderizar visualizaciones cada vez más realistas e imágenes basadas en computadora. Los gráficos por computadora tienen como objetivo tomar una imagen dentro de la cabeza del autor y traducirla en una imagen o representación en el computador,esto tiene mucha similitud con el modelado por computadora,el objetivo es tomar un modelo conceptual y traducirlo en un artefacto computacional. Así que no o sorprende que los gráficos por computadora hayan influido en el modelado basado en agentes.
+Al principio de los gráficos por computadora, muchos desarrolladores usaron una gran combinación de planos y superficies para representar objetos. Esto resultó ser una buena primera aproximación: después de todo, la vasta mayoría de nuestro rango visual generalmente está ocupado por superficies, como paredes y techos,el cielo o un camino delante de nosotros. Sin embargo, las superficies no son una representación adecuada para
+fenómenos menos claramente definidos como el humo o las estrellas o la luz (Blinn, 1982). Para modelar estos fenómenos, los desarrolladores de gráficos por computadora recurrieron a representaciones puntuales. Los puntos podrían tener tamaño, posición y velocidad y se creará una representación más natural para estos fenómenos que las superficies. Además, los puntos eran más fáciles de trabajar y sus reglas de movimiento eran más fáciles de tratar que las superficies. El enfoque basado en puntos para gráficos por computadora se conoció como sistemas de partículas (Reeves,1983). Tales sistemas tienen mucho en común con el modelado basado en agentes porque se pueden simular fenómenos emergentes visualmente , como el humo que sale de una chimenea, modelando las partículas individuales de humo y escribiendo reglas simples de
+cómo interactúan para visualizar el patrón global resultante. Modelos basados en agentes igualmente usan reglas simples de interacción basada en agentes y luego te permite observar el fenómeno global.
+Inspirado por el uso de sistemas de partículas y el trabajo antes mencionado sobre tortugas y LOGO, Craig Reynolds fue más allá del concepto de partículas y los usó para describir el movimiento de las aves que vuelan en bandadas (Reynolds,1987),Reynolds llamó a estas configuraciones Flocados (Flocks) y a las criatura voladoras Boids y usó tres reglas simples para describir su comportamiento:</p>
+<ul>
+<li>Los Boids de separación no deben acercarse demasiado a ningún otro objeto en el entorno.</li>
+<li>Los Boids de alineación deben dirigirse hacia el mismo rumbo que sus compañeros locales</li>
+<li>Los Boids de Cohesión deberían moverse hacia el centro de su grupo local.</li>
+</ul>
+<p>A pesar de la simplicidad de estas tres reglas, Reynolds pudo lograr un vuelo (flocado) realista, de hecho la interacción local de estas reglas no solo permitió a Reynolds desarrollar
+un modelo que agrupába los Boids a nivel global, sino que cada grupompequeño de BOIds se comportaba como uno solo,por ejemplo, si se introduce un obstáculo en el vuelo de los Boids estos pueden dividirse fácilmente en dos bandadas, moverse alrededor del objeto y luego volver a ensamblarse. Todo esto se logró solo con las tres reglas y sin ningúna modificación adicional al modelo.El modelo “Boids” fue en muchos sentidos un modelo basado en agentes, aunque este término no estaba en uso en esa época, el hecho de que los grupos pudieran adaptarse a situaciones novedosas (por ejemplo, la introducción de un objeto extraño) sin interrumpir el patrón emergente es un ejemplo clásico de cómo un MOBA bien escrito es generalizable más allá de las condiciones para las cuales fue concebido originalmente. Como los MOBA no requieren una descripción global del sistema, no necesitan anticipar todos lo posibles eventos que pueden suceder.
+Poco después de la presentación de Reynolds del modelo Boids en SIGGRAPH ’87, Chris
+Langton organizó el primer taller sobre Vida Artificial, donde el modelo de Reynolds también fue presentado. La vida artificial se ha convertido en una comunidad que abarca muchos de estos
+diferentes métodos de computación en los que se utilizan computadoras para emular humanos y
+sistemas biológicos La Vida Artificial, por lo tanto, comenzó a usar sistemas como los Boids de Reynolds,Los autómatas celulares de von Neumann y los algoritmos genéticos de Holland. Aunque la vida artificial es distinta del modelado basado en agentes en el sentido que su objetivo es construir sistemas que reflejenobjetos realistas dentro de una computadora, muchos de los métodos y técnicas de MOBA y de vida artificial son bastante similares.</p>
+<p><br>
+</br>
+<img src="GrafHistoria/Reynolds.jpeg" />
+Craig Reynolds
+<br>
+</br></p>
+</div>
+<div id="conclusión" class="section level2">
+<h2><span class="header-section-number">4.6</span> Conclusión</h2>
+<p>los MOBAs han recorrido un largo camino desde los días de Thomas Schelling (1971) lanzando monedas en un tablero de ajedrez. Estas seis viñetas han intentado arrojar algo de luz sobre las raíces de este campo. Sin embargo, el campo aún es bastante joven. Existe una considerable investigación que aún no se ha llevado a cabo sobre cómo implementar mejor MOBAs, qué herramientas son más útiles para soportarlos, y dónde aplicarlos mejor. Está claro que los modelos basados en agentes se han convertido en un metodología y conjunto de herramientas importantes para comprender sistemas complejos en las ciencias naturales,
+las ciencias sociales y la ingeniería.</p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ocho-modelos-clásicos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="buscadores-de-hongos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

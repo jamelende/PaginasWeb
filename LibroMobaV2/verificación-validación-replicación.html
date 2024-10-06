@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>10 Verificación, Validación Replicación | Modelación basada en Agentes</title>
+  <meta name="description" content="10 Verificación, Validación Replicación | Modelación basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="10 Verificación, Validación Replicación | Modelación basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="10 Verificación, Validación Replicación | Modelación basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="el-modelo-si-de-infección.html"/>
+<link rel="next" href="modelo-de-inversión.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El ciclo de modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html"><i class="fa fa-check"></i><b>7</b> El Modelo Predador Presa</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#siete-criterios-de-diseño"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseño:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#cinco-modelos-incrementales"><i class="fa fa-check"></i><b>7.3</b> Cinco modelos incrementales</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html"><i class="fa fa-check"></i><b>9</b> El Modelo SI de Infección</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#un-segundo-análisis-infección-ambiental"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis (Infección Ambiental)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html"><i class="fa fa-check"></i><b>11</b> Modelo de Inversión</a><ul>
+<li class="chapter" data-level="11.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Descripción del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apéndices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a><ul>
+<li class="chapter" data-level="A.6.1" data-path="redes.html"><a href="redes.html#intervención-de-políticas"><i class="fa fa-check"></i><b>A.6.1</b> Intervención de políticas</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+<li class="chapter" data-level="B.3.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#conjunto-de-agentes-agentset"><i class="fa fa-check"></i><b>B.3.1</b> Conjunto de agentes (agentset)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="verificación-validación-replicación" class="section level1">
+<h1><span class="header-section-number">10</span> Verificación, Validación Replicación</h1>
+<p>En los capítulos anteriores, hemos defendido la importancia y utilidad de los MOBAs, aprendido a extender un modelo existente y construir modelos nuevos. En este capítulo, aprenderemos a evaluar la corrección y validez de un MOBA</p>
+<ul>
+<li>¿Cómo podemos saber si nuestro MOBA implementado corresponde a nuestro modleo conceptual?</li>
+<li>¿Cómo podemos medir la correspondencia entre nuestro MOBA y el mundo real?</li>
+</ul>
+<div id="corrección-de-un-modelo" class="section level2">
+<h2><span class="header-section-number">10.1</span> Corrección de un modelo</h2>
+<p>Si un modelo es útil para responder preguntas del mundo real, es importante que el modelo proporcione resultados que abordan los problemas relevantes y que los resultados sean precisos, El modelo debe proporcionar resultados que sean útiles para el usuario del modelo. La precisión del modelo puede ser evaluado a través de tres procesos diferentes:</p>
+<ul>
+<li>Validación, Verificación y Réplicación.</li>
+</ul>
+<p>La validación del modelo es el proceso de determinar si el modelo implementado corresponde a, y explica, algún fenómeno en el mundo real. Verificación del modelo es el proceso de determinar si un modelo implementado corresponde al modelo conceptual que se uso para su construcción, este proceso es equivalente a asegurarse de que el modelo ha sido implementado correctamente.
+Por último, la replicación es la coherencia entre el modelo original y un modelo implementado por un investigador o Grupo de investigadores distinto.
+Al garantizar que un modelo implementado corresponde a un modelo conceptual (verificación) cuyas salidas se reflejan en el mundo real (validación), la confianza crece en la corrección y el poder explicativo de los modelos. Además, mientras otros científicos y constructores de modelos replican el trabajo original, la comunidad científica específica en su conjunto es la que llega a aceptar el modelo como correcto. Verificación validación y replicación sustentan colectivamente la corrección y, por lo tanto, la utilidad de un modelo.</p>
+<p>Sin embargo, demostrar que un conjunto particular de resultados de un modelo corresponde al mundo real no es suficiente. Como se discutió en capítulos anteriores, debido a la naturaleza estocástica de los MOBAs, a menudo se necesitan múltiples ejecuciones para confirmar que un modelo es exacto.Por lo tanto, las metodologías de verificación, validación y replicación a menudo se basan en métodos de estadística. Comenzamos nuestra discusión mirando más de cerca la verificación.</p>
+</div>
+<div id="verificación" class="section level2">
+<h2><span class="header-section-number">10.2</span> Verificación</h2>
+<p>A medida que un modelo basado en agentes crece, se hace más difícil simplemente mirar su código para determinar si realmente está llevando a cabo su función prevista. El proceso de verificación aborda este problema, teniendo como objetivo la eliminación de “errores” del código.Sin embargo, esto no es tan simple como puede parecer, y si los diseñadores e implementadores de modelos son personas diferentes, el proceso de depuración puede volverse mucho más complejo. Si un modelo es simple para empezar, es más fácil de verificar que un modelo complejo. Igualmente, si las partes adicionales agregadas al modelo también son de naturaleza incremental , construyendo hacia la pregunta de interés en vez de tratar de desarrollar totalmente el modelo, estos modelos serán más fáciles de verificar. Aun así, debe tenerse en cuenta que incluso si todos los componentes de un modelo son verificados, el modelo en sí puede no serlo, ya que pueden surgir complicaciones adicionales
+en las interacciones entre los componentes del modelo.
+A lo largo de esta sección, examinamos el tema de la verificación en el contexto de un simple MOBA del comportamiento de un sistema de votación, utilizaremos la siguiente narrativa ficticia para guiar nuestra discusión:</p>
+<p>Imagine que se nos acerca un grupo de politólogos que desean desarrollar un modelo simple de comportamiento de votación. Ellos explican que piensan que las interacciones sociales son las que determinan en gran medida la votación en las elecciones. Con base en sus observaciones de encuestas y resultados electorales, piensan que las personas tienen alguna inclinación inicial de votación, y cuando son encuestados inicialmente, expresan esos sentimientos. Sin embargo, en el intervalo entre cuando son encuestados y cuando realmente emiten su voto, hablan con sus vecinos y colegas y discuten la forma en que planean votar; esto puede cambiar la forma en que deciden votar. De hecho, esto puede suceder varias veces durante el período previo a una elección. Los politólogos nos piden que construyamos un MOBA que ilustre este fenómeno.</p>
+</div>
+<div id="comunicación" class="section level2">
+<h2><span class="header-section-number">10.3</span> Comunicación</h2>
+<p>A menudo, el implementador del modelo y el autor del modelo no son la misma persona, pero esto no es siempre el caso. A veces, un equipo de personas construye un modelo, en el que una o más personas describe el modelo conceptual mientras que otros miembros del equipo realmente implementan el modelo. Esto sucede con frecuencia cuando el experto en el dominio no tiene las habilidades técnicas para crear el modelo por su cuenta. En estas situaciones, la verificación se vuelve especialmente crítica, ya que ningún individuo tiene un conocimiento completo de todas las partes del proceso de modelado. Cuando los modelos están construidos de esta manera, la comunicación es crítica para asegurar que el modelo implementado refleje correctamente el modelo conceptual del experto en el dominio. La mejor manera de verificar modelos construidos en este tipo de equipos es que el experto en el dominio (o expertos) se familiaricen con las herramientas del modelo y, asimismo, los implementadores aprendan sobre el tema del modelo. Si bien uno no puede esperar que las dos partes se conviertan en expertos en los dominios del otro,construir este terreno común es esencial para garantizar que las ideas se comuniquen de manera efectiva y el modelo refleja correctamente las intenciones de los modeladores.</p>
+<p>Por ejemplo, en nuestro modelo de votación, sería útil que los politólogos conocieran la diferencia entre los tipos de vecindades ( Moore y von Neumann) que exiten en los modelos basados en agentes, este conocimiento les permitiría tomar decisiones informadas sobre cómo su modelo conceptual debería ser implementado. Además, ayudaría si el implementador tuviera una idea básica de cómo los mecanismos de votación se conceptualizan dentro de la disciplina de la ciencia política, ya que podría ayudarlos a darse cuenta de posibles simplificaciones para el modelo o incluso potenciales “trampas” en el modelo a medida que se implementa.
+Por ejemplo:</p>
+<ul>
+<li>¿es razonable suponer que solo hay dos partidos?</li>
+<li>¿es razonable suponer que el grupo de amigos de cada persona amigos no cambia durante el período de tiempo modelado en la simulación?</li>
+</ul>
+<p>Cuando se trata de la comunicación del modelo conceptual, a menudo hay espacio para errores humanos y malentendidos, en una situación ideal, el autor del modelo y el implementador son la misma persona, lo que evita el tipo de errores de comunicación que pueden resultar de diferentes vocabularios y supuestos diferentes. Sin embargo, el tiempo requerido para los expertos en el dominio para aprender programación de computadora, o por el contrario, el tiempo requerido para los programadores de computadora para aprender un dominio particular, puede ser sustancial. Esto fue particularmente cierto en las décadas pasadas, cuando a menudo era inviable convertirse en un implementador de modelos yun experto. Sin embargo, los nuevos lenguajes de MOBAs de bajo umbral, como NetLogo, tienen un objetivo explícito de disminuir la cantidad de tiempo necesario para aprender a escribir MOBAs, por lo tanto reducir (o eliminar) la brecha entre el autor y el implementador.</p>
+</div>
+<div id="descripción-de-modelos-conceptuales" class="section level2">
+<h2><span class="header-section-number">10.4</span> Descripción de Modelos Conceptuales</h2>
+<p>A medida que comenzamos a implementar el modelo de votación, podemos darnos cuenta de que hay algunos mecanismos y propiedades de agentes que no entendimos completamente cuando hablamos con los politólogos. Para aliviar este problema, se decide escribir un documento que describa cómo planeamos implementar el modelo para que podamos verificar que nosotros y los expertos en ciencia política tienen el mismo modelo conceptual en mente. Este documento servirá como un documento más formal.</p>
+<div id="descripción-del-modelo-conceptual." class="section level3">
+<h3><span class="header-section-number">10.4.1</span> Descripción del modelo conceptual.</h3>
+<p>Una forma de describir modelos conceptuales en términos más formales es usar diagramas de flujo. Un diagrama de flujo es una descripción gráfica del modelo que describe el flujo de decisiones que ocurren durante la ejecución de un procedimiento de software. Para el modelo conceptual descrito arriba, podríamos usar un diagrama de flujo como el de la siguiente figura.</p>
+<p><img src="GrafVerificacion/DiagFlujo.png" /></p>
+<p>Los diagramas de flujo usan cuadrados redondeados para indicar los estados de inicio y final del ssitema, cuadrados para indicar procesos y diamantes para indicar puntos de decisión en el código. Estos símbolos proporcionan una forma clara de entender cómo fluye el control a través del software. También podemos tomar de diagrama de flujo y reescribirlo en pseudocódigo. El objetivo es servir como punto intermedio entre el lenguaje natural y el programa formal.El pseudocódigo puede ser leído por cualquier persona, independientemente de su conocimiento de programación, mientras que, al mismo tiempo, contiene una estructura algorítmica que lo hace más fácil para implementar directamente en código real. Por ejemplo, al describir el modelo de votación, podríamos usar un pseudocódigo como este:</p>
+<pre><code>Los votantes tienen votos = {0, 1}
+Para cada votante:
+ Establezca el voto 0 o 1, elegido con igual probabilidad
+ Loop hasta la elección 
+ Para cada votante
+   Si la mayoría de los votos de los vecinos = 1 y voto = 0, establezca el voto 1
+    De lo contrario, si la mayoría de los votos de los vecinos = 0 y voto = 1, establezca el   voto 0
+Si voto = 1: establece el color azul
+De lo contrario: color = verde
+Mostrar recuento de votantes con voto = 1
+Mostrar recuento de votantes con voto = 0
+Bucle final</code></pre>
+</div>
+</div>
+<div id="verification-testing" class="section level2">
+<h2><span class="header-section-number">10.5</span> Verification Testing</h2>
+<p>Después de diseñar el modelo conceptual con nuestros colegas de ciencias políticas, podemos comenzar la codificación. Seguimos el principio de diseño central de MOBA y comenzamos a verificar de forma simple e incremental. La alineación entre nuestro modelo conceptual y el código. Por ejemplo, podemos escribir el procedimiento de configuración, como aquí:</p>
+<pre><code>patches-own
+[
+vote ;; my vote (0 or 1)
+total ;; sum of votes around me
+]
+to setup
+clear-all
+ask patches [
+if (random
+[ set vote
+]
+ask patches [
+if (random 2 =
+[ set vote
+]
+ask patches [
+recolor-patch
+]
+end
+2 = 0) ;; half a chance of this
+1 ]
+0) ;; half a chance of this
+0 ]
+to recolor-patch ;; patch procedure
+ifelse vote = 0
+[ set pcolor green ]
+[ set pcolor blue ]
+end
+</code></pre>
+<p>Luego podemos escribir una pequeña prueba que examine si el código creó el número correcto de votantes verdes y azules. En el estado inicial del modelo de votación, el número de votantes con voto 0 debería ser aproximadamente igual al número de votantes con voto 1. Podemos verificar esto fácilmente al configurar nuestro modelo varias veces, comparando los recuentos de cada voto. Si la diferencia en estas muchas configuraciones es más de aproximadamente el 10 por ciento, por ejemplo, nuestro código podría tener un error.
+Si la diferencia es inferior al 10 por ciento del número total, podemos sentir relativamente
+confiamos en que las poblaciones se generan como pretendíamos. Este código se vería así:</p>
+<pre><code>to check-setup
+let diff abs ( count patches with [ vote = 0 ] - count patches
+with [ vote = 1 ] )
+if diff &gt; .1 * count patches [
+print &quot;Warning: Difference in initial voters is greater than 10 4 %.&quot;
+]
+end
+</code></pre>
+<p>Podemos insertar una llamada a CHECK-SETUP en la parte inferior del procedimiento de “setup” Esta prueba luego se ejecutará cada vez que el modelo ejecute setup&quot; y, si hay un problema, alertará quien está ejecutando el modelo y si hay un desequilibrio de votación.
+Usando este procedimiento de setup, la advertencia aparece casi cada vez que ejecutamos el modelo, lo que nos dice que el código no está logrando lo que pretendíamos. Además, es visualmente evidente que este código crea muchos más parcelas que son verdes (voto = 0) que azules(voto = 1). Debido a que todos los errores no son aparentes visualmente, es importante escribir pruebas de verificación (Se alienta a los lectores a examinar el código de configuración anterior y determinar su falla). Después de descubrir el error, podemos reescribir el procedimiento de configuración con lo siguiente (más simple) código, que logra el equilibrio correcto de los votantes iniciales.</p>
+<pre><code>
+to setup
+clear-all
+ask patches [
+set vote random 2
+]
+ask patches [
+recolor-patch
+]
+check-setup
+end
+</code></pre>
+<p>Esta técnica de verificación es una forma de prueba unitaria, es un enfoque que implica escribir pequeñas pruebas que verifican si las unidades individuales funcionan correctamente en el código. Al escribir pruebas unitarias a medida que desarrollamos nuestro código, podemos asegurarnos de que los cambios futuros en nuestro código no interrumpan el código anterior. Dado que esta prueba unitaria se ejecutará cada vez que ejecutemos este modelo, garantiza que podamos modificar el código sin temor a que nuestros cambios alteren indetectable el código anterior. Por supuesto, esta es solo una prueba unitaria, y hay muchas más que podrían escribirse. También es posible escribir por separado un conjunto de pruebas unitarias que no forman parte del modelo implementado, sino que están escritas para ejecutar el modelo con entradas particulares y comprobar si las salidas corresponden a los resultados esperados. Este enfoque a veces se denomina prueba unitaria “fuera de línea”. Después de estar seguros de que se verifica el código de setup, se puede comenzar un proceso similar para el procedimiento go&quot; Traducimos el pseudocódigo en NetLogo de la siguiente manera:</p>
+<pre><code>to go
+ask patches [
+set total (sum [vote] of neighbors)
+]
+;; this is equivalent to count neighbors with [vote = 1]
+;; use two ask patches blocks so all patches compute &quot;total&quot;
+;; before any patches change their votes
+ask patches [
+ifelse vote = 0 and total &gt;= 4 [
+set vote 1
+]
+[if vote = 1 and total &lt;= 4 ] [
+[set vote 0
+]
+recolor-patch
+]
+tick
+end</code></pre>
+<p>En este código, primero pedimos a las parcelas que calculen el número total de vecinos con voto= 1. Si la parcela está votando 0 y tiene un total mayor o igual a 4, entonces cambia su votación a 1. Del mismo modo, si la parcela está votando 1 y tiene un total menor o igual a 4, cambia su voto a 0. Después de verificar los procedimientos SETUP y GO, podemos comenzar a investigar
+los resultados del modelo</p>
+</div>
+<div id="más-allá-de-la-verificación" class="section level2">
+<h2><span class="header-section-number">10.6</span> Más allá de la verificación</h2>
+<p>A pesar de los mejores esfuerzos para verificar que el modelo implementado corresponde al modelo conceptual, a veces producirá resultados que no parecen corresponder a lo que los implementadores y los autores planearon. Con el tiempo, puede quedar claro que
+no hay “error” en el modelo, sino que los resultados emergentes y sorprendentes del modelo son consecuencias no deseadas de decisiones a nivel individual que el modelador tiene codificado.</p>
+<p><img src="GrafVerificacion/Votos1.png" /></p>
+<p>Por ejemplo, después de codificar el modelo anterior, presentamos los resultados a nuestros colegas de ciencia política, los resultados del modelo confunden a los politólogos, porque esperaban que el modelo uniera a los votantes formando bloques estáticos con bordes suaves, en lugar de bordes irregulares que aparecen en la figura. De hecho, este modelo nunca alcanza el equilibrio; Continuamente recorre un conjunto de estados, después de un examen más detallado, queda claro que lo que está causando el ciclo del modelo y produce los bordes dentados es cuando los votos de los vecinos están empatados. Como lo codificamos, el modelo hace que los votantes cambien su voto, entonces los bordes siguen yendo y viniendo entre los dos votos. Podemos cambiar el modelo para que los votantes no cambien su voto si los votos de sus vecinos están empatados. Después de hacer esto , los bloques se unen con bordes lisos:</p>
+<p><img src="GrafVerificacion/Votos2.png" /></p>
+<p>Sin embargo, como los políticos se han interesado en cómo un cambio aparentemente pequeño crea una gran diferencia en el resultado, deciden hacer de este un elemento del modelo que puedan controlar agregando un interruptor, llamado CAMBIAR-VOT0-SI-EMPATE?.
+Tener esta opción como elemento controlable nos permite explorar nuevos comportamientos de votación, por ejemplo:</p>
+<ul>
+<li>¿qué pasaría si los votantes decidieran ponerse del lado del partido minoritario en su barrio?</li>
+</ul>
+<p>Es decir, imagine una comunidad donde, cuando los vecinos de un miembro están divididos estrechamente entre dos candidatos, el miembro decide votar por el desvalido (quien quiera que haga que la mayoría de sus vecinos no voten), ya que el miembro podría ser capaz de asegurar la victoria del desvalido. Tenga en cuenta que esta perversidad hipotética de los agentes puede no reflejar las prácticas de votación del mundo real. Sin embargo, esta es una cuestión de validación del modelo (que discutiremos más adelante), en lugar de un problema de verificación. A continuación se muestra el código para el procedimiento go con las dos opciones agregadas:</p>
+<pre><code>to go
+ask patches
+  [ set total (sum [vote] of neighbors) ]
+  ;; use two ask patches blocks so all patches compute &quot;total&quot;
+  ;; before any patches change their votes
+ask patches
+  [
+  if total &gt; 5 [ set vote 1 ]
+  if total &lt; 3 [ set vote 0 ]
+  if total = 4
+   [ if change-vote-if-tied?
+    [ set vote (1 - vote) ] ] ;; switch vote
+  if total = 5
+   [ ifelse award-close-calls-to-loser?
+    [ set vote 0 ]
+   [ set vote 1 ] ]
+   if total = 3
+     [ ifelse award-close-calls-to-loser?
+     [ set vote 1 ]
+     [ set vote 0 ] ]
+recolor-patch ]
+tick
+end
+</code></pre>
+<p>Este ejemplo ilustra que, al examinar los resultados del modelo, puede ser difícil descifrar si el resultado de un modelo es el resultado de errores en el código, una falta de comunicación entre el autor del modelo y el implementador, o un resultado “correcto” pero no anticipado de las reglas de los agentes.
+Por lo tanto, es vital que el implementador del modelo y el autor del modelo discutan ambos la modelación de las reglas y los resultados con la mayor frecuencia y regularidad posible, y no simplemente cuando finalice la implementación del modelo. Saltarse este proceso de comunicación puede resultar en que el implementador termine creando un modelo con comportamientos de agentes que el autor del modelo no había definido. Sin embargo, al mantener estas comunicaciones, el autor del modelo puede descubrir que las variantes en su modelo conceptual resultan en resultados dramáticamente diferentes. Incluso si el autor y el implementador del modelo son la misma persona, es útil revisar las reglas del modelo y los resultados de forma iterativa y discutirlos con personas que están familiarizadas con el fenómeno modelado.</p>
+</div>
+<div id="análisis-de-sensibilidad-y-robustez" class="section level2">
+<h2><span class="header-section-number">10.7</span> Análisis de sensibilidad y robustez</h2>
+<p>Después de que hayamos terminado de construir un modelo y encontrado algunos resultados interesantes, es importante explorar estos resultados para determinar qué tan sensible es nuestro modelo al conjunto particular de condiciones iniciales que estamos usando. A veces, esto solo significa variar un grupo de parámetros que ya tenemos dentro de nuestro modelo, pero otras veces, esto implica agregar nuevos parámetros al modelo. Este proceso, llamado análisis de sensibilidad, crea una comprensión de cuán sensible (o robusto) es el modelo a varias condiciones.
+Un tipo de análisis de sensibilidad implica alterar los valores de entrada del modelo. Por ejemplo, uno de los politólogos está preocupado por las condiciones iniciales del modelo, piensa que el comportamiento actual del modelo puede depender inicialmente de tener un equilibrio
+entre el número de votantes para cada partido (color). y se pregunta si inclinar el estado inicial en una dirección u otra daría como resultado que un color domine el paisaje.
+Para probar esta hipótesis, creamos un parámetro (un deslizados en la interfaz del modelo) que controla el porcentaje de agentes verdes en el estado inicial del modelo. Usando El Analizador de Comportamiento <a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica">C.1</a>, ejecutamos un conjunto de experimentos donde variamos este porcentaje del 25 por ciento al 75 por ciento en incrementos del 5 por ciento. Al establecer la condición de parada para este experimento, debemos tener en cuenta que es posible tener patrones oscilantes interminables. Por esta razón, decidimos establecer dos condiciones de parada diferentes:</p>
+<ol style="list-style-type: decimal">
+<li>el modelo se detiene si ningún votante cambió de votos en el último tick.</li>
+<li>el modelo se detendrá después de que se han ejecutado cien pasos de tiempo (ticks), ya que parece ser tiempo suficiente para llegar a un estado final del modelo. Esta investigación significará que tenemos que reevaluar nuestro proceso de verificación inicial, ya que ahora estamos deliberadamente alterando completamente la distribución inicial. Por lo tanto, podemos cambiar el código para que tome en cuenta el nuevo parámetro:</li>
+</ol>
+<pre><code>
+to check-setup
+ let expected-green (count patches * initial-green-pct / 100)
+ let diff-green (count patches with [ vote = 0 ] ) - expected-green
+ if diff-green &gt; (.1 * expected-green) [
+   print &quot;Initial number of green voters is more than expected.”
+  ]
+ if diff-green &lt; (- .1 * expected-green) [
+   print “Initial number of green voters is less than expected.”
+  ]
+end</code></pre>
+<p>Podemos examinar la relación entre la distribución inicial de votantes y el recuento final de votos haciendo diez ejecuciones para cada porcentaje inicial.Cada partido político debe contar el porcentaje de votantes finales que son verdes o azules.Después de ejecutar nuestro experimento BehaviorSpace, podemos graficas los resultados del porcentaje final contra el porcentaje de entrada, obteniendo el gráfico siguiente:</p>
+<p><img src="GrafVerificacion/GrafParcelas.png" /></p>
+<p>Estos resultados muestran que, a medida que nos alejamos de una distribución media inicial de votantes azules y media de votantes verdes, hay un efecto no lineal en la distribución final de los votantes. El modelo es sensible a estos parámetros, y por lo tanto, un ligero cambio en el número inicial de votantes de un partido dan como resultado un mayor número de votantes finales para ese mismo partido. Sin embargo,la definición de “sensibilidad” depende de los resultados del modelo que se esté considerando.Por ejemplo, la sensibilidad en los resultados cuantitativos no significa necesariamente que habrá sensibilidad en los resultados cualitativos. Si el resultado de su modelo principal es el hallazgo cualitativo de que se forman islas sólidas de votantes de ambos colores, dejando la segregación, entonces este resultado cualitativo sigue siendo cierto incluso si se perturba la distribución inicial de los votantes en un 10 por ciento en cualquier dirección.</p>
+<p>Cuando están perturbadas, las islas de un color u otro pueden ser mucho más pequeñas, pero aún habrá bloques sólidos. Por lo tanto, para esta medida cualitativa, podríamos cocluir que este modelo es insensible a pequeños cambios en la configuración inicial de votantes. El análisis de sensibilidad es un examen del impacto de diferentes parámetros del modelo en sus resultados. Para determinar qué tan sensible es un modelo, examinamos el efecto que diferentes condiciones iniciales y los mecanismos del agente tienen en los resultados del modelo. Además, podemos examinar el entorno en el que opera el modelo. Por ejemplo, en el modelo de votación, estamos usando una cuadrícula bidimensional, pero estos resultados podrían cambiar drásticamente si los votantes se ubicaron en una cuadrícula hexagonal,en una red o en alguna otra topología.</p>
+</div>
+<div id="beneficios-de-la-verificación" class="section level2">
+<h2><span class="header-section-number">10.8</span> Beneficios de la verificación</h2>
+<p>Existen muchos beneficios al realizar análisis de verificación, que incluyen el desarrollo de una comprensión de la causa de resultados inesperados y una exploración del impacto de los pequeños cambios en las reglas de un modelo, el nivel básico de verificación es que el implementador del modelo compare la descripción conceptual del modelo con el código implementado para determinar si el modelo implementado corresponde al modelo conceptual. Cuanto más riguroso sea el proceso de verificación del modelo, es más probable que el modelo implementado resultante corresponda al modelo conceptual. Si los dos modelos corresponden exactamente, entonces el modelador y los autores entienden las reglas del modelo. Esto significa que entienden cómo el modelo genera sus resultados. Aún así, comprender los componentes del modelo no garantiza una comprensión de todas las interacciones de estos componentes o de por qué el modelo genera los resultados. La verificación es importante porque ayuda a garantizar que el autor (o autores) entiendan los mecanismos que subyacen el fenómeno que se está explorando. Sin pasar por este proceso, los autores no pueden confiar en las conclusiones extraídas del modelo.La verificación puede ser difícil de lograr porque es difícil determinar si un resultado inesperado es el producto de un error en el código, una falta de comunicación entre el autor e implementador del modelo, o un resultado inesperado de una regla, además aún puede ser difícil aislar y eliminar un error, o corregir el error incluso si estamos seguros de que el resultado es una consecuencia inesperada pero precisa, Puede ser difícil descubrir qué causó que los resultados fueran diferentes de lo esperado.
+El proceso de comprender cómo funciona un modelo también puede ayudarnos a comprender la pregunta de “por qué”. Por ejemplo, en el modelo anterior, como examinan los politólogos en el modelo, comienzan a comprender la razón por la que el segundo modelo se une en bloques.
+Al pensar en las reglas del modelo desde el punto de vista del agente, queda claro que una vez que se forma un bloque de individuos permanecerá constante, mientras que si la mayoría de un los vecinos del agente votan de una manera y ninguno de ellos está cambiando, entonces el agente lo hará seguir votando de la misma manera. Por lo tanto, una vez que todos los agentes hayan alcanzado la el concenso mayoritario de sus vecinos, se quedarán así para siempre. Es solo cuando damos a los agentes la capacidad de cambiar colores según los vecinos que los rodean, como en las otras dos reglas, que vemos un cambio perpetuo en los resultados. El proceso de verificación no es binario. Un modelo no está verificado o no verificado, pero más bien existe a lo largo de un continuo de verificación. Siempre es posible escribir más pruebas de o realizar más análisis de sensibilidad. Por lo tanto, depende del autor del modelo y implementador (y más tarde un replicador de modelos) para decidir cuándo terminar la verificación</p>
+</div>
+<div id="validación" class="section level2">
+<h2><span class="header-section-number">10.9</span> Validación</h2>
+<p>La validación es el proceso de asegurar que haya una correspondencia entre el modelo implementado y realidad. La validación, por su naturaleza, es compleja, multinivel y relativa. Los modelos son simplificaciones de la realidad; Es imposible que un modelo exhiba las mismas características y patrones que existen en la realidad. Al crear un modelo, queremos incorporar los aspectos de la realidad que sean pertinentes a nuestras preguntas. Así, cuando se emprende un proceso de validación, es importante tener en cuenta las preguntas del modelo conceptual y validar aspectos del modelo que se relacionan con estas preguntas.Hay dos ejes diferentes para considerar los problemas de validación (Rand &amp; Rust,
+2011). El primer eje es el nivel en el que se produce el proceso de validación (Microvalidación) es asegurarse de que los comportamientos y mecanismos codificados en los agentes del modelo coinciden con sus análogos del mundo real. La Macrovalidación es el proceso de asegurar que las propiedades agregadas y emergentes del modelo corresponden a las propiedades agregadas en el
+mundo real. El segundo eje de validación es el nivel de detalle del proceso de validación. La validación facial (face-validation) es el proceso de mostrar que los mecanismos y propiedades del modelo parecen mecanismos y propiedades del mundo real. La validación empírica asegura que el modelo genera datos que pueden demostrarse que corresponden a patrones similares de datos en el mundo real.
+Para ayudar a ilustrar el proceso de validación de un MOBA, utilizaremos el modelo Flocking de la sección de Biología de la biblioteca de modelos NetLogo. Este modelo intenta recrear patrones de aves que acuden como existen en la naturaleza :</p>
+<p><img src="GrafVerificacion/Flock.png" /></p>
+<p>Un modelo clásico basado en agentes basado en los modelos originales de Boids de Reynolds (1987). El modelo demuestra que pueden surgir bandadas de pájaros sin ser guiados de ninguna manera por Aves líderes especiales. Por el contrario, cada ave sigue exactamente el mismo conjunto de reglas, y de ahí las bandadas emergen. Cada ave sigue tres reglas: “alineación”, “separación” y “coherencia”
+* Alineación: significa que un pájaro gira para que se mueva en la misma dirección que cerca
+aves.</p>
+<ul>
+<li><p>Separación: significa que un pájaro gira para evitar golpear a otro pájaro.</p></li>
+<li><p>Cohesión: significa queun pájaro se mueve hacia otras aves cercanas.</p></li>
+</ul>
+<p>La regla de “separación” anula las otras dos, lo que significa que si dos pájaros se acercan, siempre se separarán. En este caso, las otras dos reglas se desactivan hasta que se logra la separación mínima. las
+tres reglas afectan solo el rumbo del ave. Cada ave siempre avanza al mismo tiempo y con velocidad constante. Las reglas son notablemente robustas y se pueden adaptar a enjambres de insectos, colonias de peces (Stonedahl y Wilensky, 2010a).
+Describamos brevemente la implementación de estas tres reglas. La regla de alineación es codificada de la siguiente manera</p>
+<pre><code>to align
+;; turtle procedure
+turn-towards average-flockmate-heading max-align-turn
+end</code></pre>
+<p>Este código le dice al pájaro que gire hacia el rumbo promedio de sus compañeros de manada, pero no más
+que el control deslizante MAX-ALIGN-TURN, que especifica el ángulo máximo que puede girar un pájaro con el fin de alinearse con sus compañeros de rebaño. Este código requiere dos procedimientos auxiliares:
+uno para encontrar los compañeros de bandada de un pájaro y otro para encontrar su rumbo promedio. El primero es
+sencillo:</p>
+<pre><code>
+to find-flockmates ;; turtle procedure
+set flockmates other turtles in-radius vision
+end</code></pre>
+</div>
+<div id="replicación" class="section level2">
+<h2><span class="header-section-number">10.10</span> Replicación</h2>
+<p>Uno de los componentes fundamentales del método científico es la idea de replicación.(Latour y Woolgar, 1979). Desde este punto de vista, para que un experimento sea considerado aceptable por la comunidad científica, los científicos que originalmente realizaron el experimento deben publicar los detalles de cómo se realizó el experimento. Esta descripción puede ayudar a los equipos de científicos posteriores a realizar el experimento ellos mismos para determinar si sus resultados son lo suficientemente similares como para confirmar los resultados originales. Ese proceso confirma el hecho de que el experimento no dependía de ninguna condición local, mientras que la descripción escrita del experimento es lo suficientemente satisfactoria como para registrar el conocimiento y la ventaja obtenida en el registro permanente. La replicación es una parte importante del proceso científico y es tan importante dentro del ámbito de los modelos computacionales como lo es dentro del ámbito de los experimentos físicos. La reproducción de un experimento físico ayuda a demostrar que los resultados originales no se deben a errores o descuidos en la ejecución probando y comparando tanto la configuración experimental como los resultados posteriores. La replicación de un modelo computacional sirve para este mismo propósito. Adicionalmente, replicar un modelo computacional aumenta nuestra confianza en la verificación del modelo ya que una nueva implementación del modelo conceptual ha arrojado los mismos resultados que el original.
+La implementación del modelo replicado debe diferir de alguna manera del modelo original y también debe ser ejecutable (en lugar de otro modelo conceptual formal).
+Un modelo original y un modelo replicado asociado pueden diferir en al menos seis
+dimensiones:
+(1) tiempo,
+(2) hardware,
+(3) idiomas,
+(4) juegos de herramientas,
+(5) algoritmos y
+(6) autores.</p>
+<p>Esta lista está ordenada según la probabilidad de que el esfuerzo de replicación produzca resultados diferentes del modelo original. Por lo general, más de una de estas dimensiones son consideradas en el curso de un modelo de replicación. Un modelo puede ser replicado por el mismo individuo en el mismo hardware y en el
+mismo kit de herramientas y entorno de lenguaje pero reescrito en un momento diferente. En este cambio es menos probable que se produzcan resultados significativamente diferentes pero, si lo hiciera, lo haría indicar que la especificación publicada es inadecuada, ya que incluso el investigador original
+no se pudo volver a crear el modelo a partir del modelo conceptual original. Este es la única dimensión de replicación que siempre será variada.El modelo puede ser replicado por el mismo individuo pero en diferente hardware, por un cambio en el hardware queremos decir que el modelo implementado puede correr en una máquina diferente. Los cambios de hardware también se pueden obtener replicando el modelo en una plataforma de hardware diferente.
+El modelo podría replicarse en un lenguaje de computadora diferente. Por un lenguaje informático, nos referimos al lenguaje de programación que se utilizó para codificar las instrucciónes en el modelo implementado. Java, Fortran, Objective-C y NetLogo son ejemplos
+de diferentes lenguajes, a menudo, la sintaxis y la semántica de un lenguaje tienen un efecto significativo en cómo el investigador traduce el modelo conceptual en una implementación real. Por lo tanto, la replicación en un nuevo lenguaje puede destacar las diferencias entre el modelo conceptual y la implementación. Incluso apareciendo detalles menores en lenguaje y especificaciones algorítmicas, como los detalles de punto flotante o las diferencias entre implementaciones de protocolos, pueden causar diferencias en los modelos replicados (Izquierdo y Gotts, 2005, 2006). Para que un modelo sea ampliamente aceptado como parte de la investigación científica, debe ser robusto a tales cambios.
+NetLogo es un ejemplo interesante porque, si bien el software de NetLogo está escrito en una combinación de Java y Scala, los modeladores usan otro lenguaje (también referido como NetLogo) para desarrollar modelos. Por lo tanto, clasificamos NetLogo como un kit de herramientas y un lenguaje. Con muchos kits de herramientas de modelado diferentes disponibles para su uso, los resultados de la replicación. pueden iluminar problemas no solo conceptuales sino también en el mismo kit de herramientas los propios, el modelo podría replicarse usando diferentes algoritmos. Por ejemplo, hay muchas formas de implementar algoritmos de búsqueda (por ejemplo, primero en amplitud, primero en profundidad) o actualizar una gran cantidad de objetos (por ejemplo, en orden de creación de objetos, en un orden aleatorio ). De hecho, un modelo replicado puede simplemente realizar los pasos de un modelo en un orden diferente al del modelo original.Todas estas diferencias pueden potencialmente crear disparidades en los resultados. Por otra parte, también es posible que la descripción algorítmica difiera, pero que los resultados no lo hagan. Esto podría suceder porque dos individuos describen el mismo algoritmo de manera diferente, o que las diferencias algorítmicas no afectan los resultados.
+Esto es una prueba sólida de la replicabilidad de un modelo. Si otro investigador puede tomar una descripción formal del modelo y recrearlo para producir los mismos resultados, tenemos evidencia razonable de que el modelo se describe con precisión y los resultados son robustos a los cambios.</p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="el-modelo-si-de-infección.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelo-de-inversión.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

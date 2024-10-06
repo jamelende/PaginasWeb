@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>A Redes | Modelación basada en Agentes</title>
+  <meta name="description" content="A Redes | Modelación basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="A Redes | Modelación basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="A Redes | Modelación basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="proyectos-avanzados.html"/>
+<link rel="next" href="tutorial-netlogo.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El ciclo de modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html"><i class="fa fa-check"></i><b>7</b> El Modelo Predador Presa</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#siete-criterios-de-diseño"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseño:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#cinco-modelos-incrementales"><i class="fa fa-check"></i><b>7.3</b> Cinco modelos incrementales</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html"><i class="fa fa-check"></i><b>9</b> El Modelo SI de Infección</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#un-segundo-análisis-infección-ambiental"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis (Infección Ambiental)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html"><i class="fa fa-check"></i><b>11</b> Modelo de Inversión</a><ul>
+<li class="chapter" data-level="11.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Descripción del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apéndices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a><ul>
+<li class="chapter" data-level="A.6.1" data-path="redes.html"><a href="redes.html#intervención-de-políticas"><i class="fa fa-check"></i><b>A.6.1</b> Intervención de políticas</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+<li class="chapter" data-level="B.3.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#conjunto-de-agentes-agentset"><i class="fa fa-check"></i><b>B.3.1</b> Conjunto de agentes (agentset)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="redes" class="section level1">
+<h1><span class="header-section-number">A</span> Redes</h1>
+<div id="introducción" class="section level2">
+<h2><span class="header-section-number">A.1</span> Introducción</h2>
+<p>En capítulos anteriores, las interacciones fueron definidas por el entorno y los agentes se comportan de manera aleatoria, estos modelos no incluyen el hecho de que en los sistemas sociales reales las interacciones no son aleatorias.Hoy en día, muchas personas forman parte de sitios web de redes sociales como Facebook. Los miembros no se conectan de forma aleatoria a otros miembros, pero están conectados con sus “amigos.” Si miramos las redes en los sitios web de redes sociales observaremos una estructura, la estructura de una red puede afectar una serie de fenómenos sociales, por ejemplo, la propagación de un rumor. Si un miembro de Facebook bien conectado coloca un rumor en su página, esta información se difundirá mucho más rápido entre la comunidad de Facebook en comparación con el caso en el que el mismo rumor lo pone en la página una persona que solo tiene un amigo.
+Cuando incluimos estructuras de red en nuestros modelos basados en agentes, podremos estudiar el efecto de la estructura de la red en la difusión de información, normas, enfermedades, comportamiento, etc…</p>
+</div>
+<div id="conceptos-básicos-de-redes." class="section level2">
+<h2><span class="header-section-number">A.2</span> Conceptos Básicos de Redes.</h2>
+<p>Una red es una colección de nodos que están conectados por enlaces. Un nodo puede representar una persona, una familia, una nación, una computadora, una especie, etc. Los enlaces definen una relación entre nodos como la amistad, el parentesco, una carretera, quién-come-a quién, etc. En el modelo Netlogo tendremos agentes definidos como los nodos. Los enlaces están definidos por una categoría especial llamada enlaces (links)
+En la siguiente figura,un enlace representa que el agente A es el padre del agente B y es un enlace dirigido, pero un vínculo que representa una amistad entre los agentes A y B puede
+ser un enlace no dirigido. Es decir, si ambos agentes se ven como amigos.</p>
+<p><img src="GrafRedes/EnlaceAgentes.png" /></p>
+<p>Cada agente puede tener varios enlaces, la cantidad de enlaces que tiene un agente se llama
+el grado del agente, si un agente tiene cinco conexiones no dirigidas, diríamos que el grado del agente es cinco:</p>
+<p><img src="GrafRedes/Grados.png" /></p>
+<p>En algunas redes el grado es el mismo para cada agente, mientras que en otras, el grado es diferente para cada agente. La distribución de grados en una población de agentes es una característica importante de una red.Otra característica de las redes está definida por los caminos entre los nodos. En la figura a continuación, verá un camino entre los dos nodos rojos:</p>
+<p><img src="GrafRedes/Caminos.png" /></p>
+<p>Hay varios caminos posibles, podemos calcular el camino más corto entre cada dos nodos de una red y luego tomar el promedio de estos caminos. Esto conduce al promedio
+de las longitudes de ruta más cortas de una red. La estructura de la red afecta la longitud del camino más corto y por tanto se convierte en un indicador importante para comparar redes. Cuanto menor el promedio de los caminos más cortos, más rápido esperamos que la información se difunda dentro de una red.
+Finalmente, miremos el coeficiente de agrupamiento de una red (clustering). Este coeficiente indica con qué frecuencia los enlaces de un nodo están vinculados entre sí. En las redes sociales podemos pensar en amigos de la persona A que también son amigos entre si, una mayor cantidad de amigos de amigos conduce a mayor agrupamiento. En la siguiente figura, puede ver que el nodo rojo tiene tres amigos (amarillos), pero ninguno de estos amigos está conectado. Por tanto, el coeficiente de agrupamiento del nodo rojo es cero:</p>
+<p><img src="GrafRedes/Clustering.png" /></p>
+<p>Para calcular el coeficiente de agrupamiento de una red, tomamos el promedio del agrupamiento para todos los nodos de una red.</p>
+<p>Una red se visualiza como un grafo. A menudo, estos grafos no tienen representación espacial, la tienen cuando representan carreteras u otras redes físicas. De lo contrario, estos grafos son solo una representación de las relaciones. Miremos una serie de diferentes tipos de redes y cómo se diferencian las métricas de red ( como longitud de la ruta más corta y agrupamiento (clustering))</p>
+</div>
+<div id="redes-aleatorias" class="section level2">
+<h2><span class="header-section-number">A.3</span> Redes aleatorias</h2>
+<p>Comencemos mirando una red simple, la red aleatoria. En esta red hay una población de n nodos. Uno a uno agregamos enlaces entre nodos. Hacemos esto al azar eligiendo uno de los nodos y vinculándolo aleatoriamente con otro nodo. En Netlogo, verá que agregar un enlace aleatorio se realiza de la siguiente manera:
+Seleccione dos agentes y compruebe si ya existe un vínculo entre ellos. Para hacer esto utilizamos <strong>link-neighbor? X</strong> que es verdadera si hay un vínculo entre el agente y X. Si
+no hay ningún enlace, podemos crear un nuevo enlace entre los dos tortugas usando
+la función <strong>create-link-with X</strong>.</p>
+<pre><code>to add-edge
+let node1 one-of turtles
+let node2 one-of turtles
+ask node1 [
+ifelse link-neighbor? node2 or node1 = node2 [add-edge]
+[ create-link-with node2 ]
+]
+end
+</code></pre>
+<p>En la siguiente figura , se puede ver cómo se visualiza la red durante la construcción de enlaces. En rojo se representa el componente conectado más grande de la red.</p>
+<p><img src="GrafRedes/Random.png" /></p>
+<p>Podemos visualizar el tamaño relativo del componente más grande a lo largo del tiempo :</p>
+<p><img src="GrafRedes/GiantComponent.png" /></p>
+<p>No todos los agentes tienen el mismo número de enlaces, pero cada uno tendrá un mínimo
+de un enalce1, ya que el modelo se ejecuta hasta que todas los agentes estén conectados. En este ejemplo vemosque el número de enlaces varía de 1 a 12. El grado medio es 4. La coeficiente de agrupamineto (clustering) es de 0.054 y el promedio de longitud de rutas más cotas es de 2.96 enlaces.</p>
+<p><img src="GrafRedes/Histogram.png" /></p>
+</div>
+<div id="redes-de-mundo-pequeño" class="section level2">
+<h2><span class="header-section-number">A.4</span> Redes de mundo pequeño</h2>
+<p>Es posible que tenga un encuentro con un extraño que está a pocos enlaces de distancia de ud en la red, podría estar a solo unos pocos apretones de manos del presidente de los Estados Unidos. Definamos aquí “apretón de manos” como literalmente estrechar la mano de alguien mano como te encuentras en persona. Excluyamos los apretones de manos que los presidentes dan a la multitud cuando tienen mítines. Entonces:</p>
+<ul>
+<li>¿A cuántos apretones de manos se está del presidente?</li>
+</ul>
+<p>Puede sorprenderse de lo pequeño que es este número para la mayoría de las personas. Hagamos esto con una persona elegida al azar de los miles de millones de adultos que viven en este planeta y tratar de definir a cuántos apretones de manos están lejos. ¿Alguna conjetura? Aquí esperaríamos que este número no sea mucho más que un puñado de apretones de manos.</p>
+<p>Esto sugiere que la longitud promedio de caminos de las redes sociales en todo el mundo es pequeña.El psicólogo Stanley Milgram hizo un experimento en la década de 1960 en el que solicitó a varios personas en el oeste medio de los Estados Unidos, enviar una carta a alguien en Boston. Sin embargo, no se recibía la dirección de la persona, sino otro tipo de información como la ocupación.
+Para alcanzar su objetivo (la persona con la que quieren tener contacto), las personas tenían que enviar la carta a alguien que pensaban que tendría más éxito en
+encontrar el objetivo. Milgram estaba interesado en si las cartas llegarían a su objetivo y cuántas conexiones se necesitarían. No todas las cartas alcanzaron su objetivo, pero de
+aquellos que alcanzaron el objetivo, el número medio de enlaces fue de <strong>seis</strong>. Esto llevó al dicho que todas las personas están en promedio a solo seis apretones de manos. Este experimento se replicó 35 años después con correos electrónicos, y nuevamente el número promedio de enlaces entre la fuente y el objetivo se encontró que era de seis.</p>
+<ul>
+<li>¿Es la red aleatoria un buen modelo para las redes sociales?</li>
+</ul>
+<p>No, ya que las redes sociales tienen otro atributo distintivo. Muchos amigos de una persona también son amigos entre sí. Esto es llamado agrupamiento (clustering) dentro de las redes. Para calcular el coeficiente de agrupamiento de un nodo buscaremos a todos los amigos de este nodo, y contamos cuántas amistades posibles existen entre estosnodos. El total de amistades reales entre amigos se divide por el total posible de amistades. Este es el coeficiente de agrupamiento, que es de 0.054 en la red aleatoria del ejemplo. En redes aleatorias este coeficiente no es muy alto ya que muchas conexiones son al azar, y entonces los amigos no son amigos entre sí.
+Ahora veremos una red de mundo pequeño que captura tanto el alto nivel de agrupación como
+una longitud de trayectoria media corta. El modelo fue desarrollado por Duncan Watts y Steven Strogatz. Comenzaron con una red regular de nodos que están dispuestos en círculo. Cada nodo está conectado a dos nodos a la izquierda y dos nodos a la derecha, esto significa que el coeficiente de agrupamiento es 0.50, ya que el 50% de los enlaces entre los amigos de un nodo están conectados entre sí. Para una red de 100 nodos, la longitud de ruta promedio es de aproximadamente 13 enlaces.
+Cuando se vinculan algunos nodos sin vínculo, la longitud de ruta promedio disminuye significativamente. En la siguiente figura, el reenlace de cuatro nodos conduce a una caída en la longitud promedio de la ruta de 13 a 9 enlaces.</p>
+<p><img src="GrafRedes/SmallWorld.png" /></p>
+<p>Al volver a vincular un nodo, elegimos un nodo A aleatorio y luego elegimos aleatoriamente de este nodo uno de los enlaces con otro nodo B. El nodo B luego se reemplaza con un nodo elegido al azar de toda la población de nodos, excepto el nodo A y los nodos existentes del nodo A. Una nueva función que usamos es <strong>end1</strong>, que indica el primer agente de un enlace. En un enlace dirigidoesta será la fuente, y para los enlaces no dirigidos será la tortuga con el número who más bajo. Primero verificamos si aún se pueden agregar nuevos enlaces al agente de interés. Si este es el caso, se coloca un agente que aún no está conectada con el agente de interés. Luego creamos un enlace entre ambas tortugas. En Netlogo esto se convierte en lo siguiente:</p>
+<pre><code>let node1 end1
+if [ count link-neighbors ] of end1 &lt; (count turtles - 1)
+[
+let node2 one-of turtles with [
+(self != node1) and (not link-neighbor? node1) ]
+ask node1 [create-link-with node2]
+]
+</code></pre>
+<p>Cuando comencemos a volver a enlazar, haremos cortes transversales de una parte de la red a otra. Esto conducirá a caminos más cortos entre los extremos de la red. Si volvemos a vincular muchos nodos, la longitud promedio de los caminos inicialmente disminuirá rápidamente.El coeficiente de agrupamiento se mantiene inicialmente alto, los atajos reducen la ruta longitud entre nodos de ambos lados de la red, pero no afectan la vinculación entre
+amigos.Solo unos pocos enlaces conducen a redes con alta agrupación (clustering) y una longitud promedio de caminos baja. Ésta es la característica de las redes de mundo pequeño, este es también el tipo de redque encontramos en las redes sociales. La mayoría de las personas están agrupadas y los amigos de los amigos son amigos.
+Pero si solo un pequeño porcentaje de las amistades son con personas muy diferentes, el promedio de longitudes de camino será pequeña.</p>
+<p><img src="GrafRedes/Graf1.png" /></p>
+<p><img src="GrafRedes/Graf2.png" /></p>
+</div>
+<div id="redes-sin-escala" class="section level2">
+<h2><span class="header-section-number">A.5</span> Redes sin escala</h2>
+<p>La última red que discutiremos es la red sin escala, la red sin escala captura la observación de que la distribución de grados no es normalmente distribuida en muchas redes del mundo real, por ejemplo, muchos sitios web no se enlazan con otros, pero algunos tienen muchos enlaces, estos se denominan centros o “hubs” Si trazamos la distribución de grados en una escala logarítmica , vemos una gráfica lineal. Si fuera una distribución normal, la frecuencia de observaciones con un alto grado, digamos
+100, estaría cerca de cero. Esto significa que en una distribución sin escala, la distribución tiene colas grandes, hay más valores atípicos de los que habría en una distribución normal. Este tipo de distribuciones de grados de una red sin escala se han encontrado en muchas redes. A menudo no siguen una línea recta para toda la distribución, sino para una gran parte de ella</p>
+<p><img src="GrafRedes/ScaleFree.png" /></p>
+<p>Barabasi y Albert (1999) publicaron un modelo simple que genera redes que tienen un
+distribución de grados libre de escala. El modelo se basa en el llamado apego preferencial:</p>
+<p>Empezando con dos nodos, cada nuevo nodo estará vinculado a la red existente, pero con un mayor preferencia a los nodos con mayor número de grados. Por tanto, los nodos con alto grado tienen un mayor probabilidad de conectar más nodos. Esto también se llama “los ricos se vuelven más ricos”.
+Para modelar el proceso de crear nuevos enlaces con base en los nodos y enlaces ya existentes en la red e implementarlo en Netlogo hay que hacer lo siguiente:</p>
+<p>Primero calculamos un valor aleatorio entre 0 y el número total de grados en la red. Luego, en orden aleatorio, los grados de los agentes se agregan hasta que el algoritmo sobrepasa el número acumulativo de grados del número aleatorio generado inicialmente, cuanto más alto sea el nivel del grado, más probable es que se dibuje una tortuga.</p>
+<pre><code>let total random-float sum [count link-neighbors] of turtles
+let partner nobody
+ask turtles
+[
+let nc count link-neighbors
+if partner = nobody
+[
+ifelse nc &gt; total
+[ set partner self ]
+[ set total total - nc ]
+]
+]
+</code></pre>
+<p>En la Figura se ve una instantánea del proceso de generación de la red preferencial, el tamaño de los nodos es proporcional al grado. Vemos algunos hubs y muchos nodos que simplemente están conectados a otro nodo.</p>
+<p><img src="GrafRedes/RedPref.png" /></p>
+<p>La siguiente figura muestra la distribución de grados de una red de 100 nodos. La distribución se aproxima a una distribución libre de escala, lo que significa
+que es una línea recta en una escala logarítmica del número de nodos y el grado. La red tiene 66 nodos con grado uno, y solo dos nodos con un grado superior a 8. El coeficiente de agrupamiento es 0, ya que los amigos de los amigos no son amigos. El camino promedio
+longitud es 4.14, que es mayor que la longitud de ruta promedio cuando la red es
+generada (2,96).</p>
+<p><img src="GrafRedes/HistRedPref.png" /></p>
+</div>
+<div id="el-modelo-sir" class="section level2">
+<h2><span class="header-section-number">A.6</span> El Modelo SIR</h2>
+<p>Una forma clásica de describir la difusión de una enfermedad en una población es distinguir tres tipos de agentes:</p>
+<ul>
+<li>Susceptibles, Infectados y Recuperados.</li>
+</ul>
+<p>El llamado modelo SIR, se estudia típicamente usando ecuaciones diferenciales. Hay tres variables, S el número de susceptibles, I el número de infectados y R el número de recuperados. Si no consideramos el cambio en la población y solo miramos el virus, podemos observar que el número de susceptibles disminuye con el tiempo. La tasa de esta disminución depende del número de personas infectadas y depersonas susceptibles. Cuantas más personas susceptibles haya, más personas pueden infectarse y cuantas más personas infectadas haya, más pueden infectar a las personas susceptibles. beta es la tasa de contacto entre las personas:</p>
+<p><span class="math display">\[ \frac{dS}{dt}= -\beta IS \]</span>
+El número de personas infectadas es el número de personas que se infectan menos el número de personas que se recuperan, las personas se recuperan a una rata fija dada por <span class="math display">\[ v \]</span>:</p>
+<p><span class="math display">\[ \frac{dI}{dt}= \beta IS - vI \]</span>
+<span class="math display">\[ \frac{dR}{dt}=  vI \]</span>
+Ahora podemos definir R0 , que se llama el coeficiente básico de reproducción, este coeficiente se obtiene considerando el número esperado de nuevas infecciones de una infeción en una población de susceptibles.
+Si <span class="math display">\[ R0 &gt; 1 \]</span> , más persoans se infectan y la infección se exapnde, para combatir la epidemia se necesita que <span class="math display">\[ R0 &lt; 1 \]</span></p>
+<p><span class="math display">\[ R0=\frac{\beta }{v} \]</span>
+## El Modelo SIR en una red</p>
+<p>El modelo basado en ecuaciones diferenciales como se describe arriba asume que hay muchos agentes que interactúan aleatoriamente. Ahora discutimos un modelo basado en agentes en el que se distinguen agentes susceptibles, infectados y recuperados. Se colocan agentes conectados en una red. La red se genera de la siguiente manera. Primero todos los agentes se colocan al azar en el paisaje.</p>
+<pre><code>create-turtles num-nodos
+ [
+   setxy random-xcor random-ycor
+  ]
+</code></pre>
+<p>Luego definimos la cantidad de enlaces que se generarán de manera que la red tenga un grado promedio medio específico ( grado-promedio-de-nodos)</p>
+<pre><code>let num-enlaces (grado-promedio-de-nodos * num-nodos) / 2</code></pre>
+<p>Los enlaces se agregan uno por uno hasta que se alcanza el número de enlaces. En cada tick uno de los agentes se selecciona al azar, se selecciona el agente más cercanoa esta y se establece un enlace (link) entre estos dos agentes</p>
+<pre><code>while [ count links &lt; num-links ]
+[
+ ask one-of turtles
+ [
+  let choice 
+    (min-one-of (other turtles with [not link-neighbor?   myself])
+    [distance myself])
+  if choice != nobody [ create-link-with choice ]
+ ]
+]
+</code></pre>
+<p>Los agentes que están conectados pueden afectar el estado de los demás. Los agentes infectados pueden infectar agentes susceptibles. Cada vecino susceptible de un agente infectado tiene la probabilidad <strong>prob-difusión-virus</strong> de infectarse. Cada agente infectado tiene una probabilidad <strong>prob-recuperar</strong> de recuperarse. Si un agente se recupera, puede volverse inmune con probabilidad <strong>prob-inmunidad</strong> o volverse susceptible de nuevo. Esto se modela en Netlogo de la siguiente manera:</p>
+<pre><code>ask turtles with [infectado?]
+  [
+    ask link-neighbors with [not resistente?]
+  [
+    if random-float 100 &lt; prob-difusión-virus
+      [
+       set infectado? true
+       set resistente? false
+       set color red
+      ]
+  ]
+  ]
+  
+ask turtles with [infectado?]
+[
+   if random 100 &lt; prob-recuperar
+     [
+        ifelse random 100 &lt; prob-inmunidad
+         [
+             set infectado? false
+             set resistente? true
+             set color gray
+         ]
+        [
+             set infectado? false
+             set resistente? false
+             set color green
+       ]
+]
+]
+</code></pre>
+<p>Vemos que el virus se propaga por la red:</p>
+<p><img src="GrafRedes/RedSir1.png" /></p>
+<p><img src="GrafRedes/RedSir2.png" /></p>
+<p>Inicialmente, tres agentes son infectados y en unos pocos pasos vemos que el color rojo comienza a extenderse. Si la probabilidad de volverse resistente a la infección es alta, la enfermedad deja de propagarse de manera temprana en comparación
+con el bajo nivel de <strong>prob-recuperar</strong>, se muestra que con un valor bajo de <strong>prob-recuperar</strong>, el virus se propaga a aproximadamente el 40% de la población ya que los agentes se enferman nuevamente después de la recuperación (volviéndose susceptibles), y la infección se contiene hasta debajo de un 10% con <strong>prob-recuperar</strong>
+igual a 50%.</p>
+<p><img src="GrafRedes/EstadoRed1.png" /></p>
+<p><img src="GrafRedes/EstadoRed2.png" /></p>
+<p>Ahora exploraremos las consecuencias de los parámetros, <strong>prob-recuperar</strong> y
+<strong>prob-difusión-virus</strong> , asumimos que los agentes que se recuperan no vuelven a ser Veremos las consecuencias para los grados promedio 4, 6 y 9 para una población de 500 agentes. Cada combinación de parámetros se ejecuta 100 veces. Se muestra que un grado más alto conduce a que más agentes contraigan el virus. Además, vemos que una mayor probabilidad de propagar el virus conduce a que más agentes se enfermen y una menor tasa de recuperación también conduce a que más agentes se enfermen.</p>
+<p><img src="GrafRedes/TresGraf.png" /></p>
+<div id="intervención-de-políticas" class="section level3">
+<h3><span class="header-section-number">A.6.1</span> Intervención de políticas</h3>
+<p>Para detener la propagación de enfermedades infecciosas, tenemos varias opciones. Podemos vacunar a las personas si hay una vacuna disponible. Otra opción es reducir las interacciones entre agentes. En la práctica, las escuelas suelen estar cerradas durante un brote de un virus, ya que
+los niños son un anfitrión eficaz en la propagación de enfermedades como la gripe. Con enfermedades de transmisión sexual como el SIDA, dirigirse a las prostitutas es un enfoque común, ya que son los ejes de
+interacciones entre agentes. Como ejercicio implementamos la opción de desactivar un agente haciendo clic en ellos con el mouse. Ejecute el modelo y vea si puede aislar el virus:</p>
+<iframe src="./GrafRedes/sirnet.html" width="100%" height="600px">
+</iframe>
+<p>Como puede ver, este no es un enfoque fácil, otro enfoque es desactivar los enlaces con los grados más altos. Para modelar esto en
+NetLogo creamos un bucle while y en cada iteración encontramos uno de los agentes que tiene la mayoría de vecinos y aún no se ha aislado. Luego aislamos ese agente. Cuando un agente es aislado le damos el color azul.</p>
+<pre><code>let i 0
+while [i &lt; numberofisolatedagents]
+ [
+  let target max-one-of turtles with [color != blue] [count link-neighbors]
+   ask target [
+     set infectado? false
+     set resistente? true
+     set color blue
+  ]
+set i i + 1
+]
+</code></pre>
+<p>Simulamos el modelo 1000 veces para aislar diferentes números de agentes y vemos que más agentes no se van a enfermar.</p>
+<p><img src="GrafRedes/Graf6.png" /></p>
+<p>¿Cuál es el beneficio de aislar a una persona? En la gráfica se muestra que por cada persona aislada, en promedio, una o dos personas más se salvan.Sin embargo, después de aislar 80 agentes, el beneficio marginal comienza a disminuir.
+Al observar un ejemplo de lo que está haciendo la estrategia (Figura 7):</p>
+<p><img src="GrafRedes/Graf7.png" /></p>
+<p>vemos que al aislar los agentes con los grados más altos no es necesario ya que son, de hecho, agentes aislantes lejos de la infección. Además, no aísla la propagación de la enfermedad. Por supuesto, la estrategia más eficaz sería aislar los nodos próximos a los agentes infectados, pero esa no sería una estrategia justa, ya que la computadora es tan rápida como la velocidad de luz a diferencia de las políticas reales.
+Supongamos que podemos aislar un agente en cada tick:</p>
+<p>¿qué agentes querríamos aislar?</p>
+<p>Podemos elegir un agente con el grado más alto en cada tick dentro de un radio X de agentes que estén infectados. Un radio más pequeño indicaría que el controlador que está aislando agentes tiene mejor información sobre dónde se encuentran los agentes infectados. No es sorprendente que veamos que una distancia corta conduce a un mejor rendimiento (Figura 8). Pero no demasiado cerca, ya que podría no haber una cantidad suficiente de nodos altamente conectados en un radio pequeño que podrían detenee
+la propagación. La Figura 8 también muestra que más de 50 agentes aislados comienzan a dar menos efecto por agente aislado.
+Aunque los agentes no están aislados al comienzo de la simulación, el rendimiento es mucho mejor que aislar agentes con un alto grado al inicio de la simulación.</p>
+<p><img src="GrafRedes/Graf8.png" /></p>
+<p>.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="proyectos-avanzados.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tutorial-netlogo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>B Tutorial NetLogo | Modelación basada en Agentes</title>
+  <meta name="description" content="B Tutorial NetLogo | Modelación basada en Agentes" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="B Tutorial NetLogo | Modelación basada en Agentes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="B Tutorial NetLogo | Modelación basada en Agentes" />
+  
+  
+  
+
+<meta name="author" content="Alfonso Meléndez" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="redes.html"/>
+<link rel="next" href="simulación-de-experimentos-con-netlogo.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html#section"></a></li>
+<li class="chapter" data-level="" data-path="prologo.html"><a href="prologo.html"><i class="fa fa-check"></i>Prologo</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html"><i class="fa fa-check"></i>Introducción</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#sistemas-complejos"><i class="fa fa-check"></i>Sistemas Complejos</a></li>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#para-quién-es-este-libro"><i class="fa fa-check"></i>¿Para quién es este libro?</a></li>
+</ul></li>
+<li class="part"><span><b>I Conceptos Básicos</b></span></li>
+<li class="chapter" data-level="1" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html"><i class="fa fa-check"></i><b>1</b> ¿Qué es un modelo?</a><ul>
+<li class="chapter" data-level="1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#un-primer-ejemplo"><i class="fa fa-check"></i><b>1.2</b> Un primer ejemplo</a></li>
+<li class="chapter" data-level="1.3" data-path="qué-es-un-modelo.html"><a href="qué-es-un-modelo.html#el-ciclo-de-modelaje"><i class="fa fa-check"></i><b>1.3</b> El ciclo de modelaje</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html"><i class="fa fa-check"></i><b>2</b> Modelacion Basada en Agentes</a><ul>
+<li class="chapter" data-level="2.1" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#qué-es-moba"><i class="fa fa-check"></i><b>2.1</b> ¿Qué es Moba?</a></li>
+<li class="chapter" data-level="2.2" data-path="modelacion-basada-en-agentes.html"><a href="modelacion-basada-en-agentes.html#un-nuevo-enfoque"><i class="fa fa-check"></i><b>2.2</b> Un nuevo enfoque</a></li>
+</ul></li>
+<li class="part"><span><b>II Contexto Histórico</b></span></li>
+<li class="chapter" data-level="3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html"><i class="fa fa-check"></i><b>3</b> Ocho Modelos Clásicos</a><ul>
+<li class="chapter" data-level="3.1" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#un-descubrimiento-importante"><i class="fa fa-check"></i><b>3.1</b> Un descubrimiento importante</a></li>
+<li class="chapter" data-level="3.2" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-mundo-de-las-hormigas"><i class="fa fa-check"></i><b>3.2</b> El Mundo de las hormigas</a></li>
+<li class="chapter" data-level="3.3" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#modelo-del-fuego"><i class="fa fa-check"></i><b>3.3</b> Modelo del Fuego</a></li>
+<li class="chapter" data-level="3.4" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#bar-el-farol"><i class="fa fa-check"></i><b>3.4</b> Bar El Farol</a></li>
+<li class="chapter" data-level="3.5" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#tortugas-y-ranas"><i class="fa fa-check"></i><b>3.5</b> Tortugas y Ranas</a></li>
+<li class="chapter" data-level="3.6" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#el-moho"><i class="fa fa-check"></i><b>3.6</b> El Moho</a></li>
+<li class="chapter" data-level="3.7" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#trancones-de-tráfico"><i class="fa fa-check"></i><b>3.7</b> Trancones de Tráfico</a></li>
+<li class="chapter" data-level="3.8" data-path="ocho-modelos-clásicos.html"><a href="ocho-modelos-clásicos.html#ecología-basada-en-agentes"><i class="fa fa-check"></i><b>3.8</b> Ecología basada en agentes</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algo-de-historia.html"><a href="algo-de-historia.html"><i class="fa fa-check"></i><b>4</b> Algo de Historia</a><ul>
+<li class="chapter" data-level="4.1" data-path="algo-de-historia.html"><a href="algo-de-historia.html#autómatas-celulares-y-modelado-basado-en-agentes"><i class="fa fa-check"></i><b>4.1</b> Autómatas celulares y modelado basado en agentes</a></li>
+<li class="chapter" data-level="4.2" data-path="algo-de-historia.html"><a href="algo-de-historia.html#algoritmos-genéticos-john-holland-y-sistemas-adaptativos-complejos"><i class="fa fa-check"></i><b>4.2</b> Algoritmos genéticos, John Holland y sistemas adaptativos complejos</a></li>
+<li class="chapter" data-level="4.3" data-path="algo-de-historia.html"><a href="algo-de-historia.html#seymour-papert-logo-y-la-tortuga"><i class="fa fa-check"></i><b>4.3</b> Seymour Papert, Logo y la tortuga</a></li>
+<li class="chapter" data-level="4.4" data-path="algo-de-historia.html"><a href="algo-de-historia.html#paralelismo-de-datos"><i class="fa fa-check"></i><b>4.4</b> Paralelismo de datos</a></li>
+<li class="chapter" data-level="4.5" data-path="algo-de-historia.html"><a href="algo-de-historia.html#gráficos-por-computadora-sistemas-de-partículas-y-boids"><i class="fa fa-check"></i><b>4.5</b> Gráficos por computadora, sistemas de partículas y boids</a></li>
+<li class="chapter" data-level="4.6" data-path="algo-de-historia.html"><a href="algo-de-historia.html#conclusión"><i class="fa fa-check"></i><b>4.6</b> Conclusión</a></li>
+</ul></li>
+<li class="part"><span><b>III Un Modelo Básico</b></span></li>
+<li class="chapter" data-level="5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html"><i class="fa fa-check"></i><b>5</b> Buscadores de Hongos</a><ul>
+<li class="chapter" data-level="5.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-el-modelo"><i class="fa fa-check"></i><b>5.1</b> Construyendo el Modelo</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#preliminares-instalando-y-abriendo-netlogo"><i class="fa fa-check"></i><b>5.1.1</b> Preliminares: Instalando y Abriendo NetLogo</a></li>
+<li class="chapter" data-level="5.1.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>5.1.2</b> Procedimiento setup</a></li>
+<li class="chapter" data-level="5.1.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#construyendo-las-parcelas."><i class="fa fa-check"></i><b>5.1.3</b> Construyendo las parcelas.</a></li>
+<li class="chapter" data-level="5.1.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-globales"><i class="fa fa-check"></i><b>5.1.4</b> Variables globales</a></li>
+<li class="chapter" data-level="5.1.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#creando-los-agentes-buscadores"><i class="fa fa-check"></i><b>5.1.5</b> Creando los agentes (buscadores)</a></li>
+<li class="chapter" data-level="5.1.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#comportamiento-de-los-agentes-procedimiento-go"><i class="fa fa-check"></i><b>5.1.6</b> Comportamiento de los agentes (Procedimiento go)</a></li>
+<li class="chapter" data-level="5.1.7" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#variables-locales-de-agentes"><i class="fa fa-check"></i><b>5.1.7</b> Variables locales de agentes</a></li>
+<li class="chapter" data-level="5.1.8" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#tres-herramientas-importantes"><i class="fa fa-check"></i><b>5.1.8</b> Tres Herramientas Importantes</a></li>
+<li class="chapter" data-level="5.1.9" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#monitor-de-agentes"><i class="fa fa-check"></i><b>5.1.9</b> Monitor de Agentes</a></li>
+<li class="chapter" data-level="5.1.10" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#centro-de-comandos"><i class="fa fa-check"></i><b>5.1.10</b> Centro de Comandos</a></li>
+<li class="chapter" data-level="5.1.11" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i><b>5.1.11</b> Manejo del tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#análizando-el-modelo"><i class="fa fa-check"></i><b>5.2</b> Análizando el Modelo</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>5.2.1</b> Introducción</a></li>
+<li class="chapter" data-level="5.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#cambios-el-modelo-para-el-análisis-deslizadores"><i class="fa fa-check"></i><b>5.2.2</b> Cambios el modelo para el análisis (deslizadores)</a></li>
+<li class="chapter" data-level="5.2.3" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#posibles-preguntas"><i class="fa fa-check"></i><b>5.2.3</b> Posibles Preguntas</a></li>
+<li class="chapter" data-level="5.2.4" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#reporteros"><i class="fa fa-check"></i><b>5.2.4</b> Reporteros</a></li>
+<li class="chapter" data-level="5.2.5" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#el-analizador-de-comportamiento"><i class="fa fa-check"></i><b>5.2.5</b> El Analizador de Comportamiento</a></li>
+<li class="chapter" data-level="5.2.6" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#analizando-los-datos-en-r"><i class="fa fa-check"></i><b>5.2.6</b> Analizando los datos en R</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>6</b> Construyendo Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="6.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#cómo-modelar-un-moba"><i class="fa fa-check"></i><b>6.1</b> ¿Cómo modelar un MOBA?</a></li>
+<li class="chapter" data-level="6.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#el-paradigma-del-agente"><i class="fa fa-check"></i><b>6.2</b> El paradigma del agente</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#conceptos-básicos"><i class="fa fa-check"></i><b>6.2.1</b> Conceptos básicos</a></li>
+<li class="chapter" data-level="6.2.2" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#interacciones"><i class="fa fa-check"></i><b>6.2.2</b> Interacciones</a></li>
+<li class="chapter" data-level="6.2.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i><b>6.2.3</b> Tipos de agentes</a></li>
+<li class="chapter" data-level="6.2.4" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#paradigmas-de-organización-de-mobas"><i class="fa fa-check"></i><b>6.2.4</b> Paradigmas de organización de MOBAs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#otros-tipos-de-modelado"><i class="fa fa-check"></i><b>6.3</b> Otros tipos de modelado</a></li>
+</ul></li>
+<li class="part"><span><b>IV Un Modelo Incremental</b></span></li>
+<li class="chapter" data-level="7" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html"><i class="fa fa-check"></i><b>7</b> El Modelo Predador Presa</a><ul>
+<li class="chapter" data-level="7.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#descripcion-del-modelo"><i class="fa fa-check"></i><b>7.1</b> Descripcion del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#pregunta-básica"><i class="fa fa-check"></i>Pregunta Básica</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseñando-el-modelo"><i class="fa fa-check"></i>Diseñando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#predador-presa"><i class="fa fa-check"></i>Predador-Presa</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#diseño-del-modelo"><i class="fa fa-check"></i><b>7.2</b> Diseño del Modelo</a><ul>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#concretando-el-modelo"><i class="fa fa-check"></i>Concretando el Modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-agentes"><i class="fa fa-check"></i>Seleccionando los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-propiedades-de-los-agentes"><i class="fa fa-check"></i>Seleccionando Propiedades de los Agentes</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#características-del-ambiente-y-parcelas"><i class="fa fa-check"></i>Características del ambiente y parcelas</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#comportamiento-de-los-agentes"><i class="fa fa-check"></i>Comportamiento de los agentes</a></li>
+<li class="chapter" data-level="" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#manejo-del-tiempo"><i class="fa fa-check"></i>Manejo del Tiempo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#seleccionando-los-parámetros-del-modelo"><i class="fa fa-check"></i>Seleccionando los parámetros del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#las-mediciones"><i class="fa fa-check"></i>Las mediciones</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#resumen"><i class="fa fa-check"></i>Resumen</a></li>
+<li class="chapter" data-level="7.2.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#siete-criterios-de-diseño"><i class="fa fa-check"></i><b>7.2.1</b> Siete Criterios de Diseño:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#cinco-modelos-incrementales"><i class="fa fa-check"></i><b>7.3</b> Cinco modelos incrementales</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-uno"><i class="fa fa-check"></i><b>7.3.1</b> Version Uno</a></li>
+<li class="chapter" data-level="7.3.2" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-dos"><i class="fa fa-check"></i><b>7.3.2</b> Version dos</a></li>
+<li class="chapter" data-level="7.3.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-tres"><i class="fa fa-check"></i><b>7.3.3</b> Version tres</a></li>
+<li class="chapter" data-level="7.3.4" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cuatro"><i class="fa fa-check"></i><b>7.3.4</b> Version cuatro</a></li>
+<li class="chapter" data-level="7.3.5" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#version-cinco"><i class="fa fa-check"></i><b>7.3.5</b> Version cinco</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#introducción-versión-cinco"><i class="fa fa-check"></i>Introducción versión cinco</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html"><i class="fa fa-check"></i><b>8</b> Analizando Modelos Basados en Agentes</a><ul>
+<li class="chapter" data-level="8.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#modelos-e-investigación"><i class="fa fa-check"></i><b>8.1</b> Modelos e investigación</a></li>
+<li class="chapter" data-level="8.2" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#herramientas-básicas"><i class="fa fa-check"></i><b>8.2</b> Herramientas básicas</a></li>
+<li class="chapter" data-level="8.3" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#un-ejemplo-de-análisis"><i class="fa fa-check"></i><b>8.3</b> Un Ejemplo de Análisis</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="analizando-modelos-basados-en-agentes.html"><a href="analizando-modelos-basados-en-agentes.html#análisis-estadístico-de-abm-más-allá-de-los-datos"><i class="fa fa-check"></i><b>8.3.1</b> Análisis estadístico de ABM: ( más allá de los datos)</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Un Modelo de Infección</b></span></li>
+<li class="chapter" data-level="9" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html"><i class="fa fa-check"></i><b>9</b> El Modelo SI de Infección</a><ul>
+<li class="chapter" data-level="9.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>9.1</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>9.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="9.1.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>9.1.2</b> Descripción del Modelo</a></li>
+<li class="chapter" data-level="9.1.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i><b>9.1.3</b> Pregunta</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#implementando-el-modelo"><i class="fa fa-check"></i>Implementando el Modelo</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>9.2</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#la-pregunta"><i class="fa fa-check"></i><b>9.2.1</b> La pregunta</a></li>
+<li class="chapter" data-level="9.2.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#diseñando-el-experimento"><i class="fa fa-check"></i><b>9.2.2</b> Diseñando el experimento</a></li>
+<li class="chapter" data-level="9.2.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo-en-rstudio"><i class="fa fa-check"></i><b>9.2.3</b> Análisis del Modelo en Rstudio</a></li>
+<li class="chapter" data-level="9.2.4" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#un-segundo-análisis-infección-ambiental"><i class="fa fa-check"></i><b>9.2.4</b> Un Segundo Análisis (Infección Ambiental)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html"><i class="fa fa-check"></i><b>10</b> Verificación, Validación Replicación</a><ul>
+<li class="chapter" data-level="10.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#corrección-de-un-modelo"><i class="fa fa-check"></i><b>10.1</b> Corrección de un modelo</a></li>
+<li class="chapter" data-level="10.2" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verificación"><i class="fa fa-check"></i><b>10.2</b> Verificación</a></li>
+<li class="chapter" data-level="10.3" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#comunicación"><i class="fa fa-check"></i><b>10.3</b> Comunicación</a></li>
+<li class="chapter" data-level="10.4" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-de-modelos-conceptuales"><i class="fa fa-check"></i><b>10.4</b> Descripción de Modelos Conceptuales</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#descripción-del-modelo-conceptual."><i class="fa fa-check"></i><b>10.4.1</b> Descripción del modelo conceptual.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#verification-testing"><i class="fa fa-check"></i><b>10.5</b> Verification Testing</a></li>
+<li class="chapter" data-level="10.6" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#más-allá-de-la-verificación"><i class="fa fa-check"></i><b>10.6</b> Más allá de la verificación</a></li>
+<li class="chapter" data-level="10.7" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#análisis-de-sensibilidad-y-robustez"><i class="fa fa-check"></i><b>10.7</b> Análisis de sensibilidad y robustez</a></li>
+<li class="chapter" data-level="10.8" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#beneficios-de-la-verificación"><i class="fa fa-check"></i><b>10.8</b> Beneficios de la verificación</a></li>
+<li class="chapter" data-level="10.9" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#validación"><i class="fa fa-check"></i><b>10.9</b> Validación</a></li>
+<li class="chapter" data-level="10.10" data-path="verificación-validación-replicación.html"><a href="verificación-validación-replicación.html#replicación"><i class="fa fa-check"></i><b>10.10</b> Replicación</a></li>
+</ul></li>
+<li class="part"><span><b>VI Un Modelo Económico</b></span></li>
+<li class="chapter" data-level="11" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html"><i class="fa fa-check"></i><b>11</b> Modelo de Inversión</a><ul>
+<li class="chapter" data-level="11.1" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i><b>11.1</b> Descripción del Modelo</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>11.1.1</b> Introducción</a></li>
+<li class="chapter" data-level="11.1.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#descripción-del-modelo-odd-protocol"><i class="fa fa-check"></i><b>11.1.2</b> Descripción del Modelo <span>Odd Protocol</span></a></li>
+<li class="chapter" data-level="11.1.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#objetivo-del-modelo"><i class="fa fa-check"></i><b>11.1.3</b> Objetivo del Modelo</a></li>
+<li class="chapter" data-level="11.1.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#tipos-de-agentes-variables-y-escalas"><i class="fa fa-check"></i><b>11.1.4</b> Tipos de Agentes, Variables y escalas</a></li>
+<li class="chapter" data-level="11.1.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#escalas-espacio-temporales"><i class="fa fa-check"></i><b>11.1.5</b> Escalas Espacio Temporales</a></li>
+<li class="chapter" data-level="11.1.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procesos-y-ordenación-temporal-scheduling"><i class="fa fa-check"></i><b>11.1.6</b> Procesos y ordenación temporal (scheduling)</a></li>
+<li class="chapter" data-level="11.1.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#conceptos-de-diseño"><i class="fa fa-check"></i><b>11.1.7</b> Conceptos de diseño</a></li>
+<li class="chapter" data-level="11.1.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#inicialización-del-modelo"><i class="fa fa-check"></i><b>11.1.8</b> Inicialización del modelo</a></li>
+<li class="chapter" data-level="11.1.9" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#datos-de-entrada"><i class="fa fa-check"></i><b>11.1.9</b> Datos de entrada</a></li>
+<li class="chapter" data-level="11.1.10" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#submodelos"><i class="fa fa-check"></i><b>11.1.10</b> Submodelos</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#construcción-del-modelo"><i class="fa fa-check"></i><b>11.2</b> Construcción del Modelo</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#configuración-del-mundo"><i class="fa fa-check"></i><b>11.2.1</b> Configuración del Mundo:</a></li>
+<li class="chapter" data-level="11.2.2" data-path="buscadores-de-hongos.html"><a href="buscadores-de-hongos.html#procedimiento-setup"><i class="fa fa-check"></i><b>11.2.2</b> Procedimiento Setup</a></li>
+<li class="chapter" data-level="11.2.3" data-path="el-modelo-predador-presa.html"><a href="el-modelo-predador-presa.html#procedimiento-go"><i class="fa fa-check"></i><b>11.2.3</b> Procedimiento Go</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#análisis-del-modelo"><i class="fa fa-check"></i><b>11.3</b> Análisis del Modelo</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-básico"><i class="fa fa-check"></i><b>11.3.1</b> Análisis Básico</a></li>
+<li class="chapter" data-level="11.3.2" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#modificando-el-modelo"><i class="fa fa-check"></i><b>11.3.2</b> Modificando el Modelo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#generando-el-experimento"><i class="fa fa-check"></i><b>11.3.3</b> Generando el Experimento</a></li>
+<li class="chapter" data-level="11.3.4" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#análisis-en-r"><i class="fa fa-check"></i><b>11.3.4</b> Análisis en R</a></li>
+<li class="chapter" data-level="11.3.5" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#un-estudio-bivariado"><i class="fa fa-check"></i><b>11.3.5</b> Un Estudio Bivariado</a></li>
+<li class="chapter" data-level="11.3.6" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#el-experimento"><i class="fa fa-check"></i><b>11.3.6</b> El Experimento</a></li>
+<li class="chapter" data-level="11.3.7" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#rstudio"><i class="fa fa-check"></i><b>11.3.7</b> Rstudio</a></li>
+<li class="chapter" data-level="11.3.8" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#preguntas"><i class="fa fa-check"></i><b>11.3.8</b> Preguntas</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VII Proyectos Propuestos</b></span></li>
+<li class="chapter" data-level="12" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html"><i class="fa fa-check"></i><b>12</b> Proyectos Básicos</a><ul>
+<li class="chapter" data-level="12.1" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#la-hormiga-atomica"><i class="fa fa-check"></i><b>12.1</b> La Hormiga Atomica</a></li>
+<li class="chapter" data-level="12.2" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#partículas"><i class="fa fa-check"></i><b>12.2</b> Partículas</a></li>
+<li class="chapter" data-level="12.3" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-de-paridad"><i class="fa fa-check"></i><b>12.3</b> El modelo de paridad</a></li>
+<li class="chapter" data-level="12.4" data-path="proyectos-básicos.html"><a href="proyectos-básicos.html#el-modelo-del-chisme-gossip-model"><i class="fa fa-check"></i><b>12.4</b> El Modelo del Chisme (Gossip Model)</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html"><i class="fa fa-check"></i><b>13</b> Proyectos Intermedios</a><ul>
+<li class="chapter" data-level="13.1" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#majority-model"><i class="fa fa-check"></i><b>13.1</b> Majority model</a></li>
+<li class="chapter" data-level="13.2" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#patron-misterioso"><i class="fa fa-check"></i><b>13.2</b> Patron Misterioso</a></li>
+<li class="chapter" data-level="13.3" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#heroes-y-cobardes"><i class="fa fa-check"></i><b>13.3</b> Heroes y Cobardes</a></li>
+<li class="chapter" data-level="13.4" data-path="proyectos-intermedios.html"><a href="proyectos-intermedios.html#termitas"><i class="fa fa-check"></i><b>13.4</b> Termitas</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html"><i class="fa fa-check"></i><b>14</b> Proyectos Avanzados</a><ul>
+<li class="chapter" data-level="14.1" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#simple-economy"><i class="fa fa-check"></i><b>14.1</b> Simple economy</a></li>
+<li class="chapter" data-level="14.2" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#fuego-en-linea"><i class="fa fa-check"></i><b>14.2</b> Fuego en Linea</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#producción-del-bosque"><i class="fa fa-check"></i>Producción del Bosque</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-modelo-básico-de-comercio-toy-trader"><i class="fa fa-check"></i><b>14.3</b> Un modelo básico de comercio (Toy Trader)</a><ul>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#definiciones-de-riqueza"><i class="fa fa-check"></i>Definiciones de Riqueza</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#un-eco-sistema"><i class="fa fa-check"></i><b>14.4</b> Un Eco-Sistema</a><ul>
+<li class="chapter" data-level="" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#descripción-del-modelo"><i class="fa fa-check"></i>Descripción del Modelo</a></li>
+<li class="chapter" data-level="" data-path="proyectos-avanzados.html"><a href="proyectos-avanzados.html#comentarios-del-modelo"><i class="fa fa-check"></i>Comentarios del modelo</a></li>
+<li class="chapter" data-level="" data-path="el-modelo-si-de-infección.html"><a href="el-modelo-si-de-infección.html#pregunta"><i class="fa fa-check"></i>Pregunta</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Apéndices</b></span></li>
+<li class="chapter" data-level="A" data-path="redes.html"><a href="redes.html"><i class="fa fa-check"></i><b>A</b> Redes</a><ul>
+<li class="chapter" data-level="A.1" data-path="introducción.html"><a href="introducción.html#introducción"><i class="fa fa-check"></i><b>A.1</b> Introducción</a></li>
+<li class="chapter" data-level="A.2" data-path="redes.html"><a href="redes.html#conceptos-básicos-de-redes."><i class="fa fa-check"></i><b>A.2</b> Conceptos Básicos de Redes.</a></li>
+<li class="chapter" data-level="A.3" data-path="redes.html"><a href="redes.html#redes-aleatorias"><i class="fa fa-check"></i><b>A.3</b> Redes aleatorias</a></li>
+<li class="chapter" data-level="A.4" data-path="redes.html"><a href="redes.html#redes-de-mundo-pequeño"><i class="fa fa-check"></i><b>A.4</b> Redes de mundo pequeño</a></li>
+<li class="chapter" data-level="A.5" data-path="redes.html"><a href="redes.html#redes-sin-escala"><i class="fa fa-check"></i><b>A.5</b> Redes sin escala</a></li>
+<li class="chapter" data-level="A.6" data-path="redes.html"><a href="redes.html#el-modelo-sir"><i class="fa fa-check"></i><b>A.6</b> El Modelo SIR</a><ul>
+<li class="chapter" data-level="A.6.1" data-path="redes.html"><a href="redes.html#intervención-de-políticas"><i class="fa fa-check"></i><b>A.6.1</b> Intervención de políticas</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html"><i class="fa fa-check"></i><b>B</b> Tutorial NetLogo</a><ul>
+<li class="chapter" data-level="B.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#qué-es-netlogo"><i class="fa fa-check"></i><b>B.1</b> ¿Qué es NetLogo?</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#terminología-de-netlogo"><i class="fa fa-check"></i><b>B.1.1</b> Terminología de NetLogo</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#el-mundo-netlogo"><i class="fa fa-check"></i><b>B.2</b> El mundo NetLogo</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#sistema-de-coordenadas"><i class="fa fa-check"></i>Sistema de coordenadas</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#ángulos-y-direcciones"><i class="fa fa-check"></i>Ángulos y direcciones</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#topología"><i class="fa fa-check"></i>Topología</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación"><i class="fa fa-check"></i><b>B.3</b> Programación</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-general"><i class="fa fa-check"></i>Programación en general</a><ul>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#programación-en-netlogo"><i class="fa fa-check"></i>Programación en NetLogo</a></li>
+<li class="chapter" data-level="" data-path="modelo-de-inversión.html"><a href="modelo-de-inversión.html#procedimientos"><i class="fa fa-check"></i>Procedimientos</a></li>
+<li class="chapter" data-level="" data-path="construyendo-modelos-basados-en-agentes.html"><a href="construyendo-modelos-basados-en-agentes.html#tipos-de-agentes"><i class="fa fa-check"></i>Tipos de Agentes</a></li>
+<li class="chapter" data-level="" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#tipos-de-datos"><i class="fa fa-check"></i>Tipos de Datos</a></li>
+<li class="chapter" data-level="B.3.1" data-path="tutorial-netlogo.html"><a href="tutorial-netlogo.html#conjunto-de-agentes-agentset"><i class="fa fa-check"></i><b>B.3.1</b> Conjunto de agentes (agentset)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html"><i class="fa fa-check"></i><b>C</b> Simulación de Experimentos con NetLogo</a><ul>
+<li class="chapter" data-level="C.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#simulacion-biologica"><i class="fa fa-check"></i><b>C.1</b> Simulacion Biologica</a></li>
+<li class="chapter" data-level="C.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#experimentos-de-simulación-analizador-de-comportamiento"><i class="fa fa-check"></i><b>C.2</b> Experimentos de Simulación (Analizador de Comportamiento)</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#abra-el-analizador-de-comportamiento-desde-el-menú-herramientas-de-netlogo."><i class="fa fa-check"></i><b>C.2.1</b> Abra El Analizador de Comportamiento desde el menú Herramientas de NetLogo.</a></li>
+<li class="chapter" data-level="C.2.2" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#nota-importante"><i class="fa fa-check"></i><b>C.2.2</b> Nota Importante</a></li>
+</ul></li>
+<li class="chapter" data-level="C.3" data-path="simulación-de-experimentos-con-netlogo.html"><a href="simulación-de-experimentos-con-netlogo.html#analizando-los-resultados-del-experimento-en-rstudio"><i class="fa fa-check"></i><b>C.3</b> Analizando los resultados del experimento en Rstudio</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="bibliografía.html"><a href="bibliografía.html"><i class="fa fa-check"></i><b>D</b> Bibliografía</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelación basada en Agentes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="tutorial-netlogo" class="section level1">
+<h1><span class="header-section-number">B</span> Tutorial NetLogo</h1>
+<div id="qué-es-netlogo" class="section level2">
+<h2><span class="header-section-number">B.1</span> ¿Qué es NetLogo?</h2>
+<p>NetLogo es un programa de modelado y programación basado en agentes (MOBA) de
+código abierto, desarrollado por el Northwestern University Center for Connected Learning (CCL) and Computer-Based Modeling [1]. Se basa en el lenguaje de programación Logo original [2], incorporando y ampliando conceptos y construcciones introducidas en StarLogo y MacStarLogo [3], ambos desarrollados por el Media Lab y el Scheller Education Program del MIT.NetLogo se conoce como una herramienta basada en agentes, debido al hecho de que el lenguaje de programación y la interfaz de usuario están destinadas principalmente para el modelado y simulación de sistemas de múltiples agentes que interactúan (ver “Tipos
+de Agentes”, p. 13). Por lo general, estos agentes no necesitan tener comportamientos
+extensos o complicados; se pueden desarrollar útiles modelos a menudo con los agentes siguiendo reglas muy simples.
+Desarrollado en Java y Scala, y ejecutando en la máquina virtual de Java (JVM), NetLogo es muy portable: modelos escritos en NetLogo para Windows (por ejemplo) pueden ser modificado y ejecutado usando las ediciones OS X y Linux de NetLogo. Los modelos también se pueden ejecutar como applets de Java en las páginas Web (aunque este uso está obsoleto oficialmente), o traducidos “sobre la marcha” al JavaScript para la ejecución basada en navegador. Extensiones a NetLogo pueden ser elaborados en Java o Scala, y el propio NetLogo se pueden crear instancias y controlados por un programa de Java, Scala, o virtualmente cualquier otro idioma que se ejecuta en la JVM. Con cada lanzamiento (versión) importante, NetLogo se ha mejorado de manera significativa. Las características del lenguaje orientadas a los agentes se han racionalizado, para ser más consistentes y coherentes que en las versiones anteriores. Operaciones sobre listas y conjuntos se han ampliado, y el rendimiento de esas operaciones se ha mejorado. Agentes de tipo enlace se ha añadido, en apoyo no sólo para el modelado de las redes (sociales, la comunicación, etc.), sino también de estructuras físicas y lógicas, y ensamblados.</p>
+<div id="terminología-de-netlogo" class="section level3">
+<h3><span class="header-section-number">B.1.1</span> Terminología de NetLogo</h3>
+<p>Al igual que prácticamente todos los lenguajes de programación modernos, NetLogo tiene en común con otros lenguajes muchos conceptos y facilidades. Sin embargo, la terminología utilizada en NetLogo a veces difiere significativamente de la de otros idiomas. Algunas de estas diferencias se originaron en dialectos anteriores de Logo,mientras que otros son el resultado de decisiones deliberadas por parte de los diseñadores de NetLogo. En cualquier caso, una familiaridad con algunos de estos términos distintivos, y sus correspondencias con los términos en otros lenguajes, puede ser muy útil. Los siguientes son tres términos que son críticos para empezar: (estos y otros términos se exploran con más detalle, más adelante en este documento)</p>
+<ul>
+<li>Agente</li>
+</ul>
+<p>En programación en NetLogo, los agentes son esencialmente objetos: entidades que contienen datos, comportamientos y contextos de ejecución independientes. Para los propósitos de visualización gráfica, un agente en NetLogo (y, en particular, una tortuga, o agente móvil) es más o menos equivalente al concepto de un sprite: una entidad que puede moverse y mostrarse independientemente de otros elementos gráficos. Para obtener más información sobre los tipos de agentes provistos por NetLogo, consulte “Tipos de Agentes”</p>
+<ul>
+<li>Comando</li>
+</ul>
+<p>Un comando es conceptualmente equivalente a lo que se suele llamar una sentencia: la especificación de una acción a realizar, para cambiar el estado del sistema. En NetLogo, este estado incluye no sólo las variables globales, el espacio de visualización gráfica y el sistema de archivos, sino también los estados individuales de todos los agentes. Los comandos pueden ser invocaciones de los comandos primitivos (comandos definidos por NetLogo sí mismo) o de los procedimientos comandos (definidos en el
+código de programación de un modelo).</p>
+<ul>
+<li>Reportero</li>
+</ul>
+<p>En la mayoría de los lenguajes de programación, llamamos a esto una expresión, considerando que un comando se usa para cambiar el estado del sistema, el propósito de un reportero es calcular y devolver (reportar) algún valor. Esto puede ser un valor de un tipo de datos primitivo (por ejemplo, un número, booleano, o una
+cadena de caracteres), un agente, o una estructura de datos que contiene (potencialmente) varios elementos de datos.Al igual que los comandos, los reporteros pueden incluir invocaciones de los reporteros primitivos, así como los procedimientos reporteros.</p>
+</div>
+</div>
+<div id="el-mundo-netlogo" class="section level2">
+<h2><span class="header-section-number">B.2</span> El mundo NetLogo</h2>
+<div id="sistema-de-coordenadas" class="section level3 unnumbered">
+<h3>Sistema de coordenadas</h3>
+<p>En la construcción de los modelos de NetLogo es importante entender el sistema de
+coordenadas utilizado. Este diagrama, con las explicaciones que siguen, ilustran
+algunos puntos importantes para recordar:</p>
+<p><img src="GrafTutNetLogo/Mundo1.png" /></p>
+<ol style="list-style-type: decimal">
+<li><p>Como el sistema de coordenadas cartesianas utilizado tradicionalmente en la geometría analítica, el mundo NetLogo tiene ejes X e Y. El centro del sistema de coordenadas es el origen (que es a menudo – pero no siempre – situado en el centro físico del mundo NetLogo), donde X e Y tienen los valores de cero (0).</p></li>
+<li><p>Superpuesto en el sistema de coordenadas está una rejilla de cuadrículas (parcelas ó cuadrados de tamaño 1 X 1), cada uno de los cuales es un agente fijo (en Inglés y en código de NetLogo, se llama parcela). Cada tiene un color y una etiqueta opcional. También se puede definir variables adicionales para los agentes fijos.</p></li>
+<li><p>El centro de un agente fijo es un punto en el sistema de coordenadas donde X e Y
+tienen valores integrales; estas coordenadas se utilizan para referirse al agente fijo. Por ejemplo, patch 3 2 en el diagrama es un cuadrado con su centro en (3, 2); este cuadrado está definido por la región donde 2,5 &lt;= X &lt; 3,5 and 1,5 &lt;= Y &lt; 2,5. (También podemos hacer referencia a los agentes fijos con coordenadas de punto flotante; se redondearán a enteros si fuera necesario.)</p></li>
+<li><p>Las coordenadas de los agentes fijos son siempre valores enteros, pero eso no es necesariamente así en el caso de un agente móvil. En el diagrama, hay un agente móvil localizada en (-4,6, -8,3), que se encuentra en la cuadrado centrada en (-5, -8). Aunque un agente móvil puede aparecer como si es en dos o más cuadrados a la vez, el punto central del agente móvil es lo que importa: este punto central se trata como la ubicación real del agente móvil, y el cuadrado que contiene ese punto central es considerado como el cuadrado en la que el agente móvil está de pie.</p></li>
+<li><p>El usuario puede cambiar el ancho o alto del mundo NetLogo en cualquier momento; debido a esto, el código de un programa de NetLogo no deben hacer referencia a las dimensiones del mundo con valores literales, a menos que sea absolutamente necesario. Afortunadamente, los programas de NetLogo siempre pueden utilizar world-width y world-height para obtener las dimensiones actuales del mundo (area de simulación).</p></li>
+<li><p>Los agentes fijos en la parte extrema del lado derecho del mundo NetLogo tienen la coordenada X con el valor max-pxcor; los de la cima del mundo tienen Y con el valor max-pycor. Del mismo modo, min-pxcor y min-pycor son las coordenadas X e Y (respectivamente) de los agentes fijos en la parte izquierda extrema y parte inferior (respectivamente) del mundo NetLogo. Estas variables están relacionadas con el tamaño total del mundo, como sigue:</p></li>
+</ol>
+<p>world-width = (max-pxcor - min-pxcor) + 1
+world-height = (max-pycor - min-pycor) + 1</p>
+</div>
+<div id="ángulos-y-direcciones" class="section level3 unnumbered">
+<h3>Ángulos y direcciones</h3>
+<p>Todos los ángulos en NetLogo se especifican en grados, y las direcciones se basan en rumbos de la brújula, con 0 estando “arriba” (es decir, al norte), el 90 hacia la derecha (es decir, al este), etc. Para instruir a un agente móvil que mire a una dirección en particular, podemos hacerlo estableciendo el rumbo del agente a la dirección deseada según la brújula, o diciendo al agente móvil que gire a la derecha o a la izquierda por el número de grados necesarios.También podemos encargar a un agente móvil que mire a otro agente especificando el segundo agente, con el comando face, en lugar de calcular la dirección de la brújula o ángulo de giro requerido.</p>
+</div>
+<div id="topología" class="section level3 unnumbered">
+<h3>Topología</h3>
+<p>Nótese que podemos especificar que el mundo NetLogo tenga continuidad en su borde horizontal, vertical, o ambos, o en ningún borde. Cuando el envolvente (wrapping) está encendido en posición horizontal (por ejemplo), un agente móvil se mueve fuera del borde derecho del mundo y volverá a aparecer en el borde izquierdo, y viceversa. Si el envolvente horizontal no está habilitado, el agente móvil será incapaz de salir por el borde derecho o el izquierdo.</p>
+<ol style="list-style-type: decimal">
+<li><p>¿Cuál es la “forma” lógica del mundo NetLogo, si el envolvente está encendido en
+posición horizontal, pero no verticalmente?</p></li>
+<li><p>¿Cuál es la forma del mundo NetLogo, si el envolvente está encendido
+verticalmente, pero no horizontalmente?</p></li>
+<li><p>¿Cuál es la forma del mundo NetLogo, si el envolvente está activado tanto vertical
+como horizontalmente?</p></li>
+</ol>
+</div>
+</div>
+<div id="programación" class="section level2">
+<h2><span class="header-section-number">B.3</span> Programación</h2>
+</div>
+<div id="programación-en-general" class="section level2 unnumbered">
+<h2>Programación en general</h2>
+<p>Aunque las computadoras (más precisamente, los procesadores) son capaces de manipular los datos de manera muy eficiente, y aunque los procesadores modernos incluyen unidades de procesamiento de punto flotante que pueden realizar cálculos aritméticas, trigonométricas y logarítmicos impresionantes, también son ingenuos: Son generalmente incapaces de realizar la mayor parte de las tareas que el usuario medio consideraría significativa – hasta que se les enseña a hacerlas. Enseñamos a las computadoras a hacer esto a través de la programación: por medio de la codificación de un algoritmo (un procedimiento para completar una tarea o resolver un problema) en una forma que la computadora pueda entender, para lo cual se necesitará insumos específicos, y desde el cual se puede presentar un resultado significativo como salida. Afortunadamente para nosotros, prácticamente todas las computadoras modernas y disponibles en el mercado vienen con millones de líneas de estas instrucciones algorítmicas ya escritas y precargadas en los discos duros, chips de memoria programables, etc. Estas instrucciones forman parte del sistema operativo (que nos permite leer y escribir los datos desde y hacia el teclado, el monitor y archivos), controladores (que indican a la computadora cómo conectarse y hacer uso de los dispositivos de hardware, por ejemplo, adaptadores de visualización de vídeo, unidades de disco, impresoras, dispositivos de memoria externos) y aplicaciones (archivos especiales que se pueden ejecutar según la demanda por el usuario, para funciones más específica). Podemos aumentar esta capacidad a través de la instalación o elaboración de nuevos programas para que la computadora las ejecute; cuando hacemos esto, estamos literalmente enseñando a la computadora a realizar nuevas tareas.</p>
+<p>Algunos programas de ordenadores son traductores de instrucciones: ellos permiten a los programadores escribir nuevos programas, sin que tengan que entender mucho del funcionamiento interno de la computadora. Estos traductores pueden convertir las instrucciones de los programadores hacia una forma que la computadora puede ejecutar. NetLogo es un tal traductor: nos permite escribir programas en un lenguaje especializado para describir el comportamiento de los agentes; luego convierte estos programas (modelos) en una forma que la computadora puede ejecutar, sin que tengamos que saber nada acerca de cómo la conversión se lleva a cabo. No obstante, podemos considerar los modelos de NetLogo que escribimos como secuencias de instrucciones que enseñamos a la computadora; quizá más útil, podemos considerer nuestra tarea, en la construcción de modelos de NetLogo como el de la enseñanza de NetLogo en sí mismo.</p>
+<div id="programación-en-netlogo" class="section level3 unnumbered">
+<h3>Programación en NetLogo</h3>
+<p>Damos instrucciones a NetLogo de tres maneras:</p>
+<ol style="list-style-type: decimal">
+<li>Podemos escribir instrucciones en el Terminal de Instrucciones (Command Center):</li>
+</ol>
+<p><img src="GrafTutNetLogo/Terminal1.png" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Algunas instrucciones pueden ser incluidos en los botones y otros controles en las interfaces de usuario que creamos. Esta funcionalidad es la más utilizada para relacionar los botones que creamos a las nuevas capacidades que hemos enseñado a NetLogo en nuestro programa.</p></li>
+<li><p>Por último, y lo más importante, cuando escribimos instrucciones en la ventana de Código, estamos creando un programa NetLogo, que consiste en uno o más procedimientos. Lo que escribimos en la ventana de Código no se ejecuta inmediatamente, pero se suma a lo que NetLogo sabe hacer. Podemos invocar a esta nueva funcionalidad a través de botones y monitores en la interfaz de usuario, escribiendo comandos en el Centro de Comando, o por referencia en otros procedimientos en el código que hemos escrito en la ventana de Código.</p></li>
+</ol>
+</div>
+<div id="procedimientos" class="section level3 unnumbered">
+<h3>Procedimientos</h3>
+<p>Para enseñar un procedimiento a otra persona para completar una tarea, es posible comenzar diciendo: “Para hacer X, primero hacer A, luego hacer B”, y así sucesivamente. Enseñando a NetLogo para realizar una tarea es muy similar: utilizamos la palabra clave to, seguido del nombre de la tarea, y luego la secuencia de instrucciones que componen el procedimiento; por último, indicamos que no hay más instrucciones para esta tarea con la palabra clave end. Por ejemplo, aquí enseñamos a NetLogo un procedimiento que se puede seguir por un agente móvil para dibujar un cuadrado:</p>
+<p><img src="GrafTutNetLogo/Cuadrado1.png" />
+Tenga en cuenta que hay palabras con guiones en el código de este ejemplo. Aunque esto no se permite en la mayoría de lenguajes de programación, es válido y común en los dialectos de Logo, y hay varios primitivos (comandos y reporteros definidos por NetLogo sí mismo) con nombres con guiones. Sin embargo, aunque el procedimiento y los nombres de variables pueden incluir guiones – así como muchos otros símbolos de
+puntuación. no pueden incluir espacios. Ahora que hemos escrito el procedimiento de draw-square (dibujar cuadrado), podemos invocarlo por su nombre en el Terminal de Instrucciones, en un botón, o en
+otro procedimiento. La mayoría de los lenguajes de programación soporta dos diferentes tipos de procedimientos (también llamadas funciones, métodos, subrutinas, etc.): aquellos que modifican el estado del sistema, y los que computan y devuelven un resultado. El procedimiento anterior es un ejemplo del primero: modifica el rumbo y la posición de un agente, pero no devuelve un resultado. En NetLogo, este tipo de procedimiento se llama un procedimiento comando. También podemos escribir un procedimiento que devuelve un resultado; en NetLogo, este tipo se llama procedimiento reportero. Por ejemplo, el siguiente procedimiento calcula y retorna el cuadrado de una entrada:</p>
+<p><img src="GrafTutNetLogo/Report1.png" />
+La sintaxis para un procedimiento reportero difiere de la de un procedimiento comando en dos aspectos claves:</p>
+<ol style="list-style-type: decimal">
+<li><p>La definición de un procedimiento reportero comienza con to-report, en lugar de to.</p></li>
+<li><p>El comando primitivo report se utiliza (y se requiere) para salir y devolver un valor
+de un procedimiento reportero. Como se ha visto anteriormente, parámetros de entrada se incluyen en la definición de un procedimiento (comando o reportero) por encerrándolas entre corchetes después del nombre del procedimiento.
+Anteriormente, vimos que podemos crear procedimientos comandos y reporteros en nuestro código. De hecho, podemos considerar cualquier programa NetLogo como un conjunto de comandos, reporteros, definiciones y declaraciones. Un comando es una instrucción que invoca (llama) a un procedimiento comando o un
+comando primitivo (predefinido por NetLogo), especificando los parámetros de entrada requeridos por el primitivo o procedimiento. Por ejemplo, forward 5 es un comando que indica a un agente móvil para mover 5 pasos en la dirección hacia delante; aquí, el comando primitivo es forward (hacia adelante), y la entrada requerida es un valor numérico que indica la distancia a moverse. Por supuesto, mientras que 5 es un valor numérico literal simple, podríamos usar forward (2 + 3) en su lugar, y el resultado será el mismo. Del mismo modo, si existe la variable step-length en nuestro programa, y el valor actual de step-length es de 5, entonces forward step-length también dará lugar al agente móvil a moverse 5 pasos para delante.</p></li>
+</ol>
+<p>¿Qué tienen 5, (2 + 3) y step-length en común? Son expresiones que NetLogo puede evaluar es decir, de las cuales NetLogo puede calcular un valor. Genéricamente, y en la mayoría de los lenguajes de programación, expresiones como éstas se llaman precisamente eso: expresiones. En NetLogo, se llaman reporteros (en algunos contextos, se llaman indicadores). Así que un reportero es un simple valor literal, una variable de referencia, una invocación de un procedimiento reportero o reportero primitivos con lasentradas requeridas que son ellos mismos reporteros – o una combinación de éstos, usando operadores aritméticos o lógicos (que también son reporteros primitivos) para calcular el resultado. (Con cualquiera de las posibilidades anteriores, los paréntesis pueden usarse para especificar el orden de evaluación de manera explícita - o incluso sólo para mejor claridad visual.) El ejemplo de un procedimiento reportero en la sección anterior incluye la línea</p>
+<p><img src="GrafTutNetLogo/Report21.png" />
+Aquí, toda la línea es un comando, invocando el comando primitivo report, y proveyendo la entrada esperada por report. Esa entrada es el reportero</p>
+<p><img src="GrafTutNetLogo/Report31.png" /></p>
+<p>Este reporte se compone de paréntesis (utilizado aquí para dejar claro que por muy complicado que el reporte sea, estamos calculando y reportando un único valor) que rodea el reporte</p>
+<p><img src="GrafTutNetLogo/Report41.png" /></p>
+<p>El operador aritmético * es un reportero primitivo de un tipo especial: es un reportero infix (uno para el cual se requieren datos antes y después). Así que este reportero consiste en el primitivo *, con input-value (una referencia a una variable) especificada para ambas de las entradas esperadas.
+Podemos ir por un largo camino con los comandos y reporteros primitivos – pero no podemos realmente escribir programas NetLogo, a menos que también incluyamos declaraciones para la definición de nuevos procedimientos. Como ya vimos, hacemos eso con la palabra clave to o to-report, seguido por el nombre del procedimiento, seguido opcionalmente por una lista entre paréntesis de parámetros de entrada. Entonces, después de que los comandos que conforman el cuerpo del procedimiento, utilizamos la palabra clave end para indicar a NetLogo que se finaliza la definición del procedimiento.</p>
+<p>Por último, la mayoría de los programas de NetLogo no triviales también requieren declaraciones. Estas son sentencias escritas al comienzo de nuestro código que declaran información esencial sobre el programa a NetLogo sí mismo: las variables globales que serán asignadas y mencionadas en el código; las razas (breeds) correspondientes a los distintos tipos de agentes móviles y de enlaces que serán utilizados; las variables que serán los atributos de nuestros agentes (más allá de los predefinido por NetLogo); las extensiones NetLogo y archivos adicionales de código fuente que nuestro programa requiere. No miramos a estos en detalle en este resumen, pero los examinaremos en el contexto de ejemplos específicos posteriores; por ahora, sólo nótese que estas declaraciones emplean las palabras claves globals, breed, undirected-link-breed, directed-link-breed, patches-own, turtles-own, links-own, breeds-own, extensions
+Un importante comando primitivo es en realidad una combinación de una declaración y un comando: El comando let se utiliza dentro de un procedimiento o bloque de comandos (una secuencia de comandos encerrados por corchetes) para declarar una variable local y para asignarle un valor inicial. Ese valor – y la propia variable – se conserva sólo dentro del procedimiento o del bloque de comandos donde se declara.</p>
+</div>
+<div id="tipos-de-agentes" class="section level3 unnumbered">
+<h3>Tipos de Agentes</h3>
+<p>Hay cuatro tipos de agentes en NetLogo; cada uno es capaz de realizar diferentes tipos de acciones, y cada uno sirve a un propósito diferente en un modelo de NetLogo:</p>
+<ol style="list-style-type: decimal">
+<li>Observador (observer)</li>
+</ol>
+<ul>
+<li>Siempre existe solo una instancia de este tipo de agente. Este agente no se visualiza en el mundo NetLogo, pero es el único agente que puede realizar ciertas operaciones globales en un modelo (por ejemplo, clear-all, tick).</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Parcela (agente fijo, cuadrado, patch)</li>
+</ol>
+<ul>
+<li>Esto es un agente estacionario; hay exactamente un agente fijo por cada unidad cuadrada en la cuadrícula del mundo NetLogo. Un agente fijo no se puede mostrar de una manera o forma distinta que un cuadrado, pero cada puede tener su propio color, así como una etiqueta.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Tortuga (agente móvil, turtle)</li>
+</ol>
+<ul>
+<li>Esto es un agente que puede moverse por el mundo NetLogo independientemente de otros agentes; las instrucciones que especifican movimiento sólo puede ser ejecutado por los estos agentes móviles. La forma, el color, el tamaño y la etiqueta de un agente móvil pueden ser manipulados por el código de un modelo de NetLogo.</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Enlace (link)</li>
+</ol>
+<ul>
+<li>Estos son los agentes que conectan un agente móvil con otro. No hay instrucciones para mover enlaces directamente; un enlace se mueve cuando una o ambos de los agentes móviles en sus puntos finales se mueven. Un enlace también se puede configurar como un empalme (tie), donde el movimiento del agente móvil en uno de sus puntos finales se traduce automáticamente en el movimiento del agente móvil en otro punto final. Un enlace puede ser dirigido o no dirigido: con enlaces no dirigidos, no consideramos el enlace como proveniente de un agente móvil a otro, sino simplemente que es entre los dos; un enlace dirigido, por otro lado, es siempre de un agente móvil a otro.
+Los enlaces y los agentes móviles son los únicos agentes que pueden ser creados o destruidos por las instrucciones contenidas en el código del modelo. Además, los enlaces y los agentes móviles son los únicos agentes que se pueden organizar en razas. Los agentes móviles pueden interactuar con otros agentes móviles mediante la lectura de los atributos de esos agentes, o pidiendo a esos agentes para ejecutar unas instrucciones; también pueden interactuar así con los agentes fijos. Los agentes fijos pueden interactuar con agentes móviles y con otros agentes fijos. Los enlaces generalmente interactúan con los agentes móviles que son sus puntos finales, sino que se pueden interactuar con otros enlaces, agentes móviles y agentes fijos. El observador puede pedir a los agentes móviles, a los agentes fijos y a los enlaces para realizar las operaciones especificadas. Por otro lado, los agentes móviles, los agentes fijos y los enlaces no pueden pedir explícitamente al observador realizar cualquier acción. Sin embargo, los modelos tienen las variables globales (algunos predefinidos por NetLogo, y otros que podemos definir en nuestros deslizadores y en los código del programa); los agentes fijos, los enlaces y los agentes móviles pueden modificar los valores de algunas de estas variables globales – y estos cambios pueden afectar las acciones del observador.</li>
+</ul>
+</div>
+<div id="tipos-de-datos" class="section level3 unnumbered">
+<h3>Tipos de Datos</h3>
+<p>NetLogo es un lenguaje débilmente tipado. Cuando se declara una variable, no se especifica el tipo de datos que se grabará en la variable; la variable puede ser utilizada para almacenar cualquiera de los tipos soportados de datos. De hecho, durante la vida de una determinada variable, puede contener los datos de diferentes tipos en diferentes momentos (aunque por lo general no es una buena idea). Del mismo modo, la definición de un procedimiento reportero no especifica el tipo de dato devuelto por el procedimiento; es posible (aunque generalmente no es recomendable) que un procedimiento reportero devuelva valores de diferentes tipos en diferentes condiciones. NetLogo nativamente soporta seis tipos de datos:</p>
+<ul>
+<li>Numérico</li>
+</ul>
+<p>El formato de punto flotante de doble precisión estándar IEEE 754 se utiliza internamente para todos los valores numéricos en NetLogo [4]. Este tipo de datos utiliza 64 bits para representar números enteros exactos en el rango [-253 , 253 ] y los valores de punto flotante (no exactamente, en su mayor parte) en el rango [-1.797693×10308 , 1.797693×10308 ]</p>
+<ul>
+<li>Booleano</li>
+</ul>
+<p>Este es un tipo que contiene sólo los valores true (veradero) y false (falso). Tenga en cuenta que estos no son los valores de cadena (texto) “true” y “false”; tampoco son intercambiables con los valores de número entero 1 y 0, respectivamente.</p>
+<ul>
+<li>Cadena de caracteres (text)</li>
+</ul>
+<p>Una cadena es una secuencia de caracteres, que puede incluir letras, números, signos de puntuación y otros símbolos, así como el espacio en blanco. Tenga en cuenta que los reporteros primitivos para la manipulación de cadena son bastante mínimas: para el procesamiento de texto de uso general, NetLogo es raramente el idioma de su elección. En particular, NetLogo no tiene capacidad integrada para convertir una cadena de dígitos y otros caracteres utilizados para la representación de números en el valor numérico correspondiente.Otra manera en que podríamos pensar en cadenas en NetLogo es como listas de caracteres (consulte “List”, a continuación): muchos de los reporteros primitivos y comandos primitivos que funcionan con listas también operan en las cadenas. Por esta razón y otras, a menudo es útil considerar cadenas no como un tipo de datosdistinto, sino como una lista especializada.</p>
+<ul>
+<li>Agente</li>
+</ul>
+<p>Una variable puede almacenar (y un reportero puede devolver) una referencia a cualquier agente aparte del observador. Por ejemplo, en un modelo de ecosistema con los procesos de nacimiento y muerte, podría ser útil que cada agente móvil (en representación de algún miembro individual del ecosistema) recuerde sus padres - es decir, mantener las referencias a ellos en sus variables.
+Si una variable está almacenando una referencia a un agente móvil o un enlace, y ese agente muere, la variable se actualizará automáticamente para contener el valor de nobody (nadie), que es una referencia especial que no se refiere a ningún agente.</p>
+<ul>
+<li>List</li>
+</ul>
+<p>La lista es la estructura de datos fundamental (un tipo compuesto de datos, posiblemente contiene múltiples componentes) en NetLogo en cuanto a eso, en la mayoría de dialectos de Logo. Una lista es una secuencia ordenada de cero o más elementos. Los elementos se pueden adjuntar (ser añadido al final de) o antepuesto (ser introducido al principio de) una lista. Cada vez que una lista dada se atraviesa (sin ninguna modificación que altere el contenido de la lista), el orden de los elementos permanecerá consistente.
+La heterogeneidad es otra propiedad importante de las listas en NetLogo: Cada elemento puede ser de cualquiera de los tipos disponibles de datos (incluyendo listas).
+En parte debido a la temprana influencia de Lisp (otra lenguaje de programación) en Logo, y en parte debido a la polinización cruzada desde Python y otros lenguajes, NetLogo incluye un amplio conjunto de primitivos para el manejo de listas. Incluso muchos modelos de NetLogo que no utilizan la mayor parte de estos primitivos, o que no asigna explícitamente valores del tipo lista a las variables, todavía emplean listas implícitamente ,por ejemplo, como valores de entrada con los reporteros que calculan estadísticas agregadas (count, max, mean, min, sum, etc.). Muchos de estos usos se encuentran cuando se leen valores de todos los miembros de un conjunto de agentes (a continuación).</p>
+</div>
+<div id="conjunto-de-agentes-agentset" class="section level3">
+<h3><span class="header-section-number">B.3.1</span> Conjunto de agentes (agentset)</h3>
+<p>El conjunto de agentes es la segunda estructura de datos fundamental en NetLogo. La mayoría de los lenguajes de programación y las bibliotecas que implementan listas y conjuntos diferencian estos dos tipos de datos en la misma forma que se diferencian los correspondientes conceptos matemáticos:</p>
+<ul>
+<li>A pesar de que una lista es ordenada, un conjunto no lo es. Al agregar un miembro a un conjunto, no tenemos control sobre la posición de ese miembro dentro del conjunto , de hecho, “posición” no tiene sentido para los conjuntos. Si leemos un conjunto varias veces, incluso sin la adición o eliminación de miembros entre los recorridos, el orden de recorrido puede ser diferente cada vez.</li>
+<li>Una lista puede contener el mismo valor en múltiples posiciones dentro de la lista. Un conjunto contiene un especificado valor o bien no lo contiene no puede contener varias instancias del mismo valor al mismo tiempo.En la implementación de NetLogo, los conjuntos tienen algunas limitaciones
+importantes:</li>
+<li><p>Un conjunto sólo puede contener agentes (más exactamente, contiene referencias a los agentes). NetLogo no admite conjuntos de valores numéricos, conjuntos de cadenas, conjuntos de conjuntos, etc. Por eso los conjuntos de NetLogo se llaman agentsets.</p></li>
+<li><p>Conjuntos de agentes son homogéneos: Sólo un tipo de agente se puede contener en un conjunto en cualquier momento dado. Así que un conjunto no puede (por ejemplo) contener agentes fijos y móviles simultáneamente. (También, como las variables simples no pueden referirse al observador, el observador no puede incluirse en un conjunto de agentes.)
+Aún con estas limitaciones, los conjuntos de NetLogo son muy útiles y dominar su uso es una parte esencial de convertirse en un experto desarrollador de los modelos de NetLogo. Un conjunto se puede filtrar por una variedad de predicados lógicos, para crear un subconjunto; se puede atravesar con el propósito de obtener información de todos los miembros (esto produce una lista de valores); tan fácilmente, se puede atravesar con el propósito de pedir a cada miembro para llevar a cabo uno o más comandos; se puede combinar con otro conjunto, para construir un nuevo conjunto de la unión, la intersección, o la diferencia de los dos. Las razas de agentes móviles y enlaces pueden considerarse como conjuntos especiales, en los cuales NetLogo maneja la membresía automáticamente.Además de los tipos de datos anteriores, las extensiones de NetLogo pueden definir nuevos tipos de datos simples y estructurados; referencias a instancias de estos tipos de datos se pueden devolver por procedimientos reporteros y asignar a variables. Unos ejemplos notables de esto son las estructuras de datos definidas por las extensiones tabla, matriz y GIS, que se incluyen en la instalación estándar de NetLogo.</p></li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="redes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="simulación-de-experimentos-con-netlogo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
