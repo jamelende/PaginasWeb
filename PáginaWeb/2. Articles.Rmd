@@ -1,0 +1,85 @@
+
+<center> ![](https://www.dropbox.com/s/vjmcjd50o965gek/Imagen3.png?dl=1) </center>
+
+
+### Articles
+
+### 0. General
+
+[Butts, Revisiting the Foundations of network analysis](https://www.dropbox.com/s/xql97clp0i48bc7/butts2009.pdf?dl=1)
+
+### 1. Classical
+
+1.  [Watts, Strogatz : Collective Dynamics of small world Networks,1998](https://www.dropbox.com/s/kbklhcxixkgnaut/NAture_Watts_Strogatz.pdf?dl=1)
+
+2.  [Albert Barabasi, Error and Attack Tolerance of Complex Networks,1999](https://www.dropbox.com/s/icfcs0ofw0eazik/BarabasiErrorAndAttack.pdf?dl=1)
+
+3.  [Bocatelli,: Complex Networks, Structure and Dynamics](https://www.dropbox.com/s/9o2u09crc39wxy6/BocatelliNetworksStructureDynamics.pdf?dl=1)
+
+4. [Moreno, Sociometry in the Classrooom, 1943](https://www.dropbox.com/s/2vsw3fgj3jye2qa/1943-SociometryClasroomJakobMoreno.pdf?dl=1)
+
+5. [Mark Granovetter, The Strength of Weak Ties, 1973](https://www.dropbox.com/s/nyfv877lodd98aw/1973-GranoVetter-The%20Strength%20of%20Weak%20Ties.pdf?dl=1)
+
+6. [Lada Adamic, The Small World Web, 1999](https://www.dropbox.com/s/sreahtgtef0llj9/1999-AdamicTheSmallWorldWeb99.pdf?dl=1)
+
+7. [Nicholas Christakis, The Spread of Obesity, 2007](https://www.dropbox.com/s/hvlh5g9oa51sezj/2007-ChristakisSpreadOfObesity.pdf?dl=1)
+
+8.  [Alexander Vespignani Epidemic Spreading in Scale Free Networks](https://www.dropbox.com/s/b42cn7yxym1elt7/PastorVespignaniEpidemicsScaleFree.pdf?dl=1)
+
+
+
+
+
+### 2. Social Networks
+
+1.  [Christakis, Sensors for Early Detection](https://www.dropbox.com/s/8v9ybdczubnb5b2/SensorsForEarlyDetection.pdf?dl=1)
+
+2. [Jakob Moreno: Sociology in the classroom](https://www.dropbox.com/s/l6b82a7l5ty0mhh/moreno1943.pdf?dl=1)
+
+3.  [Kleinberg : The link Prediction problem for social networks](https://www.dropbox.com/s/o4fwmooetocx4sj/KleinbergLinkPrediction.pdf?dl=1)
+
+## Researchers Articles 
+
+### 1.  Mark Newman Articles
+
+
+1.  [Mathematics of networks](https://www.dropbox.com/s/pd4igufdnujmiqe/Newman%20Mathematics%20of%20Networks.pdf?dl=1)
+
+2.  [The structure and function of networks](https://www.dropbox.com/s/v2xsjx131rfd81f/Newman%20Strucutre%20Function.pdf?dl=1)
+
+3.  [The structure and function of complex networks](https://www.dropbox.com/s/50ikivxswsarwu3/Newman%20Strucuture%20Complex%20networks.pdf?dl=1)
+
+4. [Luseeau Newman : Identifying the role that animal plays in their social networks](https://www.dropbox.com/s/o5efdz1v8e3eu0l/DelfinesNewmanLusseau.pdf?dl=1)
+
+### 2. Alex Bavelas Articles (MIT)
+
+1.  [Communication patterns in Task Oriented Groups, 1950](https://www.dropbox.com/s/7frwulme6liz9f4/bavelas1950.pdf?dl=1)
+
+2.  [Experiments on the Alteration of Group Structures, 1965](https://www.dropbox.com/s/hpjgont0hp76cbj/bavelas1965.pdf?dl=1)
+
+3.  [Un ejercicio didáctico sobre transmisión de Información](https://www.dropbox.com/s/sjkfjzfp6yrxfzh/bavelas1967.pdf?dl=1)
+
+
+### 3. Jennifer Neville Articles
+
+[Data Mining in Social Networks](https://www.dropbox.com/s/z4znrhckxzdhpxp/Data%20Mining%20in%20Social%20Networks.pdf?dl=1)
+
+[Dependency Networks for Relational Data](https://www.dropbox.com/s/91n31wxnesvdz10/Dependency%20Networks%20for%20Relational%20Data.pdf?dl=1)
+
+[Link Strength in Social Networks](https://www.dropbox.com/s/ltzrogq5467bpi5/LinkStrengthSocialNetworks.pdf?dl=1)
+
+[Relational Dependency networks](https://www.dropbox.com/s/52xhcsi8j82aw16/RelationalDependencyNetworks.pdf?dl=1)
+
+[Relational Knowledge to Discover Frauds](https://www.dropbox.com/s/zd4eiuhigy4biem/RelationalKnowledgeToDiscoverFrauds.pdf?dl=1)
+
+
+
+
+
+
+
+### 4. Difussión in Networks
+
+
+
+

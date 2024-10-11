@@ -1,0 +1,39 @@
+
+
+<center>  ![](https://www.dropbox.com/s/10olq1flf4s5dr8/Imagen2.png?dl=1)  </center>
+
+### Libros de Referencia
+
+1. [Filippo Menczer, A first course in Network Science](https://www.dropbox.com/s/2wlw8s3509ivyd6/Filippo%20Menczer%2C%20Santo%20Fortunato%2C%20Clayton%20A.%20Davis%20-%20A%20First%20Course%20in%20Network%20Science-Cambridge%20University%20Press%20%282020%29.pdf?dl=1)
+
+2. [Michelle Coscia, Atlas del Científico de redes](https://www.dropbox.com/s/drnlweij592bqgz/sna_book.pdf?dl=1)
+
+3. [Albert Lazslo Barabasi, Network Science](http://networksciencebook.com/)
+
+### Textos Adicionales
+
+1.  [Mark Newman: Networks an Introduction](https://www.dropbox.com/s/s5od0hm02pw6yw8/Mark%20Newman%20-%20Networks-Oxford%20University%20Press%20%282018%29.pdf?dl=1)
+
+2.  [Klienberg, Easley Networks Crowds and Markets](https://www.dropbox.com/s/wfjpbubt6cuae3l/KleinbergNetworks%2C%20Crowds%2C%20and%20Markets.pdf?dl=1)
+
+3.  [Van Steen,Graph Theory and Complex Networks](https://www.dropbox.com/s/ur6685tqwwq2jt7/van%20Steen%20-%20Graph%20Theory%20and%20Complex%20Networks_%20An%20Introduction.pdf?dl=1)
+
+4.  [Dan Centola , How Behaviour Spreads](https://www.dropbox.com/s/wq8as0z60m0azua/Centola%20Behaviour.pdf?dl=1)
+
+5.  [Duncan Watts, Six Degrees of Separation](https://www.dropbox.com/s/pnnndn27i6x5v7m/Duncan%20J.%20Watts%20-%20Six%20Degrees_.pdf?dl=1)
+
+6.  [John Scott, Social Network Analysis](https://www.dropbox.com/s/wazbwtf7lwzmfqs/John%20Scott%20-%20Social%20Network%20Analysis-Sage%20Pubns%20Ltd%20%282017%29.pdf?dl=1)
+
+7.  [Barabasi,Watts,Newman The Structure and Dynamics of Networks](https://www.dropbox.com/s/c1rnugm5m1kapud/BarabasiWattsNewmanNetworks.pdf?dl=1)
+
+### Libros de Divulgación
+
+1.  [Christakis,Fowler Conectados](https://www.dropbox.com/s/2y4d72jo4nqr8hp/%28Pensamiento%29%20Nicholas%20A.%20Christakis%20%26%20James%20H.%20Fowler%20-%20Conectados-Taurus%20%282010%29.pdf?dl=1)
+
+2.  [Matthew Jackson, the human network](https://www.dropbox.com/s/mosy08rlc7tpmie/Matthew%20O.%20Jackson%20-%20The%20Human%20Network_%20How%20Your%20Social%20Position%20Determines%20Your%20Power%2C%20Beliefs%2C%20and%20Behaviors-Pantheon%20Books%20%282019%29.pdf?dl=1)
+
+3.  [James Surowiecki, The Wisdom of Crowds](https://www.dropbox.com/s/gm794cf884dy8rd/James%20Surowiecki%20-%20The%20Wisdom%20of%20Crowds-Anchor%20%282005%29.pdf?dl=1)
+
+4.  [Mark Buchanan, Nexus](https://www.dropbox.com/s/zlzqzepoo7y5jmb/Mark%20Buchanan%20-%20Nexu.pdf?dl=1)
+
+5.  [Barabasi, Linked](https://www.dropbox.com/s/mre7h7nurlbnq6s/Barabasi%20Linked_%20The%20New%20Science%20of%20Networks.pdf?dl=1)

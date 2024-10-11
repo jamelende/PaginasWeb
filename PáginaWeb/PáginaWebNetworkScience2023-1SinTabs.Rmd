@@ -1,0 +1,211 @@
+---
+title: ""
+date: ""
+output:
+  html_document:
+    theme: cerulean
+    toc: no
+    
+
+
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: 100px;
+  margin-right: auto;
+}
+</style>
+
+
+
+
+
+![](https://www.dropbox.com/s/xv551cbxfvxew55/LogoUnal.png?dl=1){width=40%} ![](https://www.dropbox.com/s/vr5pdbzm9kp8kc2/LogoEciUniversidad.jpg?dl=1){width=40%}
+
+
+## Postgraduate Course  2023-1
+
+## Network Science for Data Analytics 
+
+<br></br>
+![](https://www.dropbox.com/s/ktywzszo4ct554m/GnnDrugs.PNG?dl=1){width=50%}
+
+
+### Teachers:
+<br></br>
+
+
+#### [Ph. D., Fabio Gonzalez Full Professor ,UNAL](https://dis.unal.edu.co/~fgonza/)
+
+#### [Ph. D., Luis Fernado Niño Full Professor,UNAL](https://scholar.google.com.co/citations?user=q__sQE8AAAAJ&hl=en)
+
+#### [M.Sc., Alfonso Meléndez Full Professor,UECI](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/HojaDeVida.html)
+
+<br></br>
+![](https://www.dropbox.com/s/m35v28xmaqowmnc/ClimateChange.jpg?dl=1){width=60%}
+ <br></br>
+
+
+<center>
+
+
+
+### General Information
+
+[Download Course Schedule](https://www.dropbox.com/s/k9ptw5397a6oh1n/Schedule-Network%20Science%20for%20Data%20Analytics-2023.xlsx?dl=1)
+
+### Introduction
+
+
+
+Networks appear in practically all environments of human life. Humans organize themselves naturally by building networks (social, economic, biological), our families and neighborhoods are important networks for us. Organizations function by building complex, interconnected networks of business and financial associations. Public health is promoted through associations and coalitions of governments. Nations are connected to each other through migration systems, trade etc. On the other hand, nonhuman networks exist almost anywhere you look, genes and proteins interact with each other through complex biological networks, likewise, the human brain is a complex network. Social and scientific progress is driven by a process of diffusion of innovation whereby Information spreads through connected social systems. Network Science  offers a common language and several methods through which different disciplines  interact and try to solve common problems,  It offers a general and powerful methodology for modeling and representing simple and complex interactions. This course is focused on studying the general conceptual and applied framework of network science. Fundamental concepts , commonly used and state-of-the-art methods will be studied. Major topics include, centrality measures of networks,  models , some basic concepts of statistical and machine learning methods, and their applications in context; likewise, real world problem solving will be illustrated by showing various examples in a practical approach.
+
+
+<br></br>
+![](https://www.dropbox.com/s/og3turchwul5by3/Semana2.png?dl=1){width=30%}
+
+ <br></br>
+ 
+### Resources 
+
+[Course Objectives](https://www.dropbox.com/s/vr0gt5pyaubrv3a/Objectives.pdf?dl=1)
+
+[Network Database of research networks (Visualization + Articles)](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/0.-Networks.html)
+
+[Books](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/1.-Books.html)
+
+
+[Research Articles](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/2.-Articles.html)
+
+
+[Online Courses](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/3.-OnlineCourses.html)
+
+[Computational Tools](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/4.-ComputationalTools.html)
+
+[Videos](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/5.-OnlineVideos.html)
+
+[Simulations](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/6.-Simulations.html)
+
+[Internet Links](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/8.-WebPages.html)
+
+[Datasets (NetworkSets) Repositories](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/10.-DatasetsRepositories.html)
+
+[Project Guidelines Option 1](https://www.dropbox.com/s/s5foo6zuqf1fan0/Project.pdf?dl=1)
+
+[Project Guidelines Option 2](https://www.dropbox.com/s/tekpx6g0kqxgesj/ProjectOption2.pdf?dl=1)
+
+
+
+### Classic Datasets (or Netsets)
+
+[link to Netsets](https://www.dropbox.com/sh/eh0s92peicy6pfw/AACRtwJMt1EI0q1zSHSA9srDa?dl=1)
+
+
+### Networkx Practical Labs (Google Colab)
+<br></br>
+[ Colab Labs](http://profesores.is.escuelaing.edu.co/~amelendez/CursoMOBR-2022-2/9.-Talleres.html)
+
+<br></br>
+
+<br></br>
+
+
+
+<h1 style="text-align: center;"> Schedule (Contenido) </h1>
+
+
+
+<br></br>
+
+<br></br>
+
+
+![](https://www.dropbox.com/s/eprkglbecj3jyju/DataWisdom.PNG?dl=1){width=60%}
+
+
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+### Week 1 :  Introduction to Data Science 
+
+[Link to Week 1](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week1.html)
+
+### Week 2 : Introduction to Network Science
+
+
+[Link to Week 2](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week2.html)
+
+
+### Week 3 : Basic Concepts of Graph Theory
+
+[Link to Week 3](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week3.html)
+
+### Week 4 : Small Worlds
+
+[Link to Week 4](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week4.html)
+
+
+### Week 5 : Hubs
+
+[Link to Week 5](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week5.html)
+
+
+### Week 6 : Weights and Directed Graphs
+
+[Link to Week 6](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week6.html)
+
+
+
+### Week 7 : Network Models
+
+[Link to Week 7](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week7.html)
+
+### Week 8 : Communities
+
+[Link to Week 8](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week8.html)
+
+
+![](https://www.dropbox.com/s/1lrwdfi5x23rczo/Imagen7.png?dl=1){width=10%}
+
+
+#### Holy Week
+
+![](https://www.dropbox.com/s/10olq1flf4s5dr8/Imagen2.png?dl=1){width=10%}
+
+
+
+### Week 9 : Machine Learning with Graphs 
+
+[Link to Week 9](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week9.html)
+
+### Week 10 : Deep Learning with Graphs 
+
+[Link to Week 10](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Weeks/Week10.html)
+
+
+### Week 11 : Final project report
+
+
+### Week 12 : Final grades posting (answering appeals and complaints)
+
+</center>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+
+
+

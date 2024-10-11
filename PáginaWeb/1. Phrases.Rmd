@@ -1,0 +1,92 @@
+
+
+<center>  ![](https://www.dropbox.com/s/10olq1flf4s5dr8/Imagen2.png?dl=1)  </center>
+<br></br>
+<br></br>
+
+<br></br>
+
+### "The real value of data is hidden in its connections. Network science aims to understand these relationships, how they shape our world, and what they can tell us about the future."
+
+## George Bratanic
+
+### If Gnp is wrong Why we spend time on it? It will help us calculate many quantities and compared them to the real data end also it help us to understand to what degree a particular property is the result of some random process"
+
+## Jure leskovec
+
+### "Note that ln V/V tends to be a rather small number as V grows, given that it pits a logarithmic growth in the numerator against a linear one in the denominator. Thus we discover that random graphs tend to have giant components as they grow larger,which is exactly what we see happening in real world networks. Onepoint to team Erdos-Rényi!
+
+## Michel Coscia
+
+### "One intuitive way to think about betweenness centrality is asking yourself: how many paths would become longer if node v would disappear from the network? How much is the network structure dependent on v’s presence? Since real world networks have hubs which are closer to most nodes, the shortest paths will use them often"
+
+## Michel Coscia
+
+### "Understanding the structure and function of complex networks is among the most beneficial intellectual endeavors because, at some level, every aspect of reality seems to be made by interconnected parts"
+
+## Michel Coscia
+
+
+### "Network science is the search for the understanding of the form of a complex system via the inspection of the relations between its interacting components."
+
+## Michel Coscia
+
+### "The center of a network is a set of all nodes whose eccentricity equals the radius. Another not very intuitive definition—but it yields a surprisingly accurate result (see the following example).
+### " The periphery of a network is a set of all nodes whose eccentricity equals the diameter. The set of peripheral nodes in a complex network is usually large.
+
+### "High eigenvector centrality identifies nodes that are surrounded by other nodes with high eigenvector centrality. You can use this measure to locate groups of interconnected nodes with high prestige."
+
+
+### "The betweenness centrality is for control freaks. It measures the fraction of all possible geodesics that pass through a node. If the betweenness is high, the node is potentially a crucial go-between (thus the name) and has a brokerage capability. The removal of such a node would disrupt communications"
+
+## Dimitry Zinoviev
+
+### "In a kind of social chain reaction, we can be deeply affected by events we do not witness that happen to people we do not know. It is as if we can feel the pulse of the social world around us and respond to its persistent rhythms. As part of a social network, we transcend ourselves, for good or ill, and become a part of something much larger. We are connected"
+
+## Nicholas Christakis
+
+
+### "Reproduction numbers lie at the heart of vaccination policies. A vaccine does not need to be fully effective or to reach every individual in order to avoid widespread contagion, it just needs to bring the reproduction number below one"
+
+## Matthew jackson
+
+### "Si se mira elo aumento contemporaneo de la obesisdad es muy improbable que la biología humana haya cambiado tanto para que el aumento en la obesidad se haya producido por un factor biológico,  acá debe existir una explicación social, cultural."
+
+## Christakis
+
+
+### "The most important point is that nodes in the same network cluster usually share common features. For instance, we will see that communities in the Zachary’s karate club network coincide with real social groupings, communities in brain networks identify areas of the brain with different functions, while tightly connected groups of nodes in the World Wide Web correspond to pages on common topics. This is the reason why, by finding the communities of a network, we can learn a lot about the way the network works"
+
+## Vito latora  (Comunidades)
+
+### "In this notebook, we explore the different meanings of network "centrality". Depending on the context and the complex network one is studying, the central nodes for exactly the same network can mean really different things. Here, we explore four kinds of centrality measures:
+
+#### **Degree Centrality** - centrality depends on the degree of node (number of neighbors)
+#### **Closeness Centrality** - centrality depends on the distance of a node to all other nodes in the network
+#### **Betweenness Centrality** - centrality depends on how many all pairs shortest paths would pass through a given node
+#### **Eigenvector Centrality** - centrality depends on the relative scores of neighboring nodes (or how "famous" ones neighboring nodes are); the more high-scoring nodes an entity is connected to, the higher its centrality is. 
+
+### Centrality measures are critical in a wide-range of applications that involve concepts/phenomena such as infrastructure vulnerability and robustness (e.g., in transportation systems, urban systems, the Internet, etc.) and spreading or flow (of information or diseases, etc.), to name two. Essentially, it's about identifying the "important" or "influential" nodes in the system.
+
+## Erika Legara (Centrality)
+
+### "Complex contagions require high clustering to spread, which prevents their spread on random networks."
+
+## Edward Platt
+
+
+### "Graphs are the new frontier of deep learning
+
+## Jure Leskovec
+
+
+
+
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+

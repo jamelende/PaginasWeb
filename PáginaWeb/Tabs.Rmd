@@ -1,0 +1,141 @@
+---
+title: Network Science for Data Analytics
+output: html_document
+---
+
+
+<table border="1">
+ <tr> 
+    <th></th>
+    <th>Description</th>
+    <th>Slides</th>
+    <th>Colab Worshops</th>
+    <th>Additional material</th>
+  </tr>
+  <tr>
+    <th>Week 1</th>
+    <td>Introduction to Data Science</td>
+    <td> [Introduction to data Science](https://www.dropbox.com/s/q7tjfrrhzrk410d/Introduction_Machine_Learning.pdf?dl=1) </td>
+    <td> </td>
+    <td>Chapter 1 from Easley and Kleinberg: [Overview](https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book-ch01.pdf) </td>
+  </tr>
+  <tr> 
+    <th>Week 2</th>
+    <td>Introduction to Network Science <br> </td>
+    <td>
+    [Slides with Simulators( Zip)](https://www.dropbox.com/s/cvyy57ak7jn4w29/Sesi%C3%B3n1.zip?dl=1) <br>
+        [ Slides Basic Network Concepts(zip)](https://www.dropbox.com/s/phkb7s52bm54a2p/Sesi%C3%B3n2.zip?dl=1)
+</td>
+    <td>Filippo Menczer: <br>[Network Basic Concepts Part 1  ](https://www.dropbox.com/s/07uzc13ckb7sdpz/Chapter%201%20Tutorial.ipynb?dl=1) <br>
+       [Network Basic Concepts Part 2  ](https://www.dropbox.com/s/0aq38fd2503ifh4/Chapter%202%20Tutorial.ipynb?dl=1) <br>
+       Erika Legara : <br>
+       [Introduction to Network Analysis](https://www.dropbox.com/s/z08vx3rm7sc24sw/Intro%20to%20Network%20Analysis.ipynb?dl=1) </td>
+    <td>Videos: [ Master Class Video: The power of Network Science](https://www.youtube.com/watch?v=ysv0bw9cY6I&t=1259s) <br> [Video  Basic Network Concepts: Andrew Beveridge](https://www.youtube.com/watch?v=hNENd_OMlL4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=1)</td>
+ </tr>
+ <tr> 
+    <th>Week 3</th>
+    <td>Basic Concepts of Graph Theory (Local and Global measures)</td>
+    <td>[Slides Centrality Measures ](https://www.dropbox.com/s/s78k0v1mz2hdesp/Semana2-PropiedadesLocales.zip?dl=1) <br>
+        [Slides Global Measures of a Network](https://www.dropbox.com/s/thre3tbumot2jrt/MedidasGlobales.pptx?dl=1)
+   </td>
+    <td>Filippo Menczer <br>
+        [Centrality Measures](https://www.dropbox.com/s/bugqp3j38m1o8we/Chapter%203%20Tutorial.ipynb?dl=1) <br>
+        Erika Legara: <br>
+        [Centrality Measures](https://www.dropbox.com/s/0deh18humgji7ma/Centrality%20Measures.ipynb?dl=1)
+        </td>
+<td>[Labs Netlogo Centrality](https://www.dropbox.com/s/cjqxqr311qf5ax4/LaboratoriosCentralidad.zip?dl=1) <br>
+    [Lab Netlogo  Global Measures of a Network (zip)](https://www.dropbox.com/s/jksa499hty41ja7/Semana3-PropiedadesGlobales.zip?dl=1) </td>
+ </tr>
+ 
+ <tr>
+    <th>Week 4</th>
+    <td>Network Models</td>
+    <td>  [Slides Network Models](https://www.dropbox.com/s/aos745r4tqcwzf1/chapter5.pptx?dl=1)</td>
+    <td>Filippo Menczer : <br>
+        [ Network Models ](https://www.dropbox.com/s/fgqbpl70i38h9xb/Chapter%205%20Tutorial.ipynb?dl=1) <br>
+        Erika Legara: <br>
+        [Network Models](https://www.dropbox.com/s/yjbho5w68p79bxn/CN%20ModelsColab.ipynb?dl=1)
+        </td>
+    <td>  </td>
+  </tr>
+  <tr> 
+    <th>Week 5</th>
+    <td>Dynamic Networks (Diffusion)</td>
+    <td>[Slides Dynamics](https://www.dropbox.com/s/shvhk11khvueecl/chapter7.pptx?dl=1) </td>
+    <td>Erika Legara : <br>
+        [Exploring Social Distancing](https://www.dropbox.com/s/lkplj9puvrhqqgh/Exploring%20Social%20Distancing.ipynb?dl=1) <br> 
+        [Vaccination Strategies](https://www.dropbox.com/s/h8wbmt8qt47hzkv/Vaccination%20Strategies.ipynb?dl=1) </td>
+    <td>Data</td>
+ </tr>
+ <tr> 
+    <th>Week 6</th>
+    <td>Dynamic Networks (Robustness)</td>
+    <td>[Slides Dynamics](https://www.dropbox.com/s/shvhk11khvueecl/chapter7.pptx?dl=1) </td>
+    <td>Erika Legara: <br>
+        [Error and Attack Tolerance](https://www.dropbox.com/s/u9h6vmhkbuhinu0/Error%20and%20Attack%20Tolerance.ipynb?dl=1) </td>
+    <td>Data</td>
+ </tr>
+ 
+ <tr>
+    <th>Week 7</th>
+    <td>Communities</td>
+    <td>[Slides Communities Filippo Menczer](https://www.dropbox.com/s/shvhk11khvueecl/chapter7.pptx?dl=1) </td>
+    <td>Filippo Menczer :<br>
+        [Partitions and Communities](https://www.dropbox.com/s/2q8py2akeclr59x/Chapter%206%20Tutorial.ipynb?dl=1) </td>
+    <td>[Netlogo Models (zip)](https://www.dropbox.com/s/8qsu3y55f9hpl2i/ModelosNetlogoDeRedesParaMostrarEnClase.zip?dl=1) <br>
+
+[Network Models (zip)](https://www.dropbox.com/s/3bw5rkw0bfhpcz5/Modelos%20de%20redes.pptx?dl=1)</td>
+  </tr>
+  <tr> 
+    <th>Week 8</th>
+    <td>Additional Topics </td>
+    <td>Data</td>
+    <td>Data</td>
+    <td>Data</td>
+ </tr>
+  <tr> 
+    <th>Holy Week</th>
+    <td>  ![](https://www.dropbox.com/s/xv551cbxfvxew55/LogoUnal.png?dl=1)   </td>
+    <td>   ![](https://www.dropbox.com/s/xv551cbxfvxew55/LogoUnal.png?dl=1)    </td>
+    <td>   ![](https://www.dropbox.com/s/vr5pdbzm9kp8kc2/LogoEciUniversidad.jpg?dl=1)  </td>
+    <td>![](https://www.dropbox.com/s/vr5pdbzm9kp8kc2/LogoEciUniversidad.jpg?dl=1) </td>
+ </tr>
+ 
+ <tr>
+    <th>Week 9</th>
+    <td>Machine Learning with Graphs</td>
+    <td> [Slides with Simulators( Zip)](https://www.dropbox.com/s/cvyy57ak7jn4w29/Sesi%C3%B3n1.zip?dl=1) <br>
+        [ Slides Basic Network Concepts(zip)](https://www.dropbox.com/s/phkb7s52bm54a2p/Sesi%C3%B3n2.zip?dl=1)</td>
+    <td>Videos: <br> [ Master Class Video: The power of Network Science](https://www.youtube.com/watch?v=ysv0bw9cY6I&t=1259s) <br> [Video  Basic Network Concepts: Andrew Beveridge](https://www.youtube.com/watch?v=hNENd_OMlL4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=1)</td>
+  
+ <td>Data</td>
+ </tr>
+ <tr>
+    <th>Week 10</th>
+    <td>Deep Learning with Graphs</td>
+    <td>Chapter 1 from Easley and Kleinberg: [Overview](https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book-ch01.pdf)</td>
+    <td>Data</td>
+    <td>Data</td>
+  </tr>
+  <tr> 
+    <th>Week 11</th>
+    <td>Final project report</td>
+    <td>Data</td>
+    <td>Data</td>
+    <td>Data</td>
+ </tr>
+ <tr> 
+    <th>Week 12</th>
+    <td>Final grades posting ( appeals and complaints)</td>
+    <td>Data</td>
+    <td>Data</td>
+    <td>Data</td>
+ </tr>
+</table>
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>

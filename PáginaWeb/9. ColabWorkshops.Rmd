@@ -1,0 +1,15 @@
+### Colab Workshops (Networkx)
+
+1. [Erika Legara](https://aim.edu/faculty-and-staff/faculty/erika-fille-t-legara-phd) 
+
+[Worshops ( Zip)](https://www.dropbox.com/s/43zutrszllj2pga/TalleresErikaLegara.zip?dl=1)
+
+
+2. [Filippo Menczer](https://cnets.indiana.edu/fil/)
+
+[Workshops (Zip)](https://www.dropbox.com/s/3kskc4a643b9h90/TalleresFilippoMenczer.zip?dl=1)
+
+
+3. [Edward Platt](https://www.amazon.com/Edward-L.-Platt/e/B07YNG8MJD%3Fref=dbs_a_mng_rwt_scns_share)
+
+[WorkShops (Archivo Zip)](https://www.dropbox.com/s/i46xiwaripi8ef4/TalleresEdwardPlatt.zip?dl=1)

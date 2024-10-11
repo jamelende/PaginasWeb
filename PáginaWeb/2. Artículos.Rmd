@@ -1,0 +1,41 @@
+
+<center> ![](https://www.dropbox.com/s/vjmcjd50o965gek/Imagen3.png?dl=1) </center>
+
+
+### Artículos
+
+### 1. Clásicos
+
+1.  [Watts, Strogatz : Collective Dynamics of small world Networks](https://www.dropbox.com/s/kbklhcxixkgnaut/NAture_Watts_Strogatz.pdf?dl=1)
+
+2.  [Barabasi, Error and Attack Tolerance of Complex Networks](https://www.dropbox.com/s/icfcs0ofw0eazik/BarabasiErrorAndAttack.pdf?dl=1)
+
+3.  [Bocatelli,: Complex Networks, Structure and Dynamics](https://www.dropbox.com/s/9o2u09crc39wxy6/BocatelliNetworksStructureDynamics.pdf?dl=1)
+
+
+### 2. Redes Sociales
+
+1.  [Christakis, Sensors for Early Detection](https://www.dropbox.com/s/8v9ybdczubnb5b2/SensorsForEarlyDetection.pdf?dl=1)
+
+2. [Jakob Moreno: Sociology in the classroom](https://www.dropbox.com/s/l6b82a7l5ty0mhh/moreno1943.pdf?dl=1)
+
+3.  [Kleinberg : The link Prediction problem for social networks](https://www.dropbox.com/s/o4fwmooetocx4sj/KleinbergLinkPrediction.pdf?dl=1)
+
+
+### 3. Artículos Mark Newman
+
+
+1.  [Newman: Mathematics of networks](https://www.dropbox.com/s/pd4igufdnujmiqe/Newman%20Mathematics%20of%20Networks.pdf?dl=1)
+
+2.  [Newman: The structure and function of networks](https://www.dropbox.com/s/v2xsjx131rfd81f/Newman%20Strucutre%20Function.pdf?dl=1)
+
+3.  [Newman: The structure and function of complex networks](https://www.dropbox.com/s/50ikivxswsarwu3/Newman%20Strucuture%20Complex%20networks.pdf?dl=1)
+
+4. [Luseeau Newman : Identifying the role that animal plays in their social networks](https://www.dropbox.com/s/o5efdz1v8e3eu0l/DelfinesNewmanLusseau.pdf?dl=1)
+
+### 4. Difusión en Redes
+
+
+1.  [Vespignani Epidemic Spreading in Sclae Free Networks](https://www.dropbox.com/s/b42cn7yxym1elt7/PastorVespignaniEpidemicsScaleFree.pdf?dl=1)
+
+

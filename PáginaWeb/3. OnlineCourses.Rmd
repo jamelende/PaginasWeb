@@ -1,0 +1,66 @@
+
+<center>  ![](https://www.dropbox.com/s/3wjzhgvay5v9tv0/Imagen4.png?dl=1)  </center>
+
+
+### Online Courses
+
+#### Network Science
+
+[John Mcculloch, Introduction to Social Media Analytics](https://www.youtube.com/watch?v=5Hw1OmWOLA8&list=PLnMaaCilahfY6aBe6UFJJsZ_xvYscPJiW&index=1)
+
+[Kleingberg, Networks ,Crowds and Markets](https://learning.edx.org/course/course-v1:CornellX+INFO2040x+1T2016/home)
+
+[   Matthew Jackson, Economic Networks Coursera (Free)](https://www.coursera.org/learn/social-economic-networks)
+
+[Aaron Clauset, Network Science ](https://aaronclauset.github.io/courses/5352/)
+
+[ Andrew Beveridge, Short Course](https://www.youtube.com/watch?v=hNENd_OMlL4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR)
+
+[Paul Ribeiro, Network Science 2022, Porto University](https://www.dcc.fc.up.pt/~pribeiro/aulas/ns2122/index.html)
+
+[Hiroki Sayama, Advanced Topics in Network Science 2021](https://bingweb.binghamton.edu/~sayama/SSIE641/)
+
+[Social and Economic networks](https://www.coursera.org/learn/social-economic-networks/home/week/1)
+
+[Curso network Science lada Adamic](https://open.umich.edu/find/open-educational-resources/information/si-508-networks-theory-application)
+
+[Curso network science Denis Helic](https://courses.isds.tugraz.at/dhelic/netsci/index.html)
+
+[Curso network science Leonid Zukhov](https://www.youtube.com/watch?v=1T5-BG6yngM&list=PLriUvS7IljvkGesFRuYjqRz4lKgodJgh2)
+
+
+#### Social Networks
+
+[Dan Centola, Network Dynamics of Social Behaviour](https://ndg.asc.upenn.edu/online-course/online-course/)
+
+[Jennifer Golbeck, INST663 Socila Media Analysis, Maryland College park](http://www.cs.umd.edu/~golbeck/INST633o/index.shtml)
+
+#### Machine Learning for Graphs
+
+[Jure Luskovec, Machine learning for graphs, Stanford University 2019](http://snap.stanford.edu/class/cs224w-2020/)
+
+
+#### Complex systems
+
+
+[ Peter Sheridan, Complex systems Vermont University](http://pdodds.w3.uvm.edu/)
+
+
+[Remy Cazabet, Complex Networks-Network Science](http://cazabetremy.fr/Teaching/CN/ComplexNetworks.html)
+
+[Mark newman, Complex Systems 2017](http://websites.umich.edu/~mejn/courses/2017/cscs535/index.html)
+
+
+
+#### Machine learning
+
+[Andrew Ng, Machine Learning Full Course](https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU)
+
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+

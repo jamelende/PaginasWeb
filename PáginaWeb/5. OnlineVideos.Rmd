@@ -1,0 +1,99 @@
+
+
+<center>  ![](https://www.dropbox.com/s/uxi30omg63v9fy2/Imagen6.png?dl=1)  </center>
+
+## Online Videos
+<br></br>
+<br></br>
+
+
+### Graph Neural Networks
+
+0. [Imporove ML predictions using Graph Algorithms](https://www.youtube.com/watch?v=LWw94LVhfLk&t=1981s)
+
+1. [Excelente, Graph neural networks and Halicin](https://www.youtube.com/watch?v=GXhBEj1ZtE8)
+
+2. [Petar Veličković,Introduction to Graph neural networks](https://www.youtube.com/watch?v=8owQBFAHw7E)
+
+3. [Petar Veličković,Theoretical Foundations of   Graph neural networks](https://www.youtube.com/watch?v=uF53xsT7mjc&t=1523s)
+
+4. [Michael Bronstein, Geometric Deep learning](https://www.youtube.com/watch?v=w6Pw4MOzMuo)
+
+5. [Michael Bronstein Physics-Inspired Learning on Graphs](https://www.youtube.com/watch?v=Ug3yG4GY8T4)
+
+#### Neural networks
+
+1. [3Blue1Brown, What are Neural Networks?](https://www.youtube.com/watch?v=aircAruvnKk)
+
+
+#### Deep learning
+
+
+1. [Jure leskovec, Deep Learning On Graphs](https://www.youtube.com/watch?v=MIAbDNAxChI&t=2724s)
+
+#### Network Science
+
+ [Renaud Lambiotte,  Alan Turing Institute](https://www.youtube.com/watch?v=L6CqqlILBCI&t=4788s)
+
+[Documental The promise of network science 2017](https://www.youtube.com/watch?v=qB8YnTpCzEU)
+
+[Bernie Hogan,  Alan Turing Intr to  Network Analysis](https://www.youtube.com/watch?v=i__0cG4ijrI&t=3690s)
+
+[Raissa di Souza Santafé Institute](https://www.youtube.com/watch?v=a6U7ksiu10Y&t=2s)
+
+[Mark Newman, Alan turing Institute](https://www.youtube.com/watch?v=gPSt-xs_zWQ&list=PLhUVsjVWqglS5Pnz04SbRticB4mWgu3Jk&index=8)
+
+[Albert Barabasi , Laws of Networks](https://www.youtube.com/watch?v=MNLSMGvbAUc)
+
+[Mit Seminar Networks Understanding Networks](https://www.youtube.com/playlist?list=PLMRF2Xi6ecdtxGWOjqoyJeTIdaDksAppJ)
+
+[Kleinberg Social Connectedness in the digital age](https://www.youtube.com/watch?v=TAcmTnXMBGQ&t=4s)
+
+[Int to network Science, Short Video](https://www.youtube.com/watch?v=HWbhOf_q0Hs&list=PLy7-2HDH5IPeLpXB9h81H6u6sjvMDS5cJ&index=20)
+
+
+#### Complex Systems
+
+[Mark Newman, physics of complex systems University of Michigan](https://www.youtube.com/watch?v=2L64AhoKamE)
+
+
+#### Social networks
+
+[Dan Centola How Spontaneous Social Norms Emerge](http://wapo.st/16rkhWb)
+
+[Nicholas Christakis Social Networks](https://www.youtube.com/watch?v=wadBvDPeE4E)
+
+[The Human Network Matthew Jackson Google Talks](https://www.youtube.com/watch?v=2C5jrYlVHJQ)
+
+[Dan Centola Complex Contagions Santafé Institute](https://www.youtube.com/watch?v=o0fDcUJMzkI&t=294s)
+
+[Alessandro Vespignani, On Networks and Infectious Diseases](https://www.youtube.com/watch?v=fLoq1Zcyjw8&t=208s)
+
+[Alessandro Vespignani, Predicting AH1N1](https://www.youtube.com/watch?v=maqzLNcypUg)
+
+[Duncan Watts, Interview, Social Science, Small Worlds and Big data](https://www.youtube.com/watch?v=4YoOCLoJn6U)
+[Duncan Watts, Conversations (Music lab)](https://www.youtube.com/watch?v=4YoOCLoJn6U)
+
+
+### Informative Videos
+
+[Connected, The Emergence of Network Science 45 min](https://www.youtube.com/watch?v=cf-6qdPerlI)
+
+[The Language of networks (SystemsInnovation)](https://www.youtube.com/watch?v=82zlRaRUsaY&list=PLskfBuQC79xl_la1srAngEnBIXWzTtZOw)
+
+[Research Learning Series April 2021, Int to Network Science](https://www.youtube.com/watch?v=htHE06NhKiM&t=5s)
+
+[Fundamentals of Network Science (The kids should see this)](https://thekidshouldseethis.com/post/network-science-beakus-animation-michael-schaub-oxford)
+
+
+##### Mark Newman Introduction to network Science (three videos)
+
+1.  [Video 1](https://www.youtube.com/watch?v=yAtsm5xkb5c)
+
+2.  [Video 2](https://www.youtube.com/watch?v=lETt7IcDWLI)
+
+3.  [Video 3](https://www.youtube.com/watch?v=rwA-y-XwjuU)
+<br></br>
+<br></br>
+<br></br>
+<br></br>

@@ -1,0 +1,25 @@
+
+<center>  ![](https://www.dropbox.com/s/3wjzhgvay5v9tv0/Imagen4.png?dl=1)  </center>
+
+
+### Cursos en Línea
+
+0.  [Curso de Coursera Matthew Jackson (Gratuito)](https://www.coursera.org/learn/social-economic-networks)
+
+1.  [Curso network Science de Aaron Clauset](https://aaronclauset.github.io/courses/5352/)
+
+2.  [Curso Corto Andrew Beveridge](https://www.youtube.com/watch?v=hNENd_OMlL4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR)
+
+3.  [Stanford: Machine learning for graphs, Jure Luskovec](http://snap.stanford.edu/class/cs224w-2020/)
+
+4.  [Videos :The Language of networks (SystemsInnovation)](https://www.youtube.com/watch?v=82zlRaRUsaY&list=PLskfBuQC79xl_la1srAngEnBIXWzTtZOw)
+
+5.  [Cursos Peter Sheridan Vermont University](http://pdodds.w3.uvm.edu/)
+
+Curso Corto Mark Newman
+
+6.  [Video 1](https://www.youtube.com/watch?v=yAtsm5xkb5c)
+
+7.  [Video 2](https://www.youtube.com/watch?v=lETt7IcDWLI)
+
+8.  [Video 3](https://www.youtube.com/watch?v=rwA-y-XwjuU)

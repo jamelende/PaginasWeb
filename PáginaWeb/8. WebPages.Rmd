@@ -1,0 +1,50 @@
+
+<center> ![](https://www.dropbox.com/s/z82rsbo22r31o45/Imagen10.png?dl=1) </center>
+
+
+### Web Pages
+
+[Social Networks in Movies](https://moviegalaxies.com/)
+
+[A networked SIR Model, Animation](http://systems-sciences.uni-graz.at/etextbook/networks/sirnetwork.html)
+
+[Small Worlds Veritasium](https://www.youtube.com/watch?v=TcxZSmzPw8k&list=PLqzLNw_z6y7S31yg_2aJj3VGCohJyPe-T&index=4)
+
+[Organizational Networks](https://toreopsahl.com/datasets/#Cross_Parker)
+
+[Network Animations, NetworkPages.nl](https://www.networkpages.nl/CustomMedia/)
+
+[Networks without words Alfonso Meléndez](http://profesores.is.escuelaing.edu.co/~amelendez/RedesSinPalabras/RedesSinPalabras.html)
+
+[ Lada Adamic Web Page](http://www.ladamic.com/)
+
+[Awesome Network Analysis Francois Briatte](https://github.com/briatte/awesome-network-analysis)
+
+[Networks Demystified, Scott Wengart](https://scottbot.net/tag/networks-demystified/)
+
+[Albert-Laszlo Barabasi Network Science](https://scottbot.net/tag/networks-demystified/)
+
+[Journal of Complex networks](https://academic.oup.com/comnet)
+
+[The InterActome Atlas](http://www.interactome-atlas.org/)
+
+[Awesome Resources of Graph Neural Networks](https://github.com/GRAND-Lab/Awesome-Graph-Neural-Networks)
+
+[Petar Veličković, Graph Neural Netwok Resources (Twitter)](https://twitter.com/PetarV_93/status/1306689702020382720)
+
+[Aleska Gordic, Graph Attention Networks, pyTorch](https://github.com/gordicaleksa/pytorch-GAT)
+
+[Predicting Links in a Network with Networkx](https://www.geeksforgeeks.org/link-prediction-predict-edges-in-a-network-using-networkx/)
+
+[A Gentle Introduction to Graph Neural Networks](https://distill.pub/2021/gnn-intro/)
+
+### Network Animations
+
+[Visualising the dynamics of character networks](http://maladesimaginaires.github.io/intnetviz/)
+
+[Network Animations](https://www.networkpages.nl/CustomMedia/)
+
+
+
+<br></br> <br></br>
+

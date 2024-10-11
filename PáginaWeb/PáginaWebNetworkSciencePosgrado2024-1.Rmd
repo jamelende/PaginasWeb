@@ -1,0 +1,829 @@
+---
+title: ''
+output:
+  html_document:
+    theme: cerulean
+    toc: no
+  pdf_document:
+    toc: no
+date: ''
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: 100px;
+  margin-right: auto;
+}
+</style>
+
+---
+title: Network Science for Data Analytics
+output: html_document
+---
+
+
+
+<center> ![](https://www.dropbox.com/scl/fi/p5ll2q3jiwci7c1879bbg/LogoUnal.PNG?rlkey=y9pwx183m5cfrq5kmknrmvd70&dl=1){width=25%} ![](https://www.dropbox.com/scl/fi/sw3c5k1rrsio1agfxwnxb/LogoEciUniversidad.jpg?rlkey=qp4srpwahuzousryc7durc0vf&dl=1){width=25%} </center>
+
+<center> <h1> PostGraduate Course : Network Science for Data Analytics </h1> </center>
+
+#  {.tabset .tabset-pills}
+
+
+
+
+## General Information
+
+<center> ![](https://www.dropbox.com/s/ktywzszo4ct554m/GnnDrugs.PNG?dl=1){width=30%} </center>
+
+
+<br></br>
+
+
+
+
+
+Networks appear in practically all environments of human life. Humans organize themselves naturally by building networks (social, economic, biological), our families and neighborhoods are important networks for us. Organizations function by building complex, interconnected networks of business and financial associations. Public health is promoted through associations and coalitions of governments. Nations are connected to each other through migration systems, trade etc. On the other hand, nonhuman networks exist almost anywhere you look, genes and proteins interact with each other through complex biological networks, likewise, the human brain is a complex network. Social and scientific progress is driven by a process of diffusion of innovation whereby Information spreads through connected social systems. Network Science  offers a common language and several methods through which different disciplines  interact and try to solve common problems,  It offers a general and powerful methodology for modeling and representing simple and complex interactions. This course is focused on studying the general conceptual and applied framework of network science. Fundamental concepts , commonly used and state-of-the-art methods will be studied. Major topics include, centrality measures of networks,  models , some basic concepts of statistical and machine learning methods, and their applications in context; likewise, real world problem solving will be illustrated by showing various examples in a practical approach.
+
+[Course Objectives](https://www.dropbox.com/s/vr0gt5pyaubrv3a/Objectives.pdf?dl=1) <br> <br>
+[Grading](https://www.dropbox.com/s/43jp7wga04p5lzi/Evaluation.pptx?dl=1)<br> <br>
+[Class Resources](https://www.dropbox.com/s/05fymcq5owq1bc2/NETWORK%20SCIENCE%20FOR%20DATA%20ANALYTICS-RESOURCES.docx?dl=1)<br><br>
+[Orientation Session](https://www.dropbox.com/s/pxjnbqzx3jfpbhj/Plantilla%20Network%20Science-Orientaci%C3%B3n.pptx?dl=1)<br><br>
+
+
+
+
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/og3turchwul5by3/Semana2.png?dl=1){width=15%} </center>
+
+ <br></br>
+ 
+## Teachers
+ 
+
+<br></br>
+
+<br></br>
+
+
+#### [Ph. D., Fabio Gonzalez Full Professor ,UNAL](https://dis.unal.edu.co/~fgonza/)
+
+#### [Ph. D., Luis Fernado Niño Full Professor,UNAL](https://scholar.google.com.co/citations?user=q__sQE8AAAAJ&hl=en)
+
+#### [M.Sc., Alfonso Meléndez Full Professor,UECI](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/HojaDeVida.html)
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/m35v28xmaqowmnc/ClimateChange.jpg?dl=1){width=30%} </center>
+ <br></br>
+ 
+ 
+ 
+ 
+ 
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+## Weekly Schedule
+
+<br></br>
+
+
+<br> </br>
+<td>
+
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Description</th>
+    <th>Slides</th>
+    <th>Jupyter Notebooks</th>
+    <th>Additional material</th>
+  </tr>
+  
+ <tr>
+    <th>Week 1 February 7</th>
+    <td>Introduction to Data Science</td>
+    <td> [Introduction to data Science](https://www.dropbox.com/s/q7tjfrrhzrk410d/Introduction_Machine_Learning.pdf?dl=1) </td>
+    <td> </td>
+    <td>Chapter 1 from Easley and Kleinberg: [Overview](https://www.cs.cornell.edu/home/kleinber/networks-book/networks-book-ch01.pdf) </td>
+  </tr>
+  <tr> 
+    <th>Week 2 February 14</th>
+    <td>Introduction to Network Science <br> </td>
+    <td>
+    [New!!! Slides What is Network Science?( Zip)](https://www.dropbox.com/s/919lbl2bk2y1fdl/WhatIsNetScience.zip?dl=1) <br>
+        [ Slides Basic Network Concepts(zip)](https://www.dropbox.com/s/vnc3t9xgnmh1msb/BasicGraphConcepts.zip?dl=1)
+</td>
+    <td>Filippo Menczer: <br>[Network Basic Concepts Part 1](https://www.dropbox.com/scl/fi/ab6081yvlmzqh21cwhgik/Chapter-1-Tutorial.ipynb?rlkey=xk2e9eqjte9b2thsm41blfe0l&dl=1) <br>
+       [Network Basic Concepts Part 2  ](https://www.dropbox.com/scl/fi/g79yy36y3hf0wsmfztejc/Chapter-2-Tutorial.ipynb?rlkey=87tfjbrtczp6venkwgl6s3h7b&dl=1) <br>
+       Erika Legara : <br>
+       [Introduction to Network Analysis](https://www.dropbox.com/scl/fi/5bmusz8ckueog8cnp6en0/Intro-to-Network-Analysis.ipynb?rlkey=az4vln6ez91t4xx2in065shs6&dl=1) </td>
+    <td>Videos: [ Master Class Video: The power of Network Science](https://www.youtube.com/watch?v=ysv0bw9cY6I&t=1259s) <br> [Video  Basic Network Concepts: Andrew Beveridge](https://www.youtube.com/watch?v=hNENd_OMlL4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=1)</td>
+ </tr>
+ <tr> 
+    <th>Week 3 February 21</th>
+    <td>Local Measures on Networks</td>
+    <td>[New!!! Slides Basic Concepts of graphs](https://www.dropbox.com/scl/fi/civx24buoaxax8tqebfnd/BasicGraphConcepts.zip?rlkey=1fr1m8fzt8xclm772g8kejxbo&dl=1)<br>
+    [New!!! There Central Quantities Networkx (Google Colab)](https://www.dropbox.com/scl/fi/592usuyg08ha3wqsloecj/ThreeCentralQuantities.ipynb?rlkey=ubxywf6zjvirr7bkaxhpm710j&dl=1)<br>
+    [New!!! Slides Centrality Measures ](https://www.dropbox.com/scl/fi/bizhw3t4ujif070q6192n/CentralityMeasures.zip?rlkey=yjfmge85wl6vmc02mhc05petk&dl=1) <br>
+        
+   </td>
+    <td>Filippo Menczer <br>
+        [Centrality Measures](https://www.dropbox.com/s/y5qzucvo2hlns7t/FilippoModelsColab.ipynb?dl=1) <br>
+        Erika Legara: <br>
+        [Centrality Measures](https://www.dropbox.com/s/uju9ffm9xiva2uh/LegaraModelsColab.ipynb?dl=1)
+        </td>
+<td>Reading Material:<br>
+  [Simple properties of Graphs](https://www.dropbox.com/s/4pp0qx3m2gxx2vk/AtlasSimpleProperties.pdf?dl=1)<br>
+  [Centralities of a Graph](https://www.dropbox.com/s/2m44l56q0ohbl9i/AtlasCentrality.pdf?dl=1)<br>
+  Videos:<br>
+  [Andrew Beveridge Basic Centrality Measures (15 min)](https://www.youtube.com/watch?v=uM8USKnYiig&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=2)<br>
+  [Algebraic Centrality Measures (11 min)](https://www.youtube.com/watch?v=mOFkbS2vMRU&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=4)<br>
+  Case studies:<br>
+  0. In video: [Centrality in a Dolphin Network (3 min)](https://www.youtube.com/watch?v=f2kPiD8cjy4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=3)<br>
+  1. Local: [Local Measures Medici Family](https://www.dropbox.com/s/gutut6uhttqqeku/CaseStudy.zip?dl=1)<br>
+  2. Global [Global Measures Edward Platt](https://www.dropbox.com/s/cgefl7tlicj1d9u/CaseStudyGlobal.zip?dl=1)<br>
+ </td>
+ </tr>
+ 
+ <tr>
+    <th>Week 4 February 28 </th>
+    <td>Global Measures of networks</td>
+    <td>  [New!!! Slides Global Measures of a Network](https://www.dropbox.com/scl/fi/7wvd7azh9ouiqp3j28k2u/GlobalMeasures.zip?rlkey=e50ckedby8pstxsky925yviyi&dl=1)
+     <br>
+          </td>
+  <td>
+  [Simple properties of Graphs](https://www.dropbox.com/s/4pp0qx3m2gxx2vk/AtlasSimpleProperties.pdf?dl=1)<br>
+  [Centralities of a Graph](https://www.dropbox.com/s/2m44l56q0ohbl9i/AtlasCentrality.pdf?dl=1)<br>
+  Videos:<br>
+  [Andrew Beveridge Basic Centrality Measures (15 min)](https://www.youtube.com/watch?v=uM8USKnYiig&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=2)<br>
+  [Algebraic Centrality Measures (11 min)](https://www.youtube.com/watch?v=mOFkbS2vMRU&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=4)<br>
+  Case studies:<br>
+  0. In video: [Centrality in a Dolphin Network (3 min)](https://www.youtube.com/watch?v=f2kPiD8cjy4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR&index=3)<br></td>
+  <td>
+  1. Local: [Local Measures Medici Family](https://www.dropbox.com/s/gutut6uhttqqeku/CaseStudy.zip?dl=1)<br>
+  
+  2. Global [Global Measures Edward Platt](https://www.dropbox.com/s/cgefl7tlicj1d9u/CaseStudyGlobal.zip?dl=1)<br>
+    Videos:<br>
+    Network Models:<br>
+    [Excellent!!! The Promise of Network Science, 2017](https://www.youtube.com/watch?v=qB8YnTpCzEU)<br>
+    Erdos-Reny1 Model: <br>
+    [Rand and Small World Networks Leskovec 26:45](https://www.youtube.com/watch?v=erMiEFGRsIk&list=PL-Y8zK4dwCrQyASidb2mjj_itW2-YYx6-&index=2)<br>
+    [Random Networks Lada Adamic](https://www.youtube.com/watch?v=3PxteAgVf0o)<br>
+    Watts-Strogatz Model: <br>
+    [Small Worlds Melanie Mitchell](https://www.youtube.com/watch?v=cOKaqzk1iBM&t=155s)<br>
+    [Small World Networks Andrew Beveridge](https://www.youtube.com/watch?v=Pnh6Kg4nYbE&t=447s)<br>
+    [Small Worlds Verisatium](https://www.youtube.com/watch?v=TcxZSmzPw8k)<br>
+    Barabasi-Albert model:<br>
+    [Scale Free Distrib Mel. Mitchell P1](https://www.youtube.com/watch?v=pYMsI-8GsxI&list=PLF0b3ThojznRyDQlitfUTzXEXwLNNE-mI&index=125)<br>
+    [Scale Free Distrib Mel. Mitchell P2](https://www.youtube.com/watch?v=2rxp24JxtIs&list=PLF0b3ThojznRyDQlitfUTzXEXwLNNE-mI&index=126)<br>
+    [Preferential Model Katherine Carl](https://www.youtube.com/watch?v=V0lsI1n4QnE&t=298s)<br> 
+    Generative  Models:<br>
+    [Leskovec ](https://www.youtube.com/watch?v=OhjXpYIo9h4&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn&index=41)</td>
+  </tr>
+  
+  
+   <tr>
+    <th>Week 5 March 6 </th>
+    <td>Network Models Part 1</td>
+    <td>  [!!New!!! Slides Network Models](https://www.dropbox.com/scl/fi/qlw5oesnepem1orpc46lt/NetworkModels.zip?rlkey=uwqcrwnuw47l5keb8k3ci7vp9&dl=1) <br>
+          </td>
+    <td>Filippo Menczer : <br>
+        [ Network Models ](https://www.dropbox.com/s/y5qzucvo2hlns7t/FilippoModelsColab.ipynb?dl=1) <br>
+        Erika Legara: <br>
+        [Network Models](https://www.dropbox.com/s/uju9ffm9xiva2uh/LegaraModelsColab.ipynb?dl=1)
+        </td>
+    <td>Reading material: <br>
+    [Filippo Menczer Network Models](https://www.dropbox.com/s/b7m3er9slgt9rvt/FilippoMenczerNetworkModels.pdf?dl=1) <br>
+    [Van Steen Random Models](https://www.dropbox.com/s/iddopbqnc7wyrn7/VanSteenNetworkModels.pdf?dl=1) <br>
+    Labs: <br>
+    [Models  Netlogo Labs](https://www.dropbox.com/s/8qsu3y55f9hpl2i/ModelosNetlogoDeRedesParaMostrarEnClase.zip?dl=1)<br>
+    Videos:<br>
+    Network Models:<br>
+    [Excellent!!! The Promise of Network Science, 2017](https://www.youtube.com/watch?v=qB8YnTpCzEU)<br>
+    Erdos-Reny1 Model: <br>
+    [Rand and Small World Networks Leskovec 26:45](https://www.youtube.com/watch?v=erMiEFGRsIk&list=PL-Y8zK4dwCrQyASidb2mjj_itW2-YYx6-&index=2)<br>
+    [Random Networks Lada Adamic](https://www.youtube.com/watch?v=3PxteAgVf0o)<br>
+    Watts-Strogatz Model: <br>
+    [Small Worlds Melanie Mitchell](https://www.youtube.com/watch?v=cOKaqzk1iBM&t=155s)<br>
+    [Small World Networks Andrew Beveridge](https://www.youtube.com/watch?v=Pnh6Kg4nYbE&t=447s)<br>
+    [Small Worlds Verisatium](https://www.youtube.com/watch?v=TcxZSmzPw8k)<br>
+    Barabsi-Albert model:<br>
+    [Scale Free Distrib Mel. Mitchell P1](https://www.youtube.com/watch?v=pYMsI-8GsxI&list=PLF0b3ThojznRyDQlitfUTzXEXwLNNE-mI&index=125)<br>
+    [Scale Free Distrib Mel. Mitchell P2](https://www.youtube.com/watch?v=2rxp24JxtIs&list=PLF0b3ThojznRyDQlitfUTzXEXwLNNE-mI&index=126)<br>
+    [Preferential Model Katherine Carl](https://www.youtube.com/watch?v=V0lsI1n4QnE&t=298s)<br> 
+    Generative  Models:<br>
+    [Leskovec ](https://www.youtube.com/watch?v=OhjXpYIo9h4&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn&index=41)
+  </tr>
+  <tr> 
+    <th>Week 6 March 13</th>
+    <td>Network Models part 2</td>
+    <td>[Slides Network Models](https://www.dropbox.com/s/ckozr6cr5m8klkv/NetworkModels.zip?dl=1) </td>
+    <td>Erika Legara : <br>
+        [Exploring Social Distancing](https://www.dropbox.com/s/kj01ac79no2ywjy/Legara%20Exploring%20Social%20Distancing.ipynb?dl=1) <br> 
+        [Vaccination Strategies](https://www.dropbox.com/s/wibzjkmmrjj4n0q/Legara%20Vaccination%20Strategies.ipynb?dl=1)<br>
+        </td>
+    <td> Reading material: <br>
+    [Michel Coscia Spreading Processes](https://www.dropbox.com/s/r0b0ht993lpsjrc/SpreadingProcessesMichelCoscia.pdf?dl=1)<br>
+    [Filippo Menczer Diffusion in Networks](https://www.dropbox.com/s/iaewb9i8qh7kr06/Filippo%20Menczer%20Diffusion.pdf?dl=1) <br>
+    Videos:<br>
+    Diffusion: <br>
+    [Lada Adamic Proceses in Networks (12 min)](https://www.youtube.com/watch?v=648EcDSCY34)<br>
+    [Social Networks diffusion](https://www.youtube.com/watch?v=J1Jsh1JvztQ)<br>
+    [Network Diffusion and Contagion](https://www.youtube.com/watch?v=bTXUJQhEqL0)<br>
+    [Matthew Jackson Diffusion in Social and Economic Networks](https://www.youtube.com/watch?v=M45r47uHgyo)<br>
+    Labs: <br>
+    [Difussion Netlogo Labs](https://www.dropbox.com/s/el4pzco33cuk1zq/LabsDifusi%C3%B3n.zip?dl=1) <br> </td>
+ </tr>
+ 
+ <tr> 
+    <th>Week 7 March 20</th>
+    <td> Diffusion and Vulnerabiliy</td>
+    <td>[Diffusion and Vulnerability](https://www.dropbox.com/s/nek5qlllht7v4ct/DiffusionVulnerability.zip?dl=1) </td>
+   <td>  Reading material: <br>
+    [To do](https://www.dropbox.com/s/hpn89b74y6ztfb0/Albert-Laszlo%20Barabasi%20Robustness.pdf?dl=1)<br>
+    Videos:<br>
+   Node Embeddings: <br>
+    [Katherine Carl Network Robustness](https://www.youtube.com/watch?v=TYod3lGidPo)<br>
+    [Network Robustness and Resilience](https://www.youtube.com/watch?v=_ztNkmDg0mw)<br>
+    Labs: <br>
+    [Difussion Netlogo Labs](https://www.dropbox.com/s/el4pzco33cuk1zq/LabsDifusi%C3%B3n.zip?dl=1) <br> </td>
+    <td> </td>
+ </tr>
+  <tr> 
+    <th>Holy Week</th>
+    <td>  ![](https://www.dropbox.com/scl/fi/sw3c5k1rrsio1agfxwnxb/LogoEciUniversidad.jpg?rlkey=qp4srpwahuzousryc7durc0vf&dl=1){width=40%}   </td>
+    <td>   ![](https://www.dropbox.com/scl/fi/sw3c5k1rrsio1agfxwnxb/LogoEciUniversidad.jpg?rlkey=qp4srpwahuzousryc7durc0vf&dl=1){width=40%}    </td>
+    <td>   ![](https://www.dropbox.com/scl/fi/p5ll2q3jiwci7c1879bbg/LogoUnal.PNG?rlkey=y9pwx183m5cfrq5kmknrmvd70&dl=1){width=90%}  </td>
+    <td>![](https://www.dropbox.com/scl/fi/p5ll2q3jiwci7c1879bbg/LogoUnal.PNG?rlkey=y9pwx183m5cfrq5kmknrmvd70&dl=1){width=90%}</td>
+ </tr>
+ 
+ 
+  <tr> 
+    <th>Week 8 April 3 </th>
+    <td>Mini Project Presentations Expert Guest: Andy Dominguez </td>
+   <td> Data </td>
+    <td>Reading Material: <br>
+    <br>
+    [Mark Newman Assortativity](https://www.dropbox.com/s/1ux6s88komd3vv6/Newman%20Assortativity.pdf?dl=1)<br>
+    [John Kleinberg Mesage Passing (to do)](https://www.dropbox.com/s/303vyrqarlepo3z/Kleinberg%20The%20Link%20Prediction%20Problem.pdf?dl=1)<br>
+    [Web Page Node Classification (to do)](https://www.geeksforgeeks.org/link-prediction-predict-edges-in-a-network-using-networkx/)<br>
+    Videos:<br>
+    [Classic Graph ML Tasks]()<br>
+    Labs: <br>
+    [Robustness Netlogo Labs](https://www.dropbox.com/s/8memuuglw0ldpw5/LabsAtaques.zip?dl=1)</td>
+    <td> 
+    Labs: <br>
+    
+  [Netlogo Lab Sancho](https://www.dropbox.com/s/v3zaoy5vrlyspy9/Complex-Networks-Toolbox-master.zip?dl=1)</td>
+ </tr>
+  
+ 
+ <tr>
+    <th>Week 9 April 10</th>
+    <td>Communities in Networks </td>
+    <td>[¡¡¡¡New!!!! Slides Homophily and Communities](https://www.dropbox.com/s/n7yl2sychb2dizr/HomophilyCommunities.zip?dl=1)<br>
+        [Slides Communities Filippo Menczer](https://www.dropbox.com/s/vs1a7pdjqw1f3xu/Communities.pptx?dl=1) <br>
+        [Slides Communities Leskovec](https://www.dropbox.com/s/bl5pmeq4xgcsv8x/13-communities.pptx?dl=1) </td>
+    <td>Filippo Menczer :<br>
+        [Partitions and Communities](https://www.dropbox.com/s/bz01u3enrpjyhz0/CommunitiesFilippo.ipynb?dl=1)
+         </td>
+    <td>Reading material: <br>
+    [Filippo Menczer Communities](https://www.dropbox.com/s/vrw7p3p9f9retqg/Filippo%20Menczer%20Communities.pdf?dl=1) <br>
+    Videos: <br>
+    [Leskovec Community Structure in Networks 2019](https://www.youtube.com/watch?v=Q7CHFo8UdPU&list=PL-Y8zK4dwCrQyASidb2mjj_itW2-YYx6-&index=4)<br>
+    [Leskovec Community Detection in Networks 2021](https://www.youtube.com/watch?v=KXi4ha79o3s&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn&index=37)<br>
+    [Leskovec Network Communities 22 min 2021](https://www.youtube.com/watch?v=mJQrtXZT5pw)<br>
+    [Jure Leskovec Louvain Algorithm](https://www.youtube.com/watch?v=0zuiLBOIcsw&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn&index=39)<br>
+    [Jure Leskovec Detecting Overlapping Communities](https://www.youtube.com/watch?v=SHcVHrsgj8w&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn&index=40)<br>
+    [Beveridge: Modulatity and the Louvain Method](https://www.youtube.com/watch?v=QfTxqAxJp0U)<br>
+    Labs: <br>
+        [ Netlogo Lab Sancho](https://www.dropbox.com/s/v3zaoy5vrlyspy9/Complex-Networks-Toolbox-master.zip?dl=1) </td>
+ </tr>
+ </tr>
+ <tr>
+    <th>Week 10 April 17</th>
+    <td>Project Prototype Presentations</td>
+    <td>Data</td>
+    <td>Data</td>
+    <td>Data</td>
+  </tr>
+  <tr> 
+    <th>Week 11 April 24</th>
+    <td>Deep Learning with Graphs Part One</td>
+    <td>Data</td>
+    <td>Data</td>
+    <td>Data</td>
+  </tr>
+  <tr>  
+    <th>Week 12 May 8</th>
+    <td> Deep learning with graphs Part Two</td>
+  
+ <td>Data</td>
+    <td>Data</td>
+    <td>Data</td>
+  </tr>
+  <tr>  
+    <th>Week 13 May 10 </th>
+    <td> Final Project Presentations</td>
+    <td>  ---  </td>
+    <td>  ---  </td>
+    <td>  ---  </td>
+ </tr>
+</table>
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+
+
+ 
+## Books
+
+
+<center>  ![](https://www.dropbox.com/s/45azfa08nzapudk/Knowledge.PNG?dl=1){width=15%}  </center>
+
+
+
+<br></br>
+<br></br>
+
+### Reference Books
+
+1. [Filippo Menczer, A first course in Network Science](https://www.dropbox.com/s/2wlw8s3509ivyd6/Filippo%20Menczer%2C%20Santo%20Fortunato%2C%20Clayton%20A.%20Davis%20-%20A%20First%20Course%20in%20Network%20Science-Cambridge%20University%20Press%20%282020%29.pdf?dl=1)
+
+2. [Michelle Coscia, Atlas for the network Scientist](https://www.dropbox.com/s/drnlweij592bqgz/sna_book.pdf?dl=1)
+
+3. [Albert Lazslo Barabasi, Network Science](http://networksciencebook.com/)
+
+### Additional Books
+
+1.  [Mark Newman: Networks an Introduction](https://www.dropbox.com/s/s5od0hm02pw6yw8/Mark%20Newman%20-%20Networks-Oxford%20University%20Press%20%282018%29.pdf?dl=1)
+
+2.  [Klienberg, Easley Networks Crowds and Markets](https://www.dropbox.com/s/wfjpbubt6cuae3l/KleinbergNetworks%2C%20Crowds%2C%20and%20Markets.pdf?dl=1)
+
+3.  [Van Steen,Graph Theory and Complex Networks](https://www.dropbox.com/s/ur6685tqwwq2jt7/van%20Steen%20-%20Graph%20Theory%20and%20Complex%20Networks_%20An%20Introduction.pdf?dl=1)
+
+4.  [Dan Centola , How Behaviour Spreads](https://www.dropbox.com/s/wq8as0z60m0azua/Centola%20Behaviour.pdf?dl=1)
+
+5.  [Duncan Watts, Six Degrees of Separation](https://www.dropbox.com/s/pnnndn27i6x5v7m/Duncan%20J.%20Watts%20-%20Six%20Degrees_.pdf?dl=1)
+
+6.  [John Scott, Social Network Analysis](https://www.dropbox.com/s/wazbwtf7lwzmfqs/John%20Scott%20-%20Social%20Network%20Analysis-Sage%20Pubns%20Ltd%20%282017%29.pdf?dl=1)
+
+7.  [Barabasi,Watts,Newman The Structure and Dynamics of Networks](https://www.dropbox.com/s/c1rnugm5m1kapud/BarabasiWattsNewmanNetworks.pdf?dl=1)
+
+8. [Goodfellow Ian, Bengio Yosfua, Deep Learning](https://www.deeplearningbook.org/)
+
+### Disclosure Books(Libros de Divulgación)
+
+1.  [Christakis,Fowler Conectados](https://www.dropbox.com/s/2y4d72jo4nqr8hp/%28Pensamiento%29%20Nicholas%20A.%20Christakis%20%26%20James%20H.%20Fowler%20-%20Conectados-Taurus%20%282010%29.pdf?dl=1)
+
+2.  [Matthew Jackson, the human network](https://www.dropbox.com/s/mosy08rlc7tpmie/Matthew%20O.%20Jackson%20-%20The%20Human%20Network_%20How%20Your%20Social%20Position%20Determines%20Your%20Power%2C%20Beliefs%2C%20and%20Behaviors-Pantheon%20Books%20%282019%29.pdf?dl=1)
+
+3.  [James Surowiecki, The Wisdom of Crowds](https://www.dropbox.com/s/gm794cf884dy8rd/James%20Surowiecki%20-%20The%20Wisdom%20of%20Crowds-Anchor%20%282005%29.pdf?dl=1)
+
+4.  [Mark Buchanan, Nexus](https://www.dropbox.com/s/zlzqzepoo7y5jmb/Mark%20Buchanan%20-%20Nexu.pdf?dl=1)
+
+5.  [Barabasi, Linked](https://www.dropbox.com/s/mre7h7nurlbnq6s/Barabasi%20Linked_%20The%20New%20Science%20of%20Networks.pdf?dl=1)
+
+
+### Master Thesis
+
+[Knetch, Friendship selection and Friendship Influence](https://www.dropbox.com/s/7sebmzk0a5ya887/TesisKnecht.pdf?dl=1)
+
+[Zhuo Chen, Agent Based model For Diffusion in Networks](https://www.dropbox.com/s/cu8ys0pt797xaf8/ZhuoChen_Thesis.pdf?dl=1)
+
+[Contreras, Detección de Comunidades en Redes](https://www.dropbox.com/s/3um36k5cl5jcfmr/Valparaiso2015.pdf?dl=1)
+
+
+### Networks in a Nutshell
+
+[Borgatti, Network Analysis in the Social Sciences](https://www.dropbox.com/s/3euf3kag12pufjc/Borgatti%20S.%20et%20al.%20%282009%29%20Network%20Analysis%20in%20the%20Social%20Sciences.pdf?dl=1)
+
+[NetSciEd, Network Literacy](https://www.dropbox.com/s/6h4n4hb0whh7cpe/Network-Literacy-high-res.pdf?dl=1)
+
+[Newman, Structure of Complex Networks](https://www.dropbox.com/s/qfzvnyy7be0de1z/Newman%20Strucuture%20Complex%20networks.pdf?dl=1)
+
+
+### Books that use NetworkX
+
+[Edward Platt, Network Science with Python](https://www.dropbox.com/s/9yo3i8n5ljv33dt/Edward%20L.%20Platt%20-%20Network%20Science%20with%20Python%20and%20NetworkX%20Quick%20Start%20Guide_%20Explore%20and%20visualize%20network%20data%20effectively-Packt%20Publishing%20%282019%29.pdf?dl=1)
+
+[Dmitry Zynoviev, Complex Network Analysis](https://www.dropbox.com/s/84hpigjk4evf3r1/Dmitry%20Zinoviev%20-%20Complex%20Network%20Analysis%20in%20Python.pdf?dl=1)
+
+[Hiroki Sayama,Modeling and Analysis of Complex Systems](https://www.dropbox.com/s/iylpt8mornj3k82/Hiroki%20Sayama%20-%20Introduction%20to%20the%20Modeling%20and%20Analysis%20of%20Complex%20Systems-Open%20SUNY%20Textbooks%20%282015%29.pdf?dl=1)
+
+[Maxsin Tsvetovat, Social Network Analysis for Startups](https://www.dropbox.com/s/2cz96cgfxlc5lgr/Maksim%20Tsvetovat%2C%20Alexander%20Kouznetsov%20-%20Social%20Network%20Analysis%20for%20Startups_%20Finding%20connections%20on%20the%20social%20web%20%20-O%27Reilly%20Media%20%282011%29.pdf?dl=1)
+
+### Books that use iGraph
+
+[Douglas Luke, A user Guide to network Analysis in R](https://www.dropbox.com/s/8e06fvkh1ujq9kg/Douglas%20A.%20Luke%20-%20A%20User%27s%20Guide%20to%20Network%20Analysis%20in%20R-Springer%20%282015%29.pdf?dl=1)
+
+[Katherine Ognyanova, Network Analysis and Visualization with R](https://www.dropbox.com/s/i5mnoifliihpuj6/Katherine%20Ognyanova.%20-%20Network%20Analysis%20and%20Visualization%20with%20R%20and%20igraph.pdf?dl=1)
+
+[Kolaczyk, Statistical Analysis of network Data](https://www.dropbox.com/s/856ka41kt716utz/KolaczykStatistical%20Analysis%20Of%20Network%20Data%20With%20R.pdf?dl=1)
+
+
+
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+
+
+
+
+
+## Articles
+
+<center> ![](https://www.dropbox.com/s/vjmcjd50o965gek/Imagen3.png?dl=1){width=20%} </center>
+
+
+### 0. General
+
+[Butts, Revisiting the Foundations of network analysis](https://www.dropbox.com/s/xql97clp0i48bc7/butts2009.pdf?dl=1)
+
+### 1. Classical
+
+1.  [Watts, Strogatz : Collective Dynamics of small world Networks,1998](https://www.dropbox.com/s/kbklhcxixkgnaut/NAture_Watts_Strogatz.pdf?dl=1)
+
+2.  [Albert Barabasi, Error and Attack Tolerance of Complex Networks,1999](https://www.dropbox.com/s/icfcs0ofw0eazik/BarabasiErrorAndAttack.pdf?dl=1)
+
+3.  [Bocatelli,: Complex Networks, Structure and Dynamics](https://www.dropbox.com/s/9o2u09crc39wxy6/BocatelliNetworksStructureDynamics.pdf?dl=1)
+
+4. [Moreno, Sociometry in the Classrooom, 1943](https://www.dropbox.com/s/2vsw3fgj3jye2qa/1943-SociometryClasroomJakobMoreno.pdf?dl=1)
+
+5. [Mark Granovetter, The Strength of Weak Ties, 1973](https://www.dropbox.com/s/nyfv877lodd98aw/1973-GranoVetter-The%20Strength%20of%20Weak%20Ties.pdf?dl=1)
+
+6. [Lada Adamic, The Small World Web, 1999](https://www.dropbox.com/s/sreahtgtef0llj9/1999-AdamicTheSmallWorldWeb99.pdf?dl=1)
+
+7. [Nicholas Christakis, The Spread of Obesity, 2007](https://www.dropbox.com/s/hvlh5g9oa51sezj/2007-ChristakisSpreadOfObesity.pdf?dl=1)
+
+8.  [Alexander Vespignani Epidemic Spreading in Scale Free Networks](https://www.dropbox.com/s/b42cn7yxym1elt7/PastorVespignaniEpidemicsScaleFree.pdf?dl=1)
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+
+
+
+### 2. Social Networks
+
+1.  [Christakis, Sensors for Early Detection](https://www.dropbox.com/s/8v9ybdczubnb5b2/SensorsForEarlyDetection.pdf?dl=1)
+
+2. [Jakob Moreno: Sociology in the classroom](https://www.dropbox.com/s/l6b82a7l5ty0mhh/moreno1943.pdf?dl=1)
+
+3.  [Kleinberg : The link Prediction problem for social networks](https://www.dropbox.com/s/o4fwmooetocx4sj/KleinbergLinkPrediction.pdf?dl=1)
+
+### Researchers Articles 
+
+### 1.  Mark Newman Articles
+
+
+1.  [Mathematics of networks](https://www.dropbox.com/s/pd4igufdnujmiqe/Newman%20Mathematics%20of%20Networks.pdf?dl=1)
+
+2.  [The structure and function of networks](https://www.dropbox.com/s/v2xsjx131rfd81f/Newman%20Strucutre%20Function.pdf?dl=1)
+
+3.  [The structure and function of complex networks](https://www.dropbox.com/s/50ikivxswsarwu3/Newman%20Strucuture%20Complex%20networks.pdf?dl=1)
+
+4. [Luseeau Newman : Identifying the role that animal plays in their social networks](https://www.dropbox.com/s/o5efdz1v8e3eu0l/DelfinesNewmanLusseau.pdf?dl=1)
+
+### 2. Alex Bavelas Articles (MIT)
+
+1.  [Communication patterns in Task Oriented Groups, 1950](https://www.dropbox.com/s/7frwulme6liz9f4/bavelas1950.pdf?dl=1)
+
+2.  [Experiments on the Alteration of Group Structures, 1965](https://www.dropbox.com/s/hpjgont0hp76cbj/bavelas1965.pdf?dl=1)
+
+3.  [Un ejercicio didáctico sobre transmisión de Información](https://www.dropbox.com/s/sjkfjzfp6yrxfzh/bavelas1967.pdf?dl=1)
+
+
+### 3. Jennifer Neville Articles
+
+[Data Mining in Social Networks](https://www.dropbox.com/s/z4znrhckxzdhpxp/Data%20Mining%20in%20Social%20Networks.pdf?dl=1)
+
+[Dependency Networks for Relational Data](https://www.dropbox.com/s/91n31wxnesvdz10/Dependency%20Networks%20for%20Relational%20Data.pdf?dl=1)
+
+[Link Strength in Social Networks](https://www.dropbox.com/s/ltzrogq5467bpi5/LinkStrengthSocialNetworks.pdf?dl=1)
+
+[Relational Dependency networks](https://www.dropbox.com/s/52xhcsi8j82aw16/RelationalDependencyNetworks.pdf?dl=1)
+
+[Relational Knowledge to Discover Frauds](https://www.dropbox.com/s/zd4eiuhigy4biem/RelationalKnowledgeToDiscoverFrauds.pdf?dl=1)
+
+
+
+
+
+
+
+### 4. Difussión in Networks
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+## Online Courses
+
+
+<center>  ![](https://www.dropbox.com/s/3wjzhgvay5v9tv0/Imagen4.png?dl=1){width=20%}  </center>
+
+
+#### Network Science
+
+[John Mcculloch, Introduction to Social Media Analytics](https://www.youtube.com/watch?v=5Hw1OmWOLA8&list=PLnMaaCilahfY6aBe6UFJJsZ_xvYscPJiW&index=1)
+
+[Kleingberg, Networks ,Crowds and Markets](https://learning.edx.org/course/course-v1:CornellX+INFO2040x+1T2016/home)
+
+[   Matthew Jackson, Economic Networks Coursera (Free)](https://www.coursera.org/learn/social-economic-networks)
+
+[Aaron Clauset, Network Science ](https://aaronclauset.github.io/courses/5352/)
+
+[ Andrew Beveridge, Short Course](https://www.youtube.com/watch?v=hNENd_OMlL4&list=PLlWULwPzrppXKYVyRxFt0YsgIDXiBDPNR)
+
+[Paul Ribeiro, Network Science 2022, Porto University](https://www.dcc.fc.up.pt/~pribeiro/aulas/ns2122/index.html)
+
+[Hiroki Sayama, Advanced Topics in Network Science 2021](https://bingweb.binghamton.edu/~sayama/SSIE641/)
+
+[Social and Economic networks](https://www.coursera.org/learn/social-economic-networks/home/week/1)
+
+[Curso network Science lada Adamic](https://open.umich.edu/find/open-educational-resources/information/si-508-networks-theory-application)
+
+[Curso network science Denis Helic](https://courses.isds.tugraz.at/dhelic/netsci/index.html)
+
+[Curso network science Leonid Zukhov](https://www.youtube.com/watch?v=1T5-BG6yngM&list=PLriUvS7IljvkGesFRuYjqRz4lKgodJgh2)
+
+
+#### Social Networks
+
+[Dan Centola, Network Dynamics of Social Behaviour](https://ndg.asc.upenn.edu/online-course/online-course/)
+
+[Jennifer Golbeck, INST663 Socila Media Analysis, Maryland College park](http://www.cs.umd.edu/~golbeck/INST633o/index.shtml)
+
+#### Machine Learning for Graphs
+
+[Jure Luskovec, Machine learning for graphs, Stanford University 2019](http://snap.stanford.edu/class/cs224w-2020/)
+
+
+#### Complex systems
+
+
+[ Peter Sheridan, Complex systems Vermont University](http://pdodds.w3.uvm.edu/)
+
+
+[Remy Cazabet, Complex Networks-Network Science](http://cazabetremy.fr/Teaching/CN/ComplexNetworks.html)
+
+[Mark newman, Complex Systems 2017](http://websites.umich.edu/~mejn/courses/2017/cscs535/index.html)
+
+
+
+#### Machine learning
+
+[Andrew Ng, Machine Learning Full Course](https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU)
+
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+
+
+
+## Videos
+
+
+<center>  ![](https://www.dropbox.com/s/uxi30omg63v9fy2/Imagen6.png?dl=1){width=20%}  </center>
+
+
+### Informative Videos
+
+1.  [Flight Patterns](https://www.youtube.com/watch?v=ttH7sQ48n5k)
+
+2.  [ Alan Turing Institute](https://www.youtube.com/watch?v=L6CqqlILBCI&t=4788s)
+
+3.  [Nicholas Christakis Social Networks](https://www.youtube.com/watch?v=wadBvDPeE4E)
+
+4.  [Documental the promise of network science 2017](https://www.youtube.com/watch?v=qB8YnTpCzEU)
+
+5.  [Bernie Hogan Alan Turing Inst Network Analysis](https://www.youtube.com/watch?v=i__0cG4ijrI&t=3690s)
+
+6.  [The Human Network Matthew Jackson Google Talks](https://www.youtube.com/watch?v=2C5jrYlVHJQ)
+
+7.  [Conference Raissa di Souza Santafe Institute](https://www.youtube.com/watch?v=a6U7ksiu10Y&t=2s)
+
+8.  [Dan Centola Complex Contagions Santafé Institute](https://www.youtube.com/watch?v=o0fDcUJMzkI&t=294s)
+
+9.  [Mark Newman Conference in  Alan turing Institute](https://www.youtube.com/watch?v=gPSt-xs_zWQ&list=PLhUVsjVWqglS5Pnz04SbRticB4mWgu3Jk&index=8)
+
+10. [Mark Newman Conference in Michigan about physics of complex systems](https://www.youtube.com/watch?v=2L64AhoKamE)
+
+
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+## Internet Links
+
+
+<center> ![](https://www.dropbox.com/s/z82rsbo22r31o45/Imagen10.png?dl=1){width=20%} </center>
+
+
+### Interactive Activities
+
+ ¡¡¡¡ New Complexity Explorables !!!!!! (Nicky case ):<br>
+
+
+Graphs:<br>
+
+[Interactive Graph Theory](https://d3gt.com/)<br>
+
+Networks: <br>
+
+[The Wisdom and Madness of Crowds](https://ncase.me/crowds/)<br>
+[Opinion Dynamics](https://www.complexity-explorables.org/explorables/echo-chambers/)<br>
+
+[Random Walks](https://www.complexity-explorables.org/explorables/anomalous-itinerary/)<br>
+[Random Walks and Diffusion](https://www.complexity-explorables.org/explorables/albert-and-carl-friedrich/)<br>
+
+[The Giant Component](https://www.complexity-explorables.org/explorables/the-blob/)<br>
+[!!New!!! Going Critical](https://meltingasphalt.com/interactive/going-critical/)<br>
+[Network Growth (Clustershuck)](https://www.complexity-explorables.org/explorables/clustershuck/)<br>
+[Communities in Weighted Networks](https://www.complexity-explorables.org/explorables/jujujajaki-networks/)
+[Preferential Attachment](https://www.complexity-explorables.org/explorables/knitworks/)<br>
+
+[The SIRS Epidemic Model](https://www.complexity-explorables.org/explorables/epidemonic/)<br>
+[Network Vaccination](https://www.complexity-explorables.org/explorables/facebooked-flu-shots/)<br>
+[Going Critical](https://meltingasphalt.com/interactive/going-critical/)<br>
+[OutBreak](https://meltingasphalt.com/interactive/outbreak/)<br>
+[Corona Simulator](https://www.washingtonpost.com/graphics/2020/world/corona-simulator/)<br>
+[Making Sense of Covid19](http://www.r2d3.us/covid-19/)<br>
+
+Miscellaneous: <br>
+
+[FireFlies](https://ncase.me/fireflies/)<br>
+[Herd Immnuniy](https://www.complexity-explorables.org/explorables/i-herd-you/)<br>
+[Horde of the Flies](https://www.complexity-explorables.org/explorables/horde-of-the-flies/)<br>
+[Swarmalators](https://www.complexity-explorables.org/explorables/swarmalators/)<br>
+[The Schelling Model](https://www.complexity-explorables.org/explorables/t-schelling-plays-go/)<br>
+[Percolation on a Lattice](https://www.complexity-explorables.org/explorables/baristas-secret/)<br>
+[Parable of the Polygons](https://ncase.me/polygons/)<br>
+[Exploring Emergence](http://www.playfulinvention.com/emergence/)<br>
+<br><br><br><br>
+
+### Web Pages
+
+
+[Social Networks in Movies](https://moviegalaxies.com/)
+
+[A networked SIR Model, Animation](http://systems-sciences.uni-graz.at/etextbook/networks/sirnetwork.html)
+
+[Small Worlds Veritasium](https://www.youtube.com/watch?v=TcxZSmzPw8k&list=PLqzLNw_z6y7S31yg_2aJj3VGCohJyPe-T&index=4)
+
+[Organizational Networks](https://toreopsahl.com/datasets/#Cross_Parker)
+
+[Network Animations, NetworkPages.nl](https://www.networkpages.nl/CustomMedia/)
+
+[Networks without words Alfonso Meléndez](http://profesores.is.escuelaing.edu.co/~amelendez/RedesSinPalabras/RedesSinPalabras.html)
+
+[ Lada Adamic Web Page](http://www.ladamic.com/)
+
+[Awesome Network Analysis Francois Briatte](https://github.com/briatte/awesome-network-analysis)
+
+[Networks Demystified, Scott Wengart](https://scottbot.net/tag/networks-demystified/)
+
+[Albert-Laszlo Barabasi Network Science](https://scottbot.net/tag/networks-demystified/)
+
+[Journal of Complex networks](https://academic.oup.com/comnet)
+
+[The InterActome Atlas](http://www.interactome-atlas.org/)
+
+[Awesome Resources of Graph Neural Networks](https://github.com/GRAND-Lab/Awesome-Graph-Neural-Networks)
+
+[Petar Veličković, Graph Neural Netwok Resources (Twitter)](https://twitter.com/PetarV_93/status/1306689702020382720)
+
+[Aleska Gordic, Graph Attention Networks, pyTorch](https://github.com/gordicaleksa/pytorch-GAT)
+
+[Predicting Links in a Network with Networkx](https://www.geeksforgeeks.org/link-prediction-predict-edges-in-a-network-using-networkx/)
+
+[A Gentle Introduction to Graph Neural Networks](https://distill.pub/2021/gnn-intro/)
+
+### Network Animations
+
+[Visualising the dynamics of character networks](http://maladesimaginaires.github.io/intnetviz/)
+
+[Network Animations](https://www.networkpages.nl/CustomMedia/)
+
+
+
+<br></br> <br></br>
+
+## Datasets 
+
+
+<center> ![](https://www.dropbox.com/s/z82rsbo22r31o45/Imagen10.png?dl=1){width=20%} </center>
+
+[Social Networks](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Networks/SocialNetworks.html)
+
+[Economic Networks](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Networks/EconomicNetworks.html)
+
+
+
+[Biological Networks](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Networks/BiologicalNetworks.html)
+
+
+[Technological Networks](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Networks/TechnologicalNetworks.html)
+
+[Transportation Networks](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Networks/TransportationNetworks.html)
+
+
+
+
+
+[Other networks](http://profesores.is.escuelaing.edu.co/~amelendez/CursoPosgradoNetworkScience2023-1/Networks/OtherNetworks.html)
+
+
+<br></br><br></br>
+<br></br>
+
+## Computational Tools
+
+<br></br><br></br><br></br><br></br>
+
+<center>  ![](https://www.dropbox.com/s/gd1bhklherbdfjs/Imagen5.png?dl=1){width=20%} </center>
+<br></br><br></br><br></br><br></br>
+
+
+#### 1. Netlogo
+
+[NetLogo Web Site](https://ccl.northwestern.edu/netlogo/)
+
+
+[ NetLogo Interactive Dictionary](https://ccl.northwestern.edu/netlogo/bind/)
+
+#### 2. Networkx
+
+
+[ NetworkX Web Site](https://networkx.org/)<br>
+[Excelent Networkx Tutorial](https://www.dropbox.com/s/7p5pg6ngzy3riqq/ExcellentNetworkxTutorial.pdf?dl=1)<br>
+
+[Tutorial Hiroki Sayama](https://www.dropbox.com/s/plksx8p0wu2dj6x/TutorialSayamaNetworkx.pdf?dl=1)
+
+#### 3. Gephi
+
+[ Gephi Web Site](https://gephi.org/)
+
+[ Gephi Tutorials](https://www.youtube.com/playlist?list=PLk_jmmkw5S2BqnYBqF2VNPcszY93-ze49)
+
+[Network Analysis with Gephi](https://www.youtube.com/watch?v=WpFZmIJTjA8)
+
+#### 4. igraph
+
+
+[ igraph Web Site](https://igraph.org/)
+
+[Excellent igraph Tutorial](https://kateto.net/networks-r-igraph)
+
+## Projects
+
+#### Datasets Projects
+
+[Networks with Research Articles](https://www.dropbox.com/scl/fo/sqpdo27ons97r27wyc15s/h?rlkey=pc92muqaqphjzphug75a5q95e&dl=1)
+
+#### Projects Other Universities
+
+[Projects Jure Leskovec Course 2009](http://snap.stanford.edu/class/cs224w-2010/proj2009/)<br><br>
+<br></br><br></br><br></br>
+
+
+
+

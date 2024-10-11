@@ -1,0 +1,36 @@
+<br></br><br></br><br></br><br></br>
+
+<center>  ![](https://www.dropbox.com/s/gd1bhklherbdfjs/Imagen5.png?dl=1)  </center>
+<br></br><br></br><br></br><br></br>
+<center>
+### Computational Tools
+
+#### 1. Netlogo
+
+[NetLogo Web Site](https://ccl.northwestern.edu/netlogo/)
+
+
+[ NetLogo Interactive Dictionary](https://ccl.northwestern.edu/netlogo/bind/)
+
+#### 2. Networkx
+
+
+[ NetworkX Web Site](https://networkx.org/)
+
+#### 3. Gephi
+
+[ Gephi Web Site](https://gephi.org/)
+
+[ Gephi Tutorials](https://www.youtube.com/playlist?list=PLk_jmmkw5S2BqnYBqF2VNPcszY93-ze49)
+
+[Network Analysis with Gephi](https://www.youtube.com/watch?v=WpFZmIJTjA8)
+
+#### 4. igraph
+
+
+[ igraph Web Site](https://igraph.org/)
+
+[Excellent igraph Tutorial](https://kateto.net/networks-r-igraph)
+</center>
+
+<br></br><br></br><br></br><br></br>

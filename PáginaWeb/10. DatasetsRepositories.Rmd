@@ -1,0 +1,22 @@
+
+<center> ![](https://www.dropbox.com/s/z82rsbo22r31o45/Imagen10.png?dl=1) </center>
+
+
+### Datasets (NetworkSets) Repositories
+
+1. [Boulder Colorado Complex Networks](https://icon.colorado.edu/#!/)
+
+2. [Konect, Koblenz Network Collection]( http://konect.cc/)
+
+3. [Stanford Large Network Dataset Collection](http://snap.stanford.edu/data/)
+
+4. [Datasets del Curso Cs224w Analysis of Networks, Jure Leskovec](http://snap.stanford.edu/class/cs224w-2018/data.html)
+
+5. [Datasets Libro Wasserman Faust, Social Network Analysis 1994](https://www.dropbox.com/s/4eihxarwduiwj81/WassermanFaust.zip?dl=1)
+
+6. [NetzSchlesuder Network Repository](https://networks.skewed.de/)
+
+7. [Largest Repository, NetworkRepository](https://networkrepository.com/)
+
+<br></br> <br></br>
+

@@ -1,0 +1,30 @@
+<br></br><br></br><br></br><br></br>
+
+<center>  ![](https://www.dropbox.com/s/gd1bhklherbdfjs/Imagen5.png?dl=1)  </center>
+<br></br><br></br><br></br><br></br>
+<center>
+### Herramientas Computacionales
+
+#### 1. Netlogo
+
+[Sitio Web NetLogo](https://ccl.northwestern.edu/netlogo/)
+
+
+[Diccionario Interactivo NetLogo](https://ccl.northwestern.edu/netlogo/bind/)
+
+#### 2. Networkx
+
+
+[Sitio Web NetworkX](https://networkx.org/)
+
+#### 3. Gephi
+
+[Sitio Web Gephi](https://gephi.org/)
+
+[Tutoriales Gephi](https://www.youtube.com/playlist?list=PLk_jmmkw5S2BqnYBqF2VNPcszY93-ze49)
+
+#### 4. igraph
+
+
+[Sitio Web igraph](https://igraph.org/)
+</center>
