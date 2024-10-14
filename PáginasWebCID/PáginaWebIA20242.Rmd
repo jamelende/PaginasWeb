@@ -1,0 +1,393 @@
+---
+title: ''
+output:
+  html_document:
+    theme: cerulean
+    toc: no
+  pdf_document:
+    toc: no
+date: ''
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: 100px;
+  margin-right: auto;
+}
+</style>
+
+---
+title: <center>   </center>
+output: html_document
+---
+
+
+<center> ![](https://www.dropbox.com/scl/fi/p5ll2q3jiwci7c1879bbg/LogoUnal.PNG?rlkey=y9pwx183m5cfrq5kmknrmvd70&dl=1){width=25%} </center> <br>
+
+<center> <h1>  Inteligencia  Artificial  para Ciencias Sociales </h1> </center>
+
+<br> </br>
+<br> </br>
+
+
+<center> ![](https://www.dropbox.com/scl/fi/yxo9qhr7xpnxuek9x63q2/arn.gif?rlkey=avsigxwm9ls38cdrnx2xl03tw&dl=1){width=35%} </center>
+
+<br> </br>
+<br> </br>
+
+<center> <h1> Curso de Extensión: Martes,Jueves 6-10 p.m., Octubre 17 a Diciembre 12 de 2024</h1> </center>
+
+<br> </br>
+<br> </br>
+
+#  {.tabset .tabset-pills}
+
+
+
+
+## Información General
+
+<center> ![](https://www.dropbox.com/scl/fi/541hi9r1sgtlqfqf94kx1/AI.jpeg?rlkey=959jbs2u5z5f0gne7fbwfjkm8&dl=1){width=30%} </center>
+
+
+<br></br>
+
+
+
+Capacitar a profesionales de diversas áreas en los
+fundamentos esenciales de la Inteligencia Artificial (IA),
+proporcionándoles los conocimientos necesarios para
+comprender, aplicar y desarrollar proyectos básicos de IA en
+entornos empresariales y sociales. Se les capacitará en la
+disciplina de Ingeniería de Prompts, proporcionándoles las
+habilidades necesarias para diseñar, optimizar y aplicar
+estrategias efectivas en la generación de lenguaje mediante
+modelos de procesamiento de texto, con un enfoque
+práctico y aplicado
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/og3turchwul5by3/Semana2.png?dl=1){width=15%} </center>
+
+ <br></br>
+ 
+## Profesor
+ 
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/n1gbhe6v164d8pl/Foto2022.png?dl=1){width=30%} </center>
+
+<br></br>
+
+
+
+#### [M.Sc., Alfonso Meléndez Profesor Titular,Escuela Col de Ingeniería](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/HojaDeVida.html)
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/m35v28xmaqowmnc/ClimateChange.jpg?dl=1){width=30%} </center>
+ <br></br>
+ 
+ 
+ 
+ 
+ 
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+## Cronograma Semanal
+
+<br></br>
+
+
+<br> </br>
+<td>
+
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Diapositivas</th>
+    <th> Talleres</th>
+    <th> Material Adicional</th>
+  </tr>
+  
+ <tr>
+    
+<th>Módulo1 : 17 al 29 de Octubre </th>
+    
+ <td> ** IA Generativa e IA Clásica** <br></br>
+      1. ¿Qué es la AI Generativa? <br>
+      2. ¿Qué es el Chat Gpt?<br>
+      3. Historia de los ChatBots <br>
+      4. Ejemplos de Interacciones <br>
+      5. Qué es la IA <br>
+      6. Historia de la IA <br>
+ </td>
+    
+<td>
+Sesión 1: IA Generativa <br><br>
+ [Slides ¿Qué es la IA Generativa?](https://www.dropbox.com/scl/fi/8ojsz74z3kzemfd5orvx3/0.-GenerativeAIInaNutshellEspa-ol.pptx?rlkey=2bxd0az4joa36wuee5xya6c2q&dl=1)<br>
+ [Slides ¿Qué es el ChatGpt?](https://www.dropbox.com/scl/fi/ag6k6xo3x0prgkr6cikof/1.-WhatIsChatGptEsp.pptx?rlkey=6twrl8mcdku2x46cs1zw31gtu&dl=1)<br>
+  [Slides: Limitaciones de ChatGpt](https://www.dropbox.com/scl/fi/0jzeo5e766n2lpjcm0jid/2.-LimitationsChatGptEsp.pptx?rlkey=9lx7caodhl7p1fy92qyiqa7fp&dl=1)<br><br>
+  [1. IA Generativa para Todos](https://www.dropbox.com/scl/fi/m90ab28jauq62obydacm3/W1Esp.pptx?rlkey=z03z7ylpuy9p8l0k46d2spv3f&dl=1)<br>
+  [2. IA generativa y apps de Software](https://www.dropbox.com/scl/fi/l5qscqidfpr7xt0jza132/W2Esp.pptx?rlkey=7hjmnbuvzaq0t0wllbvzom9sm&dl=1)<br>
+  [3. La Ia Generativa y los negocios](https://www.dropbox.com/scl/fi/p44qjb2cgrii3emqsz7gh/W3Esp.pptx?rlkey=httka4buqk0sj74aikpv8h2ht&dl=1)<br>
+  
+ Sesión 2: Historia de los ChatBots<br><br>
+ [Slides : Historia de los ChatBots 1](https://www.dropbox.com/scl/fi/fkx49ps02sikll0a03jzi/ClassicalSlidesEsp.pptx?rlkey=ls31b50jihivky920jp9c4c3v&dl=1)<br>
+ [Slides : Historia de los ChatBots 2](https://www.dropbox.com/scl/fi/ox1uiysiiv2mhxsbskw99/EvolutionModernSlidesEsp.pptx?rlkey=3tb3ys1ts1jx3jshcr9qb36xl&dl=1)<br>
+ 
+ Sesión 3: Taller ChatGpt y Chatbots Multimedia <br><br>
+ [Slides: Ejemplos de Interacción](https://www.dropbox.com/scl/fi/da7zrxohk411oityq7w90/Ejemplos-Claves-ChatGpt.pptx?rlkey=jcsuxb6ghtjqfyp0cok3ru90b&dl=1)<br>
+ [¡¡ Nuevo!! Slides : Chatbots Multimedia](https://www.dropbox.com/scl/fi/jwmvaaltxglhmltct86lq/ChatBots-Multimedia.pptx?rlkey=3hr634xkjfxp4bz9ppq01p8ns&dl=1)<br>
+ 
+ Sesión 4:Aspectos éticos de la IA Generativa <br><br>
+   [ Slides: La Ia y la Sociedad](https://www.dropbox.com/scl/fi/l0b9p3ukqiijbgo34v78w/W4Esp.pptx?rlkey=k1uk3z3polpxj0uchea5zzgi4&dl=1)<br>
+
+  Sesión 5 ¿Qué es la IA? <br><br>
+  [1. Qué es la IA?](https://www.dropbox.com/scl/fi/zwb3cfyqq654ja0knl508/W1Esp.pptx?rlkey=xxmauo2ec3yum8jlld46l50x3&dl=1)<br>
+  [2, Construyendo Proyectos IA](https://www.dropbox.com/scl/fi/kewwsws0u3c8qnj2e3u1b/W2Esp.pptx?rlkey=5u36896j76kgh4adr4jzjpy5c&dl=1)<br>
+  [3. Construyendo la IA en su empresa](https://www.dropbox.com/scl/fi/5wjyador3czia24whp9bk/W3Esp.pptx?rlkey=li1j1rfztd2zi8f0nm5jlar5j&dl=1)<br>
+  
+  Sesión 6:Historia de la IA <br><br>
+</td>
+
+<td>  
+[Taller Alvarado](https://www.dropbox.com/scl/fi/i2iu0qnvkv75uxt8vb60h/1.-Alvarado-10-Actividades.docx?rlkey=zsxsmr07l6jbaxuqgsfemialr&dl=1)<br>
+[Documentos Para Taller](https://www.dropbox.com/scl/fi/wvp2nhdukm77axk6b263r/Docs.zip?rlkey=qn4fljgo6kbatbps8gwww0x2z&dl=1)<br>
+[Taller Texto Imagen](https://www.dropbox.com/scl/fi/8hk0oqktzlgom84bx4fee/Crea-una-historia-corta-inspirada-en-esta-imagen.docx?rlkey=fbnv2td5thn031zkun4kswq2b&dl=1)<br>
+
+</td>
+       
+ <td> Videos: <br>
+ [Video Oficial ChatGpt OpenAI](https://www.youtube.com/watch?v=DQacCB9tDaw&t=1256s)<br>
+   [Generative AI in a Nutshell](https://www.youtube.com/watch?v=2IK3DFHRFfw&t=39s) <br>
+   [3Blue1Brown Visual  But what is a Gpt Intro to Transformers](https://www.youtube.com/watch?v=wjZofJX0v4M&t=819s) <br>
+  [3Blue1Brown But What is a Neural Network](https://www.youtube.com/watch?v=aircAruvnKk&t=9s) <br> <br>
+  2. Otros <br>   
+  [ 1. ¿Qué puedes hacer con Gpt4?   ](https://www.youtube.com/watch?v=oc6RV5c1yd0) <br>
+  [  2. Transformers Explained ](https://www.youtube.com/watch?v=SZorAJ4I-sA)
+  [3. Iroduction to Generative AI](https://www.youtube.com/watch?v=G2fqAlgmoPo) <br> <br>
+    Artículos: <br>
+    [Historia ChatGpt wired](https://es.wired.com/articulos/openai-y-todos-los-lideres-en-inteligencia-artificial)<br>
+    [OpenAi Gpt](https://openai.com/index/gpt-4-research/)<br>
+    [What is ChatGpt doing...](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)<br>
+    [Data Analysis in chatgpt](https://openai.com/index/improvements-to-data-analysis-in-chatgpt/)<br>
+    [Historia de attention is all you need](https://es.wired.com/articulos/como-ocho-empleados-de-google-inventaron-la-inteligencia-artificial-moderna)
+    
+  
+ </td>
+ 
+ </tr>
+ 
+ 
+ <tr>  
+    <th>31 de Octubre al 12 de Noviembre </th>
+    <td>Fundamentos del Aprendizaje de Máquina</td>
+    
+<td>
+    
+        
+  </td>
+  
+  <td>
+        </td>
+        
+<td>>
+ </td>
+ 
+ </tr>
+ 
+ <tr>
+     <th>14 de Noviembre a 26 de Noviembre</th>
+    <td>Aplicaiones Prácticas de la Inteligencia Artificial</td>
+    
+<td>
+    
+        
+  </td>
+  
+  <td>
+        </td>
+        
+<td>>
+ </td>
+  </tr>
+  
+  
+   <tr>
+    <th>28 de Noviembre a 12 de Diciembre </th>
+    <td>Desarrollo e Implementación de Proyectos de IA </td>
+    
+    <td>  
+       </td>
+    
+<td>
+        </td>
+        
+ <td>
+ 
+    
+  </td>
+  
+  </tr>
+ 
+ 
+</table>
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+
+
+
+
+ 
+## Libros
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/lgknffqxy6r6y1n4zrjzs/2.-LibroChat.png?rlkey=4w81mxfhwgk6vpffai5bqj2gt&dl=1){width=40%}  </center>
+
+[Stephen Wolfram - What Is ChatGPT Doing](https://www.dropbox.com/scl/fi/3wr8olnytzyeff1hzlltr/Stephen-Wolfram-What-Is-ChatGPT-Doing-_.-and-Why-Does-It-Work_-Wolfram-Media-Inc.-2023.pdf?rlkey=bhg2fdshy0w1ooein9scg6ceg&dl=1)
+
+
+<br></br>
+<br></br>
+
+
+
+<br></br>
+
+<br></br>
+
+
+
+
+
+## Artículos
+
+<center> ![](https://www.dropbox.com/scl/fi/nsuq5vpn6i9abafwrw82d/3.-Articulos-Chatgpt.png?rlkey=iupt997vc456f4qas5gqtqsyq&dl=1){width=40%} </center>
+
+ [OpenAi Gpt](https://openai.com/index/gpt-4-research/)
+ [Resnick Ai Opprtunities](https://mit-genai.pubpub.org/pub/gj6eod3e/release/2?from=10915&to=11045)
+
+
+## Cursos en Línea
+
+
+[Hinton Couse Machine Learning](https://www.youtube.com/playlist?list=PLoRl3Ht4JOcdU872GhiYWf6jwrk_SNhz9)
+
+[Ml Course SimpliLearn](https://www.youtube.com/watch?v=rnEEHT9-c5I)
+
+[Mustafa ML Course](https://www.youtube.com/watch?v=mbyG85GZ0PI)
+
+[Pytorch Course Dlearning](https://github.com/mrdbourke/pytorch-deep-learning)
+
+[SimpliLearn 11 hours](https://www.youtube.com/live/JonnQuQDThc)
+<center>  ![](https://www.dropbox.com/scl/fi/wmo5a4k00xvzecnlq09lt/4.-Curso-ChatGpt.png?rlkey=ter3spaj318o4qghq4ui40pty&dl=1){width=40%}  </center>
+
+
+[Curso Stanford AI](https://www.youtube.com/watch?v=J8Eh7RqggsU&list=PLoROMvodv4rO1NB9TD4iUZ3qghGEGtqNX)]
+
+[John Mcculloch, Introduction to Social Media Analytics](https://www.youtube.com/watch?v=5Hw1OmWOLA8&list=PLnMaaCilahfY6aBe6UFJJsZ_xvYscPJiW&index=1)
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+
+
+
+## Videos
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/ma38u1l9na3o87ypo41py/5.-Videos-ChatGpt.png?rlkey=6ddj6k3492aczfpgnm4es57j6&dl=1){width=40%}  </center>
+
+
+
+
+1.  [Mitchell Why AI is harder than we think](https://www.youtube.com/watch?v=agzjHT92ZcU)
+
+[Mustafa Suleyman, What is the AI anyway](https://youtu.be/KKNCiRWd_j0?si=OaIpZtLs_KBnaBM-)
+
+[Rodney Brooks , Generative AI Shaping the Future](https://www.youtube.com/watch?v=pgrzEHJTPPM&t=2430s)
+
+[Francois Chollet LLMs wont lead to AGI](https://www.youtube.com/watch?v=UakqL6Pj9xo&t=840s)
+
+[3Blue1Brown Transformers](https://www.youtube.com/watch?v=wjZofJX0v4M&t=187s)
+
+[Mustafa suleyman What is Ai](https://www.youtube.com/watch?v=KKNCiRWd_j0)
+
+[Sanja, Geoffrey Hinton | On working with Ilya, choosing problems, and the power of intuition](https://www.youtube.com/watch?v=n4IQOBka8bc)
+
+[6 years ago, ignoring name of the field!!!](https://www.youtube.com/watch?v=zl99IZvW7rE&t=300s)
+
+[Bloomberg. This Canadian Genius Created Modern AI](https://www.youtube.com/watch?v=l9RWTMNnvi4)
+
+[Prof. Geoffrey Hinton - "Will digital intelligence replace biological intelligence?" Romanes Lecture](https://www.youtube.com/watch?v=N1TEjTeQeg0)
+
+ 
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+## Enlaces de Internet
+
+
+<center> ![](https://www.dropbox.com/scl/fi/gcizljzg3urw96qh9bkj2/6.-Enlaces-ChatGpt.png?rlkey=qrfxif60396l13a4fzqzuitc5&dl=1){width=50%} </center>
+
+
+### Actividades Interactivas
+
+ ¡¡¡¡ New Complexity Explorables !!!!!! (Nicky case ):<br>
+
+
+<br><br><br><br>
+
+### Páginas Web
+
+
+[Social Networks in Movies](https://moviegalaxies.com/)
+
+
+
+<br></br> <br></br>
+
+
+<br></br><br></br><br></br>
+<br></br><br></br><br></br>
+
+
+
+

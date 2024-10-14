@@ -1,0 +1,407 @@
+---
+title: ''
+output:
+  html_document:
+    theme: cerulean
+    toc: no
+  pdf_document:
+    toc: no
+date: ''
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: 100px;
+  margin-right: auto;
+}
+</style>
+
+---
+title: <center>  Conversaciones Inteligentes <br>
+        Domina el Potencial del ChatGpt </center>
+output: html_document
+---
+
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/p5ll2q3jiwci7c1879bbg/LogoUnal.PNG?rlkey=y9pwx183m5cfrq5kmknrmvd70&dl=1){width=25%} </center>
+
+<center> <h1> Curso 2025-1: Duración: 4 Semanas, 32 Horas <br> Martes y Jueves  6-10 p.m. </h1> </center>
+
+#  {.tabset .tabset-pills}
+
+
+
+
+## Información General
+
+<center> ![](https://www.dropbox.com/scl/fi/ra3vbb1dc6lr7vp3pbkz0/1.-CelularDialogando.png?rlkey=xuswgw8rq9lt9o8hkcbhyfqpi&dl=1){width=30%} </center>
+
+
+<br></br>
+
+
+El curso "Conversaciones inteligentes: domina el Potencial del ChatGPT" está diseñado para equipar a los participantes con las habilidades necesarias para interactuar de manera eficaz con modelos de lenguaje avanzados como ChatGPT. En la era digital, las herramientas de inteligencia artificial (IA) están transformando la manera en que las empresas y los profesionales abordan la resolución de problemas, la automatización de tareas y la creación de contenido. La ingeniería del diseño de prompts, o el arte de formular preguntas y directrices precisas para obtener respuestas óptimas de los modelos de IA, es una habilidad fundamental para maximizar la eficiencia y el valor de estas interacciones.
+
+A lo largo de las 32 horas del curso, los participantes aprenderán a estructurar y ajustar sus prompts para obtener resultados más precisos, relevantes y adaptados a sus necesidades específicas. El curso abordará tanto la teoría como la práctica, ofreciendo casos de estudio, ejemplos reales y ejercicios interactivos para que los asistentes desarrollen una comprensión profunda de cómo la IA puede ser un aliado estratégico en múltiples campos. Esta capacitación es ideal para profesionales de diversas áreas que deseen aprovechar el poder de la IA conversacional en sus entornos laborales o creativos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/og3turchwul5by3/Semana2.png?dl=1){width=15%} </center>
+
+ <br></br>
+ 
+## Profesor
+ 
+
+<br></br>
+
+<br></br>
+
+<center>  ![](https://www.dropbox.com/scl/fi/d80hdzs9uiisvzptoamst/Foto2022.jpg?rlkey=5t04dlk2wezxolf99j2s5cfkg&dl=1){width=25%} </center>
+
+#### [M.Sc., Alfonso Meléndez Profesor Titular,Escuela Col de Ingeniería](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/HojaDeVida.html)
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/m35v28xmaqowmnc/ClimateChange.jpg?dl=1){width=30%} </center>
+ <br></br>
+ 
+ 
+ 
+ 
+ 
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+## Cronograma Semanal
+
+<br></br>
+
+
+<br> </br>
+<td>
+
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Diapositivas</th>
+    <th>Talleres</th>
+    <th> Material Addicional</th>
+  </tr>
+  
+ <tr>
+    
+<th>Módulo 1: 17 al 29 de Octubres (Seis Sesiones) </th>
+    
+ <td> **Fundamentos dela IA Generativa:** <br></br>
+      1. ¿Qué es la AI Generativa? <br>
+      2. ¿Qué es el Chat Gpt?<br>
+      3. Historia de los ChatBots <br>
+      4. Ejemplos de Interacciones <br>
+ </td>
+    
+<td>
+ Sesión 1: <br>
+ [Slides ¿Qué es la IA Generativa?](https://www.dropbox.com/scl/fi/8ojsz74z3kzemfd5orvx3/0.-GenerativeAIInaNutshellEspa-ol.pptx?rlkey=2bxd0az4joa36wuee5xya6c2q&dl=1)<br>
+ [Slides ¿Qué es el ChatGpt?](https://www.dropbox.com/scl/fi/ag6k6xo3x0prgkr6cikof/1.-WhatIsChatGptEsp.pptx?rlkey=6twrl8mcdku2x46cs1zw31gtu&dl=1)<br>
+ Sesión 2: <br>
+ [Slides: Limitaciones de ChatGpt](https://www.dropbox.com/scl/fi/0jzeo5e766n2lpjcm0jid/2.-LimitationsChatGptEsp.pptx?rlkey=9lx7caodhl7p1fy92qyiqa7fp&dl=1)<br>
+ [Slides : Historia de los ChatBots 1](https://www.dropbox.com/scl/fi/fkx49ps02sikll0a03jzi/ClassicalSlidesEsp.pptx?rlkey=ls31b50jihivky920jp9c4c3v&dl=1)<br>
+ [Slides : Historia de los ChatBots 2](https://www.dropbox.com/scl/fi/ox1uiysiiv2mhxsbskw99/EvolutionModernSlidesEsp.pptx?rlkey=3tb3ys1ts1jx3jshcr9qb36xl&dl=1)<br>
+ Sesión 3: <br>
+ [Slides: Ejemplos de Interacción](https://www.dropbox.com/scl/fi/da7zrxohk411oityq7w90/Ejemplos-Claves-ChatGpt.pptx?rlkey=jcsuxb6ghtjqfyp0cok3ru90b&dl=1)<br>
+ Sesión 4:<br>
+ [¡¡ Nuevo!! Slides : Chatbots Multimedia](https://www.dropbox.com/scl/fi/jwmvaaltxglhmltct86lq/ChatBots-Multimedia.pptx?rlkey=3hr634xkjfxp4bz9ppq01p8ns&dl=1)<br>
+
+</td>
+
+<td>  
+[Taller Alvarado](https://www.dropbox.com/scl/fi/i2iu0qnvkv75uxt8vb60h/1.-Alvarado-10-Actividades.docx?rlkey=zsxsmr07l6jbaxuqgsfemialr&dl=1)<br>
+[Documentos Para Taller](https://www.dropbox.com/scl/fi/wvp2nhdukm77axk6b263r/Docs.zip?rlkey=qn4fljgo6kbatbps8gwww0x2z&dl=1)<br>
+[Taller Texto Imagen](https://www.dropbox.com/scl/fi/8hk0oqktzlgom84bx4fee/Crea-una-historia-corta-inspirada-en-esta-imagen.docx?rlkey=fbnv2td5thn031zkun4kswq2b&dl=1)<br>
+
+</td>
+       
+ <td> Videos: <br>
+ [Video Oficial ChatGpt OpenAI](https://www.youtube.com/watch?v=DQacCB9tDaw&t=1256s)<br>
+   [Generative AI in a Nutshell](https://www.youtube.com/watch?v=2IK3DFHRFfw&t=39s) <br>
+   [3Blue1Brown Visual  But what is a Gpt Intro to Transformers](https://www.youtube.com/watch?v=wjZofJX0v4M&t=819s) <br>
+  [3Blue1Brown But What is a Neural Network](https://www.youtube.com/watch?v=aircAruvnKk&t=9s) <br> <br>
+  2. Otros <br>   
+  [ 1. ¿Qué puedes hacer con Gpt4?   ](https://www.youtube.com/watch?v=oc6RV5c1yd0) <br>
+  [  2. Transformers Explained ](https://www.youtube.com/watch?v=SZorAJ4I-sA)
+  [3. Iroduction to Generative AI](https://www.youtube.com/watch?v=G2fqAlgmoPo) <br> <br>
+    Artículos: <br>
+    [Historia ChatGpt wired](https://es.wired.com/articulos/openai-y-todos-los-lideres-en-inteligencia-artificial)<br>
+    [OpenAi Gpt](https://openai.com/index/gpt-4-research/)<br>
+    [What is ChatGpt doing...](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)<br>
+    [Data Analysis in chatgpt](https://openai.com/index/improvements-to-data-analysis-in-chatgpt/)<br>
+    [Historia de attention is all you need](https://es.wired.com/articulos/como-ocho-empleados-de-google-inventaron-la-inteligencia-artificial-moderna)
+    
+  
+ </td>
+ 
+ </tr>
+ 
+ 
+ <tr> 
+    <th>Semana  2: 23-27 de Septiembre </th>
+    <td>
+    
+  **Diseño de Interacciones Efectivas** <br></br>
+    
+  1. Prompt Engineering <br>
+  2.  Chats Multimodales <br>
+  3.  ChatBots en el entorno Laboral <br>
+    4. ChatBots en el entorno Personal <br>
+    
+    
+    
+  </td>
+    
+<td>
+    
+  [Prompt Engineering Dcamp](https://www.dropbox.com/scl/fi/eloltcwyn95fg7vyw4mf5/MasteringPromptEngineering-DataCamp-Esp.pptx?rlkey=wit6rmeot19kmptve7g8jrrn6&dl=1)<br>
+[Lo Emocional Parte 1](https://www.dropbox.com/scl/fi/atz0nfwssn3tkkky22eng/Parte1Esp.pptx?rlkey=buwizd97198vq2hhphe47v8kf&dl=1)<br>
+[Lo Emocional Parte 2](https://www.dropbox.com/scl/fi/53vno5n8y1zqsjl1iieyp/Parte2Esp.pptx?rlkey=yfy9mcyp31trw8agw5drgwaza&dl=1)<br>
+  </td>
+  <td>
+       
+       
+ </td>
+        
+<td>
+ Videos: 
+ [Discover Prompt Engineering](https://www.youtube.com/watch?v=jNNatjruXx8)
+[17 Tips revista Wired](https://www.wired.com/story/17-tips-better-chatgpt-prompts/)<br>
+ </td>
+ 
+ </tr>
+ 
+ <tr>
+     <th>Semana 3: 30 Septiembre a 4 Octubre</th>
+    <td>Desafios Éticos</td>
+    
+<td>
+            
+    1. Lo emocional
+    2. Aspectos éticos
+     
+  </td>
+  
+  <td>
+        </td>
+        
+<td>
+[Domingos: AI should not be regulated](https://youtu.be/1lr2HosqrBE?si=4aqBuCe-8RrdVJIm)<br>
+[Rob Thomas : AI Productivity Paradox](https://www.youtube.com/watch?v=iaisOHeJLC4)<br>
+[Eric Schmidt, Solomon Future of AI](https://www.youtube.com/watch?v=MW9FGwh3wjE)<br>
+ </td>
+  </tr>
+  
+  
+   <tr>
+    <th>Semana 4: 7-11 de Octubre </th>
+    <td> Proyectos </td>
+    
+    <td>  
+       </td>
+    
+<td>
+        </td>
+        
+ <td>
+ 
+    
+  </td>
+  
+  </tr>
+ 
+ 
+</table>
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+
+
+ 
+## Libros, Artículos, Cursos
+
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/lgknffqxy6r6y1n4zrjzs/2.-LibroChat.png?rlkey=4w81mxfhwgk6vpffai5bqj2gt&dl=1){width=40%}  </center>
+
+### Libros
+
+[Stephen Wolfram - What Is ChatGPT Doing](https://www.dropbox.com/scl/fi/3wr8olnytzyeff1hzlltr/Stephen-Wolfram-What-Is-ChatGPT-Doing-_.-and-Why-Does-It-Work_-Wolfram-Media-Inc.-2023.pdf?rlkey=bhg2fdshy0w1ooein9scg6ceg&dl=1)
+
+### Artículos
+
+ [OpenAi Gpt](https://openai.com/index/gpt-4-research/)
+ 
+ 
+### Cursos
+
+
+[UMichigan What is Ai? What is ChatGpt?](https://www.coursera.org/lecture/generative-ai-essentials/what-is-ai-what-is-chatgpt-YUQlJ)
+[SimpliLearn 11 hours](https://www.youtube.com/live/JonnQuQDThc)
+
+ 
+ 
+<br></br>
+<br></br>
+
+
+
+<br></br>
+
+<br></br>
+
+
+
+
+
+## Ejemplos Claves y Talleres
+
+<center> ![](https://www.dropbox.com/scl/fi/nsuq5vpn6i9abafwrw82d/3.-Articulos-Chatgpt.png?rlkey=iupt997vc456f4qas5gqtqsyq&dl=1){width=40%} </center>
+
+### Ejemplos Claves: <br>
+[what dish can i prepair from my frige?](https://www.dropbox.com/scl/fi/lofrs2scapnfic1ipn7q8/Nevera.jpeg?rlkey=2sqjo6901gzo8o2vajnytgi96&dl=1)<br>
+[Olla Caliente y Tijeras](https://www.dropbox.com/scl/fi/l1ij9rl1s2i3kceodf6kn/TijerasOllaCaliente.png?rlkey=6k65vb13o1xshjbxmcccpd7q0&dl=1)
+[where can i hide something valuable in this room?](https://www.dropbox.com/scl/fi/q5ou2j231xbs0tmpa1myu/FotoPiezaDondeEsconderAlgo.png?rlkey=ocm9fszb2tqolhiihhhi2jrk1&dl=1)<br>
+[Cartoonize this photo 1](https://www.dropbox.com/scl/fi/t22x1kdli3g44re3f2jja/Foto2022.jpg?rlkey=6apvbpm3avw2j3gygffmz933a&dl=1)<br>
+[Cartoonize this photo 2](https://www.dropbox.com/scl/fi/fu0ni85hgbf4titoknhyp/CataJuli.jpeg?rlkey=izet3liim9qmkbqs22qm6twqr&dl=1)<br>
+
+[Problema de las cajas](https://www.dropbox.com/scl/fi/uqrpxuqliah4ze9brbigx/ProblemaDeLAsCajas.png?rlkey=uiqpvfbxgj4zug4j5lsdd29bz&dl=1)
+
+[error matemático](https://www.dropbox.com/scl/fi/34hurncb7xqxdq6isfaz8/MathError.png?rlkey=mhb6fw5os31edn4uavzy5ixjg&dl=1)
+
+[Prompt Engineering tips bt ChatGPT](https://www.dropbox.com/scl/fi/u1nz1or2s3q5aah8h5q8b/PromptEngineeringTipsByChatGpt.png?rlkey=ufj2y5gwdkchynroze0knngze&dl=1)
+
+### Talleres
+
+[Jorge Alvarado](https://www.dropbox.com/scl/fi/nf2ro5fh422ou834naxc8/Alvarado-10-Actividades.docx?rlkey=vl0pg6hpxk71hmq19zgcwtmgz&dl=1)<br>
+
+## ChatBots
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/wmo5a4k00xvzecnlq09lt/4.-Curso-ChatGpt.png?rlkey=ter3spaj318o4qghq4ui40pty&dl=1){width=40%}  </center>
+
+
+Chatbots:<br>
+
+[Whimsical generate diagrams](https://whimsical.com/ai)
+
+[Nostalgia fotos viejas en videos](https://deepnostalgia.ai/es)
+
+[Sora creating video from text](https://openai.com/index/sora/)
+
+[read.ai trancribe reuniones](https://www.read.ai/es)
+
+[suno Composición Musical](https://suno.com/) <br>
+[elevenlabs: text to speech natural sound](https://elevenlabs.io/) <br>
+[SciSpace Chat with a pdf](https://typeset.io/library/untitled-collection-3egzd7ad/levitinch5-pdf-kzyho9cq?ascm=1)<br>
+ChatBots dentro de ChatGpt-4o <br>
+[KhanMigo](https://chatgpt.com/g/g-HxPrv1p8v-code-tutor)<br>
+[Image Generator](https://chatgpt.com/g/g-pmuQfob8d-image-generator)<br>
+[Dall-e](https://chatgpt.com/g/g-2fkFE8rbu-dall-e)<br>
+[Data Analyst](https://chatgpt.com/g/g-HMNcP6w7d-data-analyst)<br>
+[excel AI](https://chatgpt.com/g/g-R6VqLNHFM-excel-ai)<br>
+[Video Summariser](https://chatgpt.com/g/g-66xQYfKVr-video-summariser-pro)<br>
+
+[Video Generator](https://chatgpt.com/g/g-Hkqnd7mFT-video-gpt-by-veed)
+
+[Logo Creator](https://chatgpt.com/g/g-WDtZ2aBA2-logo-creator)<br>
+[Powerpoint Generator](https://chatgpt.com/g/g-cJtHaGnyo-presentation-and-slides-gpt-powerpoints-pdfs)<br>
+[Code Copilot](https://chatgpt.com/g/g-2DQzU5UZl-code-copilot)<br>
+[Emotional Support](https://chatgpt.com/g/g-FGhasb1tZ-therapist-psychologist-non-medical-therapy)<br>
+
+
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+
+
+
+## Videos
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/ma38u1l9na3o87ypo41py/5.-Videos-ChatGpt.png?rlkey=6ddj6k3492aczfpgnm4es57j6&dl=1){width=40%}  </center>
+
+
+
+
+1.  [Flight Patterns](https://www.youtube.com/watch?v=ttH7sQ48n5k)
+
+ 
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+## Enlaces de Internet
+
+
+### Exper
+
+
+<center> ![](https://www.dropbox.com/scl/fi/gcizljzg3urw96qh9bkj2/6.-Enlaces-ChatGpt.png?rlkey=qrfxif60396l13a4fzqzuitc5&dl=1){width=50%} </center>
+
+### ¡¡ NUevo !! Experiencias:
+
+[Danile Ronderos Human Centered AI](https://arqdis.uniandes.edu.co/notas/experiencia-uso-ia-curso-diseno-arquitectura/)<br>                       
+### Actividades Interactivas
+
+ ¡¡¡¡ New Complexity Explorables !!!!!! (Nicky case ):<br>
+
+
+<br><br><br><br>
+
+### Páginas Web
+
+
+[Social Networks in Movies](https://moviegalaxies.com/)
+
+
+
+<br></br> <br></br>
+
+
+<br></br><br></br><br></br>
+
+
+
+
