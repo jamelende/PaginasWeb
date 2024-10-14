@@ -1,0 +1,594 @@
+---
+title: ''
+output:
+  html_document:
+    theme: cerulean
+    toc: no
+  pdf_document:
+    toc: no
+date: ''
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: 100px;
+  margin-right: auto;
+}
+</style>
+
+---
+title: <center>  Modelación Basada en Agentes </center>
+output: html_document
+---
+
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/bd9enhm6lewzhsocqv4mb/Univalle.png?rlkey=srnbg55jrrytee6ad2bja9tcn&dl=1){width=15%} </center>
+
+<center> <h1> Curso de Extensión: Lunes y Miércoles:  6-10 p.m., Octubre 7  a Noviembre 13 de 2024</h1> </center>
+
+#  {.tabset .tabset-pills}
+
+
+
+
+## Información General
+
+<center> ![](https://www.dropbox.com/scl/fi/wj0fpl56jtleehq6y3n72/Helecho.png?rlkey=rca70ozeyd4zd2rv7ejcqa3gy&dl=1){width=10%} </center>
+
+
+<br></br>
+
+
+
+
+
+
+La modelación basada en agentes (MBA) es una herramienta crucial en las ciencias sociales y económicas, ya que permite simular el comportamiento de individuos o agentes autónomos y las interacciones entre ellos dentro de sistemas complejos. A diferencia de los enfoques tradicionales, la MBA facilita la comprensión de cómo decisiones locales, racionalidad limitada y heterogeneidades individuales generan fenómenos emergentes a nivel macro, como las dinámicas de mercados financieros o redes sociales. Un curso de MBA proporciona a los estudiantes las habilidades para construir modelos y realizar simulaciones que permiten analizar políticas públicas, estrategias empresariales y otros problemas contemporáneos, dotándolos de una metodología innovadora para abordar sistemas adaptativos complejos. Esta formación fomenta una comprensión más realista de los fenómenos sociales y económicos, con aplicaciones prácticas en la toma de decisiones a nivel institucional y gubernamental.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/og3turchwul5by3/Semana2.png?dl=1){width=15%} </center>
+
+ <br></br>
+ 
+## Profesor
+ 
+
+<br></br>
+
+<br></br>
+
+<center>  ![](https://www.dropbox.com/scl/fi/d80hdzs9uiisvzptoamst/Foto2022.jpg?rlkey=5t04dlk2wezxolf99j2s5cfkg&dl=1){width=25%} </center>
+
+#### [M.Sc., Alfonso Meléndez Profesor Titular,Escuela Col de Ingeniería](http://profesores.is.escuelaing.edu.co/~amelendez/HojaDeVida/HojaDeVida.html)
+
+<br></br>
+<center> ![](https://www.dropbox.com/s/m35v28xmaqowmnc/ClimateChange.jpg?dl=1){width=30%} </center>
+ <br></br>
+ 
+ 
+ 
+ 
+ 
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+## Cronograma Semanal
+
+<br></br>
+
+
+<br> </br>
+<td>
+
+
+</td>
+
+<table border="1">
+<colgroup>
+    <col style="width: 5%;">
+    <col style="width: 20%;">
+    <col style="width: 25%;">
+    <col style="width: 25%;">
+    <col style="width: 25%;">
+  </colgroup>
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Diapositivas y Lecturas</th>
+    <th>Modelos Netlogo</th>
+    <th> Talleres </th>
+  </tr>
+  
+ <tr>
+    
+<th>Semana 1 7-11 de Octubre </th>
+    
+ <td>**Introducción**<br>
+ 
+  * ¿Qué es un Modelo?<br>
+  * ¿Que es un Modelo Basado en Agentes? <br>
+  * Historia y evolución de MOBA<br>
+  * Ejemplos Clásicos
+<br>
+ <br>
+ </td>
+    
+<td>
+<br>
+Lectura Inicial:<br>
+[ Lectura Bienvenida](https://www.dropbox.com/scl/fi/j862oc5fkcsdiytpkenuv/SciptEspa-ol.pdf?rlkey=m6t4fgul54h399gcwq35vxuus&dl=0)<br>
+Slides:<br>
+[Slides Sesión 1](https://www.dropbox.com/scl/fi/65dl2djguz1flxgea47t2/MobaUnivalleSesi-n1.pptx?rlkey=oeacgu0o71z82frxw56mom4ya&dl=1)<br>
+[Nuevo!!! Modelo Helechos Básico para Descargar](https://www.dropbox.com/scl/fi/2kw1bynd65uirz8m4ftt3/HelechosB-sico.nlogo?rlkey=9k41azwv3k0dxipcn6ig9mfgf&dl=1)<br>
+
+Lecturas:<br>
+ [Qué es un Modelo? ](http://profesores.is.escuelaing.edu.co/~amelendez/_book/qu%C3%A9-es-un-modelo.html)<br>
+ [Modelación Basada en agentes](http://profesores.is.escuelaing.edu.co/~amelendez/_book/modelacion-basada-en-agentes.html)<br>
+  [Historia de ABM](http://profesores.is.escuelaing.edu.co/~amelendez/_book/algo-de-historia.html)<br>
+  [Ocho Modelos Clásicos](http://profesores.is.escuelaing.edu.co/~amelendez/_book/ocho-modelos-cl%C3%A1sicos.html)
+ 
+</td>
+
+<td> Netlogo Web:<br>
+[Flocking Model](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Flocking.nlogo)<br>
+[Ants](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Ants.nlogo)<br>
+[Traffic Basic](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Social%20Science/Traffic%20Basic.nlogo)<br>
+
+Netlogo: <br>
+[Modelo Evacuación](https://www.dropbox.com/scl/fi/s35g4moixgr5lu0gb6bzy/1.-ModeloZoZobra531.nlogo?rlkey=5hr88btf6y2z9axp5p5saoy8s&dl=1)<br>
+Modelos AnyLogic:<br>
+[Modelo SIR con Vacuna](https://cloud.anylogic.com/model/a97e0907-ff5c-4f58-85ff-3ddef08107f1?mode=SETTINGS&tab=GENERAL)<br>
+[Distribución Nacional de Productos](https://cloud.anylogic.com/model/5be1d6a9-c790-4439-9017-4f9fcfa9391a?mode=SETTINGS&tab=GENERAL)<br>
+[Modelo Básico de Infección](https://cloud.anylogic.com/model/990004a7-73fa-44f1-8188-88e469723130?mode=SETTINGS&tab=GENERAL)
+
+</td>
+       
+ <td>
+
+  Talleres Para hacer en Casa:<br>
+  [Taller Helechos](https://www.dropbox.com/scl/fi/sz3oc1rhtm7mvnr30q5lf/Helechos.zip?rlkey=fz8gq2ojmfzavwh5valbjrr65&dl=1)<br>
+  [Taller Partículas Inglés](https://www.dropbox.com/scl/fi/d6m4wg11ftv6gp0p48n60/ParticlesCap-tulo.pdf?rlkey=i6z7r7pheh1e0e52rdt8hv8ef&dl=1)<br>
+  [Taller Buscadores de Hongos](http://profesores.is.escuelaing.edu.co/~amelendez/_book/buscadores-de-hongos.html)<br><br>
+  Actividades  Interactivas:<br>
+  [La parábola de los polígonos](https://ncase.me/polygons-es/)<br>
+  [Schelling Plays Go](https://www.complexity-explorables.org/explorables/t-schelling-plays-go/)<br>
+ </td>
+ 
+ </tr>
+ 
+ 
+ <tr> 
+ 
+ 
+ 
+  <th>Semana  2 14-19 de Octubre</th>
+   <td> Dinámica de Sistemas Complejos<br>
+  
+   * Emergencia<br>
+   * Modelos:<br>
+      + Simple Economy Model
+      + Modelo de Schelling
+  * Modelos Espaciales:
+     + Butterfly HillTopping
+     + Fire Model
+</td>
+    
+<td> Slides:<br>
+[Slides ¿Qué es MOBA?](https://www.dropbox.com/scl/fi/8krquykj22k4e765oq7n4/1.-QueEsAbM.pptx?rlkey=4px00dnkivbgwnswsdzwthamw&dl=1)<br>
+[Slides Herramientas de MOba](https://www.dropbox.com/scl/fi/a75kfscx1r52ygv4os077/2.-Herramientas-de-ABM-1.pptx?rlkey=8t49vh16pt1x0w4n6oxieyly9&dl=1)<br><br>
+[Slides Sancho el Mundo de Netlogo](https://www.dropbox.com/scl/fi/kekbz6v1sfia9ssm0r0mc/ElMundoDeNetlogo.pptx?rlkey=q598l2zvge4exevcdyonduyf9&dl=1)<br>
+Lecturas:<br>
+[Concepto de Emergencia](https://www.dropbox.com/scl/fi/ajpuhp37lbjl8fzuz4hcn/WilenskyEmergence.pdf?rlkey=t2z9mq8m5lpjw1em4vzw4wlhk&dl=1)<br>
+[Modelos Espaciales](https://www.dropbox.com/scl/fi/63u8423leu6uuxb1ctinz/WilenskySpatial.pdf?rlkey=zt9l7sqatp6fkksshwm4fadwt&dl=1)<br>
+
+
+
+        
+  </td>
+  
+  <td>
+  Netlogo Web:<br>
+[Wolf Sheep](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Biology/Wolf%20Sheep%20Predation.nlogo)<br>
+[Spread of Disease](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/IABM%20Textbook/chapter%206/Spread%20of%20Disease.nlogo)<br>
+[Fire Model](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Earth%20Science/Fire.nlogo)<br>
+  
+ 
+ </td>
+        
+<td>
+<br>
+Talleres Para hacer en Casa:<br>
+
+ [Guía Modelo Simple Economy](https://www.dropbox.com/scl/fi/a7crgsyaw8v3m0c31cqqd/GuiaEspa-ol.docx?rlkey=ebu7rnztheskyuxo16nkqxprr&dl=1)<br>
+ [Guía Modelo Schelling](https://www.dropbox.com/scl/fi/16qknzlvfa7crbpvoyb00/SchelllingCapitulo.pdf?rlkey=x4s0zhng310vdxohxkmdfhdhd&dl=1)<br>
+[Guía Modelo del Fuego](https://www.dropbox.com/scl/fi/b6b8rlcjc3fzguzwn2ot4/GuiaEspa-ol.docx?rlkey=vrkqf697t7qr0fhipa154bpyd&dl=1)<br><br>
+
+Actividades  Interactivas:<br>
+  [Luciernagas al unísono](https://ncase.me/fireflies/)<br>
+  [Explorando la Emergencia](https://www.playfulinvention.com/emergence/)<br>
+
+ </td>
+ 
+ </tr>
+ 
+ <tr>
+    <th>Semana 3 22-26 de Octubre</th>
+    <td>Modelos de Redes  (Redes sociales):<br>
+    
+  * Modelo de Adopción de un Producto
+  *  Modelo de Cuarentena en una Pandemia </td>
+    
+<td>
+<br>
+  Slides en Video!!!:<br>
+[Video Taller Cuarentena](https://www.youtube.com/watch?v=lwbIHHxmjpk)<br>
+[Video Modelo de Adopción (Rand)](https://www.youtube.com/watch?v=0yo71qHZYCc)<br><br>
+Lecturas:<br>
+[Redes](https://jamelende.github.io/PaginasWeb/LibroMobaV2/redes.html)
+
+  </td>
+  
+  <td>
+  Netlogo Web:<br>
+[Preferential Attachment](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Networks/Preferential%20Attachment.nlogo)<br>
+[Spread of Disease](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/IABM%20Textbook/chapter%206/Spread%20of%20Disease.nlogo)<br>
+
+  
+  
+   </td>
+        
+<td>
+
+Talleres para hacer en casa: <br>
+[Guía Modelo Infección Simple](https://www.dropbox.com/scl/fi/ahb33hnvsasliwgs25nfu/GuiaEspa-olConPreguntas.docx?rlkey=mi4ag5uga3xtq9hpefiyswrnd&dl=1)<br>
+
+Actividad Interactiva:<br>
+[The Wisdom and Madness of Crowds](https://ncase.me/crowds/)<br>
+[Vacunación en una red](https://www.complexity-explorables.org/explorables/facebooked-flu-shots/)<br>
+
+ </td>
+  </tr>
+  
+  
+   <tr>
+   
+   
+   <th>Semana 4 29 Octubre-2 de Noviembre </th>
+   <td>Aplicaciones de ABM en Ciencias Sociales y Economícas:
+   
+   * Contagio
+   * Opiniones y Polarización</td>
+    
+   <td> Slides:<br>
+   [Slides Contagio](https://www.dropbox.com/scl/fi/1vmkakwemxc5sqaqgu9t4/lecture02_contagion.pdf?rlkey=cbixk70qp6811trzdsmqv4b9f&dl=1)<br>
+   [Slides Opiniones](https://www.dropbox.com/scl/fi/5a7e4hh8o3il98vxeh215/lecture03_opinions.pdf?rlkey=ypd2bwr1nlms9q6t1os46wkes&dl=1)<br><br>
+   Lecturas:<br>
+   [Lectura Contagio](https://www.dropbox.com/scl/fi/1vmkakwemxc5sqaqgu9t4/lecture02_contagion.pdf?rlkey=cbixk70qp6811trzdsmqv4b9f&dl=1)<br>
+   [Lectura Opiniones](https://www.dropbox.com/scl/fi/5a7e4hh8o3il98vxeh215/lecture03_opinions.pdf?rlkey=ypd2bwr1nlms9q6t1os46wkes&dl=1)<br>
+       </td>
+    
+<td>
+<br>
+Netlogo:<br>
+Modelos Contagio:<br>
+[Contagio Espontaneo](https://www.dropbox.com/scl/fi/q5jib1c2hg1rqjxl0tkxi/2.1-Contagion_spontaneous.nlogo?rlkey=ju7wp15m705pmpe2mu791b1pq&dl=1)<br>
+[Contagio SI](https://www.dropbox.com/scl/fi/hv64unjvj73mtn4od3yp4/2.2-Contagion_SI.nlogo?rlkey=pan3yb3thz5pckrruecfvq5dq&dl=1)<br>
+[Contagio SIS](https://www.dropbox.com/scl/fi/7aypqaow0wlr16j4p0lxw/2.3-Contagion_SIS.nlogo?rlkey=ogb7nt09p6umc1iio4959bbx3&dl=1)<br><br>
+Modelos Opiniones: <br>
+[Dinámica de Opinion](https://www.dropbox.com/scl/fi/9avqoj5vhs753ne6eq53t/3.1-opiniondynamics_BC.nlogo?rlkey=lnkq8cd3cp8rud3rerqzzpxcd&dl=1)<br>
+[Con Influencia Negativa](https://www.dropbox.com/scl/fi/edc59m096021bmunuevpd/3.2-opiniondynamics_neginfluence.nlogo?rlkey=89ckovl3ixr1o72vem3lp1le1&dl=1)<br><br>
+
+
+</td>
+        
+ <td>
+ 
+ Talleres para hacer en casa: <br>
+[Guía Contagio](https://www.dropbox.com/scl/fi/wae3fkh0r14whxwbt157q/ContagionCh4.pdf?rlkey=5b80tee1gwutkr07wbpj4kix2&dl=1)<br>
+[Guía Opinión](https://www.dropbox.com/scl/fi/364dywmyzmpn708oa67dd/OpinionCh5.pdf?rlkey=fufso6vq29xii01uecd7a8njd&dl=1)<br>
+
+
+ 
+ Actividades Interactivas: <br>
+ [Going Critical](https://meltingasphalt.com/interactive/going-critical/)<br>
+ [Modelo de Opinion Dynamics](https://www.complexity-explorables.org/explorables/echo-chambers/)<br>
+    
+  </td>
+  
+  </tr>
+  
+  <th>Semana 5 5-9 de Noviembre </th>
+   <td>Aplicaciones de ABM en Ciencias Sociales y Economícas
+   
+   * Cooperación
+   * Coordinación  y Normas</td>
+    
+   <td> Slides:<br>
+   [Slides Cooperación](https://www.dropbox.com/scl/fi/4jzxgjc82794r7ot5ure9/lecture04_cooperation.pdf?rlkey=1sjrs6uwvmwkt0dx6bjr71fol&dl=1)<br>
+      [Slides Coordinación y Normas](https://www.dropbox.com/scl/fi/dbedlwpcemjwqzsgv4e8k/lecture05_coordination.pdf?rlkey=mnkr6flsua8h8l7u70xaqllwk&dl=1)<br>
+<br>
+   Lecturas:<br>
+    [Lectura Cooperación](https://www.dropbox.com/scl/fi/b7sxivmpe5cn21w3yi1gk/readings_04_cooperation.pdf?rlkey=3bc3uxbb2bp3qfgtzurmljb4c&dl=1)<br>
+   [Lectura Coordinación  y Normas](https://www.dropbox.com/scl/fi/kbzcaky8mxt4hagv9atw1/readings_05_coordination.pdf?rlkey=l91u3ijggux4frz1zyy1hvpcr&dl=1)<br>
+      </td>
+    
+<td>
+<br>
+Netlogo:<br>
+Modelos Cooperación:<br>
+[Cooperación Simple](https://www.dropbox.com/scl/fi/6oi1u4brki8r6wb7n14xc/4.1-PD_simple.nlogo?rlkey=46z5x55jws5g48h719gci5u4m&dl=1)<br>
+[Reciprocidad](https://www.dropbox.com/scl/fi/kauqlr3w8qmqe06fdt7ji/4.2-PD_reciprocity.nlogo?rlkey=f4lfo7yc2rslojnpo6t1l6yyr&dl=1)<br>
+[Cooperación Aleatoria](https://www.dropbox.com/scl/fi/1cxmzrn08k421fb5bf35j/4.3-PD_randomized.nlogo?rlkey=qew1jw0yhd6s1u9eccopcaar3&dl=1)<br><br>
+Modelos Coordinación: <br>
+[Coordinación Simple](https://www.dropbox.com/scl/fi/9avqoj5vhs753ne6eq53t/3.1-opiniondynamics_BC.nlogo?rlkey=lnkq8cd3cp8rud3rerqzzpxcd&dl=1)<br>
+[Coordinación Asimétrica](https://www.dropbox.com/scl/fi/4tqcrvjn53p5ycoow8fb9/5.2-coordination_asymmetric.nlogo?rlkey=flbclhetq6opp4k4tf0yihavb&dl=1)<br>
+[Coordinación por Grupos](https://www.dropbox.com/scl/fi/ar5bkf81l9bfjig69wfxc/5.3-coordination_2groups.nlogo?rlkey=iamnn5zymjovsyxnn69t1yttc&dl=1)<br><br>
+
+  
+  </td>
+        
+ <td>
+ Talleres para hacer en casa: <br>
+[Guía Cooperación](https://www.dropbox.com/scl/fi/pg717c0rprj3t6hm4gomk/CooperationCh6.pdf?rlkey=c35khwhyyfz1danfcp8zf55dp&dl=1)<br>
+[Guía Coordinación](https://www.dropbox.com/scl/fi/hhoyzgl6em441tskqr9oo/CoordinationCh7.pdf?rlkey=g7x4n09uoug05if2r9unk3lcr&dl=1)<br>
+
+
+  Actividades Interactivas: <br>
+ [The Evolution of Trust](https://ncase.me/trust/)<br>
+ [La difusión de Normas impopulares](https://www.coursera.org/learn/networkdynamics/home/module/4)<br>
+    
+  </td>
+  
+  </tr>
+  
+  <th>Semana 6 12-16  de Noviembre </th>
+   <td> Proyecto Final:
+   
+   * Asesoría por Grupos
+   * Presentación Final
+   
+   <td>  
+     </td>
+    
+<td>
+<br>
+ Netlogo:<br>
+ Modelos SIR:<br>
+  [Sir EcDiferenciales](https://www.dropbox.com/scl/fi/pd335rk3zkhoi5m0uxoyd/1.-SirEcDiferencial.nlogo?rlkey=5vcqjr22am4clx4q8j58hljso&dl=1)<br>
+  [Sir Sistema Dinámico](https://www.dropbox.com/scl/fi/vstwbcciwmg1h0nstaapa/2.-SirSistemaDinamico.nlogo?rlkey=m6wghm10aakhk7xw0h7r9f3vi&dl=1)<br>
+  [Sir Modelo Agentes](https://www.dropbox.com/scl/fi/cbm0x76kdxlmw89e2veh3/3.-SirModeloAgentes.nlogo?rlkey=bmxajzeco80imastf4dybzj2l&dl=1)<br>
+ Modelos Adicionales: <br>
+  [Guía Modelo Oferta Demanda](https://www.dropbox.com/scl/fi/izdtvnua3npmq2ppe0nqt/GuiaEspa-ol.docx?rlkey=ut92egfuf1cxab5cn1alpe7pf&dl=1)<br>
+
+ [Toy Trader, Tim Gooding](https://www.dropbox.com/scl/fi/2t8zl1kqep4hial8f3pu3/Toy-Trader-2019.nlogo?rlkey=k9u70jh3824siyv9z7xg89icq&dl=1)<br>
+  [Difusión Cultural, AxelRod](https://www.dropbox.com/scl/fi/yqucsmlebucntz61h9tvo/Difusion-Cultural.nlogo?rlkey=tg25fjkzmyo27ybmd9t7ktaqd&dl=1)<br>
+  [Distribución de la Riqueza](https://www.dropbox.com/scl/fi/owcvc8695com360arab23/DistribucionRiqueza.nlogo?rlkey=bffpxyj05gcsb8fqq6ydaxfex&dl=1)<br>
+  [Modelo de Mercado](https://www.dropbox.com/scl/fi/44559vv7flx8qp1glb0el/ModelMarket61.nlogo?rlkey=gntf574ekvhjalhdat9kt432d&dl=1)<br>
+  [Reservas Bancarias](https://www.dropbox.com/scl/fi/x6vpg2yj8hv88jq3zn7ap/Reservas-Bancarias.nlogo?rlkey=stft01m5tehtykx5bl1r062xi&dl=1)<br><br>
+  </td>
+        
+ <td>
+
+  </td>
+  
+  </tr>
+ 
+ 
+</table>
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+
+
+
+
+ 
+
+ 
+## Libros
+
+<center> ![](https://www.dropbox.com/scl/fi/a7edxfh7jluzsjcuwwelp/Libro.jpg?rlkey=l6lpdbel2xryrjb81y3f2y7za&dl=1){width=20%} </center>
+
+
+[William Rand Uri Wilensky: An Introduction to Agent Based Modelling](https://www.dropbox.com/scl/fi/lumj07jemtqsfe0li3he1/WilenskyRandLibroNetLogo.pdf?rlkey=waliot0xz1hy7bz457vly3uzt&dl=1)<br>
+
+[Nigel Gilbert, John Lyne: Agent Based Model in Economics](https://www.dropbox.com/scl/fi/8pybw7mylnxp9m30wgvpe/Gilbert-G.-Nigel_-Hamill-Lynne-Agent-based-modelling-in-economics-2015-Wiley.pdf?rlkey=it0f2j1i334d9n4lwbwqyw6vn&dl=1)<br>
+[Nigel Gilbert: Simulation for the Social Scientist](https://www.dropbox.com/scl/fi/1mta4irflbd9gvf0zaliu/GilbertSimulationSocialScientist.pdf?rlkey=4z24v27sqdopfagjepxcioosg&dl=1)<br>
+[Tim Gooding : Economics for a Fairer Society](https://www.dropbox.com/scl/fi/o6azflcjglgg65lvmhkcu/Tim-Gooding-Economics-for-a-Fairer-Society_-Going-Back-to-Basics-using-Agent-Based-Models-Springer-International-Publishing_-Palgrave-Pivot-2019.pdf?rlkey=1sgkq104b8yveg6epbnif2lcl&dl=1)<br>
+
+[Mitchell Resnick: Turtles, Termites and Traffic Jams](https://www.dropbox.com/scl/fi/rfvy0vr4s49bfdqsgvz5z/Turtles-Termites-and-Traffic-Jams_-Explorations-in-Mitchel-Resnick-1994-MIT-Press-9780262181624-23362d21e02b250202d286fcedf9ead7-Anna-s-Archive.pdf?rlkey=wxxvg8lwob0c5nc0r8gd2o0kk&dl=1)<br>
+
+[Marco Janssen: Agent based Modelling](https://www.dropbox.com/scl/fi/43vvv7aocajocmwt6n214/Marco-Janssen-AgentBasedModeling.pdf?rlkey=9qf2c7x694shgl595jakvzyn1&dl=1)<br>
+
+[John Miller Scott Page Complex Adaptyve Systems](https://www.dropbox.com/scl/fi/vy32fn8ehhkm7fhc7imo0/Princeton-Studies-in-Complexity-John-H.-Miller-Scott-E.-Page-Complex-Adaptive-Systems.pdf?rlkey=kzmtrlkp60rtk10dnlilaz1w5&dl=1)<br>
+[Christopher Keane: Modeling Behaviour in Complex Systems](https://www.dropbox.com/scl/fi/9cnf0eqgw8cwo0o3iq0dt/Christopher-Keane-MPH-ScD-Modeling-Behavior-in-Complex-Public-Health-Systems_-Simulation-and-Games-for-Action-and-Evaluation-Springer-Publishing-Company-2013.pdf?rlkey=z2f8j14jvqtjck731h2b6pu0v&dl=1)<br>
+
+
+
+<br></br>
+<br></br>
+
+
+
+<br></br>
+
+<br></br>
+
+
+
+
+
+## Artículos
+
+<center>  ![](https://www.dropbox.com/scl/fi/8m6lp8un88kxvgmn2z53y/Ants.jpeg?rlkey=fl5ihfetl965uph5zhmfv2sjp&dl=1){width=20%}  </center>
+
+
+
+1.  [Watts, Strogatz : Collective Dynamics of small world Networks](https://www.dropbox.com/s/kbklhcxixkgnaut/NAture_Watts_Strogatz.pdf?dl=1)
+
+2.  [Barabasi, Error and Attack Tolerance of Complex Networks](https://www.dropbox.com/s/icfcs0ofw0eazik/BarabasiErrorAndAttack.pdf?dl=1)
+
+3.  [Christakis, Sensors for Early Detection](https://www.dropbox.com/s/8v9ybdczubnb5b2/SensorsForEarlyDetection.pdf?dl=1)
+
+4.  [Bocatelli,: Complex Networks, Structure and Dynamics](https://www.dropbox.com/s/9o2u09crc39wxy6/BocatelliNetworksStructureDynamics.pdf?dl=1)
+
+5.  [Vespignani Epidemic Spreading in Sclae Free Networks](https://www.dropbox.com/s/b42cn7yxym1elt7/PastorVespignaniEpidemicsScaleFree.pdf?dl=1)
+
+6.  [Kleinberg : The link Prediction problem for social networks](https://www.dropbox.com/s/o4fwmooetocx4sj/KleinbergLinkPrediction.pdf?dl=1)
+
+7.  [Newman: Mathematics of networks](https://www.dropbox.com/s/pd4igufdnujmiqe/Newman%20Mathematics%20of%20Networks.pdf?dl=1)
+
+8.  [Newman: The structure and function of networks](https://www.dropbox.com/s/v2xsjx131rfd81f/Newman%20Strucutre%20Function.pdf?dl=1)
+
+9.  [Newman: The structure and function of complex networks](https://www.dropbox.com/s/50ikivxswsarwu3/Newman%20Strucuture%20Complex%20networks.pdf?dl=1)
+
+10. [Luseeau Newman : Identifying the role that animal plays in their social networks](https://www.dropbox.com/s/o5efdz1v8e3eu0l/DelfinesNewmanLusseau.pdf?dl=1)
+
+11. [Jakob Moreno: Sociology in the classroom](https://www.dropbox.com/s/l6b82a7l5ty0mhh/moreno1943.pdf?dl=1)
+
+
+## Cursos en Línea
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/x4wly2dc2bmgd8xv1rvu9/Curso.jpeg?rlkey=sr10fk1hprbfhcnlizpj98ky4&dl=1){width=20%}  </center>
+
+
+
+
+[Agent Based Modelling for Social Research: Southampton University](https://www.ncrm.ac.uk/resources/online/ABM_index.php)<br>
+[Agent Based Modelling Columbia University](https://www.publichealth.columbia.edu/research/population-health-methods/agent-based-modeling)<br>
+[Models of Social Dynamcis, Paul Smaldino](https://learn.culturalevolutionsociety.org/social_dynamics_module/)<br>
+[Coursera Dan Centola, Network Dynamic of Social Behaviour](https://www.coursera.org/learn/networkdynamics)
+
+<br></br>
+<br></br>
+
+<br></br>
+
+<br></br>
+
+
+
+## Videos
+
+William Rand:<br>
+
+1. [William Rand: What is Agent Based Modelling](https://www.youtube.com/watch?v=FVmQbfsOkGc&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=10)<br>
+   [Tools of Agent Based Modelling](https://www.youtube.com/watch?v=QtZ3M5UNKhI&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=11)<br>
+   [Equation Based vs Agent based Modelling](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=23)<br>
+  
+The Adoption Model: <br><br>
+
+  [1. The Beginning](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=57)<br>
+  [2.The Adoption Rules](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=58)<br>
+  [3, Plotting](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=59)<br>
+  [4. Networks Part 1](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=60)<br>
+  [5. Networks Part 2](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=61)<br>
+  [6. New Network Structures](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=62)<br>
+  [7. Influentials Part 1](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=63)<br>
+  [8. Influentials Part 2](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=64)<br>
+  [9. Analysing the Model Part 1](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=65)<br>
+  [10. Analysing the Model Part 2](https://www.youtube.com/watch?v=FCQXzyqZbAs&list=PLF0b3ThojznRKYcrw8moYMUUJK2Ra8Hwl&index=66)<br>
+  
+   
+
+<center>  ![](https://www.dropbox.com/scl/fi/iefrs6100uwkkvu5xh6v5/Videos.jpeg?rlkey=h2rd25bxb4gl8cjnx787ywo8h&dl=1){width=20%}  </center>
+
+1.  [Patrones de Vuelo](https://www.youtube.com/watch?v=ttH7sQ48n5k)
+
+2.  [Charla Alan Turing Institute](https://www.youtube.com/watch?v=L6CqqlILBCI&t=4788s)
+
+3.  [Nicholas Christakis Social Networks](https://www.youtube.com/watch?v=wadBvDPeE4E)
+
+4.  [Documental the promise of network science 2017](https://www.youtube.com/watch?v=qB8YnTpCzEU)
+
+5.  [Bernie Hogan Alan Turing Inst Network Analysis](https://www.youtube.com/watch?v=i__0cG4ijrI&t=3690s)
+
+6.  [The Human Network Matthew Jackson Google Talks](https://www.youtube.com/watch?v=2C5jrYlVHJQ)
+
+7.  [Raissa di Souza Santafe](https://www.youtube.com/watch?v=a6U7ksiu10Y&t=2s)
+
+8.  [Dan Centola complex contagions Santafé](https://www.youtube.com/watch?v=o0fDcUJMzkI&t=294s)
+
+9.  [Mark Newman Conferencia en el Alan turing Institute](https://www.youtube.com/watch?v=gPSt-xs_zWQ&list=PLhUVsjVWqglS5Pnz04SbRticB4mWgu3Jk&index=8)
+
+10. [Mark Newman Conferencia Michigan sobre physics of complex systems](https://www.youtube.com/watch?v=2L64AhoKamE)
+
+
+ 
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+## Enlaces de Internet
+
+
+<center> ![](https://www.dropbox.com/scl/fi/vlspuzl94i2kr6ur7xxh3/EnlacesInternet.jpeg?rlkey=noq78yt4u5cci73k1iyx1j1e3&dl=1){width=20%} </center>
+
+
+### Actividades Interactivas
+
+ ¡¡¡¡ New Complexity Explorables !!!!!! (Nicky case ):<br>
+
+
+<br><br><br><br>
+
+### Páginas Web
+
+[Redes Sin Palabras Alfonso Meléndez](http://profesores.is.escuelaing.edu.co/~amelendez/RedesSinPalabras/RedesSinPalabras.html)
+
+[Página Web Lada Adamic](http://www.ladamic.com/)
+
+[Awesome Network Analysis Francois Briatte](https://github.com/briatte/awesome-network-analysis)
+
+[Networks Demystified, Scott Wengart](https://scottbot.net/tag/networks-demystified/)
+
+[Albert-Laszlo Barabasi Network Science](https://scottbot.net/tag/networks-demystified/)
+
+[Journal of Complex networks](https://academic.oup.com/comnet)
+[Social Networks in Movies](https://moviegalaxies.com/)
+
+
+
+
+
+
+
+<br></br> <br></br>
+
+
+<br></br><br></br><br></br><br><br>
+<br></br><br></br><br></br>
+
+
+
+
