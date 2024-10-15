@@ -150,15 +150,11 @@ Sesión 1: IA Generativa <br><br>
  [Slides ¿Qué es la IA Generativa?](https://www.dropbox.com/scl/fi/8ojsz74z3kzemfd5orvx3/0.-GenerativeAIInaNutshellEspa-ol.pptx?rlkey=2bxd0az4joa36wuee5xya6c2q&dl=1)<br>
  [Slides ¿Qué es el ChatGpt?](https://www.dropbox.com/scl/fi/ag6k6xo3x0prgkr6cikof/1.-WhatIsChatGptEsp.pptx?rlkey=6twrl8mcdku2x46cs1zw31gtu&dl=1)<br>
   [Slides: Limitaciones de ChatGpt](https://www.dropbox.com/scl/fi/0jzeo5e766n2lpjcm0jid/2.-LimitationsChatGptEsp.pptx?rlkey=9lx7caodhl7p1fy92qyiqa7fp&dl=1)<br><br>
-  [1. IA Generativa para Todos](https://www.dropbox.com/scl/fi/m90ab28jauq62obydacm3/W1Esp.pptx?rlkey=z03z7ylpuy9p8l0k46d2spv3f&dl=1)<br>
-  [2. IA generativa y apps de Software](https://www.dropbox.com/scl/fi/l5qscqidfpr7xt0jza132/W2Esp.pptx?rlkey=7hjmnbuvzaq0t0wllbvzom9sm&dl=1)<br>
-  [3. La Ia Generativa y los negocios](https://www.dropbox.com/scl/fi/p44qjb2cgrii3emqsz7gh/W3Esp.pptx?rlkey=httka4buqk0sj74aikpv8h2ht&dl=1)<br>
-  
- Sesión 2: Historia de los ChatBots<br><br>
- [Slides : Historia de los ChatBots 1](https://www.dropbox.com/scl/fi/fkx49ps02sikll0a03jzi/ClassicalSlidesEsp.pptx?rlkey=ls31b50jihivky920jp9c4c3v&dl=1)<br>
- [Slides : Historia de los ChatBots 2](https://www.dropbox.com/scl/fi/ox1uiysiiv2mhxsbskw99/EvolutionModernSlidesEsp.pptx?rlkey=3tb3ys1ts1jx3jshcr9qb36xl&dl=1)<br>
+  [IA Generativa para Todos(Andrew Ng)](https://www.dropbox.com/scl/fi/m90ab28jauq62obydacm3/W1Esp.pptx?rlkey=z03z7ylpuy9p8l0k46d2spv3f&dl=1)<br>
  
- Sesión 3: Taller ChatGpt y Chatbots Multimedia <br><br>
+ 
+ 
+ Sesión 2 y 3: Taller ChatGpt y Chatbots Multimedia <br><br>
  [Slides: Ejemplos de Interacción](https://www.dropbox.com/scl/fi/da7zrxohk411oityq7w90/Ejemplos-Claves-ChatGpt.pptx?rlkey=jcsuxb6ghtjqfyp0cok3ru90b&dl=1)<br>
  [¡¡ Nuevo!! Slides : Chatbots Multimedia](https://www.dropbox.com/scl/fi/jwmvaaltxglhmltct86lq/ChatBots-Multimedia.pptx?rlkey=3hr634xkjfxp4bz9ppq01p8ns&dl=1)<br>
  
@@ -169,6 +165,7 @@ Sesión 1: IA Generativa <br><br>
   [1. Qué es la IA?](https://www.dropbox.com/scl/fi/zwb3cfyqq654ja0knl508/W1Esp.pptx?rlkey=xxmauo2ec3yum8jlld46l50x3&dl=1)<br>
   [2, Construyendo Proyectos IA](https://www.dropbox.com/scl/fi/kewwsws0u3c8qnj2e3u1b/W2Esp.pptx?rlkey=5u36896j76kgh4adr4jzjpy5c&dl=1)<br>
   [3. Construyendo la IA en su empresa](https://www.dropbox.com/scl/fi/5wjyador3czia24whp9bk/W3Esp.pptx?rlkey=li1j1rfztd2zi8f0nm5jlar5j&dl=1)<br>
+  
   
   Sesión 6:Historia de la IA <br><br>
 </td>
@@ -204,7 +201,18 @@ Sesión 1: IA Generativa <br><br>
  
  <tr>  
     <th>31 de Octubre al 12 de Noviembre </th>
-    <td>Fundamentos del Aprendizaje de Máquina</td>
+    <td>**Fundamentos de Aprendizaje de Máquina**<br><br>
+    
+  Aprendizaje Supervisado y no Supervisado <br>
+  
+  Algoritmos de Aprendizaje de Máquina <br>
+  
+  Evaluación de Modelos y Métricas de rendimiento <br>
+  
+  **Aplicaciones Prácticas del Machine Learning** <br><br>
+    
+    
+   </td>
     
 <td>
     
@@ -221,10 +229,35 @@ Sesión 1: IA Generativa <br><br>
  
  <tr>
      <th>14 de Noviembre a 26 de Noviembre</th>
-    <td>Aplicaiones Prácticas de la Inteligencia Artificial</td>
+    <td>**Aplicaciones Prácticas de la Inteligencia Artificial**<br><br>
+    
+  Visión Por Computador y Reconocimiento de Patrones<br>
+  
+  (Hablar de Image Net y de Lecun reconocimiento de números)<br>
+  
+  PNL y ChatBots<br>
+  
+  
+  Sistemas de Recomendación<br>
+   Caso de Estudio:<br>
+   
+   Implementación de IA en Industria<br><br>
+   
+    
+    
+    
+    
+    
+    
+    
+   
+   </td>
     
 <td>
-    
+     Historia de los ChatBots<br><br>
+ [Slides : Historia de los ChatBots 1](https://www.dropbox.com/scl/fi/fkx49ps02sikll0a03jzi/ClassicalSlidesEsp.pptx?rlkey=ls31b50jihivky920jp9c4c3v&dl=1)<br>
+ 
+ [Slides : Historia de los ChatBots 2](https://www.dropbox.com/scl/fi/ox1uiysiiv2mhxsbskw99/EvolutionModernSlidesEsp.pptx?rlkey=3tb3ys1ts1jx3jshcr9qb36xl&dl=1)<br>
         
   </td>
   
@@ -238,10 +271,27 @@ Sesión 1: IA Generativa <br><br>
   
    <tr>
     <th>28 de Noviembre a 12 de Diciembre </th>
-    <td>Desarrollo e Implementación de Proyectos de IA </td>
+    <td>**Desarrollo e Implementación de Proyectos de IA**<br><br>
     
-    <td>  
-       </td>
+  Entorno de Desarrollo y Herramientas para Proyectos de IA<br>
+  
+  Proceso de Desarollo de un proyecto de IA<br>
+    
+   Consideraciones éticas<br>
+    
+   Presentación de Proyectos<br><br>
+    
+    
+    
+  </td>
+    
+  <td>  
+    
+  [ Slides: IA generativa y apps de Software (Andrew Ng)](https://www.dropbox.com/scl/fi/l5qscqidfpr7xt0jza132/W2Esp.pptx?rlkey=7hjmnbuvzaq0t0wllbvzom9sm&dl=1)<br>
+  
+  [ Slides:La Ia Generativa y los negocios(Andrew Ng)](https://www.dropbox.com/scl/fi/p44qjb2cgrii3emqsz7gh/W3Esp.pptx?rlkey=httka4buqk0sj74aikpv8h2ht&dl=1)<br>
+  
+   </td>
     
 <td>
         </td>
