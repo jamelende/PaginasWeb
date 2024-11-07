@@ -693,8 +693,8 @@ práctico y aplicado
 
   <td>
   
-  Machine Learning<br>
-  (Aprendizaje de Máquina)
+ Introducción al Aprendizaje Automático
+ ( Machine Learning)<br>
 
 
    </td>
@@ -707,10 +707,8 @@ práctico y aplicado
 
 <!-- [El Poder de lo Digital 2 (Alpaydin)](https://www.dropbox.com/s/y7xwy5c4ixexvp1/ElPoderDeLoDigital2.pptx?dl=1)<br> -->
 
-[Diagnosticando Enfermedades cardiacas](https://www.dropbox.com/scl/fi/eah12trvo6n4tef9cb21e/Diagnosticando-enfermedades-cardiacas.pptx?rlkey=hzfioztrgnh703fbopo08b4sh&dl=1)<br>
 
 
-[SlidesMLSancho(zip)](https://www.dropbox.com/s/c3w6ch3iozsr9c9/SlidesMLSancho.zip?dl=1)<br>
 
 
 
@@ -742,20 +740,17 @@ práctico y aplicado
 
   <td>
   
-  **Primero Taller machine learning**<br>
+  **Primero Lecturas**<br>
   
-   **Taller**<br>
+  [1. Prefacio Español](https://www.dropbox.com/scl/fi/tqnx3wog20v4rkwc76i10/Prefacio-Espa-ol.docx?rlkey=qubhc32dx9irwjrqghiaciw9j&dl=1)<br>
   
- [1. Video Teachable Machine (3:18)](https://www.youtube.com/watch?v=3BhkeY974Rg&t=13s)<br>
+  [Prefacio Inglés](https://www.dropbox.com/scl/fi/s4emd0rx13sz3zqiguf9e/Prefacio-Ingl-s.pdf?rlkey=gm17ggkw732ov75jh6m6wsgso&dl=1)<br>
   
-  [2. Ejemplo 1 Hand Cow (0:12)](https://www.youtube.com/watch?v=LFHZtAasFXE)<br>
+  [2.Terrified Español](https://www.dropbox.com/scl/fi/md8dvmnds7vfhv88obnr4/Terrified-Espa-ol.docx?rlkey=p4gp5yd98nd8q481dlryaa67m&dl=1)<br>
   
-  [3. Ejemplo 2: Air Guitar(0:28)](https://www.youtube.com/watch?v=oP8-_0ZyY3U)<br>
-
-  [4. Teachable Machine Google 2017](https://teachablemachine.withgoogle.com/v1/)<br>
+  [Terrified Inglés](https://www.dropbox.com/scl/fi/6rmorlk5h7h8r8dwcqhye/Terrified-Ingl-s.pdf?rlkey=28q4zg0dpanpnlzirh0tn6jxa&dl=1)<br>
   
-  
-[5. Teachable machine 2024](https://teachablemachine.withgoogle.com/)<br>
+ 
 
 
 [6. Codefinity Interactive machine learning (Solo unos capítulos)](https://codefinity.com/courses/v2/f9fc718f-c98b-470d-ba78-d84ef16ba45f?utm_source=google&utm_medium=cpc&utm_campaign=20955067105&utm_content=158152629796&utm_term=neural%20network&gad_source=1&gclid=Cj0KCQjwpvK4BhDUARIsADHt9sTyrtNpwefd4iDZKv6rvVvtoH2uyqkYEIv92GOBZZEfjxF6pSGK6dAaArH_EALw_wcB)<br>
@@ -780,13 +775,16 @@ práctico y aplicado
 
 **Videos:**<br>
 
-[What is ML in 5 minutes](https://www.youtube.com/watch?v=7gbGavTLUUE)<br>
+
 
 [Computer Scientist Explains Machine Learning in 5 Levels of Difficulty | WIRED](https://www.youtube.com/watch?v=5q87K1WaoFI)<br>
 
-[Machine Learning is fun](https://www.machinelearningisfun.com/)<br>
+**Libros**<br>
 
-[Tensor Flow Playground an example](https://www.youtube.com/watch?v=ZNrmS6q_Zp4)<br>
+[Machine Learning is fun ebook](https://www.machinelearningisfun.com/)<br>
+
+[Libro Luis Serrano Grokking Machine Learning](https://www.dropbox.com/scl/fi/cnvu0aguzx5a6oczgpa0d/2.-Grokking-Machine-Learning-Serrano.pdf?rlkey=5m1otas2x042rqd14jhacma6a&dl=0)<br>
+
 
 <!-- [0. Abuelo de la IA (8 min)](https://www.youtube.com/watch?v=gtRLmL70TH0)<br> -->
 
@@ -795,7 +793,6 @@ práctico y aplicado
 <!-- [2. Video Mccarthy Español: 5 Minutos](https://www.youtube.com/watch?v=s9dbkKnyDLE)<br> -->
 
 
-<!-- [3. Video Yann Lecun MNIST](https://www.youtube.com/watch?v=FwFduRA_L6Q)<br> -->
 
 <!-- [4. Video Sebatian Thurn TED 2011](https://www.youtube.com/watch?v=HW3q6ktpQXA&t=124s)<br> -->
 
@@ -819,7 +816,7 @@ práctico y aplicado
 
   <td>
 
-  **Machine Learning Parte dos**<br>
+  **Tipos de Aprendizaje**<br>
 
  
 
@@ -828,6 +825,28 @@ práctico y aplicado
 
 <td>
 
+**Slides**<br>
+
+**Ejemplo Importante**<br>
+
+[0. Diagnosticando Enfermedades cardiacas](https://www.dropbox.com/scl/fi/eah12trvo6n4tef9cb21e/Diagnosticando-enfermedades-cardiacas.pptx?rlkey=hzfioztrgnh703fbopo08b4sh&dl=1)<br>
+
+**Tipos de Aprendizaje**<br>
+
+[1. Aprendizaje Supervisado y no Supervisado](https://www.dropbox.com/scl/fi/deb93k07dzl6w3w1ow5gq/0.-Aprendizaje-Supervisado-y-no-Supervisado.pptx?rlkey=nr5pgnv3ues3rrbojzjq7r1vg&dl=1)<br>
+
+[2. Qué es Aprendizaje Supervisado?](https://www.dropbox.com/scl/fi/1gtkikjz8mjke5e8c99p6/1.-Qu-es-el-Aprendizaje-Autom-tico.pptx?rlkey=db9azvwyay1dvyov6ece1wsk8&dl=1)<br>
+
+
+
+
+
+**Slides Adicionales**<br>
+
+
+[SlidesMLSancho(zip)](https://www.dropbox.com/s/c3w6ch3iozsr9c9/SlidesMLSancho.zip?dl=1)<br>
+
+
 
 
 
@@ -835,23 +854,34 @@ práctico y aplicado
 
   <td>
   
-**Taller TensorFlow PlayGround**<br>
-
-[1. Video Explicativo (13 min)](https://www.youtube.com/watch?v=ZNrmS6q_Zp4&t=153s)<br>
-
-[2. Sitio TensorFlow PlayGround](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.84976&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false)<br>
 
 
 
-[Como jugar con TensorFlow Playground 34 min](https://www.youtube.com/watch?app=desktop&v=WvE4vF4tfrU)<br>
+
+
 
 
   
 **Lecturas:**<br>
 
+[Ian GoodFellow , Yoshua Bengio ](https://www.dropbox.com/scl/fi/709n6fu1qjl37ik9rb7fp/Introducci-n-Goodfellow-Bengio.pdf?rlkey=gl04ncqx0bkyjr462c3m275rf&dl=1)<br>
+
+[Francois Chollet](https://www.dropbox.com/scl/fi/bn8afndolu7durx8qrwat/Chollet-Historia-del-ML.pdf?rlkey=ar9vg53l62da70zact3sqz9va&dl=1)<br>
+
+** Videos asociados a lecturas**<br>
+
+[NVIDIa: GTC 2015: A Short History of Deep Learning, ImageNet (part 4) ](https://www.youtube.com/watch?v=pqvdZ2jp1NA&t=27s)<br>
+
+[3. Video Yann Lecun MNIST](https://www.youtube.com/watch?v=FwFduRA_L6Q)<br>
+
+[Conferencia GTC 2015 Nvidia](https://www.youtube.com/watch?v=fNa9Z_o0hP4&list=PLZHnYvH1qtOaW8_l6XgrFqqp2V2Q3hMly)<br>}
 
 
 
+
+
+
+**Lecturas Adicionales**<br>
 
   
 [1. Fundamentos de Machine Learning](https://www.cs.us.es/~fsancho/Blog/posts/Fundamentos_de_ML/)<br>
@@ -859,6 +889,24 @@ práctico y aplicado
 [2. Aprendizaje Supervisado y no Supervisado](https://www.cs.us.es/~fsancho/Blog/posts/Aprendizaje_Supervisado_No_Supervisado.md.html)<br>
 
 [3. Algoritmos de Clustering](https://www.cs.us.es/~fsancho/Blog/posts/Clustering/)<br>
+
+
+ **Talleres**<br>
+  
+
+ [1. Video Teachable Machine (3:18)](https://www.youtube.com/watch?v=3BhkeY974Rg&t=13s)<br>
+  
+  [2. Ejemplo 1 Hand Cow (0:12)](https://www.youtube.com/watch?v=LFHZtAasFXE)<br>
+  
+  [3. Ejemplo 2: Air Guitar(0:28)](https://www.youtube.com/watch?v=oP8-_0ZyY3U)<br>
+
+  [4. Teachable Machine Google 2017](https://teachablemachine.withgoogle.com/v1/)<br>
+  
+  
+[5. Teachable machine 2024](https://teachablemachine.withgoogle.com/)<br>
+
+**Python!!**<br>
+
 
 [Interactive Guides Machine Learning  ¡¡¡Python GitHUb!!!!](https://ml4a.github.io/guides/)
 
@@ -869,26 +917,58 @@ práctico y aplicado
 
 **Videos:**<br>
 
-[Canal Serrano en Español](https://youtube.com/@serrano.academyenespanol3099?si=XJnARAEbKtRVVOB5)<br>
 
-[Luis Serrano Clustering k-means](https://www.youtube.com/watch?v=QXOkPvFM6NU)<br>
+[1. What is ML in 5 minutes](https://www.youtube.com/watch?v=7gbGavTLUUE)<br>
+
+[2. Andrew Ng: Machine learning 9 min](https://www.coursera.org/learn/ai-for-everyone/lecture/5TPFo/machine-learning)<br>
+
+[3. Stat Quest: A gentle introduction to machine learning 13 min](https://www.youtube.com/watch?v=Gv9_4yMHFhI)<br>
+
+[4. Luis serrano A friendly introduction to Machine Learning 34 min](https://www.youtube.com/watch?v=IpGxLWOIZy4&list=PLISEtDmihMo1JCbXc9ejN1OOGaTBl-0kL)<br>
+
+[5. Andrew Ng Unsupervised Learning 15 min](https://www.youtube.com/watch?v=Qj5ltrAFric)<br>
+
+**Videos Aplicaciones**<br>
+
+**Aprendizaje Supervisado**<br>
+
+[Predicción de Precios de casas en Python 44 min](https://www.youtube.com/watch?v=Wqmtf9SA_kk)<br>
+
+[Detección de Spam Python 35 min](https://www.youtube.com/watch?v=FkF2jhaRJIs)<br>
+
+[Sistemas de recomendación con Python 19 min](https://www.youtube.com/watch?v=8bD8Pagirao)<br>
+
+[Análisis de Sentimientos Video TE 15 min](https://www.youtube.com/watch?v=n4L5hHFcGVk)<br>
+
+[Reconocimiento de imágenes con Python 22 min](https://www.youtube.com/watch?v=oEKg_jiV1Ng)<br>
 
 
- [Nat and Friends: How Does Your Phone Know This Is A Dog?](https://www.youtube.com/watch?v=bHvf7Tagt18)<br>
+
+**Aprendizaje no Supervisado**<br>
+
+[Recomendación de peliculas 14 min](https://www.youtube.com/watch?v=Eeg1DEeWUjA)<br>
+
+[Segementación de Mercado 58 min](https://www.youtube.com/watch?v=-Z_cwgzDfPc)<br>
+
+
+
+
+
+
+
+<!-- [Canal Serrano en Español](https://youtube.com/@serrano.academyenespanol3099?si=XJnARAEbKtRVVOB5)<br> -->
+
+<!-- [**1 Clave: Luis Serrano Supervised Learning Regression**](https://www.youtube.com/watch?v=IpGxLWOIZy4&list=PLISEtDmihMo1JCbXc9ejN1OOGaTBl-0kL)<br> -->
+
+<!-- [**2. Clave: Luis Serrano Unsupervied Learning Clustering k-means**](https://www.youtube.com/watch?v=QXOkPvFM6NU)<br> -->
+
+
   
-[Curso Machine Learning For Music and Art](https://www.kadenze.com/courses/machine-learning-for-musicians-and-artists/info)<br>
 
-
-[Stat Quest: A gentle introduction to machine learning](https://www.youtube.com/watch?v=Gv9_4yMHFhI)<br>
-
-[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)<br>
 
  
  
- [3Blue1Brown Deep learning](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)<br>
- 
 
- [Convolutional Neural networks Explained](https://www.youtube.com/watch?v=pj9-rr1wDhM&t=133s)<br>
  </td>
 
  </tr>
@@ -908,13 +988,21 @@ práctico y aplicado
 
  <td>
 
- Machine Learning (Aprendizaje de Máquina)
+**Aprendizaje Supervisado**
 
 
 
    </td>
 
 <td>
+
+[Cinco Ejemplos Aprendizaje Supervisado](https://www.dropbox.com/scl/fi/m0jw8444upfpig9unhs5w/CincoEjemplosAprendizajeSupervisado.zip?rlkey=51cbzv4f7miq2lqa3hriu1jnr&dl=1)<br>
+
+
+[2.1 Applet interactivo Linear regression](https://mathlets.org/mathlets/linear-regression/)<br>
+[2.2 Otro Applet](https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_all.html)<br>
+
+[2.3 Curve Fitting](https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_all.html)<br>
 
 
   </td>
@@ -924,21 +1012,47 @@ práctico y aplicado
 
 <td>
 
+
+**Videos Modelos de ML**<br>
+
+[0. Clasificación](https://www.youtube.com/watch?v=QM0sYbEQSkM)<br>
+
+[1. Regresión Logística](https://www.youtube.com/watch?v=72AHKztZN44)<br>
+
+[2. Regresión Lineal (Gradient Descent)](https://www.youtube.com/watch?v=QoK1nNAURw4&t=90s)<br>
+
+
+
+
+
+[3. Árboles de Decisión](https://www.youtube.com/watch?v=_L39rN6gz7Y)<br>
+
+[4. Random Forests](https://www.youtube.com/watch?v=J4Wdy0Wc_xQ&t=1s)<br>
+
+
+
+
+
+
+
 **Videos:**<br>
 
- [Andrew NG How AI is Changing Coding and Education](https://www.youtube.com/watch?v=J91_npj0Nfw&t=793s)<br>
- 
-[Sal Khan , How Ai could save and not destroy education](https://www.youtube.com/watch?v=hJP5GqnTrNo)<br>
+ [Convolutional Neural networks Explained](https://www.youtube.com/watch?v=pj9-rr1wDhM&t=133s)<br>
+
+
+<!--  [Andrew NG How AI is Changing Coding and Education](https://www.youtube.com/watch?v=J91_npj0Nfw&t=793s)<br> -->
+
+<!-- [Sal Khan , How Ai could save and not destroy education](https://www.youtube.com/watch?v=hJP5GqnTrNo)<br> -->
 
 **Otros Videos**<br>
 
 [Teaching Computers to understand pictures 2015](https://www.ted.com/talks/fei_fei_li_how_we_re_teaching_computers_to_understand_pictures?subtitle=en&lng=es&geo=es)<br>
-[Canal Espectacular IA](https://www.youtube.com/channel/UCy5znSnfMsDwaLlROnZ7Qbg/featured)
+
+<!-- [Canal Espectacular IA](https://www.youtube.com/channel/UCy5znSnfMsDwaLlROnZ7Qbg/featured) -->
   
 
-[PlayGround TensorFlow](https://playground.tensorflow.org/)<br>
+<!-- [PlayGround TensorFlow](https://playground.tensorflow.org/)<br> -->
 
-[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)
 
 
  </td>
@@ -956,25 +1070,90 @@ práctico y aplicado
 
     <td>
 
- Deep Learning
+ **Aprendizaje  Supervisado**
 
    </td>
 
 <td>
 
 
+**Supervisados**<br>
+
+
+[5. Support Vector Machines](https://www.youtube.com/watch?v=efR1C6CvhmE&t=946s)<br>
+
+[6. Naive Bayes](https://www.youtube.com/watch?v=O2L2Uv9pdDA&t=104s)<br>
+
+[7. K-Neighbors]()
+
+
+
+**No supervisados**<br>
+
+[4. Tres Algoritmos no Supervisados](https://www.dropbox.com/scl/fi/s94o8bewlcg7c12v5ksx7/TresAlgoritmosNoSupervisados.zip?rlkey=izypn0ftplqxtwsh8z9vmdl9o&dl=1)<br>
+
+
+[1. K-means Clustering](https://www.youtube.com/watch?v=4b5d3muPQmA&t=105s)<br>
+
+[Applet Interactivo k-means](https://kmeans.js.org/en/)<br>
+
+
+[2. Hierarchical Clustering](https://www.youtube.com/watch?v=7xHsRkOdVwo)<br>
+
+[3. Matrix Factorization](https://www.youtube.com/watch?v=ZspR5PZemcs&t=2s)<br>
+
+<!-- [Qué es una red neuronal? (CoDefinity)](https://www.dropbox.com/scl/fi/ohvca4hzrxj0w8wvh4o60/Qu-es-una-red-neuronal.zip?rlkey=n559bkg2eq2bu7cjzd0cfr9ft&dl=1)<br> -->
+
+
+
   </td>
 
   <td>
-        </td>
+  
+  
+**Taller TensorFlow PlayGround**<br>
+
+[1. Video Explicativo (13 min)](https://www.youtube.com/watch?v=ZNrmS6q_Zp4&t=153s)<br>
+
+[2. Sitio TensorFlow PlayGround](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.84976&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false)<br>
+
+
+
+[Como jugar con TensorFlow Playground 34 min](https://www.youtube.com/watch?app=desktop&v=WvE4vF4tfrU)<br>
+
+ </td>
 
 <td>
 
 **Videos:**<br>
 
-[PlayGround TensorFlow](https://playground.tensorflow.org/)<br>
 
-[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)
+**Deep Learning**<br>
+
+[Yann Lecun Cifar Dataset](https://www.cs.toronto.edu/~kriz/cifar.html)<br>
+
+
+[TED Yoshua Bengio 2017](https://www.youtube.com/watch?v=uawLjkSI7Mo)<br>
+
+[Geoffrey Hinton: The Foundations of Deep Learning](https://www.youtube.com/watch?v=zl99IZvW7rE)<br>
+
+
+
+ <!-- [Nat and Friends: How Does Your Phone Know This Is A Dog?](https://www.youtube.com/watch?v=bHvf7Tagt18)<br> -->
+
+
+<!-- [PlayGround TensorFlow](https://playground.tensorflow.org/)<br> -->
+
+[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)<br>
+
+[Curso Machine Learning For Music and Art](https://www.kadenze.com/courses/machine-learning-for-musicians-and-artists/info)<br>
+
+
+<!-- [Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)<br> -->
+
+<!--  [3Blue1Brown Deep learning](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)<br> -->
+
+
  </td>
 
  </tr>
@@ -992,7 +1171,7 @@ práctico y aplicado
 
 
 
-  **Aplicaciones Prácticas del Machine Learning** <br><br>
+  **Aprendizaje no Supervisado** <br><br>
 
 
    </td>
@@ -1003,7 +1182,37 @@ práctico y aplicado
   </td>
 
   <td>
-        </td>
+  
+**Cuadernos Jupyter ML**<br>
+
+
+  
+[1. Linear Regression](https://github.com/luisguiserrano/manning/blob/master/Chapter_03_Linear_Regression/Coding_linear_regression.ipynb)<br>
+
+[1.1 Predicción Precios Casas](https://github.com/luisguiserrano/manning/blob/master/Chapter_03_Linear_Regression/House_price_predictions.ipynb)<br>
+
+[2. Logistic regression](https://github.com/luisguiserrano/manning/blob/master/Chapter_06_Logistic_Regression/Coding_logistic_regression.ipynb)<br>
+
+[2.1 Sentiment Analysis](https://github.com/luisguiserrano/manning/blob/master/Chapter_06_Logistic_Regression/Sentiment_analysis_IMDB.ipynb)<br>
+
+[3. Decision Trees](https://github.com/luisguiserrano/manning/blob/master/Chapter_09_Decision_Trees/Graphical_example.ipynb)<br>
+
+[3.1 University Admissions](https://github.com/luisguiserrano/manning/blob/master/Chapter_09_Decision_Trees/University_Admissions.ipynb)<br>
+
+[4. Naive bayes](https://github.com/luisguiserrano/manning/blob/master/Chapter_08_Naive_Bayes/Coding_naive_Bayes.ipynb)<br>
+
+**End to End Example**<br>
+
+[Complete example](https://github.com/luisguiserrano/manning/blob/master/Chapter_13_End_to_end_example/End_to_end_example.ipynb)<br>
+
+
+
+
+
+
+
+
+  </td>
 
 <td>
 
@@ -1028,7 +1237,7 @@ práctico y aplicado
 
  
 
-  **Aplicaciones Prácticas del Machine Learning** <br><br>
+  **Exposiciones** <br><br>
 
 
    </td>
@@ -1044,6 +1253,11 @@ práctico y aplicado
 <td>
 
 **Videos:**<br>
+
+[Google the Kernel Trick](https://www.youtube.com/watch?v=Rj6GlPOQ6Fw)<br>
+
+[SVM in 2 minutes](https://www.youtube.com/watch?v=_YPScrckx28)<br>
+
 
 
 [Demis Hassabis:How AI Is Unlocking the Secrets of Nature and the Universe](https://www.youtube.com/watch?v=0_M_syPuFos)<br>
