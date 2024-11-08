@@ -835,7 +835,7 @@ práctico y aplicado
 
 [1. Aprendizaje Supervisado y no Supervisado](https://www.dropbox.com/scl/fi/deb93k07dzl6w3w1ow5gq/0.-Aprendizaje-Supervisado-y-no-Supervisado.pptx?rlkey=nr5pgnv3ues3rrbojzjq7r1vg&dl=1)<br>
 
-[2. Qué es Aprendizaje Supervisado?](https://www.dropbox.com/scl/fi/1gtkikjz8mjke5e8c99p6/1.-Qu-es-el-Aprendizaje-Autom-tico.pptx?rlkey=db9azvwyay1dvyov6ece1wsk8&dl=1)<br>
+[2. Qué es Aprendizaje Supervisado?](https://www.dropbox.com/scl/fi/utdt71zuuri8mm0un11l9/1.-Qu-es-el-Aprendizaje-Autom-tico-Mejor.pptx?rlkey=sz3f8vkbe37lcp68smuqgoooz&dl=1)<br>
 
 
 
@@ -868,13 +868,13 @@ práctico y aplicado
 
 [Francois Chollet](https://www.dropbox.com/scl/fi/bn8afndolu7durx8qrwat/Chollet-Historia-del-ML.pdf?rlkey=ar9vg53l62da70zact3sqz9va&dl=1)<br>
 
-** Videos asociados a lecturas**<br>
+**Videos asociados a lecturas**<br>
 
-[NVIDIa: GTC 2015: A Short History of Deep Learning, ImageNet (part 4) ](https://www.youtube.com/watch?v=pqvdZ2jp1NA&t=27s)<br>
+[NVIDIA: GTC 2015: A Short History of Deep Learning, ImageNet (part 4) ](https://www.youtube.com/watch?v=pqvdZ2jp1NA&t=27s)<br>
 
 [3. Video Yann Lecun MNIST](https://www.youtube.com/watch?v=FwFduRA_L6Q)<br>
 
-[Conferencia GTC 2015 Nvidia](https://www.youtube.com/watch?v=fNa9Z_o0hP4&list=PLZHnYvH1qtOaW8_l6XgrFqqp2V2Q3hMly)<br>}
+[Conferencia GTC 2015 Nvidia](https://www.youtube.com/watch?v=fNa9Z_o0hP4&list=PLZHnYvH1qtOaW8_l6XgrFqqp2V2Q3hMly)<br>
 
 
 
@@ -996,30 +996,48 @@ práctico y aplicado
 
 <td>
 
-[Cinco Ejemplos Aprendizaje Supervisado](https://www.dropbox.com/scl/fi/m0jw8444upfpig9unhs5w/CincoEjemplosAprendizajeSupervisado.zip?rlkey=51cbzv4f7miq2lqa3hriu1jnr&dl=1)<br>
+
+**Ejemplos de aprendizaje Automático**<br>
+
+[1. Precios de casa + Spam](https://www.dropbox.com/scl/fi/pwfmioe6dybvsne5m82ru/2.-Precios-de-Casas-Spam.pptx?rlkey=wycfzvhv8mbdahot97kvrzx3h&dl=1)<br>
+
+[2. Sistema de recomendación de Apps](https://www.dropbox.com/scl/fi/pwfmioe6dybvsne5m82ru/2.-Precios-de-Casas-Spam.pptx?rlkey=wycfzvhv8mbdahot97kvrzx3h&dl=1)<br>
 
 
-[2.1 Applet interactivo Linear regression](https://mathlets.org/mathlets/linear-regression/)<br>
-[2.2 Otro Applet](https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_all.html)<br>
 
-[2.3 Curve Fitting](https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_all.html)<br>
+
+<!-- [Cinco Ejemplos Aprendizaje Supervisado](https://www.dropbox.com/scl/fi/m0jw8444upfpig9unhs5w/CincoEjemplosAprendizajeSupervisado.zip?rlkey=51cbzv4f7miq2lqa3hriu1jnr&dl=1)<br> -->
+
+
+
 
 
   </td>
 
   <td>
-        </td>
+
+**Actividades Interactivas**<br>
+
+  
+[Applet interactivo Linear regression](https://mathlets.org/mathlets/linear-regression/)<br>
+  
+[Otro Applet](https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_all.html)<br>
+
+[Curve Fitting](https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_all.html)<br>
+  
+  
+ </td>
 
 <td>
 
 
 **Videos Modelos de ML**<br>
 
-[0. Clasificación](https://www.youtube.com/watch?v=QM0sYbEQSkM)<br>
+[0. Clasificación (google)](https://www.youtube.com/watch?v=QM0sYbEQSkM)<br>
 
-[1. Regresión Logística](https://www.youtube.com/watch?v=72AHKztZN44)<br>
+[1. Regresión Logística (gooogle)](https://www.youtube.com/watch?v=72AHKztZN44)<br>
 
-[2. Regresión Lineal (Gradient Descent)](https://www.youtube.com/watch?v=QoK1nNAURw4&t=90s)<br>
+[2. Regresión Lineal (Gradient Descent) (google)](https://www.youtube.com/watch?v=QoK1nNAURw4&t=90s)<br>
 
 
 
@@ -1076,31 +1094,45 @@ práctico y aplicado
 
 <td>
 
+**Ejemplos de aprendizaje Supervisado**<br>
 
-**Supervisados**<br>
+[1. Análisis de Sentimientos +Recon de Imágenes](https://www.dropbox.com/scl/fi/jqckzkulto0hmj2iz46yp/4.-An-lisis-de-Sentimientos-Recon-de-Im-genes.pptx?rlkey=8bdz46pkj7cnh42ayj7gz264k&dl=1)<br>
 
+[2. Tres Métodos de Aprendizaje Supervisado](https://www.dropbox.com/scl/fi/qveo28z3z6u0cyuhuy2vc/5.-Algoritmos-de-Aprendizaje-Supervisado.pptx?rlkey=8fpj6xy59vomdr8y9ctq95ra8&dl=1)<br>
 
-[5. Support Vector Machines](https://www.youtube.com/watch?v=efR1C6CvhmE&t=946s)<br>
+[3. Naive bayes](https://www.dropbox.com/scl/fi/bcje2xemgvd4sb8wn2do3/6.-Naive-Bayes.pptx?rlkey=1qgrjzvdj49i4si7fpgqbiyxv&dl=1)<br>
 
-[6. Naive Bayes](https://www.youtube.com/watch?v=O2L2Uv9pdDA&t=104s)<br>
+[4. Redes Neuronales](https://www.dropbox.com/scl/fi/wrco9c1v4xlenxyg78xqr/7.-Redes-Neuronales.pptx?rlkey=7tsn6q8hn7y7c914uu6e6dg2p&dl=1)<br>
 
-[7. K-Neighbors]()
+**Videos**<br>
 
-
-
-**No supervisados**<br>
-
-[4. Tres Algoritmos no Supervisados](https://www.dropbox.com/scl/fi/s94o8bewlcg7c12v5ksx7/TresAlgoritmosNoSupervisados.zip?rlkey=izypn0ftplqxtwsh8z9vmdl9o&dl=1)<br>
+[1. Regresión Logística Video](https://www.youtube.com/watch?v=jbluHIgBmBo&list=PLs8w1Cdi-zvZXi_mhx9l484p3OkNmiZZe&index=2)<br>
 
 
-[1. K-means Clustering](https://www.youtube.com/watch?v=4b5d3muPQmA&t=105s)<br>
+[2. Vectores de Soporte Video](https://www.youtube.com/watch?v=Lpr__X8zuE8&list=PLs8w1Cdi-zvZXi_mhx9l484p3OkNmiZZe&index=3)
 
-[Applet Interactivo k-means](https://kmeans.js.org/en/)<br>
+[3. Video Kernel Trick Google 5 min](https://www.youtube.com/watch?v=Rj6GlPOQ6Fw)<br>
 
 
-[2. Hierarchical Clustering](https://www.youtube.com/watch?v=7xHsRkOdVwo)<br>
 
-[3. Matrix Factorization](https://www.youtube.com/watch?v=ZspR5PZemcs&t=2s)<br>
+**si hay tiempo**<br>
+
+[Métricas de Error](https://www.dropbox.com/scl/fi/unkoky9yvh3hi6bhupsw9/9.-Testing-and-Error-Metrics.pptx?rlkey=xiyflq15owyc9ulcosdzxb6rk&dl=1)<br>
+
+[Overfitting y UnderFitting](https://www.dropbox.com/scl/fi/o7gdx99rpqhrdip1ievjo/10.-Under-and-Overfitting.pptx?rlkey=zjufvdivqy2k6mao91wn6psbw&dl=0)<br>
+
+
+
+
+
+
+
+
+<!-- [Cinco Ejemplos Aprendizaje Supervisado](https://www.dropbox.com/scl/fi/m0jw8444upfpig9unhs5w/CincoEjemplosAprendizajeSupervisado.zip?rlkey=51cbzv4f7miq2lqa3hriu1jnr&dl=1)<br> -->
+
+
+
+
 
 <!-- [Qué es una red neuronal? (CoDefinity)](https://www.dropbox.com/scl/fi/ohvca4hzrxj0w8wvh4o60/Qu-es-una-red-neuronal.zip?rlkey=n559bkg2eq2bu7cjzd0cfr9ft&dl=1)<br> -->
 
@@ -1111,15 +1143,31 @@ práctico y aplicado
   <td>
   
   
-**Taller TensorFlow PlayGround**<br>
-
-[1. Video Explicativo (13 min)](https://www.youtube.com/watch?v=ZNrmS6q_Zp4&t=153s)<br>
-
-[2. Sitio TensorFlow PlayGround](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.84976&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false)<br>
+**Actividades Interactivas**<br>
 
 
+ [1. A visual introduction to machine learning](http://www.r2d3.us/visual-intro-to-machine-learning-part-1/)<br>
+ 
+ 
+ [2. Initializing neural networks](https://www.deeplearning.ai/ai-notes/initialization/index.html)<br>
+ 
+ 
+ [3. Model Tuning](http://www.r2d3.us/visual-intro-to-machine-learning-part-2/)<br>
+ 
+ [4. Embedding Projector Google](https://projector.tensorflow.org/)<br>
+ 
+ 
+ 
+  
+<!--   [Applet interactivo Linear regression](https://mathlets.org/mathlets/linear-regression/)<br> -->
+<!-- [Otro Applet](https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_all.html)<br> -->
 
-[Como jugar con TensorFlow Playground 34 min](https://www.youtube.com/watch?app=desktop&v=WvE4vF4tfrU)<br>
+<!-- [ Curve Fitting](https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_all.html)<br> -->
+
+
+  
+  
+
 
  </td>
 
@@ -1127,26 +1175,19 @@ práctico y aplicado
 
 **Videos:**<br>
 
-
-**Deep Learning**<br>
-
-[Yann Lecun Cifar Dataset](https://www.cs.toronto.edu/~kriz/cifar.html)<br>
+**Supervisados**<br>
 
 
-[TED Yoshua Bengio 2017](https://www.youtube.com/watch?v=uawLjkSI7Mo)<br>
+[Support Vector Machines](https://www.youtube.com/watch?v=efR1C6CvhmE&t=946s)<br>
 
-[Geoffrey Hinton: The Foundations of Deep Learning](https://www.youtube.com/watch?v=zl99IZvW7rE)<br>
+[Naive Bayes](https://www.youtube.com/watch?v=O2L2Uv9pdDA&t=104s)<br>
 
-
-
- <!-- [Nat and Friends: How Does Your Phone Know This Is A Dog?](https://www.youtube.com/watch?v=bHvf7Tagt18)<br> -->
+[K-Neighbors](https://www.youtube.com/watch?v=0p0o5cmgLdE)
 
 
-<!-- [PlayGround TensorFlow](https://playground.tensorflow.org/)<br> -->
 
-[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)<br>
 
-[Curso Machine Learning For Music and Art](https://www.kadenze.com/courses/machine-learning-for-musicians-and-artists/info)<br>
+
 
 
 <!-- [Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)<br> -->
@@ -1178,6 +1219,23 @@ práctico y aplicado
 
 <td>
 
+**Ejemplos de aprendizaje No Supervisado**<br>
+
+[1. Método de k-medias](https://www.dropbox.com/scl/fi/xsj7j4vs10o5y4qq5rni6/11.-Aprendizaje-no-supervisado-k-medios.pptx?rlkey=418kcmrzzqxqjaeyt30oda8g4&dl=1)<br>
+
+
+[2. Método de Clustering Jerárquico](https://www.dropbox.com/scl/fi/fn3i1g1bie3wt3fpu4t8p/12.-Aprendizaje-no-supervisado-Jer-rquico.pptx?rlkey=377aqcddi3rijuxpl1spac07o&dl=1)<br>
+
+
+[3. Factorización de matrices](https://www.dropbox.com/scl/fi/qqgak6rr6fa185o6vzcpo/8.-Como-Netflix-recomienda.pptx?rlkey=loe66pjhvfw414mh2427e8jx8&dl=1)<br>
+
+**Video**<br>
+
+[4. Análisis de Componentes Principales](https://www.youtube.com/watch?v=g-Hb26agBFg&list=PLs8w1Cdi-zvZGyT2Rt0ieA0G6xGUqn3Xw&index=3)<br>
+
+
+
+<!-- [4. Tres Algoritmos no Supervisados](https://www.dropbox.com/scl/fi/s94o8bewlcg7c12v5ksx7/TresAlgoritmosNoSupervisados.zip?rlkey=izypn0ftplqxtwsh8z9vmdl9o&dl=1)<br> -->
 
   </td>
 
@@ -1218,9 +1276,21 @@ práctico y aplicado
 
 **Videos:**<br>
 
-[PlayGround TensorFlow](https://playground.tensorflow.org/)<br>
+**No supervisados**<br>
 
-[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)
+
+
+[1. K-means Clustering](https://www.youtube.com/watch?v=4b5d3muPQmA&t=105s)<br>
+
+[Applet Interactivo k-means](https://kmeans.js.org/en/)<br>
+
+
+[2. Hierarchical Clustering](https://www.youtube.com/watch?v=7xHsRkOdVwo)<br>
+
+[3. Matrix Factorization](https://www.youtube.com/watch?v=ZspR5PZemcs&t=2s)<br>
+
+
+
  </td>
 
  </tr>
@@ -1248,11 +1318,46 @@ práctico y aplicado
   </td>
 
   <td>
-        </td>
+       **Taller TensorFlow PlayGround**<br>
+
+[1. Video Explicativo (13 min)](https://www.youtube.com/watch?v=ZNrmS6q_Zp4&t=153s)<br>
+
+[2. Sitio TensorFlow PlayGround](https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=circle&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=0&networkShape=4,2&seed=0.84976&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false)<br>
+
+
+
+[Como jugar con TensorFlow Playground 34 min](https://www.youtube.com/watch?app=desktop&v=WvE4vF4tfrU)<br>
+
+<!-- [PlayGround TensorFlow](https://playground.tensorflow.org/)<br> -->
+
+[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)
+       
+ </td>
 
 <td>
 
 **Videos:**<br>
+
+
+**Deep Learning**<br>
+
+[Yann Lecun Cifar Dataset](https://www.cs.toronto.edu/~kriz/cifar.html)<br>
+
+
+[TED Yoshua Bengio 2017](https://www.youtube.com/watch?v=uawLjkSI7Mo)<br>
+
+[Geoffrey Hinton: The Foundations of Deep Learning](https://www.youtube.com/watch?v=zl99IZvW7rE)<br>
+
+
+
+ <!-- [Nat and Friends: How Does Your Phone Know This Is A Dog?](https://www.youtube.com/watch?v=bHvf7Tagt18)<br> -->
+
+
+<!-- [PlayGround TensorFlow](https://playground.tensorflow.org/)<br> -->
+
+[Deep Learning Español,Canal 3Blue1Brown](https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m)<br>
+
+[Curso Machine Learning For Music and Art](https://www.kadenze.com/courses/machine-learning-for-musicians-and-artists/info)<br>
 
 [Google the Kernel Trick](https://www.youtube.com/watch?v=Rj6GlPOQ6Fw)<br>
 
