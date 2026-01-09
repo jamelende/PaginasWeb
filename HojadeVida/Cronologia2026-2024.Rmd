@@ -9,10 +9,35 @@ output:
 </br>
 
 
-Cursos Pregrado Universidad javeriana
+Cursos Pregrado Universidad Javeriana 2026-1
+
+Análisis de Algoritmos
+Teoría de Computación
 
 <center> <h4>2025-2</h4> </center> 
 <br>
 </br>
 
+[Curso IA Para Todos Centro de Investigaciones CID Unal](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWeb-Cid-2025-2.html)<br>
+[Contenido Detallado del Curso](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWeb/P%C3%A1ginaWebNetworkScienceedCont20242.html)<br>
+
+
+
+
+<center> <h4>2025-1</h4> </center> 
+<br>
+</br>
+
 [Maestria UNAL Curso Network Science](https://mlds.unal.edu.co/courses/course-v1:MLDS+NSDA+2025_1/about)<br>
+[Contenido detallado del curso](https://jamelende.github.io/PaginasWeb/Neda20251/P%C3%A1ginaWebNetworkScience2025-i.html)<br>
+
+[Diplomado IA Para Todos (100 horas) Univalle](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWebIA20252.html)<br>
+
+
+
+<center> <h4>2024-2</h4> </center> 
+<br>
+</br>
+[Diplomado IA Para Todos (100 horas) Centro de Investigaciones CID Unal](https://jamelende.github.io/PaginasWeb/P%C3%A1ginasWebCID/P%C3%A1ginaWebIA20242.html)<br>
+
+[Curso Modelación Basada en Agentes  , Univalle Facultad de Economía](http://profesores.is.escuelaing.edu.co/~amelendez/EdCont2024/P%C3%A1ginaWebMOBA20242.html)<br>
