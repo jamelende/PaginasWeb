@@ -16,7 +16,10 @@
 
 
 #  {.tabset .tabset-pills}
-Un cordial saludo, trabajo en la [Escuela Colombiana de Ingeniería](https://www.escuelaing.edu.co/es/) en el [Departamento de Matemáticas](https://www.escuelaing.edu.co/es/programas/matematicas/). Soy Ingeniero de Sistemas y Matemático de la [Universidad de los Andes](https://uniandes.edu.co/), con Maestría en Ingeniería de Sistemas  de la misma Universidad.
+Un cordial saludo, Soy Ingeniero de Sistemas y Matemático de la [Universidad de los Andes](https://uniandes.edu.co/), con Maestría en Ingeniería de Sistemas  de la misma Universidad.<br><br>
+
+Trabajo en la [Universidad Javeriana](https://jamelende.github.io/PaginasWeb/Pregrado/Tcom/P%C3%A1ginaWebTCOM2026-1.html) , en La [Universidad Nacional](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWeb-Cid-2025-2.html) y en la [Universidad del Valle](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWebIA20252.html).<br><br>
+
  <br>
 </br>
 
