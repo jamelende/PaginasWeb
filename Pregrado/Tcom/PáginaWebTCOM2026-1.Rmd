@@ -1,0 +1,354 @@
+---
+title: ''
+output:
+  html_document:
+    theme: cerulean
+    toc: no
+  pdf_document:
+    toc: no
+date: ''
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: 100px;
+  margin-right: auto;
+}
+</style>
+
+---
+title: Teoría de Computación
+output: html_document
+---
+
+
+<center> ![](https://www.dropbox.com/scl/fi/80cyc74xbca9es561ugey/LogoJaveriana.PNG?rlkey=grenf8p5d8jj4k2pgh0itxzpi&dl=1){width=15%} </center>
+
+<center> <h1> Curso de Pregrado 2026-1</h1> </center>
+
+#  {.tabset .tabset-pills}
+
+
+
+
+## Información General 
+
+
+
+<br></br>
+
+
+
+El curso de pregrado en Teoría de la Computación es una exploración profunda y rigurosa de los fundamentos matemáticos que sustentan la ciencia de la computación. Diseñado para proporcionar a los estudiantes una comprensión sólida de los conceptos teóricos subyacentes a la resolución de problemas computacionales, este curso abarca áreas clave como la teoría de autómatas, la complejidad computacional y la teoría de lenguajes formales. Los estudiantes se sumergirán en la investigación de modelos abstractos de cómputo, como máquinas de Turing, y explorarán cómo estas abstracciones pueden utilizarse para analizar la solubilidad de problemas algorítmicos. A lo largo del curso, se fomenta el pensamiento analítico y la capacidad para abordar problemas complejos desde una perspectiva teórica, preparando a los estudiantes para aplicar estos conocimientos en el diseño y análisis de algoritmos en diversos contextos informáticos.
+
+Además, el curso abordará temas avanzados como la teoría de la complejidad computacional, donde se explorarán clases de problemas y se analizará la dificultad intrínseca de los mismos. Los estudiantes aprenderán a clasificar problemas según su complejidad y a comprender la diferencia entre problemas resolubles de manera eficiente y aquellos que son inherentemente difíciles. Con un enfoque en la formalización de conceptos y la aplicación de la lógica matemática en la teoría de la computación, este curso proporcionará a los estudiantes las herramientas necesarias para abordar desafíos computacionales desde una perspectiva fundamentada en principios sólidos y conceptualmente ricos.
+
+### Objetivos
+
+Comprender los Fundamentos Matemáticos: Proporcionar a los estudiantes una base sólida en conceptos matemáticos fundamentales, como la lógica, la teoría de conjuntos y la álgebra booleana, que son esenciales para el análisis teórico en ciencia de la computación.
+
+Explorar Modelos de Cómputo Abstractos: Introducir y analizar modelos abstractos de cómputo, como máquinas de Turing y autómatas finitos, para comprender cómo representan y resuelven problemas algorítmicos.
+
+Estudiar la Teoría de Lenguajes Formales: Profundizar en la teoría de lenguajes formales y gramáticas, permitiendo a los estudiantes comprender la estructura y la sintaxis de los lenguajes de programación y la base de compiladores.
+
+
+ 
+ 
+## Profesor
+
+<br>[Taller Semana 3](https://www.dropbox.com/scl/fi/g0ngx54gnix30ntbf5rgt/TallerSemana3.pdf?rlkey=992xmc675ei6rpkf8rio4c7yx&dl=1)</br>
+<br>[Taller Semana 4](https://www.dropbox.com/scl/fi/5y5p9eb0nsnyda83v9765/Taller-Lenguajes-Regulares.pdf?rlkey=tcyh49j2pljqpsaw74yj5sljy&dl=1)</br>
+
+ 
+
+<br></br>
+
+<br></br>
+
+
+
+
+#### [M.Sc., Alfonso Meléndez Profesor Titular UECI](https://jamelende.github.io/PaginasWeb/HojadeVida/HojaDeVida2026.html)
+
+<br></br>
+<center> ![](https://jamelende.github.io/PaginasWeb/FotoAlf.png){width=30%} </center>
+ <br></br>
+ 
+ 
+ 
+ 
+ 
+<br></br>
+
+<br></br>
+
+<br></br>
+
+<br></br>
+
+## Cronograma Semanal
+
+### Texto del Curso : 
+Michael Sipser: [Introduction to the Theory of Computation](https://www.dropbox.com/scl/fi/tbljxputohw18pcy97oth/Michael-Sipser-Introduction-to-the-Theory-of-Computation-Thomson-South-Western-2012.pdf?rlkey=gb9woy8ki3fbgbp5ttvw9odis&dl=1)
+<br> </br>
+
+### Slides Autómatas de Estado Finito Carnegie Mellon
+
+[Slides](https://www.dropbox.com/scl/fi/zp7c3ctqszx94zbr1ho6g/ppt.zip?rlkey=nzqs487rpx1intfrq1h132fsj&dl=1)
+<td>
+
+
+
+
+<br><br><br><br>
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Material de lectura</th>
+    <th>Problemas</th>
+    <th>Material Adicional</th>
+  </tr>
+  
+  <tr>  
+    <th>Semana 1</th>
+    <td>Introducción al Curso, El Hotel Infinito</td>
+    <td>[Satán,Cantor y el Infinito](https://www.dropbox.com/scl/fi/7r9qd2wlomofwp011wgrx/SatanCantorInfinity-Smullyan.pdf?rlkey=pbwi3fmcxgwvw8eejgrk0t93p&dl=1)  </td>
+    <td> </td>
+    <td>[Video:The Infinite Hotel](https://www.youtube.com/watch?v=Uj3_KqkI9Zo&t=121s) </td>
+  </tr>
+  
+  <tr>  
+    <th>Semana 2</th>
+    <td>Lenguajes Regulares Autómatas de Estado Finito</td>
+    <td> Sección 1-1   </td>
+    <td>1.1-1.2-1.3 </td>
+    <td>[Video: Operaciones Regulares](https://www.youtube.com/watch?v=nIp604p0M8M) <br>
+        [Taller 1](https://www.dropbox.com/scl/fi/amnw9q6x8nt4ac32dp9yg/Taller1.docx?rlkey=m5e7lgg45l3b33lsou72noamo&dl=1)</td>
+  </tr>
+  
+ <tr>  
+    <th>Semana 3</th>
+    <td>Lenguajes Regulares No Determinismo</td>
+    <td> Sección 1-2</td>
+    <td>1.4-1.5-1.6-1.12-1.13 </td>
+    <td>[Video: Autómatas no Determinísticos](https://www.youtube.com/watch?v=W8Uu0inPmU8)<br>
+    [Slides Lenguajes Regulares](https://www.dropbox.com/scl/fi/79wy8u1qejrf5jljh6xta/Regular-Languages.pptx?rlkey=p0m1jjadx6j1a5gehqz2oxjl3&dl=1)<br>
+    [Slides Expresiones Regulares](https://www.dropbox.com/scl/fi/fqd3qvpmnjzy8eylr8vbq/Regular-Expressions.pptx?rlkey=qg9ywodjttyh1kfe9qq6eluhd&dl=1)<br></td>
+  </tr>
+  
+  <tr>  
+    <th>Semana 4</th>
+    <td>Lenguajes Regulares: Expresiones Regulares, Lema de Bombeo</td>
+    <td> Secciones 1-3 1-4 </td>
+    <td> 1.21-1.28-1.29</td>
+    <td> [Slides Algoritmos Determinismo y Minimización](https://www.dropbox.com/scl/fi/j74nx407n8s7ackvkpef5/Finite-State-Automata-Algorithms.pptx?rlkey=hgsc9pnwatqgn168wspzjldr8&dl=1)<br>
+         [Slides Autómata Det a Expresión Regular](https://www.dropbox.com/scl/fi/tjozu534lcqysojhrmvty/DfA-to-RE.pptx?rlkey=0sn1rrn9bhvjbszuegmchgpc1&dl=1)<br>
+        [Video: DFA to regular Expression](https://www.youtube.com/watch?v=SmT1DXLl3f4)<br>
+        [Video : Conversion of NFa to DFA](https://www.youtube.com/watch?v=i-fk9o46oVY)<br>
+        [Video: Minimization of a DFA](https://www.youtube.com/watch?app=desktop&v=0XaGAkY09Wc)<br>
+        [Video : Lema de Bombeo](https://www.youtube.com/watch?v=qtnNyUlO6vU)</td>
+  </tr>
+  
+  <tr>  
+    <th>Semana 5</th>
+    <td>Lenguajes Libres de Contexto</td>
+    <td>Sección 2.1  </td>
+    <td> 2.1 a 2.4 </td>
+    <td>[Video : LLibres de Contexto](https://www.youtube.com/watch?v=hDrLEcmRiXM)<br>
+        [Slides Propiedades de Clausura](https://www.dropbox.com/scl/fi/4p158ljmufy7nyw3q2ej4/Closure-Properties-of-Regular-Languages.pptx?rlkey=ab4qnsvifedx5bi1gv3vnrvtc&dl=1)<br>
+        [Slides Lema de Bombeo](https://www.dropbox.com/scl/fi/g8knq35d8tkxn0duhdis2/The-Pumping-Lemma.pptx?rlkey=ru6tu2a8kbs2ds49fvmro48vo&dl=1)<br></td>
+  </tr>
+  
+ <tr>  
+    <th>Semana 6</th>
+    <td>Lenguajes Libres de Contexto</td>
+    <td> Sección 2.2 </td>
+    <td>2.5-2.7-2.8 </td>
+    <td>[Video: Autómatas de Pila](https://www.youtube.com/watch?v=AsuARyVy9IE) </td>
+  </tr>
+  <tr>  
+    <th>Semana 7</th>
+    <td> Autómatas de Pila</td>
+    <td> Sección 2.3 </td>
+    <td>2.18-2.24-2.27 </td>
+    <td>[Video: Lema de Bombeo para L Libres de Contexto](https://www.youtube.com/watch?v=eQ0XkUk3qGk) </td>
+  </tr>
+  <tr>  
+    <th>Semana 8</th>
+    <td>Autómatas de Pila</td>
+    <td> Sección 2.4  </td>
+    <td>2.21-2.25 </td>
+    <td>[Video: La tesis de Church Turing](https://www.youtube.com/watch?v=0D7yInuKvKs&t=522s) </td>
+  </tr>
+  
+  <tr>  
+    <th>Semana 9</th>
+    <td>Forma Normal de Chomsky</td>
+    <td> Sección 3.1  </td>
+    <td>3.1-3.2-3.5-3.7-3.8 </td>
+    <td>[Video Forma Normal de Chomsky](https://www.youtube.com/watch?v=-SZkkMWHBvQ) </td>
+  </tr>
+  
+  <tr>  
+    <th>Semana 10</th>
+    <td>Gramáticas LL(1)</td>
+    <td> Sección 3.2 </td>
+    <td>3.3-3.6-3.7-3.8-3.9 </td>
+    <td>[Video First and Follow](https://www.youtube.com/watch?v=oOCromcWnfc&t=24s)<br>
+    [Video Tabla de Parsing](https://www.youtube.com/watch?v=clkHOgZUGWU)</td>
+  </tr>
+  <tr>  
+    <th>Semana 11</th>
+    <td>Máquinas de Turing</td>
+    <td> Sección 4.1 </td>
+    <td> 4.1 a 4.6</td>
+    <td> [Video: Turing Machines](https://www.youtube.com/watch?v=PLVCscCY4xI)</td>
+  </tr>
+  <tr>  
+    <th>Semana 12</th>
+    <td>Máquina de Turing y Problemas Insolubles </td>
+    <td> Sección 5.1</td>
+    <td> 5.1-5.3-5.7-5.9-5.11</td>
+    <td>[Video: Halting Problem](https://www.youtube.com/watch?v=t37GQgUPa6k&t=116s)<br>
+        [Video: How Computer Science was created by Accident](https://www.youtube.com/watch?v=PLVCscCY4xI)<br>
+        </td>
+  </tr>
+  <tr>  
+    <th>Semana 13</th>
+    <td>Modelos de Programación  en NetLogo</td>
+    <td> [Wilensky Capítulo 0](https://www.dropbox.com/scl/fi/0ddbm77zjhpvzerhm99st/WilenskyCh0.pdf?rlkey=4ucyzdpddrt225ojxswatjak4&dl=1) </td>
+    <td>[Modelo Hongos](https://www.dropbox.com/scl/fo/y3twzthcz2wgijbiajyfa/AJrCcZ8ls3CFCXdV505H15Q?rlkey=j1f4b8teqn06i9sbyrstos1z0&dl=1)<br> </td>
+    <td> 
+    [Modelo Difusión Enfermedad](https://www.dropbox.com/scl/fo/gra8h94dr0t0yu6fx3cro/ABiX0Xl0fdDzwskTikpsaQY?rlkey=unz2bxvq9w6oksouz2ywz6j1i&dl=1)<br>  </td>
+  </tr>
+  <tr>  
+    <th>Semana 14</th>
+    <td>Modelos de Programación  en NetLogo </td>
+    <td>[Wilensky Capítulo 1](https://www.dropbox.com/scl/fi/udd1du6pd64h6r0g077us/WilenskyCh1.pdf?rlkey=odztjkxvp9cz1vsyypjpvix0y&dl=1)<br>
+    </td>
+    <td> [Modelo Mariposas](https://www.dropbox.com/scl/fo/x3lm88hrur9ezh05l4fjw/ALULS9LbBsBm3-WgAec9A4w?rlkey=2banpydrru0nb5msouj9xsa5h&dl=1)<br></td>
+    <td> 
+    [Modelo Tráfico](https://www.dropbox.com/scl/fo/j4c4cgd1uqiqjwxyahjhy/AEnGK7Wu10AZJTk4e6QhAJs?rlkey=3d25rg1wyc8lbs3jditrrbrcz&dl=1)<br>
+  </tr>
+  <tr>  
+    <th>Semana 15</th>
+    <td>Modelos de Programación  en NetLogo
+</td>
+    <td> [Wilensky Capítulo 2](https://www.dropbox.com/scl/fi/r6hvzoqyaofv7moxvysop/WilenskyCh2.pdf?rlkey=lsror197s8ldjtfduiq3631wn&dl=1)<br>
+ </td>
+    <td>[Modelo Plaza de Mercado 1](https://www.dropbox.com/scl/fo/1dztkzg11frrooi6kv1z0/ADWpesTIG6cA0_lrYMge7xw?rlkey=v0sdildcog80vmqjarwmgv5yt&dl=1)<br> </td>
+    <td>
+[Modelo Plaza de Mercado 2](https://www.dropbox.com/scl/fo/1dztkzg11frrooi6kv1z0/ADWpesTIG6cA0_lrYMge7xw?rlkey=v0sdildcog80vmqjarwmgv5yt&dl=1)<br>
+    </td>
+  </tr>
+  <tr>  
+    <th>Semana 16</th>
+    <td>Proyectos y Exposiciones</td>
+    <td>  </td>
+    <td> </td>
+    <td> </td>
+  </tr>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</table>
+
+<br> </br>
+<br> </br>
+
+<br> </br>
+
+<br> </br>
+
+
+
+
+ 
+## Libros
+
+<center> ![](https://www.dropbox.com/scl/fi/v0p07mo7x79qx1ttc400e/TuringReal.jpg?rlkey=bknlky80cl97s3z0kqbv7xm8w&dl=1){width=20%} </center>
+
+[Lewis, Papadimitrou:  Elements of the Theory of Computation](https://www.dropbox.com/scl/fi/78mpmcpvaqh24uku4ckpi/Harry-Lewis-Christos-H.-Papadimitriou-Elements-of-the-Theory-of-Computation-2nd-Edition-Prentice-Hall-1997.pdf?rlkey=nvgnidorw8p3kzjuazi26n121&dl=1)
+
+[Hopcroft, Ullman :Introduction to Automata Theory, Languages and Computation](https://www.dropbox.com/scl/fi/224yotij0uokvkumgoy3l/John-E.-Hopcroft-Rajeev-Motwani-Jeffrey-D.-Ullman-Introduction-to-automata-theory-languages-and-computation-Addison-Wesley-2001.pdf?rlkey=reacu290tgbpedqp0xxvn0c7k&dl=1)
+
+[Sachin Agrawal: Theory of Computation](https://www.dropbox.com/scl/fi/tx9uu339e0i5feok2i6xh/Theory-of-Computation-Sachin-Agrawal-2018-511a6aac3e3622351fbb2e8151ed93ae-Anna-s-Archive.pdf?rlkey=ufxu8eyy5zx3bbnwvvlxoczg4&dl=1)
+
+[Christopher Moore:  The Nature of Computation](https://www.dropbox.com/scl/fi/nlnogvenczp89nm8vph3e/Cristopher-Moore-Stephan-Mertens-The-Nature-of-Computation-Oxford-University-Press-2011.pdf?rlkey=1rfcqqvv0n6tsy8hrn6en2qy0&dl=0)
+
+
+
+
+
+
+
+
+
+<br></br>
+<br></br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Cursos en Linea
+
+
+
+<center> ![](https://www.dropbox.com/scl/fi/ltz484qhbze09f04r4bzh/PushdownAutomata.png?rlkey=zgtw4z6i0kzu5eenvqckvm8i6&dl=1){width=20%} </center>
+
+
+[Michael Sipser Introduction to the Theory of Computation](https://ocw.mit.edu/courses/18-404j-theory-of-computation-fall-2020/video_galleries/video-lectures/)
+
+[Curso Stanford Teoría de Computación](https://learning.edx.org/course/course-v1:StanfordOnline+CSX0005+1T2020/home)
+
+
+
+
+## Enlaces de Internet
+
+
+
+
+
+
+
+## Herramientas Computacionales
+
+
+<center> ![](https://www.dropbox.com/scl/fi/6qtc02rh3lib0wh6ncfmz/FiniteState.png?rlkey=jqhhuajmc1n2f419i3sthzws7&dl=1){width=20%} </center>
+
+
+
+<br></br>
+
+[JFlap: Software Simulador de Autómatas](https://www.jflap.org/)
+
+
+
