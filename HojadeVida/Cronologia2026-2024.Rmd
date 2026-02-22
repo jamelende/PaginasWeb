@@ -11,15 +11,15 @@ output:
 
 Cursos Pregrado Universidad Javeriana 2026-1
 
-Análisis de Algoritmos
-Teoría de Computación
+[Análisis de Algoritmos](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/P%C3%A1ginaWebAnal2026-1.html)<br>
+[Teoría de Computación](https://jamelende.github.io/PaginasWeb/Pregrado/Tcom/P%C3%A1ginaWebTCOM2026-1.html)
 
 <center> <h4>2025-2</h4> </center> 
 <br>
 </br>
 
 [Curso IA Para Todos Centro de Investigaciones CID Unal](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWeb-Cid-2025-2.html)<br>
-[Contenido Detallado del Curso](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWeb/P%C3%A1ginaWebNetworkScienceedCont20242.html)<br>
+[Contenido Detallado del Curso](https://jamelende.github.io/PaginasWeb/P%C3%A1ginaWeb-Cid-2025-2.html)<br>
 
 
 
