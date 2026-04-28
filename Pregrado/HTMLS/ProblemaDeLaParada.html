@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Problema de la Parada — HTML interactivo</title>
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --ink:#172033;
+      --muted:#64748b;
+      --line:#dbe3ef;
+      --blue:#2563eb;
+      --blue2:#dbeafe;
+      --green:#16a34a;
+      --green2:#dcfce7;
+      --red:#dc2626;
+      --red2:#fee2e2;
+      --amber:#d97706;
+      --amber2:#fef3c7;
+      --purple:#7c3aed;
+      --purple2:#ede9fe;
+      --shadow:0 18px 40px rgba(15,23,42,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:radial-gradient(circle at top left,#e0ecff 0,#f7f8fb 35%,#fafafa 100%);
+      color:var(--ink);
+    }
+    header{
+      padding:26px clamp(18px,4vw,56px) 14px;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    .heroCard,.panel{
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(219,227,239,.9);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+    }
+    .heroCard{padding:28px; position:relative; overflow:hidden; min-height:245px}
+    .heroCard:after{
+      content:"";
+      position:absolute;
+      right:-80px; top:-90px;
+      width:280px; height:280px;
+      background:conic-gradient(from 120deg,var(--blue2),var(--purple2),var(--amber2),var(--blue2));
+      border-radius:50%;
+      opacity:.85;
+      z-index:0;
+    }
+    .heroCard > *{position:relative; z-index:1}
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(30px,4.6vw,58px);
+      letter-spacing:-.05em;
+      line-height:.98;
+    }
+    .subtitle{
+      max-width:840px;
+      font-size:clamp(16px,1.8vw,20px);
+      color:var(--muted);
+      line-height:1.55;
+      margin:10px 0 18px;
+    }
+    .pillbar{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px}
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background:#f1f5f9;
+      border:1px solid var(--line);
+      color:#334155;
+      font-size:13px;
+      font-weight:700;
+    }
+    .heroSide{padding:22px; display:flex; flex-direction:column; justify-content:space-between; gap:14px}
+    .bigQuestion{
+      font-size:28px;
+      font-weight:900;
+      letter-spacing:-.04em;
+      line-height:1.05;
+    }
+    .bigQuestion span{color:var(--blue)}
+    .verdictBox{
+      border-radius:18px;
+      padding:14px;
+      border:1px solid var(--line);
+      background:linear-gradient(135deg,#fff,#f8fafc);
+    }
+    .verdictText{font-size:15px; color:var(--muted); line-height:1.45; margin:8px 0 0}
+    main{padding:0 clamp(18px,4vw,56px) 40px}
+    .tabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:18px 0;
+      position:sticky;
+      top:0;
+      z-index:20;
+      padding:12px 0;
+      background:linear-gradient(to bottom,rgba(247,248,251,.98),rgba(247,248,251,.80));
+      backdrop-filter:blur(8px);
+    }
+    .tabBtn,.btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:#1f2937;
+      padding:10px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:800;
+      transition:.18s transform,.18s background,.18s border-color,.18s box-shadow;
+      box-shadow:0 2px 8px rgba(15,23,42,.04);
+    }
+    .tabBtn:hover,.btn:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(15,23,42,.08)}
+    .tabBtn.active{background:var(--blue); color:#fff; border-color:var(--blue)}
+    .btn.primary{background:var(--blue); color:white; border-color:var(--blue)}
+    .btn.green{background:var(--green); color:white; border-color:var(--green)}
+    .btn.red{background:var(--red); color:white; border-color:var(--red)}
+    .btn.amber{background:var(--amber); color:white; border-color:var(--amber)}
+    .btn.small{padding:7px 10px; border-radius:11px; font-size:13px}
+    .tabPage{display:none; animation:fade .25s ease both}
+    .tabPage.active{display:block}
+    @keyframes fade{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+    .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .panel{padding:22px; margin-bottom:18px}
+    h2{font-size:30px; letter-spacing:-.04em; margin:0 0 8px}
+    h3{font-size:20px; letter-spacing:-.025em; margin:0 0 8px}
+    p{line-height:1.62; color:#334155}
+    .muted{color:var(--muted)}
+    .note{
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#f8fafc;
+      color:#334155;
+      line-height:1.55;
+    }
+    .timeline{
+      position:relative;
+      margin-top:18px;
+      padding-left:24px;
+    }
+    .timeline:before{
+      content:""; position:absolute; left:8px; top:0; bottom:0; width:3px;
+      background:linear-gradient(var(--blue),var(--purple),var(--amber)); border-radius:999px;
+    }
+    .tItem{
+      position:relative;
+      padding:14px 16px;
+      margin-bottom:12px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      cursor:pointer;
+      transition:.18s;
+    }
+    .tItem:before{
+      content:""; position:absolute; left:-23px; top:20px; width:13px; height:13px;
+      border-radius:50%; background:var(--blue); box-shadow:0 0 0 5px var(--blue2);
+    }
+    .tItem:hover,.tItem.active{transform:translateX(3px); border-color:#93c5fd; box-shadow:0 12px 25px rgba(37,99,235,.10)}
+    .tYear{font-weight:950; color:var(--blue); font-size:18px}
+    .tTitle{font-weight:900; margin-top:3px}
+    .tDetails{display:none; color:var(--muted); margin-top:8px; line-height:1.55}
+    .tItem.active .tDetails{display:block}
+    .machineStage{
+      min-height:300px;
+      border:1px dashed #b9c6d8;
+      background:linear-gradient(135deg,#f8fafc,#eef6ff);
+      border-radius:22px;
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .machine{
+      width:min(520px,100%);
+      margin:8px auto;
+      background:#fff;
+      border:2px solid #cbd5e1;
+      border-radius:22px;
+      box-shadow:0 14px 28px rgba(15,23,42,.10);
+      padding:18px;
+      text-align:center;
+      position:relative;
+    }
+    .machine.running{animation:pulseBlue 1.1s infinite}
+    .machine.halted{border-color:var(--green); background:linear-gradient(#fff,#f0fdf4)}
+    .machine.looping{border-color:var(--amber); background:linear-gradient(#fff,#fffbeb)}
+    @keyframes pulseBlue{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.20),0 14px 28px rgba(15,23,42,.10)}50%{box-shadow:0 0 0 14px rgba(37,99,235,.05),0 14px 28px rgba(15,23,42,.14)}}
+    .machineIcon{font-size:45px; margin-bottom:6px}
+    .stateLine{font-weight:900; font-size:17px}
+    .tape{
+      margin:18px auto 8px;
+      display:flex;
+      justify-content:center;
+      gap:4px;
+      flex-wrap:wrap;
+    }
+    .cell{
+      width:38px; height:42px;
+      display:grid; place-items:center;
+      border:1px solid #cbd5e1;
+      background:white;
+      border-radius:10px;
+      font-weight:900;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      position:relative;
+    }
+    .cell.head{background:var(--blue); color:#fff; transform:translateY(-5px)}
+    .cell.head:after{content:"▲"; position:absolute; bottom:-19px; color:var(--blue); font-size:16px}
+    .codeBox{
+      background:#0f172a;
+      color:#dbeafe;
+      border-radius:18px;
+      padding:16px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:14px;
+      line-height:1.55;
+      overflow:auto;
+      white-space:pre-wrap;
+      min-height:160px;
+      border:1px solid #1e293b;
+    }
+    select,input[type="text"],textarea{
+      width:100%; padding:12px 13px; border-radius:14px; border:1px solid var(--line);
+      font:inherit; background:#fff; color:var(--ink); outline:none;
+    }
+    select:focus,input:focus,textarea:focus{border-color:#93c5fd; box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:12px 0}
+    .sliderRow{display:flex; gap:10px; align-items:center; color:var(--muted); font-weight:700; font-size:13px}
+    input[type="range"]{accent-color:var(--blue)}
+    .statusBadge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 12px; border-radius:999px; font-weight:950; border:1px solid var(--line); background:#fff;
+    }
+    .statusBadge.run{background:var(--blue2); color:#1d4ed8; border-color:#bfdbfe}
+    .statusBadge.ok{background:var(--green2); color:#166534; border-color:#bbf7d0}
+    .statusBadge.bad{background:var(--red2); color:#991b1b; border-color:#fecaca}
+    .statusBadge.warn{background:var(--amber2); color:#92400e; border-color:#fde68a}
+    .oracleArea{
+      display:grid; grid-template-columns:1fr 110px 1fr; gap:12px; align-items:center; margin-top:16px;
+    }
+    .boxNode{
+      border:2px solid #cbd5e1;
+      border-radius:20px;
+      background:#fff;
+      padding:16px;
+      min-height:150px;
+      display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
+      box-shadow:0 12px 28px rgba(15,23,42,.08);
+      transition:.25s;
+    }
+    .boxNode.active{border-color:var(--blue); transform:scale(1.02); box-shadow:0 18px 34px rgba(37,99,235,.15)}
+    .arrowBig{font-size:44px; text-align:center; color:var(--blue); animation:slideArrow 1.2s infinite}
+    @keyframes slideArrow{0%,100%{transform:translateX(0); opacity:.65}50%{transform:translateX(8px); opacity:1}}
+    .logicRow{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px}
+    .logicCard{
+      border:1px solid var(--line); background:#fff; border-radius:18px; padding:14px; min-height:150px;
+      transition:.25s; position:relative; overflow:hidden;
+    }
+    .logicCard .num{font-weight:950; color:var(--blue); font-size:28px}
+    .logicCard.active{border-color:var(--purple); box-shadow:0 16px 30px rgba(124,58,237,.14); transform:translateY(-4px)}
+    .logicCard.active:after{
+      content:""; position:absolute; inset:0; background:linear-gradient(120deg,transparent,rgba(124,58,237,.08),transparent);
+      animation:sweep 1.2s infinite;
+    }
+    @keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+    .contradictionBoard{
+      display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:stretch;
+    }
+    .programD{
+      background:linear-gradient(135deg,#111827,#312e81);
+      color:#fff;
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+      min-height:360px;
+    }
+    .programD h3{color:#fff}
+    .programD p{color:#dbeafe}
+    .programD:before{
+      content:"D";
+      position:absolute; right:18px; bottom:-24px; font-size:180px; font-weight:950; color:rgba(255,255,255,.08);
+    }
+    .loopAnim{
+      width:150px; height:150px; border-radius:50%; border:12px solid rgba(255,255,255,.18); border-top-color:#fff;
+      margin:18px auto;
+      animation:spin 1.1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .truthTable{width:100%; border-collapse:separate; border-spacing:0 8px; margin-top:12px}
+    .truthTable th{text-align:left; color:var(--muted); font-size:13px; padding:0 10px}
+    .truthTable td{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:12px 10px; font-weight:700}
+    .truthTable td:first-child{border-left:1px solid var(--line); border-radius:12px 0 0 12px}
+    .truthTable td:last-child{border-right:1px solid var(--line); border-radius:0 12px 12px 0}
+    .truthTable tr.active td{background:var(--red2); border-color:#fecaca; color:#991b1b; animation:shake .32s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+    .conceptMap{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+    .concept{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      background:#fff;
+      min-height:180px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .concept:hover{transform:translateY(-3px); box-shadow:0 16px 30px rgba(15,23,42,.10)}
+    .concept.revealed{background:linear-gradient(135deg,#fff,#eff6ff); border-color:#93c5fd}
+    .hiddenText{display:none; margin-top:10px; color:#475569; line-height:1.5}
+    .concept.revealed .hiddenText{display:block}
+    .quizGrid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    .qCard{border:1px solid var(--line); border-radius:18px; background:#fff; padding:16px}
+    .choice{
+      display:block; width:100%; text-align:left; margin:8px 0; border:1px solid var(--line); border-radius:13px; padding:10px 12px; background:#f8fafc; cursor:pointer; font-weight:700;
+    }
+    .choice.correct{background:var(--green2); border-color:#86efac; color:#166534}
+    .choice.wrong{background:var(--red2); border-color:#fecaca; color:#991b1b}
+    .feedback{display:none; margin-top:10px; color:#475569; line-height:1.5}
+    .miniFooter{
+      margin-top:24px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .downloadHint{
+      margin-top:12px;
+      padding:12px 14px;
+      background:#f8fafc;
+      border:1px dashed #cbd5e1;
+      border-radius:14px;
+      color:#475569;
+      font-size:14px;
+    }
+    @media (max-width:950px){
+      .hero,.grid2,.grid3,.contradictionBoard,.quizGrid,.conceptMap{grid-template-columns:1fr}
+      .oracleArea{grid-template-columns:1fr}
+      .arrowBig{transform:rotate(90deg)}
+      .logicRow{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:620px){
+      .logicRow{grid-template-columns:1fr}
+      .cell{width:32px;height:38px}
+      .heroCard{padding:20px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <section class="hero">
+    <div class="heroCard">
+      <h1>El Problema de la Parada</h1>
+      <p class="subtitle">Una experiencia interactiva para entender una de las ideas más profundas de la computación: existen preguntas perfectamente formuladas que ningún algoritmo general puede resolver.</p>
+      <div class="pillbar">
+        <span class="pill">Alan Turing</span>
+        <span class="pill">1936</span>
+        <span class="pill">Decidibilidad</span>
+        <span class="pill">Contradicción diagonal</span>
+        <span class="pill">Límites de la computación</span>
+      </div>
+    </div>
+    <div class="heroSide heroCard">
+      <div class="bigQuestion">¿Existe un programa universal que prediga si <span>cualquier programa</span> se detiene?</div>
+      <div class="verdictBox">
+        <strong>Respuesta central:</strong>
+        <p class="verdictText">No. Para algunos programas sí podemos decidirlo, pero no existe un algoritmo que funcione para todos los programas posibles y todas las entradas posibles.</p>
+      </div>
+    </div>
+  </section>
+</header>
+
+<main>
+  <nav class="tabs" aria-label="Secciones del interactivo">
+    <button class="tabBtn active" data-tab="historia">1. Historia</button>
+    <button class="tabBtn" data-tab="simulador">2. Simulador</button>
+    <button class="tabBtn" data-tab="oraculo">3. El supuesto algoritmo H</button>
+    <button class="tabBtn" data-tab="diagonal">4. La contradicción</button>
+    <button class="tabBtn" data-tab="ideas">5. Ideas clave</button>
+    <button class="tabBtn" data-tab="quiz">6. Actividades</button>
+  </nav>
+
+  <section id="historia" class="tabPage active">
+    <div class="grid2">
+      <article class="panel">
+        <h2>Historia didáctica</h2>
+        <p>Antes de los computadores modernos, matemáticos como David Hilbert soñaban con un método mecánico para decidir la verdad de todos los enunciados matemáticos. La pregunta era ambiciosa: ¿puede existir un procedimiento automático que, paso a paso, determine si una afirmación es demostrable o no?</p>
+        <p>Alan Turing abordó esta pregunta imaginando una máquina idealizada: una cinta infinita, una cabeza que lee y escribe símbolos, y una lista finita de instrucciones. Con ese modelo logró capturar la idea de algoritmo. Luego mostró algo sorprendente: incluso en ese mundo tan formal, hay problemas que ningún algoritmo general puede resolver.</p>
+        <div class="note"><strong>Mensaje para clase:</strong> El problema de la parada no dice que “los computadores son lentos”. Dice algo más fuerte: hay una imposibilidad lógica. No es cuestión de más memoria, más velocidad o mejor lenguaje de programación.</div>
+      </article>
+      <article class="panel">
+        <h2>Línea de tiempo interactiva</h2>
+        <p class="muted">Haz clic en cada evento para expandirlo.</p>
+        <div class="timeline" id="timeline">
+          <div class="tItem active">
+            <div class="tYear">1900</div>
+            <div class="tTitle">El sueño de Hilbert</div>
+            <div class="tDetails">Hilbert propone una visión de la matemática como sistema formal. El ideal: encontrar métodos precisos para decidir problemas matemáticos.</div>
+          </div>
+          <div class="tItem">
+            <div class="tYear">1928</div>
+            <div class="tTitle">El Entscheidungsproblem</div>
+            <div class="tDetails">Se formula el “problema de decisión”: ¿existe un procedimiento efectivo que determine si una fórmula lógica es válida?</div>
+          </div>
+          <div class="tItem">
+            <div class="tYear">1936</div>
+            <div class="tTitle">Turing define la máquina universal</div>
+            <div class="tDetails">Turing muestra que una máquina puede simular a otras máquinas si recibe su descripción como entrada. Esta idea anticipa el computador programable.</div>
+          </div>
+          <div class="tItem">
+            <div class="tYear">1936</div>
+            <div class="tTitle">Insolubilidad del problema de la parada</div>
+            <div class="tDetails">Turing demuestra que no existe un algoritmo general que decida si cualquier programa se detiene o entra en un ciclo infinito.</div>
+          </div>
+          <div class="tItem">
+            <div class="tYear">Hoy</div>
+            <div class="tTitle">Impacto moderno</div>
+            <div class="tDetails">La idea aparece en verificación de software, compiladores, seguridad, lenguajes de programación, IA y teoría de la computación.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="simulador" class="tabPage">
+    <div class="grid2">
+      <article class="panel">
+        <h2>Simulador de programas</h2>
+        <p>Elige un programa pequeño y ejecútalo paso a paso. La meta es observar que algunos programas se detienen rápidamente, otros parecen no detenerse, y otros dependen de la entrada.</p>
+        <label for="programSelect"><strong>Programa de ejemplo</strong></label>
+        <select id="programSelect">
+          <option value="countdown">Cuenta regresiva: siempre se detiene</option>
+          <option value="forever">Bucle infinito: nunca se detiene</option>
+          <option value="searchZero">Busca un 0: depende de la entrada</option>
+          <option value="collatz">Collatz limitado: parece detenerse, pero no es trivial</option>
+        </select>
+        <label for="inputText"><strong>Entrada</strong></label>
+        <input id="inputText" type="text" value="5" />
+        <div class="controls">
+          <button class="btn primary" id="stepBtn">Paso</button>
+          <button class="btn green" id="runBtn">Ejecutar</button>
+          <button class="btn amber" id="pauseBtn">Pausar</button>
+          <button class="btn" id="backBtn">Atrás</button>
+          <button class="btn red" id="resetBtn">Reiniciar</button>
+        </div>
+        <div class="sliderRow">
+          Velocidad
+          <input type="range" id="speedRange" min="120" max="1000" value="520" />
+          <span id="speedLabel">media</span>
+        </div>
+        <p><span id="simStatus" class="statusBadge run">Listo para ejecutar</span></p>
+        <div class="codeBox" id="codeBox"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Animación</h2>
+        <div class="machineStage">
+          <div id="machine" class="machine">
+            <div class="machineIcon">⚙️</div>
+            <div class="stateLine" id="stateLine">Estado: inicial</div>
+            <div class="tape" id="tape"></div>
+            <p id="explanation" class="muted">Presiona “Paso” para comenzar.</p>
+          </div>
+        </div>
+        <div class="note" id="teacherNote"><strong>Pregunta para estudiantes:</strong> ¿Saber que un programa no se ha detenido todavía es lo mismo que saber que nunca se detendrá?</div>
+      </article>
+    </div>
+  </section>
+
+  <section id="oraculo" class="tabPage">
+    <article class="panel">
+      <h2>Supongamos que existe un algoritmo perfecto H</h2>
+      <p>Imaginemos un programa hipotético llamado <strong>H</strong>. Este programa recibe dos cosas: la descripción de un programa <strong>P</strong> y una entrada <strong>x</strong>. Luego responde:</p>
+      <div class="note"><strong>H(P, x) = “se detiene”</strong> si P con entrada x termina. <br><strong>H(P, x) = “no se detiene”</strong> si P con entrada x entra en un ciclo infinito.</div>
+      <div class="oracleArea">
+        <div class="boxNode" id="oracleInput">
+          <div style="font-size:38px">📄</div>
+          <h3>Entrada</h3>
+          <p>Programa P + entrada x</p>
+        </div>
+        <div class="arrowBig">→</div>
+        <div class="boxNode" id="oracleBox">
+          <div style="font-size:38px">🔮</div>
+          <h3>Algoritmo H</h3>
+          <p id="oracleResult">Predice si P se detiene.</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="oracleBtn">Animar predicción</button>
+        <button class="btn" id="oracleReset">Reiniciar</button>
+      </div>
+    </article>
+
+    <article class="panel">
+      <h2>Pero ahora hacemos algo peligroso...</h2>
+      <p>Si H existiera, podríamos construir un nuevo programa llamado <strong>D</strong>, que usa a H como subrutina, pero hace lo contrario de lo que H predice cuando el programa se analiza a sí mismo.</p>
+      <div class="logicRow">
+        <div class="logicCard" id="logic0"><div class="num">1</div><strong>D recibe un programa P</strong><p>La entrada de D no es un número: es el código de otro programa.</p></div>
+        <div class="logicCard" id="logic1"><div class="num">2</div><strong>D pregunta a H</strong><p>“¿P se detiene si recibe su propio código como entrada?”</p></div>
+        <div class="logicCard" id="logic2"><div class="num">3</div><strong>D contradice a H</strong><p>Si H dice que P se detiene, D entra en ciclo infinito.</p></div>
+        <div class="logicCard" id="logic3"><div class="num">4</div><strong>El caso fatal</strong><p>Ejecutamos D con su propio código: D(D).</p></div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="logicNext">Siguiente idea</button>
+        <button class="btn" id="logicReset">Reiniciar</button>
+      </div>
+    </article>
+  </section>
+
+  <section id="diagonal" class="tabPage">
+    <div class="contradictionBoard">
+      <article class="programD">
+        <h2 style="color:#fff">El programa D</h2>
+        <p>Este programa usa el supuesto algoritmo H, pero invierte su respuesta.</p>
+        <div class="codeBox" style="background:rgba(15,23,42,.72); border-color:rgba(255,255,255,.18)">función D(P):
+    si H(P, P) dice "P se detiene":
+        repetir para siempre
+    si H(P, P) dice "P no se detiene":
+        detenerse</div>
+        <div id="loopVisual" class="loopAnim" style="display:none"></div>
+        <p id="dNarration">Presiona “Analizar D(D)” para ver la contradicción.</p>
+      </article>
+      <article class="panel">
+        <h2>Contradicción paso a paso</h2>
+        <p>La pregunta crítica es: <strong>¿qué ocurre cuando D recibe su propio código como entrada?</strong></p>
+        <div class="controls">
+          <button class="btn primary" id="diagNext">Analizar D(D)</button>
+          <button class="btn" id="diagReset">Reiniciar</button>
+        </div>
+        <table class="truthTable">
+          <thead><tr><th>Suposición de H sobre D(D)</th><th>Lo que D hace</th><th>Resultado</th></tr></thead>
+          <tbody>
+            <tr id="rowA"><td>H dice: “D(D) se detiene”</td><td>D entra en ciclo infinito</td><td>H se equivoca</td></tr>
+            <tr id="rowB"><td>H dice: “D(D) no se detiene”</td><td>D se detiene</td><td>H se equivoca</td></tr>
+          </tbody>
+        </table>
+        <div id="diagConclusion" class="note" style="margin-top:14px"><strong>Conclusión pendiente:</strong> todavía no hemos llegado al choque lógico.</div>
+      </article>
+    </div>
+  </section>
+
+  <section id="ideas" class="tabPage">
+    <article class="panel">
+      <h2>Ideas clave para que no se confundan</h2>
+      <p>Haz clic en cada tarjeta para revelar la explicación.</p>
+      <div class="conceptMap">
+        <div class="concept"><h3>1. No es un problema de velocidad</h3><p class="hiddenText">Aunque tuviéramos una computadora extremadamente rápida, el problema seguiría siendo insoluble en general. La dificultad no es práctica: es lógica.</p></div>
+        <div class="concept"><h3>2. Algunos casos sí se resuelven</h3><p class="hiddenText">Podemos analizar muchos programas concretos. Lo imposible es construir un algoritmo universal que siempre acierte para todo programa y toda entrada.</p></div>
+        <div class="concept"><h3>3. “No se ha detenido” no implica “nunca se detendrá”</h3><p class="hiddenText">Un programa puede tardar millones de pasos antes de terminar. Observarlo durante mucho tiempo no prueba que sea infinito.</p></div>
+        <div class="concept"><h3>4. El programa puede recibir programas</h3><p class="hiddenText">La clave de Turing es que un programa puede codificarse como texto o número. Por eso una máquina universal puede simular otras máquinas.</p></div>
+        <div class="concept"><h3>5. La autorreferencia causa el choque</h3><p class="hiddenText">La contradicción aparece cuando el supuesto predictor perfecto debe predecir un programa diseñado para hacer lo contrario de su predicción.</p></div>
+        <div class="concept"><h3>6. Impacto real</h3><p class="hiddenText">Este resultado explica por qué muchas herramientas de análisis de software son aproximadas: pueden encontrar errores, pero no pueden decidir perfectamente todo comportamiento posible.</p></div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>Guion breve para el profesor</h2>
+      <p><strong>Inicio:</strong> “Hoy vamos a estudiar un problema que parece técnico, pero en realidad habla de los límites de todo procedimiento algorítmico.”</p>
+      <p><strong>Analogía:</strong> “Imaginen una aplicación que recibe cualquier programa y nos dice si terminará o se quedará pensando para siempre. Para programas simples parece posible. Pero Turing mostró que una app así no puede existir.”</p>
+      <p><strong>Momento central:</strong> “La prueba se gana suponiendo que el predictor sí existe. Luego construimos un programa tramposo que consulta al predictor y hace exactamente lo contrario. Cuando ese programa se analiza a sí mismo, el predictor queda atrapado: cualquier respuesta que dé será falsa.”</p>
+      <div class="downloadHint"><strong>Sugerencia didáctica:</strong> primero use el simulador con ejemplos simples; luego presente H como una “caja mágica”; finalmente active la contradicción D(D).</div>
+    </article>
+  </section>
+
+  <section id="quiz" class="tabPage">
+    <article class="panel">
+      <h2>Actividades rápidas para estudiantes</h2>
+      <div class="quizGrid">
+        <div class="qCard" data-answer="b">
+          <h3>Pregunta 1</h3>
+          <p>¿Qué afirma realmente el problema de la parada?</p>
+          <button class="choice" data-choice="a">Que ningún programa se puede analizar.</button>
+          <button class="choice" data-choice="b">Que no existe un algoritmo general que decida la parada para todos los programas y entradas.</button>
+          <button class="choice" data-choice="c">Que los computadores no tienen suficiente memoria.</button>
+          <div class="feedback">Correcto: muchos programas individuales pueden analizarse, pero no existe un método universal perfecto.</div>
+        </div>
+        <div class="qCard" data-answer="c">
+          <h3>Pregunta 2</h3>
+          <p>¿Cuál es la idea central de la prueba?</p>
+          <button class="choice" data-choice="a">Ejecutar programas cada vez más rápido.</button>
+          <button class="choice" data-choice="b">Buscar todos los errores de sintaxis.</button>
+          <button class="choice" data-choice="c">Suponer que existe un predictor y construir un programa que lo contradice.</button>
+          <div class="feedback">Correcto: la prueba es por contradicción y usa autorreferencia.</div>
+        </div>
+        <div class="qCard" data-answer="a">
+          <h3>Pregunta 3</h3>
+          <p>Si un programa lleva mucho tiempo ejecutándose, ¿qué podemos concluir?</p>
+          <button class="choice" data-choice="a">Que todavía no sabemos si terminará o no.</button>
+          <button class="choice" data-choice="b">Que definitivamente nunca se detendrá.</button>
+          <button class="choice" data-choice="c">Que no es un programa válido.</button>
+          <div class="feedback">Correcto: observar muchos pasos sin parada no demuestra que la ejecución sea infinita.</div>
+        </div>
+        <div class="qCard" data-answer="b">
+          <h3>Pregunta 4</h3>
+          <p>¿Por qué D(D) es el caso problemático?</p>
+          <button class="choice" data-choice="a">Porque D no tiene entrada.</button>
+          <button class="choice" data-choice="b">Porque D usa la predicción de H sobre sí mismo y hace lo contrario.</button>
+          <button class="choice" data-choice="c">Porque H solo funciona con números pequeños.</button>
+          <div class="feedback">Correcto: la autorreferencia fuerza a H a equivocarse en cualquier caso.</div>
+        </div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>Mini-reto de discusión</h2>
+      <p>En grupos de 3 estudiantes, respondan:</p>
+      <ol>
+        <li>Den un ejemplo de programa que claramente se detiene.</li>
+        <li>Den un ejemplo de programa que claramente no se detiene.</li>
+        <li>Expliquen por qué “probar durante 10 minutos” no decide el problema general.</li>
+        <li>¿Qué consecuencias tiene esto para herramientas que buscan errores automáticamente en software?</li>
+      </ol>
+    </article>
+  </section>
+
+  <div class="miniFooter">HTML autocontenido para clase — Problema de la parada, Turing, decidibilidad e insolubilidad.</div>
+</main>
+
+<script>
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => [...document.querySelectorAll(sel)];
+
+  // Tabs
+  $$('.tabBtn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      $$('.tabBtn').forEach(b=>b.classList.remove('active'));
+      $$('.tabPage').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Timeline
+  $$('.tItem').forEach(item=>{
+    item.addEventListener('click',()=>{
+      $$('.tItem').forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  const programs = {
+    countdown: {
+      code:`programa cuenta_regresiva(n):
+    mientras n > 0:
+        imprimir(n)
+        n = n - 1
+    detenerse`,
+      init(input){
+        let n = Math.max(0, parseInt(input)||0);
+        return {n, step:0, halted:false, tape:String(n).split('').length?String(n).split(''):['0'], head:0, msg:'Inicio con n = '+n};
+      },
+      step(s){
+        if(s.halted) return s;
+        if(s.n > 0){
+          s.msg = 'Como n = '+s.n+' > 0, decrementamos n.';
+          s.n -= 1; s.step++;
+          s.tape = String(s.n).split('').length?String(s.n).split(''):['0'];
+          s.head = Math.min(s.head+1, Math.max(0,s.tape.length-1));
+        } else {
+          s.halted = true; s.msg = 'n = 0. El programa se detiene.';
+        }
+        return s;
+      }
+    },
+    forever: {
+      code:`programa ciclo_infinito():
+    mientras verdadero:
+        girar()
+        girar()
+        girar()
+    // nunca llega a detenerse`,
+      init(){return {step:0, halted:false, tape:['∞','∞','∞','∞','∞'], head:2, msg:'El programa entra al ciclo.'};},
+      step(s){s.step++; s.head = (s.head+1)%s.tape.length; s.msg='Paso '+s.step+': sigue dentro del ciclo infinito.'; return s;}
+    },
+    searchZero: {
+      code:`programa busca_cero(cadena):
+    para cada símbolo en cadena:
+        si símbolo == 0:
+            detenerse
+    repetir para siempre`,
+      init(input){
+        let arr = (input || '11101').replace(/\s/g,'').split('');
+        if(arr.length===0) arr=['1','1','1'];
+        return {i:0, step:0, halted:false, looping:false, tape:arr, head:0, msg:'Buscando un 0 en la cadena.'};
+      },
+      step(s){
+        if(s.halted) return s;
+        if(s.looping){s.step++; s.head=(s.head+1)%s.tape.length; s.msg='No apareció ningún 0. El programa queda repitiendo para siempre.'; return s;}
+        if(s.i < s.tape.length){
+          s.head=s.i; s.step++;
+          if(s.tape[s.i]==='0') {s.halted=true; s.msg='Encontró 0 en la posición '+s.i+'. Se detiene.';}
+          else {s.msg='Lee '+s.tape[s.i]+'. No es 0, avanza.'; s.i++;}
+        } else {s.looping=true; s.msg='Llegó al final sin encontrar 0. Entra en ciclo infinito.';}
+        return s;
+      }
+    },
+    collatz: {
+      code:`programa collatz(n):
+    mientras n != 1:
+        si n es par: n = n / 2
+        si n es impar: n = 3n + 1
+    detenerse
+
+// Usamos límite de seguridad en la demo`,
+      init(input){let n=Math.max(1, parseInt(input)||7); return {n, step:0, halted:false, tape:String(n).split(''), head:0, msg:'Inicio con n = '+n};},
+      step(s){
+        if(s.halted) return s;
+        if(s.n===1){s.halted=true; s.msg='n = 1. En esta ejecución se detiene.'; return s;}
+        if(s.step>=80){s.msg='Límite de demo alcanzado. No es una prueba de no parada.'; return s;}
+        let old=s.n;
+        s.n = s.n%2===0 ? s.n/2 : 3*s.n+1;
+        s.step++; s.tape=String(s.n).split(''); s.head=s.step%s.tape.length;
+        s.msg = old+(old%2===0?' es par: n = n/2 = ':' es impar: n = 3n+1 = ')+s.n;
+        return s;
+      }
+    }
+  };
+
+  let currentState, history=[], timer=null;
+
+  function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+  function currentProgram(){ return programs[$('#programSelect').value]; }
+  function resetSim(){
+    clearInterval(timer); timer=null;
+    history=[];
+    currentState = currentProgram().init($('#inputText').value);
+    $('#codeBox').textContent = currentProgram().code;
+    renderSim();
+  }
+  function renderTape(tape, head){
+    $('#tape').innerHTML='';
+    tape.forEach((v,i)=>{
+      const c=document.createElement('div'); c.className='cell'+(i===head?' head':''); c.textContent=v;
+      $('#tape').appendChild(c);
+    });
+  }
+  function renderSim(){
+    const machine=$('#machine');
+    machine.className='machine';
+    if(currentState.halted) machine.classList.add('halted');
+    else if(currentState.looping || $('#programSelect').value==='forever') machine.classList.add('looping');
+    else machine.classList.add('running');
+    $('#stateLine').textContent = currentState.halted ? 'Estado: detenido' : currentState.looping ? 'Estado: ciclo' : 'Estado: ejecutando';
+    $('#explanation').textContent = currentState.msg;
+    renderTape(currentState.tape || ['□'], currentState.head || 0);
+    const badge=$('#simStatus');
+    badge.className='statusBadge ' + (currentState.halted?'ok': currentState.looping?'warn':'run');
+    badge.textContent = currentState.halted ? 'Se detuvo' : currentState.looping ? 'Parece entrar en ciclo' : 'Ejecutándose paso a paso';
+  }
+  function doStep(){
+    history.push(clone(currentState));
+    currentState = currentProgram().step(currentState);
+    renderSim();
+    if(currentState.halted) { clearInterval(timer); timer=null; }
+  }
+  function goBack(){
+    if(history.length){ currentState=history.pop(); renderSim(); }
+  }
+  $('#programSelect').addEventListener('change',resetSim);
+  $('#inputText').addEventListener('input',resetSim);
+  $('#stepBtn').addEventListener('click',doStep);
+  $('#backBtn').addEventListener('click',goBack);
+  $('#resetBtn').addEventListener('click',resetSim);
+  $('#runBtn').addEventListener('click',()=>{
+    clearInterval(timer);
+    timer=setInterval(doStep, 1120-parseInt($('#speedRange').value));
+  });
+  $('#pauseBtn').addEventListener('click',()=>{clearInterval(timer); timer=null; $('#simStatus').textContent='Pausado';});
+  $('#speedRange').addEventListener('input',()=>{
+    const v=parseInt($('#speedRange').value);
+    $('#speedLabel').textContent = v<350?'rápida':v<750?'media':'lenta';
+    if(timer){ clearInterval(timer); timer=setInterval(doStep,1120-v); }
+  });
+  resetSim();
+
+  // Oracle animation
+  let oracleStep=0;
+  $('#oracleBtn').addEventListener('click',()=>{
+    oracleStep=(oracleStep+1)%4;
+    $('#oracleInput').classList.toggle('active',oracleStep===1);
+    $('#oracleBox').classList.toggle('active',oracleStep===2 || oracleStep===3);
+    const texts=[
+      'Predice si P se detiene.',
+      'Recibe el código de P y la entrada x.',
+      'Analiza hipotéticamente todos los casos posibles.',
+      'Responde: “se detiene” o “no se detiene”.'
+    ];
+    $('#oracleResult').textContent=texts[oracleStep];
+  });
+  $('#oracleReset').addEventListener('click',()=>{
+    oracleStep=0; $('#oracleInput').classList.remove('active'); $('#oracleBox').classList.remove('active'); $('#oracleResult').textContent='Predice si P se detiene.';
+  });
+
+  // Logic cards
+  let logicIdx=-1;
+  $('#logicNext').addEventListener('click',()=>{
+    logicIdx=(logicIdx+1)%4;
+    $$('.logicCard').forEach((c,i)=>c.classList.toggle('active',i===logicIdx));
+  });
+  $('#logicReset').addEventListener('click',()=>{logicIdx=-1; $$('.logicCard').forEach(c=>c.classList.remove('active'));});
+
+  // Diagonal contradiction
+  let diag=0;
+  const diagTexts=[
+    'Caso 1: supongamos que H predice que D(D) se detiene. Pero D está programado para entrar en ciclo cuando H dice “se detiene”. Entonces H falla.',
+    'Caso 2: supongamos que H predice que D(D) no se detiene. Pero D está programado para detenerse cuando H dice “no se detiene”. Entonces H falla otra vez.',
+    'Conclusión: H no puede existir. La suposición inicial conduce a contradicción en todos los casos.'
+  ];
+  $('#diagNext').addEventListener('click',()=>{
+    diag=(diag+1);
+    $('#rowA').classList.toggle('active',diag===1);
+    $('#rowB').classList.toggle('active',diag===2);
+    $('#loopVisual').style.display = diag===1 ? 'block' : 'none';
+    $('#dNarration').textContent = diagTexts[Math.min(diag-1,2)];
+    if(diag===1) $('#diagConclusion').innerHTML='<strong>Choque 1:</strong> si H dice que se detiene, D hace que no se detenga.';
+    if(diag===2) $('#diagConclusion').innerHTML='<strong>Choque 2:</strong> si H dice que no se detiene, D se detiene.';
+    if(diag>=3) {$('#diagConclusion').innerHTML='<strong>Conclusión:</strong> no existe un algoritmo H que decida correctamente la parada para todos los programas y entradas.'; $('#diagNext').textContent='Conclusión alcanzada';}
+  });
+  $('#diagReset').addEventListener('click',()=>{
+    diag=0; $('#rowA').classList.remove('active'); $('#rowB').classList.remove('active'); $('#loopVisual').style.display='none';
+    $('#dNarration').textContent='Presiona “Analizar D(D)” para ver la contradicción.';
+    $('#diagConclusion').innerHTML='<strong>Conclusión pendiente:</strong> todavía no hemos llegado al choque lógico.';
+    $('#diagNext').textContent='Analizar D(D)';
+  });
+
+  // Concepts
+  $$('.concept').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('revealed')));
+
+  // Quiz
+  $$('.qCard').forEach(card=>{
+    const ans=card.dataset.answer;
+    card.querySelectorAll('.choice').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        card.querySelectorAll('.choice').forEach(b=>{
+          b.classList.remove('correct','wrong');
+          if(b.dataset.choice===ans) b.classList.add('correct');
+        });
+        if(btn.dataset.choice!==ans) btn.classList.add('wrong');
+        card.querySelector('.feedback').style.display='block';
+      });
+    });
+  });
+</script>
+</body>
+</html>
