@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Correspondencia de Post — Interactivo</title>
+<style>
+  :root{
+    --bg:#f6f8fc; --card:#ffffff; --ink:#182233; --muted:#60708a; --line:#dbe3ef;
+    --blue:#2563eb; --blue2:#dbeafe; --green:#16a34a; --green2:#dcfce7;
+    --amber:#d97706; --amber2:#fff3cd; --red:#dc2626; --red2:#fee2e2; --purple:#7c3aed;
+    --shadow:0 16px 40px rgba(15,23,42,.10); --radius:22px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;background:radial-gradient(circle at top left,#e8f0ff 0,#f6f8fc 40%,#fbfbfd 100%);color:var(--ink)}
+  header{padding:26px clamp(18px,4vw,48px) 10px}
+  main{padding:0 clamp(18px,4vw,48px) 42px}
+  .hero,.grid2,.grid3{display:grid;gap:18px}
+  .hero{grid-template-columns:1.1fr .9fr}
+  .grid2{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:repeat(3,1fr)}
+  .card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+  h1{margin:0;font-size:clamp(30px,4.5vw,56px);line-height:1;letter-spacing:-.05em}
+  h2{margin:0 0 8px;font-size:30px;letter-spacing:-.04em}
+  h3{margin:0 0 8px;font-size:20px;letter-spacing:-.02em}
+  p{line-height:1.6;color:#334155}
+  .muted{color:var(--muted)}
+  .subtitle{font-size:clamp(16px,1.8vw,20px);color:var(--muted);line-height:1.55;margin:10px 0 0}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .pill{padding:8px 12px;border-radius:999px;background:#f1f5f9;border:1px solid var(--line);font-size:13px;font-weight:800;color:#334155}
+  .btn{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:14px;cursor:pointer;font-weight:800;transition:.18s;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(15,23,42,.07)}
+  .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+  .btn.green{background:var(--green);border-color:var(--green);color:#fff}
+  .btn.amber{background:var(--amber);border-color:var(--amber);color:#fff}
+  .btn.red{background:var(--red);border-color:var(--red);color:#fff}
+  .btn.small{padding:7px 10px;border-radius:11px;font-size:13px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+  select,input,textarea{width:100%;padding:12px 13px;border-radius:14px;border:1px solid var(--line);font:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:156px;resize:vertical;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+  .note{padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:#f8fafc;color:#334155;line-height:1.55}
+  .seqWrap{display:flex;flex-wrap:wrap;gap:10px;min-height:62px;padding:12px;border:1px dashed #cbd5e1;border-radius:16px;background:#f8fafc}
+  .tile{border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px;min-width:108px;cursor:pointer;position:relative;box-shadow:0 8px 20px rgba(15,23,42,.06);transition:.18s}
+  .tile:hover{transform:translateY(-2px)}
+  .tile .n{position:absolute;top:8px;right:10px;font-size:12px;color:var(--muted);font-weight:900}
+  .tile .t,.tile .b{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-weight:800;letter-spacing:.04em}
+  .tile .lab{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:900;margin-bottom:2px}
+  .tile.selected{border-color:#93c5fd;background:linear-gradient(#fff,#eff6ff)}
+  .sequenceTile{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:#fff;border:1px solid var(--line);font-weight:800}
+  .code{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;background:#0f172a;color:#dbeafe;border-radius:16px;padding:14px;overflow:auto;white-space:pre-wrap;line-height:1.55}
+  .strings{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .stringBox{padding:12px;border-radius:16px;border:1px solid var(--line);background:#fff}
+  .stringLabel{font-size:12px;text-transform:uppercase;color:var(--muted);font-weight:900;letter-spacing:.05em;margin-bottom:4px}
+  .stringVal{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:20px;min-height:28px;word-break:break-all}
+  .ok{background:var(--green2)!important;border-color:#86efac!important;color:#166534}
+  .bad{background:var(--red2)!important;border-color:#fecaca!important;color:#991b1b}
+  .warn{background:var(--amber2)!important;border-color:#fcd34d!important;color:#92400e}
+  .table{width:100%;border-collapse:separate;border-spacing:0 8px}
+  .table th{text-align:left;color:var(--muted);font-size:12px;padding:0 8px}
+  .table td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 8px;font-weight:700}
+  .table td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}
+  .table td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}
+  .resultBox{min-height:130px}
+  .searchStats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line);text-align:center}
+  .stat .num{font-size:24px;font-weight:900;color:var(--blue)}
+  .stat .lab{font-size:12px;color:var(--muted);font-weight:900;text-transform:uppercase}
+  @media(max-width:980px){.hero,.grid2,.grid3,.strings{grid-template-columns:1fr}.searchStats{grid-template-columns:1fr 1fr}}
+  @media(max-width:640px){.searchStats{grid-template-columns:1fr}.tile{min-width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <section class="hero">
+    <div class="card">
+      <h1>Correspondencia de Post</h1>
+      <p class="subtitle">Explora el PCP como un juego de fichas: concatena cadenas arriba y abajo, busca coincidencias y entiende por qué encontrar una solución no es lo mismo que demostrar que no existe ninguna.</p>
+      <div class="pills">
+        <span class="pill">PCP</span><span class="pill">Indecidibilidad</span><span class="pill">Búsqueda acotada</span><span class="pill">Reducciones</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Idea central</h3>
+      <p>Dadas fichas con una palabra arriba y otra abajo, la meta es hallar una secuencia de índices tal que la concatenación superior sea exactamente igual a la inferior.</p>
+      <div class="note"><strong>Cuidado didáctico:</strong> si el buscador no encuentra una solución hasta cierta profundidad, eso <em>no</em> prueba que la instancia no tenga solución. Solo significa que no hubo solución corta dentro del límite.</div>
+    </div>
+  </section>
+</header>
+<main>
+  <section class="grid2">
+    <article class="card">
+      <h2>1. Conjunto de fichas</h2>
+      <label><strong>Preset</strong></label>
+      <select id="preset"></select>
+      <div class="controls">
+        <button class="btn" id="loadPreset">Cargar preset</button>
+        <button class="btn small" id="sampleEasy">Ejemplo corto</button>
+        <button class="btn small" id="sampleHard">Ejemplo retador</button>
+      </div>
+      <label><strong>Editor de fichas</strong> <span class="muted">(formato: arriba/abajo, una por línea)</span></label>
+      <textarea id="tileEditor"></textarea>
+      <div class="controls">
+        <button class="btn primary" id="applyTiles">Aplicar fichas</button>
+        <button class="btn" id="clearSequence">Limpiar secuencia</button>
+      </div>
+      <table class="table" id="tileTable"></table>
+    </article>
+
+    <article class="card">
+      <h2>2. Construye una secuencia</h2>
+      <p>Haz clic en las fichas para agregarlas a la secuencia actual.</p>
+      <div id="tilePalette" class="controls"></div>
+      <div class="note resultBox" id="statusBox">Aún no has agregado fichas a la secuencia.</div>
+      <h3>Secuencia elegida</h3>
+      <div id="sequence" class="seqWrap"></div>
+      <div class="controls">
+        <button class="btn small" id="undoBtn">Deshacer último</button>
+        <button class="btn small" id="checkBtn">Comprobar</button>
+      </div>
+      <div class="strings">
+        <div class="stringBox" id="topBox"><div class="stringLabel">Concatenación superior</div><div id="topStr" class="stringVal">—</div></div>
+        <div class="stringBox" id="bottomBox"><div class="stringLabel">Concatenación inferior</div><div id="bottomStr" class="stringVal">—</div></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="grid2">
+    <article class="card">
+      <h2>3. Buscador acotado</h2>
+      <p>Prueba automáticamente todas las secuencias de longitud hasta un límite.</p>
+      <div class="grid2">
+        <div>
+          <label><strong>Profundidad máxima</strong></label>
+          <input id="depthInput" type="number" min="1" max="12" value="6" />
+        </div>
+        <div>
+          <label><strong>Número máximo de soluciones</strong></label>
+          <input id="solutionCap" type="number" min="1" max="20" value="5" />
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn green" id="searchBtn">Buscar soluciones</button>
+        <button class="btn" id="stopBtn">Detener</button>
+      </div>
+      <div class="searchStats">
+        <div class="stat"><div class="num" id="nodesVisited">0</div><div class="lab">secuencias probadas</div></div>
+        <div class="stat"><div class="num" id="bestDepth">0</div><div class="lab">profundidad explorada</div></div>
+        <div class="stat"><div class="num" id="foundCount">0</div><div class="lab">soluciones halladas</div></div>
+      </div>
+      <div class="note" id="searchInfo">Listo para buscar.</div>
+    </article>
+
+    <article class="card">
+      <h2>4. Resultados del buscador</h2>
+      <div id="solutions" class="seqWrap"></div>
+      <div class="code" id="explanation">Observación:
+- Si aparece una solución, ya resolviste la instancia.
+- Si no aparece nada, solo sabes que no hubo solución dentro del límite de profundidad.
+- El PCP es clásico porque no existe un algoritmo general que decida todas las instancias.</div>
+    </article>
+  </section>
+</main>
+<script>
+const presets = {
+  "Clásico con solución corta": [ ["a","ab"], ["ba","a"] ],
+  "Ejemplo con solución 1,2": [ ["ab","a"], ["c","bc"] ],
+  "Caso sin solución corta": [ ["ab","aba"], ["ba","a"], ["b","bb"] ],
+  "Caso didáctico más largo": [ ["1","10"], ["01","1"], ["0","01"] ]
+};
+
+const presetSelect = document.getElementById('preset');
+Object.keys(presets).forEach(name=>{
+  const o = document.createElement('option'); o.value=name; o.textContent=name; presetSelect.appendChild(o);
+});
+
+let tiles = [];
+let seq = [];
+let stopSearch = false;
+
+function editorTextFromTiles(ts){ return ts.map(t=>`${t[0]}/${t[1]}`).join('\n'); }
+function parseEditor(txt){
+  const lines = txt.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+  const out=[];
+  for(const line of lines){
+    const parts=line.split('/');
+    if(parts.length!==2) throw new Error(`Línea inválida: ${line}`);
+    out.push([parts[0],parts[1]]);
+  }
+  if(out.length===0) throw new Error('Debes ingresar al menos una ficha.');
+  return out;
+}
+function loadPreset(name){
+  tiles = JSON.parse(JSON.stringify(presets[name]));
+  document.getElementById('tileEditor').value = editorTextFromTiles(tiles);
+  seq=[]; renderAll();
+}
+function renderTileTable(){
+  const table = document.getElementById('tileTable');
+  let html = '<thead><tr><th>#</th><th>Arriba</th><th>Abajo</th></tr></thead><tbody>';
+  tiles.forEach((t,i)=> html += `<tr><td>${i+1}</td><td><code>${escapeHtml(t[0])}</code></td><td><code>${escapeHtml(t[1])}</code></td></tr>`);
+  html+='</tbody>';
+  table.innerHTML=html;
+}
+function renderPalette(){
+  const p = document.getElementById('tilePalette'); p.innerHTML='';
+  tiles.forEach((t,i)=>{
+    const d=document.createElement('div'); d.className='tile';
+    d.innerHTML=`<div class="n">#${i+1}</div><div class="lab">arriba</div><div class="t">${escapeHtml(t[0])||'ε'}</div><div class="lab" style="margin-top:8px">abajo</div><div class="b">${escapeHtml(t[1])||'ε'}</div>`;
+    d.onclick=()=>{ seq.push(i); renderAll(); };
+    p.appendChild(d);
+  });
+}
+function currentStrings(sequence=seq){
+  let top='', bottom='';
+  sequence.forEach(i=>{ top += tiles[i][0]; bottom += tiles[i][1]; });
+  return {top,bottom};
+}
+function classify(top,bottom){
+  if(top===bottom && top.length>0) return 'solution';
+  if(top.startsWith(bottom) || bottom.startsWith(top) || top==='' || bottom==='') return 'compatible';
+  return 'dead';
+}
+function renderSequence(){
+  const box=document.getElementById('sequence'); box.innerHTML='';
+  if(seq.length===0){ box.innerHTML='<span class="muted">Sin fichas aún.</span>'; }
+  seq.forEach((i,pos)=>{
+    const span=document.createElement('span'); span.className='sequenceTile';
+    span.innerHTML=`${pos+1}. ficha ${i+1}`;
+    box.appendChild(span);
+  });
+}
+function renderStrings(){
+  const {top,bottom}=currentStrings();
+  const topEl=document.getElementById('topStr'), bottomEl=document.getElementById('bottomStr');
+  topEl.textContent = top || 'ε'; bottomEl.textContent = bottom || 'ε';
+  const status = classify(top,bottom);
+  const topBox=document.getElementById('topBox'), bottomBox=document.getElementById('bottomBox');
+  [topBox,bottomBox].forEach(el=>el.classList.remove('ok','bad','warn'));
+  const sb=document.getElementById('statusBox'); sb.classList.remove('ok','bad','warn');
+  if(seq.length===0){ sb.textContent='Aún no has agregado fichas a la secuencia.'; return; }
+  if(status==='solution'){
+    [topBox,bottomBox,sb].forEach(el=>el.classList.add('ok'));
+    sb.innerHTML='<strong>¡Éxito!</strong> La secuencia actual es una solución del PCP porque las cadenas superior e inferior coinciden exactamente.';
+  }else if(status==='compatible'){
+    [topBox,bottomBox,sb].forEach(el=>el.classList.add('warn'));
+    sb.innerHTML='<strong>Compatible por ahora.</strong> Una cadena es prefijo de la otra. Todavía podría convertirse en solución si agregas más fichas.';
+  }else{
+    [topBox,bottomBox,sb].forEach(el=>el.classList.add('bad'));
+    sb.innerHTML='<strong>Camino muerto.</strong> Ya hay una discrepancia interna; ninguna extensión podrá hacer iguales las dos concatenaciones.';
+  }
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function renderAll(){ renderTileTable(); renderPalette(); renderSequence(); renderStrings(); document.getElementById('solutions').innerHTML=''; document.getElementById('foundCount').textContent='0'; }
+
+async function boundedSearch(){
+  stopSearch=false;
+  const maxDepth = Math.max(1,Math.min(12,parseInt(document.getElementById('depthInput').value)||6));
+  const cap = Math.max(1,Math.min(20,parseInt(document.getElementById('solutionCap').value)||5));
+  let visited=0, found=0, deepest=0;
+  const solBox=document.getElementById('solutions'); solBox.innerHTML='';
+  const info=document.getElementById('searchInfo'); info.textContent='Buscando...';
+  document.getElementById('nodesVisited').textContent='0';
+  document.getElementById('bestDepth').textContent='0';
+  document.getElementById('foundCount').textContent='0';
+
+  async function dfs(prefix){
+    if(stopSearch || found>=cap) return;
+    visited++; deepest=Math.max(deepest,prefix.length);
+    if(visited % 80 === 0){
+      document.getElementById('nodesVisited').textContent=visited.toLocaleString('es-CO');
+      document.getElementById('bestDepth').textContent=deepest;
+      document.getElementById('foundCount').textContent=found;
+      await new Promise(r=>setTimeout(r,0));
+    }
+    const {top,bottom} = currentStrings(prefix);
+    const status = classify(top,bottom);
+    if(status==='dead') return;
+    if(status==='solution' && prefix.length>0){
+      found++;
+      const chip=document.createElement('div'); chip.className='sequenceTile ok';
+      chip.innerHTML=`Solución ${found}: [${prefix.map(i=>i+1).join(', ')}]`;
+      chip.title=`arriba=${top}, abajo=${bottom}`;
+      chip.onclick=()=>{ seq=[...prefix]; renderStrings(); renderSequence(); };
+      solBox.appendChild(chip);
+      if(found>=cap) return;
+    }
+    if(prefix.length===maxDepth) return;
+    for(let i=0;i<tiles.length;i++){
+      prefix.push(i); await dfs(prefix); prefix.pop();
+      if(stopSearch || found>=cap) return;
+    }
+  }
+  await dfs([]);
+  document.getElementById('nodesVisited').textContent=visited.toLocaleString('es-CO');
+  document.getElementById('bestDepth').textContent=deepest;
+  document.getElementById('foundCount').textContent=found;
+  info.innerHTML = found>0
+    ? `<strong>Búsqueda terminada.</strong> Se encontraron ${found} solución(es) dentro del límite de profundidad ${maxDepth}.`
+    : `<strong>Búsqueda terminada.</strong> No se encontraron soluciones hasta profundidad ${maxDepth}. Esto no prueba insolubilidad.`;
+}
+
+// events
+loadPreset('Clásico con solución corta');
+document.getElementById('loadPreset').onclick=()=> loadPreset(presetSelect.value);
+document.getElementById('sampleEasy').onclick=()=> loadPreset('Ejemplo con solución 1,2');
+document.getElementById('sampleHard').onclick=()=> loadPreset('Caso didáctico más largo');
+document.getElementById('applyTiles').onclick=()=>{
+  try{ tiles=parseEditor(document.getElementById('tileEditor').value); seq=[]; renderAll(); }
+  catch(e){ alert(e.message); }
+};
+document.getElementById('clearSequence').onclick=()=>{ seq=[]; renderSequence(); renderStrings(); };
+document.getElementById('undoBtn').onclick=()=>{ seq.pop(); renderSequence(); renderStrings(); };
+document.getElementById('checkBtn').onclick=()=> renderStrings();
+document.getElementById('searchBtn').onclick=()=> boundedSearch();
+document.getElementById('stopBtn').onclick=()=>{ stopSearch=true; document.getElementById('searchInfo').innerHTML='<strong>Búsqueda detenida.</strong>'; };
+</script>
+</body>
+</html>

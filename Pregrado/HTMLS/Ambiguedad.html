@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ambigüedad de gramáticas — Interactivo</title>
+<style>
+  :root{
+    --bg:#f6f8fc; --card:#fff; --ink:#182233; --muted:#60708a; --line:#dbe3ef;
+    --blue:#2563eb; --green:#16a34a; --amber:#d97706; --red:#dc2626; --purple:#7c3aed;
+    --blue2:#dbeafe; --green2:#dcfce7; --amber2:#fff3cd; --red2:#fee2e2;
+    --shadow:0 16px 40px rgba(15,23,42,.10); --radius:22px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;background:radial-gradient(circle at top left,#ece9ff 0,#f6f8fc 40%,#fbfbfd 100%);color:var(--ink)}
+  header{padding:26px clamp(18px,4vw,48px) 10px} main{padding:0 clamp(18px,4vw,48px) 42px}
+  .hero,.grid2,.grid3{display:grid;gap:18px}.hero{grid-template-columns:1.1fr .9fr}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}
+  .card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+  h1{margin:0;font-size:clamp(30px,4.5vw,56px);line-height:1;letter-spacing:-.05em} h2{margin:0 0 8px;font-size:30px;letter-spacing:-.04em} h3{margin:0 0 8px;font-size:20px}
+  p{line-height:1.6;color:#334155}.subtitle{font-size:clamp(16px,1.8vw,20px);color:var(--muted);line-height:1.55;margin-top:10px}.muted{color:var(--muted)}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.pill{padding:8px 12px;border-radius:999px;background:#f1f5f9;border:1px solid var(--line);font-size:13px;font-weight:800;color:#334155}
+  select,input,textarea{width:100%;padding:12px 13px;border-radius:14px;border:1px solid var(--line);font:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:190px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .btn{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:14px;cursor:pointer;font-weight:800;transition:.18s;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(15,23,42,.07)} .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.green{background:var(--green);border-color:var(--green);color:#fff}.btn.small{padding:7px 10px;border-radius:11px;font-size:13px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+  .note{padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:#f8fafc;color:#334155;line-height:1.55}
+  .ok{background:var(--green2)!important;border-color:#86efac!important;color:#166534}.bad{background:var(--red2)!important;border-color:#fecaca!important;color:#991b1b}.warn{background:var(--amber2)!important;border-color:#fcd34d!important;color:#92400e}
+  .table{width:100%;border-collapse:separate;border-spacing:0 8px}.table th{text-align:left;color:var(--muted);font-size:12px;padding:0 8px}.table td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 8px;font-weight:700}.table td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line);text-align:center}.stat .num{font-size:24px;font-weight:900;color:var(--purple)}.stat .lab{font-size:12px;color:var(--muted);font-weight:900;text-transform:uppercase}
+  .derivBox{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line)} .step{padding:8px 10px;border-bottom:1px dashed #e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace}.step:last-child{border-bottom:none}.tree{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre;overflow:auto;background:#0f172a;color:#dbeafe;border-radius:16px;padding:14px;min-height:220px}
+  .solutionGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:980px){.hero,.grid2,.grid3,.solutionGrid,.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <section class="hero">
+    <div class="card">
+      <h1>Ambigüedad de Gramáticas</h1>
+      <p class="subtitle">Ingresa una CFG, elige una cadena objetivo y busca derivaciones distintas. Si una misma cadena tiene dos árboles o dos derivaciones izquierdas diferentes, la gramática es ambigua para esa cadena.</p>
+      <div class="pills"><span class="pill">CFG</span><span class="pill">Ambigüedad</span><span class="pill">Derivación izquierda</span><span class="pill">Árboles sintácticos</span></div>
+    </div>
+    <div class="card">
+      <h3>Formato de gramática</h3>
+      <div class="note"><strong>Convención:</strong> una producción por línea, por ejemplo:<br><code>E -&gt; E + E | E * E | ( E ) | id</code><br>Los símbolos se separan por espacios. Los no terminales son los que aparecen a la izquierda de alguna producción.</div>
+    </div>
+  </section>
+</header>
+<main>
+  <section class="grid2">
+    <article class="card">
+      <h2>1. Editor</h2>
+      <label><strong>Preset</strong></label>
+      <select id="preset"></select>
+      <div class="controls">
+        <button class="btn" id="loadPreset">Cargar preset</button>
+        <button class="btn small" id="useExpr">Expresiones</button>
+        <button class="btn small" id="useDangling">Dangling else</button>
+      </div>
+      <label><strong>Gramática</strong></label>
+      <textarea id="grammarInput"></textarea>
+      <div class="grid2">
+        <div>
+          <label><strong>Símbolo inicial</strong></label>
+          <input id="startSymbol" value="E" />
+        </div>
+        <div>
+          <label><strong>Cadena objetivo</strong></label>
+          <input id="targetString" value="id + id * id" />
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label><strong>Profundidad máxima</strong></label>
+          <input id="depthInput" type="number" min="1" max="18" value="12" />
+        </div>
+        <div>
+          <label><strong>Máx. derivaciones a mostrar</strong></label>
+          <input id="limitInput" type="number" min="2" max="10" value="4" />
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="analyzeBtn">Analizar cadena</button>
+      </div>
+      <table class="table" id="prodTable"></table>
+    </article>
+
+    <article class="card">
+      <h2>2. Diagnóstico</h2>
+      <div class="stats">
+        <div class="stat"><div class="num" id="countDer">0</div><div class="lab">derivaciones</div></div>
+        <div class="stat"><div class="num" id="countTrees">0</div><div class="lab">árboles</div></div>
+        <div class="stat"><div class="num" id="visitedStates">0</div><div class="lab">estados explorados</div></div>
+        <div class="stat"><div class="num" id="isAmb">No</div><div class="lab">¿ambigua?</div></div>
+      </div>
+      <div class="note" id="diagnosis">Carga una gramática y analiza una cadena objetivo.</div>
+      <div class="note" style="margin-top:12px"><strong>Recuerda:</strong> encontrar dos derivaciones distintas para una cadena prueba ambigüedad. No encontrar ninguna, o encontrar solo una dentro del límite, no prueba que la gramática completa sea no ambigua.</div>
+    </article>
+  </section>
+
+  <section class="card">
+    <h2>3. Derivaciones encontradas</h2>
+    <div id="derivations" class="solutionGrid"></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Comparación de dos derivaciones</h2>
+    <div class="solutionGrid">
+      <div>
+        <h3>Derivación A</h3>
+        <div id="stepsA" class="derivBox"></div>
+        <h3 style="margin-top:14px">Árbol A</h3>
+        <div id="treeA" class="tree">—</div>
+      </div>
+      <div>
+        <h3>Derivación B</h3>
+        <div id="stepsB" class="derivBox"></div>
+        <h3 style="margin-top:14px">Árbol B</h3>
+        <div id="treeB" class="tree">—</div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+const presets = {
+  'Expresiones ambiguas': {
+    start:'E', target:'id + id * id', grammar:`E -> E + E | E * E | ( E ) | id`
+  },
+  'Dangling else': {
+    start:'S', target:'if E then if E then a else a', grammar:`S -> if E then S | if E then S else S | a\nE -> E`
+  },
+  'No ambigua por precedencia': {
+    start:'E', target:'id + id * id', grammar:`E -> E + T | T\nT -> T * F | F\nF -> ( E ) | id`
+  },
+  'Paréntesis balanceados': {
+    start:'S', target:'( ( ) )', grammar:`S -> ( S ) | ( )`
+  }
+};
+const presetSel=document.getElementById('preset');
+Object.keys(presets).forEach(k=>{let o=document.createElement('option');o.value=k;o.textContent=k;presetSel.appendChild(o);});
+
+function loadPreset(name){
+  const p=presets[name];
+  document.getElementById('grammarInput').value=p.grammar;
+  document.getElementById('startSymbol').value=p.start;
+  document.getElementById('targetString').value=p.target;
+  renderProdTable(parseGrammarSafe());
+  clearOutputs();
+}
+function parseGrammarSafe(){ try{return parseGrammar(document.getElementById('grammarInput').value);}catch(e){ return null; } }
+function tokenize(str){ return str.trim()===''?[]:str.trim().split(/\s+/); }
+function parseGrammar(text){
+  const lines=text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+  const grammar={};
+  const nonterms=new Set();
+  lines.forEach(line=>{
+    const [lhs, rhs] = line.split(/\s*->\s*/);
+    if(!lhs || rhs===undefined) throw new Error('Producción inválida: '+line);
+    nonterms.add(lhs.trim());
+  });
+  lines.forEach(line=>{
+    const [lhs, rhs] = line.split(/\s*->\s*/);
+    grammar[lhs.trim()] = rhs.split('|').map(alt => tokenize(alt));
+  });
+  return {grammar, nonterms};
+}
+function renderProdTable(parsed){
+  const table=document.getElementById('prodTable');
+  if(!parsed){ table.innerHTML=''; return; }
+  let html='<thead><tr><th>No terminal</th><th>Producciones</th></tr></thead><tbody>';
+  for(const [lhs, alts] of Object.entries(parsed.grammar)){
+    html += `<tr><td>${lhs}</td><td>${alts.map(a=>a.join(' ')||'ε').join(' &nbsp; | &nbsp; ')}</td></tr>`;
+  }
+  html+='</tbody>'; table.innerHTML=html;
+}
+function clearOutputs(){
+  document.getElementById('countDer').textContent='0'; document.getElementById('countTrees').textContent='0'; document.getElementById('visitedStates').textContent='0'; document.getElementById('isAmb').textContent='No';
+  document.getElementById('diagnosis').textContent='Listo para analizar.';
+  document.getElementById('derivations').innerHTML='';
+  document.getElementById('stepsA').innerHTML='—'; document.getElementById('stepsB').innerHTML='—'; document.getElementById('treeA').textContent='—'; document.getElementById('treeB').textContent='—';
+}
+function terminalsPrefix(tokens, nonterms){
+  const res=[];
+  for(const t of tokens){ if(nonterms.has(t)) break; res.push(t); }
+  return res;
+}
+function terminalsSuffix(tokens, nonterms){
+  const res=[];
+  for(let i=tokens.length-1;i>=0;i--){ const t=tokens[i]; if(nonterms.has(t)) break; res.unshift(t); }
+  return res;
+}
+function firstNonterminalIndex(tokens, nonterms){ return tokens.findIndex(t=>nonterms.has(t)); }
+function treeToString(node,prefix='',last=true){
+  if(typeof node === 'string') return prefix + (last?'└─ ':'├─ ') + node + '\n';
+  let out = prefix + (last?'└─ ':'├─ ') + node.sym + '\n';
+  const nextPrefix = prefix + (last?'   ':'│  ');
+  node.children.forEach((child,i)=> out += treeToString(child,nextPrefix, i===node.children.length-1));
+  return out;
+}
+function expandTree(tree, path, alt){
+  function rec(node, depth){
+    if(depth===path.length) return {sym:node.sym, children: alt.map(tok => ({sym:tok, children:[]}))};
+    const idx=path[depth];
+    return {sym:node.sym, children: node.children.map((c,i)=> i===idx ? rec(c, depth+1) : cloneTree(c))};
+  }
+  return rec(tree,0);
+}
+function cloneTree(node){ return typeof node==='string' ? node : {sym:node.sym, children:(node.children||[]).map(cloneTree)}; }
+function simplifyTree(node, nonterms){
+  if(!node.children || node.children.length===0) return node.sym;
+  return {sym:node.sym, children:node.children.map(c=>simplifyTree(c, nonterms))};
+}
+
+function analyze(){
+  clearOutputs();
+  let parsed;
+  try{ parsed=parseGrammar(document.getElementById('grammarInput').value); }
+  catch(e){ alert(e.message); return; }
+  renderProdTable(parsed);
+  const grammar=parsed.grammar, nonterms=parsed.nonterms;
+  const start=document.getElementById('startSymbol').value.trim();
+  const target=tokenize(document.getElementById('targetString').value);
+  const maxDepth=Math.max(1,Math.min(18, parseInt(document.getElementById('depthInput').value)||12));
+  const limit=Math.max(2,Math.min(10, parseInt(document.getElementById('limitInput').value)||4));
+  const results=[]; let visited=0;
+  const startTree={sym:start, children:[]};
+  const queue=[{tokens:[start], steps:[start], tree:startTree, pathMap:[[ ]] , depth:0}];
+
+  while(queue.length && results.length < limit){
+    const cur=queue.shift(); visited++;
+    const prefix=terminalsPrefix(cur.tokens,nonterms);
+    const suffix=terminalsSuffix(cur.tokens,nonterms);
+    if(prefix.some((t,i)=>target[i]!==t)) continue;
+    if(suffix.some((t,i)=>target[target.length-suffix.length+i]!==t)) continue;
+    const termCount=cur.tokens.filter(t=>!nonterms.has(t)).length;
+    if(termCount>target.length) continue;
+    const ntIndex=firstNonterminalIndex(cur.tokens,nonterms);
+    if(ntIndex===-1){
+      if(cur.tokens.join(' ')===target.join(' ')) results.push(cur);
+      continue;
+    }
+    if(cur.depth>=maxDepth) continue;
+    const nt=cur.tokens[ntIndex];
+    const alts=grammar[nt] || [];
+    for(const alt of alts){
+      const nextTokens=[...cur.tokens.slice(0,ntIndex), ...alt, ...cur.tokens.slice(ntIndex+1)];
+      const nextSteps=[...cur.steps, nextTokens.join(' ') || 'ε'];
+      const treePath = cur.pathMap[ntIndex] || [];
+      const newTree = expandTree(cur.tree, treePath, alt);
+      const newPathMap=[];
+      for(let i=0;i<ntIndex;i++) newPathMap.push(cur.pathMap[i]);
+      alt.forEach((tok,j)=> newPathMap.push([...treePath, j]));
+      for(let i=ntIndex+1;i<cur.pathMap.length;i++) newPathMap.push(cur.pathMap[i]);
+      queue.push({tokens:nextTokens, steps:nextSteps, tree:newTree, pathMap:newPathMap, depth:cur.depth+1});
+    }
+  }
+
+  document.getElementById('countDer').textContent=results.length;
+  document.getElementById('countTrees').textContent=results.length;
+  document.getElementById('visitedStates').textContent=visited.toLocaleString('es-CO');
+  document.getElementById('isAmb').textContent=results.length>=2 ? 'Sí' : 'No';
+  const diag=document.getElementById('diagnosis');
+  if(results.length===0){ diag.className='note warn'; diag.innerHTML='<strong>No se encontraron derivaciones completas</strong> para la cadena dentro del límite de búsqueda.'; }
+  else if(results.length===1){ diag.className='note'; diag.innerHTML='<strong>Se encontró una sola derivación</strong> dentro del límite. Esto no prueba que la gramática sea no ambigua en general.'; }
+  else { diag.className='note ok'; diag.innerHTML='<strong>¡Ambigüedad detectada!</strong> La cadena objetivo tiene al menos dos derivaciones izquierdas distintas.'; }
+
+  const derivBox=document.getElementById('derivations');
+  derivBox.innerHTML='';
+  results.forEach((res,idx)=>{
+    const div=document.createElement('div'); div.className='derivBox';
+    div.innerHTML=`<strong>Derivación ${idx+1}</strong><div class="step">${res.steps.join('<br>')}</div><div class="controls"><button class="btn small">Comparar</button></div>`;
+    div.querySelector('button').onclick=()=>showPair(idx, Math.min((idx===0?1:0), results.length-1), results);
+    derivBox.appendChild(div);
+  });
+  if(results.length>=1) showPair(0, Math.min(1, results.length-1), results);
+}
+function showPair(i,j,results){
+  const A=results[i], B=results[j];
+  document.getElementById('stepsA').innerHTML=A.steps.map(s=>`<div class="step">${escapeHtml(s)}</div>`).join('');
+  document.getElementById('stepsB').innerHTML=B.steps.map(s=>`<div class="step">${escapeHtml(s)}</div>`).join('');
+  document.getElementById('treeA').textContent=treeToString(simplifyTree(A.tree), '', true);
+  document.getElementById('treeB').textContent=treeToString(simplifyTree(B.tree), '', true);
+}
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+loadPreset('Expresiones ambiguas');
+document.getElementById('loadPreset').onclick=()=>loadPreset(presetSel.value);
+document.getElementById('useExpr').onclick=()=>loadPreset('Expresiones ambiguas');
+document.getElementById('useDangling').onclick=()=>loadPreset('Dangling else');
+document.getElementById('grammarInput').addEventListener('input',()=>renderProdTable(parseGrammarSafe()));
+document.getElementById('analyzeBtn').onclick=analyze;
+</script>
+</body>
+</html>
