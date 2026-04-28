@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Castor Laborioso — Busy Beaver interactivo</title>
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --panel:#ffffff;
+      --ink:#172033;
+      --muted:#64748b;
+      --line:#dbe3ef;
+      --blue:#2563eb;
+      --blue2:#dbeafe;
+      --green:#16a34a;
+      --green2:#dcfce7;
+      --red:#dc2626;
+      --red2:#fee2e2;
+      --amber:#d97706;
+      --amber2:#fef3c7;
+      --purple:#7c3aed;
+      --purple2:#ede9fe;
+      --slate:#0f172a;
+      --shadow:0 18px 40px rgba(15,23,42,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:radial-gradient(circle at top left,#e0ecff 0,#f7f8fb 35%,#fbfbff 100%);
+      color:var(--ink);
+    }
+    header{padding:26px clamp(18px,4vw,56px) 14px}
+    .hero{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    .heroCard,.panel{
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(219,227,239,.95);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+    }
+    .heroCard{padding:28px; position:relative; overflow:hidden; min-height:245px}
+    .heroCard:after{
+      content:"";
+      position:absolute;
+      right:-70px; top:-85px;
+      width:300px; height:300px;
+      background:conic-gradient(from 100deg,var(--amber2),var(--green2),var(--blue2),var(--purple2),var(--amber2));
+      border-radius:50%; opacity:.9; z-index:0;
+    }
+    .heroCard>*{position:relative; z-index:1}
+    h1{margin:0 0 8px; font-size:clamp(30px,4.8vw,60px); letter-spacing:-.055em; line-height:.98}
+    h2{font-size:30px; letter-spacing:-.04em; margin:0 0 8px}
+    h3{font-size:20px; letter-spacing:-.025em; margin:0 0 8px}
+    p{line-height:1.62; color:#334155}
+    .subtitle{max-width:880px; font-size:clamp(16px,1.8vw,20px); color:var(--muted); line-height:1.55; margin:10px 0 18px}
+    .pillbar{display:flex; flex-wrap:wrap; gap:9px; margin-top:14px}
+    .pill{padding:8px 12px; border-radius:999px; background:#f1f5f9; border:1px solid var(--line); color:#334155; font-size:13px; font-weight:800}
+    .heroSide{padding:22px; display:flex; flex-direction:column; justify-content:space-between; gap:14px}
+    .bigQuestion{font-size:28px; font-weight:950; letter-spacing:-.04em; line-height:1.05}
+    .bigQuestion span{color:var(--amber)}
+    .verdictBox{border-radius:18px; padding:14px; border:1px solid var(--line); background:linear-gradient(135deg,#fff,#f8fafc)}
+    .verdictText{font-size:15px; color:var(--muted); line-height:1.45; margin:8px 0 0}
+    main{padding:0 clamp(18px,4vw,56px) 40px}
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; position:sticky; top:0; z-index:20; padding:12px 0; background:linear-gradient(to bottom,rgba(247,248,251,.98),rgba(247,248,251,.80)); backdrop-filter:blur(8px)}
+    .tabBtn,.btn{border:1px solid var(--line); background:#fff; color:#1f2937; padding:10px 14px; border-radius:14px; cursor:pointer; font-weight:850; transition:.18s transform,.18s background,.18s border-color,.18s box-shadow; box-shadow:0 2px 8px rgba(15,23,42,.04)}
+    .tabBtn:hover,.btn:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(15,23,42,.08)}
+    .tabBtn.active{background:var(--amber); color:#fff; border-color:var(--amber)}
+    .btn.primary{background:var(--blue); color:white; border-color:var(--blue)}
+    .btn.green{background:var(--green); color:white; border-color:var(--green)}
+    .btn.red{background:var(--red); color:white; border-color:var(--red)}
+    .btn.amber{background:var(--amber); color:white; border-color:var(--amber)}
+    .btn.small{padding:7px 10px; border-radius:11px; font-size:13px}
+    .tabPage{display:none; animation:fade .25s ease both}
+    .tabPage.active{display:block}
+    @keyframes fade{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+    .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .panel{padding:22px; margin-bottom:18px}
+    .muted{color:var(--muted)}
+    .note{padding:14px 16px; border-radius:16px; border:1px solid var(--line); background:#f8fafc; color:#334155; line-height:1.55}
+    .warning{background:var(--amber2); border-color:#fde68a; color:#78350f}
+    .success{background:var(--green2); border-color:#bbf7d0; color:#14532d}
+    .danger{background:var(--red2); border-color:#fecaca; color:#7f1d1d}
+    .timeline{position:relative; margin-top:18px; padding-left:24px}
+    .timeline:before{content:""; position:absolute; left:8px; top:0; bottom:0; width:3px; background:linear-gradient(var(--amber),var(--blue),var(--purple)); border-radius:999px}
+    .tItem{position:relative; padding:14px 16px; margin-bottom:12px; background:#fff; border:1px solid var(--line); border-radius:16px; cursor:pointer; transition:.18s}
+    .tItem:before{content:""; position:absolute; left:-23px; top:20px; width:13px; height:13px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 5px var(--amber2)}
+    .tItem:hover,.tItem.active{transform:translateX(3px); border-color:#fbbf24; box-shadow:0 12px 25px rgba(217,119,6,.10)}
+    .tYear{font-weight:950; color:var(--amber); font-size:18px}
+    .tTitle{font-weight:900; margin-top:3px}
+    .tDetails{display:none; color:var(--muted); margin-top:8px; line-height:1.55}
+    .tItem.active .tDetails{display:block}
+    .definitionBox{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    .defCard{background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px; min-height:190px; position:relative; overflow:hidden}
+    .defCard strong{font-size:22px; color:var(--blue)}
+    .formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:#0f172a; color:#dbeafe; border-radius:16px; padding:14px; overflow:auto; line-height:1.6; margin-top:10px}
+    select,input[type="number"],input[type="text"]{width:100%; padding:12px 13px; border-radius:14px; border:1px solid var(--line); font:inherit; background:#fff; color:var(--ink); outline:none}
+    select:focus,input:focus{border-color:#fbbf24; box-shadow:0 0 0 4px rgba(217,119,6,.12)}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:12px 0}
+    .sliderRow{display:flex; gap:10px; align-items:center; color:var(--muted); font-weight:800; font-size:13px; margin:8px 0}
+    input[type="range"]{accent-color:var(--amber)}
+    .machineStage{min-height:360px; border:1px dashed #b9c6d8; background:linear-gradient(135deg,#f8fafc,#fff7ed); border-radius:22px; padding:18px; position:relative; overflow:hidden}
+    .machine{width:min(720px,100%); margin:8px auto; background:#fff; border:2px solid #cbd5e1; border-radius:22px; box-shadow:0 14px 28px rgba(15,23,42,.10); padding:18px; text-align:center; position:relative}
+    .machine.running{animation:pulse 1.1s infinite}
+    .machine.halted{border-color:var(--green); background:linear-gradient(#fff,#f0fdf4)}
+    .machine.limit{border-color:var(--amber); background:linear-gradient(#fff,#fffbeb)}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,119,6,.20),0 14px 28px rgba(15,23,42,.10)}50%{box-shadow:0 0 0 14px rgba(217,119,6,.06),0 14px 28px rgba(15,23,42,.14)}}
+    .machineIcon{font-size:45px; margin-bottom:6px}
+    .stateLine{font-weight:950; font-size:17px}
+    .tape{margin:18px auto 8px; display:flex; justify-content:center; gap:4px; flex-wrap:nowrap; overflow-x:auto; padding-bottom:18px}
+    .cell{min-width:38px; height:42px; display:grid; place-items:center; border:1px solid #cbd5e1; background:white; border-radius:10px; font-weight:950; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; position:relative}
+    .cell.one{background:#ecfccb; border-color:#bef264}
+    .cell.head{background:var(--amber); color:#fff; transform:translateY(-5px)}
+    .cell.head:after{content:"▲"; position:absolute; bottom:-19px; color:var(--amber); font-size:16px}
+    .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0}
+    .metric{background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; text-align:center}
+    .metric .num{font-size:24px; font-weight:950; color:var(--blue)}
+    .metric .lab{font-size:12px; color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em}
+    .transitionTable{width:100%; border-collapse:separate; border-spacing:0 7px; margin-top:10px}
+    .transitionTable th{text-align:left; color:var(--muted); font-size:12px; padding:0 8px}
+    .transitionTable td{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:9px 8px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:850}
+    .transitionTable td:first-child{border-left:1px solid var(--line); border-radius:10px 0 0 10px}
+    .transitionTable td:last-child{border-right:1px solid var(--line); border-radius:0 10px 10px 0}
+    .transitionTable tr.active td{background:var(--blue2); border-color:#bfdbfe; color:#1d4ed8; animation:blink .65s ease}
+    @keyframes blink{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+    .leaderboard{width:100%; border-collapse:separate; border-spacing:0 8px; margin-top:12px}
+    .leaderboard th{text-align:left; color:var(--muted); font-size:13px; padding:0 10px}
+    .leaderboard td{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:12px 10px; font-weight:800}
+    .leaderboard td:first-child{border-left:1px solid var(--line); border-radius:12px 0 0 12px}
+    .leaderboard td:last-child{border-right:1px solid var(--line); border-radius:0 12px 12px 0}
+    .leaderboard tr.highlight td{background:var(--amber2); border-color:#fde68a; color:#78350f}
+    .growthGrid{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; align-items:end; min-height:300px; padding:16px; background:linear-gradient(#fff,#f8fafc); border:1px solid var(--line); border-radius:20px}
+    .barWrap{display:flex; flex-direction:column; justify-content:flex-end; gap:8px; height:260px; text-align:center}
+    .bar{width:100%; min-height:12px; border-radius:12px 12px 4px 4px; background:linear-gradient(var(--amber),var(--purple)); box-shadow:0 12px 24px rgba(217,119,6,.15); transition:.4s height}
+    .barLabel{font-weight:950; font-size:13px}
+    .barValue{font-size:12px; color:var(--muted); line-height:1.3}
+    .proofBoard{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px}
+    .proofCard{border:1px solid var(--line); background:#fff; border-radius:18px; padding:14px; min-height:160px; transition:.25s; position:relative; overflow:hidden}
+    .proofCard .num{font-weight:950; color:var(--amber); font-size:28px}
+    .proofCard.active{border-color:var(--purple); box-shadow:0 16px 30px rgba(124,58,237,.14); transform:translateY(-4px)}
+    .proofCard.active:after{content:""; position:absolute; inset:0; background:linear-gradient(120deg,transparent,rgba(124,58,237,.08),transparent); animation:sweep 1.2s infinite}
+    @keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+    .conceptMap{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+    .concept{border:1px solid var(--line); border-radius:18px; padding:16px; background:#fff; min-height:180px; cursor:pointer; transition:.2s}
+    .concept:hover{transform:translateY(-3px); box-shadow:0 16px 30px rgba(15,23,42,.10)}
+    .concept.revealed{background:linear-gradient(135deg,#fff,#fff7ed); border-color:#fbbf24}
+    .hiddenText{display:none; margin-top:10px; color:#475569; line-height:1.5}
+    .concept.revealed .hiddenText{display:block}
+    .quizGrid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    .qCard{border:1px solid var(--line); border-radius:18px; background:#fff; padding:16px}
+    .choice{display:block; width:100%; text-align:left; margin:8px 0; border:1px solid var(--line); border-radius:13px; padding:10px 12px; background:#f8fafc; cursor:pointer; font-weight:750}
+    .choice.correct{background:var(--green2); border-color:#86efac; color:#166534}
+    .choice.wrong{background:var(--red2); border-color:#fecaca; color:#991b1b}
+    .feedback{display:none; margin-top:10px; color:#475569; line-height:1.5}
+    .miniFooter{margin-top:24px; text-align:center; color:var(--muted); font-size:13px}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 11px; border-radius:999px; font-weight:950; border:1px solid var(--line); background:#fff}
+    .badge.ok{background:var(--green2); border-color:#bbf7d0; color:#166534}
+    .badge.warn{background:var(--amber2); border-color:#fde68a; color:#92400e}
+    .badge.run{background:var(--blue2); border-color:#bfdbfe; color:#1d4ed8}
+    @media(max-width:1050px){.hero,.grid2,.grid3,.definitionBox,.conceptMap,.quizGrid{grid-template-columns:1fr}.proofBoard{grid-template-columns:1fr 1fr}.growthGrid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:700px){.metrics{grid-template-columns:1fr 1fr}.proofBoard{grid-template-columns:1fr}.growthGrid{grid-template-columns:1fr}.barWrap{height:120px}.cell{min-width:32px;height:38px}.heroCard{padding:20px}}
+  </style>
+</head>
+<body>
+<header>
+  <section class="hero">
+    <div class="heroCard">
+      <h1>El Castor Laborioso</h1>
+      <p class="subtitle">Una experiencia interactiva para entender el juego de Turing más extremo: entre todas las máquinas que sí se detienen, ¿cuál trabaja más antes de parar?</p>
+      <div class="pillbar">
+        <span class="pill">Tibor Radó</span>
+        <span class="pill">Busy Beaver</span>
+        <span class="pill">Máquinas de Turing</span>
+        <span class="pill">Crecimiento no computable</span>
+        <span class="pill">Relación con la parada</span>
+      </div>
+    </div>
+    <div class="heroSide heroCard">
+      <div class="bigQuestion">¿Qué máquina pequeña puede producir el <span>máximo trabajo</span> antes de detenerse?</div>
+      <div class="verdictBox">
+        <strong>Idea central:</strong>
+        <p class="verdictText">El castor laborioso no busca cualquier máquina larga: busca la más productiva o la que más tarda, pero solo entre máquinas que finalmente se detienen.</p>
+      </div>
+    </div>
+  </section>
+</header>
+
+<main>
+  <nav class="tabs" aria-label="Secciones del interactivo">
+    <button class="tabBtn active" data-tab="historia">1. Historia</button>
+    <button class="tabBtn" data-tab="definicion">2. Definición</button>
+    <button class="tabBtn" data-tab="simulador">3. Simulador</button>
+    <button class="tabBtn" data-tab="crecimiento">4. Crecimiento</button>
+    <button class="tabBtn" data-tab="insoluble">5. ¿Por qué es insoluble?</button>
+    <button class="tabBtn" data-tab="ideas">6. Ideas clave</button>
+    <button class="tabBtn" data-tab="actividades">7. Actividades</button>
+  </nav>
+
+  <section id="historia" class="tabPage active">
+    <div class="grid2">
+      <article class="panel">
+        <h2>Historia didáctica</h2>
+        <p>El problema del castor laborioso fue propuesto por Tibor Radó como una competencia entre máquinas de Turing muy pequeñas. Todas comienzan con una cinta llena de ceros. Cada máquina tiene pocas reglas, escribe símbolos, se mueve a izquierda o derecha, cambia de estado y quizá algún día se detiene.</p>
+        <p>La pregunta parece inocente: si fijamos el número de estados, por ejemplo 2, 3, 4 o 5, ¿cuál de todas las máquinas que sí se detienen logra escribir más unos o ejecutar más pasos antes de parar?</p>
+        <div class="note"><strong>Mensaje para clase:</strong> el castor laborioso convierte el problema de la parada en una competencia. Para saber cuál máquina gana, primero hay que saber cuáles máquinas se detienen y cuáles no. Ahí aparece el límite profundo.</div>
+      </article>
+      <article class="panel">
+        <h2>Línea de tiempo interactiva</h2>
+        <p class="muted">Haz clic en cada evento para expandirlo.</p>
+        <div class="timeline">
+          <div class="tItem active"><div class="tYear">1936</div><div class="tTitle">Turing formaliza el algoritmo</div><div class="tDetails">La máquina de Turing permite estudiar con precisión qué significa calcular mediante pasos mecánicos.</div></div>
+          <div class="tItem"><div class="tYear">1962</div><div class="tTitle">Tibor Radó propone el juego</div><div class="tDetails">Radó introduce la función Busy Beaver: una función que crece tan rápido que no puede ser computada por ningún algoritmo general.</div></div>
+          <div class="tItem"><div class="tYear">Décadas siguientes</div><div class="tTitle">Búsqueda de campeones</div><div class="tDetails">Investigadores clasifican millones y luego billones de máquinas para encontrar campeonas y demostrar que las demás no las superan.</div></div>
+          <div class="tItem"><div class="tYear">2024</div><div class="tTitle">Se demuestra el caso de 5 estados</div><div class="tDetails">La máquina campeona de 5 estados se detiene después de 47.176.870 pasos y deja 4098 unos.</div></div>
+          <div class="tItem"><div class="tYear">Hoy</div><div class="tTitle">El caso de 6 estados sigue abierto</div><div class="tDetails">Para 6 estados no se conoce el valor exacto. Las mejores cotas inferiores son gigantescas y muestran un salto brutal de complejidad.</div></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="definicion" class="tabPage">
+    <article class="panel">
+      <h2>Dos formas de medir al castor</h2>
+      <p>Hay dos versiones muy usadas. Ambas consideran máquinas de Turing con <strong>n estados</strong>, dos símbolos, cinta inicialmente en blanco y que finalmente se detienen.</p>
+      <div class="definitionBox">
+        <div class="defCard">
+          <strong>Σ(n): productividad</strong>
+          <p>Cuenta el máximo número de unos que una máquina de n estados puede dejar escritos en la cinta al detenerse.</p>
+          <div class="formula">Σ(n) = máximo número final de 1s
+entre máquinas de n estados que se detienen</div>
+        </div>
+        <div class="defCard">
+          <strong>S(n): resistencia</strong>
+          <p>Cuenta el máximo número de pasos que una máquina de n estados puede ejecutar antes de detenerse.</p>
+          <div class="formula">S(n) = máximo número de pasos
+entre máquinas de n estados que se detienen</div>
+        </div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>Reglas del juego</h2>
+      <div class="grid3">
+        <div class="note"><strong>1. Cinta inicial:</strong><br>Todos los cuadros contienen 0.</div>
+        <div class="note"><strong>2. Máquina pequeña:</strong><br>Solo se permite un número fijo de estados: A, B, C...</div>
+        <div class="note"><strong>3. Solo cuentan las que paran:</strong><br>Si una máquina entra en ciclo infinito, queda descalificada.</div>
+      </div>
+    </article>
+  </section>
+
+  <section id="simulador" class="tabPage">
+    <div class="grid2">
+      <article class="panel">
+        <h2>Arena de castores</h2>
+        <p>Ejecuta máquinas de Turing conocidas. Observa la cinta, la cabeza, los pasos y cuántos unos quedan escritos. Algunas máquinas son campeonas exactas para ciertos valores; otras son ejemplos didácticos.</p>
+        <label for="machineSelect"><strong>Máquina</strong></label>
+        <select id="machineSelect"></select>
+        <div class="controls">
+          <button class="btn primary" id="stepBtn">Paso</button>
+          <button class="btn green" id="runBtn">Ejecutar</button>
+          <button class="btn amber" id="turboBtn">Turbo 100 pasos</button>
+          <button class="btn" id="backBtn">Atrás</button>
+          <button class="btn red" id="resetBtn">Reiniciar</button>
+        </div>
+        <div class="sliderRow">Velocidad <input type="range" id="speedRange" min="80" max="1000" value="520" /> <span id="speedLabel">media</span></div>
+        <p><span id="statusBadge" class="badge run">Listo</span></p>
+        <div class="metrics">
+          <div class="metric"><div class="num" id="mSteps">0</div><div class="lab">Pasos</div></div>
+          <div class="metric"><div class="num" id="mOnes">0</div><div class="lab">Unos</div></div>
+          <div class="metric"><div class="num" id="mState">A</div><div class="lab">Estado</div></div>
+          <div class="metric"><div class="num" id="mHead">0</div><div class="lab">Cabeza</div></div>
+        </div>
+        <div id="machineDescription" class="note"></div>
+        <h3>Tabla de transición</h3>
+        <table class="transitionTable" id="transitionTable"></table>
+      </article>
+
+      <article class="panel">
+        <h2>Visualización de la cinta</h2>
+        <div class="machineStage">
+          <div id="machineBox" class="machine">
+            <div class="machineIcon">🦫</div>
+            <div class="stateLine" id="stateLine">Estado: A</div>
+            <div class="tape" id="tape"></div>
+            <p id="explanation" class="muted">Presiona “Paso” para comenzar.</p>
+          </div>
+        </div>
+        <div class="note warning"><strong>Discusión:</strong> si una máquina lleva 500 pasos sin detenerse, ¿podemos afirmar que nunca se detendrá? No. Solo sabemos que no se ha detenido todavía.</div>
+      </article>
+    </div>
+  </section>
+
+  <section id="crecimiento" class="tabPage">
+    <article class="panel">
+      <h2>Valores conocidos y salto explosivo</h2>
+      <p>Para pocos estados los valores parecen manejables. Pero el crecimiento se vuelve monstruoso muy rápido. La barra de 5 estados está comprimida; si usáramos escala real, las anteriores casi desaparecerían.</p>
+      <table class="leaderboard">
+        <thead><tr><th>Estados</th><th>S(n): máximo de pasos</th><th>Σ(n): máximo de unos</th><th>Estado del conocimiento</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>1</td><td>1</td><td>Exacto</td></tr>
+          <tr><td>2</td><td>6</td><td>4</td><td>Exacto</td></tr>
+          <tr><td>3</td><td>21</td><td>6</td><td>Exacto</td></tr>
+          <tr><td>4</td><td>107</td><td>13</td><td>Exacto</td></tr>
+          <tr class="highlight"><td>5</td><td>47.176.870</td><td>4098</td><td>Exacto, demostrado en 2024</td></tr>
+          <tr><td>6</td><td>Desconocido; cota inferior gigantesca</td><td>Desconocido; cota inferior gigantesca</td><td>Abierto</td></tr>
+        </tbody>
+      </table>
+    </article>
+    <article class="panel">
+      <h2>Gráfico comprimido de S(n)</h2>
+      <p class="muted">La altura usa escala logarítmica para que todos los valores puedan verse.</p>
+      <div class="growthGrid" id="growthGrid"></div>
+      <div class="note" style="margin-top:14px"><strong>Idea clave:</strong> la función crece más rápido que cualquier función computable. No es solo “muy grande”; es no computable.</div>
+    </article>
+  </section>
+
+  <section id="insoluble" class="tabPage">
+    <article class="panel">
+      <h2>¿Por qué el castor laborioso es insoluble?</h2>
+      <p>Para encontrar S(n), tendríamos que revisar todas las máquinas de n estados y decidir, para cada una, si se detiene o no. Como el problema de la parada es insoluble en general, no puede existir un algoritmo general que calcule S(n) para todo n.</p>
+      <div class="proofBoard">
+        <div class="proofCard" id="proof0"><div class="num">1</div><strong>Fijamos n</strong><p>Hay un número finito de máquinas de n estados.</p></div>
+        <div class="proofCard" id="proof1"><div class="num">2</div><strong>Solo cuentan las que paran</strong><p>Las máquinas infinitas deben excluirse.</p></div>
+        <div class="proofCard" id="proof2"><div class="num">3</div><strong>Necesitamos decidir parada</strong><p>Para saber si una máquina compite, debemos saber si se detiene.</p></div>
+        <div class="proofCard" id="proof3"><div class="num">4</div><strong>Choque lógico</strong><p>Si pudiéramos calcular S(n) para todo n, podríamos resolver casos generales de parada.</p></div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="proofNext">Siguiente paso</button>
+        <button class="btn" id="proofReset">Reiniciar</button>
+      </div>
+      <div id="proofConclusion" class="note">Presiona “Siguiente paso” para construir el argumento.</div>
+    </article>
+    <article class="panel">
+      <h2>Experimento mental</h2>
+      <p>Supón que alguien te entrega una calculadora mágica de S(n). Entonces, para analizar una máquina M con n estados, podrías ejecutarla durante S(n) pasos.</p>
+      <div class="grid2">
+        <div class="note success"><strong>Si M se detiene antes o en S(n):</strong><br>ya sabes que se detiene.</div>
+        <div class="note danger"><strong>Si M no se detiene en S(n):</strong><br>entonces no puede ser una máquina halting de n estados, porque ninguna máquina halting de n estados tarda más que S(n). Por tanto, no se detendrá.</div>
+      </div>
+      <p>Eso resolvería el problema de la parada para esas máquinas. Como sabemos que la parada no tiene solución general, la función Busy Beaver no puede ser computable en general.</p>
+    </article>
+  </section>
+
+  <section id="ideas" class="tabPage">
+    <article class="panel">
+      <h2>Ideas clave para no confundirse</h2>
+      <p>Haz clic en cada tarjeta para revelar la explicación.</p>
+      <div class="conceptMap">
+        <div class="concept"><h3>1. No gana cualquier máquina infinita</h3><p class="hiddenText">Una máquina que nunca se detiene no gana. Queda fuera del concurso. El castor debe trabajar mucho, pero finalmente parar.</p></div>
+        <div class="concept"><h3>2. Estados pequeños no implican comportamiento simple</h3><p class="hiddenText">Una máquina de 5 estados puede tardar millones de pasos. Con 6 estados aparecen comportamientos que exceden nuestra intuición.</p></div>
+        <div class="concept"><h3>3. Σ(n) y S(n) no siempre son la misma competencia</h3><p class="hiddenText">Una máquina puede escribir muchos unos, mientras otra puede tardar más pasos. Por eso se distinguen productividad y resistencia.</p></div>
+        <div class="concept"><h3>4. Es una frontera de la computabilidad</h3><p class="hiddenText">El problema muestra que no todo patrón generado por reglas simples puede ser completamente domesticado por un algoritmo general.</p></div>
+        <div class="concept"><h3>5. Relación directa con la parada</h3><p class="hiddenText">Si pudiéramos calcular el castor laborioso para cualquier número de estados, podríamos decidir cuándo una máquina ya nunca se detendrá.</p></div>
+        <div class="concept"><h3>6. Relevancia moderna</h3><p class="hiddenText">Aparece en verificación formal, teoría de la prueba, límites de sistemas axiomáticos, búsqueda automática y fundamentos de la computación.</p></div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>Guion breve para el profesor</h2>
+      <p><strong>Inicio:</strong> “El problema de la parada nos decía que no siempre podemos saber si un programa termina. El castor laborioso convierte esa dificultad en una competencia: entre los programas que sí terminan, ¿cuál trabaja más?”</p>
+      <p><strong>Analogía:</strong> “Es como una carrera en la que solo cuentan los corredores que llegan a la meta. El problema es que algunos corredores quizá nunca llegan, y no siempre podemos distinguir entre ‘muy lento’ y ‘nunca llegará’.”</p>
+      <p><strong>Momento central:</strong> “Si conociéramos el máximo tiempo que puede tardar cualquier máquina de n estados que sí se detiene, entonces bastaría ejecutar una máquina durante ese máximo. Si no se detuvo, ya sabríamos que nunca lo hará. Eso resolvería la parada; por eso no puede existir un método general.”</p>
+    </article>
+  </section>
+
+  <section id="actividades" class="tabPage">
+    <article class="panel">
+      <h2>Preguntas rápidas</h2>
+      <div class="quizGrid">
+        <div class="qCard" data-answer="b"><h3>Pregunta 1</h3><p>¿Qué máquinas participan en la competencia del castor laborioso?</p><button class="choice" data-choice="a">Todas las máquinas, incluidas las infinitas.</button><button class="choice" data-choice="b">Solo las máquinas que finalmente se detienen.</button><button class="choice" data-choice="c">Solo máquinas que escriben ceros.</button><div class="feedback">Correcto: las máquinas que no se detienen quedan descalificadas.</div></div>
+        <div class="qCard" data-answer="c"><h3>Pregunta 2</h3><p>¿Por qué no podemos calcular S(n) mediante un algoritmo general?</p><button class="choice" data-choice="a">Porque las computadoras modernas son lentas.</button><button class="choice" data-choice="b">Porque las cintas de Turing son antiguas.</button><button class="choice" data-choice="c">Porque permitiría resolver el problema de la parada.</button><div class="feedback">Correcto: conocer S(n) en general permitiría decidir si ciertas máquinas nunca se detienen.</div></div>
+        <div class="qCard" data-answer="a"><h3>Pregunta 3</h3><p>¿Qué mide Σ(n)?</p><button class="choice" data-choice="a">El máximo número de unos finales.</button><button class="choice" data-choice="b">El número de estados de la máquina.</button><button class="choice" data-choice="c">La cantidad de máquinas que existen.</button><div class="feedback">Correcto: Σ(n) mide productividad final en la cinta.</div></div>
+        <div class="qCard" data-answer="b"><h3>Pregunta 4</h3><p>¿Qué significa que el caso de 6 estados esté abierto?</p><button class="choice" data-choice="a">Que no existe ninguna máquina de 6 estados.</button><button class="choice" data-choice="b">Que no se conoce el valor exacto del máximo.</button><button class="choice" data-choice="c">Que todas las máquinas de 6 estados son infinitas.</button><div class="feedback">Correcto: se conocen cotas y candidatos, pero no el valor exacto completo.</div></div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>Mini-reto para grupos</h2>
+      <ol>
+        <li>Ejecuten la máquina de 2 estados y reconstruyan paso a paso por qué deja 4 unos.</li>
+        <li>Comparen Σ(n) y S(n): ¿por qué podrían tener campeones diferentes?</li>
+        <li>Expliquen con sus palabras por qué “tardó mucho” no significa “nunca se detendrá”.</li>
+        <li>Construyan una analogía cotidiana para explicar por qué conocer S(n) resolvería el problema de la parada.</li>
+      </ol>
+    </article>
+  </section>
+
+  <div class="miniFooter">HTML autocontenido para clase — Castor laborioso, Busy Beaver, máquinas de Turing y límites de la computabilidad.</div>
+</main>
+
+<script>
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => [...document.querySelectorAll(sel)];
+
+  $$('.tabBtn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      $$('.tabBtn').forEach(b=>b.classList.remove('active'));
+      $$('.tabPage').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  $$('.tItem').forEach(item=>item.addEventListener('click',()=>{
+    $$('.tItem').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+  }));
+
+  const machines = {
+    bb1:{
+      name:'1 estado — campeón exacto: S(1)=1, Σ(1)=1',
+      desc:'La máquina más pequeña posible: escribe un 1 y se detiene en un paso.',
+      rules:{'A0':['1','R','H']},
+      expected:'1 paso, 1 uno'
+    },
+    bb2:{
+      name:'2 estados — campeón exacto: S(2)=6, Σ(2)=4',
+      desc:'Esta máquina de 2 estados es una campeona clásica: en solo 6 pasos deja 4 unos y se detiene.',
+      rules:{'A0':['1','R','B'],'A1':['1','L','B'],'B0':['1','L','A'],'B1':['1','R','H']},
+      expected:'6 pasos, 4 unos'
+    },
+    sigma3:{
+      name:'3 estados — campeona de Σ(3): deja 6 unos',
+      desc:'Esta máquina alcanza Σ(3)=6, aunque no es la que más pasos tarda para S(3). Es útil para mostrar que productividad y resistencia pueden diferir.',
+      rules:{'A0':['1','R','B'],'A1':['1','R','H'],'B0':['0','R','C'],'B1':['1','R','B'],'C0':['1','L','C'],'C1':['1','L','A']},
+      expected:'14 pasos, 6 unos'
+    },
+    bb4:{
+      name:'4 estados — campeón exacto: S(4)=107, Σ(4)=13',
+      desc:'La máquina campeona de 4 estados tarda 107 pasos y deja 13 unos. Es suficientemente grande para verse interesante en clase.',
+      rules:{'A0':['1','R','B'],'A1':['1','L','B'],'B0':['1','L','A'],'B1':['0','L','C'],'C0':['1','R','H'],'C1':['1','L','D'],'D0':['1','R','D'],'D1':['0','R','A']},
+      expected:'107 pasos, 13 unos'
+    },
+    bb5:{
+      name:'5 estados — campeón exacto: S(5)=47.176.870, Σ(5)=4098',
+      desc:'Esta máquina es demasiado larga para ejecutarla completa en clase. Puedes dar pasos iniciales o usar turbo, pero el navegador se detendrá por seguridad mucho antes del final real.',
+      rules:{'A0':['1','R','B'],'A1':['1','L','C'],'B0':['1','R','C'],'B1':['1','R','B'],'C0':['1','R','D'],'C1':['0','L','E'],'D0':['1','L','A'],'D1':['1','L','D'],'E0':['1','R','H'],'E1':['0','L','A']},
+      expected:'47.176.870 pasos, 4098 unos'
+    },
+    loopToy:{
+      name:'Ejemplo descalificado — nunca se detiene',
+      desc:'Esta máquina sirve para mostrar por qué las máquinas infinitas no pueden ganar: trabajan para siempre, pero quedan fuera de la competencia.',
+      rules:{'A0':['1','R','A'],'A1':['1','R','A']},
+      expected:'No se detiene: descalificada'
+    }
+  };
+
+  const machineSelect = $('#machineSelect');
+  Object.entries(machines).forEach(([key,m])=>{
+    const opt=document.createElement('option'); opt.value=key; opt.textContent=m.name; machineSelect.appendChild(opt);
+  });
+  machineSelect.value='bb2';
+
+  let state, history=[], timer=null, activeRule='';
+  const STEP_LIMIT=3000;
+  function clone(o){return JSON.parse(JSON.stringify(o));}
+  function currentMachine(){return machines[machineSelect.value];}
+  function initState(){
+    return {tape:{}, head:0, state:'A', steps:0, halted:false, limited:false, min:-8, max:8, msg:'Cinta en blanco. Estado inicial A.'};
+  }
+  function readCell(pos){return state.tape[pos] || '0';}
+  function writeCell(pos,val){ if(val==='0') delete state.tape[pos]; else state.tape[pos]=val; }
+  function countOnes(){return Object.values(state.tape).filter(x=>x==='1').length;}
+  function resetSim(){
+    clearInterval(timer); timer=null; history=[]; activeRule=''; state=initState(); renderAll();
+  }
+  function stepSim(){
+    if(state.halted || state.limited) return;
+    if(state.steps>=STEP_LIMIT){ state.limited=true; state.msg='Límite de seguridad del navegador alcanzado. Esto no prueba que la máquina no se detenga.'; renderAll(); clearInterval(timer); return; }
+    history.push(clone(state));
+    const sym=readCell(state.head);
+    activeRule=state.state+sym;
+    const rule=currentMachine().rules[activeRule];
+    if(!rule){ state.halted=true; state.msg='No hay regla definida. La máquina se detiene por transición incompleta.'; renderAll(); clearInterval(timer); return; }
+    const [write,move,next]=rule;
+    writeCell(state.head,write);
+    const oldHead=state.head, oldState=state.state;
+    state.head += move==='R'?1:-1;
+    state.min=Math.min(state.min,state.head-8,oldHead-8);
+    state.max=Math.max(state.max,state.head+8,oldHead+8);
+    state.state=next;
+    state.steps++;
+    if(next==='H'){
+      state.halted=true;
+      state.msg=`Paso ${state.steps}: (${oldState}, ${sym}) → escribe ${write}, mueve ${move}, entra en H. La máquina se detuvo.`;
+      clearInterval(timer);
+    } else {
+      state.msg=`Paso ${state.steps}: (${oldState}, ${sym}) → escribe ${write}, mueve ${move}, pasa a ${next}.`;
+    }
+    renderAll();
+  }
+  function backSim(){
+    if(history.length){state=history.pop(); activeRule=''; renderAll();}
+  }
+  function renderTape(){
+    const tape=$('#tape'); tape.innerHTML='';
+    const left=state.head-8, right=state.head+8;
+    for(let i=left;i<=right;i++){
+      const v=state.tape[i] || '0';
+      const cell=document.createElement('div');
+      cell.className='cell '+(v==='1'?'one ':'')+(i===state.head?'head':'');
+      cell.textContent=v;
+      cell.title='posición '+i;
+      tape.appendChild(cell);
+    }
+  }
+  function renderTable(){
+    const table=$('#transitionTable');
+    const m=currentMachine();
+    const states=[...new Set(Object.keys(m.rules).map(k=>k[0]))].sort();
+    let html='<thead><tr><th>Símbolo</th>'+states.map(s=>`<th>Estado ${s}</th>`).join('')+'</tr></thead><tbody>';
+    ['0','1'].forEach(sym=>{
+      html+=`<tr><td>${sym}</td>`;
+      states.forEach(st=>{
+        const key=st+sym;
+        const r=m.rules[key];
+        const txt=r?`${r[0]}${r[1]}${r[2]}`:'—';
+        html+=`<td data-rule="${key}">${txt}</td>`;
+      });
+      html+='</tr>';
+    });
+    html+='</tbody>';
+    table.innerHTML=html;
+    if(activeRule){
+      const cell=table.querySelector(`[data-rule="${activeRule}"]`);
+      if(cell) cell.parentElement.classList.add('active');
+    }
+  }
+  function renderAll(){
+    const box=$('#machineBox'); box.className='machine';
+    if(state.halted) box.classList.add('halted'); else if(state.limited) box.classList.add('limit'); else box.classList.add('running');
+    $('#stateLine').textContent=state.halted?'Estado: H detenido':state.limited?'Estado: límite de demo':'Estado: '+state.state;
+    $('#explanation').textContent=state.msg;
+    $('#mSteps').textContent=state.steps.toLocaleString('es-CO');
+    $('#mOnes').textContent=countOnes().toLocaleString('es-CO');
+    $('#mState').textContent=state.state;
+    $('#mHead').textContent=state.head;
+    $('#machineDescription').innerHTML=`<strong>${currentMachine().name}</strong><br>${currentMachine().desc}<br><strong>Resultado esperado:</strong> ${currentMachine().expected}`;
+    const badge=$('#statusBadge');
+    badge.className='badge '+(state.halted?'ok':state.limited?'warn':'run');
+    badge.textContent=state.halted?'Se detuvo':state.limited?'Límite de demostración':'Ejecutándose / lista';
+    renderTape(); renderTable();
+  }
+  machineSelect.addEventListener('change',resetSim);
+  $('#stepBtn').addEventListener('click',stepSim);
+  $('#backBtn').addEventListener('click',backSim);
+  $('#resetBtn').addEventListener('click',resetSim);
+  $('#runBtn').addEventListener('click',()=>{clearInterval(timer); timer=setInterval(stepSim,1080-parseInt($('#speedRange').value));});
+  $('#turboBtn').addEventListener('click',()=>{for(let i=0;i<100;i++) stepSim();});
+  $('#speedRange').addEventListener('input',()=>{
+    const v=parseInt($('#speedRange').value); $('#speedLabel').textContent=v<350?'rápida':v<750?'media':'lenta';
+    if(timer){clearInterval(timer); timer=setInterval(stepSim,1080-v);}
+  });
+  resetSim();
+
+  // Growth chart
+  const growth=[
+    {n:1,s:1,label:'1'},
+    {n:2,s:6,label:'6'},
+    {n:3,s:21,label:'21'},
+    {n:4,s:107,label:'107'},
+    {n:5,s:47176870,label:'47.176.870'},
+    {n:6,s:null,label:'abierto'}
+  ];
+  const maxLog=Math.log10(47176870+1);
+  const grid=$('#growthGrid');
+  growth.forEach(g=>{
+    const wrap=document.createElement('div'); wrap.className='barWrap';
+    let h=g.s?Math.max(10,Math.log10(g.s+1)/maxLog*230):230;
+    wrap.innerHTML=`<div class="bar" style="height:${h}px; ${g.s?'' :'background:repeating-linear-gradient(45deg,#7c3aed,#7c3aed 8px,#f59e0b 8px,#f59e0b 16px);'}"></div><div class="barLabel">n=${g.n}</div><div class="barValue">${g.label}</div>`;
+    grid.appendChild(wrap);
+  });
+
+  // Proof animation
+  let proofIdx=-1;
+  const proofTexts=[
+    '<strong>Paso 1:</strong> fijamos un número de estados. Para ese tamaño hay muchas máquinas, pero finitamente muchas.',
+    '<strong>Paso 2:</strong> el concurso solo acepta máquinas que se detienen. Las que corren para siempre no tienen puntuación ganadora.',
+    '<strong>Paso 3:</strong> para saber quién gana, debemos separar máquinas que paran de máquinas que no paran.',
+    '<strong>Conclusión:</strong> un algoritmo general para S(n) permitiría decidir la parada. Por eso el castor laborioso no es computable en general.'
+  ];
+  $('#proofNext').addEventListener('click',()=>{
+    proofIdx=(proofIdx+1)%4;
+    $$('.proofCard').forEach((c,i)=>c.classList.toggle('active',i===proofIdx));
+    $('#proofConclusion').innerHTML=proofTexts[proofIdx];
+  });
+  $('#proofReset').addEventListener('click',()=>{proofIdx=-1; $$('.proofCard').forEach(c=>c.classList.remove('active')); $('#proofConclusion').textContent='Presiona “Siguiente paso” para construir el argumento.';});
+
+  $$('.concept').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('revealed')));
+  $$('.qCard').forEach(card=>{
+    const ans=card.dataset.answer;
+    card.querySelectorAll('.choice').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        card.querySelectorAll('.choice').forEach(b=>{b.classList.remove('correct','wrong'); if(b.dataset.choice===ans) b.classList.add('correct');});
+        if(btn.dataset.choice!==ans) btn.classList.add('wrong');
+        card.querySelector('.feedback').style.display='block';
+      });
+    });
+  });
+</script>
+</body>
+</html>
