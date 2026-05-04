@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NP Studio 12 módulos con evaluación</title>
+<style>
+:root{
+ --bg:#f6f8fc;--card:#fff;--ink:#172033;--muted:#64748b;--line:#dbe3ef;
+ --blue:#2563eb;--blue2:#dbeafe;--green:#16a34a;--green2:#dcfce7;
+ --amber:#d97706;--amber2:#fff3cd;--red:#dc2626;--red2:#fee2e2;
+ --purple:#7c3aed;--purple2:#ede9fe;--shadow:0 16px 40px rgba(15,23,42,.10);
+ --radius:22px
+}
+body.dark{--bg:#0b1220;--card:#111827;--ink:#e5e7eb;--muted:#9ca3af;--line:#334155;--blue2:#172554;--green2:#052e16;--amber2:#451a03;--red2:#450a0a;--purple2:#2e1065;--shadow:0 20px 48px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,sans-serif;background:radial-gradient(circle at top left,#e7efff 0,var(--bg) 42%,var(--bg) 100%);color:var(--ink)}
+header{padding:24px clamp(16px,4vw,48px) 10px}
+main{padding:0 clamp(16px,4vw,48px) 42px}
+.hero,.grid2,.grid3,.grid4{display:grid;gap:18px}
+.hero{grid-template-columns:1.05fr .95fr}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+.card{background:color-mix(in srgb,var(--card) 94%,transparent);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+h1{margin:0;font-size:clamp(28px,4.5vw,54px);line-height:1;letter-spacing:-.05em}
+h2{margin:0 0 8px;font-size:28px;letter-spacing:-.04em}h3{margin:0 0 8px;font-size:19px}
+p,li{line-height:1.58;color:color-mix(in srgb,var(--ink) 82%,var(--muted))}
+.subtitle{font-size:clamp(16px,1.8vw,20px);color:var(--muted);line-height:1.55;margin:10px 0 0}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.pill{padding:8px 12px;border-radius:999px;background:#f1f5f9;border:1px solid var(--line);font-size:13px;font-weight:850;color:#334155}body.dark .pill{background:#1e293b;color:#cbd5e1}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;position:sticky;top:0;z-index:20;padding:12px 0;background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 96%,transparent),color-mix(in srgb,var(--bg) 75%,transparent));backdrop-filter:blur(8px)}
+.tabBtn,.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;border-radius:14px;cursor:pointer;font-weight:850;transition:.18s;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.tabBtn:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(15,23,42,.08)}
+.tabBtn.active{background:var(--blue);border-color:var(--blue);color:white}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.btn.green{background:var(--green);border-color:var(--green);color:white}.btn.amber{background:var(--amber);border-color:var(--amber);color:white}.btn.red{background:var(--red);border-color:var(--red);color:white}.btn.purple{background:var(--purple);border-color:var(--purple);color:white}.btn.small{padding:7px 10px;border-radius:11px;font-size:13px}
+.tabPage{display:none;animation:fade .22s ease both}.tabPage.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+input,textarea,select{width:100%;padding:12px 13px;border-radius:14px;border:1px solid var(--line);font:inherit;background:var(--card);color:var(--ink)}
+textarea{resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.note{padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:#f8fafc;color:#334155;line-height:1.55}body.dark .note{background:#1e293b;color:#cbd5e1}
+.info{background:var(--blue2)!important;border-color:#93c5fd!important;color:#1d4ed8!important}body.dark .info{color:#bfdbfe!important}
+.ok{background:var(--green2)!important;border-color:#86efac!important;color:#166534!important}body.dark .ok{color:#bbf7d0!important}
+.warn{background:var(--amber2)!important;border-color:#fcd34d!important;color:#92400e!important}body.dark .warn{color:#fde68a!important}
+.bad{background:var(--red2)!important;border-color:#fecaca!important;color:#991b1b!important}body.dark .bad{color:#fecaca!important}
+.purpleBox{background:var(--purple2)!important;border-color:#c4b5fd!important;color:#4c1d95!important}body.dark .purpleBox{color:#ddd6fe!important}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0f172a;color:#dbeafe;border-radius:16px;padding:14px;overflow:auto;white-space:pre-wrap;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:center}.stat .num{font-size:24px;font-weight:950;color:var(--blue)}.stat .lab{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase}
+.table{width:100%;border-collapse:separate;border-spacing:0 8px}.table th{text-align:left;color:var(--muted);font-size:12px;padding:0 8px}.table td{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 8px;font-weight:750}.table td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}
+.chip{display:inline-flex;gap:6px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-weight:800;margin:4px;cursor:pointer}.chip.sel{background:var(--blue2);border-color:#93c5fd;color:#1d4ed8}body.dark .chip.sel{color:#bfdbfe}
+.concept,.algoCard,.challengeCard{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--card);transition:.2s;min-height:135px}.concept{cursor:pointer}.concept:hover,.algoCard:hover,.challengeCard:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(15,23,42,.08)}.concept.revealed{background:linear-gradient(135deg,var(--card),var(--blue2));border-color:#93c5fd}.hidden{display:none;color:var(--muted);line-height:1.55}.concept.revealed .hidden{display:block}
+.qCard{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:16px}.choice{display:block;width:100%;text-align:left;margin:8px 0;border:1px solid var(--line);border-radius:13px;padding:10px 12px;background:#f8fafc;color:#172033;cursor:pointer;font-weight:750}body.dark .choice{background:#1e293b;color:#e5e7eb}.choice.correct{background:var(--green2);border-color:#86efac;color:#166534}.choice.wrong{background:var(--red2);border-color:#fecaca;color:#991b1b}.feedback{display:none;margin-top:10px;color:var(--muted);line-height:1.5}
+.graphArea{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card);box-shadow:var(--shadow)}.graphSvg{width:100%;height:560px;display:block;background:radial-gradient(circle at 30% 20%,#ffffff,#f8fafc)}body.dark .graphSvg{background:radial-gradient(circle at 30% 20%,#1e293b,#0f172a)}
+.vertex{cursor:pointer}.vertex circle{fill:white;stroke:#334155;stroke-width:2.5}.vertex text{font-weight:900;pointer-events:none;user-select:none}.vertex.selected circle{fill:#dbeafe;stroke:#2563eb;stroke-width:4}.vertex.colored text{fill:#0f172a}.edge{stroke:#94a3b8;stroke-width:3;cursor:pointer}.edge.covered{stroke:#16a34a}.edge.uncovered{stroke:#dc2626;stroke-dasharray:7 5}.edge.conflict{stroke:#dc2626;stroke-width:6}.edge.route{stroke:#2563eb;stroke-width:5}.edge.mst{stroke:#16a34a;stroke-width:3;stroke-dasharray:7 5}.edge.faint{stroke:#cbd5e1;stroke-width:1.4;opacity:.55}.edge.pending{stroke:#7c3aed;stroke-width:4;stroke-dasharray:4 4}
+.modeBadge{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:900}
+.stepBox{border-left:5px solid var(--blue);padding:14px;background:var(--blue2);border-radius:14px;margin:10px 0;color:#1d4ed8}body.dark .stepBox{color:#bfdbfe}
+.mapNode{padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--card);text-align:center;font-weight:900}.mapArrow{text-align:center;font-size:28px;color:var(--purple);font-weight:900}.footer{margin-top:22px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:980px){.hero,.grid2,.grid3,.grid4,.stats{grid-template-columns:1fr}.graphSvg{height:460px}}
+
+.loginWrap{min-height:100vh;display:grid;place-items:center;padding:30px}
+.loginBox{max-width:980px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.userBadge{display:inline-flex;gap:8px;align-items:center;padding:9px 12px;border-radius:999px;background:var(--blue2);border:1px solid #93c5fd;color:#1d4ed8;font-weight:900}
+.evalQuestion{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:16px;margin:12px 0}
+.evalOption{display:block;margin:8px 0;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:#f8fafc;cursor:pointer;color:#172033}
+body.dark .evalOption{background:#1e293b;color:#e5e7eb}
+.evalOption input{width:auto;margin-right:8px}
+.gradePill{display:inline-flex;align-items:center;justify-content:center;min-width:62px;padding:8px 10px;border-radius:999px;font-weight:950;border:1px solid var(--line);background:var(--card)}
+.gradeGood{background:var(--green2);border-color:#86efac;color:#166534}
+.gradeMid{background:var(--amber2);border-color:#fcd34d;color:#92400e}
+.gradeBad{background:var(--red2);border-color:#fecaca;color:#991b1b}
+.teacherTableWrap{overflow:auto;max-height:620px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.teacherTable{border-collapse:collapse;width:max-content;min-width:100%}
+.teacherTable th,.teacherTable td{border:1px solid var(--line);padding:8px 10px;text-align:center;white-space:nowrap}
+.teacherTable th{position:sticky;top:0;background:var(--blue2);z-index:2}
+.teacherTable th:first-child,.teacherTable td:first-child{position:sticky;left:0;background:var(--card);z-index:1;text-align:left;font-weight:900}
+@media(max-width:980px){.loginBox{grid-template-columns:1fr}}
+
+
+.timerBox{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--card);margin:12px 0}
+.timerBig{font-size:28px;font-weight:950;color:var(--red)}
+.activationCode{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:22px;font-weight:950;letter-spacing:.08em;padding:10px 12px;border-radius:14px;background:#0f172a;color:#dbeafe;display:inline-block}
+.lockedEval{filter:grayscale(.15);opacity:.92}
+
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="loginWrap">
+  <div class="loginBox">
+    <article class="card">
+      <h1>NP Studio</h1>
+      <p class="subtitle">Entrada para estudiantes</p>
+      <div class="note info"><strong>Entrada de estudiantes:</strong> los estudiantes pueden crear su usuario y entrar con su clave. El profesor también puede ingresar desde esta misma pantalla con sus credenciales.</div>
+      <label>Usuario</label>
+      <input id="loginUser" placeholder="ej. ana.perez">
+      <label>Clave</label>
+      <input id="loginPass" type="password" placeholder="clave">
+      <div class="controls">
+        <button class="btn primary" onclick="login()">Entrar</button>
+        <button class="btn green" onclick="registerStudent()">Crear estudiante</button>
+      </div>
+      <div id="loginMsg" class="note">Las notas se guardan localmente en este navegador y también se pueden exportar/importar como JSON.</div>
+    </article>
+    <article class="card">
+      <h2>¿Qué incluye esta versión?</h2>
+      <ul>
+        <li>12 problemas evaluables.</li>
+        <li>Evaluación de 10 preguntas por módulo.</li>
+        <li>Nota automática de 1.0 a 5.0.</li>
+        <li>Módulo profesor con notas por estudiante.</li>
+        <li>Cálculo de nota final cuando complete los 12 módulos.</li>
+        <li>Exportación/importación de notas.</li>
+      </ul>
+      <div class="note warn"><strong>Importante:</strong> al ser un HTML local, no hay servidor central. Para consolidar grupos, exporta notas desde cada computador o usa un solo equipo/navegador.</div>
+    </article>
+  </div>
+</div>
+<div id="appShell" style="display:none">
+
+<header>
+  <section class="hero">
+    <div class="card">
+      <h1 id="title">NP Studio</h1>
+      <p class="subtitle" id="subtitle">Laboratorio interactivo de problemas NP, aproximación, heurísticas y reducciones.</p>
+      <div class="pills" id="pills"></div>
+    </div>
+    <div class="card">
+      <label>Problema / módulo</label>
+      <select id="moduleSelect"></select>
+      <div class="controls">
+        <button class="btn primary" onclick="switchModule()">Cargar módulo</button>
+        <button class="btn" onclick="toggleTheme()">Modo claro/oscuro</button>
+        <button class="btn" onclick="toggleFull()">Pantalla completa</button>
+        <button class="btn red" onclick="logout()">Salir</button>
+      </div>
+      <div class="userBadge" id="userInfo">Sin sesión</div>
+      <div class="note info" id="centralQuestion" style="margin-top:10px">Pregunta central.</div>
+    </div>
+  </section>
+</header>
+<main>
+  <nav class="tabs">
+    <button class="tabBtn active" data-tab="classMode">Modo clase</button>
+    <button class="tabBtn" data-tab="lab">Laboratorio</button>
+    <button class="tabBtn" data-tab="algorithms">Algoritmos</button>
+    <button class="tabBtn" data-tab="stepper">Paso a paso</button>
+    <button class="tabBtn" data-tab="compare">Comparador</button>
+    <button class="tabBtn" data-tab="challenge">Retos</button>
+    <button class="tabBtn" data-tab="evaluation">Evaluación</button>
+    <button class="tabBtn" data-tab="teacher">Profesor</button>
+    <button class="tabBtn" data-tab="context">Contexto</button>
+    <button class="tabBtn" data-tab="map">Mapa NP</button>
+  </nav>
+
+  <section id="classMode" class="tabPage active"></section>
+  <section id="lab" class="tabPage"></section>
+  <section id="algorithms" class="tabPage"></section>
+  <section id="stepper" class="tabPage"></section>
+  <section id="compare" class="tabPage"></section>
+  <section id="challenge" class="tabPage"></section>
+  <section id="evaluation" class="tabPage"></section>
+  <section id="teacher" class="tabPage"></section>
+  <section id="context" class="tabPage"></section>
+  <section id="map" class="tabPage"></section>
+
+  <div class="footer">NP Studio — archivos autocontenidos para clase, edición local y uso con estudiantes.</div>
+</main>
+</div>
+<script>
+
+const DEFAULT_MODULE = "knapsack";
+const MODULES = {
+  knapsack: {
+    title:"Mochila 0-1", subtitle:"Selecciona objetos indivisibles con peso y valor bajo una capacidad.", pills:["NP-completo","Optimización","DP","Greedy"], type:"knapsack",
+    q:"¿Existe un subconjunto con peso ≤ C y valor ≥ V?",
+    context:"El problema de la mochila 0-1 modela decisiones con recursos limitados: objetos, proyectos, funcionalidades o inversiones que se toman completos o se descartan. Es ideal para explicar verificación, fuerza bruta, heurísticas y programación dinámica pseudo-polinomial.",
+    ideas:["0-1 significa que cada objeto se toma o se deja.","Verificar una selección solo requiere sumar pesos y valores.","El óptimo exacto puede requerir revisar 2ⁿ subconjuntos.","Greedy por valor/peso es intuitivo pero no siempre óptimo.","La DP depende de la capacidad numérica C.","Es un puente natural hacia pseudo-polinomialidad."],
+    guide:"Use una historia de viaje o presupuesto. Primero deje que los estudiantes elijan manualmente, luego compare greedy, fuerza bruta y DP.",
+    data:{capacity:10,items:[["Laptop",5,10],["Libro",3,7],["Cámara",4,9],["Chaqueta",2,4],["Botiquín",1,2],["Trípode",6,11]], selected:[]}
+  },
+  subset: {
+    title:"Subset Sum", subtitle:"Busca subconjuntos que sumen exactamente una meta.", pills:["NP-completo","Decisión","Subconjuntos","DP"], type:"subset",
+    q:"¿Existe un subconjunto cuya suma sea exactamente T?",
+    context:"Subset Sum es un problema clásico de decisión. Su enunciado es simple, pero su espacio de búsqueda crece exponencialmente. Es excelente para discutir DP pseudo-polinomial.",
+    ideas:["El certificado es un subconjunto.","Verificar es sumar y comparar con T.","Fuerza bruta revisa 2ⁿ subconjuntos.","Greedy puede fallar aunque exista solución.","DP marca sumas alcanzables hasta T.","Conecta con partición balanceada y mochila."],
+    guide:"Empiece con una meta pequeña y pida intentos manuales. Luego use DP para mostrar una prueba sistemática de alcanzabilidad.",
+    data:{target:15,nums:[2,3,7,8,10],selected:[]}
+  },
+  sat: {
+    title:"3-SAT", subtitle:"Evalúa fórmulas booleanas y busca asignaciones que satisfacen cláusulas.", pills:["Cook-Levin","SAT","NP-completo","MAX-3SAT"], type:"sat",
+    q:"¿Existe una asignación que satisfaga todas las cláusulas?",
+    context:"SAT fue el primer problema demostrado NP-completo. 3-SAT conserva la dificultad con cláusulas de tres literales y sirve como punto de partida para muchas reducciones.",
+    ideas:["Una asignación es un certificado verificable.","Hay 2ⁿ asignaciones posibles.","3-SAT sigue siendo NP-completo.","MAX-3SAT convierte decisión en optimización.","Las reducciones suelen partir de SAT o 3-SAT.","Es la puerta de entrada a NP-completitud."],
+    guide:"Use interruptores verdadero/falso. Haga visible cómo cada cláusula se ilumina o falla.",
+    data:{formula:"x1 x2 !x3\n!x1 x3 x4\nx2 !x3 !x4\n!x2 x3 x4", values:{}}
+  },
+  vertex: {
+    title:"Vertex Cover", subtitle:"Selecciona vértices que cubren todas las aristas de un grafo editable.", pills:["Grafo","Karp","NP-completo","2-aprox."], type:"vertex",
+    q:"¿Existe un conjunto de ≤ k vértices que toque todas las aristas?",
+    context:"Vertex Cover aparece en la lista clásica de Karp. Modela cámaras, monitoreo de redes y selección de puntos de control.",
+    ideas:["Cubrir una arista exige elegir al menos un extremo.","Verificar recorre todas las aristas.","La búsqueda exacta prueba subconjuntos de vértices.","La 2-aproximación toma ambos extremos de aristas no cubiertas.","Se relaciona con Independent Set.","Los grafos editables permiten ver cómo cambia el óptimo."],
+    guide:"Use la analogía de cámaras en esquinas. Luego compare selección manual, fuerza bruta y 2-aproximación.",
+    data:null
+  },
+  setcover: {
+    title:"Set Cover", subtitle:"Cubre un universo con el menor número posible de conjuntos.", pills:["Cobertura","NP-difícil","Greedy","Aprox. log"], type:"setcover",
+    q:"¿Existen a lo sumo k conjuntos cuya unión cubra todo U?",
+    context:"Set Cover generaliza muchos problemas de cobertura: sensores, pruebas, antenas, rutas, campañas y bases de datos.",
+    ideas:["El universo contiene todo lo que debe cubrirse.","La solución es una subfamilia de conjuntos.","Verificar es calcular una unión.","Greedy elige máxima cobertura nueva.","Greedy no siempre es óptimo.","Tiene garantía logarítmica en el peor caso."],
+    guide:"Presente U como zonas a cubrir y conjuntos como sensores. Compare selección manual, greedy y fuerza bruta.",
+    data:{universe:["1","2","3","4","5","6","7","8"],sets:[["A",["1","2","3"]],["B",["2","4","5"]],["C",["3","6"]],["D",["4","7","8"]],["E",["5","6","7"]],["F",["1","8"]]],selected:[]}
+  },
+  tsp: {
+    title:"TSP métrico", subtitle:"Construye tours entre ciudades editables y compara heurísticas/aproximaciones.", pills:["TSP","Rutas","NP-difícil","MST"], type:"tsp",
+    q:"¿Existe un tour de costo ≤ B que visite todas las ciudades?",
+    context:"El viajante de comercio es uno de los problemas más conocidos en optimización. Aparece en rutas, logística, manufactura, circuitos y planeación.",
+    ideas:["Un tour visita todas las ciudades y vuelve al inicio.","Verificar es sumar una ruta.","La búsqueda exacta crece factorialmente.","Vecino más cercano es rápido pero no garantiza óptimo.","MST preorder da 2-aproximación en TSP métrico.","Mover ciudades ayuda a ver el efecto de la geometría."],
+    guide:"Primero pida una ruta intuitiva. Luego compare vecino más cercano, MST y óptimo en instancias pequeñas.",
+    data:null
+  },
+  coloring: {
+    title:"Graph Coloring", subtitle:"Colorea grafos editables sin que vértices adyacentes compartan color.", pills:["Coloreo","NP-completo","Horarios","Greedy"], type:"coloring",
+    q:"¿Se puede colorear el grafo con k colores sin conflictos?",
+    context:"Graph Coloring modela horarios, frecuencias, mapas, registros y recursos incompatibles. Para k≥3, decidir k-colorabilidad es NP-completo.",
+    ideas:["Una arista representa conflicto.","Adyacentes no pueden compartir color.","Verificar es revisar aristas.","Greedy depende del orden.","Backtracking prueba instancias pequeñas.","Los ciclos impares y completos son ejemplos clave."],
+    guide:"Use horarios de exámenes: cursos con estudiantes en común no pueden ir en la misma franja.",
+    data:null
+  },
+  clique: {
+    title:"Clique", subtitle:"Busca un subconjunto de vértices todos conectados entre sí.", pills:["Grafo","NP-completo","Densidad","K-clique"], type:"clique",
+    q:"¿Existe una clique de tamaño al menos k?",
+    context:"Clique es un problema clásico en grafos: encontrar grupos completamente conectados. Es complementario a Independent Set.",
+    ideas:["Una clique tiene todas las aristas internas posibles.","Verificar una clique revisa pares internos.","Fuerza bruta prueba subconjuntos.","Se relaciona con Independent Set en el grafo complemento.","Aparece en redes sociales y detección de comunidades densas.","Es difícil de aproximar en general."],
+    guide:"Use la idea de un grupo donde todos se conocen con todos. Compare con Independent Set.",
+    data:null
+  },
+  independent: {
+    title:"Independent Set", subtitle:"Busca un conjunto de vértices sin aristas internas.", pills:["Grafo","NP-completo","Complemento","Vertex Cover"], type:"independent",
+    q:"¿Existe un conjunto independiente de tamaño al menos k?",
+    context:"Independent Set busca vértices mutuamente no adyacentes. Está estrechamente relacionado con Vertex Cover y Clique.",
+    ideas:["No puede haber aristas entre vértices elegidos.","Verificar revisa pares o aristas internas.","Es complemento de Vertex Cover en tamaño.","Clique en el complemento equivale a Independent Set.","Modela selección de tareas no conflictivas.","Es difícil de aproximar en general."],
+    guide:"Use conflictos: elegir personas/tareas que no choquen entre sí.",
+    data:null
+  },
+  hamilton: {
+    title:"Hamiltonian Cycle", subtitle:"Busca un ciclo que visite cada vértice exactamente una vez.", pills:["Grafo","NP-completo","Ciclos","TSP"], type:"hamilton",
+    q:"¿Existe un ciclo hamiltoniano en el grafo?",
+    context:"Hamiltonian Cycle pregunta si un grafo contiene un ciclo que visita todos los vértices una sola vez. Conecta directamente con TSP.",
+    ideas:["El ciclo debe pasar por todos los vértices una vez.","Verificar un ciclo es fácil.","Buscarlo puede requerir probar permutaciones.","Conecta naturalmente con TSP.","No todo grafo conectado es hamiltoniano.","Permite discutir backtracking y poda."],
+    guide:"Compare con Euler: Hamilton visita vértices; Euler visita aristas.",
+    data:null
+  },
+  partition: {
+    title:"Partition", subtitle:"Divide números en dos subconjuntos con suma lo más equilibrada posible.", pills:["NP-completo","Números","Balance","Subset Sum"], type:"partition",
+    q:"¿Existe una partición de los números en dos grupos con la misma suma?",
+    context:"Partition es un problema clásico relacionado con Subset Sum. Pregunta si un conjunto de números puede dividirse en dos grupos con igual suma. Es útil para hablar de balance de carga y reparto justo.",
+    ideas:["Una partición divide todos los elementos en dos grupos.","Verificar una partición es sumar ambos lados.","Si la suma total es impar, no hay partición perfecta.","El problema se reduce a buscar suma total/2.","DP es pseudo-polinomial.","Modela balance de carga y reparto de recursos."],
+    guide:"Use una analogía de repartir tareas entre dos equipos. Primero busque la mitad de la suma total y luego conecte con Subset Sum.",
+    data:{nums:[2,3,7,8,10],selected:[]}
+  },
+  dominating: {
+    title:"Dominating Set", subtitle:"Selecciona vértices que dominen todo el grafo: cada vértice queda elegido o adyacente a uno elegido.", pills:["Grafo","NP-completo","Cobertura","Greedy"], type:"dominating",
+    q:"¿Existe un conjunto dominante de tamaño a lo sumo k?",
+    context:"Dominating Set modela ubicación de centros, antenas, servidores o puntos de control: cada nodo debe estar seleccionado o cerca de uno seleccionado.",
+    ideas:["Un vértice domina a sí mismo y a sus vecinos.","Verificar un conjunto dominante recorre vértices y vecinos.","La búsqueda exacta prueba subconjuntos de vértices.","Greedy elige el vértice que domina más nodos nuevos.","Se parece a Set Cover en grafos.","Es útil para redes, sensores y cobertura territorial."],
+    guide:"Presente el grafo como una red donde un servidor cubre su nodo y sus vecinos. Compare solución manual, fuerza bruta y greedy.",
+    data:null
+  },
+  reductions: {
+    title:"Mapa de problemas NP y reducciones", subtitle:"Visualiza relaciones entre problemas clásicos, complementos y reducciones.", pills:["Reducciones","NP-completitud","Mapa conceptual"], type:"reductions",
+    q:"¿Cómo se conectan los problemas NP-completos entre sí?",
+    context:"Las reducciones permiten demostrar que un problema es al menos tan difícil como otro. Si un problema NP-completo se reduce a otro en tiempo polinomial, el segundo hereda la dificultad.",
+    ideas:["SAT es punto de partida histórico.","3-SAT se usa en muchas reducciones.","Clique, Independent Set y Vertex Cover están conectados por complementos.","Hamiltonian Cycle se conecta con TSP.","Subset Sum se conecta con Partition y Knapsack.","Set Cover generaliza muchas coberturas."],
+    guide:"Use este módulo como cierre de la unidad. Pida a los estudiantes explicar una flecha del mapa.",
+    data:null
+  }
+};
+
+const GRAPH_TYPES = new Set(["vertex","coloring","clique","independent","hamilton","dominating"]);
+let current = DEFAULT_MODULE in MODULES ? DEFAULT_MODULE : "knapsack";
+let compareRows = [];
+let stepTrace = [];
+let stepIndex = 0;
+let graph = {nodes:[],edges:[],selected:new Set(),colors:{},route:[],mst:[],mode:"select",pending:null,pan:{x:0,y:0},scale:1,showComplete:false,k:3};
+let nonGraphState = {};
+let drag = {pan:false,node:null,last:{x:0,y:0}};
+let COLORS = ['#ef4444','#3b82f6','#22c55e','#eab308','#8b5cf6','#f97316'];
+
+
+const PROBLEM_KEYS = ["knapsack","subset","sat","vertex","setcover","tsp","coloring","clique","independent","hamilton","partition","dominating"];
+const TEACHER_USER = "jorge";
+const TEACHER_PASS = "cata1234";
+let currentUser = null;
+let appInitialized = false;
+
+function getUsers(){
+  const raw=localStorage.getItem("npStudioUsers");
+  let users=raw?JSON.parse(raw):{};
+  if(!users[TEACHER_USER]) users[TEACHER_USER]={pass:TEACHER_PASS,role:"teacher",name:"Profesor"};
+  localStorage.setItem("npStudioUsers",JSON.stringify(users));
+  return users;
+}
+function saveUsers(users){localStorage.setItem("npStudioUsers",JSON.stringify(users));}
+
+function login(){
+  const u=document.getElementById("loginUser").value.trim();
+  const p=document.getElementById("loginPass").value;
+  const users=getUsers();
+  if(!users[u]||users[u].pass!==p){
+    document.getElementById("loginMsg").className="note bad";
+    document.getElementById("loginMsg").innerHTML="Usuario o clave incorrectos.";
+    return;
+  }
+  currentUser={username:u,role:users[u].role,name:users[u].name||u};
+  localStorage.setItem("npStudioSession",JSON.stringify(currentUser));
+  enterApp();
+}
+function registerStudent(){
+  const u=document.getElementById("loginUser").value.trim();
+  const p=document.getElementById("loginPass").value;
+  if(!u||!p){document.getElementById("loginMsg").className="note warn";document.getElementById("loginMsg").innerHTML="Escribe usuario y clave para crear el estudiante.";return;}
+  if(u===TEACHER_USER){document.getElementById("loginMsg").className="note bad";document.getElementById("loginMsg").innerHTML="Ese usuario está reservado para el profesor.";return;}
+  const users=getUsers();
+  if(users[u]){document.getElementById("loginMsg").className="note bad";document.getElementById("loginMsg").innerHTML="Ese usuario ya existe.";return;}
+  users[u]={pass:p,role:"student",name:u};
+  saveUsers(users);
+  document.getElementById("loginMsg").className="note ok";
+  document.getElementById("loginMsg").innerHTML="Estudiante creado. Ahora presiona Entrar.";
+}
+function initAuth(){
+  getUsers();
+  const s=localStorage.getItem("npStudioSession");
+  if(s){try{currentUser=JSON.parse(s);enterApp();return;}catch(e){}}
+  document.getElementById("loginScreen").style.display="grid";
+  document.getElementById("appShell").style.display="none";
+}
+function enterApp(){
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("appShell").style.display="block";
+  if(!appInitialized){init(); appInitialized=true;}
+  updateUserUI();
+  renderEvaluation();
+  renderTeacher();
+}
+function updateUserUI(){
+  const info=document.getElementById("userInfo");
+  if(info) info.innerHTML=`${currentUser.role==="teacher"?"Profesor":"Estudiante"}: <strong>${currentUser.username}</strong>`;
+  const teacherBtn=document.querySelector('[data-tab="teacher"]');
+  if(teacherBtn) teacherBtn.style.display=currentUser.role==="teacher"?"inline-flex":"none";
+}
+function logout(){
+  localStorage.removeItem("npStudioSession");
+  currentUser=null;
+  location.reload();
+}
+function gradeClass(g){
+  if(g>=4)return "gradePill gradeGood";
+  if(g>=3)return "gradePill gradeMid";
+  return "gradePill gradeBad";
+}
+function getGrades(){
+  return JSON.parse(localStorage.getItem("npStudioGrades")||"{}");
+}
+function saveGrades(g){
+  localStorage.setItem("npStudioGrades",JSON.stringify(g));
+}
+
+function init(){
+  const sel=document.getElementById("moduleSelect");
+  Object.entries(MODULES).forEach(([k,m])=>{const o=document.createElement("option");o.value=k;o.textContent=m.title;sel.appendChild(o);});
+  sel.value=current;
+  document.querySelectorAll(".tabBtn").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".tabBtn").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".tabPage").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.getElementById(btn.dataset.tab).classList.add("active");}));
+  loadModule(current);
+}
+function switchModule(){loadModule(document.getElementById("moduleSelect").value);}
+function loadModule(key){
+  current=key; compareRows=[]; stepTrace=[]; stepIndex=0;
+  const m=MODULES[current];
+  document.getElementById("title").textContent=m.title;
+  document.getElementById("subtitle").textContent=m.subtitle;
+  document.getElementById("pills").innerHTML=m.pills.map(p=>`<span class="pill">${p}</span>`).join("");
+  document.getElementById("centralQuestion").innerHTML=`<strong>Pregunta central:</strong> ${m.q}`;
+  renderClassMode(); renderLab(); renderAlgorithms(); renderStepper(); renderCompare(); renderChallenge(); renderContext(); renderMap();
+}
+function toggleTheme(){document.body.classList.toggle("dark");}
+function toggleFull(){if(!document.fullscreenElement)document.documentElement.requestFullscreen(); else document.exitFullscreen();}
+function explainStudent(){
+  const m=MODULES[current];
+  const text=`Este problema muestra una diferencia central de NP: si alguien nos entrega una solución candidata, podemos verificarla de manera eficiente; pero encontrar una solución óptima o decidir si existe puede requerir explorar muchísimas posibilidades. En ${m.title}, la pregunta es: ${m.q}`;
+  const box=document.getElementById("explainBox"); if(box) box.innerHTML=text;
+}
+function renderClassMode(){
+  const m=MODULES[current];
+  document.getElementById("classMode").innerHTML=`
+  <div class="grid2">
+    <article class="card">
+      <h2>Secuencia guiada de clase</h2>
+      <ol>
+        <li><strong>Motivación:</strong> presente la pregunta central.</li>
+        <li><strong>Certificado:</strong> pregunte cómo verificar una solución candidata.</li>
+        <li><strong>Exploración:</strong> use el laboratorio con una instancia pequeña.</li>
+        <li><strong>Fuerza bruta:</strong> muestre el crecimiento del espacio de búsqueda.</li>
+        <li><strong>Heurística/aproximación:</strong> compare rapidez vs optimalidad.</li>
+        <li><strong>Reflexión:</strong> conecte con P vs NP y reducciones.</li>
+      </ol>
+      <button class="btn primary" onclick="explainStudent()">Explicar para estudiantes</button>
+      <div id="explainBox" class="note info" style="margin-top:12px">Presiona el botón para generar una explicación breve.</div>
+    </article>
+    <article class="card">
+      <h2>Objetivo de aprendizaje</h2>
+      <div class="note ok"><strong>Al final, el estudiante debería poder:</strong> distinguir verificar de encontrar, explicar por qué la fuerza bruta escala mal y comparar exactitud con heurísticas/aproximaciones.</div>
+      <h3 style="margin-top:16px">Pregunta de apertura</h3>
+      <div class="code">${m.q}</div>
+    </article>
+  </div>`;
+}
+function renderContext(){
+  const m=MODULES[current];
+  document.getElementById("context").innerHTML=`
+  <div class="grid2">
+    <article class="card"><h2>Historia y contexto</h2><p>${m.context}</p><div class="note info"><strong>Pregunta de decisión:</strong> ${m.q}</div></article>
+    <article class="card"><h2>Ideas clave</h2><div class="grid2">${m.ideas.map((x,i)=>`<div class="concept" onclick="this.classList.toggle('revealed')"><h3>Idea ${i+1}</h3><p class="hidden">${x}</p></div>`).join("")}</div></article>
+  </div>
+  <article class="card" style="margin-top:18px"><h2>Guía docente</h2><p>${m.guide}</p></article>`;
+}
+function renderMap(){
+  document.getElementById("map").innerHTML=`
+  <div class="card">
+    <h2>Mapa conceptual de problemas y reducciones</h2>
+    <p>Las flechas indican relaciones didácticas comunes, no reemplazan una prueba formal completa.</p>
+    <div class="grid3">
+      <div class="mapNode">SAT</div><div class="mapArrow">→</div><div class="mapNode">3-SAT</div>
+      <div class="mapNode">3-SAT</div><div class="mapArrow">→</div><div class="mapNode">Vertex Cover</div>
+      <div class="mapNode">Clique</div><div class="mapArrow">↔</div><div class="mapNode">Independent Set</div>
+      <div class="mapNode">Independent Set</div><div class="mapArrow">↔</div><div class="mapNode">Vertex Cover</div>
+      <div class="mapNode">Hamiltonian Cycle</div><div class="mapArrow">→</div><div class="mapNode">TSP</div>
+      <div class="mapNode">Subset Sum</div><div class="mapArrow">→</div><div class="mapNode">Knapsack / Partition</div>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <article class="card"><h2>Actividad</h2><ol><li>Elige una flecha y explica qué debería preservar la reducción.</li><li>Identifica qué problema se formula en grafos, lógica, conjuntos o números.</li><li>Explica por qué resolver uno eficientemente cambiaría nuestra comprensión de muchos otros.</li></ol></article>
+    <article class="card"><h2>Mensaje clave</h2><div class="note purpleBox">Las reducciones son el lenguaje que conecta problemas. No demuestran que algo sea imposible, pero muestran que muchos problemas comparten una misma dificultad estructural.</div></article>
+  </div>`;
+}
+function renderChallenge(){
+  const m=MODULES[current];
+  document.getElementById("challenge").innerHTML=`
+  <div class="grid2">
+    <article class="card">
+      <h2>Modo reto</h2>
+      <div id="challengeText" class="challengeCard">Genera un reto para este módulo.</div>
+      <div class="controls">
+        <button class="btn primary" onclick="generateChallenge()">Generar reto</button>
+        <button class="btn green" onclick="checkChallenge()">Verificar reto actual</button>
+      </div>
+      <div id="challengeResult" class="note">Aquí aparecerá la retroalimentación.</div>
+    </article>
+    <article class="card">
+      <h2>Preguntas rápidas</h2>
+      ${quizHTML()}
+    </article>
+  </div>`;
+}
+function quizHTML(){
+  return `<div class="grid2">
+  ${qcard("¿Por qué estos problemas suelen estar en NP?","Porque una solución candidata puede verificarse eficientemente",["Porque siempre son rápidos","Porque una solución candidata puede verificarse eficientemente","Porque son indecidibles"],1)}
+  ${qcard("¿Qué enseña la fuerza bruta?","El tamaño real del espacio de búsqueda",["El tamaño real del espacio de búsqueda","Que siempre hay solución","Que las heurísticas son exactas"],0)}
+  ${qcard("Una heurística se caracteriza por...","buscar buenas soluciones sin garantizar siempre el óptimo",["probar imposibilidad","buscar buenas soluciones sin garantizar siempre el óptimo","ser una prueba formal de NP-completitud"],1)}
+  ${qcard("Una aproximación con garantía...","da una cota sobre qué tan lejos puede estar del óptimo",["no usa matemáticas","da una cota sobre qué tan lejos puede estar del óptimo","solo funciona en grafos completos"],1)}
+  </div>`;
+}
+function qcard(q,fb,choices,ans){
+  return `<div class="qCard" data-answer="${ans}"><h3>Pregunta</h3><p>${q}</p>${choices.map((c,i)=>`<button class="choice" onclick="gradeChoice(this,${ans})" data-i="${i}">${c}</button>`).join("")}<div class="feedback">${fb}</div></div>`;
+}
+function gradeChoice(btn,ans){
+  const card=btn.closest(".qCard");
+  card.querySelectorAll(".choice").forEach(b=>{b.classList.remove("correct","wrong"); if(+b.dataset.i===ans)b.classList.add("correct");});
+  if(+btn.dataset.i!==ans)btn.classList.add("wrong");
+  card.querySelector(".feedback").style.display="block";
+}
+function generateChallenge(){
+  const t=MODULES[current].type;
+  let msg="";
+  if(t==="knapsack") msg="Reto: selecciona objetos con peso ≤ capacidad y valor al menos 15. Luego verifica tu selección.";
+  else if(t==="subset") msg="Reto: encuentra un subconjunto que sume exactamente la meta. Cambia la meta y vuelve a intentarlo.";
+  else if(t==="sat") msg="Reto: ajusta los valores de verdad hasta satisfacer todas las cláusulas o maximizar las satisfechas.";
+  else if(t==="setcover") msg="Reto: cubre todo el universo con el menor número de conjuntos que puedas.";
+  else if(t==="partition") msg="Reto: selecciona números para que la suma del grupo A quede lo más cerca posible de la mitad del total.";
+  else if(t==="dominating") msg="Reto: selecciona un conjunto dominante pequeño; cada vértice debe quedar seleccionado o vecino de uno seleccionado.";
+  else if(t==="tsp") msg="Reto: construye manualmente un tour y luego compáralo contra vecino más cercano y MST.";
+  else if(GRAPH_TYPES.has(t)) msg="Reto: edita el grafo, intenta resolver manualmente y luego compara contra el algoritmo.";
+  else msg="Reto: elige una reducción del mapa y explica qué transforma y qué preserva.";
+  document.getElementById("challengeText").innerHTML=msg;
+}
+function checkChallenge(){
+  const t=MODULES[current].type;
+  let msg="Verificación general: usa el comparador y la traza para justificar tu solución.";
+  if(t==="knapsack") msg=checkKnapsack();
+  else if(t==="subset") msg=checkSubset();
+  else if(t==="sat") msg=checkSAT();
+  else if(t==="setcover") msg=checkSetCover();
+  else if(t==="vertex") msg=checkVertex();
+  else if(t==="coloring") msg=checkColoring();
+  else if(t==="tsp") msg=checkTSP();
+  else if(t==="clique") msg=checkClique();
+  else if(t==="independent") msg=checkIndependent();
+  else if(t==="hamilton") msg=checkHamilton();
+  else if(t==="partition") msg=checkPartition();
+  else if(t==="dominating") msg=checkDominating();
+  document.getElementById("challengeResult").innerHTML=msg;
+}
+
+function renderAlgorithms(){
+  const t=MODULES[current].type;
+  let blocks = {
+    knapsack: [
+      ["Fuerza bruta exacta","Prueba todos los subconjuntos y garantiza el óptimo. Solo es viable en instancias pequeñas.","knapBrute();syncAlgorithmResult('knapOut')"],
+      ["Greedy valor/peso","Ordena por razón valor/peso. Es rápido, pero puede fallar en mochila 0-1.","knapGreedy();syncAlgorithmResult('knapOut')"],
+      ["DP pseudo-polinomial","Construye una tabla O(n·C). Es exacta cuando la capacidad es manejable.","knapDP();syncAlgorithmResult('knapOut')"]
+    ],
+    subset: [
+      ["Fuerza bruta","Explora subconjuntos hasta encontrar una suma exacta o demostrar que no aparece.","subsetBrute();syncAlgorithmResult('subOut')"],
+      ["Greedy descendente","Toma números grandes sin exceder la meta. Sirve para discutir fallos de heurísticas.","subsetGreedy();syncAlgorithmResult('subOut')"],
+      ["DP pseudo-polinomial","Marca sumas alcanzables hasta T y prueba existencia o inexistencia.","subsetDP();syncAlgorithmResult('subOut')"]
+    ],
+    partition: [
+      ["Fuerza bruta","Busca la partición con menor diferencia entre las dos sumas.","partitionBrute();syncAlgorithmResult('partOut')"],
+      ["Greedy balanceado","Asigna cada número al grupo con menor suma acumulada. Es rápido, no siempre óptimo.","partitionGreedy();syncAlgorithmResult('partOut')"],
+      ["DP a mitad de suma","Busca una suma alcanzable lo más cercana posible a la mitad del total.","partitionDP();syncAlgorithmResult('partOut')"]
+    ],
+    sat: [
+      ["Fuerza bruta SAT","Prueba las 2ⁿ asignaciones hasta satisfacer todas las cláusulas o descartar SAT.","satBrute();syncAlgorithmResult('satOut')"],
+      ["MAX-3SAT aleatorio","Prueba asignaciones aleatorias y conserva la que satisface más cláusulas.","satRandom();syncAlgorithmResult('satOut')"]
+    ],
+    vertex: [
+      ["Fuerza bruta","Busca el vertex cover mínimo probando subconjuntos de vértices.","vertexBrute();syncAlgorithmResult('graphOut')"],
+      ["2-aproximación","Toma ambos extremos de aristas no cubiertas. Tiene garantía formal de factor 2.","vertexApprox();syncAlgorithmResult('graphOut')"]
+    ],
+    setcover: [
+      ["Fuerza bruta","Prueba subfamilias y encuentra una cobertura mínima cuando la instancia es pequeña.","setBrute();syncAlgorithmResult('setOut')"],
+      ["Greedy Set Cover","Escoge el conjunto que cubre más elementos nuevos. Tiene garantía logarítmica.","setGreedy();syncAlgorithmResult('setOut')"]
+    ],
+    tsp: [
+      ["Fuerza bruta","Prueba permutaciones de ciudades. Exacto, pero factorial.","tspBrute();syncAlgorithmResult('graphOut')"],
+      ["Vecino más cercano","Heurística rápida: desde la ciudad actual, va a la no visitada más cercana.","tspNearest();syncAlgorithmResult('graphOut')"],
+      ["MST preorder","Para TSP métrico da una 2-aproximación usando árbol de expansión mínimo.","tspMST();syncAlgorithmResult('graphOut')"]
+    ],
+    coloring: [
+      ["Fuerza bruta óptima","Prueba k=1,2,3,... hasta encontrar el número cromático mínimo y pinta el grafo con esa asignación.","colorOptimal();syncAlgorithmResult('graphOut')"],
+      ["Backtracking k actual","Prueba si el grafo se puede colorear con el número k seleccionado en el laboratorio.","colorBacktrack();syncAlgorithmResult('graphOut')"],
+      ["Greedy por grado","Ordena por grado y asigna el primer color disponible. Rápido, no siempre óptimo.","colorGreedy();syncAlgorithmResult('graphOut')"]
+    ],
+    clique: [
+      ["Fuerza bruta clique","Prueba subconjuntos y encuentra la clique máxima en instancias pequeñas.","cliqueBrute();syncAlgorithmResult('graphOut')"],
+      ["Greedy clique","Agrega vértices si mantienen la propiedad de clique. Rápido, no exacto.","cliqueGreedy();syncAlgorithmResult('graphOut')"]
+    ],
+    independent: [
+      ["Fuerza bruta independiente","Prueba subconjuntos y encuentra el conjunto independiente máximo.","indepBrute();syncAlgorithmResult('graphOut')"],
+      ["Greedy independiente","Agrega vértices de bajo grado si no chocan con los elegidos.","indepGreedy();syncAlgorithmResult('graphOut')"]
+    ],
+    hamilton: [
+      ["Backtracking hamiltoniano","Busca un ciclo que visite cada vértice exactamente una vez.","hamiltonBacktrack();syncAlgorithmResult('graphOut')"]
+    ],
+    dominating: [
+      ["Fuerza bruta dominante","Prueba subconjuntos y encuentra un conjunto dominante mínimo en grafos pequeños.","dominatingBrute();syncAlgorithmResult('graphOut')"],
+      ["Greedy dominante","Elige el vértice que domina más nodos aún no dominados.","dominatingGreedy();syncAlgorithmResult('graphOut')"]
+    ],
+    reductions: [
+      ["Mostrar reducción","Explica la reducción seleccionada en el laboratorio de reducciones.","showReduction();syncAlgorithmResult('redBox')"]
+    ]
+  };
+  let arr=blocks[t]||[];
+  let cards=arr.map(a=>`
+    <div class="algoCard">
+      <h3>${a[0]}</h3>
+      <p>${a[1]}</p>
+      <button class="btn primary" onclick="${a[2]}">Ejecutar</button>
+    </div>`).join("");
+  document.getElementById("algorithms").innerHTML=`
+    <div class="grid2">
+      <article class="card">
+        <h2>Algoritmos disponibles</h2>
+        <p>Estos botones ejecutan los algoritmos sobre la instancia actualmente cargada en el laboratorio. Los resultados también se reflejan en el comparador y en la bitácora paso a paso.</p>
+        <div class="grid3">${cards}</div>
+      </article>
+      <article class="card">
+        <h2>Resultado del algoritmo</h2>
+        <div id="algoResult" class="note">Ejecuta un algoritmo para ver aquí el resultado.</div>
+        <div class="code" style="margin-top:12px">Recomendación de clase:
+1. Resolver manualmente.
+2. Ejecutar fuerza bruta.
+3. Ejecutar heurística/aproximación.
+4. Comparar costo, tamaño o validez.
+5. Revisar la bitácora paso a paso.</div>
+      </article>
+    </div>`;
+}
+function syncAlgorithmResult(id){
+  setTimeout(()=>{
+    const src=document.getElementById(id);
+    const dst=document.getElementById("algoResult");
+    if(src&&dst)dst.innerHTML=src.innerHTML;
+  },0);
+}
+
+function renderCompare(){
+  document.getElementById("compare").innerHTML=`
+  <article class="card">
+    <h2>Comparador automático</h2>
+    <p>Ejecuta algoritmos en el laboratorio o en la pestaña paso a paso. Los resultados se agregarán aquí.</p>
+    <table class="table"><thead><tr><th>Algoritmo</th><th>Resultado</th><th>Costo/tamaño</th><th>Comentario</th></tr></thead><tbody id="compareBody">${compareRows.map(r=>`<tr><td>${r.a}</td><td>${r.r}</td><td>${r.c}</td><td>${r.n}</td></tr>`).join("")}</tbody></table>
+    <button class="btn red" onclick="compareRows=[];renderCompare()">Limpiar comparador</button>
+  </article>`;
+}
+function addCompare(a,r,c,n){compareRows.push({a,r,c,n}); renderCompare();}
+function setTrace(arr){stepTrace=arr; stepIndex=0; renderStepper();}
+function renderStepper(){
+  const step = stepTrace[stepIndex] || "Aún no hay una ejecución paso a paso. Ejecuta un algoritmo desde el laboratorio.";
+  document.getElementById("stepper").innerHTML=`
+  <div class="grid2">
+    <article class="card">
+      <h2>Paso a paso y bitácora</h2>
+      <div class="controls">
+        <button class="btn" onclick="prevStep()">Paso anterior</button>
+        <button class="btn primary" onclick="nextStep()">Siguiente paso</button>
+        <button class="btn" onclick="stepIndex=0;renderStepper()">Reiniciar traza</button>
+      </div>
+      <div class="stepBox"><strong>Paso ${stepTrace.length?stepIndex+1:0}/${stepTrace.length}</strong><br>${step}</div>
+    </article>
+    <article class="card">
+      <h2>Bitácora completa</h2>
+      <div class="code">${stepTrace.map((s,i)=>`${i+1}. ${s}`).join("\\n") || "Sin pasos todavía."}</div>
+    </article>
+  </div>`;
+}
+function nextStep(){if(stepIndex<stepTrace.length-1)stepIndex++;renderStepper();}
+function prevStep(){if(stepIndex>0)stepIndex--;renderStepper();}
+
+function renderLab(){
+  const t=MODULES[current].type;
+  if(t==="knapsack") renderKnapsackLab();
+  else if(t==="subset") renderSubsetLab();
+  else if(t==="partition") renderPartitionLab();
+  else if(t==="sat") renderSATLab();
+  else if(t==="setcover") renderSetCoverLab();
+  else if(t==="reductions") renderReductionLab();
+  else renderGraphLab(t);
+}
+
+/* Non-graph modules */
+function renderKnapsackLab(){
+  const d=MODULES[current].data; nonGraphState=JSON.parse(JSON.stringify(d));
+  document.getElementById("lab").innerHTML=`
+  <div class="grid2">
+    <article class="card"><h2>Instancia</h2><label>Capacidad</label><input id="cap" type="number" value="${d.capacity}"><label>Objetos: nombre,peso,valor</label><textarea id="itemsTxt" style="min-height:170px">${d.items.map(x=>x.join(",")).join("\\n")}</textarea><div class="controls"><button class="btn primary" onclick="loadKnapsack()">Cargar</button><button class="btn" onclick="randomKnapsack()">Aleatoria</button><button class="btn" onclick="exportInstance()">Exportar JSON</button><button class="btn" onclick="importInstance()">Importar JSON</button></div><textarea id="jsonBox" placeholder="JSON de instancia"></textarea></article>
+    <article class="card"><h2>Selección</h2><div id="knapChips"></div><div id="knapStats" class="stats"></div><div class="controls"><button class="btn green" onclick="knapBrute()">Fuerza bruta</button><button class="btn amber" onclick="knapGreedy()">Greedy</button><button class="btn primary" onclick="knapDP()">DP</button></div><div id="knapOut" class="note">Selecciona objetos o ejecuta un algoritmo.</div></article>
+  </div>`;
+  loadKnapsack();
+}
+function loadKnapsack(){
+  const items=document.getElementById("itemsTxt").value.trim().split(/\n+/).map(l=>l.split(",").map(x=>x.trim())).filter(x=>x.length>=3).map(x=>[x[0],+x[1],+x[2]]);
+  nonGraphState={capacity:+document.getElementById("cap").value,items,selected:[]}; renderKnapsackState();
+}
+function renderKnapsackState(){
+  const s=nonGraphState; document.getElementById("knapChips").innerHTML=s.items.map((it,i)=>`<span class="chip ${s.selected.includes(i)?"sel":""}" onclick="toggleKnap(${i})">${it[0]} (p=${it[1]},v=${it[2]})</span>`).join("");
+  let W=0,V=0; s.selected.forEach(i=>{W+=s.items[i][1];V+=s.items[i][2];});
+  document.getElementById("knapStats").innerHTML=`<div class="stat"><div class="num">${W}</div><div class="lab">peso</div></div><div class="stat"><div class="num">${V}</div><div class="lab">valor</div></div><div class="stat ${W<=s.capacity?"ok":"bad"}"><div class="num">${W<=s.capacity?"Sí":"No"}</div><div class="lab">factible</div></div><div class="stat"><div class="num">${Math.pow(2,s.items.length).toLocaleString("es-CO")}</div><div class="lab">subconjuntos</div></div>`;
+}
+function toggleKnap(i){let a=nonGraphState.selected; if(a.includes(i))nonGraphState.selected=a.filter(x=>x!==i); else a.push(i); renderKnapsackState();}
+function knapSet(arr,msg){nonGraphState.selected=arr;renderKnapsackState();document.getElementById("knapOut").innerHTML=msg;}
+function knapBrute(){const s=nonGraphState,n=s.items.length;let bestV=-1,best=[],trace=[];for(let mask=0;mask<Math.pow(2,n);mask++){let W=0,V=0,arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2){W+=s.items[i][1];V+=s.items[i][2];arr.push(i)}if(W<=s.capacity&&V>bestV){bestV=V;best=arr;trace.push(`Nuevo mejor subconjunto: {${arr.map(i=>s.items[i][0]).join(", ")}} con valor ${V} y peso ${W}.`);}}knapSet(best,`Óptimo exacto: valor ${bestV}.`);addCompare("Fuerza bruta","óptimo",bestV,"Prueba todos los subconjuntos.");setTrace(trace.length?trace:["Se probaron todos los subconjuntos."]);}
+function knapGreedy(){const s=nonGraphState;let W=0,V=0,arr=[],trace=[];s.items.map((it,i)=>({i,name:it[0],w:it[1],v:it[2],r:it[2]/it[1]})).sort((a,b)=>b.r-a.r).forEach(o=>{if(W+o.w<=s.capacity){W+=o.w;V+=o.v;arr.push(o.i);trace.push(`Se toma ${o.name}: razón ${o.r.toFixed(2)}, peso acumulado ${W}, valor ${V}.`)}else trace.push(`Se omite ${o.name}: excede capacidad.`)});knapSet(arr,`Greedy: valor ${V}, peso ${W}.`);addCompare("Greedy valor/peso","heurística",V,"No garantiza óptimo.");setTrace(trace);}
+function knapDP(){const s=nonGraphState,n=s.items.length,C=s.capacity;if(C>250){alert("Capacidad muy alta para visualizar DP.");return;}let dp=Array.from({length:n+1},()=>Array(C+1).fill(0)),trace=[];for(let i=1;i<=n;i++){for(let c=0;c<=C;c++){dp[i][c]=dp[i-1][c];if(s.items[i-1][1]<=c)dp[i][c]=Math.max(dp[i][c],dp[i-1][c-s.items[i-1][1]]+s.items[i-1][2]);}trace.push(`Fila ${i}: se considera ${s.items[i-1][0]}. Mejor valor con capacidad ${C}: ${dp[i][C]}.`)}let arr=[],c=C;for(let i=n;i>=1;i--)if(dp[i][c]!==dp[i-1][c]){arr.push(i-1);c-=s.items[i-1][1];}arr.reverse();knapSet(arr,`DP exacta: valor ${dp[n][C]}.`);addCompare("DP pseudo-polinomial","exacto",dp[n][C],"O(n·C).");setTrace(trace);}
+function randomKnapsack(){let n=6+Math.floor(Math.random()*4),items=[];for(let i=0;i<n;i++)items.push(["O"+(i+1),1+Math.floor(Math.random()*9),2+Math.floor(Math.random()*20)]);document.getElementById("cap").value=10+Math.floor(Math.random()*16);document.getElementById("itemsTxt").value=items.map(x=>x.join(",")).join("\\n");loadKnapsack();}
+function checkKnapsack(){const s=nonGraphState;let W=0,V=0;s.selected.forEach(i=>{W+=s.items[i][1];V+=s.items[i][2];});return W<=s.capacity?`Factible: peso ${W}, valor ${V}.`:`No factible: peso ${W} excede capacidad ${s.capacity}.`;}
+
+/* Subset */
+function renderSubsetLab(){const d=MODULES[current].data;document.getElementById("lab").innerHTML=`<div class="grid2"><article class="card"><h2>Instancia</h2><label>Números</label><input id="numsTxt" value="${d.nums.join(",")}"><label>Meta</label><input id="targetTxt" type="number" value="${d.target}"><div class="controls"><button class="btn primary" onclick="loadSubset()">Cargar</button><button class="btn" onclick="randomSubset()">Aleatoria con solución</button><button class="btn" onclick="exportInstance()">Exportar JSON</button><button class="btn" onclick="importInstance()">Importar JSON</button></div><textarea id="jsonBox" placeholder="JSON de instancia"></textarea></article><article class="card"><h2>Selección</h2><div id="subChips"></div><div id="subStats" class="stats"></div><div class="controls"><button class="btn green" onclick="subsetBrute()">Fuerza bruta</button><button class="btn amber" onclick="subsetGreedy()">Greedy</button><button class="btn primary" onclick="subsetDP()">DP</button></div><div id="subOut" class="note">Selecciona números o ejecuta un algoritmo.</div></article></div>`;loadSubset();}
+function loadSubset(){nonGraphState={nums:document.getElementById("numsTxt").value.split(",").map(x=>+x.trim()).filter(x=>!isNaN(x)),target:+document.getElementById("targetTxt").value,selected:[]};renderSubsetState();}
+function renderSubsetState(){let s=nonGraphState,sum=s.selected.reduce((a,i)=>a+s.nums[i],0);document.getElementById("subChips").innerHTML=s.nums.map((x,i)=>`<span class="chip ${s.selected.includes(i)?"sel":""}" onclick="toggleSub(${i})">${x}</span>`).join("");document.getElementById("subStats").innerHTML=`<div class="stat"><div class="num">${sum}</div><div class="lab">suma</div></div><div class="stat"><div class="num">${Math.abs(s.target-sum)}</div><div class="lab">diferencia</div></div><div class="stat ${sum===s.target?"ok":"bad"}"><div class="num">${sum===s.target?"Sí":"No"}</div><div class="lab">exacta</div></div><div class="stat"><div class="num">${Math.pow(2,s.nums.length).toLocaleString("es-CO")}</div><div class="lab">subconjuntos</div></div>`;}
+function toggleSub(i){let a=nonGraphState.selected;if(a.includes(i))nonGraphState.selected=a.filter(x=>x!==i);else a.push(i);renderSubsetState();}
+function subsetSet(arr,msg){nonGraphState.selected=arr;renderSubsetState();document.getElementById("subOut").innerHTML=msg;}
+function subsetBrute(){let s=nonGraphState,n=s.nums.length,best=[],bestDiff=Infinity,trace=[],found=null;for(let mask=0;mask<Math.pow(2,n);mask++){let sum=0,arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2){sum+=s.nums[i];arr.push(i)}let d=Math.abs(s.target-sum);if(d<bestDiff){bestDiff=d;best=arr;trace.push(`Nuevo más cercano: suma ${sum}, diferencia ${d}.`)}if(sum===s.target){found=arr;trace.push(`Solución exacta encontrada: {${arr.map(i=>s.nums[i]).join(", ")}}.`);break;}}subsetSet(found||best,found?"Solución exacta encontrada.":`No exacta. Mejor diferencia ${bestDiff}.`);addCompare("Fuerza bruta",found?"exacta":"mejor cercana",found?0:bestDiff,"Explora subconjuntos.");setTrace(trace);}
+function subsetGreedy(){let s=nonGraphState,sum=0,arr=[],trace=[];s.nums.map((x,i)=>({x,i})).sort((a,b)=>b.x-a.x).forEach(o=>{if(sum+o.x<=s.target){sum+=o.x;arr.push(o.i);trace.push(`Se toma ${o.x}; suma acumulada ${sum}.`)}else trace.push(`Se omite ${o.x}; excede la meta.`)});subsetSet(arr,`Greedy: suma ${sum}.`);addCompare("Greedy descendente","heurística",sum,"Puede fallar.");setTrace(trace);}
+function subsetDP(){let s=nonGraphState,T=s.target,n=s.nums.length;if(T<0||T>500){alert("Meta fuera del rango visual.");return;}let dp=Array.from({length:n+1},()=>Array(T+1).fill(false));dp[0][0]=true;let trace=[];for(let i=1;i<=n;i++){for(let v=0;v<=T;v++)dp[i][v]=dp[i-1][v]||(s.nums[i-1]<=v&&dp[i-1][v-s.nums[i-1]]);trace.push(`Con ${i} números, meta ${T} ${dp[i][T]?"ya es":"aún no es"} alcanzable.`)}let arr=[];if(dp[n][T]){let v=T;for(let i=n;i>=1;i--)if(!dp[i-1][v]){arr.push(i-1);v-=s.nums[i-1];}}arr.reverse();subsetSet(arr,dp[n][T]?"DP encontró solución exacta.":"DP prueba que no hay solución exacta.");addCompare("DP pseudo-polinomial",dp[n][T]?"exacta":"no existe",dp[n][T]?T:"—","O(n·T).");setTrace(trace);}
+function randomSubset(){let n=6+Math.floor(Math.random()*5),nums=[];for(let i=0;i<n;i++)nums.push(1+Math.floor(Math.random()*20));let chosen=nums.filter(()=>Math.random()<.4);if(!chosen.length)chosen=[nums[0]];document.getElementById("numsTxt").value=nums.join(",");document.getElementById("targetTxt").value=chosen.reduce((a,b)=>a+b,0);loadSubset();}
+function checkSubset(){let s=nonGraphState,sum=s.selected.reduce((a,i)=>a+s.nums[i],0);return sum===s.target?`Correcto: suma exacta ${sum}.`:`Aún no: suma ${sum}, meta ${s.target}.`;}
+
+
+/* Partition */
+function renderPartitionLab(){
+  const d=MODULES[current].data;
+  document.getElementById("lab").innerHTML=`<div class="grid2">
+    <article class="card">
+      <h2>Instancia de Partition</h2>
+      <label>Números</label><input id="partNumsTxt" value="${d.nums.join(",")}">
+      <div class="controls">
+        <button class="btn primary" onclick="loadPartition()">Cargar</button>
+        <button class="btn" onclick="randomPartition()">Aleatoria</button>
+        <button class="btn" onclick="exportInstance()">Exportar JSON</button>
+        <button class="btn" onclick="importInstance()">Importar JSON</button>
+      </div>
+      <textarea id="jsonBox" placeholder="JSON de instancia"></textarea>
+    </article>
+    <article class="card">
+      <h2>Grupo A seleccionado</h2>
+      <div id="partChips"></div>
+      <div id="partStats" class="stats"></div>
+      <div class="controls">
+        <button class="btn green" onclick="partitionBrute()">Fuerza bruta</button>
+        <button class="btn amber" onclick="partitionGreedy()">Greedy balanceado</button>
+        <button class="btn primary" onclick="partitionDP()">DP mitad</button>
+      </div>
+      <div id="partOut" class="note">Selecciona números para el grupo A.</div>
+    </article>
+  </div>`;
+  loadPartition();
+}
+function loadPartition(){
+  nonGraphState={nums:document.getElementById("partNumsTxt").value.split(",").map(x=>+x.trim()).filter(x=>!isNaN(x)),selected:[]};
+  renderPartitionState();
+}
+function renderPartitionState(){
+  let s=nonGraphState,total=s.nums.reduce((a,b)=>a+b,0),A=s.selected.reduce((a,i)=>a+s.nums[i],0),B=total-A,diff=Math.abs(A-B);
+  document.getElementById("partChips").innerHTML=s.nums.map((x,i)=>`<span class="chip ${s.selected.includes(i)?"sel":""}" onclick="togglePart(${i})">${x}</span>`).join("");
+  document.getElementById("partStats").innerHTML=`<div class="stat"><div class="num">${A}</div><div class="lab">suma A</div></div><div class="stat"><div class="num">${B}</div><div class="lab">suma B</div></div><div class="stat ${diff===0?"ok":diff<=2?"warn":"bad"}"><div class="num">${diff}</div><div class="lab">diferencia</div></div><div class="stat"><div class="num">${total}</div><div class="lab">total</div></div>`;
+}
+function togglePart(i){let a=nonGraphState.selected;if(a.includes(i))nonGraphState.selected=a.filter(x=>x!==i);else a.push(i);renderPartitionState();}
+function partitionSet(arr,msg){nonGraphState.selected=arr;renderPartitionState();document.getElementById("partOut").innerHTML=msg;}
+function partitionBrute(){
+  let s=nonGraphState,n=s.nums.length,total=s.nums.reduce((a,b)=>a+b,0),best=[],bestDiff=Infinity,trace=[];
+  for(let mask=0;mask<Math.pow(2,n);mask++){let A=0,arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2){A+=s.nums[i];arr.push(i)}let diff=Math.abs(total-2*A);if(diff<bestDiff){bestDiff=diff;best=arr;trace.push(`Nueva mejor partición: A=${A}, B=${total-A}, diferencia ${diff}.`);}}
+  partitionSet(best,`Óptimo exacto: diferencia ${bestDiff}.`);
+  addCompare("Fuerza bruta Partition","óptimo",bestDiff,"Prueba subconjuntos.");
+  setTrace(trace);
+}
+function partitionGreedy(){
+  let s=nonGraphState,A=0,B=0,arr=[],trace=[];
+  s.nums.map((x,i)=>({x,i})).sort((a,b)=>b.x-a.x).forEach(o=>{if(A<=B){A+=o.x;arr.push(o.i);trace.push(`Se asigna ${o.x} al grupo A. A=${A}, B=${B}.`)}else{B+=o.x;trace.push(`Se asigna ${o.x} al grupo B. A=${A}, B=${B}.`)}});
+  partitionSet(arr,`Greedy: diferencia ${Math.abs(A-B)}.`);
+  addCompare("Greedy Partition","heurística",Math.abs(A-B),"Balance rápido.");
+  setTrace(trace);
+}
+function partitionDP(){
+  let s=nonGraphState,total=s.nums.reduce((a,b)=>a+b,0),T=Math.floor(total/2),n=s.nums.length;
+  if(T>600){alert("Total demasiado alto para visualizar DP.");return;}
+  let dp=Array.from({length:n+1},()=>Array(T+1).fill(false));dp[0][0]=true;let trace=[];
+  for(let i=1;i<=n;i++){for(let v=0;v<=T;v++)dp[i][v]=dp[i-1][v]||(s.nums[i-1]<=v&&dp[i-1][v-s.nums[i-1]]);trace.push(`Tras considerar ${i} números, se buscan sumas cercanas a ${T}.`);}
+  let best=0;for(let v=T;v>=0;v--)if(dp[n][v]){best=v;break;}
+  let arr=[],v=best;for(let i=n;i>=1;i--)if(v>=0&&!dp[i-1][v]){arr.push(i-1);v-=s.nums[i-1];}
+  arr.reverse();
+  partitionSet(arr,`DP: mejor suma cercana a la mitad ${best}; diferencia ${Math.abs(total-2*best)}.`);
+  addCompare("DP Partition","exacto pseudo-pol.",Math.abs(total-2*best),"Busca mitad.");
+  setTrace(trace.concat([`Mejor suma alcanzable ≤ mitad: ${best}.`]));
+}
+function randomPartition(){let n=6+Math.floor(Math.random()*5),nums=[];for(let i=0;i<n;i++)nums.push(1+Math.floor(Math.random()*20));document.getElementById("partNumsTxt").value=nums.join(",");loadPartition();}
+function checkPartition(){let s=nonGraphState,total=s.nums.reduce((a,b)=>a+b,0),A=s.selected.reduce((a,i)=>a+s.nums[i],0),B=total-A;return `Grupo A=${A}, Grupo B=${B}, diferencia=${Math.abs(A-B)}.`;}
+
+/* SAT */
+function renderSATLab(){const d=MODULES[current].data;document.getElementById("lab").innerHTML=`<div class="grid2"><article class="card"><h2>Fórmula CNF</h2><label>Cláusulas, una por línea. Usa ! para negación.</label><textarea id="formulaTxt" style="min-height:180px">${d.formula}</textarea><div class="controls"><button class="btn primary" onclick="loadSAT()">Cargar</button><button class="btn" onclick="randomSAT()">Aleatoria</button><button class="btn" onclick="exportInstance()">Exportar JSON</button><button class="btn" onclick="importInstance()">Importar JSON</button></div><textarea id="jsonBox" placeholder="JSON de instancia"></textarea><h3>Variables</h3><div id="satVars"></div></article><article class="card"><h2>Evaluación</h2><div id="satStats" class="stats"></div><div id="clausesBox"></div><div class="controls"><button class="btn green" onclick="satBrute()">Fuerza bruta SAT</button><button class="btn amber" onclick="satRandom()">MAX-3SAT aleatorio</button></div><div id="satOut" class="note">Cambia variables o ejecuta un algoritmo.</div></article></div>`;loadSAT();}
+function loadSAT(){let clauses=document.getElementById("formulaTxt").value.trim().split(/\n+/).filter(Boolean).map(l=>l.trim().split(/\s+/));let vars=[...new Set(clauses.flat().map(x=>x.replace(/^!/,"")))].sort();nonGraphState={clauses,vars,values:{}};vars.forEach(v=>nonGraphState.values[v]=false);renderSATState();}
+function litVal(l){return l.startsWith("!")?!nonGraphState.values[l.slice(1)]:!!nonGraphState.values[l];}
+function renderSATState(){let s=nonGraphState;document.getElementById("satVars").innerHTML=s.vars.map(v=>`<label class="chip">${v}<input type="checkbox" ${s.values[v]?"checked":""} onchange="nonGraphState.values['${v}']=this.checked;renderSATState()"></label>`).join("");let good=s.clauses.filter(cl=>cl.some(litVal)).length;document.getElementById("satStats").innerHTML=`<div class="stat"><div class="num">${good}</div><div class="lab">satisfechas</div></div><div class="stat"><div class="num">${s.clauses.length}</div><div class="lab">total</div></div><div class="stat ${good===s.clauses.length?"ok":"bad"}"><div class="num">${good===s.clauses.length?"Sí":"No"}</div><div class="lab">SAT</div></div><div class="stat"><div class="num">${Math.pow(2,s.vars.length).toLocaleString("es-CO")}</div><div class="lab">2ⁿ</div></div>`;document.getElementById("clausesBox").innerHTML=s.clauses.map(cl=>`<div class="note ${cl.some(litVal)?"ok":"bad"}">(${cl.map(l=>`<strong>${l}</strong>: ${litVal(l)?"V":"F"}`).join(" ∨ ")})</div>`).join("");}
+function setSATMask(mask,msg){let s=nonGraphState;s.vars.forEach((v,i)=>s.values[v]=!!(Math.floor(mask/Math.pow(2,i))%2));renderSATState();document.getElementById("satOut").innerHTML=msg;}
+function satBrute(){let s=nonGraphState,n=s.vars.length,best=0,bestMask=0,trace=[];for(let mask=0;mask<Math.pow(2,n);mask++){s.vars.forEach((v,i)=>s.values[v]=!!(Math.floor(mask/Math.pow(2,i))%2));let good=s.clauses.filter(cl=>cl.some(litVal)).length;if(good>best){best=good;bestMask=mask;trace.push(`Nueva mejor asignación satisface ${good}/${s.clauses.length}.`)}if(good===s.clauses.length){setSATMask(mask,"Satisfacible: fuerza bruta encontró una asignación.");addCompare("Fuerza bruta SAT","SAT",good,"Exacto.");setTrace(trace);return;}}setSATMask(bestMask,`No se encontró SAT. Mejor: ${best}/${s.clauses.length}.`);addCompare("Fuerza bruta SAT","mejor asignación",best,"Exacto para descartar SAT.");setTrace(trace);}
+function satRandom(){let s=nonGraphState,n=s.vars.length,best=0,bestMask=0,trace=[];for(let t=1;t<=300;t++){let mask=0;for(let i=0;i<n;i++)if(Math.random()<.5)mask+=Math.pow(2,i);s.vars.forEach((v,i)=>s.values[v]=!!(Math.floor(mask/Math.pow(2,i))%2));let good=s.clauses.filter(cl=>cl.some(litVal)).length;if(good>best){best=good;bestMask=mask;trace.push(`Intento ${t}: nueva mejor asignación con ${good} cláusulas.`)}}setSATMask(bestMask,`MAX-3SAT aleatorio: ${best}/${s.clauses.length}.`);addCompare("MAX-3SAT aleatorio","heurística",best,"300 intentos.");setTrace(trace);}
+function randomSAT(){let n=4,m=6,vars=Array.from({length:n},(_,i)=>"x"+(i+1)),lines=[];for(let j=0;j<m;j++){let lits=[];for(let k=0;k<3;k++){let v=vars[Math.floor(Math.random()*n)];lits.push((Math.random()<.5?"!":"")+v);}lines.push(lits.join(" "));}document.getElementById("formulaTxt").value=lines.join("\\n");loadSAT();}
+function checkSAT(){let s=nonGraphState,good=s.clauses.filter(cl=>cl.some(litVal)).length;return good===s.clauses.length?`Correcto: todas las cláusulas satisfechas.`:`Aún no: ${good}/${s.clauses.length} cláusulas satisfechas.`;}
+
+/* Set cover */
+function renderSetCoverLab(){const d=MODULES[current].data;document.getElementById("lab").innerHTML=`<div class="grid2"><article class="card"><h2>Instancia</h2><label>Universo</label><input id="univTxt" value="${d.universe.join(",")}"><label>Conjuntos: Nombre: elementos</label><textarea id="setsTxt" style="min-height:160px">${d.sets.map(s=>s[0]+":"+s[1].join(",")).join("\\n")}</textarea><div class="controls"><button class="btn primary" onclick="loadSetCover()">Cargar</button><button class="btn" onclick="randomSetCover()">Aleatoria</button><button class="btn" onclick="exportInstance()">Exportar JSON</button><button class="btn" onclick="importInstance()">Importar JSON</button></div><textarea id="jsonBox" placeholder="JSON de instancia"></textarea></article><article class="card"><h2>Selección</h2><div id="setChips"></div><h3>Elementos cubiertos</h3><div id="univChips"></div><div id="setStats" class="stats"></div><div class="controls"><button class="btn green" onclick="setBrute()">Fuerza bruta</button><button class="btn amber" onclick="setGreedy()">Greedy</button></div><div id="setOut" class="note">Elige conjuntos o ejecuta un algoritmo.</div></article></div>`;loadSetCover();}
+function loadSetCover(){let universe=document.getElementById("univTxt").value.split(",").map(x=>x.trim()).filter(Boolean);let sets=document.getElementById("setsTxt").value.trim().split(/\n+/).filter(Boolean).map(l=>{let [name,els]=l.split(":");return [name.trim(),els.split(",").map(x=>x.trim()).filter(Boolean)]});nonGraphState={universe,sets,selected:[]};renderSetCoverState();}
+function coverOf(arr){let C=new Set();arr.forEach(i=>nonGraphState.sets[i][1].forEach(e=>C.add(e)));return C;}
+function renderSetCoverState(){let s=nonGraphState,C=coverOf(s.selected);document.getElementById("setChips").innerHTML=s.sets.map((S,i)=>`<span class="chip ${s.selected.includes(i)?"sel":""}" onclick="toggleSet(${i})">${S[0]}={${S[1].join(",")}}</span>`).join("");document.getElementById("univChips").innerHTML=s.universe.map(e=>`<span class="chip ${C.has(e)?"sel":""}">${e}</span>`).join("");let covered=s.universe.filter(e=>C.has(e)).length,ok=covered===s.universe.length;document.getElementById("setStats").innerHTML=`<div class="stat"><div class="num">${s.selected.length}</div><div class="lab">conjuntos</div></div><div class="stat"><div class="num">${covered}</div><div class="lab">cubiertos</div></div><div class="stat"><div class="num">${s.universe.length}</div><div class="lab">universo</div></div><div class="stat ${ok?"ok":"bad"}"><div class="num">${ok?"Sí":"No"}</div><div class="lab">cubre</div></div>`;}
+function toggleSet(i){let a=nonGraphState.selected;if(a.includes(i))nonGraphState.selected=a.filter(x=>x!==i);else a.push(i);renderSetCoverState();}
+function setCoverSet(arr,msg){nonGraphState.selected=arr;renderSetCoverState();document.getElementById("setOut").innerHTML=msg;}
+function setBrute(){let s=nonGraphState,n=s.sets.length,best=null,trace=[];for(let mask=0;mask<Math.pow(2,n);mask++){let arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2)arr.push(i);if(best&&arr.length>=best.length)continue;let C=coverOf(arr);if(s.universe.every(e=>C.has(e))){best=arr;trace.push(`Nueva mejor cobertura con ${arr.length} conjuntos: ${arr.map(i=>s.sets[i][0]).join(", ")}.`)}}setCoverSet(best||[],best?`Óptimo: ${best.length} conjuntos.`:"No hay cobertura completa.");addCompare("Fuerza bruta","óptimo",best?best.length:"—","Subfamilias.");setTrace(trace);}
+function setGreedy(){let s=nonGraphState,missing=new Set(s.universe),arr=[],trace=[];while(missing.size){let best=-1,bgain=-1;s.sets.forEach((S,i)=>{if(arr.includes(i))return;let gain=S[1].filter(e=>missing.has(e)).length;if(gain>bgain){bgain=gain;best=i;}});if(best<0||bgain===0)break;arr.push(best);s.sets[best][1].forEach(e=>missing.delete(e));trace.push(`Se elige ${s.sets[best][0]} porque cubre ${bgain} elementos nuevos. Faltan ${missing.size}.`)}setCoverSet(arr,missing.size===0?`Greedy cubre con ${arr.length} conjuntos.`:`Greedy no cubrió ${missing.size} elementos.`);addCompare("Greedy Set Cover","heurística/aprox.",arr.length,"Garantía logarítmica.");setTrace(trace);}
+function randomSetCover(){let U=Array.from({length:8},(_,i)=>""+(i+1)),sets=[];for(let i=0;i<7;i++){let els=U.filter(()=>Math.random()<.38);if(!els.length)els=[U[Math.floor(Math.random()*U.length)]];sets.push([String.fromCharCode(65+i),els]);}document.getElementById("univTxt").value=U.join(",");document.getElementById("setsTxt").value=sets.map(s=>s[0]+":"+s[1].join(",")).join("\\n");loadSetCover();}
+function checkSetCover(){let s=nonGraphState,C=coverOf(s.selected),ok=s.universe.every(e=>C.has(e));return ok?`Correcto: cubres todo el universo con ${s.selected.length} conjuntos.`:`Faltan: ${s.universe.filter(e=>!C.has(e)).join(", ")}.`;}
+
+/* Graph shared */
+const ns="http://www.w3.org/2000/svg";
+function graphPresets(){
+  return {
+    "Camino P6":()=>pathGraph(6),
+    "Ciclo C6":()=>cycleGraph(6),
+    "Ciclo impar C5":()=>cycleGraph(5),
+    "Completo K5":()=>completeGraph(5),
+    "Bipartito K3,3":()=>bipartiteGraph(3,3),
+    "Estrella S7":()=>starGraph(7),
+    "Petersen":()=>petersenGraph(),
+    "Rueda W6":()=>wheelGraph(6),
+    "Escalera 3x2":()=>ladderGraph(3),
+    "Aleatorio":()=>randomGraph(8,.28)
+  }
+}
+function circleNodes(names,cx=360,cy=260,r=180){return names.map((id,i)=>{const a=2*Math.PI*i/names.length-Math.PI/2;return {id,x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}});}
+function pathGraph(n){const names=Array.from({length:n},(_,i)=>String.fromCharCode(65+i));return {nodes:names.map((id,i)=>({id,x:110+i*100,y:260+(i%2?35:-35)})),edges:names.slice(0,-1).map((id,i)=>({u:id,v:names[i+1]}))};}
+function cycleGraph(n){const names=Array.from({length:n},(_,i)=>String.fromCharCode(65+i));return {nodes:circleNodes(names),edges:names.map((id,i)=>({u:id,v:names[(i+1)%n]}))};}
+function completeGraph(n){const names=Array.from({length:n},(_,i)=>String.fromCharCode(65+i));let edges=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)edges.push({u:names[i],v:names[j]});return {nodes:circleNodes(names),edges};}
+function bipartiteGraph(a,b){let nodes=[],edges=[];for(let i=0;i<a;i++)nodes.push({id:"L"+(i+1),x:230,y:130+i*100});for(let j=0;j<b;j++)nodes.push({id:"R"+(j+1),x:500,y:130+j*100});for(let i=0;i<a;i++)for(let j=0;j<b;j++)edges.push({u:"L"+(i+1),v:"R"+(j+1)});return {nodes,edges};}
+function starGraph(n){let outer=Array.from({length:n-1},(_,i)=>String.fromCharCode(65+i));let nodes=[{id:"C",x:360,y:260},...circleNodes(outer,360,260,180)];return {nodes,edges:outer.map(v=>({u:"C",v}))};}
+function petersenGraph(){let nodes=[...circleNodes(["A","B","C","D","E"],360,260,190),...circleNodes(["a","b","c","d","e"],360,260,85)];let edges=[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"],["A","a"],["B","b"],["C","c"],["D","d"],["E","e"],["a","c"],["c","e"],["e","b"],["b","d"],["d","a"]].map(([u,v])=>({u,v}));return {nodes,edges};}
+function wheelGraph(n){let outer=Array.from({length:n},(_,i)=>String.fromCharCode(65+i));let nodes=[{id:"C",x:360,y:260},...circleNodes(outer,360,260,180)];let edges=outer.map((v,i)=>({u:v,v:outer[(i+1)%n]})).concat(outer.map(v=>({u:"C",v})));return {nodes,edges};}
+function ladderGraph(n){let nodes=[],edges=[];for(let i=0;i<n;i++){nodes.push({id:"A"+(i+1),x:180+i*150,y:180});nodes.push({id:"B"+(i+1),x:180+i*150,y:340});edges.push({u:"A"+(i+1),v:"B"+(i+1)});if(i<n-1){edges.push({u:"A"+(i+1),v:"A"+(i+2)});edges.push({u:"B"+(i+1),v:"B"+(i+2)});}}return {nodes,edges};}
+function randomGraph(n,p){let nodes=circleNodes(Array.from({length:n},(_,i)=>String.fromCharCode(65+i))),edges=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(Math.random()<p)edges.push({u:nodes[i].id,v:nodes[j].id});return {nodes,edges};}
+function renderGraphLab(t){
+  graph={nodes:[],edges:[],selected:new Set(),colors:{},route:[],mst:[],mode:t==="tsp"?"route":"select",pending:null,pan:{x:0,y:0},scale:1,showComplete:false,k:3};
+  const extra = t==="coloring" ? `<label>Número de colores k</label><input id="kInput" type="number" min="2" max="6" value="3" onchange="graph.k=+this.value;renderPalette();drawGraph()"><h3>Paleta editable</h3><div id="palette" class="controls"></div>` : "";
+  const routeButtons = t==="tsp" ? `<button class="btn small" onclick="undoRoute()">Deshacer ruta</button><button class="btn small" onclick="clearRoute()">Limpiar ruta</button><button class="btn small" onclick="graph.showComplete=!graph.showComplete;drawGraph()">Mostrar completo</button>` : "";
+  const colorBtn = t==="coloring" ? `<button class="btn purple" onclick="setGMode('color')">Colorear</button>` : "";
+  document.getElementById("lab").innerHTML=`
+  <div class="grid2">
+    <article class="card">
+      <h2>Laboratorio editable</h2>
+      <label>Grafo clásico</label><select id="presetSelect"></select>
+      <div class="controls">
+        <button class="btn primary" onclick="loadGraphPreset()">Cargar grafo</button>
+        <button class="btn" onclick="setGMode('${t==="tsp"?"route":"select"}')">${t==="tsp"?"Ruta":"Seleccionar"}</button>
+        ${colorBtn}
+        <button class="btn" onclick="setGMode('move')">Mover vértices</button>
+        <button class="btn" onclick="setGMode('pan')">Desplazar lienzo</button>
+        <button class="btn green" onclick="setGMode('addv')">Agregar vértice</button>
+        <button class="btn amber" onclick="setGMode('edge')">Agregar arista</button>
+        <button class="btn red" onclick="setGMode('delete')">Borrar</button>
+      </div>
+      <div class="controls">
+        <span class="modeBadge">Modo: <span id="modeLabel">${graph.mode}</span></span>
+        <button class="btn small" onclick="zoomGraph(1.15)">Zoom +</button>
+        <button class="btn small" onclick="zoomGraph(.85)">Zoom −</button>
+        <button class="btn small" onclick="resetGraphView()">Reset vista</button>
+        <button class="btn small" onclick="exportInstance()">Exportar JSON</button>
+        <button class="btn small" onclick="importInstance()">Importar JSON</button>
+        ${routeButtons}
+      </div>
+      ${extra}
+      <textarea id="jsonBox" placeholder="JSON de instancia"></textarea>
+      <div class="note info"><strong>Uso:</strong> rueda del mouse para zoom. En modo pan, arrastra el fondo. En modo mover, arrastra vértices. En modo agregar arista, haz clic en dos vértices.</div>
+      <div class="graphArea"><svg id="graphSvg" class="graphSvg"><g id="graphLayer"></g></svg></div>
+    </article>
+    <article class="card">
+      <h2>Diagnóstico y algoritmos</h2>
+      <div id="graphStats" class="stats"></div>
+      <div class="controls">${graphButtons(t)}</div>
+      <div id="graphOut" class="note">Carga un grafo o edítalo.</div>
+      <div class="code" style="margin-top:12px">Editor: zoom, pan, agregar/quitar vértices, agregar/quitar aristas, mover vértices, importar/exportar JSON.</div>
+    </article>
+  </div>`;
+  Object.keys(graphPresets()).forEach(k=>{let o=document.createElement("option");o.value=k;o.textContent=k;document.getElementById("presetSelect").appendChild(o);});
+  setupGraphEvents(); if(t==="coloring")renderPalette(); loadGraphPreset();
+}
+function graphButtons(t){
+  if(t==="vertex")return `<button class="btn green" onclick="vertexBrute()">Fuerza bruta</button><button class="btn amber" onclick="vertexApprox()">2-aprox.</button><button class="btn" onclick="clearGraphSelection()">Limpiar selección</button>`;
+  if(t==="coloring")return `<button class="btn green" onclick="colorOptimal()">Fuerza bruta óptima</button><button class="btn primary" onclick="colorBacktrack()">Backtracking k actual</button><button class="btn amber" onclick="colorGreedy()">Greedy</button><button class="btn" onclick="clearColors()">Limpiar colores</button>`;
+  if(t==="tsp")return `<button class="btn green" onclick="tspBrute()">Fuerza bruta</button><button class="btn amber" onclick="tspNearest()">Vecino cercano</button><button class="btn primary" onclick="tspMST()">MST preorder</button>`;
+  if(t==="clique")return `<button class="btn green" onclick="cliqueBrute()">Máxima clique</button><button class="btn amber" onclick="cliqueGreedy()">Greedy clique</button><button class="btn" onclick="clearGraphSelection()">Limpiar</button>`;
+  if(t==="independent")return `<button class="btn green" onclick="indepBrute()">Máximo independiente</button><button class="btn amber" onclick="indepGreedy()">Greedy independiente</button><button class="btn" onclick="clearGraphSelection()">Limpiar</button>`;
+  if(t==="hamilton")return `<button class="btn green" onclick="hamiltonBacktrack()">Buscar ciclo</button><button class="btn" onclick="clearRoute()">Limpiar ciclo</button>`;
+  if(t==="dominating")return `<button class="btn green" onclick="dominatingBrute()">Dominating mínimo</button><button class="btn amber" onclick="dominatingGreedy()">Greedy dominante</button><button class="btn" onclick="clearGraphSelection()">Limpiar</button>`;
+  return "";
+}
+function setupGraphEvents(){
+  const svg=document.getElementById("graphSvg");
+  svg.addEventListener("mousedown",ev=>{drag.last=screen(ev); if(graph.mode==="pan"||ev.shiftKey)drag.pan=true;});
+  window.onmousemove=ev=>{const svg=document.getElementById("graphSvg"); if(!svg)return; let p=screen(ev); if(drag.pan){graph.pan.x+=p.x-drag.last.x;graph.pan.y+=p.y-drag.last.y;drag.last=p;applyGTransform();} if(drag.node){let w=world(ev);let n=graph.nodes.find(x=>x.id===drag.node);if(n){n.x=w.x;n.y=w.y;drawGraph();}}};
+  window.onmouseup=()=>{drag.pan=false;drag.node=null;};
+  svg.addEventListener("click",ev=>{if(ev.target===svg&&graph.mode==="addv"){let w=world(ev);graph.nodes.push({id:nextNodeId(),x:w.x,y:w.y});drawGraph();} if(ev.target===svg){graph.pending=null;drawGraph();}});
+  svg.addEventListener("wheel",ev=>{ev.preventDefault();let p=screen(ev);let before={x:(p.x-graph.pan.x)/graph.scale,y:(p.y-graph.pan.y)/graph.scale};graph.scale*=ev.deltaY<0?1.12:.88;graph.scale=Math.max(.25,Math.min(3.5,graph.scale));graph.pan.x=p.x-before.x*graph.scale;graph.pan.y=p.y-before.y*graph.scale;applyGTransform();},{passive:false});
+}
+function setGMode(m){graph.mode=m;graph.pending=null;document.getElementById("modeLabel").textContent=m;drawGraph();}
+function screen(evt){const r=document.getElementById("graphSvg").getBoundingClientRect();return {x:evt.clientX-r.left,y:evt.clientY-r.top};}
+function world(evt){const p=screen(evt);return {x:(p.x-graph.pan.x)/graph.scale,y:(p.y-graph.pan.y)/graph.scale};}
+function applyGTransform(){document.getElementById("graphLayer").setAttribute("transform",`translate(${graph.pan.x},${graph.pan.y}) scale(${graph.scale})`);}
+function resetGraphView(){graph.pan={x:0,y:0};graph.scale=1;applyGTransform();}
+function zoomGraph(f){graph.scale=Math.max(.25,Math.min(3.5,graph.scale*f));applyGTransform();}
+function nextNodeId(){let i=1;while(graph.nodes.some(n=>n.id==="V"+i))i++;return "V"+i;}
+function loadGraphPreset(){let g=graphPresets()[document.getElementById("presetSelect").value]();graph.nodes=g.nodes.map(x=>({...x}));graph.edges=g.edges.map(x=>({...x}));graph.selected=new Set();graph.colors={};graph.route=[];graph.mst=[];graph.pending=null;resetGraphView();drawGraph();}
+function hasEdge(a,b){return graph.edges.some(e=>(e.u===a&&e.v===b)||(e.u===b&&e.v===a));}
+function addEdge(a,b){if(a!==b&&!hasEdge(a,b))graph.edges.push({u:a,v:b});}
+function removeNode(id){graph.nodes=graph.nodes.filter(n=>n.id!==id);graph.edges=graph.edges.filter(e=>e.u!==id&&e.v!==id);graph.selected.delete(id);delete graph.colors[id];graph.route=graph.route.filter(x=>x!==id);graph.mst=graph.mst.filter(e=>!e.includes(id));}
+function removeEdge(u,v){graph.edges=graph.edges.filter(e=>!((e.u===u&&e.v===v)||(e.u===v&&e.v===u)));graph.route=graph.route.filter((x,i)=>i===0 || !((graph.route[i-1]===u&&x===v)||(graph.route[i-1]===v&&x===u)));}
+function drawGraph(){
+  const layer=document.getElementById("graphLayer"); if(!layer)return; applyGTransform(); layer.innerHTML="";
+  const t=MODULES[current].type;
+  if(t==="tsp"&&graph.showComplete){for(let i=0;i<graph.nodes.length;i++)for(let j=i+1;j<graph.nodes.length;j++)drawLine(graph.nodes[i],graph.nodes[j],"edge faint");}
+  graph.edges.forEach(e=>drawEdge(e));
+  if(t==="tsp"||t==="hamilton"){for(let i=0;i<graph.route.length-1;i++)drawLine(idNode(graph.route[i]),idNode(graph.route[i+1]),"edge route"); if(graph.route.length===graph.nodes.length&&graph.route.length>2)drawLine(idNode(graph.route[graph.route.length-1]),idNode(graph.route[0]),"edge route");}
+  graph.mst.forEach(e=>drawLine(idNode(e[0]),idNode(e[1]),"edge mst"));
+  if(graph.pending){let n=idNode(graph.pending);if(n){let c=document.createElementNS(ns,"circle");c.setAttribute("cx",n.x);c.setAttribute("cy",n.y);c.setAttribute("r",33);c.setAttribute("fill","none");c.setAttribute("stroke","#7c3aed");c.setAttribute("stroke-width","4");c.setAttribute("stroke-dasharray","5 5");layer.appendChild(c);}}
+  graph.nodes.forEach(drawNode); updateGraphStats();
+}
+function idNode(id){return graph.nodes.find(n=>n.id===id);}
+function drawLine(a,b,cls){if(!a||!b)return;let l=document.createElementNS(ns,"line");l.setAttribute("x1",a.x);l.setAttribute("y1",a.y);l.setAttribute("x2",b.x);l.setAttribute("y2",b.y);l.setAttribute("class",cls);document.getElementById("graphLayer").appendChild(l);}
+function drawEdge(e){let t=MODULES[current].type,a=idNode(e.u),b=idNode(e.v);if(!a||!b)return;let cls="edge";if(t==="vertex")cls+=" "+(graph.selected.has(e.u)||graph.selected.has(e.v)?"covered":"uncovered");if(t==="coloring"&&graph.colors[e.u]!==undefined&&graph.colors[e.u]===graph.colors[e.v])cls+=" conflict";let l=document.createElementNS(ns,"line");l.setAttribute("x1",a.x);l.setAttribute("y1",a.y);l.setAttribute("x2",b.x);l.setAttribute("y2",b.y);l.setAttribute("class",cls);l.onclick=ev=>{ev.stopPropagation();if(graph.mode==="delete"){removeEdge(e.u,e.v);drawGraph();}};document.getElementById("graphLayer").appendChild(l);}
+function drawNode(n){let t=MODULES[current].type,g=document.createElementNS(ns,"g");let cls="vertex";if(graph.selected.has(n.id)||graph.route.includes(n.id))cls+=" selected";if(t==="coloring"&&graph.colors[n.id]!==undefined)cls+=" colored";g.setAttribute("class",cls);let c=document.createElementNS(ns,"circle");c.setAttribute("cx",n.x);c.setAttribute("cy",n.y);c.setAttribute("r",25);c.setAttribute("fill",t==="coloring"&&graph.colors[n.id]!==undefined?COLORS[graph.colors[n.id]]:"white"); c.style.fill=(t==="coloring"&&graph.colors[n.id]!==undefined?COLORS[graph.colors[n.id]]:"white");let txt=document.createElementNS(ns,"text");txt.setAttribute("x",n.x);txt.setAttribute("y",n.y+6);txt.setAttribute("text-anchor","middle");txt.textContent=n.id.length>3?n.id.slice(0,3):n.id;g.appendChild(c);g.appendChild(txt);g.onmousedown=ev=>{ev.stopPropagation();if(graph.mode==="move"){drag.node=n.id;drag.last=screen(ev);}};g.onclick=ev=>{ev.stopPropagation();handleNodeClick(n.id);};document.getElementById("graphLayer").appendChild(g);}
+function handleNodeClick(id){let t=MODULES[current].type;if(graph.mode==="select"){graph.selected.has(id)?graph.selected.delete(id):graph.selected.add(id);}
+else if(graph.mode==="color"&&t==="coloring"){graph.colors[id]=activeColor;}
+else if(graph.mode==="route"&&(t==="tsp"||t==="hamilton")){if(!graph.route.includes(id))graph.route.push(id);}
+else if(graph.mode==="edge"){if(!graph.pending)graph.pending=id;else{addEdge(graph.pending,id);graph.pending=null;}}
+else if(graph.mode==="delete"){removeNode(id);}
+drawGraph();}
+let activeColor=0;
+function renderPalette(){
+  let p=document.getElementById("palette");
+  if(!p)return;
+  p.innerHTML="";
+  for(let i=0;i<graph.k;i++){
+    let wrap=document.createElement("div");
+    wrap.className="chip "+(i===activeColor?"sel":"");
+    wrap.style.alignItems="center";
+    wrap.style.gap="8px";
+    wrap.style.cursor="default";
+
+    let btn=document.createElement("button");
+    btn.className="btn small";
+    btn.style.background=COLORS[i];
+    btn.style.color="white";
+    btn.textContent="Usar color "+(i+1);
+    btn.onclick=()=>{activeColor=i;renderPalette();};
+
+    let picker=document.createElement("input");
+    picker.type="color";
+    picker.value=normalizeColor(COLORS[i]);
+    picker.style.width="44px";
+    picker.style.height="34px";
+    picker.style.padding="2px";
+    picker.title="Cambiar color "+(i+1);
+    picker.oninput=(ev)=>{
+      COLORS[i]=ev.target.value;
+      renderPalette();
+      drawGraph();
+    };
+
+    wrap.appendChild(btn);
+    wrap.appendChild(picker);
+    p.appendChild(wrap);
+  }
+  let help=document.createElement("div");
+  help.className="note info";
+  help.style.marginTop="8px";
+  help.innerHTML="<strong>Personalizar colores:</strong> usa los selectores para cambiar los colores ya aplicados al grafo. El grafo se actualiza automáticamente.";
+  p.appendChild(help);
+}
+function normalizeColor(c){
+  if(/^#[0-9a-fA-F]{6}$/.test(c))return c;
+  const map={red:"#ef4444",blue:"#3b82f6",green:"#22c55e",yellow:"#eab308",purple:"#8b5cf6",orange:"#f97316",white:"#ffffff",black:"#000000"};
+  return map[c]||"#3b82f6";
+}
+function updateGraphStats(){let t=MODULES[current].type,html="";if(t==="vertex"){let cov=graph.edges.filter(e=>graph.selected.has(e.u)||graph.selected.has(e.v)).length;html=stat4(graph.selected.size,cov,graph.edges.length,cov===graph.edges.length?"Sí":"No","selecc.","cubiertas","aristas","cover",cov===graph.edges.length);}
+else if(t==="coloring"){let colored=graph.nodes.filter(n=>graph.colors[n.id]!==undefined).length,conf=graph.edges.filter(e=>graph.colors[e.u]!==undefined&&graph.colors[e.u]===graph.colors[e.v]).length,valid=colored===graph.nodes.length&&conf===0;html=stat4(colored+"/"+graph.nodes.length,conf,graph.edges.length,valid?"Sí":"No","coloreados","conflictos","aristas","válida",valid);}
+else if(t==="tsp"){let valid=graph.route.length===graph.nodes.length&&graph.nodes.length>1;html=stat4(routeCost().toFixed(1),graph.route.length+"/"+graph.nodes.length,valid?"Sí":"No",graph.nodes.length>1?fact(graph.nodes.length-1).toLocaleString("es-CO"):0,"distancia","visitadas","tour","permut.",valid);}
+else if(t==="clique"){let ok=isClique([...graph.selected]);html=stat4(graph.selected.size,internalEdges([...graph.selected]),maxEdges(graph.selected.size),ok?"Sí":"No","selecc.","aristas int.","máx.","clique",ok);}
+else if(t==="independent"){let ok=isIndependent([...graph.selected]);html=stat4(graph.selected.size,internalEdges([...graph.selected]),graph.edges.length,ok?"Sí":"No","selecc.","aristas int.","aristas","indep.",ok);}
+else if(t==="hamilton"){let valid=hamRouteValid();html=stat4(graph.route.length+"/"+graph.nodes.length,valid?"Sí":"No",graph.edges.length,graph.nodes.length>1?fact(graph.nodes.length-1).toLocaleString("es-CO"):0,"ruta","ciclo","aristas","permut.",valid);}
+else if(t==="dominating"){let D=dominatedSet([...graph.selected]);let valid=D.size===graph.nodes.length;html=stat4(graph.selected.size,D.size,graph.nodes.length,valid?"Sí":"No","selecc.","dominados","vértices","domina",valid);}
+document.getElementById("graphStats").innerHTML=html;}
+function stat4(a,b,c,d,la,lb,lc,ld,ok){return `<div class="stat"><div class="num">${a}</div><div class="lab">${la}</div></div><div class="stat"><div class="num">${b}</div><div class="lab">${lb}</div></div><div class="stat"><div class="num">${c}</div><div class="lab">${lc}</div></div><div class="stat ${ok?"ok":"bad"}"><div class="num">${d}</div><div class="lab">${ld}</div></div>`;}
+function fact(n){let f=1;for(let i=2;i<=n;i++)f*=i;return f;}
+function clearGraphSelection(){graph.selected=new Set();drawGraph();}
+function clearColors(){graph.colors={};drawGraph();}
+function clearRoute(){graph.route=[];graph.mst=[];drawGraph();}
+function undoRoute(){graph.route.pop();drawGraph();}
+function neighbors(id){return graph.edges.filter(e=>e.u===id||e.v===id).map(e=>e.u===id?e.v:e.u);}
+function edgeExists(a,b){return graph.edges.some(e=>(e.u===a&&e.v===b)||(e.u===b&&e.v===a));}
+function internalEdges(arr){let c=0;for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++)if(edgeExists(arr[i],arr[j]))c++;return c;}
+function maxEdges(k){return k*(k-1)/2;}
+function isClique(arr){for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++)if(!edgeExists(arr[i],arr[j]))return false;return true;}
+function isIndependent(arr){for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++)if(edgeExists(arr[i],arr[j]))return false;return true;}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+function routeCost(){let r=graph.route;if(r.length<2)return 0;let s=0;for(let i=0;i<r.length-1;i++)s+=dist(idNode(r[i]),idNode(r[i+1]));if(r.length===graph.nodes.length)s+=dist(idNode(r[r.length-1]),idNode(r[0]));return s;}
+function hamRouteValid(){let r=graph.route;if(r.length!==graph.nodes.length||r.length<3)return false;for(let i=0;i<r.length-1;i++)if(!edgeExists(r[i],r[i+1]))return false;return edgeExists(r[r.length-1],r[0]);}
+function graphJSON(){return {nodes:graph.nodes,edges:graph.edges,selected:[...graph.selected],colors:graph.colors,route:graph.route,k:graph.k,type:MODULES[current].type};}
+function setGraphJSON(o){graph.nodes=o.nodes||[];graph.edges=o.edges||[];graph.selected=new Set(o.selected||[]);graph.colors=o.colors||{};graph.route=o.route||[];graph.k=o.k||3;graph.mst=[];drawGraph();if(MODULES[current].type==="coloring")renderPalette();}
+function exportInstance(){let box=document.getElementById("jsonBox");if(!box)return;if(GRAPH_TYPES.has(MODULES[current].type)||MODULES[current].type==="tsp")box.value=JSON.stringify(graphJSON(),null,2);else box.value=JSON.stringify(nonGraphState,null,2);}
+
+/* Graph algorithms */
+function vertexBrute(){let ids=graph.nodes.map(n=>n.id),n=ids.length;if(n>22){alert("Máximo 22 vértices.");return}let best=null,trace=[];for(let mask=0;mask<Math.pow(2,n);mask++){let arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2)arr.push(ids[i]);if(best&&arr.length>=best.length)continue;if(graph.edges.every(e=>arr.includes(e.u)||arr.includes(e.v))){best=arr;trace.push(`Nuevo cover de tamaño ${arr.length}: ${arr.join(", ")}.`)}}graph.selected=new Set(best||[]);drawGraph();document.getElementById("graphOut").innerHTML=`Óptimo exacto: ${best?best.length:0} vértices.`;addCompare("Fuerza bruta","óptimo",best?best.length:"—","Vertex Cover exacto.");setTrace(trace);}
+function vertexApprox(){let edges=graph.edges.slice(),ans=new Set(),trace=[];while(edges.length){let e=edges[0];ans.add(e.u);ans.add(e.v);trace.push(`Se escoge arista ${e.u}-${e.v}; se agregan ambos extremos.`);edges=edges.filter(x=>![x.u,x.v].includes(e.u)&&![x.u,x.v].includes(e.v));}graph.selected=ans;drawGraph();document.getElementById("graphOut").innerHTML=`2-aproximación: ${ans.size} vértices.`;addCompare("2-aproximación","aprox.",ans.size,"Garantía 2.");setTrace(trace);}
+
+function colorOptimal(){
+  let ids=graph.nodes.map(n=>n.id).sort((a,b)=>neighbors(b).length-neighbors(a).length);
+  if(ids.length>14){alert("Para fuerza bruta óptima usa máximo 14 vértices.");return;}
+  let trace=[], bestColors=null, bestK=null, totalCalls=0;
+  function solveWithK(Ktest){
+    let local={}, calls=0;
+    function can(v,c){return neighbors(v).every(u=>local[u]!==c);}
+    function bt(i){
+      calls++; totalCalls++;
+      if(i===ids.length)return true;
+      let v=ids[i];
+      for(let c=0;c<Ktest;c++){
+        if(can(v,c)){
+          local[v]=c;
+          if(bt(i+1))return true;
+          delete local[v];
+        }
+      }
+      return false;
+    }
+    let ok=bt(0);
+    trace.push(`k=${Ktest}: ${ok?"sí se puede colorear":"no se encontró coloración"} (${calls} llamadas).`);
+    return ok?local:null;
+  }
+  for(let k=1;k<=Math.min(graph.k, COLORS.length, ids.length || 1);k++){
+    let sol=solveWithK(k);
+    if(sol){bestK=k;bestColors=sol;break;}
+  }
+  if(!bestColors){
+    for(let k=Math.min(graph.k, COLORS.length, ids.length || 1)+1;k<=Math.min(COLORS.length, ids.length || 1);k++){
+      let sol=solveWithK(k);
+      if(sol){bestK=k;bestColors=sol;break;}
+    }
+  }
+  if(bestColors){
+    graph.colors={...bestColors};
+    graph.k=Math.max(graph.k,bestK);
+    let kInput=document.getElementById("kInput");
+    if(kInput)kInput.value=graph.k;
+    renderPalette();
+    drawGraph();
+    let assignment=Object.entries(graph.colors).map(([v,c])=>`${v}: color ${c+1}`).join(", ");
+    document.getElementById("graphOut").innerHTML=`<strong>Número cromático encontrado:</strong> ${bestK}.<br><strong>Asignación:</strong> ${assignment}<br><em>Ahora puedes cambiar los colores desde la paleta editable y el grafo conservará la asignación.</em>`;
+    addCompare("Fuerza bruta coloreo","óptimo",bestK,`Asignación aplicada al grafo. Llamadas: ${totalCalls}.`);
+    setTrace(trace.concat([`Se aplica visualmente la asignación óptima al grafo.`]));
+  }else{
+    document.getElementById("graphOut").innerHTML=`No se encontró coloración con hasta ${COLORS.length} colores.`;
+    addCompare("Fuerza bruta coloreo","no encontrada","—",`Llamadas: ${totalCalls}.`);
+    setTrace(trace);
+  }
+}
+
+function colorBacktrack(){graph.colors={};let ids=graph.nodes.map(n=>n.id).sort((a,b)=>neighbors(b).length-neighbors(a).length),calls=0,trace=[];function can(v,c){return neighbors(v).every(u=>graph.colors[u]!==c);}function bt(i){calls++;if(i===ids.length)return true;let v=ids[i];for(let c=0;c<graph.k;c++){if(can(v,c)){graph.colors[v]=c;trace.push(`Se asigna color ${c+1} a ${v}.`);if(bt(i+1))return true;trace.push(`Retroceso en ${v}.`);delete graph.colors[v];}}return false;}let ok=bt(0);drawGraph();document.getElementById("graphOut").innerHTML=ok?`Coloración encontrada con ${graph.k} colores.`:`No se encontró coloración con ${graph.k}.`;addCompare("Backtracking",ok?"válida":"no encontrada",graph.k,`Llamadas: ${calls}`);setTrace(trace);}
+function colorGreedy(){graph.colors={};let ids=graph.nodes.map(n=>n.id).sort((a,b)=>neighbors(b).length-neighbors(a).length),trace=[];for(let v of ids){let used=new Set(neighbors(v).map(u=>graph.colors[u]).filter(x=>x!==undefined));let c=0;while(used.has(c)&&c<graph.k)c++;if(c<graph.k){graph.colors[v]=c;trace.push(`Vértice ${v}: se usa color ${c+1}.`)}else trace.push(`Vértice ${v}: no hay color disponible.`);}drawGraph();let conf=graph.edges.filter(e=>graph.colors[e.u]!==undefined&&graph.colors[e.u]===graph.colors[e.v]).length;document.getElementById("graphOut").innerHTML=`Greedy: conflictos ${conf}.`;addCompare("Greedy coloreo","heurística",conf,"Conflictos finales.");setTrace(trace);}
+function tspBrute(){let ids=graph.nodes.map(n=>n.id),n=ids.length;if(n>10){alert("Máximo 10 ciudades.");return}let arr=ids.slice(1),best={v:Infinity,r:[]},trace=[];function cost(r){let s=0;for(let i=0;i<r.length-1;i++)s+=dist(idNode(r[i]),idNode(r[i+1]));s+=dist(idNode(r[r.length-1]),idNode(r[0]));return s;}function perm(a,l){if(l===a.length){let r=[ids[0],...a],v=cost(r);if(v<best.v){best={v,r:r.slice()};trace.push(`Nuevo mejor tour: ${r.join("→")} con costo ${v.toFixed(1)}.`)}return}for(let i=l;i<a.length;i++){[a[l],a[i]]=[a[i],a[l]];perm(a,l+1);[a[l],a[i]]=[a[i],a[l]];}}perm(arr,0);graph.route=best.r;graph.mst=[];drawGraph();document.getElementById("graphOut").innerHTML=`Óptimo exacto: ${best.v.toFixed(1)}.`;addCompare("Fuerza bruta TSP","óptimo",best.v.toFixed(1),"Permutaciones.");setTrace(trace);}
+function tspNearest(){let un=new Set(graph.nodes.map(n=>n.id)),r=[graph.nodes[0].id],trace=[];un.delete(r[0]);while(un.size){let last=idNode(r[r.length-1]),best=null,bd=Infinity;un.forEach(id=>{let d=dist(last,idNode(id));if(d<bd){bd=d;best=id;}});r.push(best);un.delete(best);trace.push(`Desde ${last.id}, la ciudad más cercana no visitada es ${best} (${bd.toFixed(1)}).`);}graph.route=r;graph.mst=[];drawGraph();document.getElementById("graphOut").innerHTML=`Vecino cercano: ${routeCost().toFixed(1)}.`;addCompare("Vecino cercano","heurística",routeCost().toFixed(1),"No garantiza óptimo.");setTrace(trace);}
+function tspMST(){let ids=graph.nodes.map(n=>n.id),inT=new Set([ids[0]]),edges=[],trace=[];while(inT.size<ids.length){let best=null,bd=Infinity;inT.forEach(u=>ids.forEach(v=>{if(!inT.has(v)){let d=dist(idNode(u),idNode(v));if(d<bd){bd=d;best=[u,v];}}}));edges.push(best);inT.add(best[1]);trace.push(`Se agrega arista MST ${best[0]}-${best[1]}.`);}let adj={};ids.forEach(id=>adj[id]=[]);edges.forEach(([u,v])=>{adj[u].push(v);adj[v].push(u);});let seen=new Set(),r=[];function dfs(u){seen.add(u);r.push(u);adj[u].forEach(v=>{if(!seen.has(v))dfs(v);});}dfs(ids[0]);graph.route=r;graph.mst=edges;drawGraph();document.getElementById("graphOut").innerHTML=`MST preorder: ${routeCost().toFixed(1)}.`;addCompare("MST preorder","2-aprox.",routeCost().toFixed(1),"TSP métrico.");setTrace(trace);}
+function cliqueBrute(){let ids=graph.nodes.map(n=>n.id),n=ids.length,best=[],trace=[];for(let mask=0;mask<Math.pow(2,n);mask++){let arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2)arr.push(ids[i]);if(arr.length>best.length&&isClique(arr)){best=arr;trace.push(`Nueva clique de tamaño ${arr.length}: ${arr.join(", ")}.`)}}graph.selected=new Set(best);drawGraph();document.getElementById("graphOut").innerHTML=`Clique máxima encontrada: tamaño ${best.length}.`;addCompare("Fuerza bruta clique","óptimo",best.length,"Subconjuntos.");setTrace(trace);}
+function cliqueGreedy(){let ids=graph.nodes.map(n=>n.id).sort((a,b)=>neighbors(b).length-neighbors(a).length),ans=[],trace=[];for(let v of ids){if(ans.every(u=>edgeExists(u,v))){ans.push(v);trace.push(`Se agrega ${v}; mantiene clique.`)}else trace.push(`Se omite ${v}; no conecta con todos.`)}graph.selected=new Set(ans);drawGraph();document.getElementById("graphOut").innerHTML=`Greedy clique: tamaño ${ans.length}.`;addCompare("Greedy clique","heurística",ans.length,"No garantiza óptimo.");setTrace(trace);}
+function indepBrute(){let ids=graph.nodes.map(n=>n.id),n=ids.length,best=[],trace=[];for(let mask=0;mask<Math.pow(2,n);mask++){let arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2)arr.push(ids[i]);if(arr.length>best.length&&isIndependent(arr)){best=arr;trace.push(`Nuevo independiente de tamaño ${arr.length}: ${arr.join(", ")}.`)}}graph.selected=new Set(best);drawGraph();document.getElementById("graphOut").innerHTML=`Conjunto independiente máximo: ${best.length}.`;addCompare("Fuerza bruta independent","óptimo",best.length,"Subconjuntos.");setTrace(trace);}
+function indepGreedy(){let ids=graph.nodes.map(n=>n.id).sort((a,b)=>neighbors(a).length-neighbors(b).length),ans=[],trace=[];for(let v of ids){if(ans.every(u=>!edgeExists(u,v))){ans.push(v);trace.push(`Se agrega ${v}; no choca con elegidos.`)}else trace.push(`Se omite ${v}; tiene conflicto.`)}graph.selected=new Set(ans);drawGraph();document.getElementById("graphOut").innerHTML=`Greedy independiente: ${ans.length}.`;addCompare("Greedy independent","heurística",ans.length,"No garantiza óptimo.");setTrace(trace);}
+function hamiltonBacktrack(){let ids=graph.nodes.map(n=>n.id),start=ids[0],trace=[];function bt(path,used){if(path.length===ids.length){if(edgeExists(path[path.length-1],start))return path;return null;}let last=path[path.length-1];for(let nb of neighbors(last)){if(!used.has(nb)){used.add(nb);path.push(nb);trace.push(`Se avanza a ${nb}. Camino: ${path.join("→")}.`);let r=bt(path,used);if(r)return r;trace.push(`Retroceso desde ${nb}.`);path.pop();used.delete(nb);}}return null;}let r=bt([start],new Set([start]));if(r){graph.route=r;drawGraph();document.getElementById("graphOut").innerHTML=`Ciclo hamiltoniano encontrado.`;addCompare("Backtracking Hamilton","encontrado",r.length,"Ciclo válido.");}else{document.getElementById("graphOut").innerHTML=`No se encontró ciclo hamiltoniano.`;addCompare("Backtracking Hamilton","no encontrado","—","Instancia explorada.");}setTrace(trace);}
+function edgeExists(a,b){return graph.edges.some(e=>(e.u===a&&e.v===b)||(e.u===b&&e.v===a));}
+
+/* Checks */
+function checkVertex(){let cov=graph.edges.filter(e=>graph.selected.has(e.u)||graph.selected.has(e.v)).length;return cov===graph.edges.length?`Correcto: cubres todas las aristas con ${graph.selected.size} vértices.`:`Faltan ${graph.edges.length-cov} aristas por cubrir.`;}
+function checkColoring(){let conf=graph.edges.filter(e=>graph.colors[e.u]!==undefined&&graph.colors[e.u]===graph.colors[e.v]).length,col=graph.nodes.filter(n=>graph.colors[n.id]!==undefined).length;return conf===0&&col===graph.nodes.length?`Coloración válida.`:`Conflictos: ${conf}. Vértices coloreados: ${col}/${graph.nodes.length}.`;}
+function checkTSP(){return graph.route.length===graph.nodes.length?`Tour completo con costo ${routeCost().toFixed(1)}.`:`Ruta incompleta: ${graph.route.length}/${graph.nodes.length} ciudades.`;}
+function checkClique(){let arr=[...graph.selected];return isClique(arr)?`Sí es clique de tamaño ${arr.length}.`:`No es clique: falta alguna arista interna.`;}
+function checkIndependent(){let arr=[...graph.selected];return isIndependent(arr)?`Sí es conjunto independiente de tamaño ${arr.length}.`:`No es independiente: hay una arista interna.`;}
+function checkHamilton(){return hamRouteValid()?`Ciclo hamiltoniano válido.`:`No es un ciclo hamiltoniano válido.`;}
+
+
+/* Dominating Set */
+function dominatedSet(arr){
+  let D=new Set(arr);
+  arr.forEach(v=>neighbors(v).forEach(u=>D.add(u)));
+  return D;
+}
+function isDominating(arr){return dominatedSet(arr).size===graph.nodes.length;}
+function dominatingBrute(){
+  let ids=graph.nodes.map(n=>n.id),n=ids.length;if(n>22){alert("Máximo 22 vértices.");return;}
+  let best=null,trace=[];
+  for(let mask=0;mask<Math.pow(2,n);mask++){
+    let arr=[];for(let i=0;i<n;i++)if(Math.floor(mask/Math.pow(2,i))%2)arr.push(ids[i]);
+    if(best&&arr.length>=best.length)continue;
+    if(isDominating(arr)){best=arr;trace.push(`Nuevo conjunto dominante de tamaño ${arr.length}: ${arr.join(", ")}.`);}
+  }
+  graph.selected=new Set(best||[]);drawGraph();
+  document.getElementById("graphOut").innerHTML=best?`Dominating Set mínimo: ${best.length} vértices.`:"No se encontró conjunto dominante.";
+  addCompare("Fuerza bruta Dominating","óptimo",best?best.length:"—","Subconjuntos.");
+  setTrace(trace);
+}
+function dominatingGreedy(){
+  let ids=graph.nodes.map(n=>n.id),dom=new Set(),ans=[],trace=[];
+  while(dom.size<ids.length){
+    let best=null,bgain=-1;
+    ids.forEach(v=>{if(ans.includes(v))return;let cover=new Set([v,...neighbors(v)]);let gain=[...cover].filter(x=>!dom.has(x)).length;if(gain>bgain){bgain=gain;best=v;}});
+    if(!best)break;
+    ans.push(best);dom.add(best);neighbors(best).forEach(u=>dom.add(u));
+    trace.push(`Se elige ${best}; domina ${bgain} vértices nuevos. Dominados: ${dom.size}/${ids.length}.`);
+  }
+  graph.selected=new Set(ans);drawGraph();
+  document.getElementById("graphOut").innerHTML=`Greedy dominante: ${ans.length} vértices.`;
+  addCompare("Greedy Dominating","heurística",ans.length,"Máxima cobertura nueva.");
+  setTrace(trace);
+}
+function checkDominating(){let D=dominatedSet([...graph.selected]);return D.size===graph.nodes.length?`Correcto: conjunto dominante de tamaño ${graph.selected.size}.`:`Aún faltan ${graph.nodes.length-D.size} vértices por dominar.`;}
+
+/* Reduction lab */
+function renderReductionLab(){
+  document.getElementById("lab").innerHTML=`
+  <div class="grid2">
+    <article class="card">
+      <h2>Explorador de reducciones</h2>
+      <select id="redSelect">
+        <option>3-SAT → Vertex Cover</option>
+        <option>Hamiltonian Cycle → TSP</option>
+        <option>Independent Set ↔ Vertex Cover</option>
+        <option>Clique ↔ Independent Set</option>
+        <option>Subset Sum → Knapsack</option>
+      </select>
+      <div class="controls"><button class="btn primary" onclick="showReduction()">Mostrar reducción</button></div>
+      <div id="redBox" class="note info">Elige una reducción.</div>
+    </article>
+    <article class="card">
+      <h2>Actividad</h2>
+      <ol><li>Identifica entrada y salida de la transformación.</li><li>Explica qué significa preservar respuestas sí/no.</li><li>Indica por qué la transformación debe ser polinomial.</li></ol>
+    </article>
+  </div>`;
+  showReduction();
+}
+function showReduction(){
+  let v=document.getElementById("redSelect").value,txt="";
+  if(v.includes("3-SAT"))txt="Cada variable y cláusula se transforma en gadgets de grafo. La fórmula es satisfacible si y solo si existe un vertex cover de cierto tamaño.";
+  else if(v.includes("Hamiltonian"))txt="Se asignan distancias bajas a aristas existentes y altas a aristas inexistentes. Un ciclo hamiltoniano induce un tour barato.";
+  else if(v.includes("Independent Set"))txt="En un grafo con n vértices, C es vertex cover si y solo si V−C es independent set.";
+  else if(v.includes("Clique"))txt="Una clique en G equivale a un independent set en el grafo complemento.";
+  else txt="Subset Sum puede verse como una mochila donde peso y valor coinciden con cada número y la capacidad/meta controla la suma.";
+  document.getElementById("redBox").innerHTML=`<strong>${v}:</strong> ${txt}`;
+}
+function renderReductionLabIfNeeded(){if(MODULES[current].type==="reductions")renderReductionLab();}
+
+
+
+/* Timed classroom evaluation activation */
+function getEvalActivations(){
+  return JSON.parse(localStorage.getItem("npStudioEvalActivations")||"{}");
+}
+function saveEvalActivations(a){
+  localStorage.setItem("npStudioEvalActivations",JSON.stringify(a));
+}
+function makeActivationCode(moduleKey, expiresAt){
+  const payload={m:moduleKey,e:expiresAt,r:Math.random().toString(36).slice(2,7)};
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function parseActivationCode(code){
+  try{
+    let base64=code.trim().replace(/-/g,"+").replace(/_/g,"/");
+    while(base64.length%4)base64+="=";
+    return JSON.parse(decodeURIComponent(escape(atob(base64))));
+  }catch(e){return null;}
+}
+function activateEvaluationForModule(moduleKey=current){
+  if(!currentUser||currentUser.role!=="teacher"){alert("Solo el profesor puede activar evaluaciones.");return;}
+  if(!PROBLEM_KEYS.includes(moduleKey)){alert("Este módulo no es evaluable.");return;}
+  const expiresAt=Date.now()+15*60*1000;
+  const code=makeActivationCode(moduleKey,expiresAt);
+  const acts=getEvalActivations();
+  acts[moduleKey]={module:moduleKey,expiresAt,code,activatedBy:currentUser.username,createdAt:new Date().toISOString()};
+  saveEvalActivations(acts);
+  renderEvaluation();
+  renderTeacher();
+  alert("Evaluación activada por 15 minutos.\n\nMódulo: "+MODULES[moduleKey].title+"\nCódigo: "+code);
+}
+
+function extendEvaluationForModule(moduleKey=current){
+  if(!currentUser||currentUser.role!=="teacher"){
+    alert("Solo el profesor puede extender evaluaciones.");
+    return;
+  }
+  if(!PROBLEM_KEYS.includes(moduleKey)){
+    alert("Este módulo no es evaluable.");
+    return;
+  }
+  const acts=getEvalActivations();
+  const now=Date.now();
+  if(!acts[moduleKey] || now>acts[moduleKey].expiresAt){
+    const expiresAt=now+5*60*1000;
+    const code=makeActivationCode(moduleKey,expiresAt);
+    acts[moduleKey]={module:moduleKey,expiresAt,code,activatedBy:currentUser.username,createdAt:new Date().toISOString(),extensions:1};
+    saveEvalActivations(acts);
+    renderEvaluation();
+    renderTeacher();
+    alert("La evaluación no estaba activa. Se abrió una nueva ventana de 5 minutos.\n\nCódigo: "+code);
+    return;
+  }
+  acts[moduleKey].expiresAt += 5*60*1000;
+  acts[moduleKey].extensions = (acts[moduleKey].extensions||0)+1;
+  acts[moduleKey].lastExtendedAt = new Date().toISOString();
+  saveEvalActivations(acts);
+  renderEvaluation();
+  renderTeacher();
+  alert("Evaluación extendida 5 minutos más.\n\nTiempo restante: "+fmtMs(remainingMsFor(moduleKey)));
+}
+
+function deactivateEvaluationForModule(moduleKey=current){
+  if(!currentUser||currentUser.role!=="teacher"){alert("Solo el profesor puede cerrar evaluaciones.");return;}
+  const acts=getEvalActivations();
+  delete acts[moduleKey];
+  saveEvalActivations(acts);
+  renderEvaluation();
+  renderTeacher();
+}
+function activationFor(moduleKey){
+  const a=getEvalActivations()[moduleKey];
+  if(!a)return null;
+  if(Date.now()>a.expiresAt)return null;
+  return a;
+}
+function remainingMsFor(moduleKey){
+  const a=activationFor(moduleKey);
+  return a?Math.max(0,a.expiresAt-Date.now()):0;
+}
+function fmtMs(ms){
+  const total=Math.max(0,Math.floor(ms/1000));
+  const m=String(Math.floor(total/60)).padStart(2,"0");
+  const s=String(total%60).padStart(2,"0");
+  return `${m}:${s}`;
+}
+function studentUnlockedKey(moduleKey){
+  if(!currentUser)return null;
+  return `npStudioEvalUnlocked:${currentUser.username}:${moduleKey}`;
+}
+function isEvaluationUnlocked(moduleKey){
+  if(currentUser?.role==="teacher")return true;
+  const a=activationFor(moduleKey);
+  if(!a)return false;
+  const saved=localStorage.getItem(studentUnlockedKey(moduleKey));
+  if(!saved)return false;
+  try{
+    const o=JSON.parse(saved);
+    return o.code===a.code && Date.now()<o.expiresAt;
+  }catch(e){return false;}
+}
+function unlockEvaluationWithCode(){
+  if(!currentUser){alert("Inicia sesión primero.");return;}
+  const code=(document.getElementById("activationCodeInput")?.value||"").trim();
+  const parsed=parseActivationCode(code);
+  if(!parsed||!parsed.m||!parsed.e){
+    document.getElementById("activationMsg").className="note bad";
+    document.getElementById("activationMsg").innerHTML="Código inválido.";
+    return;
+  }
+  if(parsed.m!==current){
+    document.getElementById("activationMsg").className="note bad";
+    document.getElementById("activationMsg").innerHTML="Este código corresponde a otro módulo: "+(MODULES[parsed.m]?.title||parsed.m)+".";
+    return;
+  }
+  const active=activationFor(current);
+  if(!active||active.code!==code){
+    document.getElementById("activationMsg").className="note bad";
+    document.getElementById("activationMsg").innerHTML="La evaluación no está activa o el código no coincide con el código vigente.";
+    return;
+  }
+  if(Date.now()>parsed.e){
+    document.getElementById("activationMsg").className="note bad";
+    document.getElementById("activationMsg").innerHTML="El código ya expiró.";
+    return;
+  }
+  localStorage.setItem(studentUnlockedKey(current),JSON.stringify({code,expiresAt:parsed.e,unlockedAt:new Date().toISOString()}));
+  renderEvaluation();
+}
+function renderActivationPanelForStudent(moduleKey){
+  const active=activationFor(moduleKey);
+  if(!active){
+    return `<div class="note warn"><strong>Evaluación cerrada:</strong> el profesor aún no ha activado la evaluación de este módulo o la ventana de 15 minutos ya terminó.</div>`;
+  }
+  return `<div class="card lockedEval">
+    <h2>Evaluación activa en clase</h2>
+    <div class="timerBox"><strong>Tiempo restante:</strong> <span class="timerBig" id="evalCountdown">${fmtMs(remainingMsFor(moduleKey))}</span></div>
+    <p>Solicita al profesor el código de activación para este módulo.</p>
+    <label>Código de activación</label>
+    <input id="activationCodeInput" placeholder="Pega aquí el código dado por el profesor">
+    <div class="controls"><button class="btn primary" onclick="unlockEvaluationWithCode()">Desbloquear evaluación</button></div>
+    <div id="activationMsg" class="note">El código solo sirve para este módulo y vence cuando termina la ventana de 15 minutos.</div>
+  </div>`;
+}
+function renderTeacherActivationPanel(moduleKey=current){
+  if(!currentUser||currentUser.role!=="teacher")return "";
+  const active=activationFor(moduleKey);
+  const options=PROBLEM_KEYS.map(k=>`<option value="${k}" ${k===moduleKey?"selected":""}>${MODULES[k].title}</option>`).join("");
+  return `<div class="card">
+    <h2>Activación de evaluación en clase</h2>
+    <p>Activa una evaluación durante <strong>15 minutos</strong>. Comparte el código con los estudiantes para que puedan desbloquearla.</p>
+    <label>Módulo evaluable</label>
+    <select id="activationModuleSelect">${options}</select>
+    <div class="controls">
+      <button class="btn green" onclick="activateEvaluationForModule(document.getElementById('activationModuleSelect').value)">Activar 15 minutos</button>
+      <button class="btn amber" onclick="extendEvaluationForModule(document.getElementById('activationModuleSelect').value)">Extender 5 minutos</button>
+      <button class="btn red" onclick="deactivateEvaluationForModule(document.getElementById('activationModuleSelect').value)">Cerrar evaluación</button>
+    </div>
+    ${active?`<div class="note ok"><strong>Activa:</strong> ${MODULES[moduleKey].title}<br><strong>Tiempo restante:</strong> <span id="teacherCountdown">${fmtMs(remainingMsFor(moduleKey))}</span><br><strong>Extensiones aplicadas:</strong> ${active.extensions||0}<br><strong>Código:</strong><br><span class="activationCode">${active.code}</span></div>`:`<div class="note warn">Este módulo no está activo en este momento.</div>`}
+  </div>`;
+}
+function refreshEvaluationCountdowns(){
+  const e=document.getElementById("evalCountdown");
+  if(e)e.textContent=fmtMs(remainingMsFor(current));
+  const t=document.getElementById("teacherCountdown");
+  if(t)t.textContent=fmtMs(remainingMsFor(current));
+}
+setInterval(()=>{
+  refreshEvaluationCountdowns();
+  if(document.getElementById("evaluation")?.classList.contains("active")){
+    const active=activationFor(current);
+    if(PROBLEM_KEYS.includes(current)&&currentUser?.role!=="teacher"&&!active){
+      renderEvaluation();
+    }
+  }
+},1000);
+
+/* Evaluation and teacher module */
+function getEvalQuestions(key){
+  const m=MODULES[key];
+  const common=[
+    {q:`En ${m.title}, ¿qué significa verificar una solución candidata?`, opts:["Ejecutar fuerza bruta completa","Comprobar rápidamente si la solución propuesta cumple la condición","Demostrar P=NP","Eliminar la instancia"], a:1},
+    {q:"¿Qué suele hacer la fuerza bruta?", opts:["Explorar posibilidades sistemáticamente","Evitar revisar soluciones","Garantizar tiempo constante","Convertir el problema en indecidible"], a:0},
+    {q:"¿Por qué estos problemas se estudian en NP?", opts:["Porque no tienen solución","Porque una solución candidata puede verificarse eficientemente","Porque todos son polinomiales","Porque todos son de grafos"], a:1},
+    {q:"Una heurística se caracteriza por:", opts:["Siempre prueba optimalidad","Busca buenas soluciones sin garantizar siempre el óptimo","Nunca produce soluciones","Solo sirve para SAT"], a:1},
+    {q:"Una aproximación con garantía:", opts:["Da una cota formal sobre la calidad de la solución","Es idéntica a fuerza bruta","No usa análisis","Siempre encuentra el óptimo"], a:0}
+  ];
+  const specific={
+    knapsack:[
+      ["En mochila 0-1, un objeto:",["Puede fraccionarse siempre","Se toma completo o se deja","Debe tomarse siempre","No tiene peso"],1],
+      ["La DP de mochila depende de:",["n y la capacidad C","Solo el nombre de objetos","Solo el color del grafo","La cantidad de cláusulas"],0],
+      ["Greedy valor/peso en mochila 0-1:",["Siempre es óptimo","Puede fallar","No produce solución","Es igual a SAT"],1],
+      ["El certificado es:",["Una lista de objetos","Una coloración","Un ciclo","Una cláusula"],0],
+      ["La restricción principal es:",["Peso/capacidad","Color","Aridad","Número de aristas cubiertas"],0]
+    ],
+    subset:[
+      ["Subset Sum pregunta si existe:",["Un tour","Un subconjunto con suma T","Un coloring","Un MST"],1],
+      ["El certificado es:",["Un subconjunto","Un árbol","Una ruta con regreso","Un cover de aristas"],0],
+      ["DP en Subset Sum marca:",["Colores","Sumas alcanzables","Aristas incidentes","Cláusulas falsas"],1],
+      ["Si greedy no encuentra suma exacta:",["Puede existir solución","Se prueba que no existe","El problema deja de ser NP","La meta cambia"],0],
+      ["Subset Sum se relaciona con:",["Partition","Graph Coloring únicamente","TSP métrico","Dominating Set únicamente"],0]
+    ],
+    sat:[
+      ["SAT usa variables:",["Booleanas","Reales continuas","Solo grafos","Solo pesos"],0],
+      ["Una cláusula 3-SAT tiene:",["Tres literales","Tres ciudades","Tres colores exactos","Tres mochilas"],0],
+      ["Una asignación es:",["Un certificado","Un MST","Un cover","Un conjunto dominante"],0],
+      ["El espacio de búsqueda con n variables es:",["2^n","n","n^2","log n"],0],
+      ["Cook-Levin se asocia con:",["SAT","TSP métrico","Partition únicamente","Set Cover únicamente"],0]
+    ],
+    vertex:[
+      ["Vertex Cover cubre:",["Aristas","Colores","Números","Cláusulas"],0],
+      ["Una arista está cubierta si:",["Al menos un extremo está elegido","Ambos extremos son falsos","Tiene peso cero","No existe"],0],
+      ["La aproximación clásica toma:",["Ambos extremos de una arista no cubierta","Solo vértices aislados","Colores aleatorios","La ciudad más cercana"],0],
+      ["Vertex Cover se relaciona con:",["Independent Set","TSP únicamente","SAT únicamente","Partition únicamente"],0],
+      ["Verificar requiere revisar:",["Aristas","Permutaciones de ciudades","Suma total par","Literales"],0]
+    ],
+    setcover:[
+      ["Set Cover cubre:",["Un universo","Un ciclo","Una fórmula","Una ruta"],0],
+      ["Greedy Set Cover elige:",["El conjunto que cubre más elementos nuevos","El vértice más lejano","La variable falsa","El color más claro"],0],
+      ["La solución es:",["Una subfamilia de conjuntos","Un ciclo","Una asignación booleana","Un tour"],0],
+      ["Verificar se hace con:",["La unión de conjuntos","El complemento del grafo","El MST","La tabla de colores"],0],
+      ["Set Cover es útil para:",["Sensores/cobertura","Solo ordenar listas","Solo gramáticas","Solo cadenas binarias"],0]
+    ],
+    tsp:[
+      ["TSP busca:",["Un tour mínimo","Un cover","Una cláusula","Una partición exacta"],0],
+      ["El certificado es:",["Una permutación de ciudades","Un subconjunto de números","Una asignación booleana","Una paleta"],0],
+      ["Fuerza bruta TSP crece:",["Factorialmente","Linealmente siempre","Con base 2 únicamente","No crece"],0],
+      ["Vecino más cercano:",["Es heurístico","Siempre óptimo","No construye rutas","Solo aplica a SAT"],0],
+      ["MST preorder garantiza en TSP métrico:",["2-aproximación","Número cromático","Suma exacta","Independencia"],0]
+    ],
+    coloring:[
+      ["Graph Coloring exige que vértices adyacentes:",["Tengan colores distintos","Tengan el mismo color","No tengan aristas","Sean ciudades"],0],
+      ["k-colorability pregunta si:",["Bastan k colores","Hay k aristas","Hay k mochilas","La suma es k"],0],
+      ["Verificar una coloración revisa:",["Aristas","Subconjuntos numéricos","Permutaciones","Cláusulas"],0],
+      ["Greedy coloring:",["Depende del orden","Siempre minimiza colores","No colorea","Es indecidible"],0],
+      ["Una aplicación típica es:",["Horarios","Suma de subconjuntos","Tour euclidiano","Mochila fraccional"],0]
+    ],
+    clique:[
+      ["Una clique es:",["Un conjunto con todas las aristas internas","Un conjunto sin aristas","Una suma exacta","Una ruta"],0],
+      ["Verificar clique requiere revisar:",["Pares de vértices elegidos","Solo un vértice","La capacidad","La meta"],0],
+      ["Clique se relaciona con:",["Independent Set en el complemento","TSP en línea recta","Subset Sum","DP de mochila"],0],
+      ["Una clique de tamaño k tiene máximo:",["k(k-1)/2 aristas internas","k aristas siempre","2k colores","k ciudades repetidas"],0],
+      ["Clique modela:",["Grupos densamente conectados","Particiones numéricas","Colas de prioridad","Cláusulas"],0]
+    ],
+    independent:[
+      ["Independent Set no permite:",["Aristas internas","Colores distintos","Pesos","Variables"],0],
+      ["Se relaciona con Vertex Cover porque:",["El complemento de un cover es independiente","Son iguales siempre","No usan grafos","Ambos son TSP"],0],
+      ["Verificar independencia revisa:",["Que no haya aristas entre elegidos","Que haya todas las aristas","Que la suma sea par","Que haya tour"],0],
+      ["Un uso típico es:",["Elegir tareas no conflictivas","Colorear con muchos colores","Sumar literales","Ordenar ciudades"],0],
+      ["Greedy independiente:",["Puede fallar","Siempre es óptimo","No selecciona vértices","Solo sirve con K5"],0]
+    ],
+    hamilton:[
+      ["Hamiltonian Cycle visita:",["Cada vértice exactamente una vez","Cada arista exactamente una vez","Solo vértices dominantes","Solo ciudades cercanas"],0],
+      ["Se diferencia de Euler porque Hamilton se centra en:",["Vértices","Aristas","Pesos de mochila","Cláusulas"],0],
+      ["Verificar un ciclo hamiltoniano es:",["Revisar que visite todos una vez y cierre","Resolver SAT","Colorear","Particionar"],0],
+      ["Hamiltonian Cycle se conecta con:",["TSP","Set Cover únicamente","Mochila únicamente","3-SAT únicamente"],0],
+      ["Backtracking en Hamilton:",["Explora caminos con poda","Siempre es constante","Nunca retrocede","Usa colores"],0]
+    ],
+    partition:[
+      ["Partition busca:",["Dos grupos con suma igual o cercana","Un tour","Una clique","Un color"],0],
+      ["Si la suma total es impar:",["No hay partición perfecta entera","Siempre hay partición perfecta","No se puede verificar","El problema es TSP"],0],
+      ["Se reduce a buscar:",["Suma total/2","Un MST","Una asignación booleana","Un conjunto dominante"],0],
+      ["Verificar una partición es:",["Sumar ambos grupos","Revisar colores","Evaluar cláusulas","Cubrir aristas"],0],
+      ["Partition modela:",["Balance de carga","Frecuencias de radio únicamente","Rutas urbanas únicamente","Dominación de grafos"],0]
+    ],
+    dominating:[
+      ["Un conjunto dominante hace que cada vértice:",["Esté elegido o sea vecino de uno elegido","Tenga color único","Pertenezca a un tour","Sume la meta"],0],
+      ["Verificar dominación revisa:",["Vértices y vecinos","Permutaciones","Capacidad","Literales"],0],
+      ["Greedy dominante elige:",["El vértice que domina más no dominados","La ciudad más cercana","El color más bajo","La suma más alta"],0],
+      ["Dominating Set se parece a:",["Set Cover","TSP fraccional","Mochila fraccional","3-SAT únicamente"],0],
+      ["Una aplicación típica es:",["Ubicación de antenas/servidores","Suma exacta","Cláusulas booleanas","Ordenamiento"],0]
+    ]
+  };
+  const sp=(specific[key]||[]).map(x=>({q:x[0],opts:x[1],a:x[2]}));
+  return [...sp,...common].slice(0,10);
+}
+function renderEvaluation(){
+  const box=document.getElementById("evaluation");
+  if(!box)return;
+  if(!currentUser){box.innerHTML="<article class='card'><h2>Evaluación</h2><p>Inicia sesión para ver la evaluación.</p></article>";return;}
+  if(!PROBLEM_KEYS.includes(current)){
+    box.innerHTML="<article class='card'><h2>Evaluación</h2><div class='note warn'>Este módulo es de apoyo y no cuenta dentro de los 12 problemas evaluables.</div></article>";
+    return;
+  }
+  if(currentUser.role==="teacher"){
+    box.innerHTML=renderTeacherActivationPanel(current)+`<div class="note info" style="margin-top:18px">Vista profesor: activa la evaluación para que los estudiantes puedan responderla durante 15 minutos. Si quieres previsualizar las preguntas, entra como estudiante de prueba.</div>`;
+    return;
+  }
+  if(!isEvaluationUnlocked(current)){
+    box.innerHTML=renderActivationPanelForStudent(current);
+    return;
+  }
+  const grades=getGrades();
+  const saved=grades[currentUser.username]?.[current];
+  const qs=getEvalQuestions(current);
+  box.innerHTML=`<div class="grid2">
+    <article class="card">
+      <h2>Evaluación: ${MODULES[current].title}</h2>
+      <div class="note info"><strong>Instrucciones:</strong> responde 10 preguntas. La nota se calcula de 1.0 a 5.0 usando: 1 + 4·(aciertos/10).</div>
+      ${saved?`<div class="note ok"><strong>Intento guardado:</strong> ${saved.score}/10 — nota ${saved.grade.toFixed(2)}. Puedes repetir y se actualizará la nota.</div>`:""}
+    </article>
+    <article class="card">
+      <h2>Estudiante</h2>
+      <p><strong>${currentUser.username}</strong></p>
+      <div id="evalResult" class="note">Cuando termines, presiona Calificar.</div>
+    </article>
+  </div>
+  <article class="card" style="margin-top:18px">
+    <form id="evalForm">
+      ${qs.map((qq,i)=>`<div class="evalQuestion"><h3>${i+1}. ${qq.q}</h3>${qq.opts.map((op,j)=>`<label class="evalOption"><input type="radio" name="q${i}" value="${j}"> ${op}</label>`).join("")}</div>`).join("")}
+    </form>
+    <div class="controls"><button class="btn primary" onclick="submitEvaluation()">Calificar y guardar</button><button class="btn" onclick="renderEvaluation()">Reiniciar respuestas</button></div>
+  </article>`;
+}
+function submitEvaluation(){
+  if(!PROBLEM_KEYS.includes(current))return;
+  if(currentUser?.role!=="teacher"&&!isEvaluationUnlocked(current)){
+    alert("La evaluación no está activa o el tiempo de 15 minutos terminó. Solicita al profesor una nueva activación.");
+    renderEvaluation();
+    return;
+  }
+  const qs=getEvalQuestions(current);
+  let score=0, missing=0;
+  qs.forEach((q,i)=>{
+    const ans=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!ans){missing++;return;}
+    if(+ans.value===q.a)score++;
+  });
+  if(missing>0&&!confirm(`Faltan ${missing} preguntas sin responder. ¿Calificar de todos modos?`))return;
+  const grade=1+4*(score/qs.length);
+  const all=getGrades();
+  if(!all[currentUser.username])all[currentUser.username]={};
+  all[currentUser.username][current]={module:MODULES[current].title,score,total:qs.length,grade,timestamp:new Date().toISOString()};
+  saveGrades(all);
+  document.getElementById("evalResult").innerHTML=`<strong>Resultado:</strong> ${score}/${qs.length}. Nota: <span class="${gradeClass(grade)}">${grade.toFixed(2)}</span>`;
+  renderTeacher();
+}
+function renderTeacher(){
+  const box=document.getElementById("teacher");
+  if(!box)return;
+  if(!currentUser||currentUser.role!=="teacher"){
+    box.innerHTML="<article class='card'><h2>Módulo profesor</h2><div class='note warn'>Este módulo solo está disponible para el usuario profesor.</div></article>";
+    return;
+  }
+  const grades=getGrades();
+  const users=Object.keys(grades).sort();
+  const rows=users.map(u=>{
+    const cells=PROBLEM_KEYS.map(k=>{
+      const g=grades[u]?.[k]?.grade;
+      return `<td>${g?`<span class="${gradeClass(g)}">${g.toFixed(2)}</span>`:"—"}</td>`;
+    }).join("");
+    const completed=PROBLEM_KEYS.filter(k=>grades[u]?.[k]).length;
+    const avg=completed?PROBLEM_KEYS.reduce((a,k)=>a+(grades[u]?.[k]?.grade||0),0)/completed:0;
+    const final=completed===PROBLEM_KEYS.length?avg:null;
+    return `<tr><td>${u}</td>${cells}<td>${completed}/${PROBLEM_KEYS.length}</td><td>${avg?avg.toFixed(2):"—"}</td><td>${final?`<span class="${gradeClass(final)}">${final.toFixed(2)}</span>`:"Pendiente"}</td></tr>`;
+  }).join("");
+  box.innerHTML=`${renderTeacherActivationPanel(current)}
+  <div class="grid2" style="margin-top:18px">
+    <article class="card">
+      <h2>Módulo profesor</h2>
+      <p>Visualiza las notas guardadas en este navegador. La nota final se calcula cuando el estudiante completa los 12 módulos evaluables.</p>
+      <div class="controls">
+        <button class="btn primary" onclick="exportGrades()">Exportar notas JSON</button>
+        <button class="btn" onclick="importGrades()">Importar notas JSON</button>
+        <button class="btn red" onclick="clearGrades()">Borrar notas locales</button>
+      </div>
+      <textarea id="gradesJson" placeholder="JSON de notas para exportar/importar" style="min-height:120px"></textarea>
+    </article>
+    <article class="card">
+      <h2>Resumen</h2>
+      <div class="stats"><div class="stat"><div class="num">${users.length}</div><div class="lab">estudiantes</div></div><div class="stat"><div class="num">${PROBLEM_KEYS.length}</div><div class="lab">módulos</div></div><div class="stat"><div class="num">${users.filter(u=>PROBLEM_KEYS.every(k=>grades[u]?.[k])).length}</div><div class="lab">completos</div></div><div class="stat"><div class="num">1–5</div><div class="lab">escala</div></div></div>
+    </article>
+  </div>
+  <article class="card" style="margin-top:18px">
+    <h2>Tabla de notas</h2>
+    <div class="teacherTableWrap"><table class="teacherTable"><thead><tr><th>Estudiante</th>${PROBLEM_KEYS.map(k=>`<th>${MODULES[k].title}</th>`).join("")}<th>Completados</th><th>Promedio actual</th><th>Nota final</th></tr></thead><tbody>${rows||"<tr><td colspan='16'>No hay notas guardadas todavía.</td></tr>"}</tbody></table></div>
+  </article>`;
+}
+function exportGrades(){document.getElementById("gradesJson").value=JSON.stringify(getGrades(),null,2);}
+function importGrades(){
+  const box=document.getElementById("gradesJson");
+  if(!box.value.trim())return;
+  try{const incoming=JSON.parse(box.value);saveGrades(incoming);renderTeacher();alert("Notas importadas.");}
+  catch(e){alert("JSON inválido: "+e.message);}
+}
+function clearGrades(){
+  if(confirm("¿Borrar todas las notas locales de este navegador?")){localStorage.removeItem("npStudioGrades");renderTeacher();}
+}
+
+/* Import/export fallback */
+function exportInstance(){let box=document.getElementById("jsonBox");if(!box)return;let t=MODULES[current].type;if(GRAPH_TYPES.has(t)||t==="tsp")box.value=JSON.stringify(graphJSON(),null,2);else box.value=JSON.stringify(nonGraphState,null,2);}
+
+function importInstance(){
+  let box=document.getElementById("jsonBox");
+  if(!box||!box.value.trim())return;
+  try{
+    let o=JSON.parse(box.value), t=MODULES[current].type;
+    if(GRAPH_TYPES.has(t)||t==="tsp"){setGraphJSON(o);return;}
+    nonGraphState=o;
+    if(t==="knapsack"){
+      document.getElementById("cap").value=o.capacity ?? 10;
+      document.getElementById("itemsTxt").value=(o.items||[]).map(x=>x.join(",")).join("\\n");
+      loadKnapsack();
+      nonGraphState.selected=o.selected||[];
+      renderKnapsackState();
+    }else if(t==="subset"){
+      document.getElementById("numsTxt").value=(o.nums||[]).join(",");
+      document.getElementById("targetTxt").value=o.target ?? 0;
+      loadSubset();
+      nonGraphState.selected=o.selected||[];
+      renderSubsetState();
+    }else if(t==="sat"){
+      document.getElementById("formulaTxt").value=(o.clauses?o.clauses.map(c=>c.join(" ")).join("\\n"):o.formula)||"";
+      loadSAT();
+      if(o.values){nonGraphState.values=o.values;renderSATState();}
+    }else if(t==="setcover"){
+      document.getElementById("univTxt").value=(o.universe||[]).join(",");
+      document.getElementById("setsTxt").value=(o.sets||[]).map(s=>s[0]+":"+s[1].join(",")).join("\\n");
+      loadSetCover();
+      nonGraphState.selected=o.selected||[];
+      renderSetCoverState();
+    }
+  }catch(e){alert("JSON inválido: "+e.message);}
+}
+
+initAuth();
+
+</script>
+</body>
+</html>
