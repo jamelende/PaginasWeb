@@ -712,6 +712,54 @@ document.addEventListener('DOMContentLoaded', function () {
   document.body.appendChild(topButton);
 });
 </script>
+<style type="text/css">
+
+/* Tablas de módulos más compactas */
+.tab-content .table-wrap,
+.course-tabs-panels .table-wrap {
+  margin: 12px 0 20px;
+  border-radius: 14px;
+}
+
+.tab-content table,
+.course-tabs-panels table {
+  font-size: .84rem;
+  line-height: 1.32;
+}
+
+.tab-content th,
+.tab-content td,
+.course-tabs-panels th,
+.course-tabs-panels td {
+  padding: 8px 10px !important;
+}
+
+.tab-content td p,
+.course-tabs-panels td p {
+  margin: 0 0 6px;
+  font-size: .86rem;
+  line-height: 1.32;
+}
+
+.tab-content td a,
+.course-tabs-panels td a {
+  padding: 3px 7px;
+  margin: 2px 3px 4px 0;
+  font-size: .82rem;
+  line-height: 1.2;
+}
+
+.tab-content th,
+.course-tabs-panels th {
+  min-width: 120px;
+}
+
+.tab-content br,
+.course-tabs-panels br {
+  line-height: 1.15;
+}
+
+</style>
 <section class="hero-section">
   <div class="hero-content">
     <img class="hero-logo" src="https://www.dropbox.com/scl/fi/ystrb6z1a80f6v5j7tamv/LogoUnivalle.jpg?rlkey=vltdgl81p4nofag4u1f9f24wc&dl=1" alt="Logo Universidad del Valle">
@@ -724,21 +772,15 @@ document.addEventListener('DOMContentLoaded', function () {
       <span class="badge-soft">💻 Modalidad virtual</span>
     </div>
     <div class="hero-actions">
-      <a href="https://www.dropbox.com/scl/fi/4j62wdxdrh931c8gqtlln/cronograma_inteligencia_artificial_para_todos.docx?rlkey=o2fqu3v7pnyu96hvcnznzeas4&dl=1">📘 Contenido oficial</a>
-      <a href="https://www.dropbox.com/scl/fi/2ug8heo2ilh8blc7f3fno/Modulos-Fechas.jpg?rlkey=1ox67162dyj6n6nzshdt5vmy9&dl=1">🗓️ Módulos</a>
+      <a href="https://www.dropbox.com/scl/fi/yabluo755djo53rhphysn/Descripcion_contenido_modulos.docx?rlkey=i4slp8ctg9nslqkxsunx2usob&dl=1">📘 Contenido </a>
+      <a href="https://www.dropbox.com/scl/fi/2ug8heo2ilh8blc7f3fno/Modulos-Fechas.jpg?rlkey=1ox67162dyj6n6nzshdt5vmy9&dl=1">🗓️Fechas  Módulos</a>
       <a href="https://www.dropbox.com/scl/fi/4gv9cdmkl0jigx5dheign/cronograma_curso_100_horas.pdf?rlkey=uzknc9ym5j3tmr321173g0pd9&dl=1">📄 Cronograma detallado</a>
     </div>
   </div>
 </section>
 
-<div class="quick-facts">
-  <div class="fact-card"><div class="fact-label">Tema central</div><div class="fact-value">IA y sus  aplicaciones</div></div>
-  <div class="fact-card"><div class="fact-label">Enfoque</div><div class="fact-value">Práctico, con fundamentos teóricos</div></div>
-  <div class="fact-card"><div class="fact-label">Audiencia</div><div class="fact-value">Todas las áreas del conocimiento</div></div>
-</div>
-<div id="contenido-del-curso"
-class="section level1 tabset tabset-pills">
-<h1 class="tabset tabset-pills">Contenido del curso</h1>
+<div id="pestañas" class="section level1 tabset tabset-pills">
+<h1 class="tabset tabset-pills">Pestañas</h1>
 <div id="información-general" class="section level2">
 <h2>Información General</h2>
 <div class="intro-card">
@@ -772,8 +814,8 @@ class="section level1 tabset tabset-pills">
   </div>
 </div>
 </div>
-<div id="semana-1" class="section level2">
-<h2>Semana 1</h2>
+<div id="módulo-1" class="section level2">
+<h2>Módulo 1</h2>
 <td>
 </td>
 <table border="1">
@@ -866,9 +908,11 @@ de Modelos</a><br></p>
 <p><a
 href="https://www.dropbox.com/scl/fi/baio793npiz1cvr2oh249/4.-Temas-para-PensarDef-CID.pptx?rlkey=pd6svrvlyqg0qcwg0x2qinxxa&amp;dl=1">Temas
 para pensar</a><br></p>
-<p><a
-href="https://www.dropbox.com/scl/fi/5dx98fgyszl6exxtcqndz/1.-Actividades-ChatBots.pptx?rlkey=zyenqfz5jntb4brhtc1t8vca6&amp;dl=1"><strong>Actividades
-Adicionales</strong></a><br></p>
+<!--   <a href="Modulo1/Act.pptx" download> -->
+<!--   Actividades Adicionales -->
+<!-- </a><br> -->
+<p><a href="https://jamelende.github.io/PaginasWeb/2026-1/Ia-Para-Todos/Modulo1/Act.pptx" download>
+Actividades Adicionales </a></p>
 <p><a
 href="https://www.dropbox.com/scl/fi/61h1ro9rhkau4r1vzrymq/chapter1.pptx?rlkey=964wngxoln7ueozo4lnyyxtld&amp;dl=1">opcional:
 Slides Curso DataCamp</a><br></p>
@@ -1167,8 +1211,8 @@ Solomon Future of AI</a><br></p>
 </table>
 <p><br><br><br></p>
 </div>
-<div id="semana-2" class="section level2">
-<h2>Semana 2</h2>
+<div id="módulo-2" class="section level2">
+<h2>Módulo 2</h2>
 <center>
 ![](
 <center>
@@ -1607,8 +1651,8 @@ Games 9 Videos</a><br></p>
 </table>
 <p><br><br><br></p>
 </div>
-<div id="semana-3" class="section level2">
-<h2>Semana 3</h2>
+<div id="módulo-3" class="section level2">
+<h2>Módulo 3</h2>
 <!-- ![](https://www.dropbox.com/scl/fi/ye3ifl3x66amuti85v1mb/noBias.gif?rlkey=axjarehgwzviznfbv8dijd1me&dl=1){width=30%} ![](https://www.dropbox.com/scl/fi/q72ehk3urudzshkx1gygp/Bias.gif?rlkey=qq3hh33scxgwtd0gbfmjjecon&dl=1){width=30%} ![](https://www.dropbox.com/scl/fi/0g8oeyo6aynq8xp8n3caz/BiasWithAdamOptimizer.gif?rlkey=5zht65bl8erzpcy0nztkjau82&dl=1){width=30%} -->
 <!-- <td> -->
 </td>
@@ -2325,8 +2369,8 @@ Hinton</a><br></p>
 </table>
 <p><br><br><br></p>
 </div>
-<div id="semana-4" class="section level2">
-<h2>Semana 4</h2>
+<div id="módulo-4" class="section level2">
+<h2>Módulo 4</h2>
 <center>
 <p><img
 src="https://www.dropbox.com/scl/fi/8ltbaorcdczp96ucrykqp/CatDog.gif?rlkey=hlrbuaf60x4xpfb4k4c5m84rm&amp;dl=1"
