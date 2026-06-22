@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>PaginaWeb-UniValle-2026-1Def.knit</title>
+
+<script src="PaginaWeb-UniValle-2026-1Def_files/header-attrs-2.29/header-attrs.js"></script>
+<script src="PaginaWeb-UniValle-2026-1Def_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="PaginaWeb-UniValle-2026-1Def_files/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="PaginaWeb-UniValle-2026-1Def_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="PaginaWeb-UniValle-2026-1Def_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="PaginaWeb-UniValle-2026-1Def_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="PaginaWeb-UniValle-2026-1Def_files/navigation-1.1/tabsets.js"></script>
+<link href="PaginaWeb-UniValle-2026-1Def_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="PaginaWeb-UniValle-2026-1Def_files/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --uv-red: #d71920;
+  --uv-blue: #0f4c81;
+  --uv-navy: #102a43;
+  --uv-ink: #243b53;
+  --uv-muted: #627d98;
+  --uv-bg: #f6f8fb;
+  --uv-card: rgba(255,255,255,0.94);
+  --uv-line: #e6edf5;
+  --uv-soft-blue: #eaf4ff;
+  --uv-soft-red: #fff0f1;
+  --shadow-sm: 0 8px 24px rgba(16,42,67,.08);
+  --shadow-md: 0 18px 55px rgba(16,42,67,.14);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--uv-ink);
+  background:
+    radial-gradient(circle at top left, rgba(215,25,32,.10), transparent 34rem),
+    radial-gradient(circle at top right, rgba(15,76,129,.12), transparent 34rem),
+    linear-gradient(180deg, #ffffff 0%, var(--uv-bg) 40%, #ffffff 100%);
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 18px 26px 80px;
+}
+
+h1, h2, h3, h4 { color: var(--uv-navy); font-weight: 800; letter-spacing: -0.02em; }
+h2 {
+  margin-top: 34px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--uv-line);
+  position: relative;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 92px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--uv-red), var(--uv-blue));
+}
+
+p { font-size: 1.04rem; }
+
+.hero-section {
+  margin: 18px 0 34px;
+  padding: 34px;
+  border-radius: 32px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(16,42,67,.94), rgba(15,76,129,.92)),
+    url('https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: relative;
+}
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 15%, rgba(255,255,255,.18), transparent 22rem);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; max-width: 980px; }
+.hero-logo {
+  width: 120px;
+  max-width: 32%;
+  background: #fff;
+  padding: 12px;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.16);
+  margin-bottom: 22px;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid rgba(255,255,255,.34);
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: .78rem;
+  letter-spacing: .08em;
+}
+.hero-section h1 {
+  color: #fff;
+  margin: 18px 0 10px;
+  font-size: clamp(2.15rem, 4vw, 4.8rem);
+  line-height: 1.03;
+}
+.hero-subtitle {
+  max-width: 800px;
+  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
+  color: rgba(255,255,255,.88);
+  margin-bottom: 22px;
+}
+.hero-badges, .hero-actions, .quick-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.badge-soft {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  color: #fff;
+  font-weight: 700;
+}
+.hero-actions { margin-top: 24px; }
+.hero-actions a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: #fff;
+  color: var(--uv-blue);
+  box-shadow: 0 8px 22px rgba(0,0,0,.12);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.hero-actions a:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+
+.quick-facts {
+  margin: -8px 0 30px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.fact-card {
+  border: 1px solid var(--uv-line);
+  background: var(--uv-card);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.fact-label { color: var(--uv-muted); font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.fact-value { color: var(--uv-navy); font-size: 1.1rem; font-weight: 800; margin-top: 4px; }
+
+.intro-card, .profile-card, .resource-card {
+  border: 1px solid var(--uv-line);
+  background: var(--uv-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 26px;
+  margin: 22px 0;
+}
+.intro-card {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.intro-card img {
+  width: 100%;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba(16,42,67,.12);
+}
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.resource-tile {
+  text-decoration: none !important;
+  border: 1px solid var(--uv-line);
+  border-radius: 18px;
+  padding: 16px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  color: var(--uv-navy) !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.resource-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); border-color: #b8d8f4; }
+.resource-tile strong { display: block; font-size: 1.02rem; margin-bottom: 4px; }
+.resource-tile span { color: var(--uv-muted); font-size: .92rem; }
+
+.profile-card {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 26px;
+  align-items: center;
+}
+.profile-card img {
+  width: 210px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 8px solid #fff;
+  box-shadow: 0 14px 36px rgba(16,42,67,.16);
+}
+.profile-card h3 { margin: 0 0 6px; font-size: 1.65rem; }
+.profile-card p { color: var(--uv-muted); margin-bottom: 16px; }
+.profile-card a, .main-container > p a {
+  color: var(--uv-blue);
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 28px;
+  padding: 12px !important;
+  background: rgba(255,255,255,.74);
+  border: 1px solid var(--uv-line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.nav-pills > li { margin: 0 !important; }
+.nav-pills > li > a {
+  border-radius: 999px !important;
+  color: var(--uv-blue) !important;
+  font-weight: 800;
+  padding: 10px 14px !important;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li > a:hover {
+  background: linear-gradient(135deg, var(--uv-red), var(--uv-blue)) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+.tab-content {
+  background: rgba(255,255,255,.76);
+  border: 1px solid var(--uv-line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 22px 0 34px;
+  border-radius: 22px;
+  border: 1px solid var(--uv-line);
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 0 !important;
+  background: #fff;
+  overflow: hidden;
+  font-size: .95rem;
+}
+th, td {
+  border: 0 !important;
+  border-bottom: 1px solid var(--uv-line) !important;
+  vertical-align: top !important;
+  padding: 16px !important;
+}
+th {
+  background: linear-gradient(135deg, var(--uv-navy), var(--uv-blue)) !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  min-width: 150px;
+}
+tr:nth-child(even) td { background: #fbfdff; }
+tr:hover td { background: #f2f8ff; }
+td a {
+  display: inline-block;
+  margin: 3px 4px 6px 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d9e8f6;
+  background: #f7fbff;
+  color: var(--uv-blue) !important;
+  font-weight: 700;
+  text-decoration: none !important;
+  line-height: 1.25;
+}
+td a:hover { background: var(--uv-soft-blue); border-color: #b8d8f4; }
+
+center img, p img {
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(16,42,67,.12);
+}
+
+blockquote {
+  border-left: 5px solid var(--uv-red);
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.floating-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, var(--uv-red), var(--uv-blue));
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .main-container { padding: 12px 14px 70px; }
+  .hero-section { padding: 24px; border-radius: 24px; }
+  .quick-facts, .resource-grid, .intro-card, .profile-card { grid-template-columns: 1fr; }
+  .profile-card img { width: 170px; height: 170px; }
+  .tab-content { padding: 14px; }
+  th, td { padding: 12px !important; }
+}
+</style>
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@600;700;800&display=swap');
+
+/* Ajustes de legibilidad: fuente clara, cómoda y de tamaño moderado para lectura en pantalla */
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Atkinson Hyperlegible', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.70;
+}
+
+.main-container {
+  max-width: 1180px;
+}
+
+p, li, td, th, blockquote,
+.intro-card p,
+.profile-card p,
+.resource-card p,
+.tab-content,
+.hero-subtitle {
+  font-size: 1.02rem;
+}
+
+h1, h2, h3, h4,
+.hero-section h1,
+.fact-label,
+.fact-value,
+.badge-soft,
+.hero-actions a,
+.resource-tile strong,
+.nav-pills > li > a {
+  font-family: 'Inter', 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+h2 {
+  font-size: 1.72rem;
+  line-height: 1.22;
+  margin-top: 42px;
+}
+
+h3 {
+  font-size: 1.34rem;
+  line-height: 1.28;
+}
+
+.profile-card h3 {
+  font-size: 1.72rem;
+}
+
+.hero-section h1 {
+  font-size: clamp(2.35rem, 4vw, 4.85rem);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.10rem, 1.75vw, 1.42rem);
+  line-height: 1.58;
+}
+
+.badge-soft,
+.hero-actions a,
+.fact-value {
+  font-size: 1.03rem;
+}
+
+.resource-tile strong {
+  font-size: 1.03rem;
+}
+
+.resource-tile span,
+.fact-label,
+.eyebrow {
+  font-size: .92rem;
+}
+
+.nav-pills {
+  gap: 10px;
+  padding: 14px !important;
+}
+
+.nav-pills > li > a {
+  font-size: .96rem;
+  padding: 11px 15px !important;
+}
+
+.tab-content {
+  padding: 24px;
+}
+
+table {
+  font-size: .98rem;
+}
+
+th, td {
+  padding: 15px !important;
+}
+
+td a {
+  font-size: .96rem;
+  padding: 7px 10px;
+}
+
+.floating-top {
+  font-size: 1rem;
+  padding: 12px 15px;
+}
+
+@media (min-width: 1200px) {
+  html { font-size: 17px; }
+}
+
+@media (max-width: 900px) {
+  html { font-size: 15.5px; }
+  body { line-height: 1.66; }
+  p, li, td, th, blockquote, .tab-content { font-size: 1rem; }
+  .tab-content { padding: 16px; }
+  .nav-pills > li > a { font-size: .95rem; padding: 10px 13px !important; }
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function ensureMainContainer() {
+    if (document.querySelector('.main-container')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'main-container';
+    var nodes = Array.from(document.body.childNodes).filter(function (node) {
+      if (node.nodeType === 1 && ['SCRIPT', 'STYLE', 'LINK'].indexOf(node.tagName) !== -1) return false;
+      if (node.nodeType === 1 && node.classList.contains('floating-top')) return false;
+      if (node.nodeType === 3 && !node.textContent.trim()) return false;
+      return true;
+    });
+    document.body.insertBefore(wrapper, document.body.firstChild);
+    nodes.forEach(function (node) { wrapper.appendChild(node); });
+  }
+
+  function buildTabsetIfNeeded() {
+    if (document.querySelector('.tab-content .tab-pane') || document.querySelector('.nav.nav-pills')) return;
+    var tabset = document.querySelector('h1.tabset, h1.tabset-pills');
+    if (!tabset) return;
+    var sections = [];
+    var node = tabset.nextElementSibling;
+    while (node && node.tagName !== 'H1') {
+      if (node.tagName === 'H2') {
+        var heading = node;
+        var title = heading.textContent.trim() || 'Sección';
+        var items = [];
+        node = heading.nextElementSibling;
+        while (node && node.tagName !== 'H2' && node.tagName !== 'H1') {
+          var next = node.nextElementSibling;
+          items.push(node);
+          node = next;
+        }
+        sections.push({ heading: heading, title: title, items: items });
+      } else {
+        node = node.nextElementSibling;
+      }
+    }
+    if (!sections.length) return;
+    var nav = document.createElement('ul');
+    nav.className = 'nav nav-pills custom-tabset';
+    var content = document.createElement('div');
+    content.className = 'tab-content custom-tab-content';
+    tabset.insertAdjacentElement('afterend', content);
+    tabset.insertAdjacentElement('afterend', nav);
+    sections.forEach(function (section, index) {
+      var id = 'curso-tab-' + index;
+      var li = document.createElement('li');
+      if (index === 0) li.className = 'active';
+      var a = document.createElement('a');
+      a.href = '#' + id;
+      a.textContent = section.title;
+      a.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.querySelectorAll('.custom-tabset li').forEach(function (x) { x.classList.remove('active'); });
+        document.querySelectorAll('.custom-tab-content .tab-pane').forEach(function (x) { x.classList.remove('active'); x.style.display = 'none'; });
+        li.classList.add('active');
+        panel.classList.add('active');
+        panel.style.display = 'block';
+        window.scrollTo({ top: nav.getBoundingClientRect().top + window.pageYOffset - 18, behavior: 'smooth' });
+      });
+      li.appendChild(a);
+      nav.appendChild(li);
+      var panel = document.createElement('div');
+      panel.id = id;
+      panel.className = 'tab-pane' + (index === 0 ? ' active' : '');
+      panel.style.display = index === 0 ? 'block' : 'none';
+      panel.appendChild(section.heading);
+      section.items.forEach(function (item) { panel.appendChild(item); });
+      content.appendChild(panel);
+    });
+    tabset.style.display = 'none';
+  }
+
+  ensureMainContainer();
+  buildTabsetIfNeeded();
+
+  document.querySelectorAll('table').forEach(function (table) {
+    if (!table.parentElement.classList.contains('table-wrap')) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
+  document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+  });
+  var topButton = document.createElement('button');
+  topButton.className = 'floating-top';
+  topButton.textContent = '↑';
+  topButton.title = 'Volver arriba';
+  topButton.onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  document.body.appendChild(topButton);
+});
+</script>
+<section class="hero-section">
+  <div class="hero-content">
+    <img class="hero-logo" src="https://www.dropbox.com/scl/fi/ystrb6z1a80f6v5j7tamv/LogoUnivalle.jpg?rlkey=vltdgl81p4nofag4u1f9f24wc&dl=1" alt="Logo Universidad del Valle">
+    <div class="eyebrow">Diplomado virtual</div>
+    <h1>Inteligencia Artificial para Tod@s</h1>
+    <p class="hero-subtitle">Una experiencia práctica, clara y crítica para comprender, evaluar y usar herramientas de IA en la vida académica, laboral y cotidiana.</p>
+    <div class="hero-badges">
+      <span class="badge-soft">📅 22 de junio – 10 de septiembre</span>
+      <span class="badge-soft">🕕 Lunes, martes y jueves · 6–9 p.m.</span>
+      <span class="badge-soft">💻 Modalidad virtual</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://www.dropbox.com/scl/fi/4j62wdxdrh931c8gqtlln/cronograma_inteligencia_artificial_para_todos.docx?rlkey=o2fqu3v7pnyu96hvcnznzeas4&dl=1">📘 Contenido oficial</a>
+      <a href="https://www.dropbox.com/scl/fi/2ug8heo2ilh8blc7f3fno/Modulos-Fechas.jpg?rlkey=1ox67162dyj6n6nzshdt5vmy9&dl=1">🗓️ Módulos</a>
+      <a href="https://www.dropbox.com/scl/fi/4gv9cdmkl0jigx5dheign/cronograma_curso_100_horas.pdf?rlkey=uzknc9ym5j3tmr321173g0pd9&dl=1">📄 Cronograma detallado</a>
+    </div>
+  </div>
+</section>
+
+<div class="quick-facts">
+  <div class="fact-card"><div class="fact-label">Tema central</div><div class="fact-value">IA generativa y aplicaciones</div></div>
+  <div class="fact-card"><div class="fact-label">Enfoque</div><div class="fact-value">Práctico, ético y accesible</div></div>
+  <div class="fact-card"><div class="fact-label">Audiencia</div><div class="fact-value">Todas las áreas del conocimiento</div></div>
+</div>
+<div id="contenido-del-curso"
+class="section level1 tabset tabset-pills">
+<h1 class="tabset tabset-pills">Contenido del curso</h1>
+<div id="información-general" class="section level2">
+<h2>Información General</h2>
+<div class="intro-card">
+  <img src="https://www.dropbox.com/scl/fi/541hi9r1sgtlqfqf94kx1/AI.jpeg?rlkey=959jbs2u5z5f0gne7fbwfjkm8&dl=1" alt="Imagen de inteligencia artificial">
+  <div>
+    <h3>Propósito del curso</h3>
+    <p>El curso <strong>Inteligencia Artificial para Todos</strong> tiene como objetivo brindar a personas de todas las áreas del conocimiento una comprensión clara, accesible y práctica de los conceptos fundamentales de la inteligencia artificial. A lo largo del curso, los participantes explorarán cómo funciona la IA, sus principales aplicaciones en la vida cotidiana y el mundo laboral, así como sus implicaciones éticas y sociales.</p>
+    <p>Se busca empoderar a los asistentes para que comprendan, evalúen y utilicen herramientas de IA de manera informada, promoviendo un pensamiento crítico frente a su uso y fomentando una participación activa en conversaciones sobre el futuro digital.</p>
+  </div>
+</div>
+
+
+<script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="lCBX5rXaVC0oAgQ85d15-";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+<!-- **Evaluación:**<br> -->
+<!-- Participación en clases y talleres: 60%<br> -->
+<!-- Tareas prácticas y ejercicios: 20%<br> -->
+<!-- Proyecto final: 20%<br> -->
+<!-- **Asistencia Mínimo 80%**<br> -->
+<!-- [Estudiantes Inscritos](https://www.dropbox.com/scl/fi/nhffqd5wpgwhztavwyfj6/ASISTENCIA-UNIFICADA-DIPLOMADO-IA-2025.xlsx?rlkey=6921ah7ngxfgaxqnda6f0336n&dl=1)<br> -->
+</div>
+<div id="profesor" class="section level2">
+<h2>Profesor</h2>
+<div class="profile-card">
+  <img src="https://github.com/jamelende/PaginasWeb/raw/main/FotoAlf.png" alt="Alfonso Meléndez">
+  <div>
+    <h3>M.Sc. Alfonso Meléndez</h3>
+    <p>Profesor Titular · Escuela Colombiana de Ingeniería</p>
+    <a href="https://jamelende.github.io/PaginasWeb/HojadeVida/HojaDeVida2026Def.html">Ver hoja de vida</a>
+  </div>
+</div>
+</div>
+<div id="semana-1" class="section level2">
+<h2>Semana 1</h2>
+<td>
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+<strong>Sesión 1: 19 de Noviembre</strong>
+</th>
+<td>
+<p><strong>IA Generativa </strong> <br></br> Presentación del Curso <br>
+¿Qué es la IA Generativa? <br></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/gb083k60t1pluofdepqi0/1.-Introducci-nDef-CID.pptx?rlkey=khczh6wpbxjngb3qyubbbkdvt&amp;dl=1">Introducción
+a la IA Generativa</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/9qkiw7mfrg3jttf8e7sgx/2.-La-Ia-Generativa-HoyDef-CID.pptx?rlkey=b03tyro754ampi7wdpla4geey&amp;dl=1">La
+IA Generativa Hoy</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas Iniciales</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/h79d5timf8gvwcwfqa3gp/Art-culo-Hector-Abad.pdf?rlkey=n15iuqcli6vn0p2tlfraukbdk&amp;dl=1">1.
+Héctor Abad El Espectador Enero 2024</a><br></p>
+<p><a
+href="https://www.eltiempo.com/opinion/columnistas/verdades-de-una-entrevista-fake-3509908">2.
+Verdades de Una Entrevista Fake, Vladdo</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/o1xnd6rtoe4c2aqbyg6yw/UnescoLecturaInicial.pdf?rlkey=zktamalwsjn10mwst8ucitv2l&amp;dl=1">3.
+UNESCO. Ia Generativa y Educación</a><br> <a
+href="https://notebooklm.google.com/notebook/9c1f4c2f-7770-44fe-861d-ad7fac617d1a?_gl=1*rh4mir*_ga*ODcwMjYzNTcuMTc1MTU2NDYxMA..*_ga_W0LDH41ZCB*czE3NTE1Njc2MTQkbzIkZzAkdDE3NTE1Njc2MTQkajYwJGwwJGgw">Notebook
+LM Asociado</a><br> <a
+href="https://www.dropbox.com/scl/fi/xnd9pty8chv7axxav1v23/La-IA-Generativa-y-el-Futuro-de-la-Educaci-n.wav?rlkey=345hlc8gs4v8v2hbgtv818v7w&amp;dl=1">Audio
+Diálogo</a><br></p>
+<p><strong>Lectura Adicional</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/utt04yoj417w4bd11qax6/NaturePromisePerilAISpanish.pdf?rlkey=wqmgflei7763k0k3nsklqk1qp&amp;dl=0">IA
+Generativa:Promesas y Peligros</a><br> <a
+href="https://notebooklm.google.com/notebook/bfe581da-8462-4fa9-a89e-bd176a50ab10?_gl=1*18ecfml*_ga*ODcwMjYzNTcuMTc1MTU2NDYxMA..*_ga_W0LDH41ZCB*czE3NTE1NjQ2MDkkbzEkZzEkdDE3NTE1NjUxNzgkajE4JGwwJGgw">Notebook
+LM Asociado</a><br> <a
+href="https://www.dropbox.com/scl/fi/i7ardkfpvck9rhj0lh9he/IA-Generativa_-Promesas-y-Peligros.wav?rlkey=a6sw94qu0t8y7ztlf71649kbi&amp;dl=1">Audio
+Diálogo</a><br> <strong>Libro</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/rq0ku0asw0nzpf2v1qvzy/Generative-Artificial-Intelligence_-What-Everyone-Needs-to-Kaplan-Jerry-1-2024-Oxford-University-Press-Incorporated-9780197773536-3a477cfaf159685c963a4816c61a16ad-Anna-s-Archive.pdf?rlkey=u2i5uz6cs7ryeigrlwwzug1mn&amp;dl=1">Libro
+Kaplan GenAI, Excelente</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br> <a
+href="https://youtu.be/c4WcO_XqQUM">DataCamp: What is GenAI,
+4min</a><br> <a href="https://www.youtube.com/watch?v=n5GSy-3sErQ">The
+Impact of Generative AI, 1 min</a><br> <a
+href="https://www.youtube.com/watch?v=2IK3DFHRFfw&amp;t=39s">Generative
+AI in a Nutshell, 17 min</a><br></p>
+<p><strong>Video con Quiz</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=1u9Jy1Wt1i0&amp;list=PLuD7pwCp4AA4gLBaWeU7ymZVHGWMLAeDO">Generative
+AI for Everyone, Andrew Ng 7 min</a><br> <a
+href="https://wayground.com/admin/quiz/start_new/6866bca5f2c77488de858104?fromSearch=true&amp;source=">Quizziz
+Profesor</a><br> <a href="https://wayground.com/join?gc=846353">Quizizz
+Estudiante</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Sesión 1: 19 de Noviembre</strong>
+</th>
+<td>
+<p><strong>Modelos de IA Generativa</strong><br><br></p>
+<p>Texto, Imagenes, Sonido, Video<br></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/m4j9igz6xw4o5kloiuywj/3.-Tipos-de-Modelos-HoyDef-CID.pptx?rlkey=pgha4aa0cb21my6kj1wlm0e0d&amp;dl=1">Tipos
+de Modelos</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/baio793npiz1cvr2oh249/4.-Temas-para-PensarDef-CID.pptx?rlkey=pd6svrvlyqg0qcwg0x2qinxxa&amp;dl=1">Temas
+para pensar</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/5dx98fgyszl6exxtcqndz/1.-Actividades-ChatBots.pptx?rlkey=zyenqfz5jntb4brhtc1t8vca6&amp;dl=1"><strong>Actividades
+Adicionales</strong></a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/61h1ro9rhkau4r1vzrymq/chapter1.pptx?rlkey=964wngxoln7ueozo4lnyyxtld&amp;dl=1">opcional:
+Slides Curso DataCamp</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/">Stephen
+Wolfram : What is ChatGpt doing and why does it work?</a><br> <a
+href="https://www.dropbox.com/scl/fi/io966xj7zte0sjfzaqjhb/LecturasAdicionales.zip?rlkey=hghcdccavn7urhvymxktp6oor&amp;dl=1">5
+Lecturas Adicionales</a><br></p>
+<p><strong>Encuesta</strong><br></p>
+<p><a
+href="https://hbr.org/2025/04/how-people-are-really-using-gen-ai-in-2025">how-people-are-really-using-gen-ai-in-2025</a><br></p>
+</td>
+<td>
+<p><strong>Video con Quiz</strong><br></p>
+<p><a href="https://www.3blue1brown.com/lessons/mini-llm">3Blue1Brown
+LLM Explained 7 min</a><br> <a
+href="https://wayground.com/admin/quiz/6866b880f2c77488de858038/cuestionario-sobre-mini-llm?fromSearch=true&amp;source=">QuizIzz
+Profesor</a><br> <a
+href="https://wayground.com/admin/activity/classic/6866b9a1aacbc5af561d74eb">Quizizz
+Estudiante</a><br></p>
+<p><strong>Videos:</strong><br></p>
+<p><a href="https://youtu.be/tqSDncfxqYM">DataCamp: GenAI and ML, 4:30
+min</a><br></p>
+<p><a href="https://www.youtube.com/watch?v=_6R7Ym6Vy_I">Generative AI,
+Alan Turing Institute 47 min</a><br> <a
+href="https://www.youtube.com/watch?v=hfIUstzHs9A">IBM What are
+Generative AI models?</a><br><br></p>
+</td>
+</tr>
+<th>
+<strong>Sesión 2 : 21 de Noviembre</strong>
+</th>
+<td>
+<p><br><br></p>
+<p><strong>ChatBots MultiModales:</strong></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/jseti4nyv3xstn0fjj4se/Plataformas-IA-Gen-CID.pptx?rlkey=fqrfrqpi1kbbzbejw2dsz0bya&amp;dl=1">Plataformas
+de IA Generativa</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/e8lgqdqp4hrqbhgcbhtm5/EjemplosChatbotsMultiModales-CID.pptx?rlkey=6m981j5h4sc4jpq9nu5i9px9m&amp;dl=1">Taller
+Tipos de Modelos</a><br></p>
+</td>
+<td>
+<p><strong>Lectura Inicial</strong><br></p>
+<p><a href="https://www.cs.us.es/~fsancho/Blog/posts/IA_mancha/">La IA
+lo mancha todo, hasta la dignidad</a><br></p>
+<p><strong>Taller:</strong><br> <a
+href="https://www.dropbox.com/scl/fi/c0k2x0kawug3nygbxrl4u/EjemplosChatbotsMultiModales.pptx?rlkey=4hmxaqm63l699mik4laijvpjh&amp;dl=1">Taller
+Tipos de Modelos</a><br></p>
+<!-- **Otras Lecturas**<br> -->
+<!-- [Modelos Fundacionales](https://www.cs.us.es/~fsancho/Blog/posts/Modelos_Fundacionales/) -->
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=rA9ysJpeD-c">Sandar Pichai,
+Project Astra 12:54-15:00</a><br> <a
+href="https://www.ted.com/talks/fei_fei_li_with_spatial_intelligence_ai_will_understand_the_real_world?subtitle=en&amp;lng=es&amp;geo=es">Fei
+Fei li Ted spatial Intelligence 2024</a><br> <a
+href="https://www.youtube.com/watch?v=nA-J0510Pxs">Rodney Brooks Why we
+will rely on Robots</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Sesión 2: 21 de Noviembre</strong>
+</th>
+<td>
+<p><strong>Prompt Engineering</strong><br></p>
+<p><!-- Qué es la IA <br> --></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/i9qmylppywx0o88o0ykyv/Prompt-Engineering-NutShell-CID.pptx?rlkey=61gtqnqksbdsyxbdte9fnqs8c&amp;dl=1">Slides:
+Introducción al Prompt Engineering</a><br> <a
+href="https://www.dropbox.com/scl/fi/g3scyy3s7utwsmfsjxt3j/T-cnicas-de-Prompt-Engineering-NutShell-CID.pptx?rlkey=6h5bujyvny9fd93v1v03ba2q3&amp;dl=1">Slides:
+4 Técnicas de Prompt Engineering</a><br> <a
+href="https://www.dropbox.com/scl/fi/iuaaq5za0snwl5ze1sloy/Ejemplos-Claves-ChatGpt-2025-2.pptx?rlkey=zrs8xuv3v02sov3w0hfa0ncpk&amp;dl=1">Slides:
+Más Ejemplos ChatGpt-Prompt</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/ua99m9rlujmo0e41nrl3f/AndrewGenAIIngl-s.zip?rlkey=xqrj0al5yg2fc2hsxvuihmbi7&amp;dl=1">Andrew
+NG Taxonomia Prompts Inglés(zip)</a><br> <a
+href="https://www.dropbox.com/scl/fo/4u16ua72imm7sdh9griyo/ACuO3WE6UUi_xLK01P29qs0?rlkey=nldoum64lqyrm08cgay5fga2x&amp;dl=1">Adicional
+:Guías Prompt Engineering(zip)</a><br></p>
+<!-- **VIdeos Creativity**<br> -->
+</td>
+<td>
+<p><strong>Libros Prompt Engineering</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/65no3dtaccdkzjxayhk2o/1.-The-Art-of-Prompt-Engineering-with-chatGPT-Nathan-Hunter.pdf?rlkey=8g3msp5a06j79rzri44axvnaa&amp;dl=1">Nathan
+Hunter: The Art of Prompt Engineering</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/fo49edborr5shs8acixrc/Eric-Sarrion-Exploring-the-Power-of-ChatGPT-_-Applications-Techniques-and-Implications-Apress.pdf?rlkey=912bm0awny21czw93qw9m0vq2&amp;dl=1">Eric
+Sarrion: Exploring the Power of ChatGpt</a><br></p>
+</td>
+<td>
+<p><strong>Videos</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=zPJvvKqxZJo&amp;list=PLgciul2KicVRi9dfyHGrAjDuyiUeCkkvo&amp;index=3">Datacamp:Understanding
+Prompt Engineering</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=jNNatjruXx8&amp;t=778s">Google :
+Discover Prompt Engineering</a><br></p>
+<p><a
+href="https://www.deeplearning.ai/courses/generative-ai-for-everyone/">Curso
+Andrew Ng Gen AI for Everyone</a><br> <a
+href="https://www.youtube.com/watch?v=WXc65-EnXhU&amp;list=PLuD7pwCp4AA4gLBaWeU7ymZVHGWMLAeDO&amp;index=9">Andrew
+Ng : Tips for Prompting</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Sesión 3: 24 de Noviembre</strong>
+</th>
+<td>
+<p><br><br></p>
+<p><strong>Conviviendo con la IA</strong><br> <strong>Casos de uso de
+IA</strong></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/iioly7vreqfmphuw2i9p9/Un-Buen-Resumen.pptx?rlkey=zai5oqv0q5qdibe17f6ff0qe8&amp;dl=1">Slides
+Un Buen Resumen</a><br> <a
+href="https://www.dropbox.com/scl/fi/exm4y8w837ype9afxrq39/Historia-Detallada-de-la-IA-Generativa.pptx?rlkey=5hcfh5796q3j3twb8s12ypwen&amp;dl=1">Historia
+de la IA Generativa (Generada con IA)</a><br> <strong>Casos de
+Uso</strong><br> <a
+href="https://www.dropbox.com/scl/fi/q45dtqtzh11j01puuvxzq/El-Doctor-IA-CID.pptx?rlkey=yjy0abi2iddsg338dpjymeffm&amp;dl=1">el
+Doctor IA</a><br> <a
+href="https://www.dropbox.com/scl/fi/h4k6qiz6rfjxldvg6wxte/El-Nutricionista-IA-CID.pptx?rlkey=bxsr2i67d854e431h1tkgephu&amp;dl=1">el
+Nutricionista IA</a><br> <a
+href="https://www.dropbox.com/scl/fi/meenlkz4phdqpyepzlnba/Taller-El-Coach-de-Carrera-con-IA.docx?rlkey=6kto2e6x0t6ub4umpxtegd9uo&amp;dl=1">Taller:
+El Coach IA</a><br> <strong>Si hay tiempo</strong><br> <a
+href="https://www.dropbox.com/scl/fi/5fybjx5v4yvsyj3euy1d8/El-Ing-de-Sotware-con-AI-CID.pptx?rlkey=ywnsvnynseky30v54l3gt83hh&amp;dl=1">El
+Ing de Software IA</a><br> <strong>Conviviendo con la IA</strong><br> <a
+href="https://www.dropbox.com/scl/fi/k9wqhr8avcuuua0pf2o93/Conviviendo-con-la-lA-NutShell-CID.pptx?rlkey=winuk2lvb35e9wwm2kd5id3gi&amp;dl=1">Slides
+Conviviendo con la IA</a><br></p>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/meenlkz4phdqpyepzlnba/Taller-El-Coach-de-Carrera-con-IA.docx?rlkey=6kto2e6x0t6ub4umpxtegd9uo&amp;dl=1">Taller:
+El Coach IA</a><br></p>
+</td>
+<td>
+<p><strong>Videos Casos de uso</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=_3-ZOKKo7II&amp;list=PLOspHqNVtKACJx_ue2EXC1MerohY_lLKO&amp;index=5">Servicio
+al cliente</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=c54qSfmTT5U&amp;list=PLOspHqNVtKACJx_ue2EXC1MerohY_lLKO&amp;index=8">Marketing</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=MZmJTnjJd7Y&amp;list=PLOspHqNVtKACJx_ue2EXC1MerohY_lLKO&amp;index=9">Talento</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=kNXOCsL9OF8&amp;list=PLOspHqNVtKACJx_ue2EXC1MerohY_lLKO&amp;index=18">Finanzas</a><br></p>
+<p><strong>Siraj Raval</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=DCcmFXXAHf4&amp;list=PL2-dafEMk2A6oABirZ1Ug805Ag-8W54rN">Medicina</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=UNgdIkuVC6g&amp;list=PL2-dafEMk2A6oABirZ1Ug805Ag-8W54rN&amp;index=5">Prevención
+de Fraude</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=FYMjXD3G__Y&amp;list=PL2-dafEMk2A6oABirZ1Ug805Ag-8W54rN&amp;index=5">Marketing</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=vwor9Fva1V4&amp;list=PL2-dafEMk2A6oABirZ1Ug805Ag-8W54rN&amp;index=9">Cadenas
+de Suministro</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Sesión 3: 24 de Noviembre</strong>
+</th>
+<td>
+<p><strong>Machine Learning y IA Generativa</strong><br>
+<strong>Chatbots Personalizados</strong><br>
+<strong>Alucinaciones</strong><br></p>
+</td>
+<td>
+<p><strong>ML y IAGen</strong><br> <a
+href="https://www.dropbox.com/scl/fi/us2oidnwhvfhd6zn1q88n/IA-Generativa-en-el-Paisaje-del-Aprendizaje-Automatico.pptx?rlkey=zwidtgfzib94rksjnmkkwqrfc&amp;dl=1">IA
+Generativa en el paisaje del ML</a><br> <a
+href="https://wayground.com/admin/quiz/68793d4a0ed67fe051896536">Quizizz
+Profesor</a><br></p>
+<p><strong>Taller: Liberando Tiempo con IA: Exploración con Notas
+Adhesivas Tiempo 1 hora</strong><br> <strong>RAG</strong><br> <a
+href="https://www.dropbox.com/scl/fi/7avcmgp52zwoyru7a59fo/RAG-NutShell-CID.pptx?rlkey=aicpx7i8b7f3ua29k0zu4iaqx&amp;dl=1">RAG
+en pocas palabras</a><br></p>
+<p><strong>Alucinaciones</strong><br>
+<!-- [Alucinaciones con IA DataCamp](https://www.dropbox.com/scl/fi/q5wgegu0x25mcsv9i8wuy/Alucinaciones-AI-Una-guia-con-ejemplos-1.pptx?rlkey=r7gcd3vu8sm8555cbt1amgqsp&dl=1)<br> -->
+<a
+href="https://www.dropbox.com/scl/fi/23yuxptz3hstnwwchn826/Gamma-Alucinaciones-en-la-Inteligencia-Artificial.pptx?rlkey=yxdhzay992e3jlj3jyl15o14o&amp;dl=1">Alucinaciones
+Con IA (Gamma)</a><br> <a
+href="https://wayground.com/admin/quiz/start_new/68796ef76ae9904de48d3eb2">Quizizz
+Profesor</a><br></p>
+</td>
+<td>
+<p><strong>Talleres</strong><br></p>
+<p><strong>Taller: Liberando Tiempo con IA: Exploración con Notas
+Adhesivas Tiempo 1 hora</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/7yd797wcg4ynqq7bbiwh3/Actividad-Notas-Adhesivas-primera-parte.docx?rlkey=lo8qz7fqyufq5gnb8yy6rincz&amp;dl=1">Primera
+parte</a><br> <a
+href="https://www.dropbox.com/scl/fi/t7votjpx4nlo73w0prge5/Actividad-Notas-Adhesivas-segunda-parte.docx?rlkey=m06pwcgjjvn9342c2oskflupk&amp;dl=1">Segunda
+Parte</a><br></p>
+<p><strong>Mini Taller</strong><br> <a
+href="https://www.dropbox.com/scl/fi/4ynq7unzgr8amugh2fvw0/GuiaPrimerChatbotGpt.docx?rlkey=fd7vx3ixw0811bivf5q7lv0ih&amp;dl=0">Guía
+Primer ChatBot Gpt</a><br></p>
+<p><strong>Sitios Para Construir ChatBots</strong><br> <a
+href="https://chatgpt.com/gpts">ChatGpt</a><br> <a
+href="https://landbot.io/">LandBot</a><br> <a
+href="https://www.chatbase.co/">ChatBase</a><br> <a
+href="https://botpress.com/">BotPress</a><br></p>
+<p><strong>Lecturas</strong><br></p>
+<p><strong>OJO!!!</strong><br></p>
+<p><a
+href="https://jamelende.github.io/PaginasWeb/P%C3%A1ginasWebCID/Art%C3%ADculosDiversosIA.html">Enlace
+a Artículos Diversos</a><br> <a
+href="https://www.dropbox.com/scl/fi/atz0nfwssn3tkkky22eng/Parte1Esp.pptx?rlkey=buwizd97198vq2hhphe47v8kf&amp;dl=1">Manteniendo
+la Humanidad en las Interacciones de IA</a></p>
+<p><strong>OJO!!!</strong><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=qrvK_KuIeJk&amp;t=75s">Geoffrey
+Hinton Nobel Prize Physics 2024 (13:00)</a><br> <a
+href="https://www.youtube.com/watch?v=kwcgo-NgmAg&amp;t=87s">Demis
+Hassabis Nobel Prize Chemistry 2024</a><br> <a
+href="https://www.youtube.com/watch?v=s7_NlkBwdj8&amp;t=214s">Francois
+Cholette It’s Not About Scale, It’s About Abstraction</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Material Adicional</strong>
+</th>
+<td>
+<p><strong>Futuro de la IA Generativa</strong><br> <strong>Riesgos y
+Peligros</strong><br></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/jfjtppgiy4t66ealecamy/Personalized-ChatBots.pptx?rlkey=90h6n16d9xopmphh3i8osv2t9&amp;dl=1">ChatBots
+Personalizados</a><br></p>
+<p><a
+href="https://es.wired.com/articulos/asi-puedes-crear-tu-propio-chatbot-en-whatsapp-sin-saber-programar">Chatbots
+en WhatsApp (Wired)</a><br></p>
+<p><strong>Riesgos</strong><br> <a
+href="https://www.dropbox.com/scl/fi/loce2oe6j7gfrdy5h4bzn/Riesgos-y-Peligros-de-la-Inteligencia-Artificial-Generativa-1.pptx?rlkey=7xi7vemh37wrisedd3bka676r&amp;dl=1">Slides:
+Riesgos y peligros de la IA Generativa</a><br>
+<strong>Futuro</strong><br> <strong>Grandes Preguntas</strong><br> <a
+href="https://www.dropbox.com/scl/fi/xpr5j09oru057x5ohg69a/Grandes-preguntas-sobre-el-futuro-de-la-IA.pptx?rlkey=sx7lkoz88t7e7933x1z0lb5x4&amp;dl=1">Slides:Grandes
+Preguntas sobre el futuro de la IA</a><br>
+<!-- [Slides Extensos](https://www.dropbox.com/scl/fi/hj1qd4inukxfefxgq0rmy/Gamma-La-IA-Aumentara-enormemente-la-productividad-humana.pptx?rlkey=u7nnthly1afglc5oj5xg1f1k2&dl=1)<br> -->
+<a
+href="https://www.dropbox.com/scl/fi/o4bnnkw4nsvlliu9sh5r1/El-Futuro-de-la-IA-Generativa-8-Predicciones-1.pptx?rlkey=250k1h7ejre73jil6kq91yj3d&amp;dl=1">Slides:
+El Futuro de la IA Generativa 8 predicciones</a><br></p>
+</td>
+<td>
+<p>Construir un Chatbot en:<br> <a
+href="https://es.wired.com/articulos/asi-puedes-crear-tu-propio-chatbot-en-whatsapp-sin-saber-programar">1.
+WhatsApp, Artículo Wired</a><br> <a
+href="https://www.youtube.com/watch?v=3-cnNsF6gBU">2.ChatBase, Video 13
+min</a><br> <a
+href="https://www.youtube.com/watch?v=0Q1AQAxpdGg&amp;t=1s">3. ChatGpt-4
+Video 20 min</a><br></p>
+<p><strong>Taller Riesgos de la IA</strong><br></p>
+<p><a
+href="https://builtin.com/artificial-intelligence/risks-of-artificial-intelligence">Lectura
+15 Riesgos de la IA</a><br> <a
+href="https://www.dropbox.com/scl/fi/nrehyidnxr0wv40qexyjy/Peligros-y-Riesgos-de-la-Inteligencia-Artificial.wav?rlkey=f8yp2tr7y7h7of2nuwpynitu7&amp;dl=0">Audio
+15 riesgos de la IA Notebook-LM</a><br></p>
+<p><strong>Taller Adicional </strong><br></p>
+<p><a
+href="https://jamelende.github.io/PaginasWeb/P%C3%A1ginasWebCID/Art%C3%ADculosDiversosIA.html">Enlace
+a Artículos Diversos</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><strong>El Futuro de la IA</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=z7-fPFtgRE4">1. Abdel Hadi:
+GenAi is just the begining</a><br> <a
+href="https://www.ted.com/talks/fei_fei_li_with_spatial_intelligence_ai_will_understand_the_real_world?subtitle=en&amp;lng=es&amp;geo=es">2.
+Fei Fei Li: Spatial Intelligence</a><br> <a
+href="https://www.youtube.com/watch?v=qrvK_KuIeJk&amp;t=75s">3. Geoffrey
+Hinton GodFather of Ai 13 minutes</a><br> <a
+href="https://www.youtube.com/watch?v=uawLjkSI7Mo">4. Yoshua Bengio Rise
+of AI</a><br> <a
+href="https://www.youtube.com/watch?v=KKNCiRWd_j0&amp;t=158s">5. Mustafa
+Suleyman, What is an AI anyway 22 minutes</a><br> <a
+href="https://www.youtube.com/watch?v=V95W9g-SsBU&amp;t=3053s">6. Video
+Melanie Mitchell</a><br> <a
+href="https://www.youtube.com/watch?v=MW9FGwh3wjE">7. Eric Schmidt,
+Solomon Future of AI</a><br></p>
+</td>
+</tr>
+<p><br><br><br></p>
+</tr>
+</table>
+<p><br><br><br></p>
+</div>
+<div id="semana-2" class="section level2">
+<h2>Semana 2</h2>
+<center>
+![](
+<center>
+<p><img
+src="https://www.dropbox.com/scl/fi/8j7rco1a9hict3pmzjzzr/Interpretability-vs-Prediction.jpeg?rlkey=nvrw56d8co72ak03n6vkxcgsq&amp;dl=1"
+style="width:25.0%" /><br></p>
+<td>
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+Sesión 1 : 26 de Noviembre
+</th>
+<td>
+<p><strong>¿Qué es ML: Introducción y Contexto</strong><br></p>
+</td>
+<td>
+<p><strong>Contexto</strong><br> <a
+href="https://www.dropbox.com/scl/fi/mwbkvedqo6jkeaz3wk2i9/0.-Introducci-n.pptx?rlkey=37lcrnf01y66upy2yb2peg2h4&amp;dl=1">1.
+Introducción</a><br> <a
+href="https://www.dropbox.com/scl/fi/zzr1icivvnlybgbg3w7yb/1.-El-Poder-de-lo-Digital.pptx?rlkey=74ga9houyvwvet1da09hzkzac&amp;dl=1">2.
+El Poder de lo Digital</a><br></p>
+<p><strong>¿Qué es ML? DataCamp</strong><br> <a
+href="https://www.dropbox.com/scl/fi/7fwjfbsho9t5iptuzmn60/1.-What-is-ML.pptx?rlkey=mr84hkpox4qespwjbsyo248xy&amp;dl=1">1.
+¿Qué es ML?</a><br> <a
+href="https://www.dropbox.com/scl/fi/4jtb9bqh5qq3k70mqkrzw/2.-Supervised-learning.pptx?rlkey=vvjxi9pd3rxodld761mc8510e&amp;dl=1">2.
+Aprendizaje Supervisado</a><br> <a
+href="https://www.dropbox.com/scl/fi/gjzfspk6op3jmxgs8ey4t/3.-Unsupervised-learning.pptx?rlkey=12nbbz2hyrb4w6b7gtn1mtxtk&amp;dl=1">3.
+Aprendizaje No Supervisado</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/n26x19eoomju1oqpvbtsa/Prefacio-Espa-ol.docx?rlkey=hk4y5972luszdortd53nn8yuz&amp;dl=1">1.
+Athem Alpaydin ¿Qué es ML?Español</a><br> <a
+href="https://www.dropbox.com/scl/fi/s4emd0rx13sz3zqiguf9e/Prefacio-Ingl-s.pdf?rlkey=gm17ggkw732ov75jh6m6wsgso&amp;dl=1">Inglés</a><br>
+<strong>Adicional</strong><br> <a
+href="https://www.dropbox.com/scl/fi/md8dvmnds7vfhv88obnr4/Terrified-Espa-ol.docx?rlkey=p4gp5yd98nd8q481dlryaa67m&amp;dl=1">2.
+Melanie Mitchell ¿Qué es la IA?,Español</a><br> <a
+href="https://www.dropbox.com/scl/fi/6rmorlk5h7h8r8dwcqhye/Terrified-Ingl-s.pdf?rlkey=28q4zg0dpanpnlzirh0tn6jxa&amp;dl=1">Inglés</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br> <a
+href="https://www.youtube.com/watch?v=5q87K1WaoFI">1. Computer Scientist
+Explains Machine Learning in 5 Levels of Difficulty | WIRED</a><br> <a
+href="https://www.youtube.com/watch?v=KytW151dpqU">2. Qué es el Machine
+Learning? 7 min (dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=3bJ7RChxMWQ">3. Machine Learning
+(Up and Atom), 5 min</a><br> <a
+href="https://www.youtube.com/watch?v=yaL5ZMvRRqE">4. A Brief History of
+AI</a><br> <a href="https://www.youtube.com/watch?v=7gbGavTLUUE">5. What
+is ML 365 data Science, 5 min</a><br> <a
+href="https://www.coursera.org/learn/ai-for-everyone/lecture/5TPFo/machine-learning">6.
+Andrew Ng: Machine learning 9 min</a><br> <a
+href="https://www.youtube.com/watch?v=Gv9_4yMHFhI">7. Stat Quest: A
+gentle introduction to machine learning 13 min</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 1: 26 de Noviembre
+</th>
+<td>
+<strong>Aprendizaje Supervisado</strong><br>
+</td>
+<td>
+<strong>Contexto</strong><br> <a
+href="https://www.dropbox.com/scl/fi/383gcopekggic7b2fm46y/2.-Datos-Sociales.pptx?rlkey=awh3z2owzp5ybuvmf9uz8h03l&amp;dl=1">3.
+Datos Sociales</a><br> <a
+href="https://www.dropbox.com/scl/fi/nddfx4osyocokzxsnfchp/3.-Aprendizaje-vs-Programaci-n.pptx?rlkey=0xrkmlp21fcge9578yubl7agf&amp;dl=1">4.
+Aprendizaje vs Programación</a><br> <strong>¿Qué es ML?</strong><br> <a
+href="https://www.dropbox.com/scl/fi/wgrhv80s66blydhfevhb4/Introduccion_al_aprendizaje_automatico_def.pptx?rlkey=2t378er2wjpldusran7jgnubp&amp;dl=1">1.
+Int al Machine Learning, Serrano</a><br> <strong>Modelos Básicos de
+ML:</strong><br> <strong>Regresión lineal,Regresión Logística y Árboles
+de Decisión</strong><br> <a
+href="https://www.dropbox.com/scl/fi/9b25bjb09zh58fsbqlzh0/2.Clasificaci-n-Regresi-n.pptx?rlkey=ltue7hy3beo5tq7bnlteceb56&amp;dl=1">2.
+Regresión y Clasificación 5 Ejemplos</a><br>
+</td>
+<td>
+<p><strong>Lecturas:</strong><br> <a
+href="https://www.dropbox.com/scl/fi/fttb99tv97zamfh4gavu0/Introduccion_GBC_Completo_Elegante_V3.docx?rlkey=q234qytv7vbnp4g2c7unudimm&amp;dl=1">1.
+Yoshua Bengio Introducción a ML y DL</a><br> <a
+href="https://www.dropbox.com/scl/fi/tlc096tzct9di7r6f817v/Historia_ML_Chollet_Completo_Elegante_V3.docx?rlkey=u09so11ps8njtims52uftp1ez&amp;dl=1">2.
+Francois Chollet Modelos de ML</a><br> <strong>Taller</strong><br>
+<strong>Enfermedades Cardiacas</strong><br> <a
+href="https://www.dropbox.com/scl/fi/py5cvvonrkz0gsjgwdwbw/Taller-Desaf-o-Diagn-stico-Autom-tico.pptx?rlkey=yrn7r1o6er10vr2pvkrdv1auc&amp;dl=1">Lectura
+Taller</a><br> <a
+href="https://www.dropbox.com/scl/fi/d3w6oj7dyg735xcfcspgv/Desaf-o-Diagn-stico-Autom-tico.pdf?rlkey=o4fqgogbrjogcywnjqwz1wyk5&amp;dl=1">Slides
+Taller</a><br></p>
+<p><strong>PlayGrounds</strong><br> <a
+href="https://phet.colorado.edu/sims/html/least-squares-regression/latest/least-squares-regression_all.html">1.
+Least Squares Regression (Colorado)</a><br></p>
+<p><a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/classify.html">2.
+Logistic Regression (San Diego)</a><br></p>
+<p><a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/classify.html">3.
+Decision Tree Applet (San Diego)</a><br> <strong>Cuadernos Jupyter
+ML</strong><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_03_Linear_Regression/Coding_linear_regression.ipynb">1.
+Linear Regression</a><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_03_Linear_Regression/House_price_predictions.ipynb">1.1
+Predicción Precios Casas</a><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_06_Logistic_Regression/Coding_logistic_regression.ipynb">2.
+Logistic regression</a><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_06_Logistic_Regression/Sentiment_analysis_IMDB.ipynb">2.1
+Sentiment Analysis</a><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_09_Decision_Trees/Graphical_example.ipynb">3.
+Decision Trees</a><br>
+<!-- [5. Random Forest Applet](https://cs.stanford.edu/~karpathy/svmjs/demo/demoforest.html)<br> --></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><strong>Modelos Básicos de Aprendizaje Supervisado</strong><br> <a
+href="https://www.youtube.com/watch?v=3bvM3NyMiE0">0. Excellent Logistic
+vs Linear regression</a><br> <a
+href="https://www.youtube.com/watch?v=QM0sYbEQSkM">1. Clasificación
+(google) 2 min</a><br> <a
+href="https://www.youtube.com/watch?v=72AHKztZN44">2. Regresión
+Logística (google) 2 min</a><br> <a
+href="https://www.youtube.com/watch?v=QoK1nNAURw4&amp;t=90s">3.
+Regresión Lineal (Gradient Descent) (google) 2 min</a><br> <a
+href="https://www.youtube.com/watch?v=_L39rN6gz7Y">4. Árboles de
+Decisión stat Quest 18 min</a><br> <a
+href="https://www.youtube.com/watch?v=J4Wdy0Wc_xQ&amp;t=1s">5. Random
+Forests StatQuest 10 min</a><br> <strong>Aplicaciones Modelos
+Básicos</strong><br> <a
+href="https://www.youtube.com/watch?v=Wqmtf9SA_kk">1. Predicción de
+Precios de casas en Python 44 min</a><br> <a
+href="https://www.youtube.com/watch?v=FkF2jhaRJIs">2. Detección de Spam
+Python 35 min</a><br> <a
+href="https://www.youtube.com/watch?v=8bD8Pagirao">3. Sistemas de
+recomendación con Python 19 min</a><br> <a
+href="https://www.youtube.com/watch?v=n4L5hHFcGVk">4. Análisis de
+Sentimientos (TED) 15 min</a><br> <a
+href="https://www.youtube.com/watch?v=oEKg_jiV1Ng">5. Reconocimiento de
+imágenes con Python 22 min</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 2 : 28 de Noviembre
+</th>
+<td>
+<p><strong>Aprendizaje Supervisado</strong></p>
+</td>
+<td>
+<p><strong>Otros Métodos Supervisados</strong><br></p>
+<p><strong>A. Support Vector Machines</strong><br> <a
+href="https://www.dropbox.com/scl/fi/cb1jmsbayg1a5pyg73hdz/Maquinas-de-Soporte-Vectorial-y-el-Metodo-Kernel-1.pptx?rlkey=kuvuxynfwn66sd2x7tqisjvxj&amp;dl=1">1.
+Slides Support Vector Machines-Gamma</a><br> <a
+href="https://www.youtube.com/watch?v=_YPScrckx28&amp;t=43s">2. Support
+Vector Machine in 2 Minutes</a><br> <a
+href="https://www.youtube.com/watch?v=Y6RRHw9uN9o">3. Support Vector
+Machine in 7 Minutes</a><br></p>
+<p><a href="https://www.youtube.com/watch?v=efR1C6CvhmE&amp;t=1148s">4.
+Video Stat Quest SVM Inglés 20 min</a> <strong>Importante ver el video
+en casa al lado del ChatGpt</strong><br> <strong>B. Naive
+bayes</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=De2gX2rWGbs">1. Video Naive
+bayes : Luis Serrano Español 19 min</a><br> <a
+href="https://www.youtube.com/watch?v=O2L2Uv9pdDA&amp;t=104s">2. Video
+Opcional Naive Bayes StatQuest 15 min</a><br> <a
+href="https://www.dropbox.com/scl/fi/ngjk4ogoieiw4ubxzzn4f/Clasificadores-Naive-Bayes-Spam-Reclamar2-Errores6.pptx?rlkey=qi10iip26gjg0ttgpeadjbivx&amp;dl=1">3.
+Slides Naive bayas gamma Spam</a><br> <a
+href="https://www.dropbox.com/scl/fi/whvyfwrsrnr3va3fjhd5c/Clasificadores-Naive-Bayes-Jubilaci-n.pptx?rlkey=dorx7dgbeulxsc6o5fo7xv49f&amp;dl=1">4.
+Slides Naive bayas gamma Jubilación</a><br> <a
+href="https://www.udemy.com/tutorial/machinelearning/naive-bayes-intuition/?srsltid=AfmBOoocny0iH36ksuz4Pulk10fohOO2KpDzc0H9fYDikviZcgotwccC">5.
+Video Naive bayes Explained Udemy 14 min</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas Adicionales(Fernando Sancho)</strong><br> <a
+href="https://www.cs.us.es/~fsancho/Blog/posts/Fundamentos_de_ML/">1.
+Fundamentos de Machine Learning</a><br> <a
+href="https://www.cs.us.es/~fsancho/Blog/posts/Aprendizaje_Supervisado_No_Supervisado.md.html">2.
+Aprendizaje Supervisado y no Supervisado</a><br> <a
+href="https://www.cs.us.es/~fsancho/Blog/posts/Clustering/">3.
+Algoritmos de Clustering</a><br> <strong>PlayGrounds</strong><br></p>
+<p><a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/classify.html">1.
+Support vector machine (San Diego)</a><br> <a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/classify.html">1.
+Quadratic Naive Bayes (San Diego)</a><br> <a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/neuralnetwork.html">3.
+Redes Neuronales (San Diego)</a><br> <a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/classify.html">4. K
+Nearest Neighbour (San Diego)</a><br></p>
+<p><strong>Cuadernos Jupyter ML</strong><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_09_Decision_Trees/University_Admissions.ipynb">1
+University Admissions</a><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_08_Naive_Bayes/Coding_naive_Bayes.ipynb">2.
+Naive bayes</a><br> <a
+href="https://github.com/luisguiserrano/manning/blob/master/Chapter_13_End_to_end_example/End_to_end_example.ipynb">3.
+Complete example</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><strong>Modelos Adicionales Supervisados</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=9NrALgHFwTo&amp;t=35s">1.
+Support Vector Machines TeamGrizzly 35 seg</a><br> <a
+href="https://www.youtube.com/watch?v=0p0o5cmgLdE">2. ¡Excelente!
+K-Nearest-Neighbors</a><br> <a
+href="https://www.youtube.com/watch?v=Rj6GlPOQ6Fw">3. !Excelente! Video
+Kernel Trick Google 5 min</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 2: 28 de Noviembre
+</th>
+<td>
+<strong>Aprendizaje Supervisado y No Supervisado</strong>
+</td>
+<td>
+<p><strong>Modelos Supervisados avanzados</strong><br></p>
+<p><strong>C. KNN</strong><br> <a
+href="https://www.dropbox.com/scl/fi/qwlcs31gxwdek17tlpyy8/Aprendizaje-Supervisado-KNN.pptx?rlkey=kdaj0ovj9zcrt9rgcii8g1ncg&amp;dl=1">1.
+K nearest Neighbours-gamma ppt</a><br> <a
+href="https://www.youtube.com/watch?v=gs9E7E0qOIc">2. Video KNN 3
+min</a><br> <strong>D. Redes Neuronales</strong><br> <a
+href="https://www.dropbox.com/scl/fi/sdg71qkhi38zw2575zmb9/3.-Redes_Neuronales_y_Aprendizaje.pptx?rlkey=98nl1p8521311k8eorkv0e7an&amp;dl=1">1.
+Redes Neuronales y Aprendizaje ppt</a><br> <a
+href="https://www.youtube.com/watch?v=jKCQsndqEGQ">2. Video
+3Blue1Brown</a><br> <a
+href="https://www.youtube.com/watch?v=6M5VXKLf4D4&amp;t=13s">3. What is
+Deep Learning</a><br> <strong>E. AdaBoost</strong><br> <a
+href="https://www.dropbox.com/scl/fi/ofz2xkuavhasxt1fwzww0/What_is_AdaBoost_Friendly_Explanation.pptx?rlkey=4xzp3b0w4azdw505xpfp54ydj&amp;dl=1">1.
+Mejorando Modelos Débiles , AdaBoost</a><br> <a
+href="https://www.youtube.com/watch?v=8pS2xS1Qc3I">2. What is Ada Boost?
+5 min</a><br> <a href="https://www.youtube.com/watch?v=LsK-xG1cLYA">3.
+Ada Boost StatQuest 20 min</a><br></p>
+<p><strong>Modelos No Supervisados Básicos</strong><br> <a
+href="https://www.dropbox.com/scl/fi/xsj7j4vs10o5y4qq5rni6/11.-Aprendizaje-no-supervisado-k-medios.pptx?rlkey=418kcmrzzqxqjaeyt30oda8g4&amp;dl=1">1.
+Modelo de k-medias</a><br> <a
+href="https://www.dropbox.com/scl/fi/fn3i1g1bie3wt3fpu4t8p/12.-Aprendizaje-no-supervisado-Jer-rquico.pptx?rlkey=377aqcddi3rijuxpl1spac07o&amp;dl=1">2.
+Modelo de Clustering Jerárquico</a><br> <a
+href="https://www.dropbox.com/scl/fi/9jz25miglmpfeku7hjdtr/Agrupamiento_DBSCAN.pptx?rlkey=uanpdb709c457sndhga18px1j&amp;dl=1">3.
+Modelo DBScan-DataQuest</a><br></p>
+</td>
+<td>
+<p><strong>PlayGrounds</strong><br></p>
+<p><a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/classify.html">0.
+Simple Classifiers (U SanDiego)</a><br> <a
+href="https://ml-playground.com/#">1. ML-PlayGround</a><br> <a
+href="https://kmeans.js.org/en/">3. Applet Interactivo
+k-means</a><br></p>
+<p><strong>PlayGrounds Personales</strong><br> <a
+href="https://www.dropbox.com/scl/fi/mgvf1zp1aeozz3rhuhanl/ClasificadorRegLog-Arboles-Forest-Def.html?rlkey=1uuafvk8lh0a9ad3gmfipw5oe&amp;dl=1">1.
+Clasificador Logistica-Arboles-Bosque</a><br> <a
+href="https://www.dropbox.com/scl/fi/9a004y3oxbu9s2nuz4kk8/Excelente-SVM-Definitivo.html?rlkey=6uloii3co9e0pft46j31bvfdg&amp;dl=1">2.
+Clasificador SVM</a><br> <a
+href="https://www.dropbox.com/scl/fi/ubpidlwdd0im9lul9jbg4/classifier_offline_svm_knn_gnb_csvfix.html?rlkey=9zun0n0bmghgojtys40ro2iig&amp;dl=1">3.
+Clasificador SVM-KNN-Bayes</a><br> <a
+href="https://www.dropbox.com/scl/fi/bf107kl0p7qq3g6zqc1ds/kmeans_2d_offline.html?rlkey=qx822kzk1e7ca64p1oarb2z29&amp;dl=1">4.
+Simulador K-Means</a><br> <strong>Datos</strong><br> <a
+href="https://www.dropbox.com/scl/fi/50u490fq5dx90qpuihiqe/EjEntrenamientoSVM.zip?rlkey=dmmu9xn75vk75vb50ykjoaqkh&amp;dl=1">1.
+Para Clasificadores Supervisados</a><br> <a
+href="https://www.dropbox.com/scl/fi/xmwfb0fx79xeajn6k2cv1/DatosCSV.zip?rlkey=mdedlpqvw7oy19hupb0dl0qut&amp;dl=1">2.
+Para K-Means</a><br></p>
+</td>
+<td>
+<p><strong>Aprendizaje no Supervisado</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=Qj5ltrAFric">1. Andrew Ng
+Unsupervised Learning 15 min</a><br> <a
+href="https://www.youtube.com/watch?v=yteYU_QpUxs">2. Unsupervised
+machine learning (AssemblyAI) 5 min</a><br> <a
+href="https://www.youtube.com/watch?v=-Z_cwgzDfPc">3. Segmentación de
+Mercado 58 min</a><br></p>
+</tr>
+<th>
+Sesión 3 : 1 de Diciembre
+</th>
+<td>
+<strong>Aprendizaje no Supervisado</strong> <br><br>
+</td>
+<td>
+<p><strong>Modelos No Supervisados Avanzados</strong><br></p>
+<p><strong>Factorización de Matrices</strong><br> <a
+href="https://www.dropbox.com/scl/fi/5q7gxxu4f708xf41eagmq/Netflix_Recommendation_System.pptx?rlkey=410lle7sjm0nht3wtykum5w3r&amp;dl=1">Sistema
+de recomendación de Netflix</a><br> <strong>Analisis de Componentes
+Principales</strong><br> <a
+href="https://www.dropbox.com/scl/fi/iygtvktiirkc4we347rcm/PrinCompAnalysis.pptx?rlkey=hs4z7skfnu0txbrvdsuee931e&amp;dl=1">Reducción
+Dimensionalidad</a><br></p>
+</td>
+<td>
+<p><strong>Para Comenzar: Lectura y Video</strong><br> <a
+href="https://www.automatizapro.com.ar/blog/aprendizaje-supervisado-no-supervisado-refuerzo/?utm_source=chatgpt.com">AutomatizaPro
+Carlos Martínez ICADE</a><br></p>
+<p><strong>Curso</strong><br> <a
+href="https://developers.google.com/machine-learning/crash-course?hl=es-419">Google
+ML Excelente</a><br> <a
+href="https://developers.google.com/machine-learning/crash-course/linear-regression/parameters-exercise?hl=es-419">PlayGround
+regression</a><br> <a
+href="https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent-exercise?hl=es-419">PlayGround
+Gradient Descent</a><br> <strong>Canal Youtube</strong><br> <a
+href="https://www.youtube.com/channel/UConVfxXodg78Tzh5nNu85Ew">Welch
+Labs</a><br> <a
+href="https://www.youtube.com/watch?v=bxe2T-V8XRs&amp;list=PLiaHhY2iBX9hdHaRr6b7XevZtgZRa1PoU">Demistified
+neural nets</a><br></p>
+</td>
+<td>
+<p><strong>Artículos de Investigación ML</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/mucw5kc6gdjr1o88w3bzd/ArticulosCasosrealesML.zip?rlkey=trk25yf5c8l1symi2vbj0ictk&amp;dl=1">Casos
+Reales</a><br></p>
+<p><strong>Videos:</strong><br></p>
+<p><strong>No supervisados</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=4b5d3muPQmA&amp;t=105s">1.
+K-means Clustering</a><br> <a
+href="https://www.youtube.com/watch?v=7xHsRkOdVwo">2. Hierarchical
+Clustering</a><br> <a
+href="https://www.youtube.com/watch?v=ZspR5PZemcs&amp;t=2s">3. Matrix
+Factorization</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 3 : 1 de Diciembre
+</th>
+<td>
+<strong>Evaluación de Modelos de ML</strong>
+</td>
+<td>
+<p><strong>Cómo medir y evaluar un modelo de ML</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/b176fe2jwov45c2fzj4tk/1.-Evaluating-Performance-DataCamp.pptx?rlkey=nzcq6vivch5vb1b4vpsne26eb&amp;dl=1">1.
+Evaluando el Desempeño-DataCamp</a><br> <a
+href="https://www.dropbox.com/scl/fi/7lmbeif60l8q4ai9ikt3s/2.-Stat-Quest-ConfMatrix.pptx?rlkey=384g7cww11vta9bvnftufk9u7&amp;dl=1">2.
+La Matriz de Confusión DataQuest</a><br> <a
+href="https://www.dropbox.com/scl/fi/uniqe1nr5p5aofeo1xm68/3.-Types-Of-Errors-Complexity-Graph.pptx?rlkey=rhpxb6jip4ethctikrniwfq5g&amp;dl=1">3.
+Types-of-Errors-Complexity-Graph</a><br> <a
+href="https://www.dropbox.com/scl/fi/94a29b5plj97n1uont74x/4.-Testing-and-Error-Metrics.pptx?rlkey=4czqoo0v9gjyth3fjspf2n76u&amp;dl=1">4.
+Testing and Error Metrics</a><br> <a
+href="https://www.dropbox.com/scl/fi/u565828ub4dpna2vdezvm/5.-ROC_Feito.pptx?rlkey=avjlhdr10oij4556pzc861o5o&amp;dl=1">5.
+ROC</a><br> <a
+href="https://www.dropbox.com/scl/fi/p9ophic9tdgxxv3drxkkc/6.-Summary.pptx?rlkey=oedh3z41dtz1d299wf7dy56gg&amp;dl=1">6.
+Summary</a><br></p>
+<p><strong>Videos</strong><br></p>
+<a href="https://www.youtube.com/watch?v=fSytzGwwBVw">Video: Cross
+Validation</a><br> <a
+href="https://www.youtube.com/watch?v=EuBBz3bI-aA&amp;t=66s">Video: Bias
+and variance</a><br> <a
+href="https://www.youtube.com/watch?v=Q81RR3yKn30">Video:
+Regularization</a><br> <a
+href="https://www.youtube.com/watch?v=GM3CDQfQ4sw">Video:
+Boosting</a><br> <a
+href="https://www.youtube.com/watch?v=ggqnxyjaKe4&amp;t=6432s">Video:
+RLearning Sutton Excelente</a><br>
+</td>
+<td>
+<p><strong>Lecturas</strong><br> <a
+href="https://towardsdatascience.com/how-to-evaluate-the-performance-of-your-ml-ai-models-ba1debc6f2fa/">1.Como
+evaluar el desempeño de un modelo de ML</a><br> <a
+href="https://neptune.ai/blog/ml-model-evaluation-and-selection">2.
+Evaluación y selección de Modelos (Neptune.ai)</a><br> <a
+href="https://medium.com/@fatmanurkutlu1/model-evaluation-techniques-in-machine-learning-8cd88deb8655">3.Técnicas
+de Evaluación de Modelos de ML</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br> <a
+href="https://www.youtube.com/watch?v=aDW44NPhNw0&amp;t=3s">1. ML
+Testing and Error Metrics</a><br> <a
+href="https://www.youtube.com/watch?v=z5qA9qZMyw0&amp;t=8s">2.ROC Curve
+in 10 minutes</a><br> <a
+href="https://www.youtube.com/watch?v=LbX4X71-TFI">3. How to evaluate ML
+Models 10 min</a><br> <a
+href="https://www.youtube.com/watch?v=Kdsp6soqA7o">4. StatQuest the
+Confusion Matrix</a><br></p>
+</td>
+<p><br><br><br></p>
+</tr>
+<th>
+Material Adicional
+</th>
+<td>
+<p><strong>Reinforcement y Deep Learning</strong><br></p>
+</td>
+<td>
+<p><a
+href="https://www.dropbox.com/scl/fi/sdg71qkhi38zw2575zmb9/3.-Redes_Neuronales_y_Aprendizaje.pptx?rlkey=98nl1p8521311k8eorkv0e7an&amp;dl=1">Redes
+Neuronales y Aprendizaje-Serrano</a><br> <a
+href="https://www.dropbox.com/scl/fi/p2pgep553aodxdtphrqph/Deep-Learning.pptx?rlkey=mn1rhkjqa1fpbs8gigiculiwl&amp;dl=1">Deep
+Learning-DataCamp</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/xgvzp4xkk066xil9wmtpb/Aprendizaje-por-Refuerzo-Fundamentos-y-Desafios-1.pptx?rlkey=hig1o4sawijidb1s4169exxdx&amp;dl=1">1.
+Aprendizaje por Refuerzo Fundamentos y Desafios</a><br> <a
+href="https://www.dropbox.com/scl/fi/vsvie5ski5l98ifgxbz91/1.-Recompensas-para-Robots-Mitchell.pptx?rlkey=pw27vff88s9fk7z5qygewxyc2&amp;dl=1">2.Recompensas
+para Robots(Mitchell)</a><br> <a
+href="https://www.dropbox.com/scl/fi/5flitkpcjunbsonqv8vaw/2.-Mas-Alla-de-los-Juegos-El-Aprendizaje-por-Refuerzo-en-IA.pptx?rlkey=e98u95t2m3ee8hnnoq35j1ab7&amp;dl=1">3.
+Más alla de los Juegos el RL en IA</a><br></p>
+</td>
+<td>
+<p><a
+href="https://www.analyticsvidhya.com/blog/2017/01/introduction-to-reinforcement-learning-implementation/">Excelente
+blog Intro to RL</a><br> <a
+href="https://github.com/aikorea/awesome-rl">Resources of RL
+gitHub</a><br> <a
+href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/rldemo.html">Karpathy
+RL Demo</a><br> <a
+href="https://cs.stanford.edu/people/karpathy/reinforcejs/">Karpathy
+Playground</a><br></p>
+<p><strong>Teachable Machine</strong><br></p>
+<p><a
+href="https://teachablemachine.withgoogle.com/models/zyB8EczEV/">Enlace
+a Entrenamiento MNIST</a><br> <a
+href="https://www.google.com/search?q=yann+lecun+mnist+video&amp;sca_esv=2fdb4996cfdf24b0&amp;sxsrf=AE3TifM_zwRGJkY7sNLizK9w4-AiWU8cTQ%3A1756246770861&amp;ei=8jKuaNecNMuTwbkP8MSBSA&amp;ved=0ahUKEwjX3aiHwamPAxXLSTABHXBiAAkQ4dUDCBA&amp;uact=5&amp;oq=yann+lecun+mnist+video&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiFnlhbm4gbGVjdW4gbW5pc3QgdmlkZW8yBRAhGKABMgUQIRigAUi1C1CEAljjCXABeAGQAQCYAZcBoAGHBqoBAzAuNrgBA8gBAPgBAZgCB6ACngbCAgoQABiwAxjWBBhHwgINEC4YgAQYsAMYQxiKBcICCBAAGIAEGMsBwgIGEAAYFhgewgIEECEYFZgDAIgGAZAGCZIHAzEuNqAHuheyBwMwLja4B5gGwgcFMC41LjLIBw8&amp;sclient=gws-wiz-serp#fpstate=ive&amp;vld=cid:c3a1872f,vid:FwFduRA_L6Q,st:0">Video
+Yann Lecun 1 min</a><br></p>
+</td>
+<td>
+<p><strong>Videos</strong><br></p>
+<p><strong>Reinforcement Learning</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=m2weFARriE8&amp;t=216s">Video
+Brief Intro to RL</a><br></p>
+<p><a href="https://www.youtube.com/watch?v=W2CAghUiofY">DeepMind
+Playing Space Invaders</a><br> <a
+href="https://www.youtube.com/watch?v=V1eYniJ0Rnk">DeepMind Playing
+Atari Breakout</a><br> <a
+href="https://www.youtube.com/watch?v=1AB3GQlb65c&amp;list=PLaFGzVcB2MC5wZOM2k6MvOnvqchtq2cgX">DQN
+Games 9 Videos</a><br></p>
+</td>
+</tr>
+</table>
+<p><br><br><br></p>
+</div>
+<div id="semana-3" class="section level2">
+<h2>Semana 3</h2>
+<!-- ![](https://www.dropbox.com/scl/fi/ye3ifl3x66amuti85v1mb/noBias.gif?rlkey=axjarehgwzviznfbv8dijd1me&dl=1){width=30%} ![](https://www.dropbox.com/scl/fi/q72ehk3urudzshkx1gygp/Bias.gif?rlkey=qq3hh33scxgwtd0gbfmjjecon&dl=1){width=30%} ![](https://www.dropbox.com/scl/fi/0g8oeyo6aynq8xp8n3caz/BiasWithAdamOptimizer.gif?rlkey=5zht65bl8erzpcy0nztkjau82&dl=1){width=30%} -->
+<!-- <td> -->
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+<strong>Sesión 1: 3 de Diciembre</strong>
+</th>
+<td>
+<p><strong>Introducción al Deep Learning Parte Uno</strong>
+<br></br></p>
+</td>
+<td>
+<p><strong>Introducción</strong><br> <a
+href="https://www.dropbox.com/scl/fi/tbw0ol1cspalh0dnjdi28/Introducci-n-al-Deep-Learning-Aprendizaje-Profundo.pptx?rlkey=wc2mfv5du5dryny96ucpr1krv&amp;dl=1">Introducción
+al Deep Learning</a><br></p>
+<p><strong>Video Introductorio</strong><br> <a
+href="https://www.youtube.com/watch?v=yAF3bopYMGk">Pasado, Presente y
+futuro del DL(dot.csv)</a><br> <a
+href="https://www.dropbox.com/scl/fi/r9mrxerokuayepnj4ezfg/SlidesVideoDeepLearning1-0-3-0.pptx?rlkey=uazsey1d9fdgqbvyg5vmne0o7&amp;dl=1">Slides
+Video</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/jm2ywgo1wqqewy2cycit2/Bishop2024DeepLearningEsp.pdf?rlkey=nrnt87kcc3q22zip0lnc9ovh9&amp;dl=1">1.
+Bishop 2024 Deep Learning</a><br> <a
+href="https://www.dropbox.com/scl/fi/iu8n5pl7r85iitfoybj1h/AlpaydinDeepLearning.pdf?rlkey=pgko5aqvrl1u0tw4r21m0mfw3&amp;dl=1">2.
+Alpaydin 2019 Deep Learning</a><br> <a
+href="https://wayground.com/join?gc=914499">!!! OJO Quizizz
+Lecturas!!!</a><br></p>
+<p><strong>Videos Hitos</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=GVsUOuSjvcg">Veritasium
+Historia del Perceptrón 3:45-8:10</a><br> <a
+href="https://www.ted.com/talks/sebastian_thrun_google_s_driverless_car?language=es&amp;subtitle=es">Driveless
+car Sebastian Thurn 4 min</a> <a
+href="https://www.youtube.com/watch?v=Uz7ucmqjZ08">AlphaFold
+dot.csv</a><br> <a
+href="https://www.youtube.com/watch?v=HACn6OU_y5I&amp;list=PLvtKzIJHlUuGjNAIDukH-h9alFvjtBy7P&amp;index=8">GANs
+Luis Serrano</a><br> <a
+href="https://www.youtube.com/watch?v=V1eYniJ0Rnk">Playing Atari
+BreakOut RL</a> <a
+href="https://www.youtube.com/watch?v=8tq1C8spV_g">AlphaGo Trailer 2
+min</a> <a href="https://www.youtube.com/watch?v=WXHFqTvfFSw">Alpha Go
+Zero David Silver</a></p>
+<p><strong>Lecturas Artículos Claves (NotebookLM)</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/y0s9dtbbz6n2w6v2eikay/Art-culoBengioLecunHinton2015RevistaNature.pdf?rlkey=rmuxze022gy8etpsberqa30lo&amp;dl=1">Artículo
+1 2015</a><br> <a
+href="https://www.dropbox.com/scl/fi/uf4jzfr73w44frspbhc84/AttentionIsAllyouNeed.pdf?rlkey=9blryx30buhm1werbfe55lgm7&amp;dl=1">Artículo
+2 2017</a><br></p>
+<p><strong>Adicional Blog Interactivo</strong><br> <a
+href="https://codefinity.com/courses/v2/f9fc718f-c98b-470d-ba78-d84ef16ba45f/00f9f494-73bd-443a-826a-3f89d7d8eae8/54ebc8a5-ae6d-422c-86b9-0523ecb849a4?gclid=Cj0KCQjwpvK4BhDUARIsADHt9sTyrtNpwefd4iDZKv6rvVvtoH2uyqkYEIv92GOBZZEfjxF6pSGK6dAaArH_EALw_wcB">What
+is a neural Network: 3 Capítulos</a><br></p>
+</td>
+<td>
+<p><strong>Personaje:</strong><br> <strong>Yann Lecun</strong><br> <a
+href="https://www.youtube.com/watch?v=l3Emh_cekZo&amp;t=907s">1.Yann
+Lecun: Paris Conversations Reflections of an AI Visionary Agosto
+2025</a><br> <a
+href="https://www.youtube.com/watch?v=FwFduRA_L6Q">2.Video 1989: The
+First Conv Neural network MNIST</a><br> <a
+href="https://www.youtube.com/watch?v=0bMe_vCZo30&amp;list=PL80I41oVxglKcAHllsU0txr3OuTTaWX2v">3.
+Yann Lecun: Primera Clase ,New York University</a><br> <a
+href="https://www.youtube.com/watch?v=JNiY0RXxFZY">4. Self Supervised
+Lerning the dark matter of intelligence, 10 min</a><br></p>
+<p><strong>Canal 3Blue1Brown</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=aircAruvnKk&amp;list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&amp;index=1">1.
+But What is a Neural network?</a><br> <a
+href="https://www.youtube.com/watch?v=IHZwWFHWa-w&amp;list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&amp;index=2">2.Gradient
+descent, how neural networks learn</a><br> <a
+href="https://www.youtube.com/watch?v=Ilg3gGewQ5U&amp;list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&amp;index=3">3.
+What is backpropagation really doing?</a><br></p>
+<p><strong>Videos Cortos</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=KytW151dpqU">1. Deep
+Learning Mapa Conceptual en Español : 7 min</a><br> <a
+href="https://www.youtube.com/watch?v=6M5VXKLf4D4&amp;t=13s">2. RSA What
+is Deep Learning</a><br></p>
+<p><strong>Excelente Curso Online</strong><br> <a
+href="https://www.youtube.com/watch?v=ErnWZxJovaM&amp;list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI">Mit
+Deep Learning</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 1 : 3 de Diciembre
+</th>
+<td>
+<p><strong>Introducción al Deep learning Parte Dos</strong><br><br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br> <a
+href="https://www.dropbox.com/scl/fi/9ke8i50tcuxunlz6jz6g6/La-Revolucion-del-Aprendizaje-Profundo-Sejnowski.pptx?rlkey=6j6ymhp3w1nzhfm5harhmbh34&amp;dl=1">0.
+Breve Historia del Deep learning Terrence Sejnowski</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/2ahzkwwsow05xe6pm5n6k/2.Clasificaci-n-Regresi-n.pptx?rlkey=bt4oj5wbkak2xghx5oobiw85b&amp;dl=1">1.
+Repaso Clasificación y regresión</a><br> <a
+href="https://www.dropbox.com/scl/fi/uxanooskrfp5a0aok8v9n/3.-Redes_Neuronales_y_Aprendizaje.pptx?rlkey=ldr8kiw5ao25tevqx6sb1afka&amp;dl=1">2.
+Redes neuronales y Aprendizaje Luis Serrano</a><br></p>
+<p><strong>Cómo aprenden las redes neuronales Parte Uno
+(Dot.csv)</strong><br> <a
+href="https://www.youtube.com/watch?v=uwbHOpp9xkc&amp;list=PL-Ogd76BhmcB9OjPucsnc2-piEE96jJDQ&amp;index=2">1.Qué
+es una red neuronal?</a><br> <a
+href="https://www.youtube.com/watch?v=eNIqz_noix8&amp;list=PL-Ogd76BhmcB9OjPucsnc2-piEE96jJDQ&amp;index=4">2.Propagando
+los errores backPropagation</a><br> <a
+href="https://www.youtube.com/watch?v=MRIv2IwFTPg">3.Optimización
+Gradient Descent</a><br> <a
+href="https://www.youtube.com/watch?v=qTNUbPkR2ao&amp;list=PL-Ogd76BhmcB9OjPucsnc2-piEE96jJDQ&amp;index=6">Opcional:
+Aprender a Programar una red neuronal</a><br></p>
+<p><strong>Cómo aprenden las redes neuronales Parte
+Dos(3Blue1Brown)</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=aircAruvnKk&amp;t=1s">1. Qué
+es una red neuronal? (18 min)</a><br> <a
+href="https://www.youtube.com/watch?v=mwHiaTrQOiI">2.Descenso de
+Gradiente</a><br> <a
+href="https://www.youtube.com/watch?v=ScVpPS_CFYc">Opcional Back
+Propagation</a><br></p>
+</td>
+<td>
+<p><strong>Taller TensorFlow PlayGround</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=FVozZVUNOOA">1. Video
+Jugando con redes Neuronales</a><br> <strong>PlayGrounds</strong><br> <a
+href="https://playground.tensorflow.org/#activation=tanh&amp;batchSize=10&amp;dataset=circle&amp;regDataset=reg-plane&amp;learningRate=0.03&amp;regularizationRate=0&amp;noise=0&amp;networkShape=4,2&amp;seed=0.84976&amp;showTestData=false&amp;discretize=false&amp;percTrainData=50&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;cosX=false&amp;sinX=false&amp;cosY=false&amp;sinY=false&amp;collectStats=false&amp;problem=classification&amp;initZero=false&amp;hideText=false">1.
+Sitio Oficial TensorFlow PlayGround</a><br> <a
+href="https://www.cs.cmu.edu/~pvirtue/tfp/#activation=relu&amp;batchSize=10&amp;dataset=circle&amp;regDataset=reg-saw&amp;learningRate=0.03&amp;regularizationRate=0&amp;noise=0&amp;networkShape=4,2&amp;seed=0.49562&amp;showTestData=false&amp;discretize=true&amp;percTrainData=50&amp;x=true&amp;collectStats=false&amp;problem=regression&amp;initZero=false&amp;hideText=false">2.
+Playground Carnegie Mellon</a><br></p>
+<p><a
+href="https://playground.scienxlab.org/?utm_source=chatgpt.com#activation=sigmoid&amp;batchSize=10&amp;dataset=circle&amp;regDataset=reg-plane&amp;learningRate=0.03&amp;regularizationRate=0.01&amp;errorFunc=square&amp;problem=classification&amp;noise=0&amp;networkShape=4&amp;seed=0.16904&amp;showTestData=false&amp;discretize=false&amp;percTrainData=50&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;collectStats=false&amp;initZero=false&amp;hideText=false">3.
+Playground que permite subir datos</a><br> <a
+href="https://deeperplayground.org/?utm_source=chatgpt.com#activation=tanh&amp;regularization=L2&amp;batchSize=10&amp;dataset=circle&amp;regDataset=reg-plane&amp;learningRate=0.03&amp;regularizationRate=0&amp;noise=0&amp;networkShape=4,2&amp;seed=0.48861&amp;showTestData=false&amp;discretize=false&amp;percTrainData=50&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;cosX=false&amp;sinX=false&amp;cosY=false&amp;sinY=false&amp;collectStats=false&amp;problem=classification&amp;initZero=false&amp;hideText=false&amp;animationSpeed=100&amp;layerwiseGradientNormalization=0&amp;learningRateAutotuning=-1&amp;preventLossIncreases=false&amp;dropout=0&amp;momentum=0">4
+Deeper Playground con muchos datasets</a><br></p>
+<p><a href="https://akarzazi.github.io/neural-network-playground/">5.
+Excellent Numerical Playground</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?app=desktop&amp;v=WvE4vF4tfrU">Otro
+video TensorFlow Playground 34 min</a><br></p>
+<p><strong>¡¡¡¡¡¡¡¡¡¡¡¡¡¡Tarea!!!!!!!!!!!!!!!!</strong><br> <a
+href="https://playground.scienxlab.org/?utm_source=chatgpt.com#activation=sigmoid&amp;batchSize=10&amp;dataset=circle&amp;regDataset=reg-plane&amp;learningRate=0.03&amp;regularizationRate=0.01&amp;errorFunc=square&amp;problem=classification&amp;noise=0&amp;networkShape=4&amp;seed=0.16904&amp;showTestData=false&amp;discretize=false&amp;percTrainData=50&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;collectStats=false&amp;initZero=false&amp;hideText=false">3.
+Playground que permite subir datos</a><br></p>
+<p><a
+href="https://www.ccom.ucsd.edu/~cdeotte/programs/neuralnetwork.html">4.
+Otro Playground Redes Neuronales San Diego</a></p>
+<p><strong>Aplicaciones deep learning</strong><br> <a
+href="https://www.neurovigil.com/">1. NeuroVigill Site</a><br> <a
+href="https://www.youtube.com/watch?v=AyCnDAqf8bI">1. NeuroVigil, iBrain
+Dr Philip Low</a><br> <a href="https://www.deepstack.ai/">2. DeepStack
+WebSite</a><br> <a href="https://www.youtube.com/shorts/hTRQS4cq9z8">2.
+DeepStack Video</a><br> <a
+href="https://deepmind.google/research/projects/alphago/">3. Alphago
+site</a><br> <a href="https://www.youtube.com/watch?v=WXuK6gekU1Y">3.
+AlphaGo The Movie Netflix</a><br></p>
+<p><strong>Colab Notebook</strong><br> <a
+href="https://www.youtube.com/watch?v=W8AeOXa_FqU&amp;list=PL-Ogd76BhmcCO4VeOlIH93BMT5A_kKAXp&amp;index=4">Programando
+una red neuronal desde cero</a><br></p>
+</td>
+<td>
+<p><strong>Personaje:</strong><br> <strong>Geoffrey
+Hinton</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=OVwEeSsSCHE&amp;list=PLLssT5z_DsK_gyrQ_biidwvPYCRNGI3iv">Geoffrey
+Hinton: Primera Clase , University of Toronto 13 min</a><br> <a
+href="https://www.youtube.com/watch?v=zl99IZvW7rE">Geoffrey Hinton: The
+Foundations of Deep Learning</a><br> <a
+href="https://www.youtube.com/watch?v=qrvK_KuIeJk&amp;t=6s">Geoffrey
+Hinton (Programa 60 minutes): 13 min</a></p>
+<p><strong>Videos Cortos Google:</strong><br> <a
+href="https://www.youtube.com/watch?v=ovCyBmlrZGg">Back
+Propagation</a><br> <a
+href="https://www.youtube.com/watch?v=QoK1nNAURw4&amp;list=PLOU2XLYxmsILTKLltkh859KJ9BizDvd_S&amp;index=2">Gradient
+Descent</a><br></p>
+<p><strong>Mini Cursos Redes Neuronales</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=jKCQsndqEGQ&amp;list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m">1.
+Canal 3blue1Brown en Español (3 videos)</a><br> <a
+href="https://www.youtube.com/watch?v=MRIv2IwFTPg&amp;list=PL-Ogd76BhmcB9OjPucsnc2-piEE96jJDQ">2.
+Canal Español dot.csv 3 Videos</a><br></p>
+<p><a href="https://www.youtube.com/watch?v=VjZ51nIcy1I&amp;t=187s">1.
+El fin de las cajas negras? (Interpretability) (dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=qx7hirqgfuU&amp;t=1789s">Why Deep
+learning works unreasonably well</a><br></p>
+<p><strong>Canal Futurology</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=pK9_ddD56J0&amp;list=PLfsEr6YiELADCJ6TflLs0Um9PDg6QJ0_0&amp;index=1">1.
+Video:Deep Learning Explained</a><br> <a
+href="https://www.youtube.com/watch?v=wieryfWkOl0&amp;list=PLfsEr6YiELADCJ6TflLs0Um9PDg6QJ0_0&amp;index=3">2.
+Video: How to make a Neural network</a><br> <a
+href="https://www.youtube.com/watch?v=mb7bG9ABOLU&amp;list=PLfsEr6YiELADCJ6TflLs0Um9PDg6QJ0_0&amp;index=4">3.
+Video: How Computers learn</a><br> <a
+href="https://www.youtube.com/watch?v=rJmBhnLzjOM&amp;list=PLfsEr6YiELADCJ6TflLs0Um9PDg6QJ0_0&amp;index=5">4.
+Video: How neural Networks Work</a><br></p>
+<p><strong>PlayLists youTube</strong><br> <a
+href="https://www.youtube.com/watch?v=bxe2T-V8XRs&amp;list=PLiaHhY2iBX9hdHaRr6b7XevZtgZRa1PoU">1.
+PlayList(Welch Labs) Neural Networks Demystified</a><br> <a
+href="https://www.youtube.com/playlist?list=PLblh5JKOoLUIxGDQs4LFFD--41Vzf-ME1">2.
+PlayList(StatQuest) Deep Learning</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 2: 5 de Diciembre
+</th>
+<td>
+<p><br><br></p>
+<p><strong>Procesamiento de Imágenes</strong><br> <strong>Redes
+Convolucionales</strong><br></p>
+</td>
+<td>
+<p><a
+href="https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/?utm_source=chatgpt.com">1.
+Blog Interactivo ConvNets</a><br></p>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/0g4zwau22dlk4n5hq580g/1.-La-Revolucion-de-la-Vision-Artificial.pptx?rlkey=yybnm4ucz72eaw90tnkzek054&amp;dl=1">1.
+La Revolución de la Visión Artificial(Mitchell)</a><br> <a
+href="https://www.dropbox.com/scl/fi/cc347aayzunx6lwxf3o5m/2.-Redes-Convolucionales-e-ImageNet.pptx?rlkey=mwig810wawk6fpcsfy188bfhy&amp;dl=1">2.
+Redes Convolucionales e ImageNet</a><br> <a
+href="https://www.dropbox.com/scl/fi/sb8gntyum5nkgwszub2qe/ConvolutionalNN.pptx?rlkey=b95ozmumta6k0iu999w40lyzb&amp;dl=1">3.
+Conv neural Networks Serrano</a><br> <a
+href="https://www.dropbox.com/scl/fi/cvaxhwv7wrx20zcoc0srk/Ejemplos-Adversarios.pptx?rlkey=v6ly9sccoysct3sh7ntctn41l&amp;dl=1">4.
+Adversarial Examples</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br> <strong>Libro Melanie Mitchell
+AI</strong><br> <a
+href="https://www.dropbox.com/scl/fi/2f5kk8uxkciatlhjvjwef/LecturaMitchellCap4MiraryVer.pdf?rlkey=l5i2u3e0x0qrpxpb3xxyoyjgi&amp;dl=1">Cap
+4 :Mirar y ver</a><br> <a
+href="https://www.dropbox.com/scl/fi/geiy44v2dviq0duunemcu/LecturaMitchellCap5ConvnetImageNet.pdf?rlkey=m6b5h8cwlj4inf686haqsjrgk&amp;dl=1">Cap5
+:ConvNets e imageNet</a><br></p>
+<p><strong>PlayGrounds</strong><br></p>
+<p><strong>Teachable Machine</strong><br></p>
+<p><a href="https://teachablemachine.withgoogle.com/v1/">Primera versión
+2017</a><br> <a
+href="https://www.youtube.com/watch?v=3BhkeY974Rg&amp;t=3s">0. Video
+Introductorio</a> <a
+href="https://teachablemachine.withgoogle.com/">Segunda versión</a><br>
+<a href="https://www.youtube.com/watch?v=T2qQGqZxkD0&amp;t=43s">0. Video
+Introductorio</a><br></p>
+<p><strong>Ejemplos</strong><br> <a
+href="https://www.youtube.com/watch?v=oP8-_0ZyY3U">1. Air Guitar</a><br>
+<a href="https://www.youtube.com/watch?v=LFHZtAasFXE">2.Hand say
+Moo</a><br></p>
+<p><strong>CNN Explainer</strong><br></p>
+<p><a href="https://poloclub.github.io/cnn-explainer/">1. CNN
+Explainer</a><br> <a
+href="https://www.youtube.com/watch?v=HnWIHWFbuUQ">1.1 Video CNn
+Explainer</a><br>
+<!-- [0. Excelente Playgrounds para muchas Arquitecturas (PoloClub)](https://poloclub.github.io/ganlab/)<br> -->
+<a href="https://adamharley.com/nn_vis/">2. Adam Harley : Interactive
+CNN (MNIST)</a><br> <a
+href="https://www.youtube.com/watch?v=dry5xxLRS-o">2.1 Video Explicativo
+Adam Harley 9 min</a><br></p>
+<p><strong>Interactive Activities</strong><br> <a
+href="https://quickdraw.withgoogle.com/">1. Excelente Quick Draw</a><br>
+<a href="https://mitmedialab.github.io/GAN-play/">2. De Garabatos a
+Imágenes</a><br> <a
+href="https://yining1023.github.io/pix2pix_tensorflowjs_lite/">3. Pix to
+Pix Pikachu</a><br> <a
+href="https://docs.google.com/presentation/d/1v3NBEwDakIlOuvU15nLBFSaoPdaJ3M6n-bVozMTGxWU/edit?usp=sharing">4.
+PixToPix Slides</a><br> <a
+href="https://yining1023.github.io/fast_style_transfer_in_ML5/">5. Fast
+Style Transfer</a><br></p>
+<p><strong>Jupyter Notebook </strong><br> <a
+href="https://www.dropbox.com/scl/fi/bkw9g7y8008796t3obrvq/image_classification.ipynb?rlkey=nh8y8qvbjcw7ah24xvygm6txx&amp;dl=1">Image
+Classification</a><br> <a
+href="https://colab.research.google.com/github/jamelende/JupyterNoteBooks/blob/main/DiplomadoIA/image_classification.ipynb">Enlace
+a Google Colab</a><br></p>
+<p><strong>Colab Notebook</strong><br> <a
+href="https://www.youtube.com/watch?v=JoQx39CoXW8&amp;list=PL-Ogd76BhmcCO4VeOlIH93BMT5A_kKAXp&amp;index=2">Ataques
+Adversarios Video</a><br></p>
+</td>
+<td>
+<p><strong>Personaje:</strong> <strong>Fei Fei li</strong><br></p>
+<p><a
+href="https://www.ted.com/talks/fei_fei_li_how_we_re_teaching_computers_to_understand_pictures?subtitle=en&amp;lng=es&amp;geo=es">Fei
+Fei li Ted Understanding Pictures 2015</a><br> <a
+href="https://www.ted.com/talks/fei_fei_li_with_spatial_intelligence_ai_will_understand_the_real_world?subtitle=en&amp;lng=es&amp;geo=es">Fei
+Fei li Ted spatial Intelligence 2024</a><br></p>
+<p><strong>Videos:</strong><br> <a
+href="https://www.youtube.com/watch?v=V8j1oENVz00&amp;t=236s">1. Redes
+Convolucionales : ¿Cómo funcionan? (dot.csv)</a><br> <a
+href="https://www.dropbox.com/scl/fi/wxl72z6t6a5x5z8turuah/CNNs__C-mo_las_M-quinas__Ven__el_Mundo_y_la_Revoluci-n_de_la_IA.m4a?rlkey=vemcbk2ibfluqmn99eqlmowey&amp;dl=1">1.1
+Audio NotebookLM el Video</a><br> <a
+href="https://www.youtube.com/watch?v=pj9-rr1wDhM&amp;t=133s">2. Video:
+Convolutional Neural networks Explained, Futurology</a><br> <a
+href="https://www.youtube.com/watch?v=iwyVvlOkcO0">3. What is Spatial
+Intelligence (Notebook LM)</a><br> <a
+href="https://www.ted.com/talks/joseph_redmon_how_computers_learn_to_recognize_objects_instantly?subtitle=en&amp;lng=es&amp;geo=es">4.
+Joseph Redmon How computers learn to recognize Objects 2017</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 2 : 5 de Diciembre
+</th>
+<td>
+<p><br><br></p>
+<p><strong>Procesamiento de lenguaje natural</strong><br>
+<strong>Embeddings</strong><br></p>
+</td>
+<td>
+<p><strong>Videos antes de Slides</strong><br> <strong>Intro al Natural
+language processing</strong><br> <a
+href="https://www.youtube.com/watch?v=cTQiN9dewIg">1. La siguiente gran
+Revolución: NLP</a><br> <a
+href="https://www.youtube.com/watch?v=Tg1MjMIVArc">2. De Palabras a
+Vectores</a><br> <a
+href="https://www.youtube.com/watch?v=RkYuH_K7Fx4">3. ¿Qué es un
+Embedding?</a><br></p>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/8cvfa48uptzyw5znaf3p0/Palabras-y-la-Compania-que-Mantienen.pptx?rlkey=emcvidca25t2mufndvbt16xe2&amp;dl=1">1.
+Dime con quien andas y te diré que palabra eres</a><br> <a
+href="https://www.dropbox.com/scl/fi/0c4tspj386u35pcf0jink/Inteligencia-Artificial-Rompiendo-Barreras.pptx?rlkey=hj0ct8scn4vnf5aiamp2742rm&amp;dl=1">2.
+Rompiendo Barreras</a><br> <a
+href="https://www.dropbox.com/scl/fi/k285ufj2a4u370pfsptbt/La-Traduccion-como-Codificacion-y-Descodificacion.pptx?rlkey=rim3uiiro8hwvfdknlc2mg4n7&amp;dl=1">3.
+Codificación y Decodificación</a><br></p>
+</td>
+<td>
+<p><strong>Artículos </strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/p8tw2pmk40jee6d8kvu05/NLP-Andrew-Ng.pdf?rlkey=hdvyqsnovaen93ugjs29uslvl&amp;dl=1">Andrew
+Ng Natural Language Processing</a><br> <a
+href="https://medium.com/@saikirankalidindi/a-comprehensive-guide-for-natural-language-processing-nlp-for-beginners-39faa26ad4d9">Blog
+Original NLP</a><br> <a
+href="https://www.dropbox.com/scl/fi/9wwupw1q3byw1icvbamny/PLN_al_Descubierto__Entendiendo_el_Lenguaje_Humano_y_sus_Impact.mp4?rlkey=4m1u4pm5qj5hu0u2dbzni3r3k&amp;dl=1">Audio
+Notebook LM 15 min</a><br> <a
+href="https://www.dropbox.com/scl/fi/gpkru9mfi499zikuri29k/Slides-Resumen-Articulo-Gamma.pptx?rlkey=75cmxjcm48ufjvgftqhkyhk3o&amp;dl=1">Slides
+Resumen Artículo Gamma</a><br></p>
+<p><strong>PlayGrounds</strong><br> <strong>1. Embedding
+projector</strong><br> <a href="https://projector.tensorflow.org/">1.
+Embedding Projector</a><br> <a
+href="https://www.youtube.com/watch?v=JeZm62LgzOc">1.1 Video
+Taller</a><br> <a
+href="https://www.youtube.com/watch?v=RkYuH_K7Fx4&amp;list=PL-Ogd76BhmcAQXovVph6ZBjObrdxxxeCu&amp;index=2">1.2
+Tutorial dot.csv Embedding projector</a><br> <a
+href="https://telefonicatech.com/blog/analiza-tus-datos-con-embedding-projector-de-tensorflow?utm_source=chatgpt.com">1.3
+Tutorial Telefónica</a> <br> <strong>2 Otros PlayGrounds</strong><br> <a
+href="https://p.migdal.pl/tagoverflow/?site=tex&amp;size=16">2.
+Interactive embedding generator (TagOverflow)</a><br> <a
+href="https://lamyiowce.github.io/word2viz/">3. Word2Viz</a><br> <a
+href="https://www.youtube.com/watch?v=0pCfH1RlNrk">3.1 Video
+Word2Viz</a><br></p>
+</td>
+<td>
+<p><strong>Personaje</strong><br> <strong>Yoshua Bengio</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=uawLjkSI7Mo">TED Yoshua
+Bengio 2017</a><br> <a
+href="https://www.youtube.com/watch?v=uawLjkSI7Mo">Yoshua Bengio Rise of
+AI</a><br></p>
+<p><strong>Videos</strong><br> <a
+href="https://www.youtube.com/watch?v=UNmqTiOnRfg&amp;list=PLs8w1Cdi-zvavXlPXEAsWIh4Cgh83pZPO&amp;index=3&amp;pp=iAQB">Redes
+Recurrentes, Serrano</a><br> <a
+href="https://www.youtube.com/watch?v=6I-Alfkr5K4">Natural language
+processing in 10 minutes (SimpliLearn)</a><br></p>
+<p><strong>Otros Videos</strong><br></p>
+<p><strong>Canal dot.csv</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=cTQiN9dewIg">0. La siguente
+gran Revolución NLP (dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=Tg1MjMIVArc&amp;t=47s">1. Intro al
+Natural Language Processing Parte 1(dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=RkYuH_K7Fx4&amp;t=84s">2.. Intro
+al Natural Language Processing Parte 2(dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=o_cAOa5fMhE">Latent Space
+Visualization,deepia</a><br></p>
+<p><strong>Cursos</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=CXpZnZM63Gg&amp;list=PL8FFE3F391203C98C&amp;index=1">Excelente
+Curso Coursera Natural Language Processing</a><br> <a
+href="https://www.youtube.com/playlist?list=PLLssT5z_DsK8BdawOVCCaTCO99Ya58ryR">Curso
+Universidad de Michigan</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 3: 10 de Diciembre
+</th>
+<td>
+<p><strong>Deep Generative AI</strong><br> <strong>1. Large Language
+Models</strong><br> <strong>2.Redes adversarias</strong><br>
+<strong>3.Auto-encoders</strong><br></p>
+</td>
+<td>
+<p><strong>Videos antes de Slides:</strong></p>
+<p><a href="https://www.3blue1brown.com/?v=mini-llm">1. LLMs explained
+Briefly 8 min</a><br> <a
+href="https://www.youtube.com/watch?v=wjZofJX0v4M&amp;t=197s">2.
+Transformers the Tech Behind LLMs 27 min</a><br> <a
+href="https://www.youtube.com/watch?v=eMlx5fFNoYc&amp;t=1s">3. Opcional
+Attention in Transformers 26 min</a><br></p>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/vtv781ftffounc40flb4i/Attention_Mechanism_in_LLMs.pptx?rlkey=ycazlt4sizn7pvirmy4vftn25&amp;dl=1">1.
+Attention Mechanisms in LLM, Serrano</a><br> <a
+href="https://www.dropbox.com/scl/fi/s7vix90rqjdd30nl5gv9t/What_are_Transformer_Models.pptx?rlkey=k4v3wru1gh5hai7ljayzvio3d&amp;dl=1">2.
+What are transformer models. Serrano</a><br></p>
+<p><strong>Slides-Videos Otros Modelos</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/kdinhope30oiz56lh01x6/Stable-Diffusion.pptx?rlkey=7muolnhzahn3zsackhz1fhw5w&amp;dl=1">1.
+Slides Stable Difussion</a><br> <a
+href="https://www.youtube.com/watch?v=JmATtG0yA5E">1.1 Video Stable
+Difussion Serrano 45 min</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/gygqzsfsv9hxldocae58b/AdversarialNN.pptx?rlkey=z20kso4kzxkmz6gyug6qdqcaq&amp;dl=1">2.
+Slides Adversarial Networks, Serrano</a><br> <a
+href="https://www.youtube.com/watch?v=JmATtG0yA5E&amp;t=1504s">2.1 Video
+Adversarial Networks Serrano 21 min</a><br> <a
+href="https://www.youtube.com/watch?v=DqjInckXzUc&amp;list=PLs8w1Cdi-zvZ43xD_AA-eAuEW1FLK0cef&amp;index=7">2.2
+Video Adversarial Español</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/tfl48cbrf6v3ytur59ya7/DenoisingAutoEncoders-Serrano.pptx?rlkey=uuq12zygv26xg9f80oykacq68&amp;dl=1">3.
+Slides Auto Encoders</a><br> <a
+href="https://www.youtube.com/watch?v=SSXDkfiPs7c">3.1 Video Auto
+Encoders Serrano 31 min</a><br> <a
+href="https://www.youtube.com/watch?v=hZ4a4NgM3u0&amp;t=87s">3.2 Video
+Deepai Autoencoders 11 min</a><br></p>
+</td>
+<td>
+<p><strong>Lectura</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/3aj53wf0oei19cz0grcom/Lectura-Qu-son-los-transformadores-en-la-inteligencia-artificial.docx?rlkey=i0mttiwl9yzz9wl7jvzupctjm&amp;dl=1">1.
+¿Qué son los Transformadores?</a><br> <a
+href="https://www.dropbox.com/scl/fi/mkshfpa3f54bp49xumoq4/Respuestas-Lectura-que-son-los-tranformadores.pptx?rlkey=pynth4k7ioiynwibp5jqhrfhl&amp;dl=1">1.1
+Respuestas Sel Multiple ppt</a><br> <a
+href="https://wayground.com/join?gc=759989">1.2 Enlace a
+Quizizz</a><br></p>
+<p><strong>PlayGrounds</strong><br></p>
+<p><a href="https://poloclub.github.io/transformer-explainer/">1.
+PlayGround Transformer Explainer</a><br> <a
+href="https://www.youtube.com/watch?v=ECR4oAwocjs">1.1 Video Explicativo
+90 seg</a><br> <a href="https://www.youtube.com/watch?v=TFUc41G2ikY">1.2
+Video Transformer Explainer 3 min</a><br> <a
+href="https://poloclub.github.io/diffusion-explainer/">2. Diffusion
+Explainer</a><br></p>
+</td>
+<td>
+<p><strong>Personaje</strong><br> <strong>Demis Hassabis</strong><br> <a
+href="https://www.youtube.com/watch?v=i_PKa53JcgY">IA y Juegos :
+Academia Sueca Premio Nobel</a><br> <a
+href="https://www.ted.com/talks/demis_hassabis_how_ai_is_unlocking_the_secrets_of_nature_and_the_universe?share=14622bbc0a&amp;language=es&amp;subtitle=en">IA
+y los secretos del Universo, TED</a><br></p>
+<p><strong>Videos</strong><br></p>
+<p><strong>Large Language Models</strong><br></p>
+<p><strong>dot.csv</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=cTQiN9dewIg">1.¿Qué es un
+Transformer? (dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=aL-EmKuB078&amp;list=PL-Ogd76BhmcAQXovVph6ZBjObrdxxxeCu&amp;index=3">2.
+Por qué los transformers son tan Potentes Parte 1 (dot.csv)</a><br> <a
+href="https://www.youtube.com/watch?v=xi94v_jl26U">3. Por qué los
+transformers son tan Potentes Parte 2 (dot.csv)</a><br></p>
+<p><strong>Serrano academy</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=qaWMOYf4ri8&amp;list=PLs8w1Cdi-zva4fwKkl9EK13siFvL9Wewf&amp;index=4">1.
+What are Transformer Models?</a><br> <a
+href="https://www.youtube.com/watch?v=OxCpWwDCDFQ&amp;list=PLs8w1Cdi-zva4fwKkl9EK13siFvL9Wewf&amp;index=2&amp;pp=iAQB0gcJCcYJAYcqIYzv">2.
+the Attention mechanism</a><br> <a
+href="https://www.youtube.com/watch?v=IHu3QehUmrQ&amp;list=PLs8w1Cdi-zva4fwKkl9EK13siFvL9Wewf&amp;index=7">3.
+Positional Encoding</a><br></p>
+<p><strong>Redes adversarias</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=JmATtG0yA5E&amp;list=PLs8w1Cdi-zvalz9ltXmarqyeQ49wfKFqf&amp;index=6">Video
+Stable Diffusion-How to build amazing images</a><br> <a
+href="https://www.youtube.com/watch?v=SSXDkfiPs7c&amp;list=PLs8w1Cdi-zvalz9ltXmarqyeQ49wfKFqf&amp;index=3">Video
+autoencoders!!</a><br> <a
+href="https://www.youtube.com/watch?v=R8DduzhT3-w">Mark Zuckerberg Self
+Supervised Learning</a><br> <a
+href="https://www.youtube.com/watch?v=DqjInckXzUc&amp;list=PLs8w1Cdi-zvZ43xD_AA-eAuEW1FLK0cef&amp;index=7">Video
+Adversarial Español</a><br></p>
+<p><strong>AutoEncoders</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=SSXDkfiPs7c&amp;t=148s">Video
+Autoencoders: Serrano</a><br> <a
+href="https://www.youtube.com/watch?v=hZ4a4NgM3u0&amp;list=PLmkOM-kwIYM72cGYD2ofVIrp6xoe9LVps&amp;index=3">Auto
+Encoders deepai</a><br></p>
+</td>
+</tr>
+<th>
+Sesión 3 : 10 de Diciembre
+</th>
+<td>
+<p><strong>Deep Reinforcement Learning</strong><br></p>
+</td>
+<td>
+<p><strong>Videos</strong><br> <a
+href="https://www.youtube.com/watch?v=WXuK6gekU1Y">1. AlphaGo - The
+Movie | Full award-winning documentary</a><br> <a
+href="https://www.youtube.com/watch?v=7L2sUGcOgh0">2. AlphaZero:
+Shedding new light on the grand games of chess, shogi and Go</a><br> <a
+href="https://www.youtube.com/watch?v=WXHFqTvfFSw&amp;t=22s">3. AlphaGo
+Zero: Discovering new knowledge 3 min</a> <a
+href="https://www.youtube.com/watch?v=hYV4-m7_SK8">4. MuZero: DeepMind’s
+New AI Mastered More Than 50 Games (5 min)</a><br> <a
+href="https://www.youtube.com/watch?v=Ih8EfvOzBOY">5.Google DeepMind’s
+Deep Q-Learning &amp; Superhuman Atari Gameplays</a><br> <a
+href="https://www.youtube.com/watch?v=0VLAoVGf_74">6. How DeepSeek
+Rewrote the Transformer</a><br> <a
+href="https://www.youtube.com/watch?v=TmPfTpjtdgg&amp;t=5s">7. BreakOut
+1 min</a><br> <a
+href="https://www.youtube.com/watch?v=qN9Sn7f2kaw">8.How Did TD-Gammon
+Learn? - The Board Game Xpert (3:30 min)</a><br> <a
+href="https://www.youtube.com/watch?v=t0sSFFs5jAw&amp;t=5s">9. 1952
+Arthur Samuel: Forgotten Computer Science Pioneer</a><br> <a
+href="https://www.youtube.com/watch?v=Dov68JsIC4g">10. Reinforcement
+Learning: A 60 Year History</a><br></p>
+<p><strong>Slides</strong><br></p>
+<p><strong>Mitchell</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/xgvzp4xkk066xil9wmtpb/Aprendizaje-por-Refuerzo-Fundamentos-y-Desafios-1.pptx?rlkey=hig1o4sawijidb1s4169exxdx&amp;dl=1">1.
+Aprendizaje por Refuerzo Fundamentos y Desafios</a><br> <a
+href="https://www.dropbox.com/scl/fi/vsvie5ski5l98ifgxbz91/1.-Recompensas-para-Robots-Mitchell.pptx?rlkey=pw27vff88s9fk7z5qygewxyc2&amp;dl=1">2.Recompensas
+para Robots(Mitchell)</a><br> <a
+href="https://www.dropbox.com/scl/fi/5flitkpcjunbsonqv8vaw/2.-Mas-Alla-de-los-Juegos-El-Aprendizaje-por-Refuerzo-en-IA.pptx?rlkey=e98u95t2m3ee8hnnoq35j1ab7&amp;dl=1">3.
+Más alla de los Juegos el RL en IA</a><br></p>
+<p><strong>Serrano</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/j3g2l899dvlssb9k8fi99/3.-Slides-Deep-Reinforcement-Learning-Serrano.pptx?rlkey=k9pdbb0w3npxqob2a3vzjadxo&amp;dl=1">1.
+Slides Deep Reinforcement Learning</a><br> <a
+href="https://www.dropbox.com/scl/fi/rjzbzx6kqq8vyx6egqb8o/4.-Slides-Reinforcement-Learning-With-Human-Feddback-Serrano.pptx?rlkey=wv46leg596q353d1kuhq6wze5&amp;dl=1">2.
+Slides RL with Human feedback</a><br> <a
+href="https://www.youtube.com/watch?v=AS4efwOypjU">2.1 Video RL With
+Human Feedback</a><br> <a
+href="https://www.dropbox.com/scl/fi/j8ca2uyklqsji377mq5b3/5.-Slides-Proximal-Policy-Optimization.pptx?rlkey=0vdzyucpb876i8dn55q3tgb9q&amp;dl=1">3.Slides
+Proximal Policy Optimization</a><br> <a
+href="https://www.youtube.com/watch?v=TjHH_--7l8g&amp;list=PLs8w1Cdi-zvYviYYw_V3qe6SINReGF5M-&amp;index=2">3.1
+Video Proximal Policy Optimization</a><br> <a
+href="https://www.youtube.com/watch?v=XeUB4h1OO1g">4. ¡¡¡Excelente!!!
+How Deep Seek trains reasoning models</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas:</strong><br></p>
+<p><a
+href="https://medium.com/analytics-vidhya/a-beginners-guide-to-reinforcement-learning-and-its-basic-implementation-from-scratch-2c0b5444cc49">-1
+Guía para principiantes sobre el aprendizaje por refuerzo</a><br></p>
+<p><a
+href="https://developers.redhat.com/articles/2025/04/29/how-reinforcement-learning-improves-deepseek-performance?utm_source=chatgpt.com#how_deepseek_r1_was_created">0.How
+reinforcement learning improves DeepSeek performance</a></p>
+<p><a
+href="https://www.datacamp.com/es/tutorial/reinforcement-learning-python-introduction">1.
+Aprendizaje por Refuerzo: Una introducción con ejemplos en
+Python</a><br> <a
+href="https://www.dropbox.com/scl/fi/llri764ecpx5sm2zvtayq/Respuestas_lectura_Aprendizaje_Por_Refuerzo-Alfinal.docx?rlkey=1ungtq0l704968zxh7bo7o4ws&amp;dl=1">1.1
+Doc word con Respuestas al Final</a><br> <a
+href="https://wayground.com/join?gc=552911">1.2 Enlace a
+Quizizz</a><br></p>
+<p><a
+href="https://towardsdatascience.com/drl-01-a-gentle-introduction-to-deep-reinforcement-learning-405b79866bf4/">2.
+Una introducción suave al aprendizaje por refuerzo profundo</a><br> <a
+href="https://www.dropbox.com/scl/fi/exd3l9qxcbatsdta3pzcf/Respuestas-Art-culo-RLearning.pptx?rlkey=n4sw024k5rd2qqadxsd2nihgp&amp;dl=1">2.1
+Slides respuestas a preguntas</a><br> <a
+href="https://wayground.com/join?gc=126414">2.2 enlace
+Quizizz</a><br></p>
+<p><a
+href="https://www.aprendemachinelearning.com/aprendizaje-por-refuerzo/?utm_source=chatgpt.com">3.
+Lectura Adicional Aprendizaje por Refuerzo Blog en Español</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/llt4h0foiuh400sldk7nd/SilverAlphaZero.pdf?rlkey=s6yn8wwuxx7rvl7cng7lhalo3&amp;dl=1">3.
+Artículo Clave David Silver Alpha Zero</a><br> <a
+href="https://www.dropbox.com/scl/fi/sp1ta4mpfcbdv1wsp2sl5/Perturbations.pdf?rlkey=iq2nd57cdoet4acyyq85ci4ix&amp;dl=1">Perturbations</a><br>
+<a
+href="https://www.analyticsvidhya.com/blog/2017/01/introduction-to-reinforcement-learning-implementation/">Excelente
+blog Intro to RL</a><br></p>
+<p><strong>PlayGrounds RL</strong><br></p>
+<p><a href="https://awjuliani.github.io/web-rl-playground/">1. Beginners
+RL</a><br> <a
+href="https://awjuliani.medium.com/the-beginners-rl-playground-a-simple-interactive-website-for-grokking-reinforcement-learning-b6f1edcf7c63">1.1
+Artículo Explicativo Medium</a><br> <a
+href="https://alazareva.github.io/rl_playground/#agentType=expectedSarsa&amp;learningRate=0.5&amp;epsilon=0.05&amp;discount=0.9&amp;showVisits=true&amp;showQ=true">2.
+Playground a la TensorFlow</a><br> <a
+href="https://playground.raise.mit.edu/?utm_source=chatgpt.com">3. Raise
+MIT Programable</a><br>
+<!-- [Open AI](https://spinningup.openai.com/en/latest/?utm_source=chatgpt.com)<br> --></p>
+<p><strong>Additional Playgrounds</strong><br></p>
+<p><a href="https://github.com/aikorea/awesome-rl">Resources of RL
+gitHub</a><br> <a
+href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/rldemo.html">Karpathy
+RL Demo</a><br> <a
+href="https://cs.stanford.edu/people/karpathy/reinforcejs/">Karpathy
+Playground</a><br></p>
+</td>
+<td>
+<p><strong>Personaje</strong><br> <strong>Seabastian Thrun
+</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=HW3q6ktpQXA&amp;t=124s">1.
+Video Sebastian Thurn TED 2011</a><br></p>
+<p><strong>Videos</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=1FyAh07jh0o&amp;list=PLs8w1Cdi-zva1inrFvmytT49w-hZzJIeH&amp;index=18">Friendly
+Introduction Reinforcement Learning</a><br> <a
+href="https://www.youtube.com/watch?v=1FyAh07jh0o&amp;list=PLs8w1Cdi-zva1inrFvmytT49w-hZzJIeH&amp;index=18">Quantum
+Machine Learning</a><br> <a
+href="https://www.youtube.com/watch?v=m2weFARriE8&amp;t=216s">Video
+Brief Intro to RL</a><br> <a
+href="https://www.youtube.com/watch?v=W2CAghUiofY">DeepMind Playing
+Space Invaders</a><br> <a
+href="https://www.youtube.com/watch?v=V1eYniJ0Rnk">DeepMind Playing
+Atari Breakout</a><br> <a
+href="https://www.youtube.com/watch?v=1AB3GQlb65c&amp;list=PLaFGzVcB2MC5wZOM2k6MvOnvqchtq2cgX">DQN
+Games 9 Videos</a><br></p>
+</td>
+<p><br><br><br></p>
+</tr>
+<th>
+Material Adicional
+</th>
+<td>
+<p><strong>La ética y el futuro de la IA</strong><br></p>
+</td>
+<td>
+<p><strong>16 Articulos Cortos</strong><br></p>
+<p><a
+href="https://es.wired.com/articulos/detectar-depresion-con-solo-mirar-smartphone-potencial-de-nuevas-tecnologias">1.
+Depresión</a><br> <a
+href="https://es.wired.com/articulos/esta-funeraria-usa-ia-para-darle-vida-a-las-fotos-de-tus-familiares-fallecidos">2.
+Funeraria</a><br> <a
+href="https://es.wired.com/articulos/traducir-el-lenguaje-de-senas-la-ia-como-ingrediente-de-una-sociedad-inclusiva">3.
+Lenguaje de Señas</a><br> <a
+href="https://es.wired.com/articulos/que-ocurre-cuando-se-usa-ia-para-interrogar-a-testigos-de-crimen">4.
+Testigos de un Crimen</a><br> <a
+href="https://es.wired.com/articulos/un-nino-recibe-una-mala-nota-por-usar-ia-y-sus-padres-demandan-al-colegio">5.
+Malas Notas en Colegio</a><br> <a
+href="https://es.wired.com/articulos/los-animales-hablan-gracias-a-la-ia-en-el-museo-de-zoologia-de-cambridge">6.
+Los Animales Hablan</a><br> <a
+href="https://es.wired.com/articulos/descubren-mas-de-160-mil-nuevos-virus-con-ayuda-de-la-ia">7.
+160 mil nuevos virus</a><br> <a
+href="https://es.wired.com/articulos/zoom-se-llena-de-ia-pronto-podras-tener-avatares-realistas-que-salgan-a-camara-por-ti">8.
+Zoom se llena de IA</a><br> <a
+href="https://es.wired.com/articulos/trae-stephens-ha-construido-armas-ia-y-ha-trabajado-para-donald-trump-jesucristo-lo-aprobaria-asegura">9.
+IA y las armas</a><br> <a
+href="https://es.wired.com/articulos/entre-mas-grandes-y-poderosos-se-hacen-los-chatbots-menos-confiables-se-vuelven">10.
+Confiabilidad de los chatbots</a><br> <a
+href="https://es.wired.com/articulos/inteligencia-artificial-nueva-policia-de-juegos-olimpicos-de-paris-2024">11.
+La Ia y la seguridad Juegos Olímpicos 2024</a><br> <a
+href="https://es.wired.com/articulos/juegos-olimpicos-paris-2024-primeros-era-de-inteligencia-artificial">12.
+Los juegos Olimpicos y la IA</a><br> <a
+href="https://es.wired.com/articulos/futuro-de-programacion-impulsada-por-ia-esta-cerca">13.
+El futuro de la progamación</a><br> <a
+href="https://es.wired.com/articulos/chatgpt-ya-puede-hacernos-reir-mas-que-un-humano-segun-un-estudio">14.
+la Ia y el humor</a><br> <a
+href="https://es.wired.com/articulos/empatia-programada-el-futuro-de-la-interaccion-humano-maquina">15.
+La IA y la empatía</a><br> <a
+href="https://es.wired.com/articulos/yalo-la-startup-que-ofrece-conversaciones-ia-entre-empresas-y-clientes">16.
+La IA y la atención al cliente</a><br></p>
+</td>
+<td>
+<p><strong>Otros 16 Articulos Cortos</strong><br></p>
+<a
+href="https://es.wired.com/articulos/oracle-y-el-avance-de-la-medicina-en-la-era-de-la-ia">1.
+Oracle y la medicina</a><br> <a
+href="https://es.wired.com/articulos/la-ia-quiere-innovar-la-gestion-de-proyectos-para-equipos-de-trabajo">2.
+IA y gestión de Proyectos</a><br> <a
+href="https://es.wired.com/articulos/la-cantidad-de-agua-y-electricidad-que-usa-chatgpt-esta-fuera-de-control">3.
+La energía y la IA</a><br> <a
+href="https://es.wired.com/articulos/ia-genera-tanto-calor-que-paris-lo-usa-para-templar-alberca-olimpica">4.
+La IA y el calor</a><br> <a
+href="https://es.wired.com/articulos/un-asistente-en-tu-cocina-llamado-ia">5.
+La IA y la cocina</a><br> <a
+href="https://es.wired.com/articulos/como-logramos-una-ia-mas-honesta-transparente-y-responsable">6.
+IA Honesta Transparente y Responsable</a><br> <a
+href="https://es.wired.com/articulos/este-dispositivo-digital-con-ia-registrara-tus-reuniones-y-quiza-tu-vida">7.
+La IA y las reuniones</a><br> <a
+href="https://es.wired.com/articulos/trump-comparte-imagenes-falsas-de-taylor-swift-creadas-con-ia-para-reclutar-votantes">8.
+IA y política</a><br> <a
+href="https://es.wired.com/articulos/ia-cambiando-forma-descubrir-nuevas-promesas-futbol">9.
+La Ia y las promesas del fútbol</a><br> <a
+href="https://es.wired.com/articulos/trump-comparte-imagenes-falsas-de-taylor-swift-creadas-con-ia-para-reclutar-votantes">10.
+IA y el VAR</a><br> <a
+href="https://es.wired.com/articulos/mike-rianda-hizo-una-pelicula-sobre-humanos-que-se-rebelan-contra-la-ia-ahora-se-hace-realidad">11.IA
+y el cine</a><br> <a
+href="https://es.wired.com/articulos/mike-rianda-hizo-una-pelicula-sobre-humanos-que-se-rebelan-contra-la-ia-ahora-se-hace-realidad">12.
+IA y la Ingeniería</a><br> <a
+href="https://es.wired.com/articulos/prompting-asi-es-disenar-un-juego-de-mesa-en-familia-con-ia">13.
+IA y los juegos de mesa</a><br> <a
+href="https://es.wired.com/articulos/ia-es-arma-seductora-para-ciberdelincuentes-pero-puede-escaparse-de-sus-manos">14.
+La IA y la ciberdelincuencia</a><br> <a
+href="https://aiguide.substack.com/p/llms-and-world-models-part-1">15.Melanie
+Mitchell ¿Cómo los grandes modelos lingüísticos dan sentido a sus
+“mundos”? Parte Uno</a><br> <a
+href="https://aiguide.substack.com/p/llms-and-world-models-part-2">16.
+Melanie Mitchell ¿Cómo los grandes modelos lingüísticos dan sentido a
+sus “mundos”? Parte Dos</a><br>
+</td>
+<td>
+<p><strong>Videos para Discusión</strong><br></p>
+<!-- [1.Melanie Mitchell Presents "The Future of Artificial Intelligence"](https://www.youtube.com/watch?v=V95W9g-SsBU&t=1s)<br> -->
+<p><a href="https://www.youtube.com/watch?v=hJP5GqnTrNo">1. Sal Khan How
+AI Could Save (Not Destroy) Education</a><br></p>
+<p><a href="https://www.youtube.com/watch?v=s0rwZXt-C04&amp;t=531s">2.
+An Imminent Threat from Artificial Intelligence Aidan Gomez</a><br> <a
+href="https://www.youtube.com/watch?v=eXdVDhOGqoE&amp;t=39s">3. AI Is
+Dangerous, but Not for the Reasons You Think Sasha Luccioni</a><br> <a
+href="https://www.youtube.com/watch?v=qe9QSCF-d88">4. The Catastrophic
+Risks of AI — and a Safer Path | Yoshua Bengio</a><br> <a
+href="https://www.youtube.com/watch?v=CRraHg4Ks_g">5. Demis Hassabis On
+The Future of Work in the Age of AI</a><br> <a
+href="https://www.youtube.com/watch?v=b2uEAgLeOzA">6. AI and our future
+with Yuval Noah Harari and Mustafa Suleyman</a><br> <a
+href="https://www.youtube.com/watch?v=Y7nrAOmUtRs">7. ‘We have to stop
+it taking over’ - the past, present and future of AI with Geoffrey
+Hinton</a><br></p>
+</td>
+</tr>
+</table>
+<p><br><br><br></p>
+</div>
+<div id="semana-4" class="section level2">
+<h2>Semana 4</h2>
+<center>
+<p><img
+src="https://www.dropbox.com/scl/fi/8ltbaorcdczp96ucrykqp/CatDog.gif?rlkey=hlrbuaf60x4xpfb4k4c5m84rm&amp;dl=1"
+style="width:25.0%" /><br></p>
+<td>
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+Sesión 1 : 12 de Diciembre
+</th>
+<td>
+<p>Exposiciones Finales</p>
+</td>
+<td>
+<p>Exposiciones Finales</p>
+</td>
+<td>
+<p>Exposiciones Finales</p>
+</td>
+<td>
+<p>Exposiciones Finales</p>
+</td>
+</tr>
+</table>
+<p><br><br><br></p>
+</div>
+<div id="libros" class="section level2">
+<h2>Libros</h2>
+<center>
+<img src="https://github.com/jamelende/PaginasWeb/raw/main/Libros.jpg"
+style="width:20.0%" />
+</center>
+<p><strong>Módulo 2</strong><br></p>
+<p><a href="https://www.machinelearningisfun.com/">Machine Learning is
+fun ebook</a><br> <a
+href="https://www.dropbox.com/scl/fi/iymjn5mxinvjr35r6x8tc/1.-Ethem-Alpaydin-Machine-Learning-The-MIT-Press-2021.pdf?rlkey=41dcahrj5cjhqojrkimvs6x2l&amp;dl=1">Machine
+Learning Mit Press 2022</a><br> <a
+href="https://www.dropbox.com/scl/fi/dvxw3a593prfnwljfn9zs/Melanie-Mitchell-Artificial-Intelligence_-A-Guide-for-Thinking-Humans-Farrar-Straus-and-Giroux-2019.pdf?rlkey=haxmo9jn1ecc0sogdp3dtrwza&amp;dl=1">AI:
+A guide to Thinking Humans</a><br> <a
+href="https://www.dropbox.com/scl/fi/cnvu0aguzx5a6oczgpa0d/2.-Grokking-Machine-Learning-Serrano.pdf?rlkey=5m1otas2x042rqd14jhacma6a&amp;dl=1">Luis
+Serrano Grokking Machine Learning</a><br></p>
+<p><strong>AI Clásica</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/cnvu0aguzx5a6oczgpa0d/2.-Grokking-Machine-Learning-Serrano.pdf?rlkey=5m1otas2x042rqd14jhacma6a&amp;dl=1">Excelente:
+Luis Serrano Grokking Machine Learning</a><br></p>
+<p><a
+href="https://www.dropbox.com/s/v7dfcdeju6x8qy8/UnderstandingDeepLearning_02_26_24_C.pdf?dl=1">Nuevo!!
+Simon Prine: Understanding Deep Learning</a><br><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/dvxw3a593prfnwljfn9zs/Melanie-Mitchell-Artificial-Intelligence_-A-Guide-for-Thinking-Humans-Farrar-Straus-and-Giroux-2019.pdf?rlkey=haxmo9jn1ecc0sogdp3dtrwza&amp;dl=1">Melanie
+Mitchell: ArtificialIntelligence, A Guide for Thinking
+Humans</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/dzkj3eo9kkdy08zqqze6t/James-Bridle-La-nueva-edad-oscura.pdf?rlkey=kpntil37zb16dflzh1osxzok8&amp;dl=1">James
+Bridle: la nueva Edad Oscura</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/3wr8olnytzyeff1hzlltr/Stephen-Wolfram-What-Is-ChatGPT-Doing-_.-and-Why-Does-It-Work_-Wolfram-Media-Inc.-2023.pdf?rlkey=bhg2fdshy0w1ooein9scg6ceg&amp;dl=1">Stephen
+Wolfram - What Is ChatGPT Doing</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/iymjn5mxinvjr35r6x8tc/Ethem-Alpaydin-Machine-Learning-revised-and-updated-edition-The-MIT-Press-Essential-Knowledge-series-The-MIT-Press-2021.pdf?rlkey=41dcahrj5cjhqojrkimvs6x2l&amp;dl=1">Ethem
+Alpaydin, Machine Learning Mit Press</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/i5dl9j22qry1sjj96k78m/The-MIT-Press-Essential-Knowledge-John-D.-Kelleher-Deep-Learning-Mit-Press-2019.pdf?rlkey=yaokrvbbpt4jg87evm66m29lt&amp;dl=1">John
+Kelleher, DeepLearning</a><br></p>
+<p><strong>Prompt Engineering</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/65no3dtaccdkzjxayhk2o/1.-The-Art-of-Prompt-Engineering-with-chatGPT-Nathan-Hunter.pdf?rlkey=8g3msp5a06j79rzri44axvnaa&amp;dl=1">Nathan
+Hunter: The Art of Prompt Engineering</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/fo49edborr5shs8acixrc/Eric-Sarrion-Exploring-the-Power-of-ChatGPT-_-Applications-Techniques-and-Implications-Apress.pdf?rlkey=912bm0awny21czw93qw9m0vq2&amp;dl=1">Eric
+Sarrion:Exploring the Power of ChatGpt</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/sbh50p0cqglo9c506w8i6/Adelson-Mark-The-ChatGPT-GoldRush_-Profiting-from-the-AI-Revolution-Online_-Prompt-Engineering-Mastery-with-ChatGPT-2023.pdf?rlkey=bb62e9bgcsli669ij7q4ezscr&amp;dl=1">Mark
+Adelson: The ChatGpt Gold Rush</a><br></p>
+</div>
+<div id="artículos" class="section level2">
+<h2>Artículos</h2>
+<center>
+<img
+src="https://github.com/jamelende/PaginasWeb/raw/main/Articulos.jpg"
+style="width:20.0%" />
+</center>
+<p><a href="https://openai.com/index/gpt-4-research/">OpenAi
+Gpt</a><br></p>
+<p><a
+href="https://mit-genai.pubpub.org/pub/gj6eod3e/release/2?from=10915&amp;to=11045">Resnick
+Ai Opportunities</a><br></p>
+<p><a href="https://openai.com/index/gpt-4-research/">OpenAi Gpt</a></p>
+</div>
+<div id="cursos-en-línea" class="section level2">
+<h2>Cursos en Línea</h2>
+<center>
+<img
+src="https://www.dropbox.com/scl/fi/tqtp4bz9i35awg8wgjlca/Clusters.gif?rlkey=mpoj07q3obr5b4z2b52xckvxd&amp;dl=1"
+style="width:25.0%" />
+</center>
+<p><strong>Módulo 1</strong><br></p>
+<p><a
+href="https://www.coursera.org/learn/generative-ai-for-everyone?utm_campaign=genai4e-launch&amp;utm_medium=institutions&amp;utm_source=deeplearning-ai">1.
+Generative AI for Everyone</a><br> <a
+href="https://app.datacamp.com/learn/courses/understanding-prompt-engineering">2.
+Datacamp , Understanding Prompt Engineering</a><br> <a
+href="https://www.coursera.org/learn/ai-for-everyone/home/module/3">3.
+Andrew Ng , AI for EveryOne</a><br> <a
+href="https://generative-ai-course.hks.harvard.edu/">4. Curso Harvard
+Kennedy School Generative AI</a><br> <a
+href="https://www.coursera.org/lecture/generative-ai-essentials/what-is-ai-what-is-chatgpt-YUQlJ">5.
+UMichigan What is Ai? What is ChatGpt?</a><br></p>
+<p><strong>Módulo 2</strong><br></p>
+<p><a
+href="https://campus.datacamp.com/courses/understanding-machine-learning/what-is-machine-learning?ex=1">1
+DataCamp What is ML?</a><br> <a
+href="https://developers.google.com/machine-learning?hl=es-419">2. ML
+Google</a><br> <a
+href="https://www.youtube.com/playlist?list=PLiPvV5TNogxIS4bHQVW4pMkj4CHA8COdX">3.
+Andrew Ng Machine Learning</a><br> <a
+href="https://www.kadenze.com/courses/machine-learning-for-musicians-and-artists/info">4.
+ML for musicians and artists</a><br> <a
+href="https://www.youtube.com/playlist?list=PLoRl3Ht4JOcdU872GhiYWf6jwrk_SNhz9">5.
+Geoffrey Hinton, Coursera Machine Learning Course</a><br> <a
+href="https://www.youtube.com/watch?v=rnEEHT9-c5I">6. SimpliLearn,
+Machine Learning Course</a><br> <a
+href="https://www.youtube.com/watch?v=mbyG85GZ0PI">7. Yasr Abu Mustafa,
+Learning from Data</a><br></p>
+<p><strong>Módulo 3</strong><br></p>
+<p><a href="https://github.com/mrdbourke/pytorch-deep-learning">1.
+Pytorch Course Deep learning</a><br></p>
+<p><strong>Módulo 4</strong><br></p>
+</div>
+<div id="videos" class="section level2">
+<h2>Videos</h2>
+<center>
+<img
+src="https://www.dropbox.com/scl/fi/ma38u1l9na3o87ypo41py/5.-Videos-ChatGpt.png?rlkey=6ddj6k3492aczfpgnm4es57j6&amp;dl=1"
+style="width:20.0%" />
+</center>
+<p><strong>Versiones ChatGPt</strong><br></p>
+<p><a href="https://openai.com/index/introducing-canvas/">ChatGpt with
+Canvas</a><br></p>
+<p><a
+href="https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/">ChatGpt
+40 Mini</a><br></p>
+<p><a
+href="https://openai.com/index/introducing-openai-o1-preview/">ChatGPt
+o1 Preview</a></p>
+<p><a
+href="https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/">ChatGpt-o1
+Mini</a><br></p>
+<p><a href="https://www.youtube.com/watch?v=vEd-LqBCONg">Nvidia Jensen
+Huang Do not learn to code</a><br></p>
+<p><strong>Inteligencia Artificial Clásica</strong><br></p>
+<p><a
+href="https://www.youtube.com/channel/UCy5znSnfMsDwaLlROnZ7Qbg/featured">Canal
+Espectacular IA</a></p>
+<p><a href="https://www.youtube.com/watch?v=agzjHT92ZcU">Mitchell Why AI
+is harder than we think</a></p>
+<p><a href="https://youtu.be/KKNCiRWd_j0?si=OaIpZtLs_KBnaBM-">Mustafa
+Suleyman, What is the AI anyway</a></p>
+<p><a
+href="https://www.youtube.com/watch?v=pgrzEHJTPPM&amp;t=2430s">Rodney
+Brooks , Generative AI Shaping the Future</a></p>
+<p><a
+href="https://www.youtube.com/watch?v=UakqL6Pj9xo&amp;t=840s">Francois
+Chollet LLMs wont lead to AGI</a></p>
+<p><a
+href="https://www.youtube.com/watch?v=wjZofJX0v4M&amp;t=187s">3Blue1Brown
+Transformers</a></p>
+<p><a href="https://www.youtube.com/watch?v=KKNCiRWd_j0">Mustafa
+suleyman What is Ai</a></p>
+<p><strong>Historia de la IA</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=n4IQOBka8bc">Sanja, Geoffrey
+Hinton | On working with Ilya, choosing problems, and the power of
+intuition</a></p>
+<p><a href="https://www.youtube.com/watch?v=zl99IZvW7rE&amp;t=300s">6
+years ago, ignoring name of the field!!!</a></p>
+<p><a href="https://www.youtube.com/watch?v=l9RWTMNnvi4">Bloomberg. This
+Canadian Genius Created Modern AI</a><br></p>
+<p><strong>Machine Learning y Deep learning</strong><br></p>
+<p><a href="https://playground.tensorflow.org/">PlayGround
+TensorFlow</a><br></p>
+<p><a
+href="https://www.youtube.com/playlist?list=PLIb_io8a5NB0CP5ktJE9qaLd6GOfh1Z9m">Deep
+Learning Español,Canal 3Blue1Brown</a><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=wjZofJX0v4M&amp;t=819s">3Blue1Brown
+Visual But what is a Gpt Intro to Transformers</a> <br> <a
+href="https://www.youtube.com/watch?v=aircAruvnKk&amp;t=9s">3Blue1Brown
+But What is a Neural Network</a> <br></p>
+<p><a href="https://www.youtube.com/watch?v=SZorAJ4I-sA">Transformers
+Explained</a><br></p>
+</div>
+<div id="chatbots" class="section level2">
+<h2>ChatBots</h2>
+<center>
+<img
+src="https://www.dropbox.com/scl/fi/6y0ol4ziczafz06w09y21/ia.gif?rlkey=fed842j2xz8wvhc6srl41ix2r&amp;dl=1"
+style="width:20.0%" />
+</center>
+<p><strong>Chatbots Generales</strong><br></p>
+<p><a href="https://whimsical.com/ai">Whimsical generate
+diagrams</a></p>
+<p><a href="https://deepnostalgia.ai/es">Nostalgia fotos viejas en
+videos</a></p>
+<p><a href="https://openai.com/index/sora/">Sora creating video from
+text</a></p>
+<p><a href="https://www.read.ai/es">read.ai trancribe reuniones</a></p>
+<p><a href="https://suno.com/">suno Composición Musical</a> <br> <a
+href="https://elevenlabs.io/">elevenlabs: text to speech natural
+sound</a> <br> <a
+href="https://typeset.io/library/untitled-collection-3egzd7ad/levitinch5-pdf-kzyho9cq?ascm=1">SciSpace
+Chat with a pdf</a><br></p>
+<p><strong>ChatBotsChatGpt-4o</strong><br></p>
+<p><a
+href="https://chatgpt.com/g/g-HxPrv1p8v-code-tutor">KhanMigo</a><br> <a
+href="https://chatgpt.com/g/g-pmuQfob8d-image-generator">Image
+Generator</a><br> <a
+href="https://chatgpt.com/g/g-2fkFE8rbu-dall-e">Dall-e</a><br> <a
+href="https://chatgpt.com/g/g-HMNcP6w7d-data-analyst">Data
+Analyst</a><br> <a
+href="https://chatgpt.com/g/g-R6VqLNHFM-excel-ai">excel AI</a><br> <a
+href="https://chatgpt.com/g/g-66xQYfKVr-video-summariser-pro">Video
+Summariser</a><br></p>
+<p><a href="https://chatgpt.com/g/g-Hkqnd7mFT-video-gpt-by-veed">Video
+Generator</a></p>
+<p><a href="https://chatgpt.com/g/g-WDtZ2aBA2-logo-creator">Logo
+Creator</a><br> <a
+href="https://chatgpt.com/g/g-cJtHaGnyo-presentation-and-slides-gpt-powerpoints-pdfs">Powerpoint
+Generator</a><br> <a
+href="https://chatgpt.com/g/g-2DQzU5UZl-code-copilot">Code
+Copilot</a><br> <a
+href="https://chatgpt.com/g/g-FGhasb1tZ-therapist-psychologist-non-medical-therapy">Emotional
+Support</a><br></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
