@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poll de Clase</title>
+  <style>
+    :root {
+      --bg: #f6f7f3;
+      --panel: #ffffff;
+      --ink: #172025;
+      --muted: #60707a;
+      --line: #dce2dd;
+      --teal: #0f766e;
+      --teal-dark: #115e59;
+      --coral: #d95f45;
+      --indigo: #4658a8;
+      --amber: #b7791f;
+      --soft-teal: #e5f3f1;
+      --soft-coral: #faece8;
+      --soft-indigo: #eceefd;
+      --danger: #b42318;
+      --shadow: 0 18px 50px rgba(27, 39, 45, 0.12);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      background: var(--teal);
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 6px;
+      background: #edf0eb;
+      padding: 5px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .tab-button {
+      padding: 9px 13px;
+      border-radius: 6px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 700;
+      min-height: 38px;
+    }
+
+    .tab-button.active {
+      background: #ffffff;
+      color: var(--ink);
+      box-shadow: 0 4px 14px rgba(23, 32, 37, 0.08);
+    }
+
+    main {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 26px 22px 42px;
+    }
+
+    .teacher-grid {
+      display: grid;
+      grid-template-columns: minmax(310px, 430px) 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .panel-header h2,
+    .student-card h2 {
+      font-size: 1.1rem;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .panel-header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      font-size: 0.88rem;
+      margin-bottom: 7px;
+      color: #273238;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #cfd8d2;
+      border-radius: 7px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+      min-height: 42px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 88px;
+      line-height: 1.45;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 34px 1fr 38px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .option-key {
+      height: 34px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      background: var(--soft-indigo);
+      color: var(--indigo);
+      font-weight: 900;
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      background: #edf0eb;
+      color: #344148;
+      font-size: 1.1rem;
+      font-weight: 900;
+    }
+
+    .icon-button:hover {
+      background: #e1e7e0;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 7px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn.primary {
+      background: var(--teal);
+      color: #ffffff;
+    }
+
+    .btn.primary:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn.secondary {
+      background: #edf0eb;
+      color: var(--ink);
+    }
+
+    .btn.secondary:hover {
+      background: #e1e7e0;
+    }
+
+    .btn.warn {
+      background: var(--soft-coral);
+      color: var(--danger);
+    }
+
+    .btn.warn:hover {
+      background: #f7d9d1;
+    }
+
+    .message {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin-top: 12px;
+    }
+
+    .message.error {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .link-box {
+      margin-top: 18px;
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fbfcfa;
+    }
+
+    .link-box.show {
+      display: block;
+    }
+
+    .link-box textarea {
+      border: 0;
+      border-radius: 0;
+      min-height: 78px;
+      background: transparent;
+      font-size: 0.86rem;
+    }
+
+    .link-actions {
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .poll-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .poll-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfcfa;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .poll-item strong {
+      display: block;
+      margin-bottom: 4px;
+      line-height: 1.25;
+    }
+
+    .poll-item span {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .results-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    .stat b {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      height: 360px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+      padding: 12px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .responses-table {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #ffffff;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #f1f4ef;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: #4d5b63;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .import-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .student-view {
+      max-width: 720px;
+      margin: 18px auto 0;
+    }
+
+    .student-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .question {
+      font-size: 1.35rem;
+      line-height: 1.35;
+      margin: 14px 0 20px;
+      font-weight: 850;
+    }
+
+    .answer-options {
+      display: grid;
+      gap: 10px;
+      margin: 12px 0 18px;
+    }
+
+    .answer-option {
+      position: relative;
+    }
+
+    .answer-option input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+
+    .answer-option label {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid #cfd8d2;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ffffff;
+      font-size: 1rem;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .answer-option .letter {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--soft-teal);
+      color: var(--teal-dark);
+      font-weight: 900;
+    }
+
+    .answer-option input:checked + label {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+      background: #f7fcfb;
+    }
+
+    .receipt {
+      display: none;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+      overflow: hidden;
+    }
+
+    .receipt.show {
+      display: block;
+    }
+
+    .receipt textarea {
+      border: 0;
+      border-radius: 0;
+      min-height: 92px;
+      background: transparent;
+      font-size: 0.84rem;
+    }
+
+    .empty {
+      border: 1px dashed #b9c4bd;
+      border-radius: 8px;
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      background: #fbfcfa;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .teacher-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .mode-tabs {
+        width: 100%;
+      }
+
+      .tab-button {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      main {
+        padding: 18px 14px 32px;
+      }
+
+      .panel-body,
+      .panel-header,
+      .student-card {
+        padding: 16px;
+      }
+
+      .stats,
+      .import-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .question {
+        font-size: 1.12rem;
+      }
+
+      .chart-wrap {
+        height: 310px;
+      }
+
+      .actions .btn,
+      .link-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-mark">P</div>
+          <div>
+            <h1>Poll de Clase</h1>
+            <p>Preguntas de seleccion multiple y resultados en barras</p>
+          </div>
+        </div>
+        <nav class="mode-tabs" aria-label="Modo de uso">
+          <button class="tab-button active" id="teacherTab" type="button">Profesor</button>
+          <button class="tab-button" id="studentTab" type="button">Estudiante</button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="teacherView" class="teacher-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Crear poll</h2>
+              <p>Configure la pregunta, guarde el poll y comparta el enlace.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <form id="pollForm">
+              <div class="field">
+                <label for="pollTitle">Titulo</label>
+                <input id="pollTitle" maxlength="80" placeholder="Ej. Clase 3 - Conceptos clave" required>
+              </div>
+              <div class="field">
+                <label for="pollQuestion">Pregunta</label>
+                <textarea id="pollQuestion" maxlength="500" placeholder="Escriba aqui la pregunta de seleccion multiple" required></textarea>
+              </div>
+              <div class="field">
+                <label>Opciones</label>
+                <div id="optionsList"></div>
+                <button class="btn secondary" id="addOptionBtn" type="button">+ Agregar opcion</button>
+              </div>
+              <div class="actions">
+                <button class="btn primary" type="submit">Guardar y generar enlace</button>
+                <button class="btn secondary" id="clearFormBtn" type="button">Nuevo poll</button>
+              </div>
+              <div class="message" id="formMessage"></div>
+            </form>
+
+            <div class="link-box" id="linkBox">
+              <textarea id="studentLink" readonly aria-label="Enlace para estudiantes"></textarea>
+              <div class="link-actions">
+                <button class="btn primary" id="copyLinkBtn" type="button">Copiar enlace</button>
+                <button class="btn secondary" id="openStudentBtn" type="button">Abrir vista estudiante</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-shell">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Polls guardados</h2>
+                <p>Seleccione un poll para ver o consolidar respuestas.</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="pollList" class="poll-list"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Resultados</h2>
+                <p id="selectedPollLabel">Sin poll seleccionado</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="resultsEmpty" class="empty">Cree o seleccione un poll para activar los resultados.</div>
+              <div id="resultsContent" class="hidden">
+                <div class="stats">
+                  <div class="stat"><b id="totalResponses">0</b><span>Respuestas</span></div>
+                  <div class="stat"><b id="topOption">-</b><span>Opcion lider</span></div>
+                  <div class="stat"><b id="topPercent">0%</b><span>Porcentaje lider</span></div>
+                </div>
+
+                <div class="chart-wrap" aria-label="Grafica de barras">
+                  <canvas id="resultsChart"></canvas>
+                </div>
+
+                <div class="import-grid">
+                  <div class="field">
+                    <label for="importCodes">Importar codigos de respuesta</label>
+                    <textarea id="importCodes" placeholder="Pegue aqui uno o varios codigos, uno por linea"></textarea>
+                  </div>
+                  <button class="btn secondary" id="importBtn" type="button">Importar</button>
+                </div>
+
+                <div class="actions">
+                  <button class="btn secondary" id="exportCsvBtn" type="button">Exportar CSV</button>
+                  <button class="btn secondary" id="copySummaryBtn" type="button">Copiar resumen</button>
+                  <button class="btn warn" id="deleteResponsesBtn" type="button">Borrar respuestas</button>
+                </div>
+                <div class="message" id="resultsMessage"></div>
+
+                <div class="responses-table" id="responsesTableWrap"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="studentView" class="student-view hidden">
+        <div class="student-card">
+          <h2 id="studentTitle">Responder poll</h2>
+          <div id="studentBody"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "pollClassApp.v1";
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const barColors = ["#0f766e", "#d95f45", "#4658a8", "#b7791f", "#6b7280", "#8b5cf6", "#0e7490", "#be123c"];
+
+    const state = {
+      polls: {},
+      responses: {},
+      selectedPollId: null,
+      currentStudentPoll: null
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function uid(prefix) {
+      return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function loadState() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        state.polls = stored.polls || {};
+        state.responses = stored.responses || {};
+        state.selectedPollId = stored.selectedPollId || Object.keys(state.polls)[0] || null;
+      } catch (error) {
+        state.polls = {};
+        state.responses = {};
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        polls: state.polls,
+        responses: state.responses,
+        selectedPollId: state.selectedPollId
+      }));
+    }
+
+    function encodeData(data) {
+      const json = JSON.stringify(data);
+      const bytes = new TextEncoder().encode(json);
+      let binary = "";
+      bytes.forEach((byte) => binary += String.fromCharCode(byte));
+      return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    }
+
+    function decodeData(text) {
+      const normalized = text.replace(/-/g, "+").replace(/_/g, "/");
+      const padded = normalized + "=".repeat((4 - normalized.length % 4) % 4);
+      const binary = atob(padded);
+      const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
+
+    function makeStudentUrl(poll) {
+      const base = `${location.origin}${location.pathname}`;
+      return `${base}?poll=${encodeData(poll)}`;
+    }
+
+    function setMode(mode) {
+      const teacher = mode === "teacher";
+      $("teacherView").classList.toggle("hidden", !teacher);
+      $("studentView").classList.toggle("hidden", teacher);
+      $("teacherTab").classList.toggle("active", teacher);
+      $("studentTab").classList.toggle("active", !teacher);
+      if (!teacher && !state.currentStudentPoll) renderStudentEmpty();
+    }
+
+    function renderOptions(options = ["", "", "", ""]) {
+      const list = $("optionsList");
+      list.innerHTML = "";
+      options.forEach((value, index) => {
+        const row = document.createElement("div");
+        row.className = "option-row";
+        row.innerHTML = `
+          <div class="option-key">${letters[index]}</div>
+          <input class="option-input" value="${escapeAttr(value)}" maxlength="180" placeholder="Opcion ${letters[index]}" required>
+          <button class="icon-button remove-option" type="button" title="Quitar opcion" aria-label="Quitar opcion">x</button>
+        `;
+        row.querySelector(".remove-option").addEventListener("click", () => {
+          if (document.querySelectorAll(".option-row").length <= 2) {
+            setMessage("formMessage", "Debe mantener al menos dos opciones.", true);
+            return;
+          }
+          row.remove();
+          relabelOptions();
+        });
+        list.appendChild(row);
+      });
+      relabelOptions();
+    }
+
+    function relabelOptions() {
+      document.querySelectorAll(".option-row").forEach((row, index) => {
+        row.querySelector(".option-key").textContent = letters[index];
+        row.querySelector(".option-input").placeholder = `Opcion ${letters[index]}`;
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/\n/g, " ");
+    }
+
+    function getFormOptions() {
+      return Array.from(document.querySelectorAll(".option-input"))
+        .map((input) => input.value.trim())
+        .filter(Boolean);
+    }
+
+    function getAllFormOptionValues() {
+      return Array.from(document.querySelectorAll(".option-input"))
+        .map((input) => input.value);
+    }
+
+    function setMessage(id, text, isError = false) {
+      const element = $(id);
+      element.textContent = text || "";
+      element.classList.toggle("error", isError);
+    }
+
+    function savePollFromForm(event) {
+      event.preventDefault();
+      const title = $("pollTitle").value.trim();
+      const question = $("pollQuestion").value.trim();
+      const options = getFormOptions();
+
+      if (!title || !question || options.length < 2) {
+        setMessage("formMessage", "Complete titulo, pregunta y al menos dos opciones.", true);
+        return;
+      }
+
+      const poll = {
+        id: uid("poll"),
+        title,
+        question,
+        options,
+        createdAt: new Date().toISOString()
+      };
+
+      state.polls[poll.id] = poll;
+      state.responses[poll.id] = state.responses[poll.id] || [];
+      state.selectedPollId = poll.id;
+      saveState();
+      renderPollList();
+      renderResults();
+      showLink(poll);
+      setMessage("formMessage", "Poll guardado.");
+    }
+
+    function showLink(poll) {
+      const link = makeStudentUrl(poll);
+      $("studentLink").value = link;
+      $("linkBox").classList.add("show");
+      $("openStudentBtn").onclick = () => {
+        history.replaceState(null, "", `?poll=${encodeData(poll)}`);
+        state.currentStudentPoll = poll;
+        renderStudentPoll(poll);
+        setMode("student");
+      };
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        const ok = document.execCommand("copy");
+        area.remove();
+        return ok;
+      }
+    }
+
+    function renderPollList() {
+      const list = $("pollList");
+      const polls = Object.values(state.polls).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      if (!polls.length) {
+        list.innerHTML = `<div class="empty">No hay polls guardados todavia.</div>`;
+        return;
+      }
+
+      list.innerHTML = polls.map((poll) => {
+        const count = (state.responses[poll.id] || []).length;
+        const active = poll.id === state.selectedPollId ? "border-color: #0f766e; background: #f7fcfb;" : "";
+        return `
+          <div class="poll-item" style="${active}">
+            <div>
+              <strong>${escapeHtml(poll.title)}</strong>
+              <span>${count} respuestas · ${poll.options.length} opciones</span>
+            </div>
+            <button class="btn secondary select-poll" data-id="${poll.id}" type="button">Ver</button>
+          </div>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".select-poll").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedPollId = button.dataset.id;
+          saveState();
+          renderPollList();
+          renderResults();
+          showLink(state.polls[state.selectedPollId]);
+        });
+      });
+    }
+
+    function getCounts(poll, responses) {
+      return poll.options.map((option, index) => ({
+        index,
+        option,
+        count: responses.filter((response) => response.optionIndex === index).length
+      }));
+    }
+
+    function renderResults() {
+      const poll = state.polls[state.selectedPollId];
+      if (!poll) {
+        $("resultsEmpty").classList.remove("hidden");
+        $("resultsContent").classList.add("hidden");
+        $("selectedPollLabel").textContent = "Sin poll seleccionado";
+        return;
+      }
+
+      const responses = state.responses[poll.id] || [];
+      const counts = getCounts(poll, responses);
+      const top = counts.slice().sort((a, b) => b.count - a.count)[0];
+      const topPct = responses.length ? Math.round((top.count / responses.length) * 100) : 0;
+
+      $("resultsEmpty").classList.add("hidden");
+      $("resultsContent").classList.remove("hidden");
+      $("selectedPollLabel").textContent = poll.title;
+      $("totalResponses").textContent = responses.length;
+      $("topOption").textContent = responses.length ? letters[top.index] : "-";
+      $("topPercent").textContent = `${topPct}%`;
+      renderChart(poll, counts, responses.length);
+      renderResponsesTable(poll, responses);
+    }
+
+    function renderChart(poll, counts, total) {
+      const canvas = $("resultsChart");
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(320, container.clientWidth) * dpr;
+      canvas.height = Math.max(260, container.clientHeight) * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
+
+      const width = canvas.width / dpr;
+      const height = canvas.height / dpr;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#fbfcfa";
+      ctx.fillRect(0, 0, width, height);
+
+      const pad = { left: 42, right: 20, top: 24, bottom: 72 };
+      const chartW = width - pad.left - pad.right;
+      const chartH = height - pad.top - pad.bottom;
+      const maxCount = Math.max(1, ...counts.map((item) => item.count));
+
+      ctx.strokeStyle = "#dce2dd";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, pad.top + chartH);
+      ctx.lineTo(pad.left + chartW, pad.top + chartH);
+      ctx.stroke();
+
+      ctx.fillStyle = "#60707a";
+      ctx.font = "12px Segoe UI, Arial";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i <= 4; i++) {
+        const value = Math.round((maxCount * i) / 4);
+        const y = pad.top + chartH - (chartH * i) / 4;
+        ctx.fillText(value, pad.left - 8, y);
+        ctx.strokeStyle = "#edf0eb";
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + chartW, y);
+        ctx.stroke();
+      }
+
+      const gap = 12;
+      const barW = Math.max(24, (chartW - gap * (counts.length + 1)) / counts.length);
+      counts.forEach((item, index) => {
+        const x = pad.left + gap + index * (barW + gap);
+        const barH = item.count ? Math.max(5, (item.count / maxCount) * (chartH - 8)) : 0;
+        const y = pad.top + chartH - barH;
+        ctx.fillStyle = barColors[index % barColors.length];
+        ctx.fillRect(x, y, barW, barH);
+
+        ctx.fillStyle = "#172025";
+        ctx.font = "700 13px Segoe UI, Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        const pct = total ? Math.round((item.count / total) * 100) : 0;
+        ctx.fillText(`${item.count} (${pct}%)`, x + barW / 2, y - 6);
+
+        ctx.fillStyle = "#273238";
+        ctx.font = "800 14px Segoe UI, Arial";
+        ctx.textBaseline = "top";
+        ctx.fillText(letters[item.index], x + barW / 2, pad.top + chartH + 12);
+
+        ctx.fillStyle = "#60707a";
+        ctx.font = "12px Segoe UI, Arial";
+        const label = item.option.length > 18 ? item.option.slice(0, 16) + "..." : item.option;
+        wrapText(ctx, label, x + barW / 2, pad.top + chartH + 32, Math.min(120, barW + 26), 14);
+      });
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(" ");
+      let line = "";
+      let lines = 0;
+      words.forEach((word) => {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          ctx.fillText(line, x, y + lines * lineHeight);
+          line = word;
+          lines += 1;
+        } else {
+          line = test;
+        }
+      });
+      if (line) ctx.fillText(line, x, y + lines * lineHeight);
+    }
+
+    function renderResponsesTable(poll, responses) {
+      const wrap = $("responsesTableWrap");
+      if (!responses.length) {
+        wrap.innerHTML = `<div class="empty">Aun no hay respuestas guardadas.</div>`;
+        return;
+      }
+
+      const rows = responses
+        .slice()
+        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+        .map((response) => `
+          <tr>
+            <td>${escapeHtml(response.student || "Sin nombre")}</td>
+            <td>${letters[response.optionIndex] || "-"} · ${escapeHtml(poll.options[response.optionIndex] || response.optionText || "")}</td>
+            <td>${new Date(response.submittedAt).toLocaleString()}</td>
+            <td>${escapeHtml(response.source || "local")}</td>
+          </tr>
+        `).join("");
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Respuesta</th>
+              <th>Fecha</th>
+              <th>Origen</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function renderStudentEmpty() {
+      $("studentTitle").textContent = "Responder poll";
+      $("studentBody").innerHTML = `
+        <div class="empty">Abra un enlace de poll para responder.</div>
+      `;
+    }
+
+    function renderStudentPoll(poll) {
+      state.currentStudentPoll = poll;
+      state.polls[poll.id] = state.polls[poll.id] || poll;
+      state.responses[poll.id] = state.responses[poll.id] || [];
+      saveState();
+
+      $("studentTitle").textContent = poll.title;
+      $("studentBody").innerHTML = `
+        <form id="studentForm">
+          <div class="field">
+            <label for="studentName">Nombre del estudiante</label>
+            <input id="studentName" maxlength="80" placeholder="Escriba su nombre" required>
+          </div>
+          <div class="question">${escapeHtml(poll.question)}</div>
+          <div class="answer-options">
+            ${poll.options.map((option, index) => `
+              <div class="answer-option">
+                <input type="radio" name="answer" id="answer_${index}" value="${index}" required>
+                <label for="answer_${index}">
+                  <span class="letter">${letters[index]}</span>
+                  <span>${escapeHtml(option)}</span>
+                </label>
+              </div>
+            `).join("")}
+          </div>
+          <button class="btn primary" type="submit">Enviar respuesta</button>
+          <div class="message" id="studentMessage"></div>
+        </form>
+        <div class="receipt" id="receiptBox">
+          <textarea id="receiptCode" readonly aria-label="Codigo de respuesta"></textarea>
+          <div class="link-actions">
+            <button class="btn primary" id="copyReceiptBtn" type="button">Copiar codigo</button>
+            <button class="btn secondary" id="answerAgainBtn" type="button">Responder otra vez</button>
+          </div>
+        </div>
+      `;
+
+      $("studentForm").addEventListener("submit", (event) => submitStudentAnswer(event, poll));
+      $("copyReceiptBtn").addEventListener("click", async () => {
+        const ok = await copyText($("receiptCode").value);
+        setMessage("studentMessage", ok ? "Codigo copiado." : "No se pudo copiar automaticamente.", !ok);
+      });
+      $("answerAgainBtn").addEventListener("click", () => {
+        $("studentForm").reset();
+        $("receiptBox").classList.remove("show");
+        setMessage("studentMessage", "");
+      });
+    }
+
+    function submitStudentAnswer(event, poll) {
+      event.preventDefault();
+      const student = $("studentName").value.trim();
+      const selected = document.querySelector("input[name='answer']:checked");
+      if (!student || !selected) {
+        setMessage("studentMessage", "Complete nombre y respuesta.", true);
+        return;
+      }
+
+      const optionIndex = Number(selected.value);
+      const response = {
+        id: uid("resp"),
+        pollId: poll.id,
+        pollTitle: poll.title,
+        student,
+        optionIndex,
+        optionText: poll.options[optionIndex],
+        submittedAt: new Date().toISOString(),
+        source: "estudiante"
+      };
+
+      const exists = (state.responses[poll.id] || []).some((item) => item.student.toLowerCase() === student.toLowerCase());
+      if (exists && !confirm("Ya existe una respuesta con ese nombre en este navegador. Desea registrar otra?")) {
+        return;
+      }
+
+      state.responses[poll.id] = state.responses[poll.id] || [];
+      state.responses[poll.id].push(response);
+      state.selectedPollId = poll.id;
+      saveState();
+      $("receiptCode").value = encodeData(response);
+      $("receiptBox").classList.add("show");
+      setMessage("studentMessage", "Respuesta guardada.");
+      renderPollList();
+      renderResults();
+    }
+
+    function parseUrlPoll() {
+      const params = new URLSearchParams(location.search);
+      const raw = params.get("poll");
+      if (!raw) return null;
+      try {
+        return decodeData(raw);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function importResponses() {
+      const poll = state.polls[state.selectedPollId];
+      if (!poll) return;
+      const codes = $("importCodes").value.split(/\s+/).map((code) => code.trim()).filter(Boolean);
+      let imported = 0;
+      let rejected = 0;
+
+      codes.forEach((code) => {
+        try {
+          const response = decodeData(code);
+          if (response.pollId !== poll.id || typeof response.optionIndex !== "number") {
+            rejected += 1;
+            return;
+          }
+          const duplicate = (state.responses[poll.id] || []).some((item) => item.id === response.id);
+          if (duplicate) {
+            rejected += 1;
+            return;
+          }
+          state.responses[poll.id].push({ ...response, source: "importado" });
+          imported += 1;
+        } catch (error) {
+          rejected += 1;
+        }
+      });
+
+      saveState();
+      renderPollList();
+      renderResults();
+      $("importCodes").value = "";
+      setMessage("resultsMessage", `${imported} respuestas importadas. ${rejected} codigos omitidos.`, rejected > 0 && imported === 0);
+    }
+
+    function exportCsv() {
+      const poll = state.polls[state.selectedPollId];
+      if (!poll) return;
+      const responses = state.responses[poll.id] || [];
+      const header = ["poll", "estudiante", "opcion", "respuesta", "fecha", "origen"];
+      const lines = [header, ...responses.map((response) => [
+        poll.title,
+        response.student,
+        letters[response.optionIndex] || "",
+        poll.options[response.optionIndex] || response.optionText || "",
+        response.submittedAt,
+        response.source || "local"
+      ])].map((row) => row.map(csvCell).join(","));
+
+      const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${poll.title.replace(/[^\w-]+/g, "_").slice(0, 40) || "poll"}_respuestas.csv`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function csvCell(value) {
+      const text = String(value ?? "");
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    function copySummary() {
+      const poll = state.polls[state.selectedPollId];
+      if (!poll) return;
+      const responses = state.responses[poll.id] || [];
+      const counts = getCounts(poll, responses);
+      const lines = [
+        poll.title,
+        poll.question,
+        `Total respuestas: ${responses.length}`,
+        ...counts.map((item) => `${letters[item.index]}. ${item.option}: ${item.count}`)
+      ];
+      copyText(lines.join("\n")).then((ok) => {
+        setMessage("resultsMessage", ok ? "Resumen copiado." : "No se pudo copiar automaticamente.", !ok);
+      });
+    }
+
+    function clearForm() {
+      $("pollForm").reset();
+      renderOptions();
+      $("linkBox").classList.remove("show");
+      setMessage("formMessage", "");
+    }
+
+    function initEvents() {
+      $("pollForm").addEventListener("submit", savePollFromForm);
+      $("clearFormBtn").addEventListener("click", clearForm);
+      $("addOptionBtn").addEventListener("click", () => {
+        const count = document.querySelectorAll(".option-row").length;
+        if (count >= 8) {
+          setMessage("formMessage", "Puede crear hasta ocho opciones.", true);
+          return;
+        }
+        const current = getAllFormOptionValues();
+        current.push("");
+        renderOptions(current);
+      });
+      $("copyLinkBtn").addEventListener("click", async () => {
+        const ok = await copyText($("studentLink").value);
+        setMessage("formMessage", ok ? "Enlace copiado." : "No se pudo copiar automaticamente.", !ok);
+      });
+      $("teacherTab").addEventListener("click", () => {
+        history.replaceState(null, "", location.pathname);
+        setMode("teacher");
+      });
+      $("studentTab").addEventListener("click", () => setMode("student"));
+      $("importBtn").addEventListener("click", importResponses);
+      $("exportCsvBtn").addEventListener("click", exportCsv);
+      $("copySummaryBtn").addEventListener("click", copySummary);
+      $("deleteResponsesBtn").addEventListener("click", () => {
+        const poll = state.polls[state.selectedPollId];
+        if (!poll) return;
+        if (!confirm("Desea borrar las respuestas guardadas para este poll?")) return;
+        state.responses[poll.id] = [];
+        saveState();
+        renderPollList();
+        renderResults();
+        setMessage("resultsMessage", "Respuestas borradas.");
+      });
+      window.addEventListener("resize", () => renderResults());
+    }
+
+    function init() {
+      loadState();
+      renderOptions();
+      initEvents();
+      renderPollList();
+      renderResults();
+
+      const pollFromUrl = parseUrlPoll();
+      if (pollFromUrl) {
+        renderStudentPoll(pollFromUrl);
+        setMode("student");
+      } else {
+        renderStudentEmpty();
+        setMode("teacher");
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
