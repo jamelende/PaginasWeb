@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubriendo la IA Generativa - Laboratorio Interactivo</title>
+    <style>
+        /* --- VARIABLES DE COLOR Y ESTILOS GLOBALES --- */
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eeebff;
+            --secondary: #06b6d4;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* --- DISEÑO DE LAESTRUCTURA (LAYOUT) --- */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- NAVEGACIÓN POR PESTAÑAS --- */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: #e2e8f0;
+            padding: 6px;
+            border-radius: var(--border-radius);
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 15px;
+            border: none;
+            background: none;
+            font-weight: 6xl;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(255,255,255,0.5);
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-card);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+            background-color: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ESTILOS DE COMPONENTES --- */
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Tarjetas de conceptos */
+        .concept-card {
+            background-color: var(--primary-light);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            margin-bottom: 15px;
+        }
+
+        /* --- SIMULADOR DE PREDICCIÓN DE PALABRAS --- */
+        .sim-box {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 15px;
+        }
+
+        .word-token {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            background-color: #1e293b;
+            border-radius: 4px;
+            border: 1px solid #334155;
+        }
+
+        .predicting {
+            background-color: var(--secondary);
+            color: white;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .prob-list {
+            margin-top: 15px;
+            list-style: none;
+        }
+
+        .prob-item {
+            display: flex;
+            justify-content: space-between;
+            background: #1e293b;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .prob-bar {
+            height: 6px;
+            background-color: var(--secondary);
+            border-radius: 3px;
+            margin-top: 4px;
+        }
+
+        /* --- CONSTRUCTOR DE PROMPTS --- */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .output-prompt {
+            background-color: #f1f5f9;
+            border: 2px dashed var(--primary);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .output-prompt h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* --- EJEMPLOS DE PROMPTS --- */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .badge.bad { background-color: var(--danger); }
+        .badge.good { background-color: var(--success); }
+
+        .example-box {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            background-color: #fff;
+        }
+
+        /* --- SECCIÓN BUENAS PRÁCTICAS --- */
+        .bp-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .bp-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        /* --- ESTILOS DEL QUIZ --- */
+        .quiz-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .quiz-options {
+            margin-top: 12px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .option-btn.correct {
+            background-color: #d1fae5;
+            border-color: var(--success);
+            color: #065f46;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2;
+            border-color: var(--danger);
+            color: #991b1b;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: none;
+        }
+        .feedback.visible { display: block; }
+        .feedback.correct-fb { background-color: #ecfdf5; color: #047857; }
+        .feedback.incorrect-fb { background-color: #fff5f5; color: #b91c1c; }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: #4338ca; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Explorando la IA Generativa</h1>
+        <p>Un laboratorio interactivo para entender cómo piensan y crean las inteligencias artificiales.</p>
+    </header>
+
+    <div class="container">
+        
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="switchTab('conceptos')">1. Conceptos Clave</button>
+            <button class="tab-btn" onclick="switchTab('prediccion')">2. ¿Cómo Predice?</button>
+            <button class="tab-btn" onclick="switchTab('constructor')">3. Taller de Prompts</button>
+            <button class="tab-btn" onclick="switchTab('ejemplos')">4. Buenos vs. Malos</button>
+            <button class="tab-btn" onclick="switchTab('responsable')">5. Uso Responsable</button>
+            <button class="tab-btn" onclick="switchTab('quiz')">6. Pon a Prueba tu Mente</button>
+        </nav>
+
+        <section id="conceptos" class="tab-content active">
+            <h2>¿Qué es la Inteligencia Artificial Generativa?</h2>
+            <p>Imagina que la IA tradicional funciona como un detective que clasifica pistas (por ejemplo, detecta si un correo es spam o no). En cambio, la <strong>IA Generativa</strong> funciona como un artista o un escritor: utiliza lo que ha aprendido para <strong>crear contenido completamente nuevo</strong> (textos, imágenes, música o código).</p>
+            
+            <div class="concept-card">
+                <h3>🤖 Modelo de Lenguaje (LLM)</h3>
+                <p>Es un programa matemático avanzado entrenado con miles de millones de textos de internet. Piensa en él como un lector superdotado que ha memorizado patrones de cómo se comunican los seres humanos, permitiéndole entender preguntas y redactar respuestas lógicas.</p>
+            </div>
+
+            <div class="concept-card">
+                <h3>💬 El Prompt (Instrucción)</h3>
+                <p>Un prompt es el texto o la orden que tú le escribes a la IA. Es el puente de comunicación. Cuanto más preciso, claro y detallado sea tu prompt, mejor y más útil será la respuesta que te devuelva la máquina.</p>
+            </div>
+
+            <div class="concept-card">
+                <h3>🔮 Alucinaciones</h3>
+                <p>Las IA no "piensan" como tú, solo calculan probabilidades. A veces, cuando no saben la respuesta, inventan datos falsos con total seguridad y elocuencia. A este fenómeno se le conoce como <strong>alucinación</strong>. ¡Por eso nunca debes confiar ciegamente en ellas!</p>
+            </div>
+        </section>
+
+        <section id="prediccion" class="tab-content">
+            <h2>¿Cómo genera texto una IA?</h2>
+            <p>Un modelo de lenguaje no comprende las ideas de fondo, sino que funciona adivinando continuamente: <strong>¿Cuál es la palabra más probable que debería venir a continuación?</strong></p>
+            <p>Selecciona una frase inicial para ver en cámara lenta cómo la IA calcula las probabilidades de la siguiente palabra paso a paso:</p>
+            
+            <div class="form-group" style="margin-top:20px;">
+                <label for="phrase-select">Elige una frase semilla:</label>
+                <select id="phrase-select" onchange="startPredictionSimulation()">
+                    <option value="0">El mejor amigo del hombre es el...</option>
+                    <option value="1">Para programar una página web usamos HTML, CSS y...</option>
+                    <option value="2">Mañana por la mañana voy a desayunar café con...</option>
+                </select>
+            </div>
+
+            <div class="sim-box">
+                <div id="sim-text">El mejor amigo del hombre es el...</div>
+                <div id="sim-status" style="margin-top: 15px; color: var(--secondary); font-weight: bold;"></div>
+                
+                <ul id="prob-list" class="prob-list">
+                    </ul>
+            </div>
+            <button class="btn" style="margin-top:15px;" onclick="startPredictionSimulation()">Reiniciar Simulación</button>
+        </section>
+
+        <section id="constructor" class="tab-content">
+            <h2>Taller Interactivo: Constructor de Prompts</h2>
+            <p>Un buen prompt requiere una estructura. Combina diferentes elementos abajo para ver cómo se transforma una orden vaga en una instrucción profesional de alto impacto.</p>
+            
+            <div class="grid-2" style="margin-top:20px;">
+                <div>
+                    <div class="form-group">
+                        <label>1. Rol (¿Quién es la IA?)</label>
+                        <select id="p-rol" onchange="updatePromptBuilder()">
+                            <option value="Eres un profesor de secundaria paciente">Profesor de Secundaria</option>
+                            <option value="Eres un chef experto con estrella Michelin">Chef Profesional</option>
+                            <option value="Eres un programador senior experto en desarrollo web">Programador Senior</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. Tarea (¿Qué debe hacer?)</label>
+                        <input type="text" id="p-tarea" value="explica cómo funciona la fotosíntesis" oninput="updatePromptBuilder()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>3. Contexto (Detalles del público o entorno)</label>
+                        <input type="text" id="p-contexto" value="para niños de 10 años que aman la naturaleza" oninput="updatePromptBuilder()">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label>4. Formato de Salida (¿Cómo se entrega?)</label>
+                        <select id="p-formato" onchange="updatePromptBuilder()">
+                            <option value="un cuento corto con analogías">Cuento Corto</option>
+                            <option value="una lista de 3 puntos clave bien resumidos">Lista de Puntos Clave</option>
+                            <option value="una tabla comparativa de dos columnas">Tabla Comparativa</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>5. Tono (Personalidad de la respuesta)</label>
+                        <select id="p-tono" onchange="updatePromptBuilder()">
+                            <option value="entusiasta, divertido y muy claro">Divertido y Entusiasta</option>
+                            <option value="formal, académico y riguroso">Formal y Académico</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>6. Restricciones (Lo que NO debe hacer)</label>
+                        <input type="text" id="p-restriccion" value="no uses términos científicos complejos ni tecnicismos" oninput="updatePromptBuilder()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-prompt">
+                <h4>✨ Tu Prompt Profesional Generado:</h4>
+                <p id="generated-prompt-text" style="font-style: italic; color: #334155;"></p>
+            </div>
+        </section>
+
+        <section id="ejemplos" class="tab-content">
+            <h2>Ejemplos del Mundo Real: Analizando la Calidad</h2>
+            <p>Observa la diferencia entre pedir algo sin instrucciones (malo) frente a estructurar la petición correctamente (bueno).</p>
+
+            <div class="grid-2" style="margin-top: 20px;">
+                <div class="example-box" style="border-top: 4px solid var(--danger);">
+                    <span class="badge bad">❌ Prompt Deficiente (Malo)</span>
+                    <p><strong>"Quiero hacer ejercicio."</strong></p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);"><strong>¿Por qué es malo?:</strong> Es tan genérico que la IA te dará una rutina genérica de internet. No sabe tu edad, tu estado de forma, tus objetivos ni de cuánto tiempo dispones.</p>
+                </div>
+
+                <div class="example-box" style="border-top: 4px solid var(--success);">
+                    <span class="badge good">✅ Prompt Excelente (Bueno)</span>
+                    <p><strong>"Actúa como un entrenador personal. Diseña una rutina de ejercicio en casa de 20 minutos orientada a principiantes. Mi objetivo es mejorar la resistencia cardiovascular. No tengo pesas. Devuélveme el resultado en una tabla organizada por días."</strong></p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);"><strong>¿Por qué es bueno?:</strong> Define rol, duración, limitaciones físicas, objetivos claros y la estructura del resultado final.</p>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="example-box" style="border-top: 4px solid var(--danger);">
+                    <span class="badge bad">❌ Prompt Deficiente (Malo)</span>
+                    <p><strong>"Escribe sobre la historia de Colombia."</strong></p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);"><strong>¿Por qué es malo?:</strong> Te generará un ensayo gigantesco, aburrido, aleatorio o resumido sin enfoque pedagógico ni temporal concreto.</p>
+                </div>
+
+                <div class="example-box" style="border-top: 4px solid var(--success);">
+                    <span class="badge good">✅ Prompt Excelente (Bueno)</span>
+                    <p><strong>"Eres un historiador didáctico. Describe los 3 hitos más importantes de la independencia de Colombia de forma cronológica. Usa un tono narrativo atrapante. Al final, incluye 2 preguntas de reflexión para debatir en clase."</strong></p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);"><strong>¿Por qué es bueno?:</strong> Acota el contenido a 3 hitos específicos, define la estructura cronológica y añade un entregable dinámico.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="responsable" class="tab-content">
+            <h2>Guía de Ética y Uso Responsable de la IA</h2>
+            <p>La IA es una herramienta espectacular, pero su verdadero valor radica en cómo los humanos la gestionamos. Aquí tienes los 5 pilares para usarla con sabiduría:</p>
+            
+            <div class="bp-item">
+                <div class="bp-icon">🔍</div>
+                <div>
+                    <h3>1. Verificar siempre la información</h3>
+                    <p>Dado que los modelos sufren alucinaciones, jamás utilices un dato médico, histórico o estadístico provisto por la IA para un trabajo formal sin verificarlo antes en fuentes confiables (libros, artículos científicos, prensa acreditada).</p>
+                </div>
+            </div>
+
+            <div class="bp-item">
+                <div class="bp-icon">🔒</div>
+                <div>
+                    <h3>2. No compartir datos sensibles ni privados</h3>
+                    <p>Cualquier cosa que escribas en una IA comercial (nombres completos, contraseñas, documentos de identidad, historias íntimas) podría ser utilizada para entrenar futuros modelos. ¡Protege tu privacidad!</p>
+                </div>
+            </div>
+
+            <div class="bp-item">
+                <div class="bp-icon">📚</div>
+                <div>
+                    <h3>3. Exigir y buscar fuentes</h3>
+                    <p>Cuando uses la IA para investigar, acostúmbrate a pedirle: <em>"¿En qué fuentes o evidencias se basan estas afirmaciones?"</em>. Aunque recuerda que a veces también inventa las fuentes, así que rastréalas de forma manual.</p>
+                </div>
+            </div>
+
+            <div class="bp-item">
+                <div class="bp-icon">⚖️</div>
+                <div>
+                    <h3>4. Identificar sesgos</h3>
+                    <p>Las IA se entrenan con datos de internet, por ende, a menudo replican estereotipos culturales, de género o geográficos. Mira siempre sus respuestas con ojo crítico.</p>
+                </div>
+            </div>
+
+            <div class="bp-item">
+                <div class="bp-icon">💡</div>
+                <div>
+                    <h3>5. Tu mente manda: Apoyo, no reemplazo</h3>
+                    <p>Usa la IA como un copiloto para hacer tormentas de ideas, corregir ortografía o explicar conceptos difíciles. Pero no dejes que haga tus tareas por ti: automatizar tu pensamiento bloquea tu propio aprendizaje y creatividad.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="tab-content">
+            <h2>Pon a Prueba tu Mente</h2>
+            <p>Responde las siguientes preguntas para comprobar lo aprendido en este laboratorio interactivo.</p>
+            
+            <div id="quiz-container" style="margin-top:20px;">
+                </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- SISTEMA DE PESTAÑAS (TABS) ---
+        function switchTab(tabId) {
+            // Ocultar todos los contenidos de pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Desactivar todos los botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activar la pestaña solicitada
+            document.getElementById(tabId).classList.add('active');
+            
+            // Buscar el botón correspondiente y activarlo
+            // Usamos un bucle para mapear los clics
+            const indexMap = {
+                'conceptos': 0, 'prediccion': 1, 'constructor': 2, 
+                'ejemplos': 3, 'responsable': 4, 'quiz': 5
+            };
+            document.querySelectorAll('.tab-btn')[indexMap[tabId]].classList.add('active');
+
+            // Lanzar simulaciones específicas si se entra en su pestaña
+            if(tabId === 'prediccion') {
+                startPredictionSimulation();
+            }
+        }
+
+        // --- SIMULACIÓN DE PREDICCIÓN SUCESIVA DE PALABRAS ---
+        const simulaciones = [
+            {
+                semilla: "El mejor amigo del hombre es el",
+                predicciones: [
+                    { palabra: "perro", prob: 88, lista: [{p:"perro", pr:88}, {p:"gato", pr:7}, {p:"caballo", pr:3}, {p:"auto", pr:0.1}] },
+                    { palabra: "debido", prob: 45, lista: [{p:"debido", pr:45}, {p:"ya", pr:30}, {p:"por", pr:15}, {p:"a", pr:5}] },
+                    { palabra: "a", prob: 99, lista: [{p:"a", pr:99}, {p:"su", pr:0.5}, {p:"que", pr:0.2}] },
+                    { palabra: "su", prob: 70, lista: [{p:"su", pr:70}, {p:"la", pr:15}, {p:"una", pr:10}] },
+                    { palabra: "fidelidad.", prob: 90, lista: [{p:"fidelidad.", pr:90}, {p:"cariño.", pr:6}, {p:"naturaleza.", pr:2}] }
+                ]
+            },
+            {
+                semilla: "Para programar una página web usamos HTML, CSS y",
+                predicciones: [
+                    { palabra: "JavaScript", prob: 95, lista: [{p:"JavaScript", pr:95}, {p:"Python", pr:3}, {p:"PHP", pr:1.5}, {p:"Java", pr:0.5}] },
+                    { palabra: "para", prob: 60, lista: [{p:"para", pr:60}, {p:"que", pr:20}, {p:",", pr:15}] },
+                    { palabra: "crear", prob: 75, lista: [{p:"crear", pr:75}, {p:"dar", pr:15}, {p:"hacer", pr:8}] },
+                    { palabra: "sitios", prob: 50, lista: [{p:"sitios", pr:50}, {p:"páginas", pr:40}, {p:"efectos", pr:5}] },
+                    { palabra: "interactivos.", prob: 85, lista: [{p:"interactivos.", pr:85}, {p:"modernos.", pr:10}, {p:"bonitos.", pr:2}] }
+                ]
+            },
+            {
+                semilla: "Mañana por la mañana voy a desayunar café con",
+                predicciones: [
+                    { palabra: "leche", prob: 55, lista: [{p:"leche", pr:55}, {p:"pan", pr:25}, {p:"facturas", pr:10}, {p:"huevos", pr:5}] },
+                    { palabra: "y", prob: 80, lista: [{p:"y", pr:80}, {p:"caliente", pr:10}, {p:",", pr:5}] },
+                    { palabra: "un", prob: 65, lista: [{p:"un", pr:65}, {p:"unas", pr:20}, {p:"pan", pr:10}] },
+                    { palabra: "cruasán", prob: 40, lista: [{p:"cruasán", pr:40}, {p:"sándwich", pr:35}, {p:"panqueque", pr:15}] },
+                    { palabra: "tostado.", prob: 70, lista: [{p:"tostado.", pr:70}, {p:"dulce.", pr:20}, {p:"frío.", pr:2}] }
+                ]
+            }
+        ];
+
+        let simTimer = null;
+
+        function startPredictionSimulation() {
+            // Limpiar hilos o timers previos activo
+            if(simTimer) clearInterval(simTimer);
+            
+            const index = document.getElementById('phrase-select').value;
+            const data = simulaciones[index];
+            const simTextDiv = document.getElementById('sim-text');
+            const simStatus = document.getElementById('sim-status');
+            const probList = document.getElementById('prob-list');
+            
+            simTextDiv.innerHTML = data.semilla;
+            probList.innerHTML = "";
+            simStatus.innerText = "Analizando contexto...";
+            
+            let paso = 0;
+            
+            simTimer = setInterval(() => {
+                if(paso < data.predicciones.length) {
+                    const pasoActual = data.predicciones[paso];
+                    
+                    // Mostrar estatus de análisis
+                    simStatus.innerText = `Calculando probabilidad para la siguiente palabra...`;
+                    
+                    // Mostrar lista de candidatos probabilísticos
+                    probList.innerHTML = pasoActual.lista.map(candidato => `
+                        <li>
+                            <div class="prob-item">
+                                <span>🔮 "${candidato.p}"</span>
+                                <span>${candidato.pr}% de probabilidad</span>
+                            </div>
+                            <div class="prob-bar" style="width: ${candidato.pr}%"></div>
+                        </li>
+                    `).join('');
+                    
+                    // Añadir la palabra elegida al texto con marcador visual temporal
+                    simTextDiv.innerHTML += ` <span class="word-token predicting">${pasoActual.palabra}</span>`;
+                    
+                    // Quitar animación de la palabra anterior fijada en el paso previo
+                    setTimeout(() => {
+                        const tokens = simTextDiv.querySelectorAll('.word-token');
+                        if(tokens.length > 0) {
+                            tokens[tokens.length - 1].classList.remove('predicting');
+                        }
+                    }, 800);
+
+                    paso++;
+                } else {
+                    clearInterval(simTimer);
+                    simStatus.innerText = "✨ ¡Frase completada palabra por palabra con éxito!";
+                    probList.innerHTML = "";
+                }
+            }, 2500); // Ejecuta un paso cada 2.5 segundos para que los alumnos lo asimilen
+        }
+
+        // --- CONSTRUCTOR DE PROMPTS AUTOMÁTICO ---
+        function updatePromptBuilder() {
+            const rol = document.getElementById('p-rol').value;
+            const tarea = document.getElementById('p-tarea').value;
+            const contexto = document.getElementById('p-contexto').value;
+            const formato = document.getElementById('p-formato').value;
+            const tono = document.getElementById('p-tono').value;
+            const restriccion = document.getElementById('p-restriccion').value;
+
+            // Ensamblar la superestructura del prompt educativo
+            let promptCompleto = `"${rol}. Tu tarea principal es: ${tarea || '[ingresa una tarea]'}. Tén en cuenta el siguiente contexto: ${contexto || '[ingresa contexto]'}. Por favor, entrega el resultado final en formato de ${formato}. El tono de la comunicación debe ser ${tono}. Importante: ${restriccion || 'sin restricciones particulares'}."`;
+            
+            document.getElementById('generated-prompt-text').innerText = promptCompleto;
+        }
+
+        // --- BANCO DE PREGUNTAS DEL QUIZ ---
+        const preguntasQuiz = [
+            {
+                q: "¿Cuál es la principal diferencia de la IA Generativa frente a la IA tradicional?",
+                options: [
+                    "Que puede conectarse a internet más rápido.",
+                    "Que es capaz de crear contenido nuevo en lugar de solo clasificar datos existentes.",
+                    "Que nunca comete errores matemáticos."
+                ],
+                correct: 1,
+                feedback: "¡Excelente! La IA generativa 'genera' contenido nuevo (texto, imágenes, etc.) usando patrones aprendidos."
+            },
+            {
+                q: "En el contexto de la Inteligencia Artificial, ¿qué es un 'Prompt'?",
+                options: [
+                    "El nombre del procesador físico del computador.",
+                    "El lenguaje binario secreto de la IA.",
+                    "La instrucción, texto o comando que un usuario le da a la IA para guiar su respuesta."
+                ],
+                correct: 2,
+                feedback: "¡Correcto! El prompt es la orden o texto instructivo que le proporcionamos a la interfaz de la IA."
+            },
+            {
+                q: "¿Cómo funciona un Modelo de Lenguaje (LLM) al redactar respuestas?",
+                options: [
+                    "Predice la siguiente palabra más probable basándose en patrones matemáticos de su entrenamiento.",
+                    "Copia y pega de forma oculta trozos exactos de páginas de Wikipedia en tiempo real.",
+                    "Tiene conciencia humana y razona éticamente sus opiniones."
+                ],
+                correct: 0,
+                feedback: "¡Así es! No hay magia ni razonamiento humano: los LLM calculan probabilidades estadísticas para saber qué palabra sigue a la otra."
+            },
+            {
+                q: "¿Qué es una 'Alucinación' en una Inteligencia Artificial?",
+                options: [
+                    "Un virus informático que destruye los servidores de la empresa.",
+                    "Un fenómeno donde la IA genera con total seguridad información falsa, inexacta o inventada.",
+                    "Cuando el software se apaga repentinamente por sobrecalentamiento."
+                ],
+                correct: 1,
+                feedback: "¡Exacto! Las alucinaciones ocurren porque el modelo prioriza la coherencia del texto por encima de la verdad factual. ¡Siempre verifica!"
+            },
+            {
+                q: ¿Cuál es la forma correcta de usar la IA en tus actividades académicas o cotidianas?",
+                options: [
+                    "Copiar y pegar textos directos de la IA sin revisar para terminar las labores rápido.",
+                    "Compartir bases de datos privadas e historiales clínicos personales para ahorrar espacio.",
+                    "Usarla como un asistente de apoyo, verificando fuentes y manteniendo siempre el pensamiento crítico propio."
+                ],
+                correct: 2,
+                feedback: "¡Brillante! La IA potencia tus habilidades, pero el pensamiento reflexivo y el control ético final siempre son tuyos."
+            }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = preguntasQuiz.map((p, pIdx) => `
+                <div class="quiz-card">
+                    <h3>Pregunta ${pIdx + 1}: ${p.q}</h3>
+                    <div class="quiz-options">
+                        ${p.options.map((opt, oIdx) => `
+                            <button class="option-btn" id="opt-${pIdx}-${oIdx}" onclick="checkAnswer(${pIdx}, ${oIdx})">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="fb-${pIdx}"></div>
+                </div>
+            `).join('');
+        }
+
+        function checkAnswer(pIdx, selectedIdx) {
+            const pregunta = preguntasQuiz[pIdx];
+            const fbDiv = document.getElementById(`fb-${pIdx}`);
+            
+            // Deshabilitar el resto de opciones de esta pregunta concreta para evitar spamclics
+            pregunta.options.forEach((_, oIdx) => {
+                const btn = document.getElementById(`opt-${pIdx}-${oIdx}`);
+                btn.disabled = true;
+                if(oIdx === pregunta.correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            if(selectedIdx === pregunta.correct) {
+                fbDiv.innerText = `✅ ¡Correcto! ${pregunta.feedback}`;
+                fbDiv.className = "feedback visible correct-fb";
+            } else {
+                const selectedBtn = document.getElementById(`opt-${pIdx}-${selectedIdx}`);
+                selectedBtn.classList.add('incorrect');
+                fbDiv.innerText = `❌ Incorrecto. ${pregunta.feedback}`;
+                fbDiv.className = "feedback visible incorrect-fb";
+            }
+        }
+
+        // --- CARGA INICIAL DE LA APLICACIÓN ---
+        window.onload = function() {
+            // Inicializar constructores y renderizado de componentes didácticos
+            updatePromptBuilder();
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
