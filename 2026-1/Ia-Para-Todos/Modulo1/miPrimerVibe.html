@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubriendo la IA Generativa</title>
+    <style>
+        /* --- VARIABLES DE DISEÑO (Colores amigables y modernos) --- */
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eeebff;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* --- NAVEGACIÓN (Pestañas del curso) --- */
+        nav {
+            display: flex;
+            justify-content: center;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .content-section {
+            display: none; /* Oculto por defecto, JS maneja la visibilidad */
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- COMPONENTES INTERACTIVOS REUTILIZABLES --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* --- ESTILOS: SIMULADOR DE PREDICCIÓN --- */
+        .simulator-box {
+            background: #1e1e24;
+            color: #a78bfa;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+        }
+
+        .word-token {
+            display: inline-block;
+            margin-right: 5px;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .word-predicting {
+            color: var(--secondary);
+            font-weight: bold;
+            text-decoration: underline;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.5; } to { opacity: 1; }
+        }
+
+        .probabilities-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .prob-bar-wrapper {
+            background: #f1f5f9;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+            height: 35px;
+        }
+
+        .prob-bar {
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .prob-text {
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            z-index: 10;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover { background-color: #4338ca; }
+        .btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+        /* --- ESTILOS: CONSTRUCTOR DE PROMPTS --- */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .prompt-builder-output {
+            background: #f8fafc;
+            border-left: 5px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-top: 1.5rem;
+        }
+
+        .prompt-part {
+            display: inline;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: 0 2px;
+            font-weight: 500;
+        }
+        /* Colores pastel para identificar partes del prompt */
+        .p-rol { background-color: #ffe4e6; color: #9f1239; }
+        .p-tarea { background-color: #e0f2fe; color: #0369a1; }
+        .p-contexto { background-color: #fef9c3; color: #713f12; }
+        .p-formato { background-color: #dcfce7; color: #166534; }
+        .p-tono { background-color: #f3e8ff; color: #6b21a8; }
+        .p-rest { background-color: #ffedd5; color: #9a3412; }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .legend-item {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* --- COMPARATIVA BUENO/MALO --- */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .badge.bad { background-color: #fee2e2; color: #991b1b; }
+        .badge.good { background-color: #dcfce7; color: #166534; }
+
+        .example-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #f8fafc;
+        }
+
+        /* --- ESTILOS: QUIZ --- */
+        .quiz-option {
+            display: block;
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .quiz-option.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #14532d;
+        }
+
+        .quiz-option.incorrect {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+            color: #7f1d1d;
+        }
+
+        .feedback-box {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 500;
+            display: none;
+        }
+        
+        blockquote {
+            border-left: 4px solid var(--secondary);
+            padding-left: 1rem;
+            font-style: italic;
+            margin: 1rem 0;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Explorando la IA Generativa</h1>
+        <p>Aprende cómo piensan, actúan y se usan los modelos de lenguaje de forma responsable.</p>
+    </header>
+
+    <nav id="main-nav">
+        <button class="tab-btn active" onclick="switchTab('conceptos')">💡 Conceptos Básicos</button>
+        <button class="tab-btn" onclick="switchTab('prediccion')">🔮 ¿Cómo Predice Palabras?</button>
+        <button class="tab-btn" onclick="switchTab('prompts')">🛠️ Taller de Prompts</button>
+        <button class="tab-btn" onclick="switchTab('responsabilidad')">🛡️ Uso Responsable</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 Pon al día tu mente (Quiz)</button>
+    </nav>
+
+    <main>
+        
+        <section id="conceptos" class="content-section active">
+            <div class="card">
+                <h2>¿Qué es la IA Generativa?</h2>
+                <p>Es una rama de la inteligencia artificial centrada en <strong>crear contenido nuevo e inédito</strong> (como textos, imágenes, poemas o resúmenes) a partir de datos con los que ya ha sido entrenada.</p>
+                <p>A diferencia de las IAs tradicionales que solo clasifican o filtran datos (como el filtro de spam de tu correo), la IA generativa <em>"construye"</em> respuestas desde cero basándose en tus instrucciones.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h2>🤖 El Modelo de Lenguaje</h2>
+                    <p>Imagina que es un asistente que ha leído miles de millones de libros, páginas web y conversaciones en todo el internet. Al hacer esto, aprendió las reglas del lenguaje, el contexto y los patrones de cómo nos comunicamos los humanos.</p>
+                    <blockquote>No es una mente humana: no siente, no piensa, solo reconoce estructuras lógicas avanzadas.</blockquote>
+                </div>
+                <div class="card">
+                    <h2>✍️ ¿Qué es un Prompt?</h2>
+                    <p>Un <strong>prompt</strong> es simplemente la instrucción, pregunta o texto que le das a una IA para que haga algo. La calidad de lo que la IA te devuelva depende en un 90% de qué tan claro, detallado y específico sea tu prompt.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚠️ Las Alucinaciones: El Gran Error</h2>
+                <p>A veces, las IAs inventan datos, fechas, nombres o leyes con una seguridad asombrosa. A esto se le llama <strong>alucinación</strong>.</p>
+                <p>Ocurre porque las IAs no "buscan" la verdad en una enciclopedia en tiempo real, sino que calculan qué palabras suenan más lógicas juntas. Si no saben algo, completarán el espacio en blanco con un texto que <em>parece</em> real pero que es 100% inventado.</p>
+            </div>
+        </section>
+
+        <section id="prediccion" class="content-section">
+            <div class="card">
+                <h2>¿Cómo Funciona la "Predicción de la Siguiente Palabra"?</h2>
+                <p>Para una IA, escribir es como un juego de adivinanzas matemáticas de alta velocidad. Basándose en el texto inicial, calcula qué palabra tiene la mayor probabilidad estadística de aparecer después.</p>
+                
+                <p><strong>Prueba el simulador:</strong> Elige una frase inicial y observa paso a paso cómo la IA evalúa las probabilidades de las opciones para armar la oración completa.</p>
+                
+                <div class="form-group">
+                    <label for="sim-context">Elige el inicio de la oración:</label>
+                    <select id="sim-context" onchange="resetSimulator()">
+                        <option value="perro">"El perro corre detrás del..."</option>
+                        <option value="profesor">"El profesor explica la lección en el..."</option>
+                        <option value="receta">"Para hacer un pastel, primero necesito..."</option>
+                    </select>
+                </div>
+
+                <button class="btn" id="btn-simulate" onclick="startSimulation()">🔮 Predecir palabra por palabra</button>
+
+                <h3 style="margin-top:2rem;">Pantalla del Modelo:</h3>
+                <div class="simulator-box" id="sim-display">
+                    Selecciona una frase y haz clic en el botón para ver la magia...
+                </div>
+
+                <h3>Gráfica de Probabilidades Analizadas:</h3>
+                <div class="probabilities-container" id="prob-container">
+                    <p style="color: var(--text-muted); font-style: italic;">Las probabilidades aparecerán aquí durante la simulación.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="prompts" class="content-section">
+            <div class="card">
+                <h2>🛠️ Constructor de Prompts Paso a Paso</h2>
+                <p>Un prompt profesional no es una simple pregunta de buscador. Al estructurarlo por componentes, guías a la IA a no divagar. ¡Construye el tuyo abajo!</p>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="form-group">
+                            <label>1. Rol (¿Quién es la IA?)</label>
+                            <select id="p-role" onchange="updatePromptBuilder()">
+                                <option value="Actúa como un profesor de ciencias paciente">Profesor de Ciencias</option>
+                                <option value="Actúa como un experto en marketing digital">Experto en Marketing</option>
+                                <option value="Actúa como un chef de cocina internacional">Chef de Cocina</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>2. Tarea (¿Qué debe hacer?)</label>
+                            <select id="p-task" onchange="updatePromptBuilder()">
+                                <option value="explica el ciclo del agua">Explicar el ciclo del agua</option>
+                                <option value="crea una estrategia de redes para un negocio de plantas">Estrategia de redes para tienda de plantas</option>
+                                <option value="diseña un menú saludable de tres pasos">Menú de 3 pasos</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>3. Contexto (Detalles adicionales)</label>
+                            <textarea id="p-context" rows="2" oninput="updatePromptBuilder()">para estudiantes de 10 años que se distraen fácilmente</textarea>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label>4. Formato de Salida (¿Cómo se entrega?)</label>
+                            <select id="p-format" onchange="updatePromptBuilder()">
+                                <option value="en una lista con viñetas claras">Lista con viñetas</option>
+                                <option value="en una tabla comparativa estructurada">Tabla comparativa</option>
+                                <option value="en un solo párrafo corto e impactante">Párrafo único</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>5. Tono (Personalidad del texto)</label>
+                            <select id="p-tone" onchange="updatePromptBuilder()">
+                                <option value="con un tono divertido y lleno de analogías">Divertido y Dinámico</option>
+                                <option value="con un tono formal, profesional y riguroso">Formal y Profesional</option>
+                                <option value="con un tono motivador e inspirador">Motivador</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>6. Restricciones (Lo que NO debe hacer)</label>
+                            <textarea id="p-restrictions" rows="2" oninput="updatePromptBuilder()">No uses tecnicismos complejos ni términos en inglés.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Resultado: Tu Prompt Optimizado</h3>
+                <div class="legend">
+                    <span class="legend-item p-rol">Rol</span>
+                    <span class="legend-item p-tarea">Tarea</span>
+                    <span class="legend-item p-contexto">Contexto</span>
+                    <span class="legend-item p-formato">Formato</span>
+                    <span class="legend-item p-tono">Tono</span>
+                    <span class="legend-item p-rest">Restricciones</span>
+                </div>
+                
+                <div class="prompt-builder-output" id="prompt-output">
+                    </div>
+            </div>
+
+            <div class="card">
+                <h2>🔎 Ejemplos en el mundo real</h2>
+                <div class="grid-2">
+                    <div class="example-box">
+                        <span class="badge bad">❌ Prompt Deficiente / Malo</span>
+                        <p><em>"Escríbeme algo sobre historia."</em></p>
+                        <p><small><strong>Por qué es malo:</strong> Es demasiado vago. La IA no sabe qué época, qué país, la extensión o el tipo de audiencia al que se dirige.</small></p>
+                    </div>
+                    <div class="example-box">
+                        <span class="badge good">✅ Prompt Excelente / Bueno</span>
+                        <p><em>"Actúa como un historiador especialista en América Latina. Escribe un resumen de 3 párrafos sobre la independencia de Colombia, enfocado en los hitos clave de 1810. Usa un tono educativo para jóvenes de secundaria."</em></p>
+                        <p><small><strong>Por qué es bueno:</strong> Delimita el rol, el tema exacto, la extensión, el público y el tono esperado.</small></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="responsabilidad" class="content-section">
+            <div class="card">
+                <h2>🛡️ Decálogo del Uso Responsable de la IA</h2>
+                <p>La IA es un multiplicador de tus capacidades, pero carece de conciencia moral o de noción de verdad de fondo. Sigue estas reglas de oro en clase y en tu vida diaria:</p>
+                <hr style="margin: 1rem 0; border: none; border-top: 1px solid #e2e8f0;">
+                
+                <h3>🔍 1. Verificar siempre la información</h3>
+                <p>Nunca asumas que un dato entregado por la IA es correcto por el simple hecho de que esté bellamente redactado. Contrasta fechas, datos históricos y fórmulas con fuentes tradicionales u oficiales.</p>
+
+                <h3>🔒 2. No compartir datos personales o sensibles</h3>
+                <p>Las plataformas de IA suelen guardar tus chats para seguir entrenando a sus modelos. Nunca ingreses contraseñas, datos financieros, tu dirección ni historias privadas de tus compañeros de clase o familiares.</p>
+
+                <h3>📚 3. Pedir fuentes y referencias</h3>
+                <p>Obliga a la IA a justificar sus argumentos solicitándole de dónde extrae los conceptos. E incluso cuando te dé las fuentes, revísalas (¡recuerda que también puede alucinar enlaces o libros!).</p>
+
+                <h3>⚖️ 4. Estar alerta ante los Sesgos</h3>
+                <p>Dado que las IAs aprenden de textos de internet, pueden replicar estereotipos históricos, prejuicios de género, raciales o culturales. Sé crítico frente a las opiniones de la máquina.</p>
+
+                <h3>💡 5. Apoyo, no reemplazo</h3>
+                <p>Usa la inteligencia artificial para hacer lluvias de ideas, entender un concepto difícil paso a paso o encontrar errores en códigos. Pero **nunca delegues tu pensamiento crítico**. Hacer tus tareas copiando y pegando anula tu propia capacidad de aprender.</p>
+            </div>
+        </section>
+
+        <section id="quiz" class="content-section">
+            <div class="card">
+                <h2>📝 Evaluación de Comprensión</h2>
+                <p>Comprueba qué tanto has aprendido sobre IA Generativa con este pequeño test automatizado.</p>
+                <hr style="margin:1rem 0; border: none; border-top: 1px solid #e2e8f0;">
+
+                <div id="quiz-container">
+                    <div id="question-box">
+                        <h3 id="question-text">Cargando pregunta...</h3>
+                        <div id="options-box" style="margin-top: 1rem;"></div>
+                    </div>
+                    
+                    <div class="feedback-box" id="quiz-feedback"></div>
+
+                    <div style="margin-top: 1.5rem; text-align: right;">
+                        <button class="btn" id="btn-next-quiz" onclick="nextQuestion()" disabled>Siguiente pregunta ➡️</button>
+                    </div>
+                </div>
+
+                <div id="quiz-results" style="display:none; text-align: center; padding: 2rem 0;">
+                    <h2 style="justify-content: center;">🎉 ¡Quiz Terminado!</h2>
+                    <p style="font-size: 1.3rem;">Tu puntuación final es: <strong id="score-val">0</strong> de 5</p>
+                    <p id="score-commentary"></p>
+                    <button class="btn" onclick="restartQuiz()" style="margin-top: 1rem;">Reiniciar Cuestionario</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==========================================================================
+           1. SISTEMA DE PESTAÑAS (NAVEGACIÓN)
+           ========================================================================== */
+        function switchTab(tabId) {
+            // Desactivar todas las secciones y botones
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Activar sección y botón objetivo
+            document.getElementById(tabId).classList.add('active');
+            
+            // Buscar el botón correspondiente por su evento onclick
+            const targetBtn = Array.from(document.querySelectorAll('.tab-btn'))
+                                   .find(btn => btn.getAttribute('onclick').includes(tabId));
+            if (targetBtn) targetBtn.classList.add('active');
+
+            // Inicializar vistas específicas si es necesario
+            if(tabId === 'prompts') updatePromptBuilder();
+        }
+
+        /* ==========================================================================
+           2. SIMULADOR DE PREDICCIÓN DE PALABRAS
+           ========================================================================== */
+        // Banco de datos simulado para la predicción probabilística de la IA
+        const simulationData = {
+            perro: {
+                base: "El perro corre detrás del",
+                steps: [
+                    { word: "gato", probs: [{w:"gato", p:65}, {w:"hueso", p:20}, {w:"carro", p:10}, {w:"árbol", p:5}] },
+                    { word: "en", probs: [{w:"en", p:70}, {w:"con", p:15}, {w:"para", p:10}, {w:".", p:5}] },
+                    { word: "el", probs: [{w:"el", p:85}, {w:"un", p:10}, {w:"su", p:5}] },
+                    { word: "jardín.", probs: [{w:"jardín.", p:60}, {w:"parque.", p:30}, {w:"tejado.", p:10}] }
+                ]
+            },
+            profesor: {
+                base: "El profesor explica la lección en el",
+                steps: [
+                    { word: "salón", probs: [{w:"salón", p:55}, {w:"tablero", p:30}, {w:"computador", p:10}, {w:"libro", p:5}] },
+                    { word: "de", probs: [{w:"de", p:90}, {w:"donde", p:5}, {w:"principal", p:5}] },
+                    { word: "clases.", probs: [{w:"clases.", p:85}, {w:"actos.", p:10}, {w:"sistemas.", p:5}] }
+                ]
+            },
+            receta: {
+                base: "Para hacer un pastel, primero necesito",
+                steps: [
+                    { word: "comprar", probs: [{w:"comprar", p:40}, {w:"mezclar", p:35}, {w:"romper", p:15}, {w:"precalentar", p:10}] },
+                    { word: "los", probs: [{w:"los", p:75}, {w:"unos", p:15}, {w:"harina", p:10}] },
+                    { word: "ingredientes", probs: [{w:"ingredientes", p:80}, {w:"huevos", p:15}, {w:"moldes", p:5}] },
+                    { word: "principales.", probs: [{w:"principales.", p:50}, {w:"frescos.", p:30}, {w:"necesarios.", p:20}] }
+                ]
+            }
+        };
+
+        let currentSimTimeout = null;
+
+        function resetSimulator() {
+            if (currentSimTimeout) clearTimeout(currentSimTimeout);
+            document.getElementById('sim-display').innerText = "Selecciona una frase y haz clic en el botón para ver la magia...";
+            document.getElementById('prob-container').innerHTML = '<p style="color: var(--text-muted); font-style: italic;">Las probabilidades aparecerán aquí durante la simulación.</p>';
+            document.getElementById('btn-simulate').disabled = false;
+        }
+
+        function startSimulation() {
+            const btn = document.getElementById('btn-simulate');
+            btn.disabled = true;
+            
+            const key = document.getElementById('sim-context').value;
+            const data = simulationData[key];
+            const display = document.getElementById('sim-display');
+            
+            display.innerHTML = `<span>${data.base}</span> `;
+            
+            let stepIndex = 0;
+            
+            function runNextStep() {
+                if (stepIndex >= data.steps.length) {
+                    btn.disabled = false;
+                    return;
+                }
+                
+                const currentStep = data.steps[stepIndex];
+                
+                // 1. Mostrar visualmente que se está prediciendo la siguiente palabra
+                const tempWordSpan = document.createElement('span');
+                tempWordSpan.className = "word-predicting";
+                tempWordSpan.innerText = "[pensando...]";
+                display.appendChild(tempWordSpan);
+                
+                // 2. Pintar las barras de probabilidades en la UI
+                const probContainer = document.getElementById('prob-container');
+                probContainer.innerHTML = `<strong>Analizando opciones para acompañar a: "... ${display.childNodes[display.childNodes.length-2].innerText || ''}"</strong>`;
+                
+                currentStep.probs.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = "prob-bar-wrapper";
+                    row.innerHTML = `
+                        <div class="prob-text">${item.w} (${item.p}%)</div>
+                        <div class="prob-bar" style="width: ${item.p}%"></div>
+                    `;
+                    probContainer.appendChild(row);
+                });
+                
+                // 3. Pasado 1.5 segundos, fijar la palabra con mayor probabilidad e ir al siguiente ciclo
+                currentSimTimeout = setTimeout(() => {
+                    tempWordSpan.className = "word-token";
+                    tempWordSpan.innerText = currentStep.word + " ";
+                    
+                    stepIndex++;
+                    runNextStep();
+                }, 1800);
+            }
+            
+            runNextStep();
+        }
+
+        /* ==========================================================================
+           3. CONSTRUCTOR DINÁMICO DE PROMPTS
+           ========================================================================== */
+        function updatePromptBuilder() {
+            const role = document.getElementById('p-role').value;
+            const task = document.getElementById('p-task').value;
+            const context = document.getElementById('p-context').value.trim();
+            const format = document.getElementById('p-format').value;
+            const tone = document.getElementById('p-tone').value;
+            const restrictions = document.getElementById('p-restrictions').value.trim();
+
+            const outputDiv = document.getElementById('prompt-output');
+            
+            // Construimos la salida inyectando spans con estilos diferenciados por componente
+            let htmlPrompt = `<span class="prompt-part p-rol">${role}</span>. `;
+            htmlPrompt += `Quiero que hagas lo siguiente: <span class="prompt-part p-tarea">${task}</span>, `;
+            
+            if(context) {
+                htmlPrompt += `<span class="prompt-part p-contexto">${context}</span>. `;
+            }
+            
+            htmlPrompt += `Presenta la respuesta obligatoriamente <span class="prompt-part p-formato">${format}</span>. `;
+            htmlPrompt += `Escribe todo <span class="prompt-part p-tono">${tone}</span>. `;
+            
+            if(restrictions) {
+                htmlPrompt += `Tén en cuenta la siguiente restricción: <span class="prompt-part p-rest">${restrictions}</span>`;
+            }
+
+            outputDiv.innerHTML = htmlPrompt;
+        }
+
+        /* ==========================================================================
+           4. SISTEMA DEL QUIZ (CON RETROALIMENTACIÓN COMPLETA)
+           ========================================================================== */
+        const quizQuestions = [
+            {
+                q: "¿Cuál es la función principal de la Inteligencia Artificial Generativa?",
+                options: [
+                    "A) Detectar virus informáticos y bloquear correos extraños.",
+                    "B) Crear contenido nuevo e inédito basándose en datos de entrenamiento.",
+                    "C) Reparar cables de computadores y conexiones de internet."
+                ],
+                correct: 1,
+                explain: "¡Correcto! La IA generativa destaca justamente por su capacidad de construir información nueva (texto, imágenes, etc.) que no existía antes."
+            },
+            {
+                q: "En el mundo de la IA, ¿qué es un 'Prompt'?",
+                options: [
+                    "A) El cable que conecta el monitor al computador de la escuela.",
+                    "B) Un tipo de virus informático destructivo.",
+                    "C) La instrucción o pregunta clara que le damos a la IA para obtener un resultado."
+                ],
+                correct: 2,
+                explain: "¡Exacto! El prompt es la directiva que le das a la máquina. Cuanto mejor estructurado esté, mejor será la respuesta."
+            },
+            {
+                q: "Cuando una IA inventa un dato falso con total seguridad, estamos ante una...",
+                options: [
+                    "A) Alucinación.",
+                    "B) Actualización de sistema.",
+                    "C) Conexión exitosa."
+                ],
+                correct: 0,
+                explain: "¡Perfecto! Las alucinaciones ocurren porque la IA prioriza la coherencia gramatical y estadística por encima de comprobar hechos reales."
+            },
+            {
+                q: "¿Cómo genera el texto un Modelo de Lenguaje grande?",
+                options: [
+                    "A) Copiando y pegando fragmentos de Google en tiempo real.",
+                    "B) Prediciendo estadísticamente cuál es la siguiente palabra más lógica.",
+                    "C) Pensando como un ser humano con sentimientos propios."
+                ],
+                correct: 1,
+                explain: "¡Muy bien! Se basa puramente en cálculos de probabilidad acumulada aprendidos en su entrenamiento masivo de lectura."
+            },
+            {
+                q: "¿Cuál es una práctica de uso seguro y responsable de la IA?",
+                options: [
+                    "A) Darle copias de tu documento de identidad para que lo analice.",
+                    "B) Copiar y pegar todo el contenido de la IA en tus tareas sin revisarlo.",
+                    "C) Verificar datos críticos en fuentes fiables y no ingresar información privada."
+                ],
+                correct: 2,
+                explain: "¡Excelente! La IA debe ser tu copiloto creativo, pero tú tienes la última palabra, el control de tu privacidad y la responsabilidad crítica."
+            }
+        ];
+
+        let currentQuestionIdx = 0;
+        let userScore = 0;
+
+        function loadQuestion() {
+            const qData = quizQuestions[currentQuestionIdx];
+            document.getElementById('question-text').innerText = `${currentQuestionIdx + 1}. ${qData.q}`;
+            
+            const optionsBox = document.getElementById('options-box');
+            optionsBox.innerHTML = '';
+            
+            const feedbackBox = document.getElementById('quiz-feedback');
+            feedbackBox.style.display = 'none';
+            
+            document.getElementById('btn-next-quiz').disabled = true;
+
+            qData.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = "quiz-option";
+                div.innerText = opt;
+                div.onclick = () => checkAnswer(idx, div);
+                optionsBox.appendChild(div);
+            });
+        }
+
+        function checkAnswer(selectedIdx, optionElement) {
+            const qData = quizQuestions[currentQuestionIdx];
+            const optionsBox = document.getElementById('options-box');
+            
+            // Evitar múltiples clics en la misma pregunta bloqueando el evento
+            Array.from(optionsBox.children).forEach(child => child.onclick = null);
+            
+            const feedbackBox = document.getElementById('quiz-feedback');
+            feedbackBox.style.display = 'block';
+
+            if (selectedIdx === qData.correct) {
+                optionElement.classList.add('correct');
+                feedbackBox.style.backgroundColor = '#dcfce7';
+                feedbackBox.style.color = '#15803d';
+                feedbackBox.innerText = qData.explain;
+                userScore++;
+            } else {
+                optionElement.classList.add('incorrect');
+                // Resaltar también la opción correcta para que el estudiante aprenda
+                optionsBox.children[qData.correct].classList.add('correct');
+                
+                feedbackBox.style.backgroundColor = '#fee2e2';
+                feedbackBox.style.color = '#b91c1c';
+                feedbackBox.innerText = "Respuesta incorrecta. " + qData.explain;
+            }
+
+            document.getElementById('btn-next-quiz').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            if (currentQuestionIdx < quizQuestions.length) {
+                loadQuestion();
+            } else {
+                // Mostrar resultados finales del proceso
+                document.getElementById('quiz-container').style.display = 'none';
+                const resultsBlock = document.getElementById('quiz-results');
+                resultsBlock.style.display = 'block';
+                
+                document.getElementById('score-val').innerText = userScore;
+                
+                const comm = document.getElementById('score-commentary');
+                if(userScore === 5) comm.innerText = "¡Espectacular! Tienes claras las bases para sacarle provecho a esta tecnología.";
+                else if(userScore >= 3) comm.innerText = "¡Buen trabajo! Vas por excelente camino. Repasa los puntos clave para evitar caer en alucinaciones.";
+                else comm.innerText = "Te recomendamos repasar los conceptos interactivos y volver a intentarlo. ¡Aprender es un proceso continuo!";
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIdx = 0;
+            userScore = 0;
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('quiz-results').style.display = 'none';
+            loadQuestion();
+        }
+
+        // Ejecuciones iniciales automáticas al abrir la aplicación
+        window.onload = function() {
+            updatePromptBuilder();
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
