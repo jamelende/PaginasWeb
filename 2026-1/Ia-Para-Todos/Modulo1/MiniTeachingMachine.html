@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Teaching Machine</title>
+  <style>
+    :root {
+      --ink: #18202a;
+      --muted: #647084;
+      --line: #d9e0ea;
+      --panel: #ffffff;
+      --soft: #f3f6f9;
+      --blue: #1f6feb;
+      --green: #0f8f62;
+      --orange: #c46b13;
+      --red: #c92c2c;
+      --shadow: 0 18px 45px rgba(25, 37, 51, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, #f9fbfd 0%, #eef3f8 52%, #f7fafc 100%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .app {
+      width: min(1320px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 32px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+      padding: 4px 0 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 4.7rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.5;
+    }
+
+    .status-pill {
+      justify-self: end;
+      min-width: 240px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .status-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-text {
+      display: block;
+      margin-top: 4px;
+      font-weight: 800;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.9fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .samples-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .class-title {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .class-title span {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .class-name {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--ink);
+      background: transparent;
+      font-size: 1.2rem;
+      font-weight: 850;
+      outline: none;
+      padding: 6px 8px;
+    }
+
+    .class-name:focus {
+      border-color: #9fc0f5;
+      background: #fff;
+    }
+
+    .counter {
+      flex: 0 0 auto;
+      min-width: 64px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .dropzone {
+      display: grid;
+      place-items: center;
+      min-height: 166px;
+      padding: 18px;
+      color: var(--muted);
+      background:
+        linear-gradient(135deg, rgba(31, 111, 235, 0.08), transparent 45%),
+        var(--soft);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dropzone.dragging {
+      outline: 3px solid rgba(31, 111, 235, 0.28);
+      outline-offset: -8px;
+    }
+
+    .file-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 15px;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 850;
+    }
+
+    .file-btn input {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .drop-copy {
+      margin: 10px 0 0;
+      text-align: center;
+      line-height: 1.35;
+      font-size: 0.92rem;
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+      gap: 8px;
+      min-height: 104px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--soft);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(24, 32, 42, 0.78);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .control-body {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .train-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .field input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+      font-weight: 850;
+    }
+
+    .primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--green);
+      font-weight: 900;
+    }
+
+    .secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      font-weight: 850;
+    }
+
+    .progress {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e5ebf2;
+    }
+
+    .progress div {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      transition: width 140ms ease;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--soft);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.04rem;
+      overflow-wrap: anywhere;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .test-drop {
+      min-height: 230px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview {
+      display: grid;
+      grid-template-columns: 124px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+    }
+
+    .preview-frame {
+      width: 124px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .preview-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .prediction {
+      min-width: 0;
+    }
+
+    .prediction h2 {
+      margin: 0;
+      font-size: 1.55rem;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .confidence {
+      margin-top: 8px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .bars {
+      display: grid;
+      gap: 10px;
+      padding: 0 14px 16px;
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: minmax(78px, 0.72fr) minmax(0, 1fr) 54px;
+      gap: 10px;
+      align-items: center;
+      min-height: 28px;
+    }
+
+    .bar-name {
+      font-weight: 850;
+      overflow-wrap: anywhere;
+    }
+
+    .bar-track {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e5ebf2;
+    }
+
+    .bar-track div {
+      width: 0%;
+      height: 100%;
+      background: var(--blue);
+      transition: width 180ms ease;
+    }
+
+    .bar-value {
+      text-align: right;
+      color: var(--muted);
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .log {
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 84px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 750;
+      line-height: 1.35;
+      padding: 12px;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    @media (max-width: 1000px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .status-pill {
+        justify-self: stretch;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        width: min(100% - 20px, 1320px);
+        padding-top: 14px;
+      }
+
+      .samples-grid,
+      .train-row,
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .preview {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-frame {
+        width: min(100%, 220px);
+      }
+
+      .bar {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      .bar-value {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>Mini Teaching Machine</h1>
+        <p class="subtitle">Entrena una red neuronal en tu navegador con imagenes de cualquier categoria y prueba nuevos ejemplos al instante.</p>
+      </div>
+      <div class="status-pill" aria-live="polite">
+        <span class="status-label">Estado</span>
+        <span id="statusText" class="status-text">Listo para cargar imagenes</span>
+      </div>
+    </header>
+
+    <section class="layout">
+      <div class="samples-grid" id="classGrid"></div>
+
+      <aside class="side">
+        <section class="panel">
+          <div class="panel-head">
+            <strong>Entrenamiento</strong>
+            <button class="secondary" id="resetBtn" type="button">Reiniciar</button>
+          </div>
+          <div class="control-body">
+            <div class="train-row">
+              <label class="field">
+                <span>Epocas</span>
+                <input id="epochsRange" type="range" min="20" max="220" step="10" value="90" />
+                <strong class="number" id="epochsValue">90</strong>
+              </label>
+              <label class="field">
+                <span>Aprendizaje</span>
+                <input id="lrRange" type="range" min="1" max="30" step="1" value="8" />
+                <strong class="number" id="lrValue">0.008</strong>
+              </label>
+            </div>
+            <button class="primary" id="trainBtn" type="button">Entrenar red</button>
+            <div class="progress" aria-label="Progreso de entrenamiento">
+              <div id="trainProgress"></div>
+            </div>
+            <div class="metrics">
+              <div class="metric">
+                <strong id="metricLoss">-</strong>
+                <small>perdida</small>
+              </div>
+              <div class="metric">
+                <strong id="metricAcc">-</strong>
+                <small>precision</small>
+              </div>
+              <div class="metric">
+                <strong id="metricCount">0</strong>
+                <small>ejemplos</small>
+              </div>
+            </div>
+            <div class="log" id="trainLog">Usa varias imagenes distintas por clase para que generalice mejor.</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <strong>Prueba</strong>
+            <span class="counter" id="modelBadge">sin modelo</span>
+          </div>
+          <div class="dropzone test-drop" id="testDrop">
+            <div>
+              <label class="file-btn">
+                Probar imagen
+                <input id="testInput" type="file" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.avif,.svg" />
+              </label>
+              <p class="drop-copy">Arrastra una imagen nueva aqui</p>
+            </div>
+          </div>
+          <div class="preview">
+            <div class="preview-frame">
+              <img id="testPreview" alt="Imagen de prueba" />
+            </div>
+            <div class="prediction">
+              <h2 id="predictionTitle">Sin prediccion</h2>
+              <div class="confidence" id="confidenceText">Entrena primero el modelo.</div>
+            </div>
+          </div>
+          <div class="bars" id="bars"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <canvas id="workCanvas" width="24" height="24"></canvas>
+
+  <script>
+    const IMAGE_SIZE = 24;
+    const INPUTS = IMAGE_SIZE * IMAGE_SIZE * 3;
+    const HIDDEN = 48;
+    const OUTPUTS = 2;
+
+    const state = {
+      classes: [
+        { name: "Clase 1", samples: [] },
+        { name: "Clase 2", samples: [] }
+      ],
+      model: null,
+      trained: false,
+      training: false,
+      lastTestFeatures: null
+    };
+
+    const els = {
+      classGrid: document.getElementById("classGrid"),
+      statusText: document.getElementById("statusText"),
+      trainBtn: document.getElementById("trainBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      trainProgress: document.getElementById("trainProgress"),
+      epochsRange: document.getElementById("epochsRange"),
+      epochsValue: document.getElementById("epochsValue"),
+      lrRange: document.getElementById("lrRange"),
+      lrValue: document.getElementById("lrValue"),
+      metricLoss: document.getElementById("metricLoss"),
+      metricAcc: document.getElementById("metricAcc"),
+      metricCount: document.getElementById("metricCount"),
+      trainLog: document.getElementById("trainLog"),
+      testInput: document.getElementById("testInput"),
+      testDrop: document.getElementById("testDrop"),
+      testPreview: document.getElementById("testPreview"),
+      predictionTitle: document.getElementById("predictionTitle"),
+      confidenceText: document.getElementById("confidenceText"),
+      bars: document.getElementById("bars"),
+      modelBadge: document.getElementById("modelBadge"),
+      workCanvas: document.getElementById("workCanvas")
+    };
+
+    function randn(scale) {
+      let u = 0;
+      let v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v) * scale;
+    }
+
+    function createModel() {
+      const w1 = new Float32Array(INPUTS * HIDDEN);
+      const b1 = new Float32Array(HIDDEN);
+      const w2 = new Float32Array(HIDDEN * OUTPUTS);
+      const b2 = new Float32Array(OUTPUTS);
+      const scale1 = Math.sqrt(2 / INPUTS);
+      const scale2 = Math.sqrt(2 / HIDDEN);
+
+      for (let i = 0; i < w1.length; i++) w1[i] = randn(scale1);
+      for (let i = 0; i < w2.length; i++) w2[i] = randn(scale2);
+
+      return { w1, b1, w2, b2 };
+    }
+
+    function forward(model, x) {
+      const z1 = new Float32Array(HIDDEN);
+      const a1 = new Float32Array(HIDDEN);
+      for (let h = 0; h < HIDDEN; h++) {
+        let sum = model.b1[h];
+        const offset = h * INPUTS;
+        for (let i = 0; i < INPUTS; i++) sum += model.w1[offset + i] * x[i];
+        z1[h] = sum;
+        a1[h] = sum > 0 ? sum : 0;
+      }
+
+      const logits = new Float32Array(OUTPUTS);
+      let maxLogit = -Infinity;
+      for (let o = 0; o < OUTPUTS; o++) {
+        let sum = model.b2[o];
+        const offset = o * HIDDEN;
+        for (let h = 0; h < HIDDEN; h++) sum += model.w2[offset + h] * a1[h];
+        logits[o] = sum;
+        if (sum > maxLogit) maxLogit = sum;
+      }
+
+      let total = 0;
+      const probs = new Float32Array(OUTPUTS);
+      for (let o = 0; o < OUTPUTS; o++) {
+        probs[o] = Math.exp(logits[o] - maxLogit);
+        total += probs[o];
+      }
+      for (let o = 0; o < OUTPUTS; o++) probs[o] /= total;
+
+      return { z1, a1, probs };
+    }
+
+    function trainSample(model, sample, lr) {
+      const pass = forward(model, sample.features);
+      const dz2 = new Float32Array(pass.probs);
+      dz2[sample.label] -= 1;
+
+      const oldW2 = new Float32Array(model.w2);
+      for (let o = 0; o < OUTPUTS; o++) {
+        const offset = o * HIDDEN;
+        for (let h = 0; h < HIDDEN; h++) {
+          model.w2[offset + h] -= lr * dz2[o] * pass.a1[h];
+        }
+        model.b2[o] -= lr * dz2[o];
+      }
+
+      const dz1 = new Float32Array(HIDDEN);
+      for (let h = 0; h < HIDDEN; h++) {
+        let grad = 0;
+        for (let o = 0; o < OUTPUTS; o++) grad += oldW2[o * HIDDEN + h] * dz2[o];
+        dz1[h] = pass.z1[h] > 0 ? grad : 0;
+      }
+
+      for (let h = 0; h < HIDDEN; h++) {
+        const offset = h * INPUTS;
+        const g = dz1[h];
+        for (let i = 0; i < INPUTS; i++) {
+          model.w1[offset + i] -= lr * g * sample.features[i];
+        }
+        model.b1[h] -= lr * g;
+      }
+
+      return -Math.log(Math.max(1e-7, pass.probs[sample.label]));
+    }
+
+    function predict(features) {
+      if (!state.model) return [0.5, 0.5];
+      return Array.from(forward(state.model, features).probs);
+    }
+
+    function setStatus(text) {
+      els.statusText.textContent = text;
+    }
+
+    function updateControls() {
+      els.epochsValue.textContent = els.epochsRange.value;
+      els.lrValue.textContent = (Number(els.lrRange.value) / 1000).toFixed(3);
+      const total = state.classes.reduce((sum, group) => sum + group.samples.length, 0);
+      els.metricCount.textContent = String(total);
+      els.modelBadge.textContent = state.trained ? "modelo listo" : "sin modelo";
+      renderBars([0, 0]);
+    }
+
+    function renderClasses() {
+      els.classGrid.innerHTML = "";
+      state.classes.forEach((group, classIndex) => {
+        const panel = document.createElement("section");
+        panel.className = "panel";
+        panel.innerHTML = `
+          <div class="panel-head">
+            <label class="class-title">
+              <span>Nombre de clase</span>
+              <input class="class-name" value="${escapeHtml(group.name)}" placeholder="Clase ${classIndex + 1}" aria-label="Nombre de clase ${classIndex + 1}" />
+            </label>
+            <span class="counter">${group.samples.length} imgs</span>
+          </div>
+          <div class="dropzone" data-class="${classIndex}">
+            <div>
+              <label class="file-btn">
+                Subir imagenes o ZIP
+                <input type="file" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.avif,.svg,.zip,application/zip" multiple />
+              </label>
+              <p class="drop-copy">Arrastra imagenes o un ZIP para ${escapeHtml(group.name)}</p>
+            </div>
+          </div>
+          <div class="thumbs"></div>
+        `;
+
+        const nameInput = panel.querySelector(".class-name");
+        const dropCopy = panel.querySelector(".drop-copy");
+        nameInput.addEventListener("input", () => {
+          group.name = nameInput.value.trim() || `Clase ${classIndex + 1}`;
+          dropCopy.textContent = `Arrastra imagenes o un ZIP para ${group.name}`;
+          renderBars(state.lastTestFeatures && state.trained ? predict(state.lastTestFeatures) : [0, 0]);
+        });
+
+        const fileInput = panel.querySelector("input[type=file]");
+        fileInput.addEventListener("change", async event => {
+          await addFiles(classIndex, Array.from(event.target.files || []));
+          fileInput.value = "";
+        });
+
+        setupDrop(panel.querySelector(".dropzone"), files => addFiles(classIndex, files), isSampleFile);
+
+        const thumbs = panel.querySelector(".thumbs");
+        if (!group.samples.length) {
+          const empty = document.createElement("div");
+          empty.className = "empty";
+          empty.textContent = "Sin ejemplos todavia";
+          thumbs.appendChild(empty);
+        } else {
+          group.samples.forEach((sample, sampleIndex) => {
+            const thumb = document.createElement("div");
+            thumb.className = "thumb";
+            thumb.innerHTML = `<img alt="${escapeHtml(group.name)}" src="${sample.url}" /><button type="button" aria-label="Quitar imagen">x</button>`;
+            thumb.querySelector("button").addEventListener("click", () => {
+              URL.revokeObjectURL(sample.url);
+              group.samples.splice(sampleIndex, 1);
+              state.trained = false;
+              renderAll();
+              setStatus("Ejemplo eliminado");
+            });
+            thumbs.appendChild(thumb);
+          });
+        }
+
+        els.classGrid.appendChild(panel);
+      });
+    }
+
+    function renderBars(values) {
+      els.bars.innerHTML = "";
+      const probs = values.length ? values : [0, 0];
+      state.classes.forEach((group, index) => {
+        const value = Math.round((probs[index] || 0) * 100);
+        const row = document.createElement("div");
+        row.className = "bar";
+        row.innerHTML = `
+          <span class="bar-name">${escapeHtml(group.name)}</span>
+          <span class="bar-track"><div style="width: ${value}%"></div></span>
+          <span class="bar-value">${value}%</span>
+        `;
+        els.bars.appendChild(row);
+      });
+    }
+
+    function renderAll() {
+      renderClasses();
+      updateControls();
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function setupDrop(node, handler, predicate = isImageFile) {
+      ["dragenter", "dragover"].forEach(type => {
+        node.addEventListener(type, event => {
+          event.preventDefault();
+          node.classList.add("dragging");
+        });
+      });
+      ["dragleave", "drop"].forEach(type => {
+        node.addEventListener(type, event => {
+          event.preventDefault();
+          node.classList.remove("dragging");
+        });
+      });
+      node.addEventListener("drop", event => {
+        const files = Array.from(event.dataTransfer.files || []).filter(predicate);
+        handler(files);
+      });
+    }
+
+    function isSampleFile(file) {
+      return isImageFile(file) || isZipFile(file);
+    }
+
+    function isImageFile(file) {
+      if (!file) return false;
+      if (file.type && file.type.startsWith("image/")) return true;
+      return /\.(jpe?g|png|webp|gif|bmp|avif|svg)$/i.test(file.name || "");
+    }
+
+    function isZipFile(file) {
+      if (!file) return false;
+      if (/zip/i.test(file.type || "")) return true;
+      return /\.zip$/i.test(file.name || "");
+    }
+
+    async function addFiles(classIndex, files) {
+      const images = await collectImages(files);
+      if (!images.length) return;
+      setStatus("Procesando imagenes...");
+
+      for (const file of images) {
+        const url = URL.createObjectURL(file);
+        try {
+          const features = await extractFeatures(url);
+          state.classes[classIndex].samples.push({
+            name: file.name,
+            url,
+            features,
+            label: classIndex
+          });
+        } catch (error) {
+          URL.revokeObjectURL(url);
+          console.error(error);
+        }
+      }
+
+      state.trained = false;
+      state.model = null;
+      renderAll();
+      setStatus(`${images.length} imagenes agregadas`);
+      els.trainLog.textContent = "Modelo pendiente de entrenamiento.";
+    }
+
+    async function collectImages(files) {
+      const images = [];
+      for (const file of files) {
+        if (isImageFile(file)) {
+          images.push(file);
+        } else if (isZipFile(file)) {
+          setStatus(`Leyendo ${file.name}...`);
+          const extracted = await extractImagesFromZip(file);
+          images.push(...extracted);
+        }
+      }
+      return images;
+    }
+
+    async function extractImagesFromZip(file) {
+      try {
+        const buffer = await file.arrayBuffer();
+        const view = new DataView(buffer);
+        const eocdOffset = findEndOfCentralDirectory(view);
+        if (eocdOffset < 0) throw new Error("No se encontro el directorio ZIP.");
+
+        const totalEntries = view.getUint16(eocdOffset + 10, true);
+        let cursor = view.getUint32(eocdOffset + 16, true);
+        const files = [];
+
+        for (let entry = 0; entry < totalEntries; entry++) {
+          if (view.getUint32(cursor, true) !== 0x02014b50) break;
+
+          const flags = view.getUint16(cursor + 8, true);
+          const method = view.getUint16(cursor + 10, true);
+          const compressedSize = view.getUint32(cursor + 20, true);
+          const nameLength = view.getUint16(cursor + 28, true);
+          const extraLength = view.getUint16(cursor + 30, true);
+          const commentLength = view.getUint16(cursor + 32, true);
+          const localOffset = view.getUint32(cursor + 42, true);
+          const name = decodeZipName(buffer, cursor + 46, nameLength, flags);
+
+          if (!name.endsWith("/") && isImageName(name)) {
+            const blob = await readZipEntry(buffer, view, localOffset, compressedSize, method, imageMimeType(name));
+            if (blob) {
+              files.push(new File([blob], name.split(/[\\/]/).pop(), { type: blob.type }));
+            }
+          }
+
+          cursor += 46 + nameLength + extraLength + commentLength;
+        }
+
+        if (!files.length) {
+          els.trainLog.textContent = `No encontre imagenes compatibles en ${file.name}.`;
+        }
+        return files;
+      } catch (error) {
+        console.error(error);
+        els.trainLog.textContent = `No pude leer ${file.name}. Usa un ZIP estandar con imagenes.`;
+        return [];
+      }
+    }
+
+    function findEndOfCentralDirectory(view) {
+      const minOffset = Math.max(0, view.byteLength - 65558);
+      for (let offset = view.byteLength - 22; offset >= minOffset; offset--) {
+        if (view.getUint32(offset, true) === 0x06054b50) return offset;
+      }
+      return -1;
+    }
+
+    function decodeZipName(buffer, offset, length, flags) {
+      const bytes = new Uint8Array(buffer, offset, length);
+      const decoder = new TextDecoder(flags & 0x0800 ? "utf-8" : "utf-8");
+      return decoder.decode(bytes);
+    }
+
+    async function readZipEntry(buffer, view, localOffset, compressedSize, method, type) {
+      if (view.getUint32(localOffset, true) !== 0x04034b50) return null;
+      const nameLength = view.getUint16(localOffset + 26, true);
+      const extraLength = view.getUint16(localOffset + 28, true);
+      const dataStart = localOffset + 30 + nameLength + extraLength;
+      const data = buffer.slice(dataStart, dataStart + compressedSize);
+
+      if (method === 0) return new Blob([data], { type });
+      if (method === 8 && "DecompressionStream" in window) {
+        const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+        const inflated = await new Response(stream).arrayBuffer();
+        return new Blob([inflated], { type });
+      }
+      return null;
+    }
+
+    function isImageName(name) {
+      return /\.(jpe?g|png|webp|gif|bmp|avif|svg)$/i.test(name || "");
+    }
+
+    function imageMimeType(name) {
+      const ext = (name.split(".").pop() || "").toLowerCase();
+      const types = {
+        jpg: "image/jpeg",
+        jpeg: "image/jpeg",
+        png: "image/png",
+        webp: "image/webp",
+        gif: "image/gif",
+        bmp: "image/bmp",
+        avif: "image/avif",
+        svg: "image/svg+xml"
+      };
+      return types[ext] || "image/*";
+    }
+
+    function loadImage(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+      });
+    }
+
+    async function extractFeatures(url) {
+      const img = await loadImage(url);
+      const canvas = els.workCanvas;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      ctx.clearRect(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+
+      const side = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
+      const sx = ((img.naturalWidth || img.width) - side) / 2;
+      const sy = ((img.naturalHeight || img.height) - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, IMAGE_SIZE, IMAGE_SIZE);
+
+      const pixels = ctx.getImageData(0, 0, IMAGE_SIZE, IMAGE_SIZE).data;
+      const features = new Float32Array(INPUTS);
+      let j = 0;
+      for (let i = 0; i < pixels.length; i += 4) {
+        features[j++] = pixels[i] / 127.5 - 1;
+        features[j++] = pixels[i + 1] / 127.5 - 1;
+        features[j++] = pixels[i + 2] / 127.5 - 1;
+      }
+      return features;
+    }
+
+    function dataset() {
+      return state.classes.flatMap(group => group.samples);
+    }
+
+    function shuffle(items) {
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+      return items;
+    }
+
+    function evaluate(model, data) {
+      let correct = 0;
+      let loss = 0;
+      data.forEach(sample => {
+        const probs = forward(model, sample.features).probs;
+        const predicted = probs[0] > probs[1] ? 0 : 1;
+        if (predicted === sample.label) correct++;
+        loss += -Math.log(Math.max(1e-7, probs[sample.label]));
+      });
+      return {
+        loss: loss / data.length,
+        acc: correct / data.length
+      };
+    }
+
+    async function train() {
+      if (state.training) return;
+      const data = dataset();
+      const counts = state.classes.map(group => group.samples.length);
+      if (counts.some(count => count < 2)) {
+        els.trainLog.textContent = "Agrega al menos 2 imagenes por clase.";
+        setStatus("Faltan ejemplos");
+        return;
+      }
+
+      state.training = true;
+      state.trained = false;
+      state.model = createModel();
+      els.trainBtn.disabled = true;
+      els.resetBtn.disabled = true;
+      setStatus("Entrenando...");
+
+      const epochs = Number(els.epochsRange.value);
+      const lr = Number(els.lrRange.value) / 1000;
+      for (let epoch = 1; epoch <= epochs; epoch++) {
+        const batch = shuffle([...data]);
+        let loss = 0;
+        batch.forEach(sample => {
+          loss += trainSample(state.model, sample, lr);
+        });
+
+        if (epoch === 1 || epoch % 5 === 0 || epoch === epochs) {
+          const metrics = evaluate(state.model, data);
+          els.metricLoss.textContent = metrics.loss.toFixed(3);
+          els.metricAcc.textContent = `${Math.round(metrics.acc * 100)}%`;
+          els.trainProgress.style.width = `${Math.round((epoch / epochs) * 100)}%`;
+          els.trainLog.textContent = `Epoca ${epoch}/${epochs} - perdida ${metrics.loss.toFixed(3)}`;
+          await sleep(0);
+        }
+      }
+
+      const finalMetrics = evaluate(state.model, data);
+      state.training = false;
+      state.trained = true;
+      els.trainBtn.disabled = false;
+      els.resetBtn.disabled = false;
+      els.metricLoss.textContent = finalMetrics.loss.toFixed(3);
+      els.metricAcc.textContent = `${Math.round(finalMetrics.acc * 100)}%`;
+      els.trainProgress.style.width = "100%";
+      els.trainLog.textContent = "Modelo entrenado. Prueba una imagen nueva.";
+      setStatus("Modelo listo");
+      updateControls();
+      if (state.lastTestFeatures) showPrediction(state.lastTestFeatures);
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function handleTestFile(file) {
+      if (!isImageFile(file)) return;
+      const url = URL.createObjectURL(file);
+      els.testPreview.src = url;
+      els.testPreview.style.display = "block";
+      try {
+        state.lastTestFeatures = await extractFeatures(url);
+        showPrediction(state.lastTestFeatures);
+      } finally {
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+    }
+
+    function showPrediction(features) {
+      if (!state.trained || !state.model) {
+        els.predictionTitle.textContent = "Sin prediccion";
+        els.confidenceText.textContent = "Entrena primero el modelo.";
+        renderBars([0, 0]);
+        return;
+      }
+
+      const probs = predict(features);
+      const best = probs[0] >= probs[1] ? 0 : 1;
+      const confidence = Math.round(probs[best] * 100);
+      els.predictionTitle.textContent = state.classes[best].name;
+      els.confidenceText.textContent = `${confidence}% de confianza`;
+      renderBars(probs);
+      setStatus("Prediccion calculada");
+    }
+
+    function reset() {
+      state.classes.forEach(group => {
+        group.samples.forEach(sample => URL.revokeObjectURL(sample.url));
+        group.samples = [];
+      });
+      state.model = null;
+      state.trained = false;
+      state.training = false;
+      state.lastTestFeatures = null;
+      els.metricLoss.textContent = "-";
+      els.metricAcc.textContent = "-";
+      els.trainProgress.style.width = "0%";
+      els.trainLog.textContent = "Usa varias imagenes distintas por clase para que generalice mejor.";
+      els.testPreview.removeAttribute("src");
+      els.testPreview.style.display = "none";
+      els.predictionTitle.textContent = "Sin prediccion";
+      els.confidenceText.textContent = "Entrena primero el modelo.";
+      setStatus("Listo para cargar imagenes");
+      renderAll();
+    }
+
+    els.epochsRange.addEventListener("input", updateControls);
+    els.lrRange.addEventListener("input", updateControls);
+    els.trainBtn.addEventListener("click", train);
+    els.resetBtn.addEventListener("click", reset);
+    els.testInput.addEventListener("change", event => {
+      handleTestFile(event.target.files && event.target.files[0]);
+      els.testInput.value = "";
+    });
+    setupDrop(els.testDrop, files => handleTestFile(files[0]));
+
+    renderAll();
+  </script>
+</body>
+</html>
