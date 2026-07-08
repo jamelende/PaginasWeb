@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Explorador Interactivo de Machine Learning</title>
+<style>
+:root{--bg:#f7f7fb;--surface:#fff;--surface-2:#f0f1f7;--text:#141428;--muted:#5b5f78;--border:#e3e5ef;--primary:#5b5bf0;--primary-2:#8a5bf0;--accent:#12c9a7;--danger:#ef4d6b;--warn:#f5a623;--ok:#22c55e;--shadow:0 6px 24px rgba(20,20,40,.08);--radius:14px}
+.dark{--bg:#0f1020;--surface:#171a2e;--surface-2:#1f2340;--text:#eef0ff;--muted:#a2a7c9;--border:#2a2f52;--shadow:0 6px 24px rgba(0,0,0,.4)}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;transition:background .3s,color .3s}
+a{color:var(--primary);text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.main{padding:24px 32px;max-width:1200px;width:100%}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.topbar h1{font-size:20px;margin:0;flex:1;min-width:200px}
+.search{flex:1;min-width:180px;max-width:360px;position:relative}
+.search input{width:100%;padding:9px 12px 9px 34px;border-radius:10px;border:1px solid var(--border);background:var(--surface)}
+.search::before{content:"";position:absolute;left:11px;top:10px;width:14px;height:14px;border:2px solid var(--muted);border-radius:50%}
+.search::after{content:"";position:absolute;left:22px;top:22px;width:8px;height:2px;background:var(--muted);transform:rotate(45deg);border-radius:2px}
+.search-results{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-top:4px;max-height:280px;overflow-y:auto;z-index:20;display:none;box-shadow:var(--shadow)}
+.search-results.open{display:block}
+.search-results div{padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border)}
+.search-results div:hover{background:var(--surface-2)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:18px}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--primary-2));position:relative}
+.logo-mark::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--surface)}
+.nav-group{margin-bottom:14px}
+.nav-title{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 6px 6px}
+.nav a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;color:var(--text);font-size:14px;margin:2px 0}
+.nav a:hover{background:var(--surface-2)}
+.nav a.active{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff}
+.nav .dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
+.nav a.done .dot{background:var(--ok)}
+.nav a.active .dot{background:#fff}
+.progress-mini{margin-top:14px;padding:12px;border-radius:10px;background:var(--surface-2)}
+.progress-mini .label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.bar{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .4s}
+section.view{display:none;animation:fade .4s ease}
+section.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2.section-title{font-size:26px;margin:0 0 6px}
+p.lead{color:var(--muted);margin:0 0 20px;max-width:70ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:transform .2s}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin:0 0 6px;font-size:16px}
+.card p{margin:0;color:var(--muted);font-size:13px}
+.card .icon{width:36px;height:36px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,var(--primary),var(--primary-2));position:relative}
+.card .icon::after{content:"";position:absolute;inset:9px;border-radius:6px;background:var(--surface)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;font-weight:600;font-size:14px;transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(91,91,240,.35)}
+.btn.ghost{background:var(--surface-2);color:var(--text)}
+.btn.small{padding:6px 10px;font-size:12px}
+.chip{display:inline-block;padding:3px 9px;border-radius:99px;background:var(--surface-2);color:var(--muted);font-size:12px;margin:2px 4px 2px 0}
+details.box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin:10px 0}
+details.box summary{cursor:pointer;font-weight:600;list-style:none}
+details.box summary::before{content:"▸";display:inline-block;margin-right:8px;transition:transform .2s}
+details.box[open] summary::before{transform:rotate(90deg)}
+details.box .inner{padding-top:10px;color:var(--text)}
+.concept{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:var(--shadow)}
+.concept h3{margin:0 0 8px}
+.qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+.qa .qa-item{background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.qa .qa-item b{color:var(--primary);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.qa .qa-item p{margin:4px 0 0;font-size:13px;color:var(--text)}
+.quiz{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:16px}
+.quiz .q{margin-bottom:14px}
+.quiz .opts{display:grid;gap:6px;margin-top:8px}
+.quiz .opt{padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;text-align:left;transition:background .15s}
+.quiz .opt:hover{background:var(--surface-2)}
+.quiz .opt.correct{background:#dcfce7;border-color:#22c55e;color:#065f46}
+.quiz .opt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.dark .quiz .opt.correct{background:#052e1c;color:#a7f3d0}
+.dark .quiz .opt.wrong{background:#3b0d15;color:#fecaca}
+.feedback{margin-top:8px;padding:10px;border-radius:9px;background:var(--surface-2);font-size:13px;display:none}
+.feedback.show{display:block}
+.quiz-score{font-weight:700;color:var(--primary)}
+.lab{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.lab-canvas{width:100%;height:380px;background:var(--surface-2);border-radius:10px;display:block}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;align-items:center}
+.controls label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.controls input[type=range]{width:140px}
+.controls input[type=number]{width:70px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;background:var(--surface)}
+.stat{background:var(--surface-2);padding:6px 10px;border-radius:8px;font-size:13px}
+.stat b{color:var(--primary)}
+.toggle{width:44px;height:24px;background:var(--surface-2);border-radius:99px;position:relative;cursor:pointer;border:1px solid var(--border)}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-2));transition:.25s}
+.dark .toggle::after{left:22px}
+.hamburger{display:none;width:38px;height:38px;border-radius:8px;background:var(--surface-2);align-items:center;justify-content:center}
+.hamburger span{display:block;width:18px;height:2px;background:var(--text);position:relative}
+.hamburger span::before,.hamburger span::after{content:"";position:absolute;left:0;width:18px;height:2px;background:var(--text)}
+.hamburger span::before{top:-6px}.hamburger span::after{top:6px}.backdrop{display:none}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
+.flow .step{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:.2s}
+.flow .step:hover{border-color:var(--primary);transform:translateY(-2px)}
+.flow .step .n{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-bottom:6px}
+.flow .step h4{margin:0 0 4px;font-size:14px}
+.flow .step p{margin:0;font-size:12px;color:var(--muted)}
+.certificate{background:linear-gradient(135deg,#fff8e1,#fef3c7);color:#5b3f00;border:6px double #d4a017;border-radius:16px;padding:40px;text-align:center;margin-top:20px}
+.dark .certificate{background:linear-gradient(135deg,#3a2f00,#4a3800);color:#fde68a;border-color:#a8760e}
+.certificate h2{font-size:34px;margin:0 0 10px;font-family:Georgia,serif}
+.certificate .name{font-size:24px;font-weight:700;margin:14px 0;border-bottom:1px solid currentColor;display:inline-block;padding:0 30px 4px}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{position:fixed;left:-280px;width:260px;z-index:30;transition:left .25s;top:0}.sidebar.open{left:0}.hamburger{display:inline-flex}.main{padding:16px}.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:29;display:none}.backdrop.show{display:block}}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;background:var(--surface-2);color:var(--muted)}
+.pill-sup{background:#dbeafe;color:#1e40af}.pill-uns{background:#fef3c7;color:#92400e}.pill-ref{background:#dcfce7;color:#065f46}
+.dark .pill-sup{background:#1e2a4a;color:#93c5fd}.dark .pill-uns{background:#3a2f00;color:#fde68a}.dark .pill-ref{background:#052e1c;color:#86efac}
+@media print{.sidebar,.topbar,.hamburger,.btn{display:none!important}.main{padding:0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo"><div class="logo-mark"></div><div>ML Explorer</div></div>
+    <div class="nav-group"><div class="nav-title">Inicio</div>
+      <div class="nav"><a href="#inicio" data-nav="inicio"><span class="dot"></span>Pantalla de inicio</a></div></div>
+    <div class="nav-group"><div class="nav-title">Módulos</div><div class="nav" id="nav-modules"></div></div>
+    <div class="nav-group"><div class="nav-title">Laboratorios</div><div class="nav" id="nav-labs"></div></div>
+    <div class="nav-group"><div class="nav-title">Recursos</div>
+      <div class="nav">
+        <a href="#simulador" data-nav="simulador"><span class="dot"></span>Simulador de proyecto</a>
+        <a href="#glosario" data-nav="glosario"><span class="dot"></span>Glosario</a>
+        <a href="#errores" data-nav="errores"><span class="dot"></span>Errores comunes</a>
+        <a href="#casos" data-nav="casos"><span class="dot"></span>Casos reales</a>
+        <a href="#discusion" data-nav="discusion"><span class="dot"></span>Preguntas de clase</a>
+        <a href="#certificado" data-nav="certificado"><span class="dot"></span>Certificado</a>
+      </div></div>
+    <div class="progress-mini">
+      <div class="label">Progreso global</div>
+      <div class="bar"><span id="progress-bar" style="width:0%"></span></div>
+      <div style="font-size:12px;margin-top:6px;color:var(--muted)"><span id="progress-text">0%</span> completado</div>
+      <button class="btn ghost small" style="margin-top:8px;width:100%;justify-content:center" onclick="try{localStorage.removeItem(STORE_KEY)}catch(e){};location.hash='inicio';location.reload();">Reiniciar progreso</button>
+    </div>
+  </aside>
+  <div class="backdrop" id="backdrop"></div>
+  <main class="main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span></button>
+      <h1>Explorador Interactivo de Machine Learning</h1>
+      <div class="search">
+        <input id="search-input" placeholder="Buscar concepto..." autocomplete="off"/>
+        <div class="search-results" id="search-results"></div>
+      </div>
+      <div class="row"><span style="font-size:12px;color:var(--muted)">Tema</span>
+        <div class="toggle" id="theme-toggle" title="Cambiar tema"></div></div>
+    </div>
+    <section id="view-inicio" class="view active">
+      <h2 class="section-title">Bienvenido/a al Explorador Interactivo de ML</h2>
+      <p class="lead">Machine Learning (aprendizaje automático) es la disciplina que permite a las computadoras <b>aprender patrones a partir de datos</b> en lugar de seguir reglas programadas explícitamente. Aquí explorarás los conceptos clave, practicarás en laboratorios simulados y pondrás a prueba lo aprendido con quizzes.</p>
+      <div class="row" style="margin:14px 0 22px">
+        <button class="btn" id="btn-guided">▶ Iniciar recorrido guiado</button>
+        <button class="btn ghost" onclick="go('simulador')">Construye tu primer proyecto</button>
+      </div>
+      <h3>Mapa de módulos</h3>
+      <div class="grid" id="modules-map"></div>
+      <h3 style="margin-top:26px">Laboratorios prácticos</h3>
+      <div class="grid" id="labs-map"></div>
+    </section>
+    <div id="dynamic-views"></div>
+    <section id="view-simulador" class="view">
+      <h2 class="section-title">Construye tu primer proyecto de Machine Learning</h2>
+      <p class="lead">Responde estas preguntas y generaremos una mini-guía para tu proyecto.</p>
+      <div class="concept">
+        <div class="controls">
+          <label>Tipo de problema: <select id="sim-problema"><option>Clasificación</option><option>Regresión</option><option>Clustering</option></select></label>
+          <label>Tipo de datos: <select id="sim-datos"><option>Salud</option><option>Educación</option><option>Negocios</option><option>Deportes</option><option>Redes sociales</option></select></label>
+          <label>Variable objetivo: <input id="sim-objetivo" type="text" placeholder="ej: diagnóstico" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);width:170px"/></label>
+          <button class="btn" onclick="generarProyecto()">Generar guía</button>
+        </div>
+        <div id="sim-output" style="margin-top:14px"></div>
+      </div>
+    </section>
+    <section id="view-glosario" class="view"><h2 class="section-title">Glosario interactivo</h2><p class="lead">Términos clave que aparecerán una y otra vez.</p><div id="glosario-list"></div></section>
+    <section id="view-errores" class="view"><h2 class="section-title">Errores comunes al aprender Machine Learning</h2><p class="lead">Evítalos desde el principio.</p><div id="errores-list"></div></section>
+    <section id="view-casos" class="view"><h2 class="section-title">Casos reales de uso</h2><div id="casos-list" class="grid"></div></section>
+    <section id="view-discusion" class="view"><h2 class="section-title">Preguntas para discusión en clase</h2><div id="discusion-list"></div></section>
+    <section id="view-certificado" class="view"><h2 class="section-title">Tu certificado simbólico</h2><p class="lead">Se desbloquea al completar todos los módulos y quizzes.</p><div id="certificado-wrap"></div></section>
+  </main>
+</div>
+<script>
+/* ============ 1. ESTADO ============ */
+const STORE_KEY='ml_explorer_state_v1';
+const state={theme:'light',visited:{},quizzes:{},labs:{}};
+function storageOK(){try{const k='__ml_test__'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true;}catch(e){return false;}}
+const CAN_STORE=storageOK();
+function save(){try{if(CAN_STORE)localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){console.warn('No se pudo guardar progreso local:',e);}}
+function load(){try{if(CAN_STORE){const raw=localStorage.getItem(STORE_KEY); if(raw)Object.assign(state,JSON.parse(raw));}}catch(e){console.warn('No se pudo cargar progreso local:',e);}}
+load();
+
+/* ============ 2. CONTENIDO ============ */
+const MODULES=[
+{id:'A',title:'¿Qué es Machine Learning?',short:'Introducción',
+ concept:{que:'Rama de la IA donde las máquinas aprenden patrones a partir de ejemplos, sin ser programadas paso a paso.',
+  para:'Automatizar decisiones cuando las reglas son demasiado complejas o cambian con el tiempo.',
+  como:'Un algoritmo observa muchos datos, ajusta parámetros internos y produce un modelo capaz de generalizar.',
+  donde:'Filtros de spam, recomendaciones, diagnóstico médico, autos autónomos, traducción automática.',
+  errores:'Creer que "aprende solo" (necesita datos y objetivo), o pensar que reemplaza la comprensión humana del problema.'},
+ extra:`<h4>Programación tradicional vs Machine Learning</h4>
+  <div class="qa"><div class="qa-item"><b>Tradicional</b><p>Datos + Reglas → Resultado. El programador escribe la lógica.</p></div>
+  <div class="qa-item"><b>Machine Learning</b><p>Datos + Resultados → Reglas (modelo). El algoritmo las descubre.</p></div></div>
+  <div class="lab" style="margin-top:14px"><b>Animación: el modelo mejora con más ejemplos</b>
+  <canvas class="lab-canvas" id="canvas-mejora" style="height:220px"></canvas>
+  <div class="controls"><button class="btn small" onclick="animMejora()">▶ Reiniciar</button>
+  <span class="stat">Iteración: <b id="mejora-iter">0</b></span><span class="stat">Error: <b id="mejora-err">–</b></span></div></div>`},
+{id:'B',title:'Tipos de aprendizaje',short:'Supervisado, no supervisado, refuerzo',
+ concept:{que:'Familias principales según cómo el modelo recibe información: con etiquetas, sin etiquetas, o con recompensas.',
+  para:'Elegir el enfoque correcto según los datos disponibles y el objetivo.',
+  como:'Supervisado usa pares (X, y). No supervisado busca estructura en X. Refuerzo aprende de premios/castigos.',
+  donde:'Supervisado: predicción de precios. No supervisado: segmentación de clientes. Refuerzo: robótica, juegos.',
+  errores:'Confundir clustering con clasificación, o aplicar refuerzo cuando basta con supervisado.'},
+ extra:`<div class="grid">
+  <div class="card"><div class="icon"></div><h3>Supervisado <span class="badge pill-sup">X → y</span></h3><p>Aprende a predecir una etiqueta conocida. Ej: detectar fraude.</p></div>
+  <div class="card"><div class="icon"></div><h3>No supervisado <span class="badge pill-uns">solo X</span></h3><p>Descubre estructura oculta. Ej: agrupar clientes.</p></div>
+  <div class="card"><div class="icon"></div><h3>Refuerzo <span class="badge pill-ref">acciones</span></h3><p>Maximiza recompensa. Ej: aprender a jugar ajedrez.</p></div></div>
+  <div class="lab" style="margin-top:14px"><b>Actividad: clasifica cada caso</b><div id="drag-activity" style="margin-top:10px"></div></div>`},
+{id:'C',title:'Datos y datasets',short:'Variables, entrenamiento y prueba',
+ concept:{que:'Un dataset es una tabla de observaciones (filas) con características (columnas) y opcionalmente una etiqueta.',
+  para:'Alimentar al algoritmo con información representativa del problema.',
+  como:'Se divide en entrenamiento (para aprender) y prueba (para evaluar sin trampa).',
+  donde:'Todo proyecto de ML parte de un dataset: imágenes, transacciones, tuits, sensores.',
+  errores:'Usar los mismos datos para entrenar y evaluar (fuga de datos), o datasets desbalanceados sin corregirlo.'},
+ extra:`<div class="qa">
+  <div class="qa-item"><b>Observación</b><p>Una fila: un cliente, un paciente, un pixel.</p></div>
+  <div class="qa-item"><b>Característica (feature)</b><p>Columna que describe: edad, ingreso, hora.</p></div>
+  <div class="qa-item"><b>Etiqueta (label)</b><p>Valor a predecir: compra/no compra.</p></div></div>
+  <div class="lab" style="margin-top:14px"><b>Simulación: división train/test</b>
+  <canvas class="lab-canvas" id="canvas-split" style="height:220px"></canvas>
+  <div class="controls"><label>% Entrenamiento: <input type="range" id="split-range" min="10" max="90" value="80"/></label>
+  <span class="stat">Train: <b id="split-tr">80%</b></span><span class="stat">Test: <b id="split-te">20%</b></span>
+  <button class="btn small" onclick="drawSplit()">Redistribuir</button></div></div>`},
+{id:'D',title:'Aprendizaje supervisado',short:'Algoritmos principales',
+ concept:{que:'Algoritmos que aprenden de datos etiquetados para predecir un valor (regresión) o una clase (clasificación).',
+  para:'Predicción cuando tenemos ejemplos históricos con la respuesta correcta.',
+  como:'Minimiza el error entre predicción y etiqueta real ajustando parámetros.',
+  donde:'Precios de casas, diagnóstico, detección de spam, reconocimiento facial.',
+  errores:'Elegir un algoritmo complejo sin necesidad, o no normalizar las variables cuando el algoritmo lo requiere.'},
+ extra:`<div class="grid">${[
+  ['Regresión lineal','Predice valores numéricos ajustando una línea que minimiza el error cuadrático.','Precio de vivienda.','Simple, interpretable.','Solo relaciones lineales.'],
+  ['Clasificación','Asigna categorías a observaciones.','Correo: spam o no spam.','Muy usada.','Depende del algoritmo elegido.'],
+  ['K-Nearest Neighbors','Predice mirando a los K ejemplos más parecidos.','Recomendaciones.','Fácil de entender.','Lento con muchos datos.'],
+  ['Árboles de decisión','Divide los datos con preguntas sí/no.','Aprobación de crédito.','Interpretable.','Tiende a sobreajustar.'],
+  ['Regresión logística','Estima la probabilidad de una clase.','Riesgo de enfermedad.','Rápida y probabilística.','Frontera lineal.'],
+  ['Support Vector Machines','Busca el margen máximo entre clases.','Reconocimiento de dígitos.','Efectivo en alta dimensión.','Difícil de escalar.'],
+  ['Redes neuronales','Capas de neuronas que aprenden representaciones.','Visión, lenguaje.','Muy poderosas.','Necesitan datos y cómputo.']
+ ].map(a=>`<div class="card"><div class="icon"></div><h3>${a[0]}</h3><p>${a[1]}</p>
+  <div style="margin-top:8px"><span class="chip">Uso: ${a[2]}</span></div>
+  <div><span class="chip">✔ ${a[3]}</span><span class="chip">✖ ${a[4]}</span></div></div>`).join('')}</div>`},
+{id:'E',title:'Aprendizaje no supervisado',short:'Clustering y más',
+ concept:{que:'Descubre estructura, grupos o anomalías en datos sin etiquetas.',
+  para:'Explorar datos, segmentar usuarios, detectar comportamientos raros.',
+  como:'Se basa en similitud, densidad o reducción de dimensiones.',
+  donde:'Marketing, ciberseguridad, biología, compresión de datos.',
+  errores:'Interpretar clusters como verdad absoluta, o no escalar las variables antes de agrupar.'},
+ extra:`<div class="grid">
+  <div class="card"><div class="icon"></div><h3>Clustering</h3><p>Agrupa observaciones similares.</p></div>
+  <div class="card"><div class="icon"></div><h3>K-means</h3><p>Encuentra K centroides que minimizan la distancia intra-grupo.</p></div>
+  <div class="card"><div class="icon"></div><h3>Reducción de dimensionalidad</h3><p>Comprime muchas variables en pocas (ej: PCA).</p></div>
+  <div class="card"><div class="icon"></div><h3>Detección de anomalías</h3><p>Identifica puntos raros o fraudulentos.</p></div></div>
+  <div class="lab" style="margin-top:14px"><b>Animación: puntos se agrupan automáticamente</b>
+  <canvas class="lab-canvas" id="canvas-cluster-anim" style="height:280px"></canvas>
+  <div class="controls"><button class="btn small" onclick="animCluster()">▶ Reiniciar</button>
+  <span class="stat">Iteración: <b id="cluster-iter">0</b></span></div></div>`},
+{id:'F',title:'Entrenamiento de modelos',short:'Pérdida y optimización',
+ concept:{que:'Proceso iterativo donde el modelo ajusta sus parámetros para reducir una función de pérdida.',
+  para:'Convertir un modelo vacío en uno que hace predicciones útiles.',
+  como:'Se calcula el error, se derivan los ajustes (gradiente) y se aplican pequeñas correcciones.',
+  donde:'Todo modelo entrenable: desde regresión hasta redes profundas.',
+  errores:'Usar tasa de aprendizaje demasiado alta o entrenar demasiadas épocas (sobreajuste).'},
+ extra:`<div class="qa">
+  <div class="qa-item"><b>Función de pérdida</b><p>Mide qué tan malas son las predicciones.</p></div>
+  <div class="qa-item"><b>Optimización</b><p>Algoritmo (ej: descenso de gradiente) que baja la pérdida.</p></div>
+  <div class="qa-item"><b>Iteración / época</b><p>Una pasada de ajuste sobre los datos.</p></div></div>
+  <div class="lab" style="margin-top:14px"><b>Animación: la línea se ajusta a los puntos</b>
+  <canvas class="lab-canvas" id="canvas-fit" style="height:260px"></canvas>
+  <div class="controls"><button class="btn small" onclick="animFit()">▶ Entrenar</button>
+  <span class="stat">Época: <b id="fit-epoch">0</b></span><span class="stat">Pérdida: <b id="fit-loss">–</b></span></div></div>`},
+{id:'G',title:'Evaluación de modelos',short:'Métricas y matriz de confusión',
+ concept:{que:'Métricas que dicen qué tan bueno es un modelo en datos no vistos.',
+  para:'Comparar modelos, decidir si están listos para producción.',
+  como:'Se calculan sobre el conjunto de prueba comparando predicción vs. realidad.',
+  donde:'Todo proyecto serio de ML.',
+  errores:'Usar solo accuracy en datasets desbalanceados (puede engañar).'},
+ extra:`<div class="qa">
+  <div class="qa-item"><b>Accuracy</b><p>(TP+TN)/Total. Aciertos totales.</p></div>
+  <div class="qa-item"><b>Precision</b><p>TP/(TP+FP). De lo predicho positivo, cuánto acertó.</p></div>
+  <div class="qa-item"><b>Recall</b><p>TP/(TP+FN). De lo realmente positivo, cuánto detectó.</p></div>
+  <div class="qa-item"><b>F1-score</b><p>Media armónica entre precision y recall.</p></div></div>
+  <details class="box"><summary>Overfitting y underfitting</summary><div class="inner">
+  <b>Underfitting:</b> el modelo es demasiado simple y falla incluso en entrenamiento.<br>
+  <b>Overfitting:</b> memoriza el entrenamiento pero falla en datos nuevos.<br>
+  <b>Buen ajuste:</b> equilibrio entre ambos.</div></details>
+  <details class="box"><summary>Validación cruzada</summary><div class="inner">
+  Divide los datos en K partes, entrena K veces rotando la parte de validación. Estima mejor el desempeño real.</div></details>`},
+{id:'H',title:'Overfitting, underfitting y generalización',short:'Complejidad del modelo',
+ concept:{que:'Fenómenos que ocurren cuando el modelo es demasiado simple, demasiado complejo o justo.',
+  para:'Diagnosticar por qué un modelo no generaliza bien.',
+  como:'Se compara el error de entrenamiento con el de prueba a medida que cambia la complejidad.',
+  donde:'En absolutamente todos los modelos supervisados.',
+  errores:'Aumentar complejidad para bajar el error de entrenamiento sin mirar la prueba.'},
+ extra:`<div class="lab"><b>Explora la complejidad</b>
+  <canvas class="lab-canvas" id="canvas-fit-complexity" style="height:280px"></canvas>
+  <div class="controls"><label>Complejidad (grado polinomial): <input type="range" id="cx-range" min="1" max="12" value="3"/></label>
+  <span class="stat">Grado: <b id="cx-val">3</b></span><span class="stat">Error train: <b id="cx-tr">–</b></span><span class="stat">Error test: <b id="cx-te">–</b></span></div></div>`},
+{id:'I',title:'Flujo completo de un proyecto de ML',short:'Del problema al despliegue',
+ concept:{que:'Serie de etapas ordenadas para llevar una idea de ML a un producto útil.',
+  para:'No perderse en el camino; cada etapa alimenta a la siguiente.',
+  como:'Iterativo: casi siempre se vuelve atrás para mejorar los datos o el modelo.',
+  donde:'Cualquier equipo de ciencia de datos.',
+  errores:'Saltarse la definición del problema o el monitoreo tras el despliegue.'},
+ extra:`<div class="flow" id="flow-diagram"></div><div id="flow-detail" style="margin-top:12px"></div>`},
+{id:'J',title:'Ética y uso responsable',short:'Sesgos, privacidad, responsabilidad',
+ concept:{que:'Principios para desarrollar ML de forma justa, transparente y segura.',
+  para:'Evitar daños a personas o grupos y mantener confianza en los sistemas.',
+  como:'Auditando datos, explicando decisiones, incluyendo supervisión humana.',
+  donde:'Justicia, salud, contratación, crédito, seguridad.',
+  errores:'Suponer que los datos son neutrales o delegar decisiones críticas 100% al modelo.'},
+ extra:`<div class="grid">
+  <div class="card"><div class="icon"></div><h3>Sesgos en datos</h3><p>Si los datos reflejan desigualdad, el modelo la aprenderá.</p></div>
+  <div class="card"><div class="icon"></div><h3>Privacidad</h3><p>Datos personales requieren consentimiento y protección.</p></div>
+  <div class="card"><div class="icon"></div><h3>Explicabilidad</h3><p>Poder justificar por qué el modelo decidió lo que decidió.</p></div>
+  <div class="card"><div class="icon"></div><h3>Supervisión humana</h3><p>Decisiones sensibles no deben ser automáticas al 100%.</p></div></div>
+  <details class="box"><summary>Casos de discusión</summary><div class="inner"><ul>
+  <li>Un banco usa ML para decidir créditos. ¿Cómo evitar discriminación?</li>
+  <li>Un hospital predice riesgo de reingreso. ¿Qué pasa si el modelo se equivoca?</li>
+  <li>Una red social recomienda contenido. ¿Cómo balancear engagement y bienestar?</li>
+  </ul></div></details>`}
+];
+
+const QUIZZES={
+A:[
+ {q:'¿En qué se diferencia ML de la programación tradicional?',opts:['ML no usa datos','En ML el algoritmo descubre las reglas a partir de datos','ML solo usa if/else','ML siempre es más lento'],ok:1,exp:'En programación tradicional el humano escribe las reglas; en ML el algoritmo las aprende de los datos.'},
+ {q:'¿Cuál NO es un ejemplo de ML?',opts:['Filtro de spam','Sistema de recomendación','Sumar dos números con +','Reconocimiento de voz'],ok:2,exp:'Sumar dos números es lógica programada directamente.'},
+ {q:'ML es una rama de...',opts:['Estadística clásica únicamente','Inteligencia Artificial','Ingeniería civil','Compiladores'],ok:1,exp:'ML es una subdisciplina de la IA.'},
+ {q:'Un modelo "aprende" cuando...',opts:['Se descarga de internet','Ajusta sus parámetros para reducir el error','Se compila','Se imprime en pantalla'],ok:1,exp:'Aprender = ajustar parámetros para reducir la pérdida.'},
+ {q:'¿Qué se necesita mínimamente para hacer ML?',opts:['Datos y un objetivo','Solo una GPU','Solo un lenguaje','Solo internet'],ok:0,exp:'Sin datos ni objetivo no hay aprendizaje posible.'}
+],
+B:[
+ {q:'¿Qué usa el aprendizaje supervisado?',opts:['Solo datos','Pares (entrada, salida esperada)','Recompensas','Nada'],ok:1,exp:'Supervisado necesita ejemplos con etiquetas.'},
+ {q:'Agrupar clientes sin etiquetas es un caso de...',opts:['Supervisado','No supervisado','Refuerzo','Ninguno'],ok:1,exp:'Es clustering, un caso clásico de no supervisado.'},
+ {q:'El aprendizaje por refuerzo se basa en...',opts:['Etiquetas','Recompensas y castigos','Reglas explícitas','Random'],ok:1,exp:'El agente aprende a maximizar la recompensa.'},
+ {q:'Predecir el precio de una casa es...',opts:['Supervisado (regresión)','No supervisado','Refuerzo','Ninguno'],ok:0,exp:'Se tienen precios históricos como etiqueta.'},
+ {q:'Un robot que aprende a caminar recibiendo puntos es...',opts:['Supervisado','No supervisado','Refuerzo','Clustering'],ok:2,exp:'Refuerzo: acciones + recompensas.'}
+],
+C:[
+ {q:'¿Qué es una observación?',opts:['Una columna','Una fila del dataset','El modelo','La métrica'],ok:1,exp:'Cada fila es una observación.'},
+ {q:'¿Para qué separamos entrenamiento y prueba?',opts:['Para ir más rápido','Para evaluar en datos no vistos','Por moda','No sirve'],ok:1,exp:'Así medimos la capacidad de generalizar.'},
+ {q:'Una característica (feature) es...',opts:['Una fila','Una columna que describe la observación','Un modelo','Una métrica'],ok:1,exp:'Feature = variable de entrada.'},
+ {q:'¿Qué es "fuga de datos"?',opts:['Se pierden archivos','Información de prueba se cuela en entrenamiento','El disco lleno','Un error de red'],ok:1,exp:'Contamina la evaluación.'},
+ {q:'Un dataset desbalanceado suele...',opts:['Mejorar accuracy','Engañar la métrica accuracy','Ser más rápido','Ser irrelevante'],ok:1,exp:'Si 95% es clase A, predecir siempre A da 95% pero es inútil.'}
+],
+D:[
+ {q:'La regresión lineal predice...',opts:['Categorías','Valores numéricos','Clusters','Recompensas'],ok:1,exp:'Regresión = valores continuos.'},
+ {q:'KNN clasifica mirando...',opts:['El promedio global','Los K vecinos más cercanos','La primera muestra','Nada'],ok:1,exp:'K vecinos más cercanos votan.'},
+ {q:'Un árbol de decisión...',opts:['Es una red neuronal','Divide los datos con preguntas sí/no','Es no supervisado','Solo hace clustering'],ok:1,exp:'Se construye particionando el espacio de features.'},
+ {q:'La regresión logística sirve para...',opts:['Regresión numérica','Clasificación probabilística','Clustering','Reducción de dimensión'],ok:1,exp:'Da probabilidad de pertenecer a una clase.'},
+ {q:'Una red neuronal aprende...',opts:['Reglas escritas a mano','Representaciones jerárquicas de los datos','Solo promedios','Nada'],ok:1,exp:'Cada capa aprende una abstracción.'}
+],
+E:[
+ {q:'K-means es un algoritmo de...',opts:['Clasificación','Clustering','Regresión','Refuerzo'],ok:1,exp:'Agrupa sin etiquetas.'},
+ {q:'PCA sirve para...',opts:['Aumentar variables','Reducir dimensionalidad','Clasificar','Optimizar redes'],ok:1,exp:'Comprime la información en pocas componentes.'},
+ {q:'La detección de anomalías busca...',opts:['Datos comunes','Datos raros o atípicos','Clusters iguales','Etiquetas'],ok:1,exp:'Puntos fuera del patrón normal.'},
+ {q:'¿Qué debemos hacer antes de aplicar K-means?',opts:['Nada','Escalar las variables','Etiquetar los datos','Entrenar una red'],ok:1,exp:'Sensible a la escala de las variables.'},
+ {q:'Un caso típico de clustering es...',opts:['Predecir precios','Segmentar clientes','Traducir texto','Jugar ajedrez'],ok:1,exp:'Agrupar clientes por comportamiento.'}
+],
+F:[
+ {q:'¿Qué mide la función de pérdida?',opts:['Velocidad','Error del modelo','Memoria RAM','Tiempo'],ok:1,exp:'Cuánto se aleja la predicción de la etiqueta.'},
+ {q:'El descenso de gradiente sirve para...',opts:['Aumentar la pérdida','Reducir la pérdida ajustando parámetros','Guardar archivos','Nada'],ok:1,exp:'Baja la pérdida siguiendo el gradiente negativo.'},
+ {q:'Una época es...',opts:['Una pasada completa por los datos','Un tipo de red','Una métrica','Un dataset'],ok:0,exp:'Una vuelta sobre el conjunto de entrenamiento.'},
+ {q:'Si la tasa de aprendizaje es muy alta...',opts:['Convergencia perfecta','Puede divergir','Nada cambia','Es ideal siempre'],ok:1,exp:'Los pasos se pasan del mínimo.'},
+ {q:'Ajustar parámetros es lo mismo que...',opts:['Compilar','Aprender','Guardar','Imprimir'],ok:1,exp:'Aprender = actualizar parámetros para reducir la pérdida.'}
+],
+G:[
+ {q:'Accuracy se calcula como...',opts:['TP/FP','Aciertos totales / total','Recall - Precision','TP+FN'],ok:1,exp:'(TP+TN)/N.'},
+ {q:'Precision responde a...',opts:['De lo predicho positivo, cuánto es correcto','De lo real positivo, cuánto detecté','Nada','Todo'],ok:0,exp:'TP/(TP+FP).'},
+ {q:'Recall responde a...',opts:['De lo predicho positivo, cuánto es correcto','De lo real positivo, cuánto detecté','El error','La pérdida'],ok:1,exp:'TP/(TP+FN).'},
+ {q:'F1 es...',opts:['Precision + Recall','Media armónica de precision y recall','Suma','Producto'],ok:1,exp:'Equilibra precision y recall.'},
+ {q:'En datasets desbalanceados es mejor mirar...',opts:['Solo accuracy','Precision/Recall/F1','Ninguna','La memoria'],ok:1,exp:'Accuracy puede engañar.'}
+],
+H:[
+ {q:'Overfitting significa que...',opts:['El modelo es muy simple','Memoriza entrenamiento pero falla en prueba','Es perfecto','No entrena'],ok:1,exp:'Se ajusta al ruido de los datos.'},
+ {q:'Underfitting significa que...',opts:['Modelo demasiado simple para el patrón','Modelo perfecto','Mucha data','Nada'],ok:0,exp:'No captura la relación real.'},
+ {q:'Para reducir overfitting sirve...',opts:['Aumentar complejidad','Regularización o más datos','Menos datos','Copiar el modelo'],ok:1,exp:'Regularizar, más datos, o simplificar.'},
+ {q:'Un buen modelo generaliza cuando...',opts:['Solo funciona en train','Funciona bien en datos nuevos','Es muy lento','Es muy grande'],ok:1,exp:'Rinde bien fuera de la muestra.'},
+ {q:'La complejidad se controla con...',opts:['Regularización, hiperparámetros','El color','El nombre','La hora'],ok:0,exp:'Hiperparámetros y técnicas de regularización.'}
+],
+I:[
+ {q:'¿Cuál es el primer paso de un proyecto de ML?',opts:['Entrenar el modelo','Definir el problema','Desplegar','Comprar GPU'],ok:1,exp:'Sin un problema claro, no hay proyecto.'},
+ {q:'Limpieza de datos incluye...',opts:['Eliminar duplicados y tratar nulos','Comprar disco','Cambiar de OS','Nada'],ok:0,exp:'También outliers y formatos.'},
+ {q:'Tras desplegar hay que...',opts:['Olvidar el proyecto','Monitorear el modelo','Borrar los datos','Reiniciar todo'],ok:1,exp:'Los modelos se degradan (drift).'},
+ {q:'La evaluación se hace con...',opts:['El conjunto de entrenamiento','El conjunto de prueba','El código','El JSON'],ok:1,exp:'Prueba u otras técnicas como CV.'},
+ {q:'El ciclo de ML es...',opts:['Lineal, una sola vez','Iterativo, con retornos a etapas previas','Aleatorio','Instantáneo'],ok:1,exp:'Volver atrás es normal.'}
+],
+J:[
+ {q:'El sesgo puede venir de...',opts:['Los datos históricos','El programador únicamente','Nunca ocurre','El hardware'],ok:0,exp:'Datos sesgados producen modelos sesgados.'},
+ {q:'Explicabilidad significa...',opts:['Justificar por qué el modelo decidió X','Que el modelo sea rápido','Que sea grande','Que sea barato'],ok:0,exp:'Poder interpretar la decisión.'},
+ {q:'Un modelo médico crítico debería...',opts:['Reemplazar al médico','Ayudar al médico bajo supervisión','No usarse nunca','Ser secreto'],ok:1,exp:'Supervisión humana es clave.'},
+ {q:'La privacidad exige...',opts:['Publicar los datos','Anonimizar y proteger datos personales','Ignorar la ley','Nada'],ok:1,exp:'Consentimiento y protección.'},
+ {q:'Automatizar decisiones sensibles sin revisión...',opts:['Es siempre buena idea','Puede causar daños graves','Da igual','Es más ético'],ok:1,exp:'Puede afectar vidas de forma injusta.'}
+]
+};
+
+const LABS=[
+ {id:'L1',title:'Laboratorio 1: Regresión lineal',short:'Ajusta una línea a puntos'},
+ {id:'L2',title:'Laboratorio 2: Clasificación binaria',short:'Mueve la frontera de decisión'},
+ {id:'L3',title:'Laboratorio 3: KNN',short:'Elige K y observa vecinos'},
+ {id:'L4',title:'Laboratorio 4: Árbol de decisión',short:'Recorre preguntas paso a paso'},
+ {id:'L5',title:'Laboratorio 5: K-means',short:'Anima el movimiento de centroides'},
+ {id:'L6',title:'Laboratorio 6: Matriz de confusión',short:'Calcula métricas al modificar TP/FP/TN/FN'}
+];
+
+const GLOSARIO=[
+ ['Machine Learning','Rama de la IA que aprende patrones a partir de datos.'],
+ ['Dataset','Conjunto de observaciones para entrenar o evaluar.'],
+ ['Feature','Variable de entrada que describe una observación.'],
+ ['Label','Valor a predecir en aprendizaje supervisado.'],
+ ['Modelo','Función matemática con parámetros ajustables.'],
+ ['Overfitting','Modelo que memoriza el entrenamiento y falla en prueba.'],
+ ['Underfitting','Modelo demasiado simple para capturar el patrón.'],
+ ['Función de pérdida','Mide el error entre predicción y realidad.'],
+ ['Gradiente','Dirección de mayor aumento de la pérdida.'],
+ ['Cluster','Grupo de observaciones similares sin etiquetas.'],
+ ['Centroide','Punto representativo del centro de un cluster.'],
+ ['Accuracy','Proporción de aciertos totales.'],
+ ['Precision','De los positivos predichos, cuántos son correctos.'],
+ ['Recall','De los positivos reales, cuántos se detectaron.'],
+ ['F1-score','Media armónica de precision y recall.'],
+ ['Validación cruzada','Evaluación por particiones rotatorias.'],
+ ['Hiperparámetro','Ajuste externo al aprendizaje (K, tasa de aprendizaje).'],
+ ['Sesgo','Distorsión sistemática en datos o predicciones.'],
+ ['PCA','Reducción de dimensionalidad por componentes principales.'],
+ ['Época','Una pasada completa sobre el conjunto de entrenamiento.']
+];
+const ERRORES=[
+ ['Evaluar con datos de entrenamiento','Da métricas infladas. Usa prueba o validación cruzada.'],
+ ['Ignorar el balance de clases','Accuracy engaña; usa precision, recall, F1.'],
+ ['No normalizar/escalar','KNN o K-means dependen de la escala.'],
+ ['Elegir modelo complejo primero','Empieza simple; escala solo si es necesario.'],
+ ['Entrenar demasiado','Puede llevar a overfitting.'],
+ ['Olvidar el monitoreo tras desplegar','Los modelos se degradan (drift).'],
+ ['Confundir correlación con causalidad','El modelo detecta correlaciones, no causas.'],
+ ['No cuestionar los datos','Datos sesgados producen modelos sesgados.']
+];
+const CASOS=[
+ ['Netflix / Spotify','Filtrado colaborativo y factores latentes recomiendan contenido.'],
+ ['Detección de fraude bancario','Modelos supervisados y de anomalías bloquean transacciones.'],
+ ['Diagnóstico por imagen','Redes convolucionales apoyan al radiólogo.'],
+ ['Traductores automáticos','Transformers traducen entre idiomas.'],
+ ['Vehículos autónomos','Visión, sensores y refuerzo combinados.'],
+ ['Predicción de demanda','Regresión y series temporales para logística.']
+];
+const DISCUSION=[
+ '¿Es ético usar ML para preseleccionar candidatos a un empleo? ¿Qué garantías se necesitan?',
+ '¿Quién es responsable cuando un modelo se equivoca: el programador, la empresa o el usuario?',
+ '¿Cómo comunicarías a un usuario que una decisión fue tomada por un algoritmo?',
+ '¿Debe existir el derecho a una explicación cuando un modelo afecta tu vida?',
+ '¿Cómo evitar que un modelo perpetúe sesgos históricos?',
+ '¿Qué tanto deberíamos automatizar en salud, justicia o educación?'
+];
+
+/* ============ 3. RENDER ============ */
+function renderNav(){
+  document.getElementById('nav-modules').innerHTML=MODULES.map(m=>{
+    const done=state.visited[m.id]?'done':'';
+    return `<a href="#mod-${m.id}" data-nav="mod-${m.id}" class="${done}"><span class="dot"></span><span>${m.id}. ${m.short}</span></a>`;
+  }).join('');
+  document.getElementById('nav-labs').innerHTML=LABS.map(l=>{
+    const done=state.labs[l.id]?'done':'';
+    return `<a href="#lab-${l.id}" data-nav="lab-${l.id}" class="${done}"><span class="dot"></span><span>${l.short}</span></a>`;
+  }).join('');
+}
+function renderInicio(){
+  document.getElementById('modules-map').innerHTML=MODULES.map(m=>`<div class="card" onclick="go('mod-${m.id}')" style="cursor:pointer"><div class="icon"></div><h3>${m.id}. ${m.title}</h3><p>${m.short}</p></div>`).join('');
+  document.getElementById('labs-map').innerHTML=LABS.map(l=>`<div class="card" onclick="go('lab-${l.id}')" style="cursor:pointer"><div class="icon"></div><h3>${l.title}</h3><p>${l.short}</p></div>`).join('');
+}
+function renderDynamicViews(){
+  let html='';
+  MODULES.forEach(m=>{
+    html+=`<section id="view-mod-${m.id}" class="view">
+      <h2 class="section-title">${m.id}. ${m.title}</h2>
+      <p class="lead">${m.concept.que}</p>
+      <div class="concept"><div class="qa">
+        <div class="qa-item"><b>¿Qué es?</b><p>${m.concept.que}</p></div>
+        <div class="qa-item"><b>¿Para qué sirve?</b><p>${m.concept.para}</p></div>
+        <div class="qa-item"><b>¿Cómo funciona?</b><p>${m.concept.como}</p></div>
+        <div class="qa-item"><b>¿Dónde se usa?</b><p>${m.concept.donde}</p></div>
+        <div class="qa-item"><b>Errores comunes</b><p>${m.concept.errores}</p></div>
+      </div></div>
+      ${m.extra||''}
+      <div class="quiz" id="quiz-${m.id}"></div>
+      <details class="box"><summary>Nota avanzada (opcional)</summary><div class="inner">
+      Para estudiantes con más matemáticas: profundiza en las ecuaciones consultando <i>"An Introduction to Statistical Learning"</i> o los cursos abiertos de Andrew Ng.</div></details>
+    </section>`;
+  });
+  LABS.forEach(l=>{
+    html+=`<section id="view-lab-${l.id}" class="view">
+      <h2 class="section-title">${l.title}</h2><p class="lead">${l.short}</p>
+      <div id="lab-body-${l.id}"></div></section>`;
+  });
+  document.getElementById('dynamic-views').innerHTML=html;
+  document.getElementById('lab-body-L1').innerHTML=labRegresionHTML();
+  document.getElementById('lab-body-L2').innerHTML=labClasificacionHTML();
+  document.getElementById('lab-body-L3').innerHTML=labKNNHTML();
+  document.getElementById('lab-body-L4').innerHTML=labArbolHTML();
+  document.getElementById('lab-body-L5').innerHTML=labKmeansHTML();
+  document.getElementById('lab-body-L6').innerHTML=labMatrizHTML();
+  MODULES.forEach(m=>renderQuiz(m.id));
+  renderFlow(); renderDragActivity();
+}
+
+/* ============ 4. ROUTER ============ */
+function go(id){location.hash=id}
+function showView(id){
+  document.querySelectorAll('section.view').forEach(v=>v.classList.remove('active'));
+  const el=document.getElementById('view-'+id);
+  if(el){el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'})}
+  else document.getElementById('view-inicio').classList.add('active');
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('data-nav')===id));
+  if(id.startsWith('mod-')){state.visited[id.slice(4)]=true;save();renderNav();updateProgress()}
+  if(id.startsWith('lab-')){state.labs[id.slice(4)]=true;save();renderNav();updateProgress()}
+  setTimeout(()=>initViewCanvases(id),50);
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('show');
+}
+window.addEventListener('hashchange',()=>showView(location.hash.slice(1)||'inicio'));
+
+/* ============ 5. PROGRESO ============ */
+function updateProgress(){
+  state.visited=state.visited||{}; state.labs=state.labs||{}; state.quizzes=state.quizzes||{};
+  const totalMods=MODULES.length, totalLabs=LABS.length, totalQ=MODULES.length;
+  const doneMods=Object.keys(state.visited).length;
+  const doneLabs=Object.keys(state.labs).length;
+  const doneQ=Object.values(state.quizzes).filter(q=>q&&q.score>=Math.ceil((q.total||0)*0.6)).length;
+  const pct=Math.round(((doneMods+doneLabs+doneQ)/(totalMods+totalLabs+totalQ))*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=pct+'%';
+  renderCertificado(pct);
+}
+
+/* ============ 6. QUIZZES ============ */
+function renderQuiz(modId){
+  const wrap=document.getElementById('quiz-'+modId); if(!wrap)return;
+  const qs=QUIZZES[modId]||[];
+  state.quizzes[modId]=state.quizzes[modId]||{score:0,total:qs.length,answered:{}};
+  wrap.innerHTML=`<h3>Quiz del módulo <span class="quiz-score">Puntaje: <span id="score-${modId}">${state.quizzes[modId].score}</span>/${qs.length}</span></h3>
+    <div id="quiz-body-${modId}"></div>
+    <button class="btn ghost small" onclick="resetQuiz('${modId}')">↻ Reiniciar quiz</button>`;
+  document.getElementById('quiz-body-'+modId).innerHTML=qs.map((q,i)=>`
+    <div class="q" data-qi="${i}"><b>${i+1}. ${q.q}</b>
+      <div class="opts">${q.opts.map((o,j)=>`<button class="opt" onclick="answerQuiz('${modId}',${i},${j})">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb-${modId}-${i}"></div></div>`).join('');
+}
+function answerQuiz(modId,qi,oi){
+  const q=QUIZZES[modId][qi], st=state.quizzes[modId];
+  if(st.answered[qi]!==undefined)return;
+  st.answered[qi]=oi;
+  const opts=document.querySelectorAll(`#quiz-body-${modId} .q[data-qi="${qi}"] .opt`);
+  opts.forEach((el,j)=>{if(j===q.ok)el.classList.add('correct'); else if(j===oi)el.classList.add('wrong')});
+  const ok=oi===q.ok; if(ok)st.score++;
+  const fb=document.getElementById(`fb-${modId}-${qi}`);
+  fb.innerHTML=`<b>${ok?'✓ Correcto':'✗ Respuesta correcta: '+q.opts[q.ok]}</b><br>${q.exp}`;
+  fb.classList.add('show');
+  document.getElementById('score-'+modId).textContent=st.score;
+  save(); updateProgress();
+}
+function resetQuiz(modId){state.quizzes[modId]={score:0,total:QUIZZES[modId].length,answered:{}}; save(); renderQuiz(modId); updateProgress();}
+
+/* ============ 7. UTIL CANVAS ============ */
+function fitCanvas(c){const r=c.getBoundingClientRect(); c.width=r.width; c.height=r.height;}
+function drawAxes(ctx,W,H){
+  ctx.strokeStyle=getCss('--border'); ctx.lineWidth=1; ctx.beginPath();
+  for(let i=0;i<=10;i++){ctx.moveTo(i*W/10,0); ctx.lineTo(i*W/10,H); ctx.moveTo(0,i*H/10); ctx.lineTo(W,i*H/10);}
+  ctx.stroke();
+}
+function getCss(name){return getComputedStyle(document.body).getPropertyValue(name).trim()||'#5b5bf0';}
+
+/* ============ 8. LABS ============ */
+/* LAB 1 */
+function labRegresionHTML(){return `<div class="lab">
+  <p>Haz clic en el gráfico para agregar puntos. Se ajustará una línea por mínimos cuadrados.</p>
+  <canvas class="lab-canvas" id="canvas-lin"></canvas>
+  <div class="controls">
+    <button class="btn small" onclick="linClear()">Limpiar</button>
+    <button class="btn small ghost" onclick="linRandom()">Puntos aleatorios</button>
+    <span class="stat">Pendiente m: <b id="lin-m">–</b></span>
+    <span class="stat">Intercepto b: <b id="lin-b">–</b></span>
+    <span class="stat">Error (MSE): <b id="lin-e">–</b></span>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">La <b>pendiente</b> indica cuánto cambia y por cada unidad de x. El <b>intercepto</b> es el valor de y cuando x=0.</p></div>`;}
+let linPoints=[];
+function linClear(){linPoints=[]; drawLin();}
+function linRandom(){linPoints=[]; for(let i=0;i<12;i++){const x=Math.random(); const y=0.6*x+0.2+Math.random()*0.2-0.1; linPoints.push({x,y});} drawLin();}
+function drawLin(){
+  const c=document.getElementById('canvas-lin'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+  linPoints.forEach(p=>{ctx.fillStyle=getCss('--primary'); ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,5,0,7); ctx.fill();});
+  if(linPoints.length>=2){
+    const n=linPoints.length, sx=linPoints.reduce((a,p)=>a+p.x,0), sy=linPoints.reduce((a,p)=>a+p.y,0);
+    const sxy=linPoints.reduce((a,p)=>a+p.x*p.y,0), sxx=linPoints.reduce((a,p)=>a+p.x*p.x,0);
+    const m=(n*sxy-sx*sy)/((n*sxx-sx*sx)||1e-9), b=(sy-m*sx)/n;
+    ctx.strokeStyle=getCss('--accent'); ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(0,H-b*H); ctx.lineTo(W,H-(m+b)*H); ctx.stroke();
+    const mse=linPoints.reduce((a,p)=>a+Math.pow(p.y-(m*p.x+b),2),0)/n;
+    document.getElementById('lin-m').textContent=m.toFixed(3);
+    document.getElementById('lin-b').textContent=b.toFixed(3);
+    document.getElementById('lin-e').textContent=mse.toFixed(4);
+  } else {['lin-m','lin-b','lin-e'].forEach(id=>document.getElementById(id).textContent='–');}
+}
+function initLin(){const c=document.getElementById('canvas-lin'); if(!c||c._init)return; c._init=true;
+  c.addEventListener('click',e=>{const r=c.getBoundingClientRect(); linPoints.push({x:(e.clientX-r.left)/r.width, y:1-(e.clientY-r.top)/r.height}); drawLin();});
+  linRandom();}
+
+/* LAB 2 */
+function labClasificacionHTML(){return `<div class="lab">
+  <p>Ajusta la <b>frontera de decisión</b> con los sliders y observa aciertos y errores.</p>
+  <canvas class="lab-canvas" id="canvas-cls"></canvas>
+  <div class="controls">
+    <label>Pendiente m: <input type="range" id="cls-m" min="-3" max="3" step="0.1" value="1"/></label>
+    <label>Intercepto b: <input type="range" id="cls-b" min="-1" max="1" step="0.05" value="0"/></label>
+    <span class="stat">Aciertos: <b id="cls-ok">0</b></span>
+    <span class="stat">Errores: <b id="cls-err">0</b></span>
+    <button class="btn small ghost" onclick="clsRegen()">Nuevos datos</button>
+  </div></div>`;}
+let clsData=[];
+function clsRegen(){clsData=[]; for(let i=0;i<40;i++){const x=Math.random(),y=Math.random(); const label=(y>x+(Math.random()*0.2-0.1))?1:0; clsData.push({x,y,c:label});} drawCls();}
+function drawCls(){
+  const c=document.getElementById('canvas-cls'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const m=parseFloat(document.getElementById('cls-m').value), b=parseFloat(document.getElementById('cls-b').value);
+  ctx.fillStyle='rgba(91,91,240,0.08)'; ctx.beginPath(); ctx.moveTo(0,H); ctx.lineTo(0,H-b*H); ctx.lineTo(W,H-(m+b)*H); ctx.lineTo(W,H); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(18,201,167,0.08)'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,H-b*H); ctx.lineTo(W,H-(m+b)*H); ctx.lineTo(W,0); ctx.closePath(); ctx.fill();
+  drawAxes(ctx,W,H);
+  ctx.strokeStyle=getCss('--text'); ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(0,H-b*H); ctx.lineTo(W,H-(m+b)*H); ctx.stroke();
+  let ok=0,err=0;
+  clsData.forEach(p=>{
+    const pred=(p.y>m*p.x+b)?1:0; const correct=pred===p.c;
+    ctx.fillStyle=p.c===1?getCss('--accent'):getCss('--primary');
+    ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,6,0,7); ctx.fill();
+    if(!correct){ctx.strokeStyle=getCss('--danger'); ctx.lineWidth=2; ctx.stroke(); err++;} else ok++;
+  });
+  document.getElementById('cls-ok').textContent=ok; document.getElementById('cls-err').textContent=err;
+}
+function initCls(){const c=document.getElementById('canvas-cls'); if(!c||c._init)return; c._init=true;
+  ['cls-m','cls-b'].forEach(id=>document.getElementById(id).addEventListener('input',drawCls));
+  clsRegen();}
+
+/* LAB 3 */
+function labKNNHTML(){return `<div class="lab">
+  <p>Haz clic para agregar un punto nuevo. Se mostrarán los K vecinos más cercanos.</p>
+  <canvas class="lab-canvas" id="canvas-knn"></canvas>
+  <div class="controls">
+    <label>K: <input type="number" id="knn-k" min="1" max="15" value="3"/></label>
+    <span class="stat">Clase predicha: <b id="knn-pred">–</b></span>
+    <button class="btn small ghost" onclick="knnReset()">Reiniciar</button>
+  </div></div>`;}
+let knnData=[], knnQuery=null;
+function knnReset(){knnData=[];
+  for(let i=0;i<20;i++){knnData.push({x:0.2+Math.random()*0.3,y:0.5+Math.random()*0.3,c:0}); knnData.push({x:0.5+Math.random()*0.3,y:0.2+Math.random()*0.3,c:1});}
+  knnQuery=null; drawKNN();}
+function drawKNN(){
+  const c=document.getElementById('canvas-knn'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+  knnData.forEach(p=>{ctx.fillStyle=p.c===0?getCss('--primary'):getCss('--accent'); ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,6,0,7); ctx.fill();});
+  if(knnQuery){
+    const k=Math.max(1,Math.min(15,parseInt(document.getElementById('knn-k').value)||3));
+    const sorted=knnData.map(p=>({p,d:Math.hypot(p.x-knnQuery.x,p.y-knnQuery.y)})).sort((a,b)=>a.d-b.d);
+    const kn=sorted.slice(0,k);
+    ctx.strokeStyle=getCss('--muted'); ctx.lineWidth=1;
+    kn.forEach(n=>{ctx.beginPath(); ctx.moveTo(knnQuery.x*W,H-knnQuery.y*H); ctx.lineTo(n.p.x*W,H-n.p.y*H); ctx.stroke();});
+    const rmax=kn[kn.length-1].d;
+    ctx.strokeStyle=getCss('--primary'); ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.arc(knnQuery.x*W,H-knnQuery.y*H,rmax*W,0,7); ctx.stroke(); ctx.setLineDash([]);
+    const c0=kn.filter(n=>n.p.c===0).length, c1=k-c0, pred=c0>c1?0:1;
+    ctx.fillStyle=pred===0?getCss('--primary'):getCss('--accent');
+    ctx.beginPath(); ctx.arc(knnQuery.x*W,H-knnQuery.y*H,9,0,7); ctx.fill();
+    ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.stroke();
+    document.getElementById('knn-pred').textContent='Clase '+pred+' ('+(pred===0?c0:c1)+'/'+k+' vecinos)';
+  } else {document.getElementById('knn-pred').textContent='– (haz clic)';}
+}
+function initKNN(){const c=document.getElementById('canvas-knn'); if(!c||c._init)return; c._init=true;
+  c.addEventListener('click',e=>{const r=c.getBoundingClientRect(); knnQuery={x:(e.clientX-r.left)/r.width,y:1-(e.clientY-r.top)/r.height}; drawKNN();});
+  document.getElementById('knn-k').addEventListener('input',drawKNN);
+  knnReset();}
+
+/* LAB 4 */
+function labArbolHTML(){return `<div class="lab">
+  <p>Recorre un árbol simple que decide si aprobar un crédito.</p>
+  <div id="arbol-view" style="text-align:center;padding:14px;background:var(--surface-2);border-radius:10px;min-height:200px"></div>
+  <div class="controls" style="justify-content:center"><button class="btn small ghost" onclick="arbolReset()">↻ Reiniciar recorrido</button></div></div>`;}
+const ARBOL={q:'¿Ingreso mensual > $2.000 USD?',
+  yes:{q:'¿Historial crediticio positivo?',yes:{res:'✅ APROBAR crédito',color:'ok'},no:{q:'¿Edad > 30?',yes:{res:'✅ APROBAR con monto menor',color:'ok'},no:{res:'❌ RECHAZAR crédito',color:'danger'}}},
+  no:{q:'¿Tiene aval?',yes:{res:'✅ APROBAR con aval',color:'ok'},no:{res:'❌ RECHAZAR crédito',color:'danger'}}};
+let arbolPath=[];
+function arbolReset(){arbolPath=[]; drawArbol(ARBOL);}
+function drawArbol(node){
+  const v=document.getElementById('arbol-view'); if(!v)return;
+  if(node.res){
+    v.innerHTML=arbolPath.map(p=>`<div class="chip">${p}</div>`).join(' → ')+
+      `<div style="margin-top:14px;font-size:22px;font-weight:700;color:var(--${node.color==='ok'?'accent':'danger'})">${node.res}</div>
+       <div style="margin-top:6px;font-size:13px;color:var(--muted)">Recorriste ${arbolPath.length} niveles del árbol.</div>`;
+    return;
+  }
+  v.innerHTML=arbolPath.map(p=>`<div class="chip">${p}</div>`).join(' → ')+
+    `<div style="margin-top:14px;font-weight:700;font-size:16px">${node.q}</div>
+     <div style="margin-top:10px"><button class="btn small" onclick="arbolAns(true)">Sí</button>
+     <button class="btn small ghost" onclick="arbolAns(false)">No</button></div>`;
+  drawArbol._cur=node;
+}
+function arbolAns(y){const node=drawArbol._cur; arbolPath.push(node.q+' → '+(y?'Sí':'No')); drawArbol(y?node.yes:node.no);}
+function initArbol(){const v=document.getElementById('arbol-view'); if(v&&!v._init){v._init=true; arbolReset();}}
+
+/* LAB 5 */
+function labKmeansHTML(){return `<div class="lab">
+  <p>Elige K y observa cómo los centroides se mueven hasta converger.</p>
+  <canvas class="lab-canvas" id="canvas-km"></canvas>
+  <div class="controls">
+    <label>K: <input type="number" id="km-k" min="2" max="6" value="3"/></label>
+    <button class="btn small" onclick="kmStep()">▶ Paso</button>
+    <button class="btn small ghost" onclick="kmAuto()">▶▶ Auto</button>
+    <button class="btn small ghost" onclick="kmReset()">Reiniciar</button>
+    <span class="stat">Iteración: <b id="km-iter">0</b></span>
+  </div></div>`;}
+let kmData=[],kmCent=[],kmIter=0,kmTimer=null;
+function kmReset(){kmData=[]; kmIter=0;
+  const centers=[[0.25,0.25],[0.75,0.25],[0.5,0.75]];
+  for(const c of centers) for(let i=0;i<25;i++) kmData.push({x:c[0]+(Math.random()-0.5)*0.2,y:c[1]+(Math.random()-0.5)*0.2,k:-1});
+  const K=Math.max(2,Math.min(6,parseInt(document.getElementById('km-k').value)||3));
+  kmCent=[]; for(let i=0;i<K;i++) kmCent.push({x:Math.random(),y:Math.random()});
+  document.getElementById('km-iter').textContent=0; drawKM();}
+function kmStep(){
+  kmData.forEach(p=>{let b=0,bd=1e9; kmCent.forEach((c,i)=>{const d=Math.hypot(p.x-c.x,p.y-c.y); if(d<bd){bd=d;b=i;}}); p.k=b;});
+  kmCent.forEach((c,i)=>{const g=kmData.filter(p=>p.k===i); if(g.length){c.x=g.reduce((a,p)=>a+p.x,0)/g.length; c.y=g.reduce((a,p)=>a+p.y,0)/g.length;}});
+  kmIter++; document.getElementById('km-iter').textContent=kmIter; drawKM();
+}
+function kmAuto(){if(kmTimer){clearInterval(kmTimer);kmTimer=null;return;}
+  kmTimer=setInterval(()=>{const prev=JSON.stringify(kmCent); kmStep(); if(prev===JSON.stringify(kmCent)){clearInterval(kmTimer);kmTimer=null;}},500);}
+function drawKM(){
+  const c=document.getElementById('canvas-km'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+  const colors=['#5b5bf0','#12c9a7','#f5a623','#ef4d6b','#8a5bf0','#22c55e'];
+  kmData.forEach(p=>{ctx.fillStyle=p.k<0?getCss('--muted'):colors[p.k%colors.length]; ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,5,0,7); ctx.fill();});
+  kmCent.forEach((c2,i)=>{ctx.fillStyle=colors[i%colors.length]; ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(c2.x*W,H-c2.y*H,11,0,7); ctx.fill(); ctx.stroke();});
+}
+function initKM(){const c=document.getElementById('canvas-km'); if(c&&!c._init){c._init=true; document.getElementById('km-k').addEventListener('input',kmReset); kmReset();}}
+
+/* LAB 6 */
+function labMatrizHTML(){return `<div class="lab">
+  <p>Modifica los valores y observa cómo cambian las métricas.</p>
+  <div style="display:grid;grid-template-columns:auto auto auto;gap:8px;max-width:420px;margin:14px auto;text-align:center;align-items:center">
+    <div></div><div class="badge">Pred +</div><div class="badge">Pred −</div>
+    <div class="badge">Real +</div>
+    <input type="number" id="m-tp" value="40" min="0" style="padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
+    <input type="number" id="m-fn" value="10" min="0" style="padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
+    <div class="badge">Real −</div>
+    <input type="number" id="m-fp" value="5" min="0" style="padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
+    <input type="number" id="m-tn" value="45" min="0" style="padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
+  </div>
+  <div class="grid" id="metric-cards"></div>
+  <details class="box"><summary>¿Qué significa cada métrica?</summary><div class="inner">
+    <b>Accuracy:</b> aciertos totales / total.<br>
+    <b>Precision:</b> de los positivos predichos, cuántos son correctos.<br>
+    <b>Recall:</b> de los positivos reales, cuántos detectaste.<br>
+    <b>F1:</b> equilibrio entre precision y recall.</div></details></div>`;}
+function calcMatriz(){
+  const tp=+document.getElementById('m-tp').value||0, fp=+document.getElementById('m-fp').value||0;
+  const fn=+document.getElementById('m-fn').value||0, tn=+document.getElementById('m-tn').value||0;
+  const total=tp+fp+fn+tn||1;
+  const acc=(tp+tn)/total, prec=tp/((tp+fp)||1), rec=tp/((tp+fn)||1);
+  const f1=(prec+rec)>0?2*prec*rec/(prec+rec):0;
+  document.getElementById('metric-cards').innerHTML=[
+    ['Accuracy',acc,'Aciertos generales.'],
+    ['Precision',prec,'Precisión al decir "positivo".'],
+    ['Recall',rec,'Capacidad de detectar positivos.'],
+    ['F1-score',f1,'Equilibrio precision/recall.']
+  ].map(m=>`<div class="card"><div class="icon"></div><h3>${m[0]}</h3>
+    <p style="font-size:24px;font-weight:700;color:var(--primary)">${(m[1]*100).toFixed(1)}%</p><p>${m[2]}</p></div>`).join('');
+}
+function initMatriz(){['m-tp','m-fp','m-fn','m-tn'].forEach(id=>{const el=document.getElementById(id); if(el&&!el._init){el._init=true; el.addEventListener('input',calcMatriz);}}); calcMatriz();}
+
+/* ============ 9. ANIMACIONES ============ */
+let mejoraTimer=null;
+function animMejora(){
+  const c=document.getElementById('canvas-mejora'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  const pts=[]; for(let i=0;i<20;i++){const x=i/20; pts.push({x,y:0.7*x+0.15+(Math.random()-0.5)*0.08});}
+  let m=0.1,b=0.9,iter=0;
+  if(mejoraTimer)clearInterval(mejoraTimer);
+  mejoraTimer=setInterval(()=>{
+    let gm=0,gb=0; pts.forEach(p=>{const e=(m*p.x+b)-p.y; gm+=e*p.x; gb+=e;});
+    m-=0.15*gm/pts.length; b-=0.15*gb/pts.length; iter++;
+    const err=pts.reduce((a,p)=>a+Math.pow(m*p.x+b-p.y,2),0)/pts.length;
+    document.getElementById('mejora-iter').textContent=iter;
+    document.getElementById('mejora-err').textContent=err.toFixed(4);
+    ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+    ctx.fillStyle=getCss('--primary'); pts.forEach(p=>{ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,4,0,7); ctx.fill();});
+    ctx.strokeStyle=getCss('--accent'); ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(0,H-b*H); ctx.lineTo(W,H-(m+b)*H); ctx.stroke();
+    if(iter>=80)clearInterval(mejoraTimer);
+  },80);
+}
+function drawSplit(){
+  const c=document.getElementById('canvas-split'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const pct=+document.getElementById('split-range').value;
+  document.getElementById('split-tr').textContent=pct+'%';
+  document.getElementById('split-te').textContent=(100-pct)+'%';
+  const cols=10,rows=6,total=cols*rows, trainN=Math.round(total*pct/100);
+  const cw=W/cols-4, ch=H/rows-4;
+  const order=[]; for(let i=0;i<total;i++)order.push(i); order.sort(()=>Math.random()-0.5);
+  const trainSet=new Set(order.slice(0,trainN));
+  let n=0;
+  for(let r=0;r<rows;r++) for(let col=0;col<cols;col++){
+    ctx.fillStyle=trainSet.has(n)?getCss('--primary'):getCss('--accent');
+    ctx.fillRect(col*(cw+4)+2, r*(ch+4)+2, cw, ch); n++;
+  }
+  ctx.fillStyle=getCss('--text'); ctx.font='12px sans-serif';
+  ctx.fillText('■ Entrenamiento',10,H-8); ctx.fillText('■ Prueba',130,H-8);
+}
+function initSplit(){const el=document.getElementById('split-range'); if(el&&!el._init){el._init=true; el.addEventListener('input',drawSplit);} drawSplit();}
+
+let clusterTimer=null;
+function animCluster(){
+  const c=document.getElementById('canvas-cluster-anim'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  const data=[]; const centers=[[0.25,0.3],[0.7,0.35],[0.5,0.75]];
+  for(const cc of centers) for(let i=0;i<25;i++) data.push({x:cc[0]+(Math.random()-0.5)*0.18,y:cc[1]+(Math.random()-0.5)*0.18,k:-1});
+  const cents=[{x:Math.random(),y:Math.random()},{x:Math.random(),y:Math.random()},{x:Math.random(),y:Math.random()}];
+  let iter=0; const colors=['#5b5bf0','#12c9a7','#f5a623'];
+  if(clusterTimer)clearInterval(clusterTimer);
+  clusterTimer=setInterval(()=>{
+    data.forEach(p=>{let b=0,bd=1e9; cents.forEach((c2,i)=>{const d=Math.hypot(p.x-c2.x,p.y-c2.y); if(d<bd){bd=d;b=i;}}); p.k=b;});
+    cents.forEach((c2,i)=>{const g=data.filter(p=>p.k===i); if(g.length){c2.x=g.reduce((a,p)=>a+p.x,0)/g.length; c2.y=g.reduce((a,p)=>a+p.y,0)/g.length;}});
+    iter++; document.getElementById('cluster-iter').textContent=iter;
+    ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+    data.forEach(p=>{ctx.fillStyle=colors[p.k]||'#888'; ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,5,0,7); ctx.fill();});
+    cents.forEach((c2,i)=>{ctx.fillStyle=colors[i]; ctx.strokeStyle='#000'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(c2.x*W,H-c2.y*H,10,0,7); ctx.fill(); ctx.stroke();});
+    if(iter>=20)clearInterval(clusterTimer);
+  },300);
+}
+
+let fitTimer=null;
+function animFit(){
+  const c=document.getElementById('canvas-fit'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  const pts=[]; for(let i=0;i<25;i++){const x=i/25; pts.push({x,y:0.5+0.4*Math.sin(x*Math.PI*1.5)+(Math.random()-0.5)*0.05});}
+  let a=0,b=0.5,cc=0,epoch=0;
+  if(fitTimer)clearInterval(fitTimer);
+  fitTimer=setInterval(()=>{
+    let ga=0,gb=0,gc=0;
+    pts.forEach(p=>{const y=a+b*p.x+cc*p.x*p.x; const e=y-p.y; ga+=e; gb+=e*p.x; gc+=e*p.x*p.x;});
+    a-=0.05*ga/pts.length; b-=0.05*gb/pts.length; cc-=0.05*gc/pts.length; epoch++;
+    const loss=pts.reduce((s,p)=>s+Math.pow(a+b*p.x+cc*p.x*p.x-p.y,2),0)/pts.length;
+    document.getElementById('fit-epoch').textContent=epoch;
+    document.getElementById('fit-loss').textContent=loss.toFixed(4);
+    ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+    ctx.fillStyle=getCss('--primary'); pts.forEach(p=>{ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,4,0,7); ctx.fill();});
+    ctx.strokeStyle=getCss('--accent'); ctx.lineWidth=2.5; ctx.beginPath();
+    for(let x=0;x<=1;x+=0.02){const y=a+b*x+cc*x*x; if(x===0)ctx.moveTo(x*W,H-y*H); else ctx.lineTo(x*W,H-y*H);}
+    ctx.stroke();
+    if(epoch>=120)clearInterval(fitTimer);
+  },70);
+}
+
+function drawComplexity(){
+  const c=document.getElementById('canvas-fit-complexity'); if(!c)return; fitCanvas(c);
+  const ctx=c.getContext('2d'), W=c.width, H=c.height;
+  ctx.clearRect(0,0,W,H); drawAxes(ctx,W,H);
+  const deg=+document.getElementById('cx-range').value;
+  document.getElementById('cx-val').textContent=deg;
+  if(!drawComplexity._pts){
+    const pts=[],tst=[];
+    for(let i=0;i<25;i++){const x=i/25; pts.push({x,y:0.5+0.3*Math.sin(x*Math.PI*2)+(Math.random()-0.5)*0.1});}
+    for(let i=0;i<20;i++){const x=Math.random(); tst.push({x,y:0.5+0.3*Math.sin(x*Math.PI*2)+(Math.random()-0.5)*0.1});}
+    drawComplexity._pts=pts; drawComplexity._tst=tst;
+  }
+  const pts=drawComplexity._pts, tst=drawComplexity._tst;
+  const coefs=polyFit(pts.map(p=>p.x),pts.map(p=>p.y),deg);
+  ctx.fillStyle=getCss('--primary'); pts.forEach(p=>{ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,4,0,7); ctx.fill();});
+  ctx.fillStyle=getCss('--accent'); tst.forEach(p=>{ctx.beginPath(); ctx.arc(p.x*W,H-p.y*H,3,0,7); ctx.fill();});
+  ctx.strokeStyle=getCss('--danger'); ctx.lineWidth=2; ctx.beginPath();
+  for(let x=0;x<=1;x+=0.01){const y=polyEval(coefs,x); if(x===0)ctx.moveTo(x*W,H-y*H); else ctx.lineTo(x*W,H-y*H);}
+  ctx.stroke();
+  const eTr=pts.reduce((s,p)=>s+Math.pow(polyEval(coefs,p.x)-p.y,2),0)/pts.length;
+  const eTe=tst.reduce((s,p)=>s+Math.pow(polyEval(coefs,p.x)-p.y,2),0)/tst.length;
+  document.getElementById('cx-tr').textContent=eTr.toFixed(4);
+  document.getElementById('cx-te').textContent=eTe.toFixed(4);
+}
+function polyFit(x,y,deg){
+  const n=x.length, m=deg+1, A=[];
+  for(let i=0;i<m;i++)A.push(new Array(m+1).fill(0));
+  for(let i=0;i<m;i++){for(let j=0;j<m;j++){A[i][j]=x.reduce((s,xk)=>s+Math.pow(xk,i+j),0);} A[i][m]=x.reduce((s,xk,k)=>s+Math.pow(xk,i)*y[k],0);}
+  for(let i=0;i<m;i++){let mx=i; for(let k=i+1;k<m;k++) if(Math.abs(A[k][i])>Math.abs(A[mx][i])) mx=k; [A[i],A[mx]]=[A[mx],A[i]];
+    for(let k=i+1;k<m;k++){const f=A[k][i]/(A[i][i]||1e-9); for(let j=i;j<=m;j++) A[k][j]-=f*A[i][j];}}
+  const c=new Array(m).fill(0);
+  for(let i=m-1;i>=0;i--){let s=A[i][m]; for(let j=i+1;j<m;j++) s-=A[i][j]*c[j]; c[i]=s/(A[i][i]||1e-9);}
+  return c;
+}
+function polyEval(c,x){let s=0; for(let i=0;i<c.length;i++) s+=c[i]*Math.pow(x,i); return s;}
+function initComplexity(){const el=document.getElementById('cx-range'); if(el&&!el._init){el._init=true; el.addEventListener('input',drawComplexity);} drawComplexity();}
+
+/* Flujo */
+const FLUJO=[
+ ['Definir el problema','¿Qué queremos predecir o descubrir? Métricas de éxito.'],
+ ['Recolectar datos','Fuentes internas, APIs, encuestas, sensores.'],
+ ['Limpiar datos','Nulos, duplicados, outliers, formatos consistentes.'],
+ ['Dividir datos','Train / validation / test.'],
+ ['Entrenar modelo','Elegir algoritmo y ajustar parámetros.'],
+ ['Evaluar modelo','Métricas sobre datos no vistos.'],
+ ['Mejorar modelo','Ajustar hiperparámetros, más datos, mejores features.'],
+ ['Desplegar','Poner el modelo en producción (API, app).'],
+ ['Monitorear','Vigilar drift, errores y actualizar.']
+];
+function renderFlow(){const el=document.getElementById('flow-diagram'); if(!el)return;
+  el.innerHTML=FLUJO.map((s,i)=>`<div class="step" onclick="showFlow(${i})"><span class="n">${i+1}</span><h4>${s[0]}</h4><p>Haz clic para detalles</p></div>`).join('');}
+function showFlow(i){document.getElementById('flow-detail').innerHTML=`<div class="concept"><h3>Etapa ${i+1}: ${FLUJO[i][0]}</h3><p>${FLUJO[i][1]}</p></div>`;}
+
+/* Actividad de clasificación */
+const CASOS_ACT=[
+ ['Predecir el precio de un carro usado','sup'],
+ ['Agrupar clientes por comportamiento de compra','uns'],
+ ['Enseñar a un robot a caminar','ref'],
+ ['Detectar si un correo es spam','sup'],
+ ['Encontrar transacciones inusuales sin etiquetas','uns'],
+ ['Un agente que aprende a jugar Pac-Man','ref']
+];
+function renderDragActivity(){const el=document.getElementById('drag-activity'); if(!el)return;
+  el.innerHTML=CASOS_ACT.map((c,i)=>`<div class="row" style="margin:6px 0;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
+    <span style="flex:1">${c[0]}</span>
+    <select id="act-${i}" onchange="checkAct(${i})" style="padding:4px 6px;border:1px solid var(--border);border-radius:6px;background:var(--surface)">
+      <option value="">-- elige --</option><option value="sup">Supervisado</option><option value="uns">No supervisado</option><option value="ref">Refuerzo</option>
+    </select><span id="act-fb-${i}"></span></div>`).join('');}
+function checkAct(i){const v=document.getElementById('act-'+i).value, fb=document.getElementById('act-fb-'+i);
+  if(!v){fb.textContent='';return;}
+  fb.textContent=v===CASOS_ACT[i][1]?'✓':'✗'; fb.style.color=v===CASOS_ACT[i][1]?'var(--ok)':'var(--danger)';}
+
+/* ============ 10. GLOSARIO/ERRORES/CASOS/DISCUSIÓN/SIM/CERT ============ */
+function renderGlosario(){document.getElementById('glosario-list').innerHTML=GLOSARIO.map(g=>`<details class="box"><summary>${g[0]}</summary><div class="inner">${g[1]}</div></details>`).join('');}
+function renderErrores(){document.getElementById('errores-list').innerHTML=ERRORES.map(g=>`<details class="box"><summary>⚠ ${g[0]}</summary><div class="inner">${g[1]}</div></details>`).join('');}
+function renderCasos(){document.getElementById('casos-list').innerHTML=CASOS.map(g=>`<div class="card"><div class="icon"></div><h3>${g[0]}</h3><p>${g[1]}</p></div>`).join('');}
+function renderDiscusion(){document.getElementById('discusion-list').innerHTML=DISCUSION.map((g,i)=>`<div class="concept"><b>Pregunta ${i+1}.</b> ${g}</div>`).join('');}
+function generarProyecto(){
+  const prob=document.getElementById('sim-problema').value, dat=document.getElementById('sim-datos').value;
+  const obj=document.getElementById('sim-objetivo').value||'(sin especificar)';
+  const algos={'Clasificación':['Regresión logística','Árbol de decisión','KNN','Random Forest'],
+    'Regresión':['Regresión lineal','Árbol de regresión','Redes neuronales'],
+    'Clustering':['K-means','DBSCAN','Clustering jerárquico']}[prob];
+  const metricas={'Clasificación':'Accuracy, Precision, Recall, F1','Regresión':'MSE, MAE, R²','Clustering':'Silueta, inercia'}[prob];
+  const riesgos={'Salud':'Datos sensibles y sesgos demográficos.','Educación':'Riesgo de etiquetar estudiantes prematuramente.',
+    'Negocios':'Discriminación por género o zona.','Deportes':'Datos incompletos entre ligas.','Redes sociales':'Privacidad y amplificación de contenido dañino.'}[dat];
+  document.getElementById('sim-output').innerHTML=`<div class="concept"><h3>Guía de tu proyecto</h3><div class="qa">
+    <div class="qa-item"><b>Problema</b><p>${prob} en ${dat}. Variable objetivo: <b>${obj}</b>.</p></div>
+    <div class="qa-item"><b>Datos necesarios</b><p>Dataset de ${dat} con variables descriptivas relacionadas a ${obj}.</p></div>
+    <div class="qa-item"><b>Algoritmo recomendado</b><p>${algos.join(', ')}. Empieza por el más simple.</p></div>
+    <div class="qa-item"><b>Métricas</b><p>${metricas}</p></div>
+    <div class="qa-item"><b>Riesgos éticos</b><p>${riesgos}</p></div>
+    <div class="qa-item"><b>Próximos pasos</b><p>1) Explorar datos. 2) Limpiar. 3) Dividir train/test. 4) Entrenar modelo simple. 5) Evaluar. 6) Iterar.</p></div>
+  </div></div>`;
+}
+function renderCertificado(pct){
+  const el=document.getElementById('certificado-wrap'); if(!el)return;
+  if(pct>=100){
+    el.innerHTML=`<div class="certificate"><h2>Certificado de Exploración en Machine Learning</h2>
+      <p>Se otorga simbólicamente a</p><div class="name" contenteditable="true">Escribe tu nombre aquí</div>
+      <p>por completar todos los módulos, laboratorios y quizzes del Explorador Interactivo de ML.</p>
+      <p style="margin-top:20px;font-style:italic">Fecha: ${new Date().toLocaleDateString('es')}</p>
+      <button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button></div>`;
+  } else {
+    el.innerHTML=`<div class="concept"><p>Progreso actual: <b>${pct}%</b>. Completa el 100% (visita todos los módulos, laboratorios y aprueba los quizzes con al menos 60%) para desbloquear tu certificado.</p>
+      <div class="bar" style="margin-top:8px"><span style="width:${pct}%"></span></div></div>`;
+  }
+}
+
+/* ============ 11. BUSCADOR ============ */
+const SEARCH_INDEX=[];
+function buildSearchIndex(){
+  MODULES.forEach(m=>SEARCH_INDEX.push({label:`Módulo ${m.id}: ${m.title}`,id:'mod-'+m.id}));
+  LABS.forEach(l=>SEARCH_INDEX.push({label:l.title,id:'lab-'+l.id}));
+  GLOSARIO.forEach(g=>SEARCH_INDEX.push({label:'Glosario: '+g[0],id:'glosario'}));
+  ['inicio','simulador','errores','casos','discusion','certificado'].forEach(id=>SEARCH_INDEX.push({label:id[0].toUpperCase()+id.slice(1),id}));
+}
+function handleSearch(){
+  const q=document.getElementById('search-input').value.trim().toLowerCase();
+  const box=document.getElementById('search-results');
+  if(!q){box.classList.remove('open');return;}
+  const hits=SEARCH_INDEX.filter(s=>s.label.toLowerCase().includes(q)).slice(0,10);
+  if(!hits.length){box.classList.remove('open');return;}
+  box.innerHTML=hits.map(h=>`<div onclick="go('${h.id}');document.getElementById('search-input').value='';this.parentNode.classList.remove('open')">${h.label}</div>`).join('');
+  box.classList.add('open');
+}
+
+/* ============ 12. CANVAS INIT POR VISTA ============ */
+function initViewCanvases(viewId){
+  if(viewId==='mod-A')animMejora();
+  if(viewId==='mod-C')initSplit();
+  if(viewId==='mod-E')animCluster();
+  if(viewId==='mod-F')animFit();
+  if(viewId==='mod-H')initComplexity();
+  if(viewId==='lab-L1')initLin();
+  if(viewId==='lab-L2')initCls();
+  if(viewId==='lab-L3')initKNN();
+  if(viewId==='lab-L4')initArbol();
+  if(viewId==='lab-L5')initKM();
+  if(viewId==='lab-L6')initMatriz();
+}
+
+/* ============ 13. TEMA ============ */
+function applyTheme(){document.body.classList.toggle('dark',state.theme==='dark');}
+document.getElementById('theme-toggle').addEventListener('click',()=>{
+  state.theme=state.theme==='dark'?'light':'dark'; save(); applyTheme();
+  const active=document.querySelector('section.view.active'); if(active) initViewCanvases(active.id.replace('view-',''));
+});
+
+/* ============ 14. NAV MODULOS PREV/NEXT + REPASO ============ */
+function attachModuleNav(){
+  MODULES.forEach((m,i)=>{
+    const v=document.getElementById('view-mod-'+m.id); if(!v)return;
+    const prev=MODULES[i-1], next=MODULES[i+1];
+    const nav=document.createElement('div');
+    nav.className='row'; nav.style.marginTop='20px';
+    nav.innerHTML=`${prev?`<button class="btn ghost" onclick="go('mod-${prev.id}')">← ${prev.id}. ${prev.short}</button>`:''}
+      <span class="spacer"></span>
+      ${next?`<button class="btn" onclick="go('mod-${next.id}')">${next.id}. ${next.short} →</button>`:`<button class="btn" onclick="go('simulador')">Ir al simulador →</button>`}`;
+    v.appendChild(nav);
+  });
+}
+function botonRepaso(){
+  const home=document.getElementById('view-inicio');
+  const btn=document.createElement('button');
+  btn.className='btn ghost'; btn.textContent='↻ Repasar conceptos difíciles';
+  btn.onclick=()=>{
+    const failed=MODULES.filter(m=>{const q=state.quizzes[m.id]; return q&&Object.keys(q.answered||{}).length>0&&q.score<Math.ceil(q.total*0.6);});
+    if(!failed.length){alert('¡No hay conceptos débiles detectados aún! Responde algunos quizzes para obtener recomendaciones.'); return;}
+    go('mod-'+failed[0].id);
+  };
+  home.querySelector('.row').appendChild(btn);
+}
+
+/* ============ 15. ARRANQUE ============ */
+document.getElementById('hamburger').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('backdrop').classList.toggle('show');
+});
+document.getElementById('backdrop').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('show');
+});
+document.getElementById('search-input').addEventListener('input',handleSearch);
+document.getElementById('btn-guided').addEventListener('click',()=>go('mod-A'));
+
+applyTheme(); renderNav(); renderInicio(); renderDynamicViews();
+renderGlosario(); renderErrores(); renderCasos(); renderDiscusion();
+attachModuleNav(); botonRepaso(); buildSearchIndex(); updateProgress();
+showView(location.hash.slice(1)||'inicio');
+window.addEventListener('resize',()=>{const active=document.querySelector('section.view.active'); if(active) initViewCanvases(active.id.replace('view-',''));});
+</script>
+</body>
+</html>
