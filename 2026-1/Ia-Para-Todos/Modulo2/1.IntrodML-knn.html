@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laboratorio interactivo de introducción a Machine Learning con KNN para el curso IA para todos.">
+  <title>Mi primer modelo de Machine Learning | IA para todos</title>
+  <style>
+    :root {
+      --ink:#18243b; --muted:#62708a; --paper:#fff; --bg:#f4f7ff;
+      --blue:#2878ff; --blue-soft:#e8f1ff; --red:#f04f64; --red-soft:#ffe9ed;
+      --violet:#7557e8; --green:#168a67; --yellow:#ffcc57; --line:#dfe6f3;
+      --shadow:0 14px 38px rgba(43,62,111,.10); --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,ui-rounded,"Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible{outline:3px solid #ffbf32;outline-offset:3px}
+    .hero{background:linear-gradient(135deg,#5e4ddb 0%,#3178ed 55%,#1ca7b8 100%);color:#fff;padding:54px 20px 74px;position:relative;overflow:hidden}
+    .hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.10)}
+    .hero:before{width:270px;height:270px;right:-60px;top:-80px}.hero:after{width:150px;height:150px;left:7%;bottom:-85px}
+    .hero-inner,.container{max-width:1180px;margin:auto}.hero-inner{position:relative;z-index:1}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:7px 13px;border-radius:999px;font-weight:750;font-size:.86rem;letter-spacing:.03em}
+    h1{font-size:clamp(2.15rem,5vw,4.25rem);line-height:1.04;margin:20px 0 14px;max-width:860px;letter-spacing:-.045em}
+    .hero p{font-size:clamp(1rem,2vw,1.27rem);max-width:750px;margin:0 0 25px;color:#eef5ff}
+    .hero-btn{display:inline-block;color:#29395a;background:#fff;text-decoration:none;font-weight:800;padding:13px 19px;border-radius:13px;box-shadow:0 8px 25px rgba(20,29,74,.18)}
+    .container{padding:32px 20px 70px}
+    .goal{margin-top:-54px;position:relative;z-index:2;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:23px 26px;display:flex;gap:17px;align-items:center;border:1px solid rgba(255,255,255,.8)}
+    .goal-icon{width:54px;height:54px;border-radius:17px;background:#fff4d4;display:grid;place-items:center;font-size:1.65rem;flex:none}
+    .goal strong{display:block;font-size:1.08rem}.goal p{margin:3px 0 0;color:var(--muted)}
+    .section{margin-top:52px}.section-title{margin-bottom:22px}.kicker{color:var(--violet);text-transform:uppercase;letter-spacing:.09em;font-size:.77rem;font-weight:900}.section h2{font-size:clamp(1.65rem,3vw,2.35rem);line-height:1.15;margin:5px 0 8px;letter-spacing:-.025em}.section-title>p{margin:0;color:var(--muted);max-width:760px}
+    .concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.concept{background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 7px 21px rgba(44,66,110,.05)}
+    .concept-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:1.25rem;background:#edf2ff;margin-bottom:12px}.concept h3{margin:0 0 6px;font-size:1.03rem}.concept p{margin:0;color:var(--muted);font-size:.92rem}
+    .lab{background:#fff;border-radius:26px;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
+    .lab-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(90deg,#fbfcff,#f4f7ff)}
+    .step-badge{background:#eae6ff;color:#6045cc;padding:6px 11px;border-radius:999px;font-size:.81rem;font-weight:850;white-space:nowrap}
+    .lab-head h3{margin:0;font-size:1.15rem}.lab-head p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+    .lab-body{display:grid;grid-template-columns:minmax(0,1fr) 310px;min-height:620px}
+    .canvas-side{padding:22px;min-width:0}.canvas-wrap{position:relative;width:100%;aspect-ratio:1.5;border:2px solid #d5ddeb;border-radius:18px;overflow:hidden;background:#f9fbff;touch-action:none}
+    canvas{display:block;width:100%;height:100%;cursor:crosshair}
+    .canvas-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.94);padding:12px 17px;border-radius:13px;box-shadow:0 5px 18px rgba(40,58,95,.15);text-align:center;pointer-events:none;color:var(--muted);max-width:260px;font-weight:700}
+    .canvas-hint.hidden{display:none}.axis-x,.axis-y{position:absolute;font-size:.72rem;color:#8390a8;pointer-events:none}.axis-x{right:10px;bottom:6px}.axis-y{left:8px;top:6px}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;color:var(--muted);font-size:.82rem}.legend span{display:flex;align-items:center;gap:6px}.dot{width:12px;height:12px;border-radius:50%;display:inline-block}.dot.blue{background:var(--blue)}.dot.red{background:var(--red)}.dot.test{background:#fff;border:3px solid #222}
+    .status{margin-top:15px;border-radius:15px;background:#f3f6fc;padding:13px 15px;display:flex;gap:10px;align-items:flex-start;min-height:55px}.status-icon{font-size:1.2rem}.status p{margin:0;font-size:.91rem}.status strong{display:block;color:#34415c}
+    .controls{border-left:1px solid var(--line);padding:21px;background:#fafbfe}
+    .control-block{padding-bottom:19px;margin-bottom:19px;border-bottom:1px solid var(--line)}.control-block:last-child{border:0;margin:0;padding:0}.control-label{display:block;font-weight:850;font-size:.88rem;margin-bottom:9px}.help{font-size:.77rem;color:var(--muted);margin:7px 0 0}
+    .segmented{display:grid;grid-template-columns:1fr 1fr;gap:8px}.class-btn{border:2px solid transparent;background:#fff;border-radius:12px;padding:10px 7px;font-weight:800;color:var(--ink);box-shadow:0 2px 8px rgba(30,45,85,.07)}.class-btn.blue.active{border-color:var(--blue);background:var(--blue-soft);color:#155bc5}.class-btn.red.active{border-color:var(--red);background:var(--red-soft);color:#be3045}
+    .range-row{display:flex;align-items:center;gap:11px}.range-row input{width:100%;accent-color:var(--violet)}.k-value{min-width:41px;height:36px;border-radius:10px;background:#eae6ff;color:#6045cc;display:grid;place-items:center;font-weight:900}
+    .btn{border:0;border-radius:12px;padding:11px 13px;font-weight:850;transition:transform .15s,box-shadow .15s,opacity .15s;width:100%;margin-top:8px}.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 14px rgba(43,61,103,.14)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn-primary{background:linear-gradient(135deg,#6d54df,#387ef1);color:#fff}.btn-test{background:#17233a;color:#fff}.btn-soft{background:#e9eef8;color:#32425f}.btn-danger{background:#fff0f2;color:#c6374c}.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn-row .btn{font-size:.8rem;padding:10px 7px}
+    .counter{display:flex;justify-content:space-between;gap:8px;font-size:.82rem;margin-top:11px}.count-blue{color:#1767de;font-weight:800}.count-red{color:#cf3b50;font-weight:800}
+    .prediction-card{display:none;margin-top:14px;padding:14px;border-radius:15px;background:#fff;border:1px solid var(--line)}.prediction-card.show{display:block;animation:pop .25s ease}.prediction-card h4{margin:0 0 5px}.prediction-card p{margin:0;color:var(--muted);font-size:.84rem}.prediction-result{font-size:1.12rem;font-weight:900;margin-bottom:4px}.prediction-result.blue{color:#1768e0}.prediction-result.red{color:#cf3c51}
+    @keyframes pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+    .analogy{display:grid;grid-template-columns:1fr 1fr;gap:18px}.analogy-card{border-radius:20px;padding:23px;border:1px solid var(--line);background:#fff}.analogy-card:first-child{background:#edf5ff;border-color:#cfe2ff}.analogy-card:last-child{background:#fff6df;border-color:#f5dda1}.analogy-card h3{margin:0 0 6px}.analogy-card p{margin:0;color:#52617c}.formula{font-weight:900;color:#384a6b;margin-top:10px!important}
+    .overfit{display:grid;grid-template-columns:190px 1fr;gap:23px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;align-items:center}.overfit-visual{height:135px;border-radius:16px;background:linear-gradient(135deg,#e8f1ff 48%,#ffdfe4 52%);position:relative;overflow:hidden}.wiggle{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 190 135'%3E%3Cpath d='M8 113 C35 105,25 55,58 68 S75 120,96 77 S117 28,139 55 S157 94,185 18' fill='none' stroke='%237557e8' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E") center/cover no-repeat}.overfit h3{margin:0 0 5px}.overfit p{margin:0;color:var(--muted)}
+    details{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}summary{cursor:pointer;padding:16px 18px;font-weight:850;list-style:none;display:flex;justify-content:space-between;gap:12px}summary::-webkit-details-marker{display:none}summary:after{content:"+";color:var(--violet);font-size:1.2rem}details[open] summary:after{content:"−"}details p{margin:0;padding:0 18px 17px;color:var(--muted)}
+    .quiz{background:#fff;border:1px solid var(--line);border-radius:22px;padding:25px;box-shadow:var(--shadow)}.quiz-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px;color:var(--muted);font-size:.88rem}.bar{height:8px;background:#e8edf6;border-radius:99px;overflow:hidden;margin-bottom:22px}.bar-fill{height:100%;width:20%;background:linear-gradient(90deg,#7557e8,#3585ee);transition:width .3s}.question{font-size:1.18rem;font-weight:850;margin-bottom:15px}.answers{display:grid;gap:9px}.answer{border:2px solid var(--line);background:#fff;border-radius:13px;padding:12px 14px;text-align:left;color:var(--ink)}.answer:hover:not(:disabled){border-color:#a99af0;background:#faf9ff}.answer.correct{border-color:#31a77f;background:#e8f8f2;color:#126b50}.answer.incorrect{border-color:#eb6475;background:#fff0f2;color:#ac2e40}.feedback{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;background:#f2f5fb;color:#4d5b73}.feedback.show{display:block}.quiz-next{max-width:180px;margin-top:14px;display:none}.quiz-next.show{display:block}.quiz-result{text-align:center;padding:20px}.quiz-result .score{font-size:3rem;font-weight:900;color:var(--violet);line-height:1}.quiz-result p{color:var(--muted)}
+    footer{text-align:center;padding:30px 20px 45px;color:var(--muted);font-size:.88rem}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,100px);background:#18243b;color:#fff;padding:11px 17px;border-radius:12px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:10;font-weight:750}.toast.show{transform:translate(-50%,0);opacity:1}
+    @media(max-width:900px){.concept-grid{grid-template-columns:repeat(2,1fr)}.lab-body{grid-template-columns:1fr}.controls{border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.control-block{margin:0}.canvas-wrap{aspect-ratio:1.25}.overfit{grid-template-columns:150px 1fr}}
+    @media(max-width:620px){.hero{padding-top:38px}.goal{align-items:flex-start}.concept-grid,.analogy{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.lab-head{align-items:flex-start;flex-direction:column}.canvas-side{padding:12px}.canvas-wrap{aspect-ratio:1}.overfit{grid-template-columns:1fr}.overfit-visual{height:115px}.section{margin-top:42px}.quiz{padding:18px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">✨ IA PARA TODOS · LABORATORIO 01</span>
+      <h1>Entrena tu primer modelo de Machine Learning</h1>
+      <p>Sin fórmulas complicadas y sin programar: crea ejemplos, deja que el modelo encuentre un patrón y pon a prueba lo que aprendió.</p>
+      <a class="hero-btn" href="#laboratorio">Comenzar el laboratorio →</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="goal"><div class="goal-icon">🎯</div><div><strong>Meta de aprendizaje</strong><p>Al terminar podrás explicar con tus palabras cómo una máquina aprende a clasificar casos usando ejemplos.</p></div></div>
+
+    <section class="section" aria-labelledby="conceptos-title">
+      <div class="section-title"><span class="kicker">Antes de experimentar</span><h2 id="conceptos-title">Seis ideas en lenguaje cotidiano</h2><p>Machine Learning no es magia: es una forma de encontrar patrones en ejemplos y usarlos para tomar decisiones sobre casos nuevos.</p></div>
+      <div class="concept-grid">
+        <article class="concept"><div class="concept-icon">🧠</div><h3>¿Qué es Machine Learning?</h3><p>En vez de escribir todas las reglas, mostramos ejemplos para que la computadora encuentre un patrón.</p></article>
+        <article class="concept"><div class="concept-icon">🗂️</div><h3>Datos de entrenamiento</h3><p>Son los ejemplos que usamos para enseñar. Aquí, cada punto del plano es un ejemplo.</p></article>
+        <article class="concept"><div class="concept-icon">🏷️</div><h3>Etiqueta</h3><p>Es la respuesta conocida de cada ejemplo: en este laboratorio, “azul” o “rojo”.</p></article>
+        <article class="concept"><div class="concept-icon">🔮</div><h3>Predicción</h3><p>Es la respuesta que propone el modelo para un caso nuevo que todavía no tiene etiqueta.</p></article>
+        <article class="concept"><div class="concept-icon">⚙️</div><h3>Entrenar</h3><p>Es usar los ejemplos etiquetados para preparar un modelo capaz de responder ante casos nuevos.</p></article>
+        <article class="concept"><div class="concept-icon">🎯</div><h3>Error</h3><p>Ocurre cuando la predicción del modelo no coincide con la respuesta real. Sirve para saber qué mejorar.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="laboratorio" aria-labelledby="lab-title">
+      <div class="section-title"><span class="kicker">Aprender haciendo</span><h2 id="lab-title">Laboratorio: clasifica puntos con KNN</h2><p>Imagina que los ejes representan dos características, por ejemplo “horas de estudio” y “asistencia”. Los colores pueden representar dos resultados diferentes.</p></div>
+      <div class="lab">
+        <div class="lab-head"><div><h3>Plano de ejemplos</h3><p id="modeText">Modo actual: agregar ejemplos de entrenamiento</p></div><span class="step-badge" id="stepBadge">PASO 1 · CREA DATOS</span></div>
+        <div class="lab-body">
+          <div class="canvas-side">
+            <div class="canvas-wrap" id="canvasWrap">
+              <canvas id="plot" aria-label="Plano interactivo para agregar puntos azules y rojos" role="img"></canvas>
+              <div class="canvas-hint" id="canvasHint">👆 Elige un color y haz clic para agregar ejemplos</div>
+              <span class="axis-y">Característica 2 ↑</span><span class="axis-x">Característica 1 →</span>
+            </div>
+            <div class="legend"><span><i class="dot blue"></i> Ejemplo azul</span><span><i class="dot red"></i> Ejemplo rojo</span><span><i class="dot test"></i> Caso nuevo</span></div>
+            <div class="status" aria-live="polite"><span class="status-icon" id="statusIcon">💡</span><p><strong id="statusTitle">Comienza creando los datos</strong><span id="statusText">Agrega al menos un ejemplo de cada color. Recomendamos 8 o más puntos.</span></p></div>
+          </div>
+          <aside class="controls" aria-label="Controles del laboratorio">
+            <div class="control-block">
+              <label class="control-label">1. Elige la etiqueta</label>
+              <div class="segmented"><button class="class-btn blue active" id="blueBtn" type="button">● Azul</button><button class="class-btn red" id="redBtn" type="button">● Rojo</button></div>
+              <div class="counter"><span class="count-blue" id="blueCount">Azules: 0</span><span class="count-red" id="redCount">Rojos: 0</span></div>
+            </div>
+            <div class="control-block">
+              <label class="control-label" for="kSlider">2. Vecinos que consulta: K</label>
+              <div class="range-row"><input id="kSlider" type="range" min="1" max="9" step="2" value="3"><output class="k-value" id="kValue" for="kSlider">3</output></div>
+              <p class="help">K = 3 significa que el modelo mira los 3 ejemplos más cercanos.</p>
+            </div>
+            <div class="control-block">
+              <label class="control-label">3. Entrena y prueba</label>
+              <button class="btn btn-primary" id="trainBtn" type="button">⚙️ Entrenar modelo</button>
+              <button class="btn btn-test" id="testBtn" type="button" disabled>✦ Probar nuevo caso</button>
+              <p class="help" id="testHelp">Primero agrega puntos de ambos colores y entrena.</p>
+              <div class="prediction-card" id="predictionCard"><div class="prediction-result" id="predictionResult"></div><p id="predictionExplain"></p></div>
+            </div>
+            <div class="control-block">
+              <label class="control-label">Datos del plano</label>
+              <div class="btn-row"><button class="btn btn-soft" id="exampleBtn" type="button">✨ Ejemplo automático</button><button class="btn btn-danger" id="clearBtn" type="button">🗑 Borrar todo</button></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="entiende-title">
+      <div class="section-title"><span class="kicker">Conecta la experiencia</span><h2 id="entiende-title">¿Qué ocurrió al entrenar?</h2></div>
+      <div class="analogy">
+        <article class="analogy-card"><h3>🏘️ KNN: pregunta a los vecinos</h3><p>Para clasificar un caso nuevo, KNN busca los <strong>K ejemplos más cercanos</strong> y elige el color que aparece más veces. Es como preguntar a los vecinos qué es más común en esa zona.</p><p class="formula">Ejemplos + distancia + mayoría = predicción</p></article>
+        <article class="analogy-card"><h3>🗺️ Regiones de decisión</h3><p>El fondo del plano muestra lo que el modelo respondería en cada zona. Azul claro significa “aquí predeciría azul”; rojo claro significa “aquí predeciría rojo”. La frontera puede cambiar con los datos y con K.</p></article>
+      </div>
+      <div class="overfit" style="margin-top:18px"><div class="overfit-visual" aria-hidden="true"><div class="wiggle"></div></div><div><h3>¿Qué es el sobreajuste?</h3><p>Ocurre cuando el modelo se adapta demasiado a los ejemplos de entrenamiento —incluso a sus rarezas— y falla con casos nuevos. Con K muy pequeño, KNN puede crear fronteras irregulares que “memorizan” puntos aislados. Un buen modelo busca un patrón útil, no una copia perfecta.</p></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="reflexion-title">
+      <div class="section-title"><span class="kicker">Conversación en clase</span><h2 id="reflexion-title">Preguntas para reflexionar</h2><p>Abre cada pregunta después de experimentar y compara tu respuesta con la pista.</p></div>
+      <details><summary>1. ¿Qué pasa si hay pocos datos?</summary><p>El patrón es menos confiable: unos pocos ejemplos pueden no representar la realidad. Prueba entrenando con solo dos o tres puntos y observa cuánto depende el resultado de cada punto.</p></details>
+      <details><summary>2. ¿Qué pasa si los datos están mezclados?</summary><p>La decisión se vuelve más difícil y aparecen fronteras irregulares. Cerca de la mezcla habrá más posibilidad de error o incertidumbre.</p></details>
+      <details><summary>3. ¿Qué cambia cuando K es pequeño o grande?</summary><p>Un K pequeño presta mucha atención a detalles y puntos aislados; un K grande busca una tendencia más general, aunque puede ignorar patrones pequeños.</p></details>
+      <details><summary>4. ¿La máquina entiende o solo encuentra patrones?</summary><p>En este caso no comprende el significado de los puntos: calcula distancias y vota. Encuentra una regularidad útil, pero no razona como una persona ni conoce el contexto.</p></details>
+    </section>
+
+    <section class="section" aria-labelledby="quiz-title">
+      <div class="section-title"><span class="kicker">Comprueba lo aprendido</span><h2 id="quiz-title">Mini quiz · 5 preguntas</h2><p>Recibirás retroalimentación inmediata después de cada respuesta.</p></div>
+      <div class="quiz" id="quizBox">
+        <div class="quiz-progress"><span id="questionNumber">Pregunta 1 de 5</span><strong id="scoreLive">Aciertos: 0</strong></div><div class="bar"><div class="bar-fill" id="barFill"></div></div>
+        <div id="quizContent"><div class="question" id="questionText"></div><div class="answers" id="answers"></div><div class="feedback" id="feedback" role="status"></div><button class="btn btn-primary quiz-next" id="nextBtn" type="button">Siguiente pregunta →</button></div>
+      </div>
+    </section>
+  </main>
+  <footer>IA para todos · Primera clase de Machine Learning · Aprende experimentando</footer>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+  (() => {
+    'use strict';
+    const canvas=document.getElementById('plot'), ctx=canvas.getContext('2d'), wrap=document.getElementById('canvasWrap');
+    const blueBtn=document.getElementById('blueBtn'), redBtn=document.getElementById('redBtn'), trainBtn=document.getElementById('trainBtn'), testBtn=document.getElementById('testBtn');
+    const kSlider=document.getElementById('kSlider'), kValue=document.getElementById('kValue'), hint=document.getElementById('canvasHint');
+    let points=[], selected='blue', trained=false, testMode=false, testPoint=null, neighborIndices=[], regionImage=null, cssW=0, cssH=0, dpr=1;
+    const colors={blue:'#2878ff',red:'#f04f64'};
+
+    function resize(){
+      const r=wrap.getBoundingClientRect(); dpr=Math.min(window.devicePixelRatio||1,2); cssW=Math.max(280,Math.round(r.width)); cssH=Math.max(280,Math.round(r.height));
+      canvas.width=Math.round(cssW*dpr); canvas.height=Math.round(cssH*dpr); canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px'; ctx.setTransform(dpr,0,0,dpr,0,0);
+      if(trained) computeRegions(); else draw();
+    }
+    function grid(){ctx.fillStyle='#f9fbff';ctx.fillRect(0,0,cssW,cssH);ctx.strokeStyle='#e8edf6';ctx.lineWidth=1;for(let x=cssW/10;x<cssW;x+=cssW/10){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cssH);ctx.stroke()}for(let y=cssH/8;y<cssH;y+=cssH/8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cssW,y);ctx.stroke()}}
+    function draw(){
+      ctx.clearRect(0,0,cssW,cssH); if(regionImage) ctx.drawImage(regionImage,0,0,cssW,cssH); else grid();
+      if(neighborIndices.length&&testPoint){ctx.setLineDash([5,5]);ctx.lineWidth=1.5;neighborIndices.forEach(i=>{const p=points[i];ctx.strokeStyle=colors[p.label];ctx.beginPath();ctx.moveTo(testPoint.x*cssW,testPoint.y*cssH);ctx.lineTo(p.x*cssW,p.y*cssH);ctx.stroke()});ctx.setLineDash([])}
+      points.forEach((p,i)=>{const x=p.x*cssW,y=p.y*cssH;ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.fillStyle=colors[p.label];ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#fff';ctx.stroke();if(neighborIndices.includes(i)){ctx.beginPath();ctx.arc(x,y,13,0,Math.PI*2);ctx.lineWidth=2;ctx.strokeStyle='#1d283d';ctx.stroke()}});
+      if(testPoint){const x=testPoint.x*cssW,y=testPoint.y*cssH;ctx.beginPath();ctx.arc(x,y,11,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=4;ctx.strokeStyle='#17233a';ctx.stroke();ctx.beginPath();ctx.moveTo(x-5,y);ctx.lineTo(x+5,y);ctx.moveTo(x,y-5);ctx.lineTo(x,y+5);ctx.lineWidth=2;ctx.stroke()}
+    }
+    function classify(x,y){
+      const ordered=points.map((p,i)=>({i,label:p.label,d:(p.x-x)**2+(p.y-y)**2})).sort((a,b)=>a.d-b.d);
+      const k=Math.min(+kSlider.value,ordered.length), near=ordered.slice(0,k); let blue=0,red=0; near.forEach(n=>n.label==='blue'?blue++:red++);
+      if(blue===red && near.length) return {label:near[0].label,blue,red,indices:near.map(n=>n.i),tie:true};
+      return {label:blue>red?'blue':'red',blue,red,indices:near.map(n=>n.i),tie:false};
+    }
+    function computeRegions(){
+      if(!points.length)return; const off=document.createElement('canvas'), scale=.25;off.width=Math.max(100,Math.round(cssW*scale));off.height=Math.max(80,Math.round(cssH*scale));const o=off.getContext('2d'), step=5;
+      o.fillStyle='#f9fbff';o.fillRect(0,0,off.width,off.height);
+      for(let y=0;y<off.height;y+=step)for(let x=0;x<off.width;x+=step){const r=classify(x/off.width,y/off.height);o.fillStyle=r.label==='blue'?'#dceaff':'#ffe0e5';o.fillRect(x,y,step+1,step+1)}
+      regionImage=off;draw();
+    }
+    function resetPrediction(){testPoint=null;neighborIndices=[];document.getElementById('predictionCard').classList.remove('show')}
+    function invalidate(){trained=false;testMode=false;regionImage=null;resetPrediction();testBtn.disabled=true;document.getElementById('modeText').textContent='Modo actual: agregar ejemplos de entrenamiento';document.getElementById('stepBadge').textContent='PASO 1 · CREA DATOS';document.getElementById('testHelp').textContent='Entrena de nuevo para actualizar el modelo.';setStatus('✏️','Datos modificados','Cuando cambian los ejemplos o K, es necesario volver a entrenar.');draw()}
+    function counts(){const b=points.filter(p=>p.label==='blue').length,r=points.length-b;document.getElementById('blueCount').textContent='Azules: '+b;document.getElementById('redCount').textContent='Rojos: '+r;hint.classList.toggle('hidden',points.length>0)}
+    function setStatus(icon,title,text){document.getElementById('statusIcon').textContent=icon;document.getElementById('statusTitle').textContent=title;document.getElementById('statusText').textContent=text}
+    function toast(text){const t=document.getElementById('toast');t.textContent=text;t.classList.add('show');clearTimeout(t.timer);t.timer=setTimeout(()=>t.classList.remove('show'),2300)}
+    function choose(label){selected=label;blueBtn.classList.toggle('active',label==='blue');redBtn.classList.toggle('active',label==='red');if(testMode){testMode=false;document.getElementById('modeText').textContent='Modo actual: agregar ejemplos de entrenamiento';document.getElementById('stepBadge').textContent='PASO 1 · CREA DATOS'}}
+    blueBtn.addEventListener('click',()=>choose('blue'));redBtn.addEventListener('click',()=>choose('red'));
+    canvas.addEventListener('pointerdown',e=>{
+      const r=canvas.getBoundingClientRect(),x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
+      if(testMode){testPoint={x,y};const result=classify(x,y);neighborIndices=result.indices;showPrediction(result);draw();return}
+      points.push({x,y,label:selected});if(trained)invalidate();counts();draw();setStatus('✅','Ejemplo agregado','Este punto es un dato de entrenamiento con etiqueta '+(selected==='blue'?'azul.':'roja.'));
+    });
+    trainBtn.addEventListener('click',()=>{
+      const b=points.some(p=>p.label==='blue'),r=points.some(p=>p.label==='red');if(!b||!r){toast('Agrega al menos un punto azul y uno rojo');setStatus('⚠️','Faltan ejemplos','Para comparar clases, el modelo necesita al menos un punto de cada color.');return}
+      trained=true;testMode=false;resetPrediction();computeRegions();testBtn.disabled=false;document.getElementById('testHelp').textContent='Ahora haz clic en “Probar nuevo caso” y luego en el plano.';document.getElementById('modeText').textContent='Modelo entrenado: el fondo muestra sus decisiones';document.getElementById('stepBadge').textContent='PASO 2 · MODELO LISTO';setStatus('🎉','¡Modelo entrenado!','El fondo coloreado muestra la predicción que haría KNN en cada zona.');toast('Modelo entrenado con '+points.length+' ejemplos');
+    });
+    testBtn.addEventListener('click',()=>{if(!trained)return;testMode=true;document.getElementById('modeText').textContent='Modo actual: probar un caso nuevo';document.getElementById('stepBadge').textContent='PASO 3 · HAZ CLIC EN EL PLANO';setStatus('🔮','Elige un caso nuevo','Haz clic en cualquier lugar del plano. Ese punto no se usará para entrenar.');toast('Haz clic en el plano para predecir')});
+    function showPrediction(r){
+      const card=document.getElementById('predictionCard'),out=document.getElementById('predictionResult'),exp=document.getElementById('predictionExplain'),name=r.label==='blue'?'AZUL':'ROJA';out.textContent='Predicción: clase '+name;out.className='prediction-result '+r.label;
+      const majority=r.blue>r.red?'azules':r.red>r.blue?'rojos':'de ambos colores';exp.textContent='El modelo miró los '+r.indices.length+' vecinos más cercanos y encontró '+r.blue+' '+(r.blue===1?'azul':'azules')+' y '+r.red+' '+(r.red===1?'rojo':'rojos')+'. '+(r.tie?'Hubo empate, así que eligió el vecino más cercano.':'Había más puntos '+majority+' que del otro color.');card.classList.add('show');setStatus('🔎','Predicción explicada','Las líneas punteadas conectan el caso nuevo con los vecinos que participaron en la votación.');
+    }
+    kSlider.addEventListener('input',()=>{kValue.value=kValue.textContent=kSlider.value;if(trained)invalidate()});
+    document.getElementById('clearBtn').addEventListener('click',()=>{points=[];trained=false;testMode=false;regionImage=null;resetPrediction();counts();draw();testBtn.disabled=true;document.getElementById('predictionCard').classList.remove('show');document.getElementById('modeText').textContent='Modo actual: agregar ejemplos de entrenamiento';document.getElementById('stepBadge').textContent='PASO 1 · CREA DATOS';document.getElementById('testHelp').textContent='Primero agrega puntos de ambos colores y entrena.';setStatus('💡','Plano vacío','Agrega al menos un ejemplo de cada color. Recomendamos 8 o más puntos.');toast('Se borraron todos los puntos')});
+    document.getElementById('exampleBtn').addEventListener('click',()=>{
+      points=[{x:.17,y:.22,label:'blue'},{x:.27,y:.34,label:'blue'},{x:.18,y:.51,label:'blue'},{x:.38,y:.22,label:'blue'},{x:.36,y:.45,label:'blue'},{x:.65,y:.55,label:'red'},{x:.74,y:.32,label:'red'},{x:.82,y:.48,label:'red'},{x:.68,y:.76,label:'red'},{x:.87,y:.70,label:'red'},{x:.55,y:.30,label:'red'},{x:.43,y:.67,label:'blue'}];trained=false;testMode=false;regionImage=null;resetPrediction();counts();draw();testBtn.disabled=true;document.getElementById('modeText').textContent='Modo actual: ejemplo automático cargado';document.getElementById('stepBadge').textContent='PASO 2 · ENTRENA';setStatus('✨','Ejemplo cargado','Ya tienes 12 datos etiquetados. Cambia K o pulsa “Entrenar modelo”.');toast('Ejemplo automático listo');
+    });
+
+    const quiz=[
+      {q:'¿Qué representa cada punto de color en el plano?',a:['Una predicción futura','Un ejemplo de entrenamiento','Un error del programa'],c:1,f:'Cada punto es un ejemplo conocido que ayuda al modelo a encontrar un patrón.'},
+      {q:'En este laboratorio, ¿qué es la etiqueta?',a:['La posición del punto','El valor de K','El color azul o rojo asignado al ejemplo'],c:2,f:'La etiqueta es la respuesta conocida: aquí indica a cuál clase pertenece cada ejemplo.'},
+      {q:'¿Cómo decide KNN la clase de un caso nuevo?',a:['Pregunta a los ejemplos más cercanos y usa la mayoría','Elige siempre el color con más puntos totales','Comprende el significado de los datos'],c:0,f:'KNN calcula cercanía, consulta K vecinos y realiza una votación.'},
+      {q:'¿Qué puede ocurrir cuando K es muy pequeño?',a:['El modelo deja de usar datos','Puede adaptarse demasiado a puntos aislados','Las dos clases desaparecen'],c:1,f:'Con un K pequeño, un solo punto extraño puede cambiar una zona completa: es una señal de posible sobreajuste.'},
+      {q:'¿Qué significa que una predicción tenga error?',a:['Que el computador está dañado','Que K siempre debe ser 1','Que la respuesta predicha no coincide con la real'],c:2,f:'El error compara lo que predijo el modelo con la respuesta real; nos ayuda a evaluar y mejorar.'}
+    ];
+    let qi=0,score=0,answered=false;const qText=document.getElementById('questionText'),answers=document.getElementById('answers'),feedback=document.getElementById('feedback'),next=document.getElementById('nextBtn');
+    function renderQuestion(){answered=false;const item=quiz[qi];document.getElementById('questionNumber').textContent='Pregunta '+(qi+1)+' de '+quiz.length;document.getElementById('scoreLive').textContent='Aciertos: '+score;document.getElementById('barFill').style.width=((qi+1)/quiz.length*100)+'%';qText.textContent=item.q;answers.innerHTML='';feedback.className='feedback';next.className='btn btn-primary quiz-next';item.a.forEach((text,i)=>{const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=text;b.addEventListener('click',()=>answer(i,b));answers.appendChild(b)})}
+    function answer(i,button){if(answered)return;answered=true;const item=quiz[qi],buttons=[...answers.children];buttons.forEach(b=>b.disabled=true);buttons[item.c].classList.add('correct');if(i===item.c){score++;feedback.textContent='✅ ¡Correcto! '+item.f}else{button.classList.add('incorrect');feedback.textContent='💡 Aún no. '+item.f}document.getElementById('scoreLive').textContent='Aciertos: '+score;feedback.classList.add('show');next.textContent=qi===quiz.length-1?'Ver resultado':'Siguiente pregunta →';next.classList.add('show')}
+    next.addEventListener('click',()=>{qi++;if(qi<quiz.length)renderQuestion();else showResult()});
+    function showResult(){const msg=score===5?'¡Excelente! Comprendiste las ideas clave.':score>=3?'¡Buen trabajo! Experimenta otra vez para afianzar las ideas.':'Buen comienzo. Vuelve al laboratorio, prueba diferentes datos y repite el quiz.';document.getElementById('quizContent').innerHTML='<div class="quiz-result"><div class="score">'+score+'/5</div><h3>Laboratorio completado</h3><p>'+msg+'</p><button class="btn btn-primary" id="retryBtn" type="button">Repetir quiz</button></div>';document.getElementById('questionNumber').textContent='Resultado final';document.getElementById('barFill').style.width='100%';document.getElementById('retryBtn').addEventListener('click',()=>location.reload())}
+    renderQuestion();window.addEventListener('resize',resize);if('ResizeObserver' in window)new ResizeObserver(resize).observe(wrap);setTimeout(resize,0);
+  })();
+  </script>
+</body>
+</html>

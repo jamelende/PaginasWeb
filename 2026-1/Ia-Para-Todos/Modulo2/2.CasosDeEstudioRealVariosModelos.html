@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratorio Interactivo de Machine Learning</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --text:#172033;
+      --muted:#667085;
+      --line:#d9dfeb;
+      --blue:#2563eb;
+      --red:#dc2626;
+      --green:#16a34a;
+      --purple:#7c3aed;
+      --shadow:0 12px 30px rgba(30,41,59,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(135deg,#eef3ff,#f9fbff 55%,#f4f7fb);
+      color:var(--text);
+    }
+    header{
+      padding:28px 20px 18px;
+      text-align:center;
+    }
+    header h1{margin:0 0 8px;font-size:clamp(28px,4vw,44px)}
+    header p{margin:0;color:var(--muted);font-size:17px}
+    .app{
+      width:min(1200px,94vw);
+      margin:0 auto 40px;
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:20px;
+    }
+    .panel{
+      background:var(--panel);
+      border:1px solid #e7ebf3;
+      border-radius:20px;
+      box-shadow:var(--shadow);
+    }
+    .controls{padding:20px;display:flex;flex-direction:column;gap:16px}
+    .controls h2,.workspace h2{margin:0;font-size:21px}
+    label{font-size:14px;font-weight:700}
+    select,button,input[type="range"]{
+      width:100%;
+    }
+    select{
+      padding:11px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      color:var(--text);
+      font-size:15px;
+    }
+    button{
+      border:0;
+      border-radius:12px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    button:hover{transform:translateY(-1px)}
+    .primary{background:var(--blue);color:#fff}
+    .secondary{background:#edf2ff;color:#1d4ed8}
+    .danger{background:#fff1f2;color:#be123c}
+    .success{background:#ecfdf3;color:#15803d}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .hint{
+      background:#f8fafc;
+      border:1px dashed #cfd7e6;
+      border-radius:14px;
+      padding:12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+    .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+    .workspace{padding:20px}
+    .topbar{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px
+    }
+    .scenario-title{font-weight:800;font-size:24px;margin-bottom:4px}
+    .scenario-desc{color:var(--muted);font-size:14px}
+    .canvas-wrap{
+      position:relative;
+      width:100%;
+      aspect-ratio:16/10;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+    }
+    canvas{width:100%;height:100%;display:block}
+    .status{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+    .card{
+      border:1px solid #e7ebf3;
+      border-radius:14px;
+      padding:14px;
+      background:#fbfcfe;
+    }
+    .card strong{display:block;font-size:22px;margin-top:4px}
+    .small{font-size:13px;color:var(--muted)}
+    .explain{
+      margin-top:14px;
+      padding:14px;
+      border-radius:14px;
+      background:#f7f9ff;
+      border:1px solid #dfe7ff;
+      line-height:1.55;
+      font-size:14px;
+    }
+    .quiz{
+      margin-top:14px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid #e7ebf3;
+      background:#fff;
+    }
+    .quiz h3{margin:0 0 10px}
+    .quiz button{margin-top:8px;text-align:left;background:#f8fafc;border:1px solid #e5e7eb;color:#111827}
+    .quiz-feedback{margin-top:10px;font-weight:700}
+    @media(max-width:900px){
+      .app{grid-template-columns:1fr}
+      .status{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Laboratorio Interactivo de Machine Learning</h1>
+  <p>Explora cómo una máquina clasifica datos usando ejemplos de la vida real.</p>
+</header>
+
+<main class="app">
+  <aside class="panel controls">
+    <h2>Controles</h2>
+
+    <div>
+      <label for="scenario">Caso de estudio</label>
+      <select id="scenario">
+        <option value="bank">Banco: aprobar un crédito</option>
+        <option value="admission">Universidad: admitir estudiante</option>
+        <option value="medical">Salud: riesgo clínico</option>
+        <option value="marketing">Marketing: comprará o no</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="algorithm">Algoritmo visual</label>
+      <select id="algorithm">
+        <option value="linear">Regresión logística</option>
+        <option value="knn">K vecinos más cercanos</option>
+        <option value="tree">Árbol de decisión</option>
+        <option value="svm">SVM lineal</option>
+        <option value="svmRbf">SVM no lineal (RBF)</option>
+        <option value="nn">Red neuronal</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="classSelect">Clase del nuevo punto</label>
+      <select id="classSelect">
+        <option value="1">Azul: resultado positivo</option>
+        <option value="0">Rojo: resultado negativo</option>
+      </select>
+    </div>
+
+    <div class="grid2">
+      <button class="primary" id="trainBtn">Entrenar modelo</button>
+      <button class="secondary" id="predictBtn">Modo predicción</button>
+    </div>
+
+    <div class="grid2">
+      <button class="success" id="randomBtn">Nuevos datos</button>
+      <button class="danger" id="resetBtn">Reiniciar</button>
+    </div>
+
+    <div>
+      <label for="kSlider">Valor de K: <span id="kValue">5</span></label>
+      <input id="kSlider" type="range" min="1" max="15" step="2" value="5" />
+    </div>
+
+    <div>
+      <label for="layersSelect">Capas ocultas de la red neuronal</label>
+      <select id="layersSelect">
+        <option value="1">1 capa oculta</option>
+        <option value="2" selected>2 capas ocultas</option>
+        <option value="3">3 capas ocultas</option>
+        <option value="4">4 capas ocultas</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="neuronsSelect">Neuronas por capa</label>
+      <select id="neuronsSelect">
+        <option value="4">4 neuronas</option>
+        <option value="6">6 neuronas</option>
+        <option value="8" selected>8 neuronas</option>
+        <option value="12">12 neuronas</option>
+      </select>
+    </div>
+
+    <div class="hint">
+      <strong>Cómo usarla</strong><br>
+      1. Haz clic en el plano para añadir ejemplos.<br>
+      2. Cambia el color de la clase.<br>
+      3. Entrena el modelo.<br>
+      4. Activa “Modo predicción” y haz clic para clasificar un caso nuevo.<br>
+      5. Cuando cambies de algoritmo o de arquitectura neuronal, vuelve a entrenar.
+    </div>
+
+    <div class="legend">
+      <span><span class="dot" style="background:#2563eb"></span>Positivo</span>
+      <span><span class="dot" style="background:#dc2626"></span>Negativo</span>
+      <span><span class="dot" style="background:#16a34a"></span>Nuevo caso</span>
+    </div>
+  </aside>
+
+  <section class="panel workspace">
+    <div class="topbar">
+      <div>
+        <div class="scenario-title" id="scenarioTitle"></div>
+        <div class="scenario-desc" id="scenarioDesc"></div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="canvas" width="900" height="560"></canvas>
+    </div>
+
+    <div class="status">
+      <div class="card">
+        <span class="small">Ejemplos de entrenamiento</span>
+        <strong id="countPoints">0</strong>
+      </div>
+      <div class="card">
+        <span class="small">Estado del modelo</span>
+        <strong id="modelStatus">Sin entrenar</strong>
+      </div>
+      <div class="card">
+        <span class="small">Última predicción</span>
+        <strong id="prediction">—</strong>
+      </div>
+    </div>
+
+    <div class="explain" id="explanation"></div>
+
+    <div class="quiz">
+      <h3>Pregunta rápida</h3>
+      <div id="quizQuestion">¿Qué representan los puntos de colores?</div>
+      <button data-answer="0">Los algoritmos del modelo</button>
+      <button data-answer="1">Ejemplos históricos usados para aprender</button>
+      <button data-answer="0">Los errores del computador</button>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const scenarioSel = document.getElementById("scenario");
+const algorithmSel = document.getElementById("algorithm");
+const classSel = document.getElementById("classSelect");
+const trainBtn = document.getElementById("trainBtn");
+const predictBtn = document.getElementById("predictBtn");
+const randomBtn = document.getElementById("randomBtn");
+const resetBtn = document.getElementById("resetBtn");
+const kSlider = document.getElementById("kSlider");
+const kValue = document.getElementById("kValue");
+const layersSelect = document.getElementById("layersSelect");
+const neuronsSelect = document.getElementById("neuronsSelect");
+
+const scenarios = {
+  bank:{
+    title:"Banco: ¿aprobar o no un crédito?",
+    desc:"Eje X: ingreso mensual. Eje Y: estabilidad laboral.",
+    xLabel:"Ingreso mensual",
+    yLabel:"Estabilidad laboral",
+    pos:"Crédito aprobado",
+    neg:"Crédito rechazado"
+  },
+  admission:{
+    title:"Universidad: ¿admitir a un estudiante?",
+    desc:"Eje X: resultado del examen. Eje Y: promedio académico.",
+    xLabel:"Puntaje de examen",
+    yLabel:"Promedio académico",
+    pos:"Admitido",
+    neg:"No admitido"
+  },
+  medical:{
+    title:"Salud: ¿riesgo clínico alto?",
+    desc:"Eje X: presión arterial. Eje Y: nivel de colesterol.",
+    xLabel:"Presión arterial",
+    yLabel:"Colesterol",
+    pos:"Riesgo alto",
+    neg:"Riesgo bajo"
+  },
+  marketing:{
+    title:"Marketing: ¿comprará el producto?",
+    desc:"Eje X: visitas al sitio. Eje Y: tiempo de navegación.",
+    xLabel:"Visitas al sitio",
+    yLabel:"Tiempo de navegación",
+    pos:"Comprará",
+    neg:"No comprará"
+  }
+};
+
+let points = [];
+let trained = false;
+let predictionMode = false;
+let queryPoint = null;
+let treeModel = null;
+let svmModel = null;
+let svmRbfModel = null;
+let nnModel = null;
+
+function seedData(){
+  points = [];
+  for(let i=0;i<24;i++){
+    const cls = i<12 ? 0 : 1;
+    let x,y;
+    if(cls===0){
+      x = 120 + Math.random()*290;
+      y = 120 + Math.random()*280;
+    } else {
+      x = 470 + Math.random()*300;
+      y = 250 + Math.random()*220;
+    }
+    if(Math.random()<0.22) x += cls===0 ? 170 : -170;
+    points.push({x,y,cls});
+  }
+  trained=false;
+  queryPoint=null;
+  predictionMode=false;
+  treeModel=null; svmModel=null; svmRbfModel=null; nnModel=null;
+  updateUI();
+  draw();
+}
+
+function drawAxes(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#ffffff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="#edf0f5";
+  ctx.lineWidth=1;
+  for(let x=70;x<canvas.width-30;x+=80){
+    ctx.beginPath();ctx.moveTo(x,30);ctx.lineTo(x,canvas.height-60);ctx.stroke();
+  }
+  for(let y=30;y<canvas.height-60;y+=60){
+    ctx.beginPath();ctx.moveTo(70,y);ctx.lineTo(canvas.width-30,y);ctx.stroke();
+  }
+
+  ctx.strokeStyle="#667085";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(70,30);ctx.lineTo(70,canvas.height-60);ctx.lineTo(canvas.width-30,canvas.height-60);
+  ctx.stroke();
+
+  const s=scenarios[scenarioSel.value];
+  ctx.fillStyle="#344054";
+  ctx.font="16px sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText(s.xLabel,canvas.width/2,canvas.height-18);
+  ctx.save();
+  ctx.translate(22,canvas.height/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText(s.yLabel,0,0);
+  ctx.restore();
+}
+
+function drawBackground(){
+  if(!trained) return;
+  const alg=algorithmSel.value;
+  const step=10;
+  for(let y=30;y<canvas.height-60;y+=step){
+    for(let x=70;x<canvas.width-30;x+=step){
+      const pred=predictClass(x,y,alg);
+      ctx.fillStyle=pred===1?"rgba(37,99,235,.10)":"rgba(220,38,38,.10)";
+      ctx.fillRect(x,y,step,step);
+    }
+  }
+}
+
+function drawPoints(){
+  points.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,7,0,Math.PI*2);
+    ctx.fillStyle=p.cls===1?"#2563eb":"#dc2626";
+    ctx.fill();
+    ctx.lineWidth=2;
+    ctx.strokeStyle="#fff";
+    ctx.stroke();
+  });
+  if(queryPoint){
+    ctx.beginPath();
+    ctx.arc(queryPoint.x,queryPoint.y,10,0,Math.PI*2);
+    ctx.fillStyle="#16a34a";
+    ctx.fill();
+    ctx.lineWidth=3;
+    ctx.strokeStyle="#fff";
+    ctx.stroke();
+  }
+}
+
+function draw(){
+  drawAxes();
+  drawBackground();
+  drawAxesOverlay();
+  drawPoints();
+}
+
+function drawAxesOverlay(){
+  ctx.strokeStyle="#667085";
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(70,30);ctx.lineTo(70,canvas.height-60);ctx.lineTo(canvas.width-30,canvas.height-60);
+  ctx.stroke();
+  const s=scenarios[scenarioSel.value];
+  ctx.fillStyle="#344054";
+  ctx.font="16px sans-serif";
+  ctx.textAlign="center";
+  ctx.fillText(s.xLabel,canvas.width/2,canvas.height-18);
+  ctx.save();
+  ctx.translate(22,canvas.height/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText(s.yLabel,0,0);
+  ctx.restore();
+}
+
+function predictClass(x,y,alg){
+  if(points.length===0) return 0;
+  if(alg==="knn") return knn(x,y);
+  if(alg==="tree") return treeModel ? predictTree(treeModel,x,y) : 0;
+  if(alg==="svm") return svmModel ? predictSVM(x,y) : 0;
+  if(alg==="svmRbf") return svmRbfModel ? predictSVMRbf(x,y) : 0;
+  if(alg==="nn") return nnModel ? predictNN(x,y) : 0;
+  return linearPredict(x,y);
+}
+
+function knn(x,y){
+  const k=parseInt(kSlider.value);
+  const sorted=[...points].sort((a,b)=>
+    ((a.x-x)**2+(a.y-y)**2)-((b.x-x)**2+(b.y-y)**2)
+  ).slice(0,k);
+  const votes=sorted.reduce((s,p)=>s+p.cls,0);
+  return votes>=sorted.length/2?1:0;
+}
+
+function linearPredict(x,y){
+  if(points.length<2) return 0;
+  let pos=points.filter(p=>p.cls===1);
+  let neg=points.filter(p=>p.cls===0);
+  if(!pos.length||!neg.length) return pos.length?1:0;
+  const cp={
+    x:pos.reduce((s,p)=>s+p.x,0)/pos.length,
+    y:pos.reduce((s,p)=>s+p.y,0)/pos.length
+  };
+  const cn={
+    x:neg.reduce((s,p)=>s+p.x,0)/neg.length,
+    y:neg.reduce((s,p)=>s+p.y,0)/neg.length
+  };
+  const dp=(x-cp.x)**2+(y-cp.y)**2;
+  const dn=(x-cn.x)**2+(y-cn.y)**2;
+  return dp<dn?1:0;
+}
+
+function gini(arr){
+  if(!arr.length) return 0;
+  const p=arr.reduce((s,p)=>s+p.cls,0)/arr.length;
+  return 1-p*p-(1-p)*(1-p);
+}
+
+function majority(arr){
+  return arr.reduce((s,p)=>s+p.cls,0) >= arr.length/2 ? 1 : 0;
+}
+
+function trainDecisionTree(data,depth=0,maxDepth=5,minLeaf=3){
+  const node={prediction:majority(data)};
+  const pure=data.every(p=>p.cls===data[0].cls);
+  if(depth>=maxDepth || data.length<minLeaf*2 || pure) return node;
+
+  let best=null;
+  for(const feature of ["x","y"]){
+    const vals=[...new Set(data.map(p=>p[feature]))].sort((a,b)=>a-b);
+    for(let i=0;i<vals.length-1;i++){
+      const threshold=(vals[i]+vals[i+1])/2;
+      const left=data.filter(p=>p[feature]<=threshold);
+      const right=data.filter(p=>p[feature]>threshold);
+      if(left.length<minLeaf || right.length<minLeaf) continue;
+      const score=(left.length*gini(left)+right.length*gini(right))/data.length;
+      if(!best || score<best.score) best={feature,threshold,left,right,score};
+    }
+  }
+  if(!best) return node;
+  node.feature=best.feature;
+  node.threshold=best.threshold;
+  node.left=trainDecisionTree(best.left,depth+1,maxDepth,minLeaf);
+  node.right=trainDecisionTree(best.right,depth+1,maxDepth,minLeaf);
+  return node;
+}
+
+function predictTree(node,x,y){
+  while(node && node.feature){
+    const value=node.feature==="x"?x:y;
+    node=value<=node.threshold?node.left:node.right;
+  }
+  return node ? node.prediction : 0;
+}
+
+function normX(x){ return (x-470)/360; }
+function normY(y){ return (y-280)/240; }
+
+function trainLinearSVM(data){
+  let w1=0,w2=0,b=0;
+  const lambda=0.01, lr0=0.06;
+  for(let e=0;e<220;e++){
+    const lr=lr0/(1+e*0.015);
+    for(const p of [...data].sort(()=>Math.random()-.5)){
+      const x1=normX(p.x), x2=normY(p.y), yy=p.cls===1?1:-1;
+      const margin=yy*(w1*x1+w2*x2+b);
+      w1*=1-lr*lambda; w2*=1-lr*lambda;
+      if(margin<1){ w1+=lr*yy*x1; w2+=lr*yy*x2; b+=lr*yy; }
+    }
+  }
+  return {w1,w2,b};
+}
+
+function predictSVM(x,y){
+  return (svmModel.w1*normX(x)+svmModel.w2*normY(y)+svmModel.b)>=0?1:0;
+}
+
+function rbfKernel(a,b,gamma=2.2){
+  const dx=a[0]-b[0], dy=a[1]-b[1];
+  return Math.exp(-gamma*(dx*dx+dy*dy));
+}
+
+// Clasificador kernel RBF inspirado en SVM:
+// selecciona puntos frontera y pondera su influencia con un kernel gaussiano.
+function trainSVMRbf(data){
+  const samples=data.map(p=>({
+    x:[normX(p.x),normY(p.y)],
+    y:p.cls===1?1:-1
+  }));
+  const alpha=Array(samples.length).fill(0);
+  const gamma=2.2;
+  const epochs=22;
+
+  for(let e=0;e<epochs;e++){
+    for(let i=0;i<samples.length;i++){
+      let score=0;
+      for(let j=0;j<samples.length;j++){
+        if(alpha[j]!==0){
+          score += alpha[j]*samples[j].y*rbfKernel(samples[j].x,samples[i].x,gamma);
+        }
+      }
+      if(samples[i].y*score<=0) alpha[i]+=1;
+    }
+  }
+  return {samples,alpha,gamma};
+}
+
+function predictSVMRbf(x,y){
+  const q=[normX(x),normY(y)];
+  let score=0;
+  for(let i=0;i<svmRbfModel.samples.length;i++){
+    if(svmRbfModel.alpha[i]!==0){
+      score += svmRbfModel.alpha[i]*svmRbfModel.samples[i].y*
+        rbfKernel(svmRbfModel.samples[i].x,q,svmRbfModel.gamma);
+    }
+  }
+  return score>=0?1:0;
+}
+
+function sigmoid(z){
+  z=Math.max(-20,Math.min(20,z));
+  return 1/(1+Math.exp(-z));
+}
+
+function tanhDerivFromOutput(v){
+  return 1-v*v;
+}
+
+function createMatrix(rows,cols,scale=0.8){
+  return Array.from({length:rows},()=>Array.from({length:cols},()=>Math.random()*scale-scale/2));
+}
+
+function createVector(n,scale=0.2){
+  return Array.from({length:n},()=>Math.random()*scale-scale/2);
+}
+
+function trainNeuralNetwork(data){
+  const hiddenLayers=parseInt(layersSelect.value);
+  const neurons=parseInt(neuronsSelect.value);
+  const layerSizes=[2,...Array(hiddenLayers).fill(neurons),1];
+
+  const weights=[];
+  const biases=[];
+  for(let l=0;l<layerSizes.length-1;l++){
+    weights.push(createMatrix(layerSizes[l+1],layerSizes[l],1.1));
+    biases.push(createVector(layerSizes[l+1],0.2));
+  }
+
+  const epochs=520;
+  const lr=0.055;
+
+  for(let e=0;e<epochs;e++){
+    const shuffled=[...data].sort(()=>Math.random()-.5);
+    for(const p of shuffled){
+      const activations=[[normX(p.x),normY(p.y)]];
+      const zs=[];
+
+      for(let l=0;l<weights.length;l++){
+        const prev=activations[l];
+        const z=weights[l].map((row,j)=>
+          row.reduce((s,w,k)=>s+w*prev[k],biases[l][j])
+        );
+        zs.push(z);
+        const isOutput=l===weights.length-1;
+        activations.push(isOutput ? [sigmoid(z[0])] : z.map(v=>Math.tanh(v)));
+      }
+
+      let deltas=Array(weights.length);
+      const out=activations[activations.length-1][0];
+      deltas[deltas.length-1]=[out-p.cls];
+
+      for(let l=weights.length-2;l>=0;l--){
+        const currentAct=activations[l+1];
+        deltas[l]=currentAct.map((a,i)=>{
+          let sum=0;
+          for(let j=0;j<weights[l+1].length;j++){
+            sum += weights[l+1][j][i]*deltas[l+1][j];
+          }
+          return sum*tanhDerivFromOutput(a);
+        });
+      }
+
+      for(let l=0;l<weights.length;l++){
+        const prev=activations[l];
+        for(let j=0;j<weights[l].length;j++){
+          for(let k=0;k<weights[l][j].length;k++){
+            weights[l][j][k]-=lr*deltas[l][j]*prev[k];
+          }
+          biases[l][j]-=lr*deltas[l][j];
+        }
+      }
+    }
+  }
+
+  return {weights,biases,hiddenLayers,neurons};
+}
+
+function predictNN(x,y){
+  let a=[normX(x),normY(y)];
+  for(let l=0;l<nnModel.weights.length;l++){
+    const z=nnModel.weights[l].map((row,j)=>
+      row.reduce((s,w,k)=>s+w*a[k],nnModel.biases[l][j])
+    );
+    a=(l===nnModel.weights.length-1)?[sigmoid(z[0])]:z.map(v=>Math.tanh(v));
+  }
+  return a[0]>=0.5?1:0;
+}
+
+canvas.addEventListener("click",e=>{
+  const r=canvas.getBoundingClientRect();
+  const x=(e.clientX-r.left)*canvas.width/r.width;
+  const y=(e.clientY-r.top)*canvas.height/r.height;
+  if(x<70||x>canvas.width-30||y<30||y>canvas.height-60) return;
+
+  if(predictionMode && trained){
+    const cls=predictClass(x,y,algorithmSel.value);
+    queryPoint={x,y,cls};
+    document.getElementById("prediction").textContent=cls===1?scenarios[scenarioSel.value].pos:scenarios[scenarioSel.value].neg;
+  } else {
+    points.push({x,y,cls:parseInt(classSel.value)});
+    trained=false;
+    queryPoint=null;
+  }
+  updateUI();
+  draw();
+});
+
+trainBtn.addEventListener("click",()=>{
+  if(points.length<4){alert("Añade al menos cuatro puntos.");return;}
+  treeModel=null; svmModel=null; svmRbfModel=null; nnModel=null;
+  if(algorithmSel.value==="tree") treeModel=trainDecisionTree(points);
+  if(algorithmSel.value==="svm") svmModel=trainLinearSVM(points);
+  if(algorithmSel.value==="svmRbf") svmRbfModel=trainSVMRbf(points);
+  if(algorithmSel.value==="nn") nnModel=trainNeuralNetwork(points);
+  trained=true;
+  predictionMode=false;
+  queryPoint=null;
+  updateUI();
+  draw();
+});
+
+predictBtn.addEventListener("click",()=>{
+  if(!trained){alert("Primero entrena el modelo.");return;}
+  predictionMode=!predictionMode;
+  predictBtn.textContent=predictionMode?"Salir de predicción":"Modo predicción";
+  updateUI();
+});
+
+randomBtn.addEventListener("click",seedData);
+resetBtn.addEventListener("click",()=>{
+  points=[];trained=false;predictionMode=false;queryPoint=null;updateUI();draw();
+});
+
+scenarioSel.addEventListener("change",()=>{
+  seedData();
+  updateScenario();
+});
+algorithmSel.addEventListener("change",()=>{
+  queryPoint=null; trained=false;
+  treeModel=null; svmModel=null; svmRbfModel=null; nnModel=null;
+  updateUI(); draw();
+});
+kSlider.addEventListener("input",()=>{
+  kValue.textContent=kSlider.value;
+  if(trained) draw();
+});
+
+layersSelect.addEventListener("change",()=>{
+  if(algorithmSel.value==="nn"){
+    trained=false; nnModel=null; queryPoint=null; updateUI(); draw();
+  }
+});
+
+neuronsSelect.addEventListener("change",()=>{
+  if(algorithmSel.value==="nn"){
+    trained=false; nnModel=null; queryPoint=null; updateUI(); draw();
+  }
+});
+
+function updateScenario(){
+  const s=scenarios[scenarioSel.value];
+  document.getElementById("scenarioTitle").textContent=s.title;
+  document.getElementById("scenarioDesc").textContent=s.desc;
+}
+
+function updateUI(){
+  const s=scenarios[scenarioSel.value];
+  document.getElementById("countPoints").textContent=points.length;
+  document.getElementById("modelStatus").textContent=trained?"Entrenado":"Sin entrenar";
+  if(!queryPoint) document.getElementById("prediction").textContent="—";
+  const alg=algorithmSel.value;
+  let txt="";
+  if(alg==="linear"){
+    txt="<strong>Regresión logística:</strong> crea una frontera aproximadamente lineal. Es útil cuando las dos clases pueden separarse con una línea o una transición suave.";
+  }else if(alg==="knn"){
+    txt="<strong>K vecinos más cercanos:</strong> observa los puntos más cercanos al caso nuevo y decide por mayoría. Cambia K para ver cómo se suaviza o vuelve más sensible la frontera.";
+  }else if(alg==="tree"){
+    txt="<strong>Árbol de decisión:</strong> realiza varias divisiones sucesivas en X o Y. Por eso genera regiones rectangulares escalonadas. Cada borde corresponde a una regla del tipo “si X ≤ valor”.";
+  }else if(alg==="svm"){
+    txt="<strong>SVM lineal:</strong> busca una recta separadora con el mayor margen posible entre las dos clases.";
+  }else if(alg==="svmRbf"){
+    txt="<strong>SVM no lineal con kernel RBF:</strong> transforma implícitamente los datos y puede formar fronteras curvas, islas y regiones cerradas.";
+  }else{
+    txt="<strong>Red neuronal:</strong> usa "+layersSelect.value+" capa(s) oculta(s) con "+neuronsSelect.value+" neuronas por capa. Al aumentar la profundidad puede representar fronteras más complejas.";
+  }
+  document.getElementById("explanation").innerHTML=txt+"<br><br><strong>Idea clave:</strong> los datos son la experiencia de la máquina y el modelo es lo que aprende de esa experiencia.";
+}
+
+document.querySelectorAll(".quiz button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const ok=btn.dataset.answer==="1";
+    const f=document.getElementById("quizFeedback");
+    f.textContent=ok?"¡Correcto! Son ejemplos históricos usados para entrenar el modelo.":"No exactamente. Los puntos representan casos históricos con una clase conocida.";
+    f.style.color=ok?"#15803d":"#b91c1c";
+  });
+});
+
+updateScenario();
+seedData();
+</script>
+</body>
+</html>
