@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Laboratorio interactivo sobre calidad de datos y aprendizaje automático.">
+  <title>El modelo aprende lo que contienen los datos</title>
+  <style>
+    :root{--background:#f4f7fc;--foreground:#17233a;--card:#ffffff;--card-foreground:#17233a;--primary:#6752d8;--primary-foreground:#ffffff;--secondary:#edf1f7;--secondary-foreground:#344158;--muted:#eef1f6;--muted-foreground:#66738a;--border:#d9e1ed;--ring:#ffc857;--viz-series-1:#2878f2;--viz-series-2:#ed5367;--viz-series-3:#18a36f}
+    html{background:var(--background);color:var(--foreground)}body{margin:0;min-height:100vh;background:var(--background);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.app-hero{color:#fff;background:linear-gradient(130deg,#172548,#3d519c 55%,#7250cd);padding:38px 20px 52px}.app-hero>div,.app-main{max-width:1180px;margin:auto}.app-hero span{display:inline-block;padding:5px 10px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.12);font-size:.75rem;font-weight:800;letter-spacing:.05em}.app-hero h1{font-size:clamp(2rem,5vw,3.65rem);line-height:1.04;letter-spacing:-.045em;margin:14px 0 9px}.app-hero p{max-width:820px;margin:0;color:#eef1ff;font-size:clamp(.96rem,2vw,1.12rem)}.app-main{padding:20px 18px 55px}.intro{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px 16px;margin:-36px 0 18px;position:relative;box-shadow:0 12px 34px rgba(31,45,82,.12);color:#526078}.intro strong{color:var(--foreground)}
+  </style>
+</head>
+<body>
+<header class="app-hero"><div><span>IA PARA TODOS · LABORATORIO DE DATOS</span><h1>El modelo aprende lo que contienen los datos</h1><p>Experimenta con datos faltantes, etiquetas equivocadas, valores extremos y sesgo. Observa cómo una información imperfecta cambia la frontera y las predicciones.</p></div></header>
+<main class="app-main">
+<div class="intro"><strong>Idea central:</strong> un modelo no conoce la realidad. Solo puede aprender de los ejemplos que le entregamos.</div>
+<div id="datos-ml-lab">
+  <style>
+    #datos-ml-lab{color:var(--foreground);font-family:system-ui,sans-serif;max-width:1180px;margin:auto}
+    #datos-ml-lab *{box-sizing:border-box}
+    #datos-ml-lab .lab-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:16px;align-items:start}
+    #datos-ml-lab .plot-shell{position:relative;min-height:470px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--card)}
+    #datos-ml-lab canvas{display:block;width:100%;height:470px;touch-action:none;cursor:crosshair}
+    #datos-ml-lab .plot-note{position:absolute;left:12px;top:10px;background:color-mix(in srgb,var(--card) 88%,transparent);color:var(--card-foreground);border:1px solid var(--border);border-radius:8px;padding:6px 9px;font-size:12px}
+    #datos-ml-lab .controls{display:grid;gap:12px}
+    #datos-ml-lab .control-block{border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--card);color:var(--card-foreground)}
+    #datos-ml-lab .control-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px;font-weight:500}
+    #datos-ml-lab .control-head output{padding:3px 7px;border-radius:999px;background:var(--muted);color:var(--muted-foreground)}
+    #datos-ml-lab input[type=range]{width:100%;accent-color:var(--primary)}
+    #datos-ml-lab .control-block small{display:block;color:var(--muted-foreground);margin-top:5px}
+    #datos-ml-lab .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+    #datos-ml-lab .stat{border:1px solid var(--border);border-radius:11px;padding:10px;background:var(--card);color:var(--card-foreground)}
+    #datos-ml-lab .stat span{display:block;color:var(--muted-foreground);font-size:12px}
+    #datos-ml-lab .stat strong{display:block;margin-top:3px;font-size:20px;font-weight:500}
+    #datos-ml-lab .message{border-left:4px solid var(--viz-series-3);background:color-mix(in srgb,var(--viz-series-3) 12%,var(--card));color:var(--card-foreground);padding:10px 12px;border-radius:8px;margin-top:12px}
+    #datos-ml-lab .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;color:var(--muted-foreground);font-size:12px}
+    #datos-ml-lab .legend span{display:inline-flex;align-items:center;gap:5px}
+    #datos-ml-lab .sw{width:12px;height:12px;border-radius:50%;display:inline-block}
+    #datos-ml-lab .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    #datos-ml-lab button{border:1px solid var(--border);border-radius:9px;padding:8px 11px;background:var(--secondary);color:var(--secondary-foreground);font:inherit;cursor:pointer}
+    #datos-ml-lab button.primary{background:var(--primary);color:var(--primary-foreground);border-color:var(--primary)}
+    #datos-ml-lab button:focus-visible,#datos-ml-lab input:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+    @media(max-width:760px){#datos-ml-lab .lab-grid{grid-template-columns:1fr}#datos-ml-lab .plot-shell{min-height:390px}#datos-ml-lab canvas{height:390px}#datos-ml-lab .stats{grid-template-columns:1fr}}
+  </style>
+
+  <div class="lab-grid">
+    <section aria-label="Plano de datos y predicciones">
+      <div class="plot-shell" id="plotShell">
+        <canvas id="dataCanvas" aria-label="Plano con ejemplos azules y rojos, fronteras del modelo y un caso verde"></canvas>
+        <div class="plot-note">Haz clic para mover el caso verde</div>
+      </div>
+      <div class="legend" aria-label="Leyenda">
+        <span><i class="sw" style="background:var(--viz-series-1)"></i>Clase azul</span>
+        <span><i class="sw" style="background:var(--viz-series-2)"></i>Clase roja</span>
+        <span><i class="sw" style="background:var(--viz-series-3)"></i>Caso nuevo</span>
+        <span>― frontera actual</span><span>┄ frontera con datos limpios</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>Exactitud con casos nuevos</span><strong id="accuracy">—</strong></div>
+        <div class="stat"><span>Predicción del punto verde</span><strong id="prediction">—</strong></div>
+        <div class="stat"><span>Confianza aproximada</span><strong id="confidence">—</strong></div>
+      </div>
+      <div class="message" id="explanation" role="status"></div>
+    </section>
+
+    <section class="controls" aria-label="Controles para alterar los datos">
+      <div class="control-block">
+        <div class="control-head"><label for="missing">Datos faltantes</label><output id="missingOut">0%</output></div>
+        <input id="missing" type="range" min="0" max="45" value="0" step="5">
+        <small>Oculta una característica de algunos ejemplos. El sistema intenta rellenarla con el promedio.</small>
+      </div>
+      <div class="control-block">
+        <div class="control-head"><label for="noise">Etiquetas equivocadas</label><output id="noiseOut">0%</output></div>
+        <input id="noise" type="range" min="0" max="40" value="0" step="5">
+        <small>Cambia azul por rojo o rojo por azul, como si alguien hubiera etiquetado mal.</small>
+      </div>
+      <div class="control-block">
+        <div class="control-head"><label for="outliers">Valores extremos</label><output id="outliersOut">0</output></div>
+        <input id="outliers" type="range" min="0" max="14" value="0" step="1">
+        <small>Añade ejemplos muy alejados que pueden empujar la frontera.</small>
+      </div>
+      <div class="control-block">
+        <div class="control-head"><label for="bias">Sesgo de selección</label><output id="biasOut">0%</output></div>
+        <input id="bias" type="range" min="0" max="80" value="0" step="10">
+        <small>Elimina del entrenamiento parte de un grupo azul. El modelo recibe una visión incompleta.</small>
+      </div>
+      <div class="actions">
+        <button class="primary" id="newData" type="button">Nuevos datos</button>
+        <button id="cleanData" type="button">Volver a datos limpios</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+  (()=>{
+    const root=document.getElementById('datos-ml-lab');
+    const $=id=>root.querySelector('#'+id),canvas=$('dataCanvas'),ctx=canvas.getContext('2d'),shell=$('plotShell');
+    const controls=['missing','noise','outliers','bias'];
+    let seed=48271,base=[],current=[],cleanModel=null,model=null,query={x:.52,y:.49},W=700,H=470,dpr=1;
+    function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+    function normal(){return (rand()+rand()+rand()+rand()+rand()+rand()-3)/3}
+    function sigmoid(z){return 1/(1+Math.exp(-Math.max(-25,Math.min(25,z))))}
+    function generate(){base=[];for(let i=0;i<100;i++){const label=i>=50;let x,y;if(label){x=.62+normal()*.18;y=.60+normal()*.18}else{x=.37+normal()*.18;y=.38+normal()*.18}base.push({x:Math.max(.04,Math.min(.96,x)),y:Math.max(.04,Math.min(.96,y)),label:label?1:0,id:i})}cleanModel=train(base);applyChanges()}
+    function train(data){if(!data.length)return{w:[0,0],b:0};const mx=data.reduce((s,p)=>s+p.x,0)/data.length,my=data.reduce((s,p)=>s+p.y,0)/data.length;const prepared=data.map(p=>({x:Number.isFinite(p.x)?p.x:mx,y:Number.isFinite(p.y)?p.y:my,label:p.label}));let w=[0,0],b=0;for(let e=0;e<700;e++){let g0=0,g1=0,gb=0;for(const p of prepared){const err=sigmoid(w[0]*p.x+w[1]*p.y+b)-p.label;g0+=err*p.x;g1+=err*p.y;gb+=err}const lr=1.15/prepared.length;w[0]-=lr*g0;w[1]-=lr*g1;b-=lr*gb}return{w,b,mx,my}}
+    function probability(m,p){const x=Number.isFinite(p.x)?p.x:m.mx,y=Number.isFinite(p.y)?p.y:m.my;return sigmoid(m.w[0]*x+m.w[1]*y+m.b)}
+    function applyChanges(){const missing=+$('missing').value/100,noise=+$('noise').value/100,out=+$('outliers').value,bias=+$('bias').value/100;seed=base.length*991+Math.round(missing*100)*31+Math.round(noise*100)*47+out*67+Math.round(bias*100)*89;current=[];for(const original of base){const p={...original};if(p.label===0&&p.x>.42&&rand()<bias)continue;if(rand()<noise){p.label=1-p.label;p.noisy=true}if(rand()<missing){if(rand()<.5)p.x=NaN;else p.y=NaN;p.missing=true}current.push(p)}for(let i=0;i<out;i++){const side=i%2===0;current.push({x:side?.88+.07*rand():.05+.08*rand(),y:side?.1+.12*rand():.8+.13*rand(),label:side?0:1,outlier:true,id:100+i})}model=train(current);update();draw()}
+    function testAccuracy(m){let ok=0,n=240;let old=seed;seed=93313;for(let i=0;i<n;i++){const label=i>=n/2,x=(label?.62:.37)+normal()*.18,y=(label?.60:.38)+normal()*.18;ok+=(probability(m,{x,y})>=.5)==label}seed=old;return ok/n}
+    function update(){controls.forEach(id=>{$(id+'Out').textContent=id==='outliers'?$(id).value:$(id).value+'%'});const p=probability(model,query),pred=p>=.5?1:0,acc=testAccuracy(model);$('accuracy').textContent=Math.round(acc*100)+'%';$('prediction').textContent=pred?'Roja':'Azul';$('confidence').textContent=Math.round(Math.max(p,1-p)*100)+'%';const damaged=+$('missing').value+ +$('noise').value+ +$('outliers').value*3+ +$('bias').value;let cause='Los datos están limpios: la frontera se aproxima al patrón general.';if(damaged){const parts=[];if(+$('missing').value)parts.push('faltan características');if(+$('noise').value)parts.push('hay etiquetas equivocadas');if(+$('outliers').value)parts.push('los valores extremos empujan la frontera');if(+$('bias').value)parts.push('un grupo está poco representado');cause='El modelo no ve la realidad completa: '+parts.join(', ')+'. Por eso cambia su frontera y puede equivocarse con casos nuevos.'}$('explanation').textContent=cause}
+    function css(name){return getComputedStyle(root).getPropertyValue(name).trim()}
+    function pointToCanvas(p){return{x:38+p.x*(W-58),y:H-35-p.y*(H-58)}}
+    function boundary(m,color,dashed){const den=m.w[1]||1e-9,y0=-(m.w[0]*0+m.b)/den,y1=-(m.w[0]+m.b)/den,a=pointToCanvas({x:0,y:y0}),b=pointToCanvas({x:1,y:y1});ctx.save();ctx.beginPath();ctx.rect(38,20,W-58,H-55);ctx.clip();ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=color;ctx.lineWidth=dashed?2:4;ctx.setLineDash(dashed?[8,7]:[]);ctx.stroke();ctx.restore()}
+    function draw(){ctx.clearRect(0,0,W,H);ctx.fillStyle=css('--card');ctx.fillRect(0,0,W,H);ctx.strokeStyle=css('--border');ctx.lineWidth=1;ctx.font='12px system-ui';ctx.fillStyle=css('--muted-foreground');for(let i=0;i<=5;i++){const x=38+i*(W-58)/5,y=H-35-i*(H-58)/5;ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,H-35);ctx.stroke();ctx.beginPath();ctx.moveTo(38,y);ctx.lineTo(W-20,y);ctx.stroke();ctx.fillText((i*20)+'',x-5,H-13);ctx.fillText((i*20)+'',8,y+4)}boundary(cleanModel,css('--muted-foreground'),true);boundary(model,css('--foreground'),false);for(const p of current){const shown={x:Number.isFinite(p.x)?p.x:model.mx,y:Number.isFinite(p.y)?p.y:model.my},q=pointToCanvas(shown);ctx.beginPath();ctx.arc(q.x,q.y,p.outlier?8:5.5,0,Math.PI*2);ctx.fillStyle=p.label?css('--viz-series-2'):css('--viz-series-1');ctx.fill();ctx.strokeStyle=css('--card');ctx.lineWidth=1.5;ctx.stroke();if(p.missing){ctx.strokeStyle=css('--foreground');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(q.x-7,q.y-7);ctx.lineTo(q.x+7,q.y+7);ctx.moveTo(q.x+7,q.y-7);ctx.lineTo(q.x-7,q.y+7);ctx.stroke()}if(p.noisy){ctx.fillStyle=css('--foreground');ctx.font='500 11px system-ui';ctx.fillText('!',q.x+7,q.y-6)}if(p.outlier){ctx.strokeStyle=css('--viz-series-3');ctx.lineWidth=2;ctx.beginPath();ctx.arc(q.x,q.y,11,0,Math.PI*2);ctx.stroke()}}const q=pointToCanvas(query);ctx.fillStyle=css('--viz-series-3');ctx.beginPath();ctx.arc(q.x,q.y,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=css('--card');ctx.lineWidth=3;ctx.stroke();ctx.strokeStyle=css('--foreground');ctx.lineWidth=1;ctx.stroke();ctx.fillStyle=css('--foreground');ctx.font='500 12px system-ui';ctx.fillText('Caso nuevo',q.x+13,q.y-11)}
+    function resize(){const r=shell.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);W=Math.max(310,Math.round(r.width));H=innerWidth<760?390:470;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+    controls.forEach(id=>$(id).addEventListener('input',applyChanges));$('cleanData').addEventListener('click',()=>{controls.forEach(id=>$(id).value=0);applyChanges()});$('newData').addEventListener('click',()=>{seed=(Date.now()>>>0);generate()});canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect();query.x=Math.max(0,Math.min(1,((e.clientX-r.left)/r.width*W-38)/(W-58)));query.y=Math.max(0,Math.min(1,(H-35-(e.clientY-r.top)/r.height*H)/(H-58)));update();draw()});new ResizeObserver(resize).observe(shell);generate();resize();
+  })();
+  </script>
+</div>
+</main>
+</body>
+</html>
