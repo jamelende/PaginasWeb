@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="es" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Laboratorio interactivo: mecanismo de atención en los LLM</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-legend,
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<main id="attention-lab-app">
+  <style>
+    #attention-lab-app{--al-bg:var(--background,#f5f7fb);--al-fg:var(--foreground,#182235);--al-card:var(--card,#fff);--al-muted:var(--muted,#edf1f7);--al-muted-fg:var(--muted-foreground,#657086);--al-border:var(--border,#dbe2ed);--al-primary:var(--primary,#6558d6);--al-primary-fg:var(--primary-foreground,#fff);--al-accent:var(--accent,#e9e6ff);--al-accent-fg:var(--accent-foreground,#4738ad);--al-s1:var(--viz-series-1,#6758d7);--al-s2:var(--viz-series-2,#13a28b);--al-s3:var(--viz-series-3,#e45c73);--al-s4:var(--viz-series-4,#e99a39);--al-s5:var(--viz-series-5,#2583df);color:var(--al-fg);background:var(--al-bg);font-family:Inter,"Segoe UI",system-ui,sans-serif;line-height:1.45;padding-bottom:40px}
+    #attention-lab-app *{box-sizing:border-box}#attention-lab-app button,#attention-lab-app input,#attention-lab-app select,#attention-lab-app textarea{font:inherit}#attention-lab-app button{cursor:pointer}#attention-lab-app button:focus-visible,#attention-lab-app input:focus-visible,#attention-lab-app select:focus-visible{outline:3px solid color-mix(in srgb,var(--al-s4) 65%,transparent);outline-offset:2px}
+    .al-hero{background:radial-gradient(circle at 85% 10%,color-mix(in srgb,var(--al-s2) 35%,transparent),transparent 30%),linear-gradient(130deg,#172440,#3f3b9e 55%,#7855ca);color:#fff;padding:42px 20px 62px}.al-wrap{max-width:1240px;margin:auto;padding:0 18px}.al-hero .al-wrap{padding:0}.al-eyebrow{display:inline-flex;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);padding:6px 10px;border-radius:999px;font-weight:500;font-size:.76rem;letter-spacing:.05em}.al-hero h1{font-size:clamp(2.2rem,5.5vw,4.5rem);line-height:1;letter-spacing:-.055em;margin:18px 0 12px;max-width:920px}.al-hero p{max-width:850px;color:#eef0ff;font-size:clamp(.98rem,2vw,1.18rem);margin:0}.al-intro{margin-top:-31px;background:var(--al-card);border:1px solid var(--al-border);border-radius:18px;padding:17px 19px;display:grid;grid-template-columns:auto 1fr;gap:14px;box-shadow:0 15px 42px rgba(38,49,87,.13)}.al-intro-icon{width:50px;height:50px;border-radius:14px;background:var(--al-accent);color:var(--al-accent-fg);display:grid;place-items:center;font-size:1.55rem}.al-intro strong{display:block;margin-bottom:2px}.al-intro span{color:var(--al-muted-fg);font-size:.86rem}
+    .al-road{padding:30px 0 10px}.al-kicker{color:var(--al-primary);font-weight:500;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}.al-title{font-size:clamp(1.45rem,3vw,2.15rem);letter-spacing:-.035em;margin:4px 0 5px}.al-sub{color:var(--al-muted-fg);margin:0;max-width:850px}.al-ideas{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:14px}.al-idea{background:var(--al-card);border:1px solid var(--al-border);border-radius:13px;padding:12px;min-height:118px;position:relative;overflow:hidden}.al-idea:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--al-s1))}.al-idea i{font-style:normal;font-size:1.2rem}.al-idea h3{font-size:.79rem;margin:6px 0 3px}.al-idea p{font-size:.67rem;color:var(--al-muted-fg);margin:0}
+    .al-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:26px 0 12px}.al-tab{border:2px solid transparent;background:var(--al-muted);color:var(--al-muted-fg);border-radius:11px;padding:9px 12px;font-weight:500}.al-tab[aria-selected="true"]{background:var(--al-accent);border-color:color-mix(in srgb,var(--al-primary) 50%,var(--al-border));color:var(--al-accent-fg)}.al-panel{display:none}.al-panel.active{display:block}.al-shell{background:var(--al-card);border:1px solid var(--al-border);border-radius:20px;overflow:hidden;box-shadow:0 13px 36px rgba(35,49,80,.1)}.al-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--al-border);background:linear-gradient(90deg,var(--al-card),color-mix(in srgb,var(--al-accent) 35%,var(--al-card)))}.al-head h2{font-size:1.08rem;margin:0}.al-head p{font-size:.74rem;color:var(--al-muted-fg);margin:2px 0 0}.al-badge{background:var(--al-accent);color:var(--al-accent-fg);border-radius:999px;padding:5px 9px;font-size:.64rem;font-weight:500;white-space:nowrap}.al-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr)}.al-stage{padding:14px;border-right:1px solid var(--al-border);min-width:0}.al-side{padding:15px;min-width:0}.al-canvas{width:100%;height:430px;display:block;border:1px solid var(--al-border);border-radius:14px;background:color-mix(in srgb,var(--al-bg) 72%,var(--al-card));touch-action:none}.al-field{margin-bottom:12px}.al-field label{display:block;font-size:.7rem;font-weight:500;color:var(--al-muted-fg);margin-bottom:5px;letter-spacing:.03em}.al-field select,.al-field textarea{width:100%;border:1px solid var(--al-border);background:var(--al-bg);color:var(--al-fg);border-radius:9px;padding:9px}.al-field textarea{resize:vertical;min-height:64px}.al-range{display:flex;align-items:center;gap:9px}.al-range input{width:100%;accent-color:var(--al-primary)}.al-out{min-width:48px;text-align:center;background:var(--al-accent);color:var(--al-accent-fg);border-radius:8px;padding:5px;font-size:.74rem;font-weight:500}.al-actions{display:flex;gap:7px;flex-wrap:wrap}.al-btn{border:0;border-radius:10px;padding:9px 11px;background:var(--al-muted);color:var(--al-fg);font-weight:500}.al-btn.primary{background:var(--al-primary);color:var(--al-primary-fg)}.al-btn.ghost{background:transparent;border:1px solid var(--al-border)}.al-btn:disabled{opacity:.42;cursor:not-allowed}.al-status{margin-top:12px;border-left:4px solid var(--al-primary);background:var(--al-accent);border-radius:9px;padding:10px;font-size:.75rem;color:var(--al-muted-fg)}.al-status strong{display:block;color:var(--al-accent-fg);margin-bottom:2px}.al-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}.al-metric{background:var(--al-muted);border-radius:10px;padding:9px;text-align:center}.al-metric strong{font-size:1.08rem;color:var(--al-primary);display:block}.al-metric span{font-size:.6rem;color:var(--al-muted-fg);text-transform:uppercase;letter-spacing:.05em}.al-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:.66rem;color:var(--al-muted-fg)}.al-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}.al-chips{display:flex;flex-wrap:wrap;gap:6px}.al-chip{border:1px solid var(--al-border);background:var(--al-bg);color:var(--al-fg);border-radius:999px;padding:6px 9px;font-size:.72rem}.al-chip.active{background:var(--al-primary);color:var(--al-primary-fg);border-color:var(--al-primary)}
+    .al-tokens{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;padding:16px 4px}.al-token{border:2px solid var(--al-border);background:var(--al-card);color:var(--al-fg);border-radius:10px;padding:8px 10px;position:relative}.al-token.target{border-color:var(--al-primary);background:var(--al-accent);color:var(--al-accent-fg)}.al-token.future{opacity:.35}.al-bars{display:grid;gap:6px;margin-top:10px}.al-bar-row{display:grid;grid-template-columns:80px 1fr 42px;gap:7px;align-items:center;font-size:.68rem}.al-bar{height:10px;border-radius:99px;background:var(--al-muted);overflow:hidden}.al-bar i{display:block;height:100%;border-radius:99px;background:var(--al-s2)}.al-attention-viz{position:relative;min-height:230px;border:1px solid var(--al-border);border-radius:13px;background:var(--al-bg);overflow:hidden}.al-attention-viz svg{position:absolute;inset:0;width:100%;height:100%}.al-attention-viz .al-tokens{position:absolute;left:10px;right:10px;bottom:8px;z-index:2}.al-matrix{display:grid;gap:3px;margin-top:12px;overflow:auto;padding-bottom:4px}.al-mcell{aspect-ratio:1;border-radius:4px;min-width:24px;display:grid;place-items:center;font-size:.55rem;color:var(--al-fg)}.al-mlabel{font-size:.56rem;color:var(--al-muted-fg);display:grid;place-items:center;min-width:24px}.al-toggle{display:flex;gap:8px;align-items:center;color:var(--al-muted-fg);font-size:.72rem}.al-toggle input{accent-color:var(--al-primary)}
+    .al-qkv-board{min-height:430px;border:1px solid var(--al-border);border-radius:14px;background:var(--al-bg);padding:15px}.al-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:15px}.al-flow-step{background:var(--al-muted);color:var(--al-muted-fg);border-radius:9px;padding:8px 5px;text-align:center;font-size:.65rem}.al-flow-step.active{background:var(--al-primary);color:var(--al-primary-fg)}.al-formula{background:var(--al-card);border:1px solid var(--al-border);border-radius:11px;padding:12px;text-align:center;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;margin-bottom:12px;overflow:auto}.al-qkv-table{width:100%;border-collapse:collapse;font-size:.72rem}.al-qkv-table th,.al-qkv-table td{border-bottom:1px solid var(--al-border);padding:7px;text-align:center}.al-qkv-table th{color:var(--al-muted-fg);font-weight:500}.al-qkv-table tr.focus{background:var(--al-accent)}.al-mini-vector{display:flex;gap:2px;justify-content:center}.al-mini-vector i{width:7px;border-radius:2px;background:var(--al-s1);display:block}.al-explain{margin-top:12px;background:var(--al-card);border-left:4px solid var(--al-s2);border-radius:9px;padding:10px;color:var(--al-muted-fg);font-size:.75rem}
+    .al-heads{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.al-head-card{border:1px solid var(--al-border);background:var(--al-bg);border-radius:13px;padding:11px;transition:.2s}.al-head-card.off{opacity:.35}.al-head-card h3{font-size:.78rem;margin:0 0 3px}.al-head-card p{font-size:.66rem;color:var(--al-muted-fg);margin:0 0 9px}.al-head-card button{width:100%;font-size:.66rem}.al-head-bars{display:grid;gap:4px;margin:8px 0}.al-head-bar{display:grid;grid-template-columns:58px 1fr;gap:4px;align-items:center;font-size:.58rem;color:var(--al-muted-fg)}.al-head-bar i{height:7px;border-radius:9px;background:var(--al-s1)}.al-combine{margin-top:11px;border:2px dashed var(--al-border);border-radius:13px;padding:13px;text-align:center}.al-combine strong{display:block;color:var(--al-primary);font-size:1rem}.al-combine span{font-size:.72rem;color:var(--al-muted-fg)}
+    .al-next-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px}.al-context-box,.al-predict-box{border:1px solid var(--al-border);border-radius:14px;background:var(--al-bg);padding:14px}.al-context-box h3,.al-predict-box h3{font-size:.83rem;margin:0 0 8px}.al-sentence{font-size:1.08rem;line-height:1.8}.al-word-mark{border-radius:5px;padding:2px 4px;background:color-mix(in srgb,var(--al-s2) calc(var(--w)*75%),transparent)}.al-candidates{display:grid;gap:8px}.al-candidate{display:grid;grid-template-columns:82px 1fr 46px;gap:8px;align-items:center;font-size:.72rem}.al-prob{height:20px;border-radius:6px;background:var(--al-muted);overflow:hidden}.al-prob i{display:block;height:100%;background:var(--al-s5);transition:width .35s}.al-warning{margin-top:12px;background:color-mix(in srgb,var(--al-s4) 16%,var(--al-card));border-left:4px solid var(--al-s4);border-radius:9px;padding:9px 10px;font-size:.72rem;color:var(--al-muted-fg)}
+    .al-quiz{margin-top:34px;background:var(--al-card);border:1px solid var(--al-border);border-radius:19px;padding:18px;box-shadow:0 13px 35px rgba(35,49,80,.09)}.al-quiz-top{display:flex;justify-content:space-between;gap:10px;color:var(--al-muted-fg);font-size:.74rem}.al-progress{height:7px;background:var(--al-muted);border-radius:99px;overflow:hidden;margin:8px 0 15px}.al-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--al-s1),var(--al-s2));transition:width .25s}.al-question{font-weight:500;margin-bottom:10px}.al-answers{display:grid;gap:7px}.al-answer{text-align:left;border:2px solid var(--al-border);background:var(--al-card);color:var(--al-fg);border-radius:9px;padding:9px 11px}.al-answer.correct{border-color:var(--al-s2);background:color-mix(in srgb,var(--al-s2) 13%,var(--al-card))}.al-answer.wrong{border-color:var(--al-s3);background:color-mix(in srgb,var(--al-s3) 12%,var(--al-card))}.al-feedback{display:none;margin-top:9px;padding:9px 10px;border-radius:9px;background:var(--al-muted);color:var(--al-muted-fg);font-size:.74rem}.al-feedback.show{display:block}.al-next{display:none;margin-top:9px}.al-next.show{display:inline-block}.al-result{text-align:center;padding:18px}.al-result strong{display:block;font-size:2.6rem;color:var(--al-primary)}.al-footer{text-align:center;color:var(--al-muted-fg);font-size:.72rem;padding:28px 16px 0}.al-footer a{color:var(--al-primary)}
+    @media(max-width:1000px){.al-ideas{grid-template-columns:repeat(3,1fr)}.al-grid{grid-template-columns:1fr}.al-stage{border-right:0;border-bottom:1px solid var(--al-border)}.al-canvas{height:380px}.al-next-layout{grid-template-columns:1fr}}
+    @media(max-width:700px){.al-ideas{grid-template-columns:repeat(2,1fr)}.al-heads{grid-template-columns:1fr}.al-flow{grid-template-columns:1fr 1fr}.al-qkv-board{overflow:auto}.al-head{align-items:flex-start}.al-tabs{display:grid;grid-template-columns:1fr 1fr}.al-tab{width:100%}.al-canvas{height:340px}.al-bar-row{grid-template-columns:65px 1fr 38px}}
+    @media(max-width:430px){.al-ideas,.al-tabs{grid-template-columns:1fr}.al-intro{grid-template-columns:1fr}.al-intro-icon{width:43px;height:43px}.al-actions{display:grid}.al-btn{width:100%}.al-head .al-badge{display:none}.al-metrics{grid-template-columns:1fr}.al-stage{padding:9px}.al-side{padding:12px}.al-candidate{grid-template-columns:68px 1fr 38px}}
+    @media(prefers-reduced-motion:reduce){#attention-lab-app *{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+
+  <header class="al-hero"><div class="al-wrap"><span class="al-eyebrow">IA PARA TODOS · LABORATORIO VISUAL</span><h1>¿A qué palabras presta atención una IA?</h1><p>Explora cómo un modelo transforma palabras aisladas en significados dependientes del contexto. Sin programación y sin matemáticas obligatorias.</p></div></header>
+  <div class="al-wrap">
+    <section class="al-intro"><div class="al-intro-icon">🔦</div><div><strong>La idea esencial</strong><span>“Apple” puede ser una fruta o una empresa. La atención mira las palabras cercanas, asigna pesos y construye una representación contextual. Los pesos no son comprensión humana: son relaciones numéricas aprendidas.</span></div></section>
+    <section class="al-road"><span class="al-kicker">Mapa conceptual</span><h2 class="al-title">De una palabra ambigua a una predicción</h2><p class="al-sub">Estas seis piezas forman el recorrido del video y de los laboratorios.</p><div class="al-ideas">
+      <article class="al-idea" style="--c:var(--al-s5)"><i>🔤</i><h3>Token</h3><p>Una unidad de texto que el modelo procesa.</p></article>
+      <article class="al-idea" style="--c:var(--al-s5)"><i>🗺️</i><h3>Embedding</h3><p>Un vector: coordenadas numéricas con relaciones de significado.</p></article>
+      <article class="al-idea" style="--c:var(--al-s2)"><i>🧲</i><h3>Atención</h3><p>Decide cuánto influye cada palabra sobre otra.</p></article>
+      <article class="al-idea" style="--c:var(--al-s1)"><i>🔑</i><h3>Query, Key, Value</h3><p>Qué busco, qué ofrece cada palabra y qué información aporta.</p></article>
+      <article class="al-idea" style="--c:var(--al-s4)"><i>👀</i><h3>Varias cabezas</h3><p>Diferentes focos observan relaciones distintas simultáneamente.</p></article>
+      <article class="al-idea" style="--c:var(--al-s3)"><i>🎯</i><h3>Predicción</h3><p>El contexto modifica qué siguiente token parece más probable.</p></article>
+    </div></section>
+
+    <nav class="al-tabs" role="tablist" aria-label="Laboratorios de atención">
+      <button class="al-tab" role="tab" aria-selected="true" data-panel="embedding">1 · Significado</button>
+      <button class="al-tab" role="tab" aria-selected="false" data-panel="spotlight">2 · Pesos</button>
+      <button class="al-tab" role="tab" aria-selected="false" data-panel="qkv">3 · Q–K–V</button>
+      <button class="al-tab" role="tab" aria-selected="false" data-panel="multihead">4 · Multi-head</button>
+      <button class="al-tab" role="tab" aria-selected="false" data-panel="prediction">5 · Siguiente token</button>
+    </nav>
+
+    <section class="al-panel active" id="embedding" role="tabpanel"><div class="al-shell"><div class="al-head"><div><h2>Laboratorio 1 · “Apple” cambia de lugar</h2><p>Observa cómo el contexto transforma un embedding ambiguo.</p></div><span class="al-badge">EMBEDDING CONTEXTUAL</span></div><div class="al-grid"><div class="al-stage"><canvas class="al-canvas" id="embedCanvas" aria-label="Mapa semántico de frutas y tecnología"></canvas><div class="al-legend"><span><i class="al-dot" style="background:var(--al-s2)"></i>Frutas</span><span><i class="al-dot" style="background:var(--al-s5)"></i>Tecnología</span><span><i class="al-dot" style="background:var(--al-s3)"></i>Apple</span></div></div><aside class="al-side">
+      <div class="al-field"><label for="embedSentence">CONTEXTO</label><select id="embedSentence"><option value="neutral">“Apple” sin contexto</option><option value="fruit">Corté la Apple y comí la fruta</option><option value="tech">Apple presentó un nuevo teléfono</option><option value="mixed">Compré una Apple mientras usaba mi portátil</option></select></div>
+      <div class="al-field"><label>PALABRAS QUE INFLUYEN</label><div class="al-chips" id="embedChips"></div></div>
+      <div class="al-actions"><button class="al-btn primary" id="moveApple">Aplicar atención</button><button class="al-btn ghost" id="resetApple">Quitar contexto</button></div>
+      <div class="al-metrics"><div class="al-metric"><strong id="fruitScore">50%</strong><span>señal fruta</span></div><div class="al-metric"><strong id="techScore">50%</strong><span>señal tecnología</span></div></div>
+      <div class="al-status"><strong id="embedMeaning">Significado ambiguo</strong><span id="embedExplain">Sin contexto, el modelo no sabe cuál sentido de “Apple” es relevante.</span></div>
+    </aside></div></div></section>
+
+    <section class="al-panel" id="spotlight" role="tabpanel"><div class="al-shell"><div class="al-head"><div><h2>Laboratorio 2 · El foco de atención</h2><p>Selecciona una palabra y descubre qué otras palabras influyen en ella.</p></div><span class="al-badge">PESOS + SOFTMAX</span></div><div class="al-grid"><div class="al-stage"><div class="al-attention-viz"><svg id="attentionSvg" aria-hidden="true"></svg><div class="al-tokens" id="attentionTokens"></div></div><div class="al-matrix" id="attentionMatrix" aria-label="Matriz de atención"></div></div><aside class="al-side">
+      <div class="al-field"><label for="attentionPreset">ORACIÓN</label><select id="attentionPreset"><option value="bank">El banco aprobó el crédito para la empresa</option><option value="bat">El murciélago voló sobre la cueva oscura</option><option value="pronoun">Laura llamó a Marta porque ella tenía noticias</option><option value="apple">Apple lanzó un teléfono con una cámara potente</option></select></div>
+      <div class="al-field"><label for="temperature">TEMPERATURA DEL SOFTMAX</label><div class="al-range"><input id="temperature" type="range" min="35" max="200" value="90"><output class="al-out" id="tempOut">0.90</output></div></div>
+      <label class="al-toggle"><input type="checkbox" id="causalMask"> Usar máscara causal (no mirar el futuro)</label>
+      <div class="al-bars" id="attentionBars"></div>
+      <div class="al-status"><strong id="focusTitle">Selecciona una palabra</strong><span id="focusExplain">El grosor de cada conexión representa su peso relativo.</span></div>
+    </aside></div></div></section>
+
+    <section class="al-panel" id="qkv" role="tabpanel"><div class="al-shell"><div class="al-head"><div><h2>Laboratorio 3 · La cocina de Q, K y V</h2><p>Avanza paso a paso por el cálculo simplificado de una cabeza de atención.</p></div><span class="al-badge">QUERY · KEY · VALUE</span></div><div class="al-grid"><div class="al-stage"><div class="al-qkv-board"><div class="al-flow" id="qkvFlow"></div><div class="al-formula" id="qkvFormula">Selecciona un token y pulsa Step →</div><table class="al-qkv-table"><thead><tr><th>Token</th><th>Query</th><th>Key</th><th>Q·K</th><th>Peso</th><th>Value</th></tr></thead><tbody id="qkvBody"></tbody></table><div class="al-explain" id="qkvExplain">Q pregunta “¿qué información necesito?”. K indica “¿qué información puedo ofrecer?”. V contiene la información que finalmente se combina.</div></div></div><aside class="al-side">
+      <div class="al-field"><label for="qkvSentence">EJEMPLO</label><select id="qkvSentence"><option value="animal">El gato persiguió al ratón porque tenía hambre</option><option value="finance">El banco negó el préstamo por falta de ingresos</option><option value="tech">La aplicación usa datos para recomendar películas</option></select></div>
+      <div class="al-field"><label for="qkvTarget">TOKEN QUE HACE LA CONSULTA</label><select id="qkvTarget"></select></div>
+      <div class="al-actions"><button class="al-btn ghost" id="qkvBack">← Back</button><button class="al-btn primary" id="qkvPlay">▶ Auto</button><button class="al-btn ghost" id="qkvNext">Step →</button></div>
+      <div class="al-metrics"><div class="al-metric"><strong id="qkvStep">0/5</strong><span>etapa</span></div><div class="al-metric"><strong id="qkvTop">—</strong><span>mayor atención</span></div></div>
+      <div class="al-status"><strong>Analogía sencilla</strong><span>Query es una pregunta, Key es la etiqueta de un cajón y Value es lo que hay dentro del cajón.</span></div>
+    </aside></div></div></section>
+
+    <section class="al-panel" id="multihead" role="tabpanel"><div class="al-shell"><div class="al-head"><div><h2>Laboratorio 4 · Tres miradas al mismo tiempo</h2><p>Cada cabeza puede especializarse en una relación diferente.</p></div><span class="al-badge">MULTI-HEAD ATTENTION</span></div><div class="al-grid"><div class="al-stage"><div class="al-tokens" id="multiTokens"></div><div class="al-heads" id="headCards"></div><div class="al-combine"><strong id="combinedMeaning">Activa al menos una cabeza</strong><span id="combinedExplain">Las salidas se concatenan y una transformación aprende cómo mezclarlas.</span></div></div><aside class="al-side">
+      <div class="al-field"><label for="multiSentence">ORACIÓN</label><select id="multiSentence"><option value="doctor">La médica examinó al paciente porque sentía dolor</option><option value="apple">Apple vende teléfonos y la manzana contiene fibra</option><option value="student">El estudiante entregó tarde la tarea que era difícil</option></select></div>
+      <div class="al-field"><label for="multiTarget">PALABRA OBSERVADA</label><select id="multiTarget"></select></div>
+      <div class="al-status"><strong>¿Por qué varias cabezas?</strong><span>Una sola lista de pesos puede perder información. Varias cabezas ofrecen perspectivas complementarias, aunque no siempre corresponden a conceptos humanos tan claros.</span></div>
+    </aside></div></div></section>
+
+    <section class="al-panel" id="prediction" role="tabpanel"><div class="al-shell"><div class="al-head"><div><h2>Laboratorio 5 · El contexto cambia la continuación</h2><p>La atención contextualiza la secuencia antes de estimar el siguiente token.</p></div><span class="al-badge">PREDICCIÓN AUTORREGRESIVA</span></div><div class="al-grid"><div class="al-stage"><div class="al-next-layout"><div class="al-context-box"><h3>Contexto y atención</h3><div class="al-sentence" id="predictionSentence"></div><div class="al-warning">Los porcentajes son una simulación educativa. Un LLM real usa muchos parámetros, capas y cabezas.</div></div><div class="al-predict-box"><h3>Posibles siguientes tokens</h3><div class="al-candidates" id="candidateBars"></div></div></div></div><aside class="al-side">
+      <div class="al-field"><label for="predictionPreset">INICIO DEL TEXTO</label><select id="predictionPreset"><option value="river">Se sentó en la orilla del banco y miró el…</option><option value="money">Depositó su salario en el banco y revisó el…</option><option value="fruit">Cortó la manzana en trozos y preparó una…</option><option value="tech">La empresa Apple anunció un nuevo…</option></select></div>
+      <div class="al-field"><label for="predTemperature">CREATIVIDAD / TEMPERATURA</label><div class="al-range"><input id="predTemperature" type="range" min="30" max="190" value="80"><output class="al-out" id="predTempOut">0.80</output></div></div>
+      <div class="al-actions"><button class="al-btn primary" id="sampleToken">Elegir siguiente token</button><button class="al-btn ghost" id="resetPrediction">Reiniciar</button></div>
+      <div class="al-status"><strong id="sampledTitle">Aún no se eligió un token</strong><span id="sampledExplain">Con baja temperatura se favorece la opción más probable; con alta temperatura aumenta la variedad.</span></div>
+    </aside></div></div></section>
+
+    <section class="al-quiz"><span class="al-kicker">Mini quiz</span><h2 class="al-title">Comprueba lo aprendido</h2><div class="al-quiz-top"><span id="quizNum">Pregunta 1 de 10</span><strong id="quizScore">Aciertos: 0</strong></div><div class="al-progress"><i id="quizProgress"></i></div><div id="quizContent"><div class="al-question" id="quizQuestion"></div><div class="al-answers" id="quizAnswers"></div><div class="al-feedback" id="quizFeedback"></div><button class="al-btn primary al-next" id="quizNext">Siguiente →</button></div></section>
+    <footer class="al-footer">Laboratorio educativo inspirado en <a href="https://www.youtube.com/watch?v=OxCpWwDCDFQ" target="_blank" rel="noopener">The Attention Mechanism in Large Language Models</a>, de Luis Serrano. La implementación es una simulación pedagógica, no un modelo comercial.</footer>
+  </div>
+
+  <script>
+  (function(){
+    "use strict";
+    const root=document.getElementById("attention-lab-app"),$=id=>root.querySelector("#"+id),$$=s=>[...root.querySelectorAll(s)];
+    const css=n=>getComputedStyle(root).getPropertyValue(n).trim(),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+    const colors=()=>({fg:css("--al-fg"),muted:css("--al-muted-fg"),border:css("--al-border"),bg:css("--al-bg"),card:css("--al-card"),p:css("--al-s1"),green:css("--al-s2"),red:css("--al-s3"),orange:css("--al-s4"),blue:css("--al-s5")});
+    function canvasSetup(c,h){const d=devicePixelRatio||1,r=c.getBoundingClientRect(),w=Math.max(280,r.width);c.width=w*d;c.height=h*d;const g=c.getContext("2d");g.setTransform(d,0,0,d,0,0);return{g,w,h}}
+    $$(".al-tab").forEach(b=>b.onclick=()=>{$$(".al-tab").forEach(x=>x.setAttribute("aria-selected","false"));b.setAttribute("aria-selected","true");$$(".al-panel").forEach(x=>x.classList.remove("active"));$(b.dataset.panel).classList.add("active");requestAnimationFrame(()=>{if(b.dataset.panel==="embedding")drawEmbedding();if(b.dataset.panel==="spotlight")renderAttention()})});
+
+    const semantic={fruit:[{n:"banana",x:.20,y:.27},{n:"pera",x:.31,y:.18},{n:"naranja",x:.18,y:.44},{n:"fruta",x:.36,y:.35},{n:"dulce",x:.29,y:.51}],tech:[{n:"teléfono",x:.72,y:.25},{n:"portátil",x:.83,y:.36},{n:"empresa",x:.69,y:.49},{n:"software",x:.85,y:.58},{n:"cámara",x:.65,y:.67}]};
+    const embedContexts={neutral:{chips:[],fruit:1,tech:1},fruit:{chips:["corté","comí","fruta"],fruit:8,tech:1},tech:{chips:["presentó","nuevo","teléfono"],fruit:1,tech:8},mixed:{chips:["compré","portátil","Apple"],fruit:3,tech:5}};
+    let apple={x:.5,y:.43},appleAnim=null;
+    function embedTarget(){const d=embedContexts[$("embedSentence").value],sum=d.fruit+d.tech,tech=d.tech/sum;return{x:.28*(1-tech)+.76*tech,y:.39}}
+    function drawEmbedding(){const c=$("embedCanvas"),h=innerWidth<700?340:430,{g,w}=canvasSetup(c,h),C=colors();g.clearRect(0,0,w,h);g.font="12px Segoe UI";g.fillStyle=C.muted;g.fillText("FRUTAS",18,25);g.fillText("TECNOLOGÍA",w-98,25);g.strokeStyle=C.border;g.setLineDash([5,6]);g.beginPath();g.moveTo(w/2,25);g.lineTo(w/2,h-20);g.stroke();g.setLineDash([]);[["fruit",C.green],["tech",C.blue]].forEach(([k,col])=>semantic[k].forEach(p=>{g.beginPath();g.arc(p.x*w,p.y*h,7,0,Math.PI*2);g.fillStyle=col;g.fill();g.fillStyle=C.fg;g.fillText(p.n,p.x*w+10,p.y*h+4)}));const d=embedContexts[$("embedSentence").value];if(d.chips.length){semantic.fruit.concat(semantic.tech).forEach(p=>{const rel=d.chips.includes(p.n);if(rel){g.strokeStyle=C.orange;g.lineWidth=1.5;g.beginPath();g.moveTo(p.x*w,p.y*h);g.lineTo(apple.x*w,apple.y*h);g.stroke()}})}g.beginPath();g.arc(apple.x*w,apple.y*h,13,0,Math.PI*2);g.fillStyle=C.red;g.fill();g.strokeStyle=C.card;g.lineWidth=3;g.stroke();g.fillStyle=C.fg;g.font="500 14px Segoe UI";g.fillText("Apple",apple.x*w+17,apple.y*h+5)}
+    function updateEmbedUI(){const d=embedContexts[$("embedSentence").value],sum=d.fruit+d.tech;$('fruitScore').textContent=Math.round(d.fruit/sum*100)+"%";$('techScore').textContent=Math.round(d.tech/sum*100)+"%";$('embedChips').innerHTML=d.chips.length?d.chips.map(x=>'<button class="al-chip active" type="button">'+x+'</button>').join(""):'<span style="color:var(--al-muted-fg);font-size:.72rem">No hay palabras de contexto</span>';const dominant=d.fruit===d.tech?"ambiguous":d.fruit>d.tech?"fruit":"tech";const msg={ambiguous:["Significado ambiguo","El embedding conserva ambos sentidos posibles."],fruit:["Apple se acerca a las frutas","“comí” y “fruta” aportan más señal al sentido comestible."],tech:["Apple se acerca a la tecnología","“teléfono” y “presentó” aportan más señal al sentido empresarial."]}[dominant];$('embedMeaning').textContent=msg[0];$('embedExplain').textContent=msg[1];drawEmbedding()}
+    function animateApple(target){cancelAnimationFrame(appleAnim);const start={...apple},t0=performance.now(),dur=1100;function frame(t){const q=clamp((t-t0)/dur,0,1),e=1-Math.pow(1-q,3);apple.x=start.x+(target.x-start.x)*e;apple.y=start.y+(target.y-start.y)*e;drawEmbedding();if(q<1)appleAnim=requestAnimationFrame(frame)}appleAnim=requestAnimationFrame(frame)}
+    $("embedSentence").onchange=()=>{updateEmbedUI()};$("moveApple").onclick=()=>animateApple(embedTarget());$("resetApple").onclick=()=>{$("embedSentence").value="neutral";updateEmbedUI();animateApple({x:.5,y:.43})};
+
+    const attentionData={
+      bank:{words:["El","banco","aprobó","el","crédito","para","la","empresa"],focus:1,links:{0:[.4,.6,.1,.1,.1,.1,.1,.1],1:[.05,.18,.14,.04,.28,.04,.04,.23],2:[.05,.22,.12,.03,.31,.05,.03,.19],3:[.1,.1,.1,.2,.2,.1,.1,.1],4:[.03,.31,.22,.03,.18,.05,.03,.15],5:[.08,.08,.12,.05,.18,.2,.08,.21],6:[.1,.1,.1,.1,.1,.1,.3,.1],7:[.03,.25,.11,.03,.22,.08,.04,.24]}},
+      bat:{words:["El","murciélago","voló","sobre","la","cueva","oscura"],focus:1,links:{1:[.04,.22,.27,.05,.04,.26,.12],2:[.03,.34,.18,.07,.03,.23,.12],5:[.04,.25,.13,.08,.04,.26,.2]}},
+      pronoun:{words:["Laura","llamó","a","Marta","porque","ella","tenía","noticias"],focus:5,links:{0:[.34,.22,.04,.19,.04,.13,.02,.02],3:[.25,.18,.04,.32,.04,.13,.02,.02],5:[.32,.1,.02,.23,.06,.11,.11,.05],6:[.19,.07,.02,.18,.05,.37,.08,.04]}},
+      apple:{words:["Apple","lanzó","un","teléfono","con","una","cámara","potente"],focus:0,links:{0:[.23,.14,.03,.25,.03,.03,.21,.08],1:[.28,.16,.03,.23,.04,.03,.16,.07],3:[.29,.16,.03,.25,.03,.03,.17,.04],6:[.17,.09,.02,.25,.04,.04,.27,.12]}}
+    };
+    let focusIndex=1;
+    function rawWeights(data,i){let base=data.links[i];if(!base){base=data.words.map((_,j)=>j===i?.25:1/(Math.abs(i-j)+3))}return base.slice()}
+    function softmax(a,temp,maskAt){const z=a.map((v,i)=>i>maskAt?-1e9:Math.log(Math.max(v,.001))/temp),m=Math.max(...z),e=z.map(v=>Math.exp(v-m)),s=e.reduce((x,y)=>x+y,0);return e.map(v=>v/s)}
+    function currentAttention(){const d=attentionData[$("attentionPreset").value],temp=+$('temperature').value/100,mask=$('causalMask').checked?focusIndex:999;return{d,w:softmax(rawWeights(d,focusIndex),temp,mask)}}
+    function renderAttention(){const {d,w}=currentAttention();focusIndex=clamp(focusIndex,0,d.words.length-1);$('attentionTokens').innerHTML=d.words.map((x,i)=>'<button class="al-token '+(i===focusIndex?'target ':'')+(($('causalMask').checked&&i>focusIndex)?'future':'')+'" data-i="'+i+'">'+x+'</button>').join("");$$('#attentionTokens .al-token').forEach(b=>b.onclick=()=>{focusIndex=+b.dataset.i;renderAttention()});requestAnimationFrame(()=>drawAttentionLines(w));$('attentionBars').innerHTML=d.words.map((x,i)=>'<div class="al-bar-row"><span>'+x+'</span><div class="al-bar"><i style="width:'+Math.round(w[i]*100)+'%"></i></div><strong>'+Math.round(w[i]*100)+'%</strong></div>').join("");$('focusTitle').textContent='“'+d.words[focusIndex]+'” está mirando…';const top=w.map((v,i)=>({v,i})).filter(x=>x.i!==focusIndex).sort((a,b)=>b.v-a.v)[0];$('focusExplain').textContent='La influencia externa más fuerte viene de “'+d.words[top.i]+'” ('+Math.round(top.v*100)+'%).';renderMatrix(d)}
+    function drawAttentionLines(w){const svg=$('attentionSvg'),box=svg.getBoundingClientRect(),tokens=$$('#attentionTokens .al-token');svg.setAttribute('viewBox','0 0 '+box.width+' '+box.height);svg.innerHTML='';if(!tokens.length)return;const base=$('attentionTokens').getBoundingClientRect(),target=tokens[focusIndex].getBoundingClientRect(),tx=target.left-base.left+target.width/2,ty=target.top-base.top+10;tokens.forEach((t,i)=>{if(i===focusIndex||w[i]<.003)return;const r=t.getBoundingClientRect(),x=r.left-base.left+r.width/2,y=r.top-base.top+10,midY=25+Math.abs(x-tx)*.18;const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M '+tx+' '+ty+' Q '+((x+tx)/2)+' '+midY+' '+x+' '+y);path.setAttribute('fill','none');path.setAttribute('stroke',colors().green);path.setAttribute('stroke-opacity',String(.2+w[i]*2));path.setAttribute('stroke-width',String(1+w[i]*14));path.setAttribute('stroke-linecap','round');svg.appendChild(path)})}
+    function renderMatrix(d){const n=d.words.length,mask=$('causalMask').checked,temp=+$('temperature').value/100;let html='<div class="al-mlabel"></div>'+d.words.map(x=>'<div class="al-mlabel">'+x.slice(0,4)+'</div>').join('');for(let i=0;i<n;i++){const w=softmax(rawWeights(d,i),temp,mask?i:999);html+='<div class="al-mlabel">'+d.words[i].slice(0,4)+'</div>'+w.map((v,j)=>'<div class="al-mcell" style="background:color-mix(in srgb,var(--al-s1) '+Math.round(v*140)+'%,var(--al-card))">'+Math.round(v*100)+'</div>').join('')}const m=$('attentionMatrix');m.style.gridTemplateColumns='repeat('+(n+1)+',minmax(24px,1fr))';m.innerHTML=html}
+    $('attentionPreset').onchange=()=>{focusIndex=attentionData[$('attentionPreset').value].focus;renderAttention()};$('temperature').oninput=()=>{$('tempOut').textContent=(+$('temperature').value/100).toFixed(2);renderAttention()};$('causalMask').onchange=renderAttention;
+
+    const qkvSets={animal:["El","gato","persiguió","al","ratón","porque","tenía","hambre"],finance:["El","banco","negó","el","préstamo","por","falta","de","ingresos"],tech:["La","aplicación","usa","datos","para","recomendar","películas"]};
+    const stageLabels=["1 · Embeddings","2 · Crear Q/K/V","3 · Q·K","4 · Softmax","5 · Suma V"];
+    let qkvStage=0,qkvTimer=null;
+    function hash(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return()=>((h=Math.imul(h^h>>>15,2246822507))>>>0)/4294967295}
+    function vectorsFor(words){return words.map((w,i)=>{const r=hash(w+i);return{q:[r()*2-1,r()*2-1,r()*2-1],k:[r()*2-1,r()*2-1,r()*2-1],v:[r(),r(),r()]}})}
+    function semanticBoost(a,b){const pairs=[['gato','hambre'],['gato','ratón'],['banco','préstamo'],['préstamo','ingresos'],['aplicación','datos'],['recomendar','películas'],['tenía','gato']];return pairs.some(p=>p.includes(a.toLowerCase())&&p.includes(b.toLowerCase()))?1.8:0}
+    function qkvCalc(){const words=qkvSets[$('qkvSentence').value],target=+$('qkvTarget').value,V=vectorsFor(words),q=V[target].q,scores=V.map((x,i)=>q.reduce((s,z,j)=>s+z*x.k[j],0)/Math.sqrt(3)+semanticBoost(words[target],words[i])),m=Math.max(...scores),ex=scores.map(x=>Math.exp(x-m)),sum=ex.reduce((a,b)=>a+b,0),weights=ex.map(x=>x/sum);return{words,target,V,scores,weights}}
+    function vecHtml(v){return'<span class="al-mini-vector">'+v.map(x=>'<i style="height:'+(5+Math.abs(x)*14)+'px;opacity:'+(0.35+Math.abs(x)*.65)+'"></i>').join('')+'</span>'}
+    function resetQkv(){clearInterval(qkvTimer);qkvTimer=null;qkvStage=0;const words=qkvSets[$('qkvSentence').value];$('qkvTarget').innerHTML=words.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('');$('qkvTarget').value=Math.min(1,words.length-1);renderQkv()}
+    function renderQkv(){const d=qkvCalc();$('qkvFlow').innerHTML=stageLabels.map((x,i)=>'<div class="al-flow-step '+(i+1===qkvStage?'active':'')+'">'+x+'</div>').join('');$('qkvBody').innerHTML=d.words.map((x,i)=>'<tr class="'+(i===d.target?'focus':'')+'"><td>'+x+'</td><td>'+(qkvStage>=2&&i===d.target?vecHtml(d.V[i].q):'—')+'</td><td>'+(qkvStage>=2?vecHtml(d.V[i].k):'—')+'</td><td>'+(qkvStage>=3?d.scores[i].toFixed(2):'—')+'</td><td>'+(qkvStage>=4?Math.round(d.weights[i]*100)+'%':'—')+'</td><td>'+(qkvStage>=2?vecHtml(d.V[i].v):'—')+'</td></tr>').join('');const formulas=['Selecciona un token y pulsa Step →','x → embedding','Q=xWQ · K=xWK · V=xWV','scoreᵢ = Q · Kᵢ / √d','pesoᵢ = softmax(scores)','salida = Σ pesoᵢ · Vᵢ'];$('qkvFormula').textContent=formulas[qkvStage];const explains=['Partimos de tokens convertidos en vectores.','Cada token ya tiene coordenadas numéricas.','Tres transformaciones crean Q, K y V.','El producto punto mide compatibilidad entre la consulta y cada clave.','Softmax convierte puntuaciones en pesos que suman 100%.','Los Values se mezclan usando esos pesos: nace el embedding contextual.'];$('qkvExplain').textContent=explains[qkvStage];$('qkvStep').textContent=qkvStage+'/5';const top=d.weights.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v)[0];$('qkvTop').textContent=qkvStage>=4?d.words[top.i]:'—';$('qkvBack').disabled=qkvStage===0;$('qkvNext').disabled=qkvStage===5}
+    $('qkvSentence').onchange=resetQkv;$('qkvTarget').onchange=()=>{qkvStage=0;renderQkv()};$('qkvNext').onclick=()=>{qkvStage=Math.min(5,qkvStage+1);renderQkv()};$('qkvBack').onclick=()=>{qkvStage=Math.max(0,qkvStage-1);renderQkv()};$('qkvPlay').onclick=()=>{if(qkvTimer){clearInterval(qkvTimer);qkvTimer=null;$('qkvPlay').textContent='▶ Auto';return}if(qkvStage===5)qkvStage=0;$('qkvPlay').textContent='⏸ Pausa';qkvTimer=setInterval(()=>{qkvStage++;renderQkv();if(qkvStage>=5){clearInterval(qkvTimer);qkvTimer=null;$('qkvPlay').textContent='▶ Auto'}},900)};
+
+    const multiSets={doctor:["La","médica","examinó","al","paciente","porque","sentía","dolor"],apple:["Apple","vende","teléfonos","y","la","manzana","contiene","fibra"],student:["El","estudiante","entregó","tarde","la","tarea","que","era","difícil"]};
+    const heads=[{name:'Cabeza 1 · significado',desc:'Busca palabras semánticamente relacionadas.',color:'var(--al-s2)'},{name:'Cabeza 2 · gramática',desc:'Busca sujeto, verbo y referencias.',color:'var(--al-s1)'},{name:'Cabeza 3 · posición',desc:'Favorece palabras cercanas en la secuencia.',color:'var(--al-s4)'}];let headOn=[true,true,true];
+    function multiWeights(words,target,h){return words.map((w,i)=>{if(h===2)return 1/(1+Math.abs(i-target));if(h===1)return(i===target?1.4:((i+target)%3===0?.9:.2));return .18+semanticBoost(words[target],w)+(w.length%4)/5})}
+    function resetMulti(){const words=multiSets[$('multiSentence').value];$('multiTarget').innerHTML=words.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('');$('multiTarget').value=Math.min(words.length-1,words.length>6?6:1);renderMulti()}
+    function renderMulti(){const words=multiSets[$('multiSentence').value],target=+$('multiTarget').value;$('multiTokens').innerHTML=words.map((x,i)=>'<span class="al-token '+(i===target?'target':'')+'">'+x+'</span>').join('');$('headCards').innerHTML=heads.map((h,j)=>{const raw=multiWeights(words,target,j),sum=raw.reduce((a,b)=>a+b,0),w=raw.map(x=>x/sum),top=w.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v).slice(0,4);return'<article class="al-head-card '+(headOn[j]?'':'off')+'"><h3>'+h.name+'</h3><p>'+h.desc+'</p><div class="al-head-bars">'+top.map(o=>'<div class="al-head-bar"><span>'+words[o.i]+'</span><i style="width:'+Math.round(o.v*260)+'%;background:'+h.color+'"></i></div>').join('')+'</div><button class="al-btn '+(headOn[j]?'primary':'ghost')+'" data-head="'+j+'">'+(headOn[j]?'Activa':'Inactiva')+'</button></article>'}).join('');$$('#headCards button').forEach(b=>b.onclick=()=>{headOn[+b.dataset.head]=!headOn[+b.dataset.head];renderMulti()});const active=headOn.filter(Boolean).length;if(!active){$('combinedMeaning').textContent='Activa al menos una cabeza';$('combinedExplain').textContent='Sin cabezas activas no se construye una representación contextual.'}else{$('combinedMeaning').textContent=active+' perspectiva'+(active>1?'s':'')+' combinada'+(active>1?'s':'');$('combinedExplain').textContent='“'+words[target]+'” incorpora señales de significado, estructura y distancia según las cabezas activas.'}}
+    $('multiSentence').onchange=resetMulti;$('multiTarget').onchange=renderMulti;
+
+    const predSets={river:{text:'Se sentó en la orilla del banco y miró el…',att:[['orilla',.92],['sentó',.42],['banco',.66],['miró',.55]],cand:{río:50,paisaje:25,agua:18,saldo:7}},money:{text:'Depositó su salario en el banco y revisó el…',att:[['Depositó',.8],['salario',.87],['banco',.92],['revisó',.48]],cand:{saldo:52,extracto:25,dinero:17,río:6}},fruit:{text:'Cortó la manzana en trozos y preparó una…',att:[['Cortó',.48],['manzana',.95],['trozos',.72],['preparó',.55]],cand:{ensalada:42,tarta:31,merienda:19,computadora:8}},tech:{text:'La empresa Apple anunció un nuevo…',att:[['empresa',.72],['Apple',.96],['anunció',.66],['nuevo',.44]],cand:{teléfono:46,producto:30,sistema:19,postre:5}}};let predSample=null;
+    function tempProbs(obj,temp){const entries=Object.entries(obj),z=entries.map(([,v])=>Math.pow(v/100,1/temp)),s=z.reduce((a,b)=>a+b,0);return entries.map(([k],i)=>[k,z[i]/s])}
+    function renderPrediction(){const d=predSets[$('predictionPreset').value],temp=+$('predTemperature').value/100;let html=d.text;d.att.forEach(([w,a])=>{html=html.replace(w,'<span class="al-word-mark" style="--w:'+a+'">'+w+'</span>')});$('predictionSentence').innerHTML=html;const p=tempProbs(d.cand,temp);$('candidateBars').innerHTML=p.map(([k,v])=>'<div class="al-candidate"><strong>'+k+'</strong><div class="al-prob"><i style="width:'+Math.round(v*100)+'%"></i></div><span>'+Math.round(v*100)+'%</span></div>').join('');return p}
+    $('predictionPreset').onchange=()=>{predSample=null;$('sampledTitle').textContent='Aún no se eligió un token';renderPrediction()};$('predTemperature').oninput=()=>{$('predTempOut').textContent=(+$('predTemperature').value/100).toFixed(2);renderPrediction()};$('sampleToken').onclick=()=>{const p=renderPrediction(),r=Math.random();let s=0,chosen=p[p.length-1][0];for(const [k,v] of p){s+=v;if(r<=s){chosen=k;break}}predSample=chosen;$('sampledTitle').textContent='El modelo eligió: “'+chosen+'”';$('sampledExplain').textContent='La elección fue muestreada de la distribución: probable no significa seguro.'};$('resetPrediction').onclick=()=>{$('predictionPreset').value='river';$('predTemperature').value=80;$('predTempOut').textContent='0.80';predSample=null;$('sampledTitle').textContent='Aún no se eligió un token';$('sampledExplain').textContent='Con baja temperatura se favorece la opción más probable; con alta temperatura aumenta la variedad.';renderPrediction()};
+
+    const quiz=[
+      {q:'¿Qué es un embedding?',a:['Una representación numérica de un token','Una imagen guardada en internet','La respuesta final del modelo'],c:0,f:'El embedding convierte unidades de texto en vectores que el modelo puede procesar.'},
+      {q:'¿Por qué “Apple” necesita contexto?',a:['Porque siempre es una fruta','Porque puede tener varios sentidos','Porque no existe como token'],c:1,f:'El contexto ayuda a priorizar el sentido de fruta o el de empresa.'},
+      {q:'¿Qué representa un peso de atención alto?',a:['Mayor influencia relativa de un token','Una certeza absoluta','Una palabra más larga'],c:0,f:'El peso expresa influencia dentro de esa operación de atención.'},
+      {q:'¿Qué hace softmax?',a:['Borra las palabras repetidas','Convierte puntuaciones en pesos que suman 1','Traduce automáticamente'],c:1,f:'Softmax normaliza los scores para obtener una distribución de pesos.'},
+      {q:'En la analogía Q–K–V, Query es…',a:['La información que se aporta','La pregunta o necesidad de información','La respuesta humana correcta'],c:1,f:'Query expresa qué busca el token observado.'},
+      {q:'¿Para qué sirve Key?',a:['Para describir qué ofrece cada token','Para elegir el color de la pantalla','Para almacenar el quiz'],c:0,f:'La compatibilidad entre Query y Key produce la puntuación de atención.'},
+      {q:'¿Qué se mezcla usando los pesos?',a:['Los vectores Value','Los nombres de los archivos','Las preguntas del quiz'],c:0,f:'La salida es una suma ponderada de los vectores Value.'},
+      {q:'¿Por qué usar múltiples cabezas?',a:['Para observar distintas relaciones en paralelo','Para repetir exactamente el mismo cálculo','Para eliminar el contexto'],c:0,f:'Cada cabeza puede aprender patrones complementarios.'},
+      {q:'¿Qué impide la máscara causal?',a:['Atender a tokens futuros al predecir','Usar palabras anteriores','Calcular softmax'],c:0,f:'Un modelo autoregresivo no debe mirar una respuesta que todavía no ha generado.'},
+      {q:'¿Los pesos de atención demuestran comprensión humana?',a:['Sí, siempre','No; son relaciones numéricas aprendidas','Solo si superan 50%'],c:1,f:'Son útiles para inspeccionar relaciones, pero no prueban comprensión ni explican por completo una predicción.'}
+    ];let qi=0,qscore=0,qanswered=false;
+    function renderQuiz(){qanswered=false;const q=quiz[qi];$('quizNum').textContent='Pregunta '+(qi+1)+' de '+quiz.length;$('quizScore').textContent='Aciertos: '+qscore;$('quizProgress').style.width=((qi+1)/quiz.length*100)+'%';$('quizQuestion').textContent=q.q;$('quizAnswers').innerHTML='';$('quizFeedback').className='al-feedback';$('quizNext').className='al-btn primary al-next';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='al-answer';b.textContent=a;b.onclick=()=>answerQuiz(i,b);$('quizAnswers').appendChild(b)})}
+    function answerQuiz(i,b){if(qanswered)return;qanswered=true;const q=quiz[qi],buttons=[...$('quizAnswers').children];buttons.forEach(x=>x.disabled=true);buttons[q.c].classList.add('correct');if(i===q.c){qscore++;$('quizFeedback').textContent='✅ Correcto. '+q.f}else{b.classList.add('wrong');$('quizFeedback').textContent='💡 Revisa la idea. '+q.f}$('quizFeedback').classList.add('show');$('quizScore').textContent='Aciertos: '+qscore;$('quizNext').textContent=qi===quiz.length-1?'Ver resultado':'Siguiente →';$('quizNext').classList.add('show')}
+    $('quizNext').onclick=()=>{qi++;if(qi<quiz.length)renderQuiz();else $('quizContent').innerHTML='<div class="al-result"><strong>'+qscore+'/'+quiz.length+'</strong><h3>Recorrido completado</h3><p>'+(qscore>=8?'Ya puedes explicar la atención con tus propias palabras.':'Vuelve a los laboratorios y observa qué cambia cuando modificas el contexto.')+'</p></div>'};
+    function init(){updateEmbedUI();focusIndex=attentionData.bank.focus;renderAttention();resetQkv();resetMulti();renderPrediction();renderQuiz()}
+    let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{drawEmbedding();if($('spotlight').classList.contains('active'))renderAttention()},100)});init();
+  })();
+  </script>
+</main>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>
