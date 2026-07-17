@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laboratorio Interactivo KNN</title>
+  <style>
+    :root{--bg:#f4f7fb;--card:#fff;--ink:#12223d;--muted:#60708a;--line:#dce5f1;--blue:#2563eb;--blue2:#dbeafe;--red:#ef4444;--red2:#fee2e2;--green:#16a34a;--amber:#f59e0b;--purple:#7c3aed;--shadow:0 18px 45px rgba(30,64,175,.09)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:linear-gradient(180deg,#eef5ff 0,#f8fafc 280px,#f4f7fb 100%);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    button,select,input{font:inherit} button{cursor:pointer}.shell{max-width:1240px;margin:auto;padding:0 22px 50px}
+    header{padding:32px 0 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.brand{display:flex;gap:16px;align-items:center}.logo{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;color:white;font-size:26px;font-weight:900;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 12px 30px #2563eb33}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:800;color:var(--blue)}h1{font-size:clamp(28px,4vw,46px);line-height:1.08;margin:3px 0 7px}.subtitle{color:var(--muted);max-width:740px;margin:0}.badge{border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
+    nav{position:sticky;top:0;z-index:10;background:#ffffffde;backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:15px;padding:7px;display:flex;gap:6px;box-shadow:0 8px 28px #1e3a8a12;overflow:auto}.tab{border:0;background:transparent;color:var(--muted);padding:10px 14px;border-radius:10px;font-weight:750;white-space:nowrap}.tab.active,.tab:hover{background:var(--blue);color:#fff}
+    main{padding-top:22px}.section{display:none}.section.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.pad{padding:22px}.grid{display:grid;grid-template-columns:1.35fr .85fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.mini{padding:18px}.mini h3{margin:7px 0;font-size:17px}.mini p{margin:0;color:var(--muted)}.num{width:38px;height:38px;border-radius:12px;background:var(--blue2);color:var(--blue);font-weight:900;display:grid;place-items:center}
+    h2{font-size:26px;margin:0 0 8px}h3{margin-top:0}.lead{color:var(--muted);margin:0 0 20px}.formula{background:#0f172a;color:#e2e8f0;padding:18px;border-radius:16px;text-align:center;font:600 18px Georgia,serif;margin:14px 0}.callout{border-left:4px solid var(--blue);padding:13px 16px;background:#eff6ff;border-radius:0 12px 12px 0;color:#244166}.callout strong{color:#173a73}
+    .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-bottom:16px}.control{display:flex;flex-direction:column;gap:5px;min-width:150px}.control label{font-size:12px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:var(--muted)}select,input[type=number]{border:1px solid var(--line);border-radius:10px;background:#fff;padding:9px 11px;color:var(--ink)}input[type=range]{accent-color:var(--blue);width:180px}.kread{font-size:18px;font-weight:900;color:var(--blue)}
+    .btn{border:0;padding:10px 15px;border-radius:11px;font-weight:800;background:#e8eef7;color:#263a59}.btn.primary{background:var(--blue);color:#fff}.btn.success{background:var(--green);color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}.btn:hover:not(:disabled){filter:brightness(.96);transform:translateY(-1px)}
+    .canvasbox{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}.canvasbox canvas{display:block;width:100%;height:auto;touch-action:none}.hint{position:absolute;left:14px;top:12px;background:#ffffffed;border:1px solid var(--line);padding:6px 9px;border-radius:8px;font-size:12px;color:var(--muted);pointer-events:none}.legend{display:flex;flex-wrap:wrap;gap:14px;margin:10px 4px 0;color:var(--muted);font-size:13px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}.result{padding:17px;border-radius:16px;background:#f8fafc;border:1px solid var(--line);min-height:108px}.result.big{background:linear-gradient(135deg,#eff6ff,#f5f3ff)}.result .answer{font-size:23px;font-weight:900;margin:3px 0}.muted{color:var(--muted)}.steps{display:grid;gap:9px;margin-top:13px}.step{display:flex;gap:10px;padding:11px;border-radius:12px;background:#f8fafc;border:1px solid var(--line);opacity:.5}.step.on{opacity:1;border-color:#93c5fd;background:#eff6ff}.step.done{opacity:1}.step-index{min-width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:#e2e8f0;font-weight:900}.step.on .step-index{background:var(--blue);color:white}.step.done .step-index{background:var(--green);color:white}
+    .tablewrap{overflow:auto;max-height:290px;border:1px solid var(--line);border-radius:13px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{position:sticky;top:0;background:#edf3fb;z-index:1}.neighbor{background:#fff7db}.bar{height:8px;border-radius:99px;background:#e2e8f0;overflow:hidden}.bar>i{display:block;height:100%;background:var(--blue);border-radius:99px}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}.metric b{display:block;font-size:22px;color:var(--blue)}.metric span{font-size:12px;color:var(--muted)}
+    .quizq{padding:17px;border:1px solid var(--line);border-radius:15px;margin-bottom:12px}.quizq p{font-weight:800;margin-top:0}.option{display:block;border:1px solid var(--line);padding:10px 12px;border-radius:10px;margin:7px 0;cursor:pointer}.option:hover{background:#f8fafc}.option.correct{background:#dcfce7;border-color:#86efac}.option.wrong{background:#fee2e2;border-color:#fca5a5}.feedback{font-weight:750;margin-top:8px;min-height:22px}.footer{text-align:center;color:var(--muted);padding-top:25px;font-size:13px}.pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:#e8eef7;font-size:12px;font-weight:800}.progress{height:8px;background:#dbe5f2;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed);width:0;transition:.25s}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.warning{background:#fffbeb;border-color:#fde68a}.tooltip{position:absolute;display:none;background:#0f172a;color:#fff;padding:7px 9px;border-radius:8px;font-size:12px;pointer-events:none;z-index:3}.vote-pop{position:absolute;display:none;z-index:5;width:210px;max-width:45%;padding:12px;background:#fffffff5;border:2px solid var(--blue);border-radius:14px;box-shadow:0 12px 30px #0f172a2e;transform:translate(14px,-50%);animation:popin .25s ease}.vote-pop.show{display:block}.vote-pop:before{content:"";position:absolute;left:-10px;top:50%;width:16px;height:16px;background:#fff;border-left:2px solid var(--blue);border-bottom:2px solid var(--blue);transform:translateY(-50%) rotate(45deg)}.vote-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:900;margin-bottom:7px}.vote-close{position:relative;z-index:1;border:0;background:#e8eef7;color:#334155;border-radius:7px;width:25px;height:25px;line-height:1;font-weight:900}.vote-row{display:flex;justify-content:space-between;gap:8px;padding:4px 0;font-size:12px}.vote-row b{white-space:nowrap}@keyframes popin{from{opacity:0;transform:translate(5px,-50%) scale(.92)}to{opacity:1;transform:translate(14px,-50%) scale(1)}}
+    @media(max-width:900px){.grid,.two{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}header{flex-direction:column}.shell{padding:0 12px 35px}.pad{padding:16px}}@media(max-width:520px){.metrics{grid-template-columns:1fr}.control{min-width:130px}h1{font-size:30px}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <div class="brand"><div class="logo">K</div><div><div class="eyebrow">Machine Learning • Laboratorio visual</div><h1>KNN paso a paso</h1><p class="subtitle">Descubre cómo un modelo puede clasificar o estimar un valor observando los ejemplos más cercanos.</p></div></div>
+    <span class="badge">✓ 100 % autónoma • sin internet</span>
+  </header>
+  <nav id="nav">
+    <button class="tab active" data-section="concepto">1. Concepto</button>
+    <button class="tab" data-section="laboratorio">2. Laboratorio</button>
+    <button class="tab" data-section="evaluacion">3. Elegir K</button>
+    <button class="tab" data-section="quiz">4. Reto final</button>
+  </nav>
+  <main>
+    <section id="concepto" class="section active">
+      <div class="card pad">
+        <h2>La idea: “dime con quién andas…”</h2>
+        <p class="lead">KNN significa <b>K-Nearest Neighbors</b> o <b>K vecinos más cercanos</b>. No construye una fórmula durante el entrenamiento: conserva los ejemplos y los consulta cuando llega un caso nuevo.</p>
+        <div class="grid3">
+          <div class="card mini"><div class="num">1</div><h3>Guarda ejemplos</h3><p>Cada ejemplo tiene características y una etiqueta conocida.</p></div>
+          <div class="card mini"><div class="num">2</div><h3>Mide cercanía</h3><p>Calcula la distancia entre el caso nuevo y todos los ejemplos.</p></div>
+          <div class="card mini"><div class="num">3</div><h3>Decide</h3><p>Clasifica por votación o estima un número con el promedio.</p></div>
+        </div>
+        <div class="grid" style="margin-top:18px">
+          <div>
+            <h3>Distancia euclidiana</h3>
+            <div class="formula">d(A,B) = √[(x<sub>A</sub>−x<sub>B</sub>)² + (y<sub>A</sub>−y<sub>B</sub>)²]</div>
+            <p class="muted">Es la distancia “en línea recta”. La app también permite experimentar con Manhattan, que suma los desplazamientos horizontal y vertical.</p>
+          </div>
+          <div class="callout"><strong>K es una decisión del diseñador.</strong><br>Con K pequeño el modelo es sensible al ruido. Con K muy grande puede ignorar patrones locales. Conviene evaluarlo con datos que el modelo no haya usado como vecinos.</div>
+        </div>
+      </div>
+      <div class="card pad" style="margin-top:18px">
+        <h2>Clasificación y regresión</h2>
+        <div class="two">
+          <div class="result"><span class="pill">Clasificación</span><div class="answer">Votación mayoritaria</div><div class="muted">Ej.: Admitido / No admitido; Riesgo alto / bajo; especie de flor.</div></div>
+          <div class="result"><span class="pill">Regresión</span><div class="answer">Promedio de vecinos</div><div class="muted">Ej.: precio de una vivienda, demanda o tiempo de entrega.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="laboratorio" class="section">
+      <div class="card pad">
+        <h2>Laboratorio de predicción</h2>
+        <p class="lead">Selecciona un ejemplo, haz clic en el plano para ubicar el caso nuevo y ejecuta el algoritmo paso a paso.</p>
+        <div class="controls">
+          <div class="control"><label>Ejemplo</label><select id="dataset"></select></div>
+          <div class="control"><label>Número de vecinos</label><div><input id="k" type="range" min="1" max="9" step="1" value="3"> <span class="kread" id="kout">3</span></div></div>
+          <div class="control"><label>Distancia</label><select id="distance"><option value="euclidean">Euclidiana</option><option value="manhattan">Manhattan</option></select></div>
+          <label class="pill" style="margin-bottom:5px"><input id="weighted" type="checkbox" style="margin-right:7px"> Ponderar por distancia</label>
+          <button class="btn" id="randomPoint">Nuevo caso</button>
+          <button class="btn" id="resetStep">Reiniciar pasos</button>
+        </div>
+        <div class="grid">
+          <div>
+            <div class="canvasbox"><canvas id="plot" width="760" height="510"></canvas><div class="hint">Haz clic para mover el caso ★</div><div class="tooltip" id="tip"></div><div class="vote-pop" id="votePop"><div class="vote-head"><span id="voteTitle">Votación</span><button class="vote-close" id="voteClose" title="Cerrar">×</button></div><div id="voteBody"></div></div></div>
+            <div class="legend" id="legend"></div>
+          </div>
+          <div>
+            <div class="result big" id="prediction"><span class="pill">Caso nuevo</span><div class="answer">Aún sin clasificar</div><div class="muted">Pulsa “Siguiente paso” para comenzar.</div></div>
+            <div class="steps" id="steps"></div>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn primary" id="nextStep">Siguiente paso</button><button class="btn success" id="autoStep">▶ Automático</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="card pad" style="margin-top:18px">
+        <h2 id="tableTitle">Cálculo de distancias</h2>
+        <div class="tablewrap"><table><thead><tr id="thead"></tr></thead><tbody id="distTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="evaluacion" class="section">
+      <div class="card pad">
+        <h2>¿Cómo elegir el mejor valor de K?</h2>
+        <p class="lead">La app oculta temporalmente cada ejemplo, lo predice usando los demás y mide el resultado. Esto simula una validación “dejar uno fuera”.</p>
+        <div class="controls"><div class="control"><label>Conjunto de datos</label><select id="evalDataset"></select></div><div class="control"><label>Distancia</label><select id="evalDistance"><option value="euclidean">Euclidiana</option><option value="manhattan">Manhattan</option></select></div><button class="btn primary" id="runEval">Evaluar K = 1…9</button></div>
+        <div class="grid">
+          <div class="canvasbox"><canvas id="chart" width="760" height="400"></canvas></div>
+          <div>
+            <div class="result big" id="bestK"><span class="pill">Validación</span><div class="answer">Ejecuta la evaluación</div><div class="muted">Busca un buen equilibrio, no solo el número más alto.</div></div>
+            <div class="metrics" id="metrics" style="margin-top:12px"></div>
+            <div class="callout warning" style="margin-top:13px"><strong>Normalizar importa.</strong> Si “ingreso” va de 0 a 100.000 y “edad” de 18 a 80, el ingreso dominará la distancia. En proyectos reales, estandariza las variables.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card pad" style="margin-top:18px">
+        <h2>Frontera de decisión</h2><p class="lead">Activa el mapa para colorear qué predeciría KNN en cada zona del espacio. Cambia K y observa cómo se suaviza la frontera.</p>
+        <button class="btn primary" id="toggleMap">Mostrar mapa de decisión</button>
+        <div class="canvasbox" style="margin-top:12px"><canvas id="mapPlot" width="1000" height="470"></canvas></div>
+      </div>
+    </section>
+
+    <section id="quiz" class="section">
+      <div class="card pad">
+        <h2>Reto final</h2><p class="lead">Comprueba lo aprendido. El resultado se calcula automáticamente.</p>
+        <div class="progress"><i id="quizProgress"></i></div><p id="quizScore" class="muted">0 de 5 respondidas</p><div id="quizBox"></div>
+        <button class="btn" id="resetQuiz">Reiniciar reto</button>
+      </div>
+    </section>
+  </main>
+  <div class="footer">Laboratorio educativo KNN • Funciona sin conexión • HTML autónomo</div>
+</div>
+<script>
+const C={blue:'#2563eb',red:'#ef4444',green:'#16a34a',purple:'#7c3aed',amber:'#f59e0b',grid:'#dbe5f1',ink:'#12223d',muted:'#60708a'};
+const datasets={
+ admissions:{name:'Admisión universitaria',type:'class',x:'Puntaje de admisión',y:'Promedio escolar',range:[40,100,2.5,5],labels:['No admitido','Admitido'],colors:[C.red,C.blue],data:[[48,3.1,0,'Laura'],[52,3.6,0,'Mateo'],[57,3.0,0,'Sara'],[60,3.4,0,'Juan'],[64,3.2,0,'Diana'],[65,3.9,1,'Pablo'],[69,3.5,1,'Lina'],[72,4.1,1,'Camilo'],[77,3.7,1,'Ana'],[82,4.4,1,'Sofía'],[88,4.0,1,'Andrés'],[91,4.7,1,'Valeria'],[58,4.2,1,'Nicolás'],[75,2.9,0,'Emma'],[67,4.5,1,'Tomás'],[84,3.1,0,'Lucía']],point:[68,3.8]},
+ health:{name:'Riesgo clínico',type:'class',x:'Colesterol (mg/dL)',y:'Presión sistólica',range:[130,290,90,190],labels:['Riesgo bajo','Riesgo alto'],colors:[C.green,C.red],data:[[145,105,0,'Paciente 1'],[160,112,0,'Paciente 2'],[174,118,0,'Paciente 3'],[185,125,0,'Paciente 4'],[198,120,0,'Paciente 5'],[210,140,1,'Paciente 6'],[220,148,1,'Paciente 7'],[235,155,1,'Paciente 8'],[250,164,1,'Paciente 9'],[270,175,1,'Paciente 10'],[190,152,1,'Paciente 11'],[230,125,0,'Paciente 12'],[175,165,1,'Paciente 13'],[260,135,1,'Paciente 14'],[205,132,0,'Paciente 15']],point:[215,142]},
+ iris:{name:'Flores Iris (simplificado)',type:'class',x:'Longitud de pétalo (cm)',y:'Ancho de pétalo (cm)',range:[1,7,.1,2.6],labels:['Setosa','Versicolor','Virginica'],colors:[C.blue,C.amber,C.purple],data:[[1.4,.2,0,'Iris 1'],[1.5,.3,0,'Iris 2'],[1.3,.2,0,'Iris 3'],[1.7,.4,0,'Iris 4'],[1.6,.2,0,'Iris 5'],[3.9,1.2,1,'Iris 6'],[4.3,1.3,1,'Iris 7'],[4.7,1.4,1,'Iris 8'],[4.9,1.5,1,'Iris 9'],[4.1,1.0,1,'Iris 10'],[5.1,1.8,2,'Iris 11'],[5.6,2.1,2,'Iris 12'],[6.1,2.3,2,'Iris 13'],[5.8,1.9,2,'Iris 14'],[6.5,2.2,2,'Iris 15']],point:[4.8,1.6]},
+ houses:{name:'Precio de vivienda',type:'reg',x:'Área (m²)',y:'Distancia al centro (km)',range:[35,190,0,24],labels:[],colors:[C.purple],data:[[45,18,145,'Casa 1'],[55,14,185,'Casa 2'],[65,20,180,'Casa 3'],[70,10,245,'Casa 4'],[82,15,250,'Casa 5'],[90,8,310,'Casa 6'],[105,12,330,'Casa 7'],[115,6,410,'Casa 8'],[125,18,345,'Casa 9'],[140,9,455,'Casa 10'],[155,4,560,'Casa 11'],[170,14,490,'Casa 12'],[180,3,650,'Casa 13'],[95,20,245,'Casa 14'],[130,2,510,'Casa 15']],point:[110,10],unit:' millones'}
+};
+let key='admissions',step=0,timer=null,showMap=false,lastEval=[],starVisible=true,voteOpen=false,blinkTimers=[];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function fillSelects(){Object.entries(datasets).forEach(([id,d])=>{['dataset','evalDataset'].forEach(sel=>{let o=document.createElement('option');o.value=id;o.textContent=d.name;$('#'+sel).append(o)})})}
+function dist(a,b,mode=$('#distance').value,d=datasets[key]){let [xmin,xmax,ymin,ymax]=d.range;let dx=(a[0]-b[0])/(xmax-xmin),dy=(a[1]-b[1])/(ymax-ymin);return mode==='manhattan'?Math.abs(dx)+Math.abs(dy):Math.hypot(dx,dy)}
+function neighbors(d=datasets[key],point=d.point,k=+$('#k').value,mode=$('#distance').value,exclude=-1){return d.data.map((p,i)=>({p,i,d:distFor(d,p,point,mode)})).filter(x=>x.i!==exclude).sort((a,b)=>a.d-b.d).slice(0,k)}
+function distFor(d,a,b,mode){let [xmin,xmax,ymin,ymax]=d.range,dx=(a[0]-b[0])/(xmax-xmin),dy=(a[1]-b[1])/(ymax-ymin);return mode==='manhattan'?Math.abs(dx)+Math.abs(dy):Math.hypot(dx,dy)}
+function predict(d,point,k,mode='euclidean',weighted=false,exclude=-1){let ns=d.data.map((p,i)=>({p,i,d:distFor(d,p,point,mode)})).filter(x=>x.i!==exclude).sort((a,b)=>a.d-b.d).slice(0,k);if(d.type==='reg'){let vals=ns.map(n=>n.p[2]),ws=ns.map(n=>weighted?1/Math.max(n.d,.0001):1),sum=ws.reduce((a,b)=>a+b,0);return {value:vals.reduce((s,v,i)=>s+v*ws[i],0)/sum,ns}}let votes={};ns.forEach(n=>votes[n.p[2]]=(votes[n.p[2]]||0)+(weighted?1/Math.max(n.d,.0001):1));let value=+Object.entries(votes).sort((a,b)=>b[1]-a[1])[0][0];return {value,ns,votes}}
+function xy(d,p,w,h){let m={l:66,r:22,t:28,b:58},[xmin,xmax,ymin,ymax]=d.range;return [m.l+(p[0]-xmin)/(xmax-xmin)*(w-m.l-m.r),h-m.b-(p[1]-ymin)/(ymax-ymin)*(h-m.t-m.b)]}
+function unxy(d,x,y,w,h){let m={l:66,r:22,t:28,b:58},[xmin,xmax,ymin,ymax]=d.range;return [xmin+(x-m.l)/(w-m.l-m.r)*(xmax-xmin),ymin+(h-m.b-y)/(h-m.t-m.b)*(ymax-ymin)]}
+function axes(ctx,d,w,h){ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);let m={l:66,r:22,t:28,b:58},[xmin,xmax,ymin,ymax]=d.range;ctx.font='12px system-ui';ctx.strokeStyle=C.grid;ctx.fillStyle=C.muted;ctx.textAlign='center';for(let i=0;i<=5;i++){let x=m.l+i*(w-m.l-m.r)/5,y=h-m.b-i*(h-m.t-m.b)/5;ctx.beginPath();ctx.moveTo(x,m.t);ctx.lineTo(x,h-m.b);ctx.stroke();ctx.fillText(fmt(xmin+i*(xmax-xmin)/5),x,h-m.b+20);ctx.beginPath();ctx.moveTo(m.l,y);ctx.lineTo(w-m.r,y);ctx.stroke();ctx.textAlign='right';ctx.fillText(fmt(ymin+i*(ymax-ymin)/5),m.l-9,y+4);ctx.textAlign='center'}ctx.fillStyle=C.ink;ctx.font='600 13px system-ui';ctx.fillText(d.x,(m.l+w-m.r)/2,h-13);ctx.save();ctx.translate(16,(m.t+h-m.b)/2);ctx.rotate(-Math.PI/2);ctx.fillText(d.y,0,0);ctx.restore()}
+function fmt(x){return Math.abs(x)>=100?Math.round(x):(+x.toFixed(1))}
+function drawPlot(){let cv=$('#plot'),ctx=cv.getContext('2d'),d=datasets[key],w=cv.width,h=cv.height;axes(ctx,d,w,h);let ns=neighbors(),near=new Set(ns.map(n=>n.i)),pnew=xy(d,d.point,w,h);if(step>=1){ctx.setLineDash([5,5]);d.data.forEach(p=>{let q=xy(d,p,w,h);ctx.strokeStyle='#94a3b8';ctx.beginPath();ctx.moveTo(pnew[0],pnew[1]);ctx.lineTo(q[0],q[1]);ctx.stroke()});ctx.setLineDash([])}if(step>=2){ns.forEach(n=>{let q=xy(d,n.p,w,h);ctx.strokeStyle='#f59e0b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(pnew[0],pnew[1]);ctx.lineTo(q[0],q[1]);ctx.stroke()});ctx.lineWidth=1}d.data.forEach((p,i)=>{let [x,y]=xy(d,p,w,h);ctx.beginPath();ctx.arc(x,y,near.has(i)&&step>=2?9:7,0,Math.PI*2);ctx.fillStyle=d.type==='class'?d.colors[p[2]]:priceColor(d,p[2]);ctx.fill();ctx.strokeStyle=near.has(i)&&step>=2?'#f59e0b':'#fff';ctx.lineWidth=near.has(i)&&step>=2?4:2;ctx.stroke()});let pr=step>=4?predict(d,d.point,+$('#k').value,$('#distance').value,$('#weighted').checked):null;if(starVisible){ctx.fillStyle=pr?(d.type==='class'?d.colors[pr.value]:priceColor(d,pr.value)):'#111827';ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.font='900 32px system-ui';ctx.textAlign='center';ctx.strokeText('★',pnew[0],pnew[1]+10);ctx.fillText('★',pnew[0],pnew[1]+10)}ctx.lineWidth=1;positionVote(pnew,w,h);renderTable();renderResult();}
+
+function clearBlink(){blinkTimers.forEach(clearTimeout);blinkTimers=[];starVisible=true}
+function blinkStar(){clearBlink();for(let i=1;i<=8;i++)blinkTimers.push(setTimeout(()=>{starVisible=i%2===0;drawPlot()},i*180));blinkTimers.push(setTimeout(()=>{starVisible=true;drawPlot()},9*180))}
+function positionVote(p,w,h){let pop=$('#votePop');if(!voteOpen||step<4){pop.classList.remove('show');return}let d=datasets[key],pr=predict(d,d.point,+$('#k').value,$('#distance').value,$('#weighted').checked),left=p[0]/w*100,top=p[1]/h*100;pop.style.left=Math.min(left,68)+'%';pop.style.top=Math.max(18,Math.min(top,82))+'%';pop.style.borderColor=d.type==='class'?d.colors[pr.value]:C.purple;$('#voteTitle').textContent=d.type==='class'?'Votación de los vecinos':'Promedio de los vecinos';if(d.type==='class'){let totals={};pr.ns.forEach(n=>{let label=d.labels[n.p[2]],v=$('#weighted').checked?1/Math.max(n.d,.0001):1;totals[label]=(totals[label]||0)+v});$('#voteBody').innerHTML=Object.entries(totals).map(([label,v])=>`<div class="vote-row"><span><i class="dot" style="background:${d.colors[d.labels.indexOf(label)]}"></i>${label}</span><b>${$('#weighted').checked?v.toFixed(2):v} voto${v===1?'':'s'}</b></div>`).join('')+`<div class="vote-row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:7px"><strong>Ganadora</strong><b style="color:${d.colors[pr.value]}">${d.labels[pr.value]}</b></div>`}else{$('#voteBody').innerHTML=pr.ns.map(n=>`<div class="vote-row"><span>${n.p[3]}</span><b>$${n.p[2]}</b></div>`).join('')+`<div class="vote-row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:7px"><strong>Predicción</strong><b>$${pr.value.toFixed(1)}${d.unit}</b></div>`}pop.classList.add('show')}
+function priceColor(d,v){let vals=d.data.map(x=>x[2]),t=(v-Math.min(...vals))/(Math.max(...vals)-Math.min(...vals));return `hsl(${270-210*t} 75% 52%)`}
+function renderLegend(){let d=datasets[key],html=d.type==='class'?d.labels.map((l,i)=>`<span><i class="dot" style="background:${d.colors[i]}"></i>${l}</span>`).join(''):`<span><i class="dot" style="background:${C.purple}"></i>Menor precio</span><span>→</span><span><i class="dot" style="background:${C.red}"></i>Mayor precio</span>`;html+=`<span><b>★</b> Caso nuevo</span>`;$('#legend').innerHTML=html}
+const stepTexts=['Medir la distancia a todos los ejemplos','Ordenar de menor a mayor distancia','Seleccionar los K vecinos más cercanos','Votar la clase o promediar el valor'];
+function renderSteps(){$('#steps').innerHTML=stepTexts.map((t,i)=>`<div class="step ${step===i+1?'on':step>i+1?'done':''}"><div class="step-index">${step>i+1?'✓':i+1}</div><div>${t}</div></div>`).join('');$('#nextStep').textContent=step>=4?'Ver de nuevo':'Siguiente paso'}
+function renderResult(){let d=datasets[key];if(step<4){$('#prediction').innerHTML=`<span class="pill">Caso nuevo</span><div class="answer">${step?`Paso ${step} de 4`:'Aún sin predecir'}</div><div class="muted">(${fmt(d.point[0])}, ${fmt(d.point[1])}) · ${step?stepTexts[step-1]:'Inicia el recorrido paso a paso.'}</div>`;return}let pr=predict(d,d.point,+$('#k').value,$('#distance').value,$('#weighted').checked),txt=d.type==='class'?d.labels[pr.value]:`$${pr.value.toFixed(1)}${d.unit}`;$('#prediction').innerHTML=`<span class="pill">Predicción KNN</span><div class="answer">${txt}</div><div class="muted">Resultado con K = ${$('#k').value}${$('#weighted').checked?' y voto ponderado por cercanía':''}.</div>`}
+function renderTable(){let d=datasets[key],all=d.data.map((p,i)=>({p,i,d:dist(p,d.point)})).sort((a,b)=>a.d-b.d),near=new Set(all.slice(0,+$('#k').value).map(n=>n.i));$('#thead').innerHTML=`<th>Orden</th><th>Ejemplo</th><th>${d.x}</th><th>${d.y}</th><th>${d.type==='class'?'Etiqueta':'Valor'}</th><th>Distancia</th>`;$('#distTable').innerHTML=all.map((n,j)=>`<tr class="${step>=2&&near.has(n.i)?'neighbor':''}"><td>${step>=2?j+1:'—'}</td><td>${n.p[3]}</td><td>${fmt(n.p[0])}</td><td>${fmt(n.p[1])}</td><td>${d.type==='class'?d.labels[n.p[2]]:'$'+n.p[2]}</td><td>${step>=1?n.d.toFixed(3):'?'}</td></tr>`).join('')}
+function setDataset(v){key=v;$('#dataset').value=v;$('#evalDataset').value=v;step=0;voteOpen=false;clearBlink();stopAuto();renderLegend();renderSteps();drawPlot();drawMap();}
+function randomPoint(){let d=datasets[key],[a,b,c,e]=d.range;d.point=[a+(b-a)*(.12+Math.random()*.76),c+(e-c)*(.12+Math.random()*.76)];step=0;voteOpen=false;clearBlink();renderSteps();drawPlot()}
+function next(){if(step>=4){step=0;voteOpen=false;clearBlink()}else{step++;if(step===4){voteOpen=true;blinkStar()}}renderSteps();drawPlot()}
+function stopAuto(){if(timer){clearInterval(timer);timer=null;$('#autoStep').textContent='▶ Automático'}}
+function auto(){if(timer){stopAuto();return}step=0;next();$('#autoStep').textContent='■ Detener';timer=setInterval(()=>{if(step>=4){stopAuto()}else next()},850)}
+function evalKs(){let d=datasets[$('#evalDataset').value],mode=$('#evalDistance').value,res=[];for(let k=1;k<=Math.min(9,d.data.length-1);k++){let vals=d.data.map((p,i)=>predict(d,p,k,mode,false,i).value);let score;if(d.type==='class')score=vals.filter((v,i)=>v===d.data[i][2]).length/d.data.length;else{let mae=vals.reduce((s,v,i)=>s+Math.abs(v-d.data[i][2]),0)/vals.length;score=mae}res.push({k,score})}lastEval=res;drawChart(d,res);let best=[...res].sort((a,b)=>d.type==='class'?b.score-a.score:a.score-b.score)[0];$('#bestK').innerHTML=`<span class="pill">K recomendado</span><div class="answer">K = ${best.k}</div><div class="muted">${d.type==='class'?`Exactitud ${(best.score*100).toFixed(1)} %`:`Error MAE $${best.score.toFixed(1)}${d.unit}`}. Evalúa también la estabilidad y el contexto.</div>`;let ks=[1,3,5,7].filter(k=>k<=res.length);$('#metrics').innerHTML=ks.map(k=>{let r=res[k-1];return `<div class="metric"><b>${d.type==='class'?(r.score*100).toFixed(0)+'%':r.score.toFixed(1)}</b><span>K = ${k} · ${d.type==='class'?'exactitud':'MAE'}</span></div>`}).join('')}
+function drawChart(d,res){let cv=$('#chart'),ctx=cv.getContext('2d'),w=cv.width,h=cv.height,m={l:65,r:25,t:30,b:52};ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);let vals=res.map(r=>r.score),lo=d.type==='class'?Math.max(0,Math.min(...vals)-.1):0,hi=d.type==='class'?1:Math.max(...vals)*1.15;ctx.strokeStyle=C.grid;ctx.fillStyle=C.muted;ctx.font='12px system-ui';for(let i=0;i<=5;i++){let y=m.t+i*(h-m.t-m.b)/5,v=hi-i*(hi-lo)/5;ctx.beginPath();ctx.moveTo(m.l,y);ctx.lineTo(w-m.r,y);ctx.stroke();ctx.textAlign='right';ctx.fillText(d.type==='class'?Math.round(v*100)+'%':v.toFixed(0),m.l-9,y+4)}let pts=res.map((r,i)=>[m.l+i*(w-m.l-m.r)/(res.length-1),h-m.b-(r.score-lo)/(hi-lo)*(h-m.t-m.b)]);ctx.strokeStyle=C.blue;ctx.lineWidth=4;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();pts.forEach((p,i)=>{ctx.fillStyle=C.blue;ctx.beginPath();ctx.arc(...p,6,0,7);ctx.fill();ctx.fillStyle=C.ink;ctx.textAlign='center';ctx.fillText(res[i].k,p[0],h-m.b+22)});ctx.fillText('Valor de K',(m.l+w-m.r)/2,h-10);ctx.save();ctx.translate(17,(m.t+h-m.b)/2);ctx.rotate(-Math.PI/2);ctx.fillText(d.type==='class'?'Exactitud':'Error MAE',0,0);ctx.restore();ctx.lineWidth=1}
+function drawMap(){let cv=$('#mapPlot'),ctx=cv.getContext('2d'),d=datasets[key],w=cv.width,h=cv.height;axes(ctx,d,w,h);if(showMap&&d.type==='class'){let s=12;for(let x=66;x<w-22;x+=s)for(let y=28;y<h-58;y+=s){let p=unxy(d,x,y,w,h),v=predict(d,p,+$('#k').value,$('#distance').value,$('#weighted').checked).value;ctx.globalAlpha=.16;ctx.fillStyle=d.colors[v];ctx.fillRect(x-s/2,y-s/2,s+1,s+1)}ctx.globalAlpha=1}d.data.forEach(p=>{let q=xy(d,p,w,h);ctx.beginPath();ctx.arc(...q,6,0,7);ctx.fillStyle=d.type==='class'?d.colors[p[2]]:priceColor(d,p[2]);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke()});ctx.lineWidth=1;if(d.type==='reg'){ctx.fillStyle=C.muted;ctx.font='600 16px system-ui';ctx.fillText('El mapa de decisión aplica a ejemplos de clasificación.',w/2,55)}}
+const quiz=[
+ {q:'¿Qué representa K en KNN?',a:['El número de variables','El número de vecinos consultados','El total de clases'],ok:1,why:'K indica cuántos vecinos participan en la decisión.'},
+ {q:'En clasificación, ¿cómo decide normalmente KNN?',a:['Con el promedio de coordenadas','Con votación de etiquetas','Con una ecuación lineal'],ok:1,why:'Las clases de los vecinos emiten votos.'},
+ {q:'¿Por qué conviene normalizar las variables?',a:['Para que ninguna escala domine la distancia','Para eliminar todos los errores','Para reducir el número de clases'],ok:0,why:'Las escalas muy grandes pueden dominar el cálculo de cercanía.'},
+ {q:'¿Qué suele ocurrir con K = 1?',a:['El modelo puede ser sensible al ruido','El modelo siempre es perfecto','No se calculan distancias'],ok:0,why:'Un solo vecino puede ser un caso atípico o estar mal etiquetado.'},
+ {q:'En regresión KNN, ¿qué se hace con los valores vecinos?',a:['Se descartan','Se convierten en clases','Se promedian, a veces con ponderación'],ok:2,why:'La predicción numérica suele ser el promedio simple o ponderado.'}
+];let answered={};
+function renderQuiz(){answered={};$('#quizBox').innerHTML=quiz.map((q,i)=>`<div class="quizq" data-q="${i}"><p>${i+1}. ${q.q}</p>${q.a.map((a,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"> ${a}</label>`).join('')}<div class="feedback"></div></div>`).join('');$('#quizBox').onchange=e=>{if(!e.target.matches('input[type=radio]'))return;let box=e.target.closest('.quizq'),i=+box.dataset.q,v=+e.target.value;if(answered[i]!==undefined)return;answered[i]=v;box.querySelectorAll('input').forEach(x=>x.disabled=true);box.querySelectorAll('.option')[quiz[i].ok].classList.add('correct');if(v!==quiz[i].ok)e.target.closest('.option').classList.add('wrong');box.querySelector('.feedback').textContent=(v===quiz[i].ok?'✓ Correcto. ':'✗ Revisa. ')+quiz[i].why;updateQuiz()};updateQuiz()}
+function updateQuiz(){let n=Object.keys(answered).length,score=Object.entries(answered).filter(([i,v])=>quiz[i].ok===v).length;$('#quizProgress').style.width=(n/quiz.length*100)+'%';$('#quizScore').textContent=n<quiz.length?`${n} de ${quiz.length} respondidas · ${score} correctas`:`Resultado: ${score} de ${quiz.length} · ${score===5?'¡Excelente dominio!':score>=3?'Buen trabajo; revisa las explicaciones.':'Vuelve al laboratorio y ensaya otros valores de K.'}`}
+function bind(){
+ $$('.tab').forEach(b=>b.onclick=()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===b));$$('.section').forEach(s=>s.classList.toggle('active',s.id===b.dataset.section));if(b.dataset.section==='evaluacion')drawMap()});
+ $('#dataset').onchange=e=>setDataset(e.target.value);$('#evalDataset').onchange=e=>setDataset(e.target.value);$('#k').oninput=e=>{$('#kout').textContent=e.target.value;step=Math.min(step,3);voteOpen=false;clearBlink();renderSteps();drawPlot();drawMap()};$('#distance').onchange=()=>{step=0;voteOpen=false;clearBlink();renderSteps();drawPlot();drawMap()};$('#weighted').onchange=()=>{drawPlot();drawMap()};$('#randomPoint').onclick=randomPoint;$('#resetStep').onclick=()=>{step=0;voteOpen=false;clearBlink();stopAuto();renderSteps();drawPlot()};$('#nextStep').onclick=next;$('#autoStep').onclick=auto;$('#voteClose').onclick=e=>{e.stopPropagation();voteOpen=false;$('#votePop').classList.remove('show')};$('#runEval').onclick=evalKs;$('#toggleMap').onclick=()=>{showMap=!showMap;$('#toggleMap').textContent=showMap?'Ocultar mapa de decisión':'Mostrar mapa de decisión';drawMap()};$('#resetQuiz').onclick=renderQuiz;
+ let cv=$('#plot');cv.onclick=e=>{let r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*cv.width/r.width,y=(e.clientY-r.top)*cv.height/r.height;if(x<66||x>cv.width-22||y<28||y>cv.height-58)return;datasets[key].point=unxy(datasets[key],x,y,cv.width,cv.height);step=0;voteOpen=false;clearBlink();renderSteps();drawPlot()};cv.onmousemove=e=>{let r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)*cv.width/r.width,my=(e.clientY-r.top)*cv.height/r.height,d=datasets[key],hit=d.data.find(p=>{let q=xy(d,p,cv.width,cv.height);return Math.hypot(q[0]-mx,q[1]-my)<12}),tip=$('#tip');if(hit){tip.style.display='block';tip.style.left=(e.clientX-r.left+12)+'px';tip.style.top=(e.clientY-r.top+12)+'px';tip.textContent=`${hit[3]} · (${fmt(hit[0])}, ${fmt(hit[1])}) · ${d.type==='class'?d.labels[hit[2]]:'$'+hit[2]+d.unit}`}else tip.style.display='none'};cv.onmouseleave=()=>$('#tip').style.display='none'
+}
+fillSelects();bind();renderQuiz();renderLegend();renderSteps();drawPlot();drawMap();
+</script>
+</body>
+</html>
