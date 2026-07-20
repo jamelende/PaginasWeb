@@ -1,0 +1,2185 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Atlas Interactivo para Científicos de Redes</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --panel: #fff;
+        --panel2: #eef4fa;
+        --text: #162033;
+        --muted: #657187;
+        --line: #d8e1ec;
+        --blue: #1768e5;
+        --cyan: #00a6c7;
+        --orange: #ff7a2f;
+        --green: #16a276;
+        --purple: #7a55d9;
+        --red: #e74b5b;
+        --shadow: 0 12px 34px #1e385017;
+      }
+      [data-theme="dark"] {
+        --bg: #0e1623;
+        --panel: #162234;
+        --panel2: #1d2b40;
+        --text: #edf4ff;
+        --muted: #a7b4c6;
+        --line: #304057;
+        --blue: #64a3ff;
+        --cyan: #2dd4e8;
+        --orange: #ff9d64;
+        --green: #43d6a7;
+        --purple: #b094ff;
+        --red: #ff7280;
+        --shadow: 0 12px 34px #0005;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          15px/1.55 Inter,
+          Segoe UI,
+          Arial,
+          sans-serif;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      .app {
+        display: grid;
+        grid-template-columns: 310px 1fr;
+        min-height: 100vh;
+      }
+      .side {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        z-index: 20;
+      }
+      .brand {
+        padding: 18px 18px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand b {
+        display: block;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+      .brand small {
+        color: var(--muted);
+      }
+      .brand-row,
+      .top-row,
+      .chapter-head,
+      .between {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .icon {
+        border: 1px solid var(--line);
+        background: var(--panel2);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 8px 10px;
+        cursor: pointer;
+      }
+      .search {
+        margin: 12px 14px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--text);
+        width: calc(100% - 28px);
+      }
+      .nav {
+        overflow: auto;
+        padding: 0 10px 18px;
+      }
+      .part-title {
+        font-size: 11px;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 14px 9px 5px;
+        font-weight: 900;
+      }
+      .nav button {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 8px;
+        text-align: left;
+        align-items: center;
+        padding: 7px 9px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .nav button:hover,
+      .nav button.on {
+        background: var(--panel2);
+        color: var(--blue);
+      }
+      .nav button.done .n {
+        background: var(--green);
+      }
+      .n {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: var(--blue);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        font-size: 11px;
+      }
+      .side-foot {
+        margin-top: auto;
+        padding: 12px 16px;
+        border-top: 1px solid var(--line);
+        background: var(--panel);
+      }
+      .progress {
+        height: 7px;
+        background: var(--panel2);
+        border-radius: 99px;
+        overflow: hidden;
+        margin: 6px 0;
+      }
+      .progress i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--blue), var(--cyan));
+        width: 0;
+      }
+      .main {
+        min-width: 0;
+      }
+      .top {
+        height: 58px;
+        position: sticky;
+        top: 0;
+        background: color-mix(in srgb, var(--panel) 92%, transparent);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        z-index: 15;
+      }
+      .crumb {
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .xp {
+        font-weight: 900;
+        color: var(--orange);
+      }
+      .menu {
+        display: none;
+      }
+      .view {
+        max-width: 1320px;
+        margin: auto;
+        padding: 22px 25px 46px;
+      }
+      .hero {
+        background: linear-gradient(125deg, #0e3e86, #1768e5 52%, #00a6c7);
+        color: #fff;
+        border-radius: 22px;
+        padding: 38px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        position: relative;
+      }
+      .hero:after {
+        content: "";
+        position: absolute;
+        width: 360px;
+        height: 360px;
+        border: 70px solid #ffffff17;
+        border-radius: 50%;
+        right: -130px;
+        top: -160px;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 11px;
+        font-weight: 900;
+        color: var(--cyan);
+      }
+      .hero .eyebrow {
+        color: #b9f5ff;
+      }
+      h1 {
+        font-size: clamp(34px, 5vw, 62px);
+        line-height: 0.98;
+        margin: 12px 0 16px;
+        max-width: 800px;
+      }
+      h2 {
+        font-size: 29px;
+        line-height: 1.15;
+        margin: 5px 0 8px;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+      p {
+        margin: 6px 0 12px;
+      }
+      .lead {
+        font-size: 17px;
+        color: var(--muted);
+        max-width: 850px;
+      }
+      .hero .lead {
+        color: #e9f3ff;
+      }
+      .actions,
+      .controls,
+      .filters,
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .btn {
+        border: 0;
+        border-radius: 10px;
+        background: var(--blue);
+        color: #fff;
+        padding: 10px 14px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+      .btn:hover {
+        filter: brightness(1.08);
+      }
+      .btn.sec {
+        background: var(--panel2);
+        color: var(--text);
+        border: 1px solid var(--line);
+      }
+      .btn.warn {
+        background: var(--red);
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin: 14px 0;
+      }
+      .stat,
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+      }
+      .stat {
+        padding: 14px;
+      }
+      .stat b {
+        font-size: 25px;
+        display: block;
+        color: var(--blue);
+      }
+      .stat span {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 850;
+      }
+      .section-head {
+        margin: 28px 0 12px;
+      }
+      .parts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .part-card {
+        padding: 17px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .part-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--blue);
+      }
+      .part-card .roman {
+        font-size: 12px;
+        color: var(--cyan);
+        font-weight: 900;
+      }
+      .part-card p {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .chapter-head {
+        align-items: flex-start;
+        background: var(--panel);
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+      }
+      .tag {
+        display: inline-flex;
+        background: var(--panel2);
+        color: var(--blue);
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        padding: 5px 9px;
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .tabs {
+        margin: 12px 0;
+      }
+      .tab {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        color: var(--muted);
+        padding: 9px 14px;
+        border-radius: 9px;
+        font-weight: 850;
+        cursor: pointer;
+      }
+      .tab.on {
+        background: var(--blue);
+        color: #fff;
+        border-color: var(--blue);
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+        gap: 12px;
+      }
+      .grid3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .card {
+        padding: 17px;
+      }
+      .card p,
+      .card li {
+        color: var(--muted);
+      }
+      .stack {
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+      .formula {
+        font:
+          700 15px/1.5 Consolas,
+          monospace;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        overflow: auto;
+        color: var(--purple);
+      }
+      .concepts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .concept {
+        background: color-mix(in srgb, var(--cyan) 12%, var(--panel));
+        border: 1px solid color-mix(in srgb, var(--cyan) 40%, var(--line));
+        padding: 6px 9px;
+        border-radius: 9px;
+        font-weight: 750;
+        font-size: 12px;
+      }
+      .sections {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+      }
+      .section {
+        padding: 9px 10px;
+        background: var(--panel2);
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      .lab-shell {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr) 300px;
+        gap: 12px;
+        align-items: start;
+      }
+      .lab-panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+      }
+      .field {
+        margin-bottom: 11px;
+      }
+      .field label {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 850;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      .field input,
+      .field select {
+        width: 100%;
+        padding: 9px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      input[type="range"] {
+        padding: 0;
+      }
+      .canvas-wrap {
+        position: relative;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        min-height: 520px;
+      }
+      .canvas-wrap canvas {
+        display: block;
+        width: 100%;
+        height: 520px;
+      }
+      .canvas-note {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        background: color-mix(in srgb, var(--panel) 88%, transparent);
+        padding: 8px 10px;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        font-size: 12px;
+        max-width: 75%;
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .metric {
+        background: var(--panel2);
+        border-radius: 9px;
+        padding: 10px;
+      }
+      .metric b {
+        display: block;
+        font-size: 20px;
+        color: var(--blue);
+      }
+      .metric span {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .log {
+        max-height: 220px;
+        overflow: auto;
+        font:
+          12px/1.5 Consolas,
+          monospace;
+        background: var(--panel2);
+        border-radius: 9px;
+        padding: 10px;
+      }
+      .log div {
+        border-bottom: 1px solid var(--line);
+        padding: 4px;
+      }
+      .matrix {
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 12px;
+      }
+      .matrix td,
+      .matrix th {
+        border: 1px solid var(--line);
+        padding: 7px;
+        text-align: center;
+        min-width: 32px;
+      }
+      .matrix td.on {
+        background: var(--orange);
+        color: white;
+      }
+      .hist {
+        display: flex;
+        align-items: flex-end;
+        height: 160px;
+        gap: 5px;
+        padding: 10px;
+      }
+      .bar {
+        flex: 1;
+        background: linear-gradient(var(--cyan), var(--blue));
+        min-width: 6px;
+        border-radius: 4px 4px 0 0;
+        position: relative;
+      }
+      .bar:hover:after {
+        content: attr(data-v);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--text);
+        color: var(--panel);
+        padding: 3px 5px;
+        border-radius: 5px;
+        font-size: 10px;
+      }
+      .quiz-q {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .opt {
+        display: block;
+        padding: 8px;
+        border-radius: 8px;
+        margin: 5px 0;
+        background: var(--panel2);
+        cursor: pointer;
+      }
+      .opt.good {
+        outline: 2px solid var(--green);
+      }
+      .opt.bad {
+        outline: 2px solid var(--red);
+      }
+      .feedback {
+        padding: 12px;
+        border-radius: 10px;
+        background: var(--panel2);
+        margin-top: 10px;
+      }
+      .footer-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 18px;
+      }
+      .table-wrap {
+        overflow: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 9px;
+        text-align: left;
+      }
+      th {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .glossary {
+        columns: 3;
+        column-gap: 12px;
+      }
+      .term {
+        break-inside: avoid;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 11px;
+        margin-bottom: 9px;
+      }
+      .term b {
+        display: block;
+        color: var(--blue);
+      }
+      .term span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: #0008;
+        display: none;
+        place-items: center;
+        z-index: 50;
+      }
+      .modal.show {
+        display: grid;
+      }
+      .modal .card {
+        max-width: 430px;
+      }
+      .toast {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        background: var(--text);
+        color: var(--panel);
+        padding: 12px 16px;
+        border-radius: 10px;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: 0.25s;
+        z-index: 60;
+      }
+      .toast.show {
+        transform: none;
+        opacity: 1;
+      }
+      @media (max-width: 1100px) {
+        .lab-shell {
+          grid-template-columns: 220px 1fr;
+        }
+        .lab-side {
+          grid-column: 1/-1;
+        }
+        .stats {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .parts {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 820px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        .side {
+          position: fixed;
+          left: -330px;
+          width: 310px;
+          transition: 0.25s;
+        }
+        .side.open {
+          left: 0;
+          box-shadow: 0 0 0 999px #0008;
+        }
+        .menu {
+          display: block;
+        }
+        .view {
+          padding: 15px;
+        }
+        .grid2,
+        .grid3,
+        .lab-shell {
+          grid-template-columns: 1fr;
+        }
+        .parts {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .sections {
+          grid-template-columns: 1fr;
+        }
+        .glossary {
+          columns: 1;
+        }
+        .canvas-wrap canvas {
+          height: 430px;
+        }
+        .canvas-wrap {
+          min-height: 430px;
+        }
+        .top {
+          padding: 0 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="side" id="side">
+        <div class="brand">
+          <div class="brand-row">
+            <div><b>Atlas Interactivo</b><small>Ciencia de Redes</small></div>
+            <button class="icon" id="theme" title="Cambiar tema">◐</button>
+          </div>
+        </div>
+        <input
+          class="search"
+          id="search"
+          placeholder="Buscar capítulo o concepto..."
+        />
+        <nav class="nav" id="nav"></nav>
+        <div class="side-foot">
+          <div class="between">
+            <small>Progreso</small><b id="xpSide">0 XP</b>
+          </div>
+          <div class="progress"><i id="progressBar"></i></div>
+          <small id="progressText">0 de 48 capítulos</small>
+        </div>
+      </aside>
+      <main class="main">
+        <header class="top">
+          <div class="top-row">
+            <button class="icon menu" id="menu">☰</button>
+            <div class="crumb" id="crumb">Inicio</div>
+          </div>
+          <div class="xp" id="xp">0 XP</div>
+        </header>
+        <section class="view" id="view"></section>
+      </main>
+    </div>
+    <div class="toast" id="toast"></div>
+    <div class="modal" id="resetModal">
+      <div class="card">
+        <h3>¿Borrar todo el progreso?</h3>
+        <p>
+          Se eliminarán capítulos completados, evaluaciones y XP guardados en
+          este navegador.
+        </p>
+        <div class="controls">
+          <button class="btn warn" id="resetYes">Borrar</button
+          ><button class="btn sec" id="resetNo">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      (() => {
+        "use strict";
+        const $ = (s, r = document) => r.querySelector(s),
+          $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const parts = [
+          [
+            "Inicio",
+            "Introducción",
+            [1],
+            "La red como lenguaje general para estudiar sistemas complejos.",
+          ],
+          [
+            "I",
+            "Fundamentos",
+            [2, 3, 4, 5],
+            "Probabilidad, grafos, extensiones y matrices.",
+          ],
+          [
+            "II",
+            "Propiedades simples",
+            [6, 7, 8, 9],
+            "Grado, caminos, paseos aleatorios, densidad y agrupamiento.",
+          ],
+          [
+            "III",
+            "Centralidad",
+            [10, 11, 12],
+            "Distancias, ranking y roles estructurales.",
+          ],
+          [
+            "IV",
+            "Modelos sintéticos",
+            [13, 14, 15, 16],
+            "Generación, propiedades y significancia estadística.",
+          ],
+          [
+            "V",
+            "Procesos de difusión",
+            [17, 18, 19],
+            "Epidemias, contagio complejo y fallas.",
+          ],
+          [
+            "VI",
+            "Predicción de enlaces",
+            [20, 21, 22],
+            "Predictores, multicapas y evaluación experimental.",
+          ],
+          [
+            "VII",
+            "La maraña",
+            [23, 24, 25],
+            "Proyección, backboning y muestreo.",
+          ],
+          [
+            "VIII",
+            "Mesoescala",
+            [26, 27, 28, 29, 30],
+            "Homofilia, mezcla, núcleo-periferia, jerarquías y orden superior.",
+          ],
+          [
+            "IX",
+            "Comunidades",
+            [31, 32, 33, 34, 35, 36],
+            "Particiones, evaluación y comunidades complejas.",
+          ],
+          [
+            "X",
+            "Minería de grafos",
+            [37, 38, 39],
+            "Embeddings, resumen y patrones frecuentes.",
+          ],
+          [
+            "XI",
+            "Distancias de redes",
+            [40, 41],
+            "Distancias entre nodos y entre redes completas.",
+          ],
+          [
+            "XII",
+            "Visualización",
+            [42, 43, 44],
+            "Atributos visuales y layouts.",
+          ],
+          [
+            "XIII",
+            "Recursos",
+            [45, 46, 47, 48],
+            "Aplicaciones, herramientas, glosario y abreviaturas.",
+          ],
+        ];
+        const raw = [
+          [
+            1,
+            "Introducción",
+            "1.1 Todo es una red|1.2 Mito de creación|1.3 Ciencia de redes como ciencia de datos|1.4 Otros enfoques|1.5 Contenido del libro|1.6 Agradecimientos",
+            "Las redes describen sistemas complejos mediante componentes y relaciones. El enfoque combina teoría de grafos, datos, estadística, algoritmos y visualización.",
+            "sistema complejo|nodo|enlace|red|ciencia de datos",
+            "G=(V,E)",
+            "intro",
+          ],
+          [
+            2,
+            "Teoría de probabilidad",
+            "2.1 Notación|2.2 Axiomas|2.3 Probabilidad condicional|2.4 Bayes|2.5 Estocasticidad|2.6 Procesos de Markov|2.7 Distribuciones|2.8 Información mutua|2.9 Resumen|2.10 Ejercicios",
+            "La probabilidad permite razonar sobre redes observadas como realizaciones de procesos inciertos. Bayes actualiza creencias y Markov modela transiciones dependientes del estado actual.",
+            "evento|condicional|Bayes|Markov|distribución|información mutua",
+            "P(A|B)=P(B|A)P(A)/P(B)",
+            "prob",
+          ],
+          [
+            3,
+            "Grafos básicos",
+            "3.1 Grafos simples|3.2 Grafos dirigidos|3.3 Grafos ponderados|3.4 Resumen|3.5 Ejercicios",
+            "Un grafo define nodos y enlaces; la dirección representa asimetría y el peso cuantifica intensidad, costo o frecuencia.",
+            "grafo simple|dirigido|ponderado|lazo|multiarista",
+            "G=(V,E), E⊆V×V",
+            "graph",
+          ],
+          [
+            4,
+            "Grafos extendidos",
+            "4.1 Bipartitos|4.2 Multicapa|4.3 Hipergrafos|4.4 Dinámicos|4.5 Atributos|4.6 Tipos de red|4.7 Resumen|4.8 Ejercicios",
+            "Las redes reales pueden tener tipos de nodos, capas, relaciones de orden superior, tiempo y atributos. Elegir la representación correcta condiciona todo el análisis.",
+            "bipartito|multicapa|hipergrafo|dinámico|atributos",
+            "G=(V,E,L,T,X)",
+            "graph",
+          ],
+          [
+            5,
+            "Matrices",
+            "5.1 Matriz de adyacencia|5.2 Álgebra lineal|5.3 Matrices especiales|5.4 Factorización|5.5 Resumen|5.6 Ejercicios",
+            "Las matrices convierten la estructura de una red en álgebra. Sus potencias cuentan paseos y sus factorizaciones revelan estructura latente.",
+            "adyacencia|Laplaciana|incidencia|autovalor|SVD",
+            "Aᵏᵢⱼ = número de paseos de longitud k",
+            "matrix",
+          ],
+          [
+            6,
+            "Grado",
+            "6.1 Variantes|6.2 Distribuciones|6.3 Leyes de potencia y scale-free|6.4 Pruebas de ley de potencia|6.5 Resumen|6.6 Ejercicios",
+            "El grado cuenta vecinos o enlaces incidentes. Su distribución resume heterogeneidad, pero una cola pesada no basta para afirmar una ley de potencia.",
+            "grado|in-degree|out-degree|fuerza|distribución|ley de potencia",
+            "kᵢ=ΣⱼAᵢⱼ",
+            "degree",
+          ],
+          [
+            7,
+            "Caminos y paseos",
+            "7.1 Paseos y matrices|7.2 Ciclos|7.3 Reciprocidad|7.4 Componentes conexas|7.5 Resumen|7.6 Ejercicios",
+            "Paseos, caminos y ciclos describen accesibilidad. Las componentes identifican regiones internamente alcanzables.",
+            "paseo|camino|ciclo|reciprocidad|componente",
+            "Aᵏ cuenta paseos de longitud k",
+            "paths",
+          ],
+          [
+            8,
+            "Paseos aleatorios",
+            "8.1 Distribución estacionaria|8.2 No-retorno|8.3 Tiempo de llegada|8.4 Mincut|8.5 Consenso|8.6 Resumen|8.7 Ejercicios",
+            "Un caminante que elige vecinos al azar conecta estructura local con comportamiento global, difusión, ranking y consenso.",
+            "random walk|estacionaria|hitting time|mincut|consenso",
+            "π=πP",
+            "walk",
+          ],
+          [
+            9,
+            "Densidad",
+            "9.1 Redes reales|9.2 Coeficiente de clustering|9.3 Cliques|9.4 Conjuntos independientes|9.5 Resumen|9.6 Ejercicios",
+            "La densidad compara enlaces presentes con posibles; el clustering mide cierre de triadas y las cliques capturan cohesión completa.",
+            "densidad|triángulo|clustering|clique|independiente",
+            "D=2m/[n(n-1)]",
+            "density",
+          ],
+          [
+            10,
+            "Caminos más cortos",
+            "10.1 Exploración|10.2 Algoritmos|10.3 Distribución de longitudes|10.4 Árboles de expansión|10.5 Problemas combinatorios|10.6 Resumen|10.7 Ejercicios",
+            "BFS y Dijkstra encuentran distancias mínimas; los árboles de expansión conservan conectividad con una estructura filtrada.",
+            "BFS|Dijkstra|distancia|diámetro|árbol de expansión",
+            "d(u,v)=min |p(u,v)|",
+            "paths",
+          ],
+          [
+            11,
+            "Ranking de nodos",
+            "11.1 Cercanía|11.2 Intermediación|11.3 Alcance|11.4 Eigenvector|11.5 HITS|11.6 Armónica|11.7 k-core|11.8 Centralización|11.9 Resumen|11.10 Ejercicios",
+            "No existe una centralidad universal: cada medida formaliza una noción distinta de importancia, acceso, intermediación o prestigio.",
+            "closeness|betweenness|eigenvector|HITS|harmónica|k-core",
+            "C_B(v)=Σ σst(v)/σst",
+            "centrality",
+          ],
+          [
+            12,
+            "Roles de nodos",
+            "12.1 Clasificación clásica|12.2 Similitud|12.3 Embeddings|12.4 Resumen|12.5 Ejercicios",
+            "Los roles agrupan nodos por función estructural, aun cuando estén lejos. La equivalencia puede ser exacta, aproximada o aprendida.",
+            "rol|equivalencia estructural|similitud|embedding",
+            "sim(i,j)=xᵢ·xⱼ/(||xᵢ||||xⱼ||)",
+            "centrality",
+          ],
+          [
+            13,
+            "Grafos aleatorios",
+            "13.1 Construcción|13.2 Distribución de grado|13.3 Componentes|13.4 Longitud media|13.5 Clustering|13.6 Resumen|13.7 Ejercicios",
+            "El modelo Erdős-Rényi crea una referencia nula donde cada enlace aparece con probabilidad p. Presenta transiciones de fase al variar p.",
+            "Erdős-Rényi|probabilidad p|componente gigante|umbral",
+            "E[m]=p·n(n-1)/2",
+            "models",
+          ],
+          [
+            14,
+            "Comprender propiedades de red",
+            "14.1 Clustering|14.2 Longitudes|14.3 Distribución de grado|14.4 Resumen|14.5 Ejercicios",
+            "Small-world combina caminos cortos con clustering alto; scale-free se refiere a una distribución de grado sin escala característica bajo supuestos específicos.",
+            "small-world|scale-free|clustering|camino medio|cola pesada",
+            "σ=(C/Cr)/(L/Lr)",
+            "models",
+          ],
+          [
+            15,
+            "Generación de datos realistas",
+            "15.1 Modelo de configuración|15.2 Comunidades|15.3 Grafo geométrico|15.4 Redes generativas|15.5 Resumen|15.6 Ejercicios",
+            "Los modelos generativos preservan o producen propiedades deseadas: grados, comunidades, proximidad espacial o patrones aprendidos.",
+            "configuración|SBM|geométrico|generativo|Barabási-Albert",
+            "P(i)=kᵢ/Σk",
+            "models",
+          ],
+          [
+            16,
+            "Significancia estadística",
+            "16.1 Barajado|16.2 Grafos aleatorios exponenciales|16.3 Resumen|16.4 Ejercicios",
+            "Una medida es informativa cuando difiere de un modelo nulo apropiado. El barajado controlado y los ERGM formalizan comparaciones.",
+            "modelo nulo|shuffle|z-score|ERGM|significancia",
+            "z=(x-μnull)/σnull",
+            "models",
+          ],
+          [
+            17,
+            "Epidemias",
+            "17.1 SI|17.2 SIS|17.3 SIR|17.4 Resumen|17.5 Ejercicios",
+            "Los modelos SI, SIS y SIR representan contagio y recuperación sobre una red; la topología altera velocidad, alcance y umbral.",
+            "SI|SIS|SIR|infección|recuperación|umbral",
+            "P(contagio)=1-(1-β)ᵏ",
+            "spread",
+          ],
+          [
+            18,
+            "Contagio complejo",
+            "18.1 Disparadores|18.2 Oportunidades limitadas|18.3 Intervenciones|18.4 Controlabilidad|18.5 Resumen|18.6 Ejercicios",
+            "En el contagio complejo puede requerirse refuerzo social: una fracción o número mínimo de vecinos activos antes de adoptar.",
+            "umbral|refuerzo|cascada|intervención|control",
+            "adopta si mᵢ/kᵢ≥θ",
+            "spread",
+          ],
+          [
+            19,
+            "Fallas catastróficas",
+            "19.1 Fallas aleatorias|19.2 Ataques dirigidos|19.3 Efectos en cadena|19.4 Redes interdependientes|19.5 Resumen|19.6 Ejercicios",
+            "La robustez depende de cómo se eliminan nodos y de las dependencias entre capas. Los hubs protegen eficiencia y también crean vulnerabilidad.",
+            "robustez|ataque dirigido|cascada|percolación|interdependencia",
+            "R=(1/n)Σ S(q)",
+            "failure",
+          ],
+          [
+            20,
+            "Predicción en grafos simples",
+            "20.1 Enlace preferencial|20.2 Vecinos comunes|20.3 Adamic-Adar|20.4 Asignación de recursos|20.5 HRG|20.6 Reglas de asociación|20.7 Otros|20.8 Resumen|20.9 Ejercicios",
+            "La predicción de enlaces puntúa pares no conectados usando similitud local, caminos, estructura jerárquica o modelos aprendidos.",
+            "vecinos comunes|Jaccard|Adamic-Adar|resource allocation|preferential attachment",
+            "AA(x,y)=Σ 1/log k(z)",
+            "link",
+          ],
+          [
+            21,
+            "Predicción en redes multicapa",
+            "21.1 Redes con signo|21.2 Predicción multicapa generalizada|21.3 Resumen|21.4 Ejercicios",
+            "Las capas aportan señales complementarias; signos y tipos de relación obligan a distinguir qué enlace se predice.",
+            "signed|multicapa|balance|transferencia|tipo de enlace",
+            "score=Σₗwₗsₗ(x,y)",
+            "link",
+          ],
+          [
+            22,
+            "Diseño del experimento",
+            "22.1 Train/test|22.2 Evaluación|22.3 Resumen|22.4 Ejercicios",
+            "Separar entrenamiento y prueba en el tiempo evita fuga de información. AUC, precisión y recall responden preguntas distintas.",
+            "train/test|negativos|AUC|precision|recall|fuga",
+            "precision=TP/(TP+FP)",
+            "link",
+          ],
+          [
+            23,
+            "Proyecciones bipartitas",
+            "23.1 Pesos simples|23.2 Proyección vectorizada|23.3 Pesos hiperbólicos|23.4 Recursos|23.5 Paseos|23.6 Comparación|23.7 Resumen|23.8 Ejercicios",
+            "Proyectar una red bipartita conecta nodos que comparten vecinos, pero puede crear una maraña densa y sesgada por nodos populares.",
+            "bipartito|proyección|co-ocurrencia|peso|sesgo",
+            "W=B·Bᵀ",
+            "hairball",
+          ],
+          [
+            24,
+            "Backboning",
+            "24.1 Ingenuo|24.2 Doblemente estocástico|24.3 High-salience|24.4 Reducción convexa|24.5 Disparity filter|24.6 Noise-corrected|24.7 Error|24.8 Resumen|24.9 Ejercicios",
+            "Un backbone conserva enlaces informativos y elimina conexiones esperables por volumen o azar; el umbral debe respetar un modelo nulo.",
+            "backbone|disparity|salience|noise-corrected|umbral",
+            "αᵢⱼ=(1-pᵢⱼ)^(kᵢ-1)",
+            "hairball",
+          ],
+          [
+            25,
+            "Muestreo de redes",
+            "25.1 Inducido|25.2 BFS|25.3 Random walk|25.4 Sesgos|25.5 Compleción|25.6 Resumen|25.7 Ejercicios",
+            "El muestreo reduce escala, pero BFS y random walks sobrerrepresentan nodos de alto grado. La muestra debe evaluarse contra el objetivo.",
+            "muestreo|BFS|random walk|sesgo|compleción",
+            "P(visitar i)∝kᵢ",
+            "hairball",
+          ],
+          [
+            26,
+            "Homofilia",
+            "26.1 Ego-redes|26.2 Asortatividad|26.3 Lazos débiles|26.4 Contagio social|26.5 Resumen|26.6 Ejercicios",
+            "La homofilia conecta similares, mientras los lazos débiles enlazan grupos. Correlación entre vecinos no prueba contagio causal.",
+            "homofilia|ego-red|lazo débil|asortatividad|contagio",
+            "r=(observado-esperado)/(máximo-esperado)",
+            "meso",
+          ],
+          [
+            27,
+            "Asortatividad cuantitativa",
+            "27.1 Correlaciones de grado|27.2 Paradoja de amistad|27.3 Atributos cuantitativos|27.4 Resumen|27.5 Ejercicios",
+            "La asortatividad cuantifica si valores similares se conectan. En promedio, los amigos pueden tener más amigos debido al sesgo de grado.",
+            "asortatividad|correlación|paradoja de amistad|atributo",
+            "E[k_amigo]=E[k²]/E[k]",
+            "meso",
+          ],
+          [
+            28,
+            "Núcleo-periferia",
+            "28.1 Modelos|28.2 Tensión con comunidades|28.3 Emergencia social|28.4 Nestedness|28.5 Resumen|28.6 Ejercicios",
+            "Una estructura núcleo-periferia combina un núcleo cohesivo con periferias conectadas al núcleo; no equivale a una partición comunitaria.",
+            "core-periphery|k-core|nestedness|coreness|bloques",
+            "cᵢ=max{k: i pertenece al k-core}",
+            "meso",
+          ],
+          [
+            29,
+            "Jerarquías",
+            "29.1 Tipos|29.2 Ciclos|29.3 Global reach|29.4 Arborescencias|29.5 Agony|29.6 Dibujo|29.7 Resumen|29.8 Ejercicios",
+            "Las jerarquías ordenan nodos por niveles. Ciclos y enlaces ascendentes cuantifican desviaciones de un orden ideal.",
+            "jerarquía|DAG|arborescencia|agony|alcance",
+            "agony=Σ max(r(u)-r(v)+1,0)",
+            "meso",
+          ],
+          [
+            30,
+            "Dinámicas de orden superior",
+            "30.1 Dinámica en estructura|30.2 Dinámica en algoritmo|30.3 Resumen|30.4 Ejercicios",
+            "Las redes de orden superior recuerdan secuencias o interacciones grupales que una arista par a par no representa.",
+            "memoria|orden superior|hiperarista|línea de tiempo|estado",
+            "P(vₜ|vₜ₋₁,vₜ₋₂)",
+            "meso",
+          ],
+          [
+            31,
+            "Particiones de grafos",
+            "31.1 SBM|31.2 Random walks|31.3 Propagación de etiquetas|31.4 Temporales|31.5 Locales|31.6 Clustering|31.7 Resumen|31.8 Ejercicios",
+            "La detección de comunidades busca grupos densos o funcionalmente coherentes mediante modelos, flujos, etiquetas o clustering.",
+            "comunidad|SBM|label propagation|Infomap|partición",
+            "Q=Σ(e_cc-a_c²)",
+            "community",
+          ],
+          [
+            32,
+            "Evaluación de comunidades",
+            "32.1 Modularidad|32.2 Otras medidas|32.3 Link prediction|32.4 NMI|32.5 Resumen|32.6 Ejercicios",
+            "La modularidad compara enlaces internos contra un nulo; NMI compara particiones conocidas. Toda medida incorpora sesgos y resolución.",
+            "modularidad|NMI|conductancia|ground truth|resolución",
+            "NMI(X,Y)=2I(X;Y)/(H(X)+H(Y))",
+            "community",
+          ],
+          [
+            33,
+            "Comunidades jerárquicas",
+            "33.1 Recursivos|33.2 HRG|33.3 Densidad vs jerarquía|33.4 Resumen|33.5 Ejercicios",
+            "Las comunidades pueden anidarse. Los dendrogramas representan divisiones a múltiples escalas y permiten explorar resolución.",
+            "dendrograma|jerárquico|HRG|recursión|escala",
+            "P(enlace)=p_ancestro(i,j)",
+            "community",
+          ],
+          [
+            34,
+            "Cobertura solapada",
+            "34.1 Evaluación|34.2 Adaptaciones|34.3 Estructura explícita|34.4 Latente|34.5 Clustering de enlaces|34.6 Otros|34.7 Paradoja|34.8 Resumen|34.9 Ejercicios",
+            "Un nodo puede pertenecer a varias comunidades. El solapamiento puede modelarse explícitamente, con factores latentes o agrupando enlaces.",
+            "overlap|membresía|link clustering|factor latente|cobertura",
+            "uᵢc∈[0,1]",
+            "community",
+          ],
+          [
+            35,
+            "Comunidades bipartitas",
+            "35.1 Evaluación|35.2 Proyección|35.3 Detección directa|35.4 Similitud|35.5 Resumen|35.6 Ejercicios",
+            "Detectar módulos directamente en el grafo bipartito evita artefactos de proyección y conserva tipos de nodo.",
+            "bipartito|bimódulo|proyección|Barber modularity|similitud",
+            "Q_b=(1/m)Σ(Aᵢⱼ-kᵢdⱼ/m)δ(gᵢ,hⱼ)",
+            "community",
+          ],
+          [
+            36,
+            "Comunidades multicapa",
+            "36.1 Aplanado|36.2 Capa a capa|36.3 Adaptaciones|36.4 Densidad|36.5 Integración|36.6 Resumen|36.7 Ejercicios",
+            "Las comunidades multicapa pueden persistir, dividirse o variar entre relaciones y tiempos; aplanar puede perder esa información.",
+            "multicapa|acoplamiento|persistencia|flattening|densidad",
+            "Q_multi=ΣₗQₗ+acoplamientos",
+            "community",
+          ],
+          [
+            37,
+            "Embeddings de grafos",
+            "37.1 Definición|37.2 Construcción|37.3 Knowledge graphs|37.4 Aplicaciones|37.5 Resumen|37.6 Ejercicios",
+            "Un embedding representa nodos o grafos como vectores conservando proximidad, contexto de paseos o relaciones semánticas.",
+            "embedding|DeepWalk|node2vec|skip-gram|knowledge graph",
+            "max Σ log P(contexto|nodo)",
+            "embedding",
+          ],
+          [
+            38,
+            "Resumen de grafos",
+            "38.1 Agregación|38.2 Compresión|38.3 Simplificación|38.4 Influencia|38.5 Resumen|38.6 Ejercicios",
+            "Resumir preserva información relevante con menos nodos, enlaces o bits. La calidad depende de la consulta futura.",
+            "resumen|agregación|compresión|simplificación|influencia",
+            "calidad = información preservada/costo",
+            "embedding",
+          ],
+          [
+            39,
+            "Minería de subgrafos frecuentes",
+            "39.1 Motifs|39.2 Isomorfismo|39.3 Grafos transaccionales|39.4 Grafo único|39.5 Resumen|39.6 Ejercicios",
+            "Los motifs son patrones pequeños sobrerrepresentados frente a un nulo. La isomorfía y el crecimiento de patrones dominan el costo.",
+            "motif|isomorfismo|frecuencia|soporte|subgrafo",
+            "support(g)=#grafos que contienen g",
+            "embedding",
+          ],
+          [
+            40,
+            "Distancia entre vectores de nodos",
+            "40.1 No-red|40.2 Euclidianas generalizadas|40.3 Basadas en caminos|40.4 Fourier de grafos|40.5 Resumen|40.6 Ejercicios",
+            "Comparar nodos exige decidir qué rasgos importan: atributos, vecindad, caminos, difusión o frecuencias del grafo.",
+            "Euclidiana|coseno|Mahalanobis|resistencia|Fourier",
+            "d(x,y)=√((x-y)ᵀM(x-y))",
+            "distance",
+          ],
+          [
+            41,
+            "Distancias topológicas",
+            "41.1 Similitud de redes|41.2 Alineamiento|41.3 Fusión|41.4 Resumen|41.5 Ejercicios",
+            "Las redes completas se comparan por espectro, distribuciones, motifs o alineamiento. No existe una distancia óptima para toda pregunta.",
+            "distancia de grafos|alineamiento|fusión|espectro|kernel",
+            "d(G,H)=||φ(G)-φ(H)||",
+            "distance",
+          ],
+          [
+            42,
+            "Atributos visuales de nodos",
+            "42.1 Tamaño|42.2 Color|42.3 Otros rasgos|42.4 Resumen|42.5 Ejercicios",
+            "Tamaño, color y forma comunican variables, pero sus escalas perceptuales difieren. La codificación debe tener leyenda y evitar confusiones.",
+            "tamaño|color|forma|opacidad|percepción",
+            "área ∝ valor, no radio",
+            "visual",
+          ],
+          [
+            43,
+            "Atributos visuales de enlaces",
+            "43.1 Elementos clásicos|43.2 Xenográficos|43.3 Lifting|43.4 Resumen|43.5 Ejercicios",
+            "Grosor, color, dirección, curvatura y bundling representan peso, tipo y flujo, pero un exceso produce oclusión.",
+            "grosor|flecha|curvatura|bundling|lifting",
+            "ancho=f(peso)",
+            "visual",
+          ],
+          [
+            44,
+            "Layouts de red",
+            "44.1 Force-directed|44.2 Otros node-link|44.3 Curvas|44.4 Alternativas|44.5 Casos|44.6 Resumen|44.7 Ejercicios",
+            "El layout es una hipótesis visual: force-directed muestra cohesión, circular facilita comparación y jerárquico enfatiza dirección.",
+            "force-directed|circular|jerárquico|matriz|geográfico",
+            "F_rep∝1/d²; F_attr∝d",
+            "visual",
+          ],
+          [
+            45,
+            "Aplicaciones de ciencia de redes",
+            "45.1 Innovación|45.2 Anonimato|45.3 Conectoma|45.4 Ciencia y éxito|45.5 Movilidad|45.6 Memética|45.7 Humanidades digitales",
+            "La ciencia de redes estudia innovación, privacidad, cerebro, ciencia, movilidad, difusión cultural y humanidades digitales.",
+            "innovación|privacidad|conectoma|movilidad|memes|humanidades",
+            "pregunta → representación → método → validación",
+            "resources",
+          ],
+          [
+            46,
+            "Datos y herramientas",
+            "46.1 Bibliotecas|46.2 Software|46.3 Datos|46.4 Grafos legendarios",
+            "El ecosistema incluye bibliotecas de programación, software visual, repositorios de datos y redes de referencia para comparar métodos.",
+            "NetworkX|igraph|Gephi|datos abiertos|benchmark",
+            "datos + método + reproducibilidad",
+            "resources",
+          ],
+          [
+            47,
+            "Glosario",
+            "Términos fundamentales ordenados alfabéticamente",
+            "El glosario unifica vocabulario para navegar los conceptos del atlas y relacionar definiciones entre capítulos.",
+            "definición|notación|concepto|índice|referencia",
+            "término ↔ definición",
+            "resources",
+          ],
+          [
+            48,
+            "Abreviaturas frecuentes",
+            "Siglas y abreviaturas de uso común",
+            "Las abreviaturas condensan nombres de modelos, métricas y algoritmos; deben expandirse la primera vez que se usan.",
+            "ER|BA|WS|SIR|SBM|NMI|HITS",
+            "sigla → nombre completo",
+            "resources",
+          ],
+        ];
+        const chapters = raw.map((r) => ({
+          n: r[0],
+          title: r[1],
+          sections: r[2].split("|"),
+          summary: r[3],
+          concepts: r[4].split("|"),
+          formula: r[5],
+          lab: r[6],
+        }));
+        const labNames = {
+          intro: "Mapa de la disciplina",
+          prob: "Probabilidad y Markov",
+          graph: "Constructor de grafos",
+          matrix: "Matriz de adyacencia",
+          degree: "Grados y distribución",
+          paths: "BFS y caminos",
+          walk: "Paseo aleatorio",
+          density: "Densidad y clustering",
+          centrality: "Centralidades",
+          models: "Modelos sintéticos",
+          spread: "Difusión",
+          failure: "Vulnerabilidad",
+          link: "Predicción de enlaces",
+          hairball: "Proyección y filtrado",
+          meso: "Mesoescala",
+          community: "Comunidades",
+          embedding: "Embeddings y motifs",
+          distance: "Distancia entre redes",
+          visual: "Layouts y codificación",
+          resources: "Mapa de recursos",
+        };
+        const glossary = [
+          ["Adyacencia", "Relación directa entre dos nodos."],
+          ["Asortatividad", "Tendencia de nodos similares a conectarse."],
+          ["Backbone", "Subgrafo que conserva enlaces informativos."],
+          [
+            "Betweenness",
+            "Fracción de caminos mínimos que atraviesan un nodo.",
+          ],
+          ["Centralidad", "Medida de importancia estructural."],
+          ["Clique", "Subgrafo completamente conectado."],
+          ["Clustering", "Fracción de triadas cerradas."],
+          ["Componente", "Conjunto maximal de nodos conectados."],
+          ["Comunidad", "Grupo con cohesión estructural o funcional."],
+          ["Densidad", "Proporción de enlaces posibles presentes."],
+          ["Diámetro", "Mayor distancia geodésica finita."],
+          ["Embedding", "Representación vectorial de una entidad de red."],
+          ["Grafo", "Conjunto de nodos y enlaces."],
+          ["Hipergrafo", "Red cuyas aristas pueden unir más de dos nodos."],
+          ["Homofilia", "Preferencia por conectar con similares."],
+          ["Layout", "Regla para ubicar nodos visualmente."],
+          ["Matriz de adyacencia", "Matriz que codifica los enlaces."],
+          ["Modularidad", "Calidad de una partición frente a un modelo nulo."],
+          ["Motif", "Subgrafo pequeño recurrente."],
+          ["Multicapa", "Red con varios tipos de relaciones o tiempos."],
+          ["Paseo aleatorio", "Proceso que salta entre vecinos al azar."],
+          [
+            "Scale-free",
+            "Distribución sin escala característica bajo una definición precisa.",
+          ],
+          ["Small-world", "Alta agrupación y caminos cortos."],
+          ["SBM", "Modelo de bloques estocásticos."],
+          ["SIR", "Modelo susceptible-infectado-recuperado."],
+        ];
+        const base = {
+          xp: 0,
+          done: [],
+          quiz: {},
+          last: "home",
+          theme: "light",
+        };
+        let state;
+        try {
+          state = {
+            ...base,
+            ...JSON.parse(localStorage.getItem("atlasRedes") || "{}"),
+          };
+        } catch (e) {
+          state = { ...base };
+        }
+        let current = "home",
+          tab = "study",
+          timer = null,
+          labState = null;
+        function save() {
+          localStorage.setItem("atlasRedes", JSON.stringify(state));
+          updateProgress();
+        }
+        function toast(m) {
+          const t = $("#toast");
+          t.textContent = m;
+          t.classList.add("show");
+          clearTimeout(toast.t);
+          toast.t = setTimeout(() => t.classList.remove("show"), 2100);
+        }
+        function award(id, xp = 20) {
+          if (!state.done.includes(id)) {
+            state.done.push(id);
+            state.xp += xp;
+            save();
+            toast(`+${xp} XP · actividad completada`);
+          }
+        }
+        function partOf(n) {
+          return parts.find((p) => p[2].includes(n));
+        }
+        function buildNav() {
+          const nav = $("#nav");
+          nav.innerHTML =
+            '<button data-page="home"><span class="n">⌂</span>Inicio</button>';
+          parts.forEach((p) => {
+            nav.insertAdjacentHTML(
+              "beforeend",
+              `<div class="part-title">${p[0]} · ${p[1]}</div>`,
+            );
+            p[2].forEach((n) => {
+              const c = chapters[n - 1];
+              nav.insertAdjacentHTML(
+                "beforeend",
+                `<button data-page="${n}" data-search="${(c.title + " " + c.concepts.join(" ")).toLowerCase()}"><span class="n">${n}</span>${c.title}</button>`,
+              );
+            });
+          });
+          nav.insertAdjacentHTML(
+            "beforeend",
+            '<div class="part-title">Mi aprendizaje</div><button data-page="progress"><span class="n">✓</span>Progreso y glosario</button>',
+          );
+          $$("#nav button").forEach(
+            (b) => (b.onclick = () => go(b.dataset.page)),
+          );
+        }
+        function go(p) {
+          stop();
+          current = p;
+          state.last = p;
+          save();
+          $$("#nav button").forEach((b) =>
+            b.classList.toggle("on", b.dataset.page === String(p)),
+          );
+          $("#side").classList.remove("open");
+          if (p === "home") home();
+          else if (p === "progress") progress();
+          else chapter(+p);
+          scrollTo({ top: 0, behavior: "smooth" });
+        }
+        function stop() {
+          if (timer) {
+            clearInterval(timer);
+            timer = null;
+          }
+        }
+        function updateProgress() {
+          const completed = chapters.filter((c) =>
+              state.done.includes("ch" + c.n),
+            ).length,
+            pct = Math.round((completed / 48) * 100);
+          $("#progressBar").style.width = pct + "%";
+          $("#progressText").textContent =
+            `${completed} de 48 capítulos · ${pct}%`;
+          $("#xp").textContent = state.xp + " XP";
+          $("#xpSide").textContent = state.xp + " XP";
+          $$("#nav button[data-page]").forEach((b) => {
+            const n = +b.dataset.page;
+            b.classList.toggle("done", n && state.done.includes("ch" + n));
+          });
+        }
+        function wire() {
+          $$("[data-go]").forEach((x) => (x.onclick = () => go(x.dataset.go)));
+        }
+        function home() {
+          $("#crumb").textContent = "Inicio";
+          $("#view").innerHTML =
+            `<div class="hero"><div class="eyebrow">Michele Coscia · The Atlas for the Aspiring Network Scientist · adaptación educativa</div><h1>Atlas Interactivo de Ciencia de Redes</h1><p class="lead">Explora los 48 capítulos y las 13 partes del libro mediante redes manipulables, algoritmos paso a paso, experimentos, retos y evaluaciones.</p><div class="actions"><button class="btn" data-go="${state.last === "home" ? "1" : state.last}">Comenzar o continuar</button><button class="btn sec" data-go="progress">Mi progreso</button></div></div><div class="stats"><div class="stat"><b>48</b><span>capítulos</span></div><div class="stat"><b>13</b><span>partes</span></div><div class="stat"><b>20</b><span>laboratorios</span></div><div class="stat"><b>144</b><span>preguntas</span></div><div class="stat"><b>${state.xp}</b><span>XP</span></div></div><div class="section-head"><div class="eyebrow">Mapa completo</div><h2>Ruta por el atlas</h2></div><div class="parts">${parts.map((p) => `<article class="card part-card" data-go="${p[2][0]}"><div class="roman">PARTE ${p[0]}</div><h3>${p[1]}</h3><p>${p[3]}</p><span class="tag">${p[2][0] === p[2].at(-1) ? "Capítulo " + p[2][0] : `Capítulos ${p[2][0]}-${p[2].at(-1)}`}</span></article>`).join("")}</div>`;
+          wire();
+        }
+        function chapter(n) {
+          const c = chapters[n - 1],
+            p = partOf(n);
+          $("#crumb").textContent = `${p[0]} · Capítulo ${n} · ${c.title}`;
+          $("#view").innerHTML =
+            `<div class="chapter-head"><div><div class="eyebrow">Parte ${p[0]} · ${p[1]}</div><h2>${n}. ${c.title}</h2><p class="lead">${c.summary}</p></div><span class="tag">${state.done.includes("ch" + n) ? "✓ completado" : "en progreso"}</span></div><div class="tabs"><button class="tab ${tab === "study" ? "on" : ""}" data-tab="study">Estudiar</button><button class="tab ${tab === "lab" ? "on" : ""}" data-tab="lab">Laboratorio</button><button class="tab ${tab === "quiz" ? "on" : ""}" data-tab="quiz">Evaluación</button></div><div id="body"></div><div class="footer-nav"><button class="btn sec" data-go="${n === 1 ? "home" : n - 1}">← ${n === 1 ? "Inicio" : "Capítulo " + (n - 1)}</button><button class="btn" data-go="${n === 48 ? "progress" : n + 1}">${n === 48 ? "Progreso" : "Capítulo " + (n + 1)} →</button></div>`;
+          $$(".tab").forEach(
+            (b) =>
+              (b.onclick = () => {
+                tab = b.dataset.tab;
+                chapter(n);
+              }),
+          );
+          wire();
+          if (tab === "study") study(c);
+          else if (tab === "lab") lab(c);
+          else quiz(c);
+        }
+        function study(c) {
+          $("#body").innerHTML =
+            `<div class="grid2"><div class="stack"><div class="card"><h3>Idea esencial</h3><p>${c.summary}</p><div class="formula">${c.formula}</div></div><div class="card"><h3>Conceptos</h3><div class="concepts">${c.concepts.map((x) => `<span class="concept">${x}</span>`).join("")}</div></div><div class="card"><h3>Secciones del capítulo</h3><div class="sections">${c.sections.map((x) => `<div class="section">${x}</div>`).join("")}</div></div></div><div class="stack"><div class="card"><h3>Actividad guiada adaptada</h3><p>Construye un ejemplo pequeño con 8-15 nodos. Cambia una sola variable y explica cómo afecta <b>${c.concepts[0]}</b> y <b>${c.concepts[1] || c.concepts[0]}</b>.</p><button class="btn" id="openLab">Abrir ${labNames[c.lab]}</button></div><div class="card"><h3>Preguntas de reflexión</h3><ol><li>¿Qué información conserva esta representación?</li><li>¿Qué supuesto podría sesgar la conclusión?</li><li>¿Qué modelo nulo o comparación usarías?</li></ol></div><div class="card"><h3>Nota de fidelidad</h3><p>Esta explicación es una adaptación pedagógica original basada en los temas del capítulo; no reproduce literalmente el texto ni los ejercicios.</p></div></div></div>`;
+          $("#openLab").onclick = () => {
+            tab = "lab";
+            chapter(c.n);
+          };
+        }
+        function rng(seed) {
+          let x = seed || 123456;
+          return () =>
+            (x = (Math.imul(1664525, x) + 1013904223) >>> 0) / 4294967296;
+        }
+        function makeER(n, p, seed = 1) {
+          const r = rng(seed),
+            e = [];
+          for (let i = 0; i < n; i++)
+            for (let j = i + 1; j < n; j++) if (r() < p) e.push([i, j]);
+          return { n, e };
+        }
+        function makeWS(n, k = 4, b = 0.15, seed = 2) {
+          const r = rng(seed),
+            set = new Set();
+          for (let i = 0; i < n; i++)
+            for (let d = 1; d <= k / 2; d++) {
+              let j = (i + d) % n;
+              if (r() < b) j = Math.floor(r() * n);
+              if (j !== i) set.add([Math.min(i, j), Math.max(i, j)].join("-"));
+            }
+          return { n, e: [...set].map((x) => x.split("-").map(Number)) };
+        }
+        function makeBA(n, m = 2, seed = 3) {
+          const r = rng(seed),
+            e = [[0, 1]],
+            deg = [1, 1];
+          for (let v = 2; v < n; v++) {
+            const chosen = new Set();
+            while (chosen.size < Math.min(m, v)) {
+              let total = deg.reduce((a, b) => a + b, 0),
+                x = r() * total,
+                u = 0;
+              while ((x -= deg[u] || 0) > 0) u++;
+              chosen.add(Math.min(u, v - 1));
+            }
+            deg[v] = 0;
+            chosen.forEach((u) => {
+              e.push([u, v]);
+              deg[u]++;
+              deg[v]++;
+            });
+          }
+          return { n, e };
+        }
+        function adj(g) {
+          const a = Array.from({ length: g.n }, () => []);
+          g.e.forEach(([u, v]) => {
+            a[u].push(v);
+            a[v].push(u);
+          });
+          return a;
+        }
+        function layout(g, type = "spring") {
+          const n = g.n,
+            pts = [];
+          for (let i = 0; i < n; i++) {
+            const a = (2 * Math.PI * i) / n;
+            pts.push({
+              x: 0.5 + 0.38 * Math.cos(a),
+              y: 0.5 + 0.38 * Math.sin(a),
+            });
+          }
+          if (type === "grid")
+            for (let i = 0; i < n; i++) {
+              const q = Math.ceil(Math.sqrt(n));
+              pts[i] = {
+                x: 0.12 + (0.76 * (i % q)) / (q - 1 || 1),
+                y: 0.12 + (0.76 * Math.floor(i / q)) / (q - 1 || 1),
+              };
+            }
+          if (type === "spring") {
+            const A = adj(g);
+            for (let it = 0; it < 120; it++) {
+              const f = pts.map(() => ({ x: 0, y: 0 }));
+              for (let i = 0; i < n; i++)
+                for (let j = i + 1; j < n; j++) {
+                  let dx = pts[i].x - pts[j].x,
+                    dy = pts[i].y - pts[j].y,
+                    d2 = dx * dx + dy * dy + 0.002,
+                    q = 0.0007 / d2;
+                  f[i].x += dx * q;
+                  f[i].y += dy * q;
+                  f[j].x -= dx * q;
+                  f[j].y -= dy * q;
+                }
+              g.e.forEach(([u, v]) => {
+                let dx = pts[v].x - pts[u].x,
+                  dy = pts[v].y - pts[u].y,
+                  d = Math.hypot(dx, dy) || 1,
+                  q = (d - 0.18) * 0.03;
+                f[u].x += (dx / d) * q;
+                f[u].y += (dy / d) * q;
+                f[v].x -= (dx / d) * q;
+                f[v].y -= (dy / d) * q;
+              });
+              for (let i = 0; i < n; i++) {
+                pts[i].x = Math.max(0.07, Math.min(0.93, pts[i].x + f[i].x));
+                pts[i].y = Math.max(0.07, Math.min(0.93, pts[i].y + f[i].y));
+              }
+            }
+          }
+          return pts;
+        }
+        function degrees(g) {
+          const d = Array(g.n).fill(0);
+          g.e.forEach(([u, v]) => {
+            d[u]++;
+            d[v]++;
+          });
+          return d;
+        }
+        function components(g, alive = null) {
+          const A = adj(g),
+            seen = new Set(),
+            cs = [];
+          for (let s = 0; s < g.n; s++) {
+            if (seen.has(s) || (alive && !alive.has(s))) continue;
+            let q = [s],
+              c = [];
+            seen.add(s);
+            while (q.length) {
+              const u = q.shift();
+              c.push(u);
+              A[u].forEach((v) => {
+                if ((!alive || alive.has(v)) && !seen.has(v)) {
+                  seen.add(v);
+                  q.push(v);
+                }
+              });
+            }
+            cs.push(c);
+          }
+          return cs.sort((a, b) => b.length - a.length);
+        }
+        function clustering(g) {
+          const A = adj(g);
+          let sum = 0;
+          A.forEach((N, i) => {
+            let links = 0;
+            for (let x = 0; x < N.length; x++)
+              for (let y = x + 1; y < N.length; y++)
+                if (A[N[x]].includes(N[y])) links++;
+            sum += N.length < 2 ? 0 : (2 * links) / (N.length * (N.length - 1));
+          });
+          return sum / g.n;
+        }
+        function density(g) {
+          return (2 * g.e.length) / (g.n * (g.n - 1) || 1);
+        }
+        function lab(c) {
+          $("#body").innerHTML =
+            `<div class="lab-shell"><div class="lab-panel"><div class="field"><label>Laboratorio</label><select id="labMode">${Object.entries(
+              labNames,
+            )
+              .map(
+                ([k, v]) =>
+                  `<option value="${k}" ${k === c.lab ? "selected" : ""}>${v}</option>`,
+              )
+              .join(
+                "",
+              )}</select></div><div class="field"><label>Nodos</label><input type="range" id="nodes" min="6" max="32" value="18"><div class="between"><small>6</small><b id="nodesV">18</b><small>32</small></div></div><div class="field"><label>Conectividad / tasa</label><input type="range" id="param" min="5" max="70" value="22"><div class="between"><small>baja</small><b id="paramV">0.22</b><small>alta</small></div></div><div class="field"><label>Layout</label><select id="layout"><option value="spring">Spring</option><option value="circle">Circular</option><option value="grid">Cuadrícula</option></select></div><div class="controls"><button class="btn" id="stepBtn">Siguiente paso</button><button class="btn sec" id="autoBtn">▶ Automático</button><button class="btn sec" id="resetBtn">Reiniciar</button></div></div><div class="canvas-wrap"><canvas id="canvas"></canvas><div class="canvas-note" id="note"></div><div id="below"></div></div><div class="lab-panel lab-side"><h3 id="labTitle"></h3><p id="explain"></p><div class="metrics"><div class="metric"><b id="m1">-</b><span id="l1">nodos</span></div><div class="metric"><b id="m2">-</b><span id="l2">enlaces</span></div><div class="metric"><b id="m3">-</b><span id="l3">densidad</span></div><div class="metric"><b id="m4">-</b><span id="l4">paso</span></div></div><h3 style="margin-top:14px">Registro</h3><div class="log" id="log"></div><button class="btn" id="complete" style="margin-top:12px">Marcar capítulo como completado</button></div></div>`;
+          $("#labMode").onchange = initLab;
+          $("#nodes").oninput = () => {
+            $("#nodesV").textContent = $("#nodes").value;
+            initLab();
+          };
+          $("#param").oninput = () => {
+            $("#paramV").textContent = (+$("#param").value / 100).toFixed(2);
+            initLab();
+          };
+          $("#layout").onchange = drawLab;
+          $("#resetBtn").onclick = initLab;
+          $("#stepBtn").onclick = stepLab;
+          $("#autoBtn").onclick = () => {
+            if (timer) {
+              stop();
+              $("#autoBtn").textContent = "▶ Automático";
+            } else {
+              $("#autoBtn").textContent = "⏸ Pausar";
+              timer = setInterval(() => stepLab(), 700);
+            }
+          };
+          $("#complete").onclick = () => {
+            award("ch" + c.n, 30);
+            chapter(c.n);
+          };
+          $("#canvas").onclick = (e) => {
+            if (!labState) return;
+            const box = e.currentTarget.getBoundingClientRect();
+            const px = (e.clientX - box.left) / box.width;
+            const py = (e.clientY - box.top) / box.height;
+            let best = 0,
+              dist = Infinity;
+            labState.pts.forEach((p, i) => {
+              const d = Math.hypot(p.x - px, p.y - py);
+              if (d < dist) {
+                dist = d;
+                best = i;
+              }
+            });
+            labState.active = best;
+            log(`Nodo ${best} seleccionado directamente.`);
+            drawLab();
+          };
+          initLab();
+        }
+        function initLab() {
+          stop();
+          if (!$("#canvas")) return;
+          const mode = $("#labMode").value,
+            n = +$("#nodes").value,
+            p = +$("#param").value / 100;
+          let g =
+            mode === "models"
+              ? makeWS(n, 4, p, 7)
+              : makeER(n, Math.min(0.5, Math.max(0.08, p)), 11);
+          if (mode === "graph") g = makeER(n, p, 5);
+          labState = {
+            mode,
+            g,
+            pts: layout(g, $("#layout").value),
+            step: 0,
+            active: 0,
+            visited: new Set([0]),
+            visits: Array(n).fill(0),
+            queue: [0],
+            infect: Array(n).fill(0),
+            removed: new Set(),
+            labels: Array.from({ length: n }, (_, i) => i % 3),
+            logs: ["Experimento preparado."],
+          };
+          labState.infect[0] = 1;
+          labState.visits[0] = 1;
+          $("#labTitle").textContent = labNames[mode];
+          $("#explain").textContent = labExplain(mode);
+          drawLab();
+        }
+        function labExplain(m) {
+          return {
+            intro:
+              "Recorre el mapa conceptual que conecta datos, modelos, procesos y visualización.",
+            prob: "Compara evidencia previa y posterior; observa además una transición de Markov sobre la red.",
+            graph:
+              "Cambia n y p para construir grafos simples. Haz clic en un nodo para resaltarlo.",
+            matrix:
+              "La matriz de adyacencia y la red son dos vistas de la misma estructura.",
+            degree: "El histograma resume la heterogeneidad de conexiones.",
+            paths:
+              "BFS expande la frontera por niveles y obtiene caminos mínimos en grafos no ponderados.",
+            walk: "El caminante elige un vecino; su frecuencia de visita converge hacia nodos de mayor grado.",
+            density: "Compara densidad global con cierre local de triadas.",
+            centrality:
+              "El tamaño representa grado; el color resalta el nodo más central bajo la vista actual.",
+            models:
+              "Observa cómo el modelo small-world reconecta enlaces y altera clustering y distancias.",
+            spread:
+              "Los nodos susceptibles, infectados y recuperados cambian según contagio y recuperación.",
+            failure:
+              "Se eliminan primero los nodos de mayor grado; observa la componente gigante.",
+            link: "Se puntúan pares ausentes por vecinos comunes y se agrega la mejor predicción.",
+            hairball:
+              "Filtra enlaces débiles o examina una proyección para revelar estructura.",
+            meso: "Las etiquetas representan atributos o niveles; observa mezcla y núcleo-periferia.",
+            community:
+              "La propagación de etiquetas forma grupos a partir de los vecinos.",
+            embedding:
+              "Las posiciones vectoriales sintetizan similitud estructural; los colores señalan patrones.",
+            distance:
+              "Compara el grafo actual con una referencia por densidad, grado y clustering.",
+            visual:
+              "Cambia el layout y la codificación: la estructura no cambia, la lectura visual sí.",
+            resources:
+              "Mapa de conceptos, aplicaciones y herramientas del atlas.",
+          }[m];
+        }
+        function log(m) {
+          labState.logs.unshift(`Paso ${labState.step}: ${m}`);
+          $("#log").innerHTML = labState.logs
+            .slice(0, 12)
+            .map((x) => `<div>${x}</div>`)
+            .join("");
+        }
+        function stepLab() {
+          const s = labState,
+            m = s.mode,
+            A = adj(s.g);
+          s.step++;
+          if (m === "paths") {
+            if (s.queue.length) {
+              const u = s.queue.shift();
+              s.active = u;
+              A[u].forEach((v) => {
+                if (!s.visited.has(v)) {
+                  s.visited.add(v);
+                  s.queue.push(v);
+                }
+              });
+              log(`BFS expande ${u}; frontera [${s.queue.join(", ")}].`);
+            } else log("BFS terminó.");
+          } else if (m === "walk" || m === "prob") {
+            const N = A[s.active];
+            if (N.length) s.active = N[(s.step * 7 + 3) % N.length];
+            s.visited.add(s.active);
+            s.visits[s.active]++;
+            log(`El caminante llegó al nodo ${s.active}.`);
+          } else if (m === "spread") {
+            const next = [...s.infect];
+            for (let i = 0; i < s.g.n; i++)
+              if (s.infect[i] === 0) {
+                const k = A[i].filter((v) => s.infect[v] === 1).length;
+                if (k && 1 - Math.pow(1 - +$("#param").value / 100, k) > 0.35)
+                  next[i] = 1;
+              } else if (s.infect[i] === 1 && s.step % 4 === 0) next[i] = 2;
+            s.infect = next;
+            log(
+              `${next.filter((x) => x === 1).length} infectados, ${next.filter((x) => x === 2).length} recuperados.`,
+            );
+          } else if (m === "failure") {
+            const d = degrees(s.g),
+              alive = [...Array(s.g.n).keys()].filter((i) => !s.removed.has(i));
+            if (alive.length) {
+              alive.sort((a, b) => d[b] - d[a]);
+              s.removed.add(alive[0]);
+              log(`Ataque elimina nodo ${alive[0]} (grado ${d[alive[0]]}).`);
+            }
+          } else if (m === "link") {
+            let best = null,
+              score = -1;
+            for (let i = 0; i < s.g.n; i++)
+              for (let j = i + 1; j < s.g.n; j++)
+                if (!A[i].includes(j)) {
+                  const z = A[i].filter((x) => A[j].includes(x)).length;
+                  if (z > score) {
+                    score = z;
+                    best = [i, j];
+                  }
+                }
+            if (best) {
+              s.g.e.push(best);
+              s.pts = layout(s.g, $("#layout").value);
+              log(
+                `Predicción ${best[0]}-${best[1]} con ${score} vecinos comunes.`,
+              );
+            }
+          } else if (m === "community") {
+            const old = [...s.labels];
+            for (let i = 0; i < s.g.n; i++) {
+              const count = {};
+              A[i].forEach((v) => (count[old[v]] = (count[old[v]] || 0) + 1));
+              const choices = Object.entries(count).sort((a, b) => b[1] - a[1]);
+              if (choices[0]) s.labels[i] = +choices[0][0];
+            }
+            log(`Propagación: ${new Set(s.labels).size} etiquetas activas.`);
+          } else if (m === "models") {
+            s.g =
+              s.step % 2
+                ? makeBA(s.g.n, 2, 10)
+                : makeWS(s.g.n, 4, +$("#param").value / 100, 7);
+            s.pts = layout(s.g, $("#layout").value);
+            log(
+              s.step % 2
+                ? "Modelo Barabási-Albert: adjunción preferencial."
+                : "Modelo Watts-Strogatz: reconexión local.",
+            );
+          } else if (m === "hairball") {
+            if (s.g.e.length > Math.max(5, s.g.n)) {
+              s.g.e = s.g.e.filter((_, i) => i % 3 !== s.step % 3);
+              s.pts = layout(s.g, $("#layout").value);
+              log("Se retiró una fracción de enlaces de baja saliencia.");
+            } else log("El backbone se estabilizó.");
+          } else if (m === "meso") {
+            s.labels = s.labels.map((x, i) =>
+              degrees(s.g)[i] >= 3 ? 0 : (i % 2) + 1,
+            );
+            log("Clasificación aproximada en núcleo y periferias.");
+          } else if (m === "embedding") {
+            s.pts = s.pts.map((p, i) => ({
+              x:
+                0.12 +
+                0.76 *
+                  ((degrees(s.g)[i] + (i % 3)) /
+                    (Math.max(...degrees(s.g)) + 3)),
+              y: 0.15 + 0.7 * (((i * 7) % s.g.n) / (s.g.n - 1 || 1)),
+            }));
+            log("Proyección vectorial recalculada.");
+          } else {
+            s.active = (s.active + 1) % s.g.n;
+            log("Se actualizó la vista del experimento.");
+          }
+          drawLab();
+        }
+        function drawLab() {
+          if (!labState) return;
+          const s = labState,
+            c = $("#canvas"),
+            box = c.getBoundingClientRect(),
+            dpr = Math.min(2, devicePixelRatio || 1);
+          c.width = Math.max(500, box.width) * dpr;
+          c.height = Math.max(430, box.height) * dpr;
+          const x = c.getContext("2d");
+          x.scale(dpr, dpr);
+          const W = c.width / dpr,
+            H = c.height / dpr;
+          if (!["embedding"].includes(s.mode))
+            s.pts = layout(s.g, $("#layout").value);
+          x.clearRect(0, 0, W, H);
+          x.fillStyle = getComputedStyle(
+            document.documentElement,
+          ).getPropertyValue("--panel");
+          x.fillRect(0, 0, W, H);
+          const color = ["#1768e5", "#ff7a2f", "#16a276", "#7a55d9", "#e74b5b"];
+          const d = degrees(s.g),
+            max = Math.max(1, ...d);
+          s.g.e.forEach(([u, v]) => {
+            if (s.removed.has(u) || s.removed.has(v)) return;
+            x.beginPath();
+            x.moveTo(s.pts[u].x * W, s.pts[u].y * H);
+            x.lineTo(s.pts[v].x * W, s.pts[v].y * H);
+            x.strokeStyle = "#8fa2b9";
+            x.globalAlpha = 0.45;
+            x.lineWidth = 1.2;
+            x.stroke();
+            x.globalAlpha = 1;
+          });
+          for (let i = 0; i < s.g.n; i++) {
+            if (s.removed.has(i)) continue;
+            const p = s.pts[i],
+              r = s.mode === "centrality" ? 7 + (12 * d[i]) / max : 9;
+            x.beginPath();
+            x.arc(p.x * W, p.y * H, r, 0, Math.PI * 2);
+            let fill = color[0];
+            if (s.mode === "spread")
+              fill =
+                s.infect[i] === 0
+                  ? "#a9b4c3"
+                  : s.infect[i] === 1
+                    ? "#e74b5b"
+                    : "#16a276";
+            else if (["community", "meso", "embedding"].includes(s.mode))
+              fill = color[s.labels[i] % color.length];
+            else if (i === s.active || (s.visited.has(i) && s.mode === "paths"))
+              fill = "#ff7a2f";
+            x.fillStyle = fill;
+            x.fill();
+            x.strokeStyle = "#fff";
+            x.lineWidth = 2;
+            x.stroke();
+            x.fillStyle = "#fff";
+            x.font = "bold 10px Arial";
+            x.textAlign = "center";
+            x.textBaseline = "middle";
+            x.fillText(i, p.x * W, p.y * H);
+          }
+          if (s.mode === "matrix") drawMatrix(s);
+          else if (s.mode === "degree" || s.mode === "walk")
+            drawHist(s.mode === "walk" ? s.visits : d);
+          else if (s.mode === "prob") drawBayes(s);
+          else $("#below").innerHTML = "";
+          const cs = components(
+            s.g,
+            new Set([...Array(s.g.n).keys()].filter((i) => !s.removed.has(i))),
+          );
+          $("#note").textContent =
+            `${labNames[s.mode]} · ${labExplain(s.mode)}`;
+          $("#m1").textContent = s.g.n - s.removed.size;
+          $("#l1").textContent = "nodos activos";
+          $("#m2").textContent = s.g.e.length;
+          $("#l2").textContent = "enlaces";
+          $("#m3").textContent = density(s.g).toFixed(2);
+          $("#l3").textContent = "densidad";
+          $("#m4").textContent =
+            s.mode === "failure" ? cs[0]?.length || 0 : s.step;
+          $("#l4").textContent =
+            s.mode === "failure" ? "componente gigante" : "paso";
+          if (s.mode === "prob") {
+            const prior = Math.max(0.01, +$("#param").value / 100),
+              posterior =
+                (0.85 * prior) / (0.85 * prior + 0.12 * (1 - prior));
+            $("#m4").textContent = (posterior * 100).toFixed(1) + "%";
+            $("#l4").textContent = "posterior Bayes";
+          } else if (s.mode === "density") {
+            $("#m3").textContent = density(s.g).toFixed(3);
+            $("#l3").textContent = "densidad global";
+            $("#m4").textContent = clustering(s.g).toFixed(3);
+            $("#l4").textContent = "clustering medio";
+          } else if (s.mode === "centrality") {
+            const hub = d.indexOf(Math.max(...d));
+            $("#m4").textContent = `nodo ${hub}`;
+            $("#l4").textContent = "máximo grado";
+          } else if (s.mode === "walk") {
+            $("#m4").textContent = Math.max(...s.visits);
+            $("#l4").textContent = "máx. visitas";
+          } else if (s.mode === "distance") {
+            const ref = makeWS(s.g.n, 4, 0.15, 21);
+            const delta =
+              Math.abs(density(s.g) - density(ref)) +
+              Math.abs(clustering(s.g) - clustering(ref));
+            $("#m4").textContent = delta.toFixed(3);
+            $("#l4").textContent = "distancia resumen";
+          } else if (s.mode === "visual") {
+            $("#m4").textContent = $("#layout").value;
+            $("#l4").textContent = "layout activo";
+          }
+          $("#log").innerHTML = s.logs.map((q) => `<div>${q}</div>`).join("");
+        }
+        function drawBayes(s) {
+          const prior = Math.max(0.01, +$("#param").value / 100),
+            sensitivity = 0.85,
+            falsePositive = 0.12,
+            posterior =
+              (sensitivity * prior) /
+              (sensitivity * prior + falsePositive * (1 - prior));
+          $("#below").innerHTML = `<div style="position:absolute;right:10px;bottom:10px;width:47%;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px"><b>Actualización de Bayes</b><div class="hist"><div class="bar" style="height:${prior * 100}%" data-v="Prior ${(prior * 100).toFixed(1)}%"></div><div class="bar" style="height:${posterior * 100}%" data-v="Posterior ${(posterior * 100).toFixed(1)}%"></div></div><small>Prior → evidencia positiva → posterior</small></div>`;
+          $("#m4").textContent = (posterior * 100).toFixed(1) + "%";
+          $("#l4").textContent = "posterior Bayes";
+        }
+        function drawMatrix(s) {
+          const A = adj(s.g),
+            n = Math.min(10, s.g.n);
+          let h =
+            '<div class="table-wrap" style="position:absolute;right:10px;bottom:10px;max-width:46%;background:var(--panel);padding:8px;border-radius:10px"><table class="matrix">';
+          for (let i = 0; i < n; i++) {
+            h += "<tr>";
+            for (let j = 0; j < n; j++)
+              h += `<td class="${A[i].includes(j) ? "on" : ""}">${A[i].includes(j) ? 1 : 0}</td>`;
+            h += "</tr>";
+          }
+          $("#below").innerHTML = h + "</table></div>";
+        }
+        function drawHist(d) {
+          const count = {};
+          d.forEach((k) => (count[k] = (count[k] || 0) + 1));
+          $("#below").innerHTML =
+            `<div style="position:absolute;right:10px;bottom:10px;width:46%;background:var(--panel);border:1px solid var(--line);border-radius:10px"><div class="hist">${Object.entries(
+              count,
+            )
+              .map(
+                ([k, v]) =>
+                  `<div class="bar" style="height:${(v / Math.max(...Object.values(count))) * 100}%" data-v="k=${k}: ${v}"></div>`,
+              )
+              .join("")}</div></div>`;
+        }
+        function shuffled(arr, seed) {
+          const a = arr
+            .map((x, i) => ({ x, k: (i * 37 + seed * 17) % 97 }))
+            .sort((a, b) => a.k - b.k);
+          return a.map((o) => o.x);
+        }
+        function quiz(c) {
+          const other = chapters[(c.n + 7) % 48].concepts;
+          const qs = [
+            {
+              q: `¿Cuál es un concepto central del capítulo ${c.n}?`,
+              a: c.concepts[0],
+              o: [
+                c.concepts[0],
+                other[0],
+                "recursión sintáctica",
+                "cifrado simétrico",
+              ],
+            },
+            {
+              q: "¿Qué afirmación coincide con la idea esencial?",
+              a: c.summary,
+              o: [
+                c.summary,
+                "Toda red real es completa y determinista.",
+                "Una sola métrica responde cualquier pregunta.",
+                "La visualización reemplaza la validación estadística.",
+              ],
+            },
+            {
+              q: `¿Qué expresión se asocia con ${c.title}?`,
+              a: c.formula,
+              o: [
+                c.formula,
+                chapters[(c.n + 4) % 48].formula,
+                "n!=n+1",
+                "Σ=∅ siempre",
+              ],
+            },
+          ];
+          $("#body").innerHTML =
+            `<form class="card" id="quizForm"><div class="between"><h3>Evaluación del capítulo</h3><span class="tag">Mejor: ${state.quiz[c.n] || 0}/3</span></div>${qs
+              .map((q, i) => {
+                const opts = shuffled(q.o, c.n + i);
+                return `<div class="quiz-q"><b>${i + 1}. ${q.q}</b>${opts.map((o) => `<label class="opt"><input type="radio" name="q${i}" value="${encodeURIComponent(o)}"> ${o}</label>`).join("")}</div>`;
+              })
+              .join(
+                "",
+              )}<button class="btn" type="submit">Comprobar</button></form><div id="result"></div>`;
+          $("#quizForm").onsubmit = (e) => {
+            e.preventDefault();
+            let score = 0;
+            qs.forEach((q, i) => {
+              const z = $(`input[name=q${i}]:checked`);
+              if (z && decodeURIComponent(z.value) === q.a) score++;
+            });
+            $("#result").innerHTML =
+              `<div class="feedback"><h3>${score === 3 ? "Dominio excelente" : score === 2 ? "Buen avance" : "Conviene repasar"}</h3><p>${score}/3 respuestas correctas. ${score < 3 ? "Revisa la idea esencial y prueba el laboratorio antes de reintentar." : "Ya puedes continuar al siguiente capítulo."}</p></div>`;
+            if (score > (state.quiz[c.n] || 0)) {
+              state.quiz[c.n] = score;
+              if (score === 3) {
+                award("ch" + c.n, 35);
+              } else save();
+            }
+          };
+        }
+        function progress() {
+          $("#crumb").textContent = "Progreso y glosario";
+          const done = chapters.filter((c) =>
+              state.done.includes("ch" + c.n),
+            ).length,
+            avg = Object.values(state.quiz).length
+              ? (
+                  Object.values(state.quiz).reduce((a, b) => a + b, 0) /
+                  Object.values(state.quiz).length
+                ).toFixed(1)
+              : "0.0";
+          $("#view").innerHTML =
+            `<div class="chapter-head"><div><div class="eyebrow">Panel personal</div><h2>Progreso y glosario</h2><p class="lead">Todo se guarda automáticamente en este navegador.</p></div></div><div class="stats"><div class="stat"><b>${done}/48</b><span>capítulos</span></div><div class="stat"><b>${Math.round((done / 48) * 100)}%</b><span>avance</span></div><div class="stat"><b>${state.xp}</b><span>XP</span></div><div class="stat"><b>${avg}/3</b><span>promedio</span></div><div class="stat"><b>${Object.keys(state.quiz).length}</b><span>evaluaciones</span></div></div><div class="card"><h3>Estado por capítulo</h3><div class="table-wrap"><table><thead><tr><th>Capítulo</th><th>Parte</th><th>Evaluación</th><th>Estado</th><th></th></tr></thead><tbody>${chapters.map((c) => `<tr><td>${c.n}. ${c.title}</td><td>${partOf(c.n)[1]}</td><td>${state.quiz[c.n] || 0}/3</td><td>${state.done.includes("ch" + c.n) ? "✓ Completado" : "Pendiente"}</td><td><button class="btn sec" data-go="${c.n}">Abrir</button></td></tr>`).join("")}</tbody></table></div></div><div class="section-head"><h2>Glosario esencial</h2></div><div class="glossary">${glossary.map(([a, b]) => `<div class="term"><b>${a}</b><span>${b}</span></div>`).join("")}</div><div class="card" style="margin-top:14px"><h3>Gestión de datos</h3><div class="controls"><button class="btn sec" id="export">Exportar progreso</button><button class="btn warn" id="reset">Borrar progreso</button></div></div>`;
+          wire();
+          $("#export").onclick = () => {
+            const blob = new Blob(
+                [
+                  JSON.stringify(
+                    {
+                      titulo: "Atlas Interactivo de Ciencia de Redes",
+                      fecha: new Date().toISOString(),
+                      ...state,
+                    },
+                    null,
+                    2,
+                  ),
+                ],
+                { type: "application/json" },
+              ),
+              a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "progreso_atlas_redes.json";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 300);
+          };
+          $("#reset").onclick = () => $("#resetModal").classList.add("show");
+        }
+        $("#theme").onclick = () => {
+          state.theme = state.theme === "dark" ? "light" : "dark";
+          document.documentElement.dataset.theme = state.theme;
+          save();
+          if ($("#canvas")) drawLab();
+        };
+        $("#menu").onclick = () => $("#side").classList.toggle("open");
+        $("#search").oninput = (e) => {
+          const q = e.target.value.toLowerCase();
+          $$("#nav button[data-search]").forEach(
+            (b) =>
+              (b.style.display = b.dataset.search.includes(q)
+                ? "grid"
+                : "none"),
+          );
+        };
+        $("#resetNo").onclick = () => $("#resetModal").classList.remove("show");
+        $("#resetYes").onclick = () => {
+          localStorage.removeItem("atlasRedes");
+          state = { ...base, done: [], quiz: {} };
+          $("#resetModal").classList.remove("show");
+          go("home");
+          toast("Progreso eliminado");
+        };
+        document.documentElement.dataset.theme = state.theme;
+        buildNav();
+        go(state.last || "home");
+        updateProgress();
+      })();
+    </script>
+  </body>
+</html>
