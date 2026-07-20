@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Small-World • SI / Complejo (≥2 vecinos) • Fondo blanco (FIX)</title>
+<style>
+
+  :root{
+    --bg:#f8fafc; --panel:#ffffff; --fg:#111827; --muted:#64748b; --grid:#dbe3ec; --accent:#e67e22;
+    --sus:#1e40af; --inf:#dc2626; --edge:#9aa3af; --edge-rewired:#e67e22; --label:#111827;
+    --sidebar:300px; --topbar:42px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+  .app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);height:100vh;overflow:hidden;transition:grid-template-columns .24s ease}
+  .app.sidebarCollapsed{grid-template-columns:0 minmax(0,1fr)}
+  aside{min-width:0;overflow-y:auto;overflow-x:hidden;border-right:1px solid var(--grid);padding:8px;background:#fff;scrollbar-width:thin}
+  .app.sidebarCollapsed aside{padding-left:0;padding-right:0;border-right:0}
+  .sideHead{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 6px;padding:4px 5px}
+  h1{font-size:14px;line-height:1.2;margin:0;color:#0f172a}
+  details.drawer{border:1px solid var(--grid);border-radius:9px;margin:6px 0;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+  details.drawer summary{list-style:none;cursor:pointer;user-select:none;font-size:12.5px;font-weight:750;padding:8px 10px;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;color:#0f172a}
+  details.drawer summary::-webkit-details-marker{display:none}
+  details.drawer summary::after{content:'›';font-size:18px;line-height:12px;color:var(--muted);transform:rotate(90deg);transition:transform .18s ease}
+  details.drawer[open] summary{border-bottom:1px solid var(--grid);background:#f1f5f9}
+  details.drawer[open] summary::after{transform:rotate(-90deg)}
+  details.drawer > :not(summary){margin-left:8px;margin-right:8px}
+  details.drawer > :last-child{margin-bottom:8px}
+  details.drawer[open] > :not(summary){animation:drawerIn .18s ease both}
+  @keyframes drawerIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .row{display:grid;grid-template-columns:minmax(104px,1fr) minmax(70px,1fr) auto;align-items:center;gap:6px;margin:6px 0}
+  .row label{min-width:0;font-size:12px;color:#334155}
+  input[type="number"],select{width:100%;min-width:0;padding:5px 6px;background:#fff;border:1px solid #cbd5e1;color:#111827;border-radius:7px;font-size:12px}
+  input[type="range"]{width:100%;min-width:0;height:18px}
+  input[type="checkbox"]{justify-self:start}
+  .row>span{font-size:11px;min-width:28px;color:#475569;text-align:right}
+  .btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:6px}
+  .btns button:only-child{grid-column:1/-1}
+  button{background:#111827;color:#f8fafc;border:1px solid #111827;border-radius:7px;padding:6px 8px;cursor:pointer;font-size:11.5px;font-weight:650;white-space:normal;line-height:1.15}
+  button:hover{filter:brightness(1.08)}
+  button.secondary{background:#fff;color:#111827;border-color:#cbd5e1}
+  .note{font-size:10.5px;line-height:1.3;color:#64748b}
+  .metrics{font-size:11.5px;color:#111827;background:#f8fafc;border:1px solid var(--grid);padding:6px 7px;border-radius:7px;margin-top:6px}
+  .warn{color:#b91c1c;font-size:11px;margin-top:5px}
+  main{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;height:100vh}
+  .topbar{height:var(--topbar);min-height:var(--topbar);display:flex;gap:8px;justify-content:space-between;align-items:center;padding:5px 8px;border-bottom:1px solid var(--grid);background:#fff}
+  #status{padding:4px 8px;border-radius:999px;transition:.2s ease;white-space:nowrap}
+  #status.statusComplete{color:#166534;background:#dcfce7;border:1px solid #86efac;font-weight:750}
+  .completionToast{position:absolute;z-index:20;top:52px;left:50%;transform:translate(-50%,-12px);display:flex;align-items:center;gap:9px;max-width:min(520px,calc(100% - 28px));padding:10px 14px;border:1px solid #86efac;border-radius:10px;background:#f0fdf4;color:#166534;box-shadow:0 10px 28px rgba(15,23,42,.18);font-size:12.5px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+  .completionToast.show{opacity:1;transform:translate(-50%,0)}
+  .completionToast .check{display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#22c55e;color:#fff;font-size:15px;flex:0 0 auto}
+  .topbarLeft{display:flex;align-items:center;gap:8px;min-width:0}
+  .title{font-weight:750;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .iconBtn{padding:5px 8px;min-width:34px;background:#fff;color:#111827;border-color:#cbd5e1;font-size:15px}
+  .panel,.vizPanel{border:1px solid var(--grid);border-radius:10px;background:#fff;overflow:hidden;display:flex;flex-direction:column;min-width:0;min-height:0;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .panelHeader{height:31px;min-height:31px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--grid);background:#fff;font-size:12px}
+  .panelHeader .name,.panelHeader>span:first-child{font-weight:750}
+  .panelBody{flex:1;min-height:0}
+  svg{width:100%;height:100%;background:#fff;touch-action:none;display:block}
+  .edge{stroke:var(--edge);stroke-width:1;opacity:.95}
+  .edge.rewired{stroke:var(--edge-rewired);stroke-width:1.2}
+  .node{stroke:#0b2a7a;stroke-width:.6;cursor:grab;transition:r .18s ease,stroke-width .18s ease,filter .18s ease}
+  .node.infectedEmphasis{stroke:#991b1b;stroke-width:1.4;filter:drop-shadow(0 0 3px rgba(220,38,38,.45))}
+  .label{font-size:11px;fill:var(--label);pointer-events:none}
+  .timeLabel{font-size:16px;fill:#111827;font-weight:800;user-select:none}
+  .chartWrap{position:relative;flex:1;min-height:0;padding:5px 8px 7px}
+  canvas{width:100%;height:100%;display:block}
+
+  #canvasWrap{flex:1;min-height:0;padding:6px}
+  .workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,34%);gap:6px;height:100%;min-height:0}
+  .chartPanel{min-width:0;min-height:0}
+  @media(max-width:900px){html,body{overflow:auto}.app,.app.sidebarCollapsed{grid-template-columns:1fr;height:auto;overflow:visible}.app.sidebarCollapsed aside{display:none}aside{max-height:none}.workspace{grid-template-columns:1fr;height:auto}.vizPanel{height:62vh}.chartPanel{height:34vh}main{height:auto}.topbar{position:sticky;top:0;z-index:5}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="controlPanel">
+    <div class="sideHead"><h1>Contagio en red Small-World</h1><span class="note">Panel de control</span></div>
+
+    <details class="drawer">
+      <summary>Parámetros de la red</summary>
+      <div class="row"><label for="n">n (nodos)</label><input id="n" type="number" min="6" max="800" step="1" value="60"></div>
+      <div class="row"><label for="k">k (vecinos)</label><input id="k" type="number" min="2" max="100" step="2" value="4"></div>
+      <div class="row"><label for="p">p (re-cableo)</label><input id="p" type="range" min="0" max="1" step="0.01" value="0.10"><span id="pval">0.10</span></div>
+      <div class="row"><label for="size">Tamaño nodo</label><input id="size" type="range" min="2" max="12" step="1" value="6"><span id="sizeval">6</span></div>
+      <div class="row"><label for="labels">Etiquetas</label><input id="labels" type="checkbox" checked></div>
+      <div class="row"><label for="sep">Separación (radios)</label><input id="sep" type="range" min="0" max="1" step="0.01" value="0.55"><span id="sepval">0.55</span></div>
+      <div class="btns">
+        <button id="gen">Generar</button>
+        <button id="regen" class="secondary">Re-generar</button>
+        <button id="recenter" class="secondary">Recentrar</button>
+      </div>
+      <div class="note">k debe ser par y menor que n. p≈0.1 suele mostrar mundo-pequeño.</div>
+    </details>
+
+    <details class="drawer">
+      <summary>Re-cableo 1 a 1</summary>
+      <div class="btns"><button id="rewireOne">Re-cablear 1 (aleatorio)</button></div>
+      <div class="row"><label for="clickMode">Modo arista-clic</label><input id="clickMode" type="checkbox"></div>
+    </details>
+
+    <details class="drawer" open>
+      <summary>Modelo de contagio</summary>
+      <div class="row">
+        <label for="modelSelect">Tipo</label>
+        <select id="modelSelect">
+          <option value="simple" selected>Simple (SI, prob. β)</option>
+          <option value="complejo">Complejo (≥2 vecinos infectados)</option>
+        </select>
+      </div>
+      <div id="simpleControls">
+        <div class="row"><label for="beta">Prob. infección (β)</label><input id="beta" type="range" min="0" max="1" step="0.01" value="0.25"><span id="betaval">0.25</span></div>
+      </div>
+      <div class="row"><label for="infectMode">Infectar (clic)</label><input id="infectMode" type="checkbox"></div>
+      <div class="row"><label for="highlightInfected">Resaltar infectados</label><input id="highlightInfected" type="checkbox" checked></div>
+      <div class="row"><label for="infectedScale">Escala infectado</label><input id="infectedScale" type="range" min="1.2" max="3" step="0.1" value="1.8"><span id="infectedScaleVal">1.8×</span></div>
+      <div class="row"><label for="initialCount">Infectados iniciales</label><input id="initialCount" type="number" min="1" max="800" step="1" value="3"></div>
+      <div class="btns"><button id="randomInfect" class="secondary">Infección inicial aleatoria</button></div>
+      <div class="row"><label for="tickMs">Velocidad (ms)</label><input id="tickMs" type="number" min="20" max="2000" step="20" value="400"></div>
+      <div class="btns">
+        <button id="startSim">Iniciar</button>
+        <button id="pauseSim" class="secondary">Pausa</button>
+        <button id="stepSim" class="secondary">Paso</button>
+        <button id="resetInf" class="secondary">Reset infecciones</button>
+      </div>
+      <div class="metrics" id="siMetrics">S: — &nbsp; I: — &nbsp; Paso: 0</div>
+    </details>
+
+    <details class="drawer">
+      <summary>Exportar</summary>
+      <div class="btns">
+        <button id="exportGraphML">Descargar GraphML</button>
+        <button id="exportGEXF" class="secondary">Descargar GEXF</button>
+      </div>
+      <div class="warn" id="warn"></div>
+    </details>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div class="topbarLeft"><button id="toggleSidebar" class="iconBtn" aria-label="Mostrar u ocultar controles" aria-expanded="true">☰</button><div class="title">Small-World · contagio simple y complejo</div></div>
+      <div id="status" class="note" role="status" aria-live="polite"></div>
+    </div>
+    <div id="completionToast" class="completionToast" role="alert" aria-live="assertive"><span class="check">✓</span><span id="completionMessage">Todos los nodos quedaron infectados. La simulación se detuvo automáticamente.</span></div>
+    <div id="canvasWrap">
+      <div class="workspace">
+        <section class="vizPanel">
+          <div class="panelHeader"><span>Red de contagio</span><span id="networkCaption" class="note">Rueda: zoom · arrastre fondo: mover</span></div>
+          <div class="panelBody">
+            <svg id="svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet" aria-label="Lienzo de red">
+              <g id="overlay"><text id="timeLabel" x="20" y="30" class="timeLabel">t = 0</text></g>
+              <g id="edges"></g>
+              <g id="nodes"></g>
+              <g id="labelsLayer"></g>
+            </svg>
+          </div>
+        </section>
+        <section class="vizPanel chartPanel">
+          <div class="panelHeader"><span>Evolución de contagiados</span><span class="note">I(t)</span></div>
+          <div class="chartWrap"><canvas id="chart" aria-label="Gráfica de evolución de infectados"></canvas></div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ==== Utilidades ==== */
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rand=n=>Math.floor(Math.random()*n);
+function download(filename,text,mime='application/xml'){const blob=new Blob([text],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+
+/* ==== Watts–Strogatz ==== */
+function wattsStrogatz(n,k,p){
+  if(k%2!==0) throw new Error("k debe ser par.");
+  if(k>=n) throw new Error("k debe ser menor que n.");
+  const nodes=Array.from({length:n},(_,i)=>i);
+  const adj=new Map(nodes.map(i=>[i,new Set()]));
+  const edges=[];
+  function addEdge(a,b,rewired=false){
+    const u=Math.min(a,b), v=Math.max(a,b);
+    if(u===v || adj.get(u).has(v)) return false;
+    adj.get(u).add(v); adj.get(v).add(u);
+    edges.push({u,v,rewired:!!rewired}); return true;
+  }
+  function removeEdge(a,b){
+    const u=Math.min(a,b), v=Math.max(a,b);
+    if(!adj.get(u).has(v)) return false;
+    adj.get(u).delete(v); adj.get(v).delete(u);
+    const i=edges.findIndex(e=>e.u===u&&e.v===v); if(i>=0) edges.splice(i,1); return true;
+  }
+  const half=k/2;
+  for(let i=0;i<n;i++) for(let j=1;j<=half;j++) addEdge(i,(i+j)%n,false);
+  for(let i=0;i<n;i++){
+    for(let j=1;j<=half;j++){
+      const v=(i+j)%n;
+      if(Math.random()<p && adj.get(i).has(v)){
+        removeEdge(i,v);
+        let w,tries=0,max=5*n;
+        do{ w=rand(n); tries++; } while((w===i || adj.get(i).has(w)) && tries<max);
+        if(!(w===i || adj.get(i).has(w))) addEdge(i,w,true); else addEdge(i,v,false);
+      }
+    }
+  }
+  return {nodes,edges,adj,addEdge,removeEdge};
+}
+
+/* ==== Disposición doble círculo ==== */
+function doubleCirclePositions(n,W,H,sep){
+  const cx=W/2, cy=H/2, minD=Math.min(W,H);
+  const Rmid=0.34*minD, delta=(0.14*minD)*clamp(sep,0,1);
+  const R1=Rmid-delta, R2=Rmid+delta;
+  const pos=new Map();
+  for(let i=0;i<n;i++){
+    const a=2*Math.PI*i/n; const R=(i%2===0)?R1:R2;
+    pos.set(i,{x:cx+R*Math.cos(a), y:cy+R*Math.sin(a)});
+  }
+  return pos;
+}
+
+/* ==== DOM ==== */
+const svg=$('svg'), edgesLayer=$('edges'), nodesLayer=$('nodes'), labelsLayer=$('labelsLayer'), timeLabel=$('timeLabel');
+const elN=$('n'), elK=$('k'), elP=$('p'), elPVal=$('pval');
+const elSize=$('size'), elSizeVal=$('sizeval'), elLabels=$('labels'), elSep=$('sep'), elSepVal=$('sepval');
+const btnGen=$('gen'), btnRegen=$('regen'), btnRecenter=$('recenter');
+const btnRewireOne=$('rewireOne'), cbClickMode=$('clickMode');
+const modelSelect=$('modelSelect'), betaRange=$('beta'), betaVal=$('betaval');
+const infModeCb=$('infectMode'), tickMsInput=$('tickMs');
+const highlightInfectedCb=$('highlightInfected'), infectedScaleRange=$('infectedScale'), infectedScaleVal=$('infectedScaleVal');
+const initialCountInput=$('initialCount'), btnRandomInfect=$('randomInfect');
+const chartCanvas=$('chart'), chartCtx=chartCanvas.getContext('2d');
+const btnStart=$('startSim'), btnPause=$('pauseSim'), btnStep=$('stepSim'), btnReset=$('resetInf');
+const btnExpGraphML=$('exportGraphML'), btnExpGEXF=$('exportGEXF');
+const warn=$('warn'), status=$('status');
+const completionToast=$('completionToast'), completionMessage=$('completionMessage');
+
+/* ==== Estado global ==== */
+let G=null, positions=new Map(), handles=new Map(), edgeRecs=[], nodeToEdges=new Map();
+let clickRewireMode=false, dragState=null;
+
+/* contagio (sin recuperación) */
+let nodeState=new Map(); // 'S' | 'I'
+let simTimer=null, simStep=0, simRunning=false;  /* <-- única declaración */
+let infectionHistory=[{step:0, infected:0}];
+
+/* ==== Dibujo ==== */
+function ensureViewBox(){ if(!svg.viewBox.baseVal || !svg.viewBox.baseVal.width){ svg.setAttribute('viewBox','0 0 1200 800'); } }
+function nodeRadius(state){
+  const base=+elSize.value;
+  return state==='I' && highlightInfectedCb.checked ? base*(+infectedScaleRange.value) : base;
+}
+function applyNodeAppearance(id){
+  const h=handles.get(id); if(!h) return;
+  const st=nodeState.get(id)||'S';
+  const r=nodeRadius(st);
+  h.circle.setAttribute('fill', st==='I' ? 'var(--inf)' : 'var(--sus)');
+  h.circle.setAttribute('r', r);
+  h.circle.classList.toggle('infectedEmphasis', st==='I' && highlightInfectedCb.checked);
+  if(h.label){
+    const p=positions.get(id);
+    h.label.setAttribute('x',p.x+r+3); h.label.setAttribute('y',p.y-r-3);
+  }
+}
+function refreshAllNodeAppearances(){ for(const v of G?.nodes||[]) applyNodeAppearance(v); }
+
+function drawAll({recomputePositions=true}={}){
+  ensureViewBox();
+  edgesLayer.innerHTML=''; nodesLayer.innerHTML=''; labelsLayer.innerHTML='';
+  handles.clear(); edgeRecs=[]; nodeToEdges=new Map();
+
+  const vb=svg.viewBox.baseVal; const W=vb.width||1200, H=vb.height||800;
+  if(recomputePositions || positions.size!==G.nodes.length){ positions=doubleCirclePositions(G.nodes.length,W,H,+elSep.value); }
+
+  for(const e of G.edges){
+    const a=positions.get(e.u), b=positions.get(e.v);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',a.x); line.setAttribute('y1',a.y);
+    line.setAttribute('x2',b.x); line.setAttribute('y2',b.y);
+    line.dataset.u=e.u; line.dataset.v=e.v;
+    line.setAttribute('class', e.rewired ? 'edge rewired' : 'edge');
+    if(clickRewireMode){ line.style.cursor='pointer'; line.addEventListener('click', onEdgeClickRewire); }
+    edgesLayer.appendChild(line);
+    edgeRecs.push({el:line,u:e.u,v:e.v});
+  }
+
+  nodeToEdges = new Map(G.nodes.map(v=>[v,[]]));
+  for(const rec of edgeRecs){
+    nodeToEdges.get(rec.u).push({el:rec.el,which:'x1'});
+    nodeToEdges.get(rec.v).push({el:rec.el,which:'x2'});
+  }
+
+  for(const v of G.nodes){
+    const p=positions.get(v);
+    const st=nodeState.get(v) || 'S';
+    const r=nodeRadius(st);
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p.x); c.setAttribute('cy',p.y);
+    c.setAttribute('r',r); c.dataset.id=v; c.setAttribute('class','node');
+    c.setAttribute('fill', st==='I' ? 'var(--inf)' : 'var(--sus)');
+    c.classList.toggle('infectedEmphasis', st==='I' && highlightInfectedCb.checked);
+    c.addEventListener('pointerdown', onNodePointerDown);
+    c.addEventListener('click', onNodeClickForInfect);
+    nodesLayer.appendChild(c);
+
+    let t=null;
+    if(elLabels.checked){
+      t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',p.x + r + 3); t.setAttribute('y',p.y - r - 3);
+      t.setAttribute('class','label'); t.textContent=String(v);
+      labelsLayer.appendChild(t);
+    }
+    handles.set(v,{circle:c,label:t});
+  }
+
+  timeLabel.textContent = `t = ${simStep}`;
+}
+
+function refreshNode(v){
+  const h=handles.get(v); if(!h) return;
+  const p=positions.get(v);
+  h.circle.setAttribute('cx',p.x); h.circle.setAttribute('cy',p.y);
+  if(h.label){
+    const r=nodeRadius(nodeState.get(v)||'S');
+    h.label.setAttribute('x', p.x + r + 3);
+    h.label.setAttribute('y', p.y - r - 3);
+  }
+  const arr=nodeToEdges.get(v)||[];
+  for(const rec of arr){
+    if(rec.which==='x1'){ rec.el.setAttribute('x1',p.x); rec.el.setAttribute('y1',p.y); }
+    else{ rec.el.setAttribute('x2',p.x); rec.el.setAttribute('y2',p.y); }
+  }
+}
+
+/* ==== Drag ==== */
+function svgPoint(evt){ const pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY; const inv=svg.getScreenCTM().inverse(); return pt.matrixTransform(inv); }
+function onNodePointerDown(evt){
+  const id=+evt.target.dataset.id;
+  evt.target.setPointerCapture(evt.pointerId);
+  const pt=svgPoint(evt); const p=positions.get(id);
+  dragState={id, dx:p.x-pt.x, dy:p.y-pt.y};
+  svg.addEventListener('pointermove', onPointerMove);
+  svg.addEventListener('pointerup', onPointerUp);
+}
+function onPointerMove(evt){
+  if(!dragState) return;
+  const pt=svgPoint(evt); const x=pt.x+dragState.dx, y=pt.y+dragState.dy;
+  positions.set(dragState.id,{x,y}); refreshNode(dragState.id);
+}
+function onPointerUp(){ if(!dragState) return; svg.removeEventListener('pointermove', onPointerMove); svg.removeEventListener('pointerup', onPointerUp); dragState=null; }
+
+/* ==== Rewire ==== */
+function onEdgeClickRewire(evt){
+  if(!clickRewireMode) return;
+  const line=evt.currentTarget; const u=+line.dataset.u, v=+line.dataset.v;
+  rewireEdgeDOM(u,v,line);
+}
+function rewireRandomOne(){ if(!edgeRecs.length) return; const rec=edgeRecs[rand(edgeRecs.length)]; rewireEdgeDOM(rec.u,rec.v,rec.el); }
+function rewireEdgeDOM(u,v,lineEl){
+  const base=Math.min(u,v);
+  let w,tries=0,max=5*G.nodes.length;
+  do{ w=rand(G.nodes.length); tries++; } while((w===base || G.adj.get(base).has(w)) && tries<max);
+  if(w===base || G.adj.get(base).has(w)) return;
+  G.removeEdge(u,v); G.addEdge(base,w,true);
+  const pa=positions.get(Math.min(base,w)), pb=positions.get(Math.max(base,w));
+  lineEl.classList.add('rewired');
+  lineEl.dataset.u=String(Math.min(base,w)); lineEl.dataset.v=String(Math.max(base,w));
+  lineEl.setAttribute('x1',pa.x); lineEl.setAttribute('y1',pa.y);
+  lineEl.setAttribute('x2',pb.x); lineEl.setAttribute('y2',pb.y);
+  const rec=edgeRecs.find(r=>r.el===lineEl); if(rec){ rec.u=Math.min(base,w); rec.v=Math.max(base,w); }
+}
+
+/* ==== Infección por clic ==== */
+function onNodeClickForInfect(evt){
+  if(!infModeCb.checked) return;
+  const id=+evt.currentTarget.dataset.id;
+  const cur=nodeState.get(id)||'S';
+  const next=(cur==='S')?'I':'S';
+  nodeState.set(id,next);
+  applyNodeAppearance(id);
+  updateSiMetrics();
+  recordHistory();
+  if(allNodesInfected()) notifyAllInfected();
+  else clearCompletionNotice();
+}
+
+/* ==== Simulación ==== */
+function simStepOnce(){
+  if(!G) return;
+  if(allNodesInfected()){
+    notifyAllInfected();
+    return;
+  }
+  simStep++;
+  const mode = modelSelect.value;
+
+  if(mode==='simple'){
+    const beta=+betaRange.value;
+    const newlyInfected=new Set();
+    for(const [u,st] of nodeState.entries()){
+      if(st!=='I') continue;
+      for(const v of G.adj.get(u)){
+        if((nodeState.get(v)||'S')==='S' && Math.random()<beta) newlyInfected.add(v);
+      }
+    }
+    for(const v of newlyInfected) nodeState.set(v,'I');
+  }else{ // complejo: ≥2 vecinos infectados
+    const newlyInfected=new Set();
+    for(const v of G.nodes){
+      if((nodeState.get(v)||'S')==='I') continue;
+      let inf=0; for(const u of G.adj.get(v)){ if((nodeState.get(u)||'S')==='I') inf++; if(inf>=2) break; }
+      if(inf>=2) newlyInfected.add(v);
+    }
+    for(const v of newlyInfected) nodeState.set(v,'I');
+  }
+
+  refreshAllNodeAppearances();
+  updateSiMetrics();
+  timeLabel.textContent = `t = ${simStep}`;
+  recordHistory();
+  if(allNodesInfected()) notifyAllInfected();
+}
+
+function updateSiMetrics(){
+  let S=0,I=0;
+  for(const v of G.nodes){ (nodeState.get(v)||'S')==='I'? I++ : S++; }
+  $('siMetrics').innerHTML = `<b>S:</b> ${S} &nbsp; <b>I:</b> ${I} &nbsp; <b>Paso:</b> ${simStep}`;
+}
+
+/* ==== Gráfica de evolución ==== */
+function countInfected(){
+  let total=0;
+  if(!G) return total;
+  for(const v of G.nodes) if((nodeState.get(v)||'S')==='I') total++;
+  return total;
+}
+function allNodesInfected(){
+  return !!G && G.nodes.length>0 && countInfected()===G.nodes.length;
+}
+function stopSimulationTimer(){
+  if(simTimer) clearInterval(simTimer);
+  simTimer=null;
+  simRunning=false;
+}
+function clearCompletionNotice(){
+  status.classList.remove('statusComplete');
+  completionToast.classList.remove('show');
+}
+function notifyAllInfected(){
+  stopSimulationTimer();
+  const message=`Simulación finalizada: los ${G.nodes.length} nodos están infectados.`;
+  status.textContent='✓ Todos los nodos infectados';
+  status.classList.add('statusComplete');
+  completionMessage.textContent=`${message} La ejecución se detuvo automáticamente en t = ${simStep}.`;
+  completionToast.classList.add('show');
+}
+function recordHistory(){
+  const point={step:simStep, infected:countInfected()};
+  const last=infectionHistory[infectionHistory.length-1];
+  if(last && last.step===point.step) infectionHistory[infectionHistory.length-1]=point;
+  else infectionHistory.push(point);
+  drawInfectionChart();
+}
+function resetHistory(){
+  infectionHistory=[{step:simStep, infected:countInfected()}];
+  drawInfectionChart();
+}
+function drawInfectionChart(){
+  if(!chartCanvas || !chartCtx) return;
+  const rect=chartCanvas.getBoundingClientRect();
+  const dpr=Math.max(1,window.devicePixelRatio||1);
+  const width=Math.max(320,Math.round(rect.width||500));
+  const height=Math.max(240,Math.round(rect.height||360));
+  if(chartCanvas.width!==Math.round(width*dpr) || chartCanvas.height!==Math.round(height*dpr)){
+    chartCanvas.width=Math.round(width*dpr); chartCanvas.height=Math.round(height*dpr);
+  }
+  chartCtx.setTransform(dpr,0,0,dpr,0,0);
+  chartCtx.clearRect(0,0,width,height);
+  const m={l:52,r:18,t:24,b:42};
+  const pw=width-m.l-m.r, ph=height-m.t-m.b;
+  const maxStep=Math.max(1,...infectionHistory.map(d=>d.step));
+  const maxInf=Math.max(1,G?G.nodes.length:1,...infectionHistory.map(d=>d.infected));
+  chartCtx.font='12px system-ui, sans-serif';
+  chartCtx.lineWidth=1;
+  chartCtx.strokeStyle='#e5e7eb'; chartCtx.fillStyle='#475569';
+  for(let i=0;i<=5;i++){
+    const y=m.t+ph*i/5;
+    chartCtx.beginPath(); chartCtx.moveTo(m.l,y); chartCtx.lineTo(width-m.r,y); chartCtx.stroke();
+    const val=Math.round(maxInf*(1-i/5));
+    chartCtx.textAlign='right'; chartCtx.textBaseline='middle'; chartCtx.fillText(String(val),m.l-8,y);
+  }
+  for(let i=0;i<=5;i++){
+    const x=m.l+pw*i/5;
+    chartCtx.beginPath(); chartCtx.moveTo(x,m.t); chartCtx.lineTo(x,height-m.b); chartCtx.stroke();
+    const val=Math.round(maxStep*i/5);
+    chartCtx.textAlign='center'; chartCtx.textBaseline='top'; chartCtx.fillText(String(val),x,height-m.b+8);
+  }
+  chartCtx.strokeStyle='#111827'; chartCtx.lineWidth=1.2;
+  chartCtx.beginPath(); chartCtx.moveTo(m.l,m.t); chartCtx.lineTo(m.l,height-m.b); chartCtx.lineTo(width-m.r,height-m.b); chartCtx.stroke();
+  chartCtx.fillStyle='#111827';
+  chartCtx.textAlign='center'; chartCtx.textBaseline='bottom'; chartCtx.fillText('Paso de simulación',m.l+pw/2,height-4);
+  chartCtx.save(); chartCtx.translate(14,m.t+ph/2); chartCtx.rotate(-Math.PI/2); chartCtx.fillText('Nodos infectados',0,0); chartCtx.restore();
+  if(infectionHistory.length){
+    chartCtx.strokeStyle='#dc2626'; chartCtx.lineWidth=3; chartCtx.lineJoin='round'; chartCtx.lineCap='round';
+    chartCtx.beginPath();
+    infectionHistory.forEach((d,i)=>{
+      const x=m.l+pw*(d.step/maxStep);
+      const y=m.t+ph*(1-d.infected/maxInf);
+      if(i===0) chartCtx.moveTo(x,y); else chartCtx.lineTo(x,y);
+    });
+    chartCtx.stroke();
+    chartCtx.fillStyle='#dc2626';
+    infectionHistory.forEach(d=>{
+      const x=m.l+pw*(d.step/maxStep), y=m.t+ph*(1-d.infected/maxInf);
+      chartCtx.beginPath(); chartCtx.arc(x,y,3.5,0,Math.PI*2); chartCtx.fill();
+    });
+  }
+  const latest=infectionHistory[infectionHistory.length-1]||{step:0,infected:0};
+  chartCtx.fillStyle='#111827'; chartCtx.textAlign='left'; chartCtx.textBaseline='top';
+  chartCtx.fillText(`Actual: ${latest.infected} infectados`,m.l,m.t-18);
+}
+function seedRandomInfections(){
+  if(!G) return;
+  pauseSim();
+  clearCompletionNotice();
+  const requested=Math.floor(+initialCountInput.value);
+  if(!Number.isFinite(requested) || requested<1){ warn.textContent='La cantidad de infectados iniciales debe ser al menos 1.'; return; }
+  const amount=Math.min(requested,G.nodes.length);
+  initialCountInput.value=amount;
+  warn.textContent=requested>G.nodes.length?`Se infectaron los ${amount} nodos disponibles.`:'';
+  for(const v of G.nodes) nodeState.set(v,'S');
+  const shuffled=[...G.nodes];
+  for(let i=shuffled.length-1;i>0;i--){ const j=rand(i+1); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+  for(let i=0;i<amount;i++) nodeState.set(shuffled[i],'I');
+  simStep=0;
+  refreshAllNodeAppearances();
+  updateSiMetrics(); timeLabel.textContent='t = 0'; resetHistory();
+  status.textContent=`Infección inicial aleatoria: ${amount} nodos`;
+  if(allNodesInfected()) notifyAllInfected();
+}
+
+/* ==== Control simulación ==== */
+function startSim(){
+  if(simRunning) return;
+  if(allNodesInfected()){
+    notifyAllInfected();
+    return;
+  }
+  clearCompletionNotice();
+  simRunning=true;
+  const ms=Math.max(20,+tickMsInput.value);
+  simTimer=setInterval(()=>simStepOnce(), ms);
+  status.textContent='Simulación: en ejecución';
+}
+function pauseSim(){ stopSimulationTimer(); status.textContent='Simulación: pausada'; }
+function stepSim(){
+  if(allNodesInfected()) notifyAllInfected();
+  else simStepOnce();
+}
+function resetInf(){ clearCompletionNotice(); for(const v of G.nodes) nodeState.set(v,'S'); simStep=0; refreshAllNodeAppearances(); updateSiMetrics(); timeLabel.textContent='t = 0'; resetHistory(); status.textContent='Infecciones reiniciadas'; }
+
+/* ==== Export ==== */
+function toGraphML(G){ let s='<?xml version="1.0" encoding="UTF-8"?>\n<graphml xmlns="http://graphml.graphdrawing.org/xmlns">\n<graph edgedefault="undirected">\n'; s+=G.nodes.map(i=>`  <node id="n${i}"/>\n`).join(''); s+=G.edges.map((e,idx)=>`  <edge id="e${idx}" source="n${e.u}" target="n${e.v}"/>\n`).join(''); s+='</graph>\n</graphml>'; return s; }
+function toGEXF(G){ let s='<?xml version="1.0" encoding="UTF-8"?>\n<gexf xmlns="http://www.gexf.net/1.2draft" version="1.2">\n<graph mode="static" defaultedgetype="undirected">\n<nodes>\n'; s+=G.nodes.map(i=>`  <node id="${i}" label="${i}"/>\n`).join(''); s+='</nodes>\n<edges>\n'; s+=G.edges.map((e,idx)=>`  <edge id="${idx}" source="${e.u}" target="${e.v}"/>\n`).join(''); s+='</edges>\n</graph>\n</gexf>'; return s; }
+$('exportGraphML').addEventListener('click', ()=> download('smallworld.graphml', toGraphML(G)));
+$('exportGEXF').addEventListener('click', ()=> download('smallworld.gexf', toGEXF(G)));
+
+/* ==== Generar/redibujar ==== */
+function tryGenerate(){
+  warn.textContent=''; pauseSim(); clearCompletionNotice();
+  const n=+elN.value, k=+elK.value, p=+elP.value;
+  if(!Number.isInteger(n)||n<6){ warn.textContent='n debe ser entero ≥ 6'; return; }
+  if(!Number.isInteger(k)||k<2){ warn.textContent='k debe ser entero ≥ 2 y par'; return; }
+  if(k%2!==0){ warn.textContent='k debe ser par'; return; }
+  if(k>=n){ warn.textContent='k debe ser menor que n'; return; }
+
+  try{ G=wattsStrogatz(n,k,p); } catch(e){ warn.textContent=e.message||String(e); return; }
+
+  nodeState=new Map(G.nodes.map(v=>[v,'S']));
+  simStep=0; simRunning=false; status.textContent='Listo';
+  drawAll({recomputePositions:true}); updateSiMetrics(); timeLabel.textContent='t = 0';
+  resetHistory();
+}
+function recenter(){ if(!G) return; drawAll({recomputePositions:true}); updateSiMetrics(); timeLabel.textContent=`t = ${simStep}`; }
+
+/* ==== Zoom y desplazamiento de la red ==== */
+function getViewBox(){ const vb=svg.viewBox.baseVal; return {x:vb.x,y:vb.y,w:vb.width||1200,h:vb.height||800}; }
+function setViewBox(vb){ svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`); }
+function attachZoomPan(){
+  svg.addEventListener('wheel',(e)=>{
+    e.preventDefault();
+    const pt=svgPoint(e), vb=getViewBox();
+    const scale=e.deltaY<0 ? 0.88 : 1/0.88;
+    const wNew=clamp(vb.w*scale,120,12000), hNew=clamp(vb.h*scale,80,8000);
+    setViewBox({
+      x:pt.x-(pt.x-vb.x)*(wNew/vb.w),
+      y:pt.y-(pt.y-vb.y)*(hNew/vb.h),
+      w:wNew,h:hNew
+    });
+    if(!allNodesInfected()) status.textContent=e.deltaY<0?'Zoom acercado':'Zoom alejado';
+  },{passive:false});
+  let panning=false,last=null;
+  svg.addEventListener('pointerdown',(e)=>{
+    if(e.target===svg || e.target.closest?.('#overlay')){
+      panning=true; svg.setPointerCapture(e.pointerId); last=svgPoint(e); svg.style.cursor='grabbing';
+    }
+  });
+  svg.addEventListener('pointermove',(e)=>{
+    if(!panning) return;
+    const cur=svgPoint(e),vb=getViewBox();
+    setViewBox({x:vb.x-(cur.x-last.x),y:vb.y-(cur.y-last.y),w:vb.w,h:vb.h}); last=cur;
+  });
+  const stopPan=()=>{panning=false;last=null;svg.style.cursor='';};
+  svg.addEventListener('pointerup',stopPan); svg.addEventListener('pointercancel',stopPan);
+}
+
+/* ==== Eventos ==== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  $('pval').textContent=(+elP.value).toFixed(2);
+  elSizeVal.textContent=elSize.value;
+  elSepVal.textContent=(+elSep.value).toFixed(2);
+  betaVal.textContent=(+betaRange.value).toFixed(2);
+  infectedScaleVal.textContent=(+infectedScaleRange.value).toFixed(1)+'×';
+  tryGenerate();
+  attachZoomPan();
+});
+elP.addEventListener('input', ()=> $('pval').textContent=(+elP.value).toFixed(2));
+elSize.addEventListener('input', ()=>{ elSizeVal.textContent=elSize.value; drawAll({recomputePositions:false}); });
+elSep.addEventListener('input', ()=>{ elSepVal.textContent=(+elSep.value).toFixed(2); drawAll({recomputePositions:true}); });
+$('labels').addEventListener('change', ()=> drawAll({recomputePositions:false}));
+
+$('gen').addEventListener('click', tryGenerate);
+$('regen').addEventListener('click', tryGenerate);
+$('recenter').addEventListener('click', recenter);
+
+btnRewireOne.addEventListener('click', rewireRandomOne);
+cbClickMode.addEventListener('change', e=>{ clickRewireMode=e.target.checked; drawAll({recomputePositions:false}); });
+
+betaRange.addEventListener('input', ()=> betaVal.textContent=(+betaRange.value).toFixed(2));
+highlightInfectedCb.addEventListener('change',refreshAllNodeAppearances);
+infectedScaleRange.addEventListener('input',()=>{ infectedScaleVal.textContent=(+infectedScaleRange.value).toFixed(1)+'×'; refreshAllNodeAppearances(); });
+$('infectMode').addEventListener('change', ()=>{});
+
+$('startSim').addEventListener('click', startSim);
+$('pauseSim').addEventListener('click', pauseSim);
+$('stepSim').addEventListener('click', stepSim);
+$('resetInf').addEventListener('click', resetInf);
+btnRandomInfect.addEventListener('click', seedRandomInfections);
+window.addEventListener('resize', drawInfectionChart);
+
+// Interfaz compacta: panel lateral deslizante y acordeones exclusivos
+(function(){
+  const app=document.querySelector('.app');
+  const toggle=document.getElementById('toggleSidebar');
+  if(toggle && app){
+    toggle.addEventListener('click',()=>{
+      app.classList.toggle('sidebarCollapsed');
+      toggle.setAttribute('aria-expanded', String(!app.classList.contains('sidebarCollapsed')));
+      setTimeout(()=>window.dispatchEvent(new Event('resize')),260);
+    });
+  }
+  const drawers=[...document.querySelectorAll('details.drawer')];
+  drawers.forEach(d=>d.addEventListener('toggle',()=>{
+    if(!d.open) return;
+    drawers.forEach(other=>{ if(other!==d) other.open=false; });
+    setTimeout(()=>window.dispatchEvent(new Event('resize')),190);
+  }));
+})();
+</script>
+</body>
+</html>
