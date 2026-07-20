@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio de Programación Dinámica — Decisiones paso a paso</title>
+  <style>
+    :root{
+      --navy:#0b2f55;--navy2:#123f70;--blue:#2563eb;--sky:#eaf3ff;--bg:#f4f7fb;
+      --card:#fff;--text:#172033;--muted:#637087;--border:#d7e0ec;--green:#16a36a;
+      --green-bg:#ddf8eb;--orange:#e9781d;--orange-bg:#fff0df;--violet:#7c3aed;
+      --violet-bg:#eee7ff;--red:#dc3545;--yellow:#f4b942;--shadow:0 6px 22px rgba(15,47,85,.09);
+      --cell:42px;--radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.42;filter:grayscale(.25)}
+    .topbar{height:70px;background:linear-gradient(120deg,var(--navy),#174d84);color:#fff;display:flex;align-items:center;gap:18px;padding:0 22px;position:sticky;top:0;z-index:50;box-shadow:0 3px 14px rgba(5,30,57,.22)}
+    .brand{display:flex;align-items:center;gap:12px;min-width:305px}
+    .brand-icon{width:42px;height:42px;border-radius:12px;background:#fff;color:var(--blue);display:grid;place-items:center;font-size:23px;font-weight:900;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+    .brand h1{font-size:17px;line-height:1.1;margin:0}.brand small{display:block;color:#cfe3f7;font-size:11px;margin-top:4px;font-weight:500}
+    .lab-tabs{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1}
+    .lab-tab{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#e7f2ff;border-radius:9px;padding:9px 12px;white-space:nowrap;font-weight:700;font-size:12px}
+    .lab-tab:hover,.lab-tab.active{background:#fff;color:var(--navy);border-color:#fff}
+    .progress-pill{white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:7px 11px;font-size:11px}
+    .workspace{--left:275px;--right:360px;display:grid;grid-template-columns:var(--left) minmax(520px,1fr) var(--right);gap:9px;padding:9px;max-width:1900px;margin:auto;height:calc(100vh - 70px);transition:grid-template-columns .28s ease}
+    .workspace.left-closed{--left:48px}.workspace.right-closed{--right:48px}
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);min-height:0;overflow:hidden}
+    .sidebar,.explain-panel{display:flex;flex-direction:column}
+    .panel-head{padding:10px 11px 9px;border-bottom:1px solid var(--border);background:linear-gradient(#fff,#f9fbfe);display:flex;align-items:center;gap:8px;min-height:52px}
+    .panel-head-copy{min-width:0;flex:1}.panel-head-copy p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .panel-head h2,.panel-head h3{font-size:14px;margin:0;display:flex;align-items:center;gap:8px}.panel-head p{font-size:11px;color:var(--muted);margin:5px 0 0}
+    .panel-body,.drawer-content{padding:9px 10px;overflow:auto;min-height:0}.drawer-content{flex:1;transition:opacity .18s ease}
+    .drawer-toggle{flex:0 0 30px;width:30px;height:30px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--navy);font-weight:900;display:grid;place-items:center;box-shadow:0 2px 6px rgba(15,47,85,.08)}
+    .workspace.left-closed .sidebar .panel-head-copy,.workspace.right-closed .explain-panel .panel-head-copy,.workspace.left-closed .sidebar .drawer-content,.workspace.right-closed .explain-panel .drawer-content{display:none}
+    .workspace.left-closed .sidebar .panel-head,.workspace.right-closed .explain-panel .panel-head{padding:9px;justify-content:center;border-bottom:0;height:100%}
+    .workspace.left-closed .sidebar .drawer-toggle,.workspace.right-closed .explain-panel .drawer-toggle{position:sticky;top:8px;align-self:flex-start}
+    .slide-section{border:1px solid var(--border);border-radius:10px;background:#fff;margin-bottom:8px;overflow:hidden}
+    .slide-section summary{list-style:none;cursor:pointer;padding:8px 10px;background:#f5f8fc;color:#34445a;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;justify-content:space-between}
+    .slide-section summary::-webkit-details-marker{display:none}.slide-section summary::after{content:"⌄";font-size:14px;color:var(--blue);transition:.18s}.slide-section:not([open]) summary::after{transform:rotate(-90deg)}
+    .slide-inner{padding:9px}.example-count{display:inline-flex;align-items:center;gap:5px;background:#e8f7ef;color:#08784b;border:1px solid #bfe8d3;border-radius:99px;padding:5px 8px;font-size:9px;font-weight:850;margin-bottom:8px}
+    .problem-menu{display:grid;gap:4px;max-height:285px;overflow:auto;padding-right:3px;scrollbar-color:#a8b8cc #edf2f7}.problem-link{width:100%;border:1px solid transparent;border-radius:8px;background:#f7f9fc;color:#405069;padding:7px 8px;display:flex;align-items:center;gap:7px;text-align:left;font-size:10px;font-weight:800;transition:.16s}.problem-link:hover{background:var(--sky);border-color:#cfe0f5;color:#174d84;transform:translateX(2px)}.problem-link.active{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 3px 9px rgba(11,47,85,.18)}.problem-link .problem-icon{width:20px;text-align:center;font-size:13px}.problem-link small{display:block;margin-left:auto;font-size:8px;opacity:.68;font-weight:700}
+    .section-title{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#60708a;margin:4px 0 8px}
+    .field{margin-bottom:10px}.field label{display:block;font-size:11px;font-weight:750;margin-bottom:5px;color:#38465a}
+    input[type="number"],input[type="text"],select{width:100%;border:1px solid #cbd6e4;border-radius:8px;padding:8px 9px;background:#fff;color:var(--text);outline:none}
+    input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    input[type="range"]{width:100%;accent-color:var(--blue)}
+    .segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#edf2f8;padding:4px;border-radius:10px;margin-bottom:10px}
+    .segmented button{border:0;border-radius:7px;background:transparent;padding:7px 3px;font-size:10px;font-weight:800;color:#60708a}
+    .segmented button.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(30,65,100,.12)}
+    .btn{border:1px solid #cbd7e6;background:#fff;color:#2d3d54;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.18s}
+    .btn:hover:not(:disabled){transform:translateY(-1px);border-color:#92a9c5}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.danger{color:var(--red)}.btn.soft{background:var(--sky);border-color:#cfe1fb;color:#174d84}
+    .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.btn.full{width:100%}
+    .object-list{display:grid;gap:5px;max-height:180px;overflow:auto;padding-right:2px}
+    .object-row{display:grid;grid-template-columns:28px 25px 1fr 40px 40px 24px;gap:4px;align-items:center;padding:6px;border:1px solid var(--border);border-radius:9px;background:#fbfcfe}
+    .object-row .obj-icon{width:27px;height:27px;border:0;border-radius:8px;display:grid;place-items:center;font-size:15px;padding:0}.object-row input{padding:5px;border-radius:6px;font-size:10px;min-width:0}.object-row input[type="color"]{width:25px;height:27px;padding:2px}.object-row .remove-object{border:0;background:transparent;color:var(--red);font-weight:900}
+    .main-panel{display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;min-height:0}
+    .lab-title{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .lab-title h2{font-size:16px;margin:0}.lab-title p{font-size:11px;color:var(--muted);margin:3px 0 0}.badge{font-size:10px;font-weight:850;padding:5px 8px;border-radius:99px;background:var(--sky);color:#1858a6;white-space:nowrap}
+    .visual-zone{padding:8px;overflow:auto;background:linear-gradient(135deg,#fbfdff,#f3f8ff)}
+    .visual-stage{min-height:92px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+    .controls{padding:8px 11px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border);flex-wrap:wrap;background:#fff}
+    .controls .btn{padding:7px 9px}.controls .spacer{flex:1}.speed{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);min-width:115px}.speed input{width:75px}
+    .table-shell{position:relative;overflow:auto;min-height:0;background:#f9fbfd;scrollbar-color:#aab9cc #edf2f7}
+    .table-tools{position:sticky;top:0;z-index:15;display:flex;justify-content:flex-end;gap:4px;padding:5px 7px;pointer-events:none;height:0}.table-tools>*{pointer-events:auto}
+    .zoom-btn{width:27px;height:27px;border:1px solid var(--border);background:#fff;border-radius:7px;font-weight:800;color:var(--navy);box-shadow:0 2px 6px rgba(0,0,0,.07)}
+    table.dp{border-collapse:separate;border-spacing:0;margin:11px auto 28px;background:#fff;box-shadow:0 3px 14px rgba(20,50,80,.08);font-variant-numeric:tabular-nums;font-size:calc(var(--cell) * .27)}
+    table.dp th,table.dp td{min-width:var(--cell);height:var(--cell);text-align:center;border-right:1px solid #dfe7f0;border-bottom:1px solid #dfe7f0;padding:3px;position:relative;transition:.2s;background:#fff}
+    table.dp th{background:#eaf1f9;color:#2e4058;font-weight:850;position:sticky;top:0;z-index:6}table.dp th:first-child,table.dp td:first-child{position:sticky;left:0;z-index:5;background:#eaf1f9;font-weight:850;min-width:58px}table.dp th:first-child{z-index:8}
+    table.dp td.future{color:#b8c2cf;background:#fafbfd}table.dp td.current{background:#fff3bf!important;outline:3px solid var(--yellow);z-index:4;animation:pulse 1s infinite}table.dp td.ref-a{background:var(--sky)!important;color:#124e96;font-weight:850}table.dp td.ref-b{background:var(--violet-bg)!important;color:#5f27b8;font-weight:850}table.dp td.include{background:var(--green-bg)}table.dp td.exclude{background:var(--orange-bg)}table.dp td.path{background:#c8f3df!important;box-shadow:inset 0 0 0 2px var(--green);font-weight:900}table.dp td.match{background:var(--green-bg);color:#08784b;font-weight:900}
+    @keyframes pulse{50%{box-shadow:0 0 0 6px rgba(244,185,66,.2)}}
+    .legend{display:flex;gap:8px;flex-wrap:wrap;padding:7px 10px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);background:#fff}.dot{width:10px;height:10px;border-radius:3px;display:inline-block;vertical-align:-1px;margin-right:3px}.d-current{background:#fff3bf;border:1px solid var(--yellow)}.d-a{background:var(--sky)}.d-b{background:var(--violet-bg)}.d-good{background:var(--green-bg)}.d-path{background:var(--green)}.arrow-key{font-size:15px;font-weight:1000;line-height:8px;vertical-align:-2px;margin-right:2px}.arrow-blue{color:#1677e8}.arrow-violet{color:#7c3aed}
+    #tableArea{position:relative;min-height:100%}.dependency-arrows{position:absolute;inset:0;overflow:visible;pointer-events:none;z-index:12}.dependency-arrows>path{fill:none;stroke-width:3;stroke-linecap:round;filter:drop-shadow(0 1px 1px rgba(255,255,255,.9));animation:drawArrow .38s ease-out both}.dependency-arrows .dep-one{stroke:#1677e8}.dependency-arrows .dep-two{stroke:#7c3aed}.dependency-arrows .dep-more{stroke:#e9781d;stroke-dasharray:5 4}@keyframes drawArrow{from{stroke-dashoffset:35;opacity:.15}to{stroke-dashoffset:0;opacity:1}}
+    .explain-content{padding:9px;min-height:0}.step-card{border:1px solid #cfe0f3;background:#f5f9ff;border-radius:11px;padding:9px;margin-bottom:8px}.step-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);font-weight:850}.step-card h3{font-size:13px;margin:4px 0}.step-card p{font-size:11px;line-height:1.45;margin:0;color:#35445b}
+    .formula{font-family:"Cascadia Code",Consolas,monospace;background:#0f2742;color:#eaf4ff;border-radius:10px;padding:10px;font-size:11px;line-height:1.55;overflow:auto;margin-bottom:10px}.formula .hi{display:block;background:#24527f;margin:0 -5px;padding:1px 5px;border-radius:4px;color:#fff59d}.formula .dim{color:#91abc5}
+    .decision{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:9px 0}.decision div{border-radius:9px;padding:8px;text-align:center;font-size:10px;font-weight:800}.decision .a{background:var(--orange-bg);color:#9a4b0e}.decision .b{background:var(--green-bg);color:#08784b}
+    .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.metric{padding:8px;border:1px solid var(--border);border-radius:9px;background:#fff}.metric span{display:block;font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:800}.metric strong{font-size:14px;color:var(--navy)}
+    .practice-box{border:1px solid #d7c4ff;background:#f8f4ff;border-radius:11px;padding:10px;margin-bottom:10px}.practice-box h4{margin:0 0 6px;font-size:12px;color:#5b21b6}.practice-line{display:flex;gap:5px}.practice-line input{flex:1;min-width:0}.feedback{font-size:11px;margin-top:7px;line-height:1.4}.feedback.ok{color:#08784b}.feedback.bad{color:#b42335}.hint{font-size:11px;background:#fff;border-left:3px solid var(--violet);padding:7px;margin-top:6px}
+    .item-card{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:10px;border:2px solid var(--item);background:#fff;box-shadow:0 3px 9px rgba(0,0,0,.07);font-size:11px}.item-card .emoji{font-size:20px}.item-card strong{display:block}.item-card small{color:var(--muted)}
+    .bag{width:115px;height:82px;border:4px solid #8b5e34;border-top-width:9px;border-radius:13px 13px 35px 35px;background:linear-gradient(135deg,#e8b773,#c98c42);position:relative;display:grid;place-items:center;color:#5b381b;font-size:11px;font-weight:850;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18)}.bag::before{content:"";position:absolute;width:55px;height:28px;border:5px solid #8b5e34;border-bottom:0;border-radius:30px 30px 0 0;top:-37px}.flying{animation:intoBag .85s ease forwards}@keyframes intoBag{to{transform:translate(80px,25px) scale(.25);opacity:0}}
+    .coin{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 28%,#fff3a0,#e3a51b 67%,#9e6810);border:3px double #a97013;color:#6e4508;font-weight:900;box-shadow:0 3px 7px rgba(108,70,10,.25);font-size:11px}.coin.dpcoin{background:radial-gradient(circle at 35% 28%,#c9ffe7,#26a46e 70%,#116342);border-color:#117a50;color:#063f2a}
+    .sequence{display:flex;gap:3px;align-items:center;justify-content:center}.char{width:31px;height:36px;border:1px solid #cad6e4;border-radius:7px;display:grid;place-items:center;background:#fff;font-weight:850}.char.selected{background:var(--green-bg);border:2px solid var(--green);color:#08784b;transform:translateY(-3px)}
+    .fib-array{display:flex;gap:5px;align-items:end;justify-content:center;flex-wrap:wrap}.fib-cell{width:48px;border:1px solid #cbd8e7;border-radius:8px;background:#fff;overflow:hidden;text-align:center}.fib-cell small{display:block;background:#eaf1f9;padding:3px;color:var(--muted)}.fib-cell b{display:block;padding:7px;font-size:12px}.fib-cell.current{outline:3px solid var(--yellow)}.fib-cell.source{background:var(--sky)}.fib-cell.cached{background:var(--green-bg)}
+    .tree-wrap{width:100%;overflow:auto;text-align:center}.tree{display:inline-flex;flex-direction:column;align-items:center;gap:6px;min-width:max-content}.tree-node{border:2px solid #89a4c2;border-radius:99px;background:#fff;padding:4px 8px;font-size:10px;font-weight:800}.tree-node.repeat{border-color:var(--orange);background:var(--orange-bg)}.tree-node.active{border-color:var(--blue);background:var(--sky);animation:pulse 1s infinite}.tree-children{display:flex;gap:10px;position:relative}.tree-children::before{content:"";position:absolute;top:-6px;left:10%;right:10%;height:1px;background:#9fb1c5}
+    .greedy-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:560px}.solution-box{border:1px solid var(--border);border-radius:10px;padding:8px;background:#fff}.solution-box h4{font-size:11px;margin:0 0 6px}.solution-box .coins{display:flex;gap:4px;flex-wrap:wrap}.solution-box.dp-solution{border-color:#7dd3aa;background:#f2fff8}
+    .complete-banner{width:100%;border:1px solid #83d8b1;background:var(--green-bg);border-radius:10px;padding:8px 12px;color:#086943;font-weight:800;text-align:center;font-size:11px}
+    .modal{position:fixed;inset:0;background:rgba(5,25,47,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.open{display:flex}.modal-card{max-width:920px;width:100%;max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:3}.modal-head h2{margin:0;font-size:18px}.close{border:0;background:#edf2f7;width:34px;height:34px;border-radius:9px;font-size:18px}.modal-body{padding:18px}
+    .concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.concept{border:1px solid var(--border);border-radius:11px;padding:11px;background:#fbfcfe}.concept h3{font-size:12px;color:var(--navy);margin:0 0 5px}.concept p{font-size:11px;line-height:1.45;margin:0;color:var(--muted)}
+    .compare-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:11px}.compare-table th,.compare-table td{padding:9px;border:1px solid var(--border);text-align:left}.compare-table th{background:#eaf1f9}
+    .quiz-question{border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px}.quiz-question h3{font-size:12px;margin:0 0 8px}.option{display:block;padding:7px;border-radius:7px;font-size:11px}.option:hover{background:#f2f6fb}.quiz-result{padding:14px;border-radius:12px;background:var(--sky);margin-top:12px}.review-ok{border-left:4px solid var(--green)}.review-bad{border-left:4px solid var(--red)}
+    .cell-inspector{font-size:11px;line-height:1.5}.cell-inspector strong{color:var(--navy)}
+    .statbar{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}.stat{background:#f5f7fb;border-radius:7px;text-align:center;padding:5px}.stat b{display:block;font-size:12px}.stat span{font-size:8px;color:var(--muted);text-transform:uppercase}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1250px){.workspace{--left:240px;--right:300px;grid-template-columns:var(--left) minmax(440px,1fr) var(--right)}.progress-pill{display:none}.brand{min-width:240px}}
+    @media(max-width:900px){.workspace{grid-template-columns:minmax(210px,250px) minmax(440px,1fr);height:auto;min-height:calc(100vh - 70px)}.workspace.left-closed{grid-template-columns:48px minmax(440px,1fr)}.explain-panel{grid-column:1/-1;max-height:520px}}
+    @media(max-width:760px){.topbar{height:auto;min-height:70px;align-items:flex-start;flex-wrap:wrap;padding:10px}.brand{min-width:100%}.workspace,.workspace.left-closed{display:block;height:auto;padding:7px}.panel{margin-bottom:8px}.sidebar{max-height:none}.main-panel{height:760px}.lab-tabs{order:2;width:100%}.concept-grid{grid-template-columns:1fr}.greedy-compare{grid-template-columns:1fr}.controls .btn span{display:none}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-icon">DP</div><div><h1>Laboratorio de Programación Dinámica</h1><small>Decisiones óptimas, celda por celda</small></div></div>
+    <nav class="lab-tabs" aria-label="Recursos del laboratorio">
+      <button class="lab-tab" data-modal="concepts">Conceptos</button>
+      <button class="lab-tab" data-modal="quiz">Evaluación</button>
+    </nav>
+    <div class="progress-pill" id="savedStatus">Progreso guardado localmente</div>
+  </header>
+
+  <main class="workspace" id="workspace">
+    <aside class="panel sidebar">
+      <div class="panel-head"><div class="panel-head-copy"><h2>⚙️ Configuración</h2><p>13 problemas y 38 ejemplos.</p></div><button class="drawer-toggle" id="toggleLeft" title="Plegar configuración" aria-label="Plegar configuración">◀</button></div>
+      <div class="drawer-content">
+        <details class="slide-section" open><summary>Menú de problemas · 13</summary><div class="slide-inner">
+          <nav class="problem-menu" aria-label="Problemas de programación dinámica">
+            <button class="problem-link active" data-lab="knapsack"><span class="problem-icon">🎒</span>Mochila 0/1 <small>2D</small></button>
+            <button class="problem-link" data-lab="coins"><span class="problem-icon">🪙</span>Cambio de monedas <small>1D/2D</small></button>
+            <button class="problem-link" data-lab="lcs"><span class="problem-icon">🔤</span>LCS <small>2D</small></button>
+            <button class="problem-link" data-lab="fib"><span class="problem-icon">🌿</span>Fibonacci <small>1D</small></button>
+            <button class="problem-link" data-lab="egg"><span class="problem-icon">🥚</span>Egg Drop <small>2D</small></button>
+            <button class="problem-link" data-lab="balloons"><span class="problem-icon">🎈</span>Burst Balloons <small>intervalos</small></button>
+            <button class="problem-link" data-lab="edit"><span class="problem-icon">✍️</span>Distancia de edición <small>2D</small></button>
+            <button class="problem-link" data-lab="lis"><span class="problem-icon">📈</span>LIS <small>1D</small></button>
+            <button class="problem-link" data-lab="matrix"><span class="problem-icon">🔗</span>Cadena de matrices <small>intervalos</small></button>
+            <button class="problem-link" data-lab="rod"><span class="problem-icon">📏</span>Corte de varilla <small>1D</small></button>
+            <button class="problem-link" data-lab="grid"><span class="problem-icon">🗺️</span>Camino mínimo <small>rejilla</small></button>
+            <button class="problem-link" data-lab="robber"><span class="problem-icon">🏠</span>House Robber <small>1D</small></button>
+            <button class="problem-link" data-lab="subset"><span class="problem-icon">🧩</span>Subset Sum <small>2D</small></button>
+          </nav>
+        </div></details>
+        <details class="slide-section" open><summary>Modo de aprendizaje</summary><div class="slide-inner">
+          <div class="segmented" id="modeSelector">
+            <button data-mode="guided" class="active">Guiado</button><button data-mode="practice">Práctica</button><button data-mode="challenge">Desafío</button>
+          </div>
+          <div id="challengeStats" class="statbar" hidden></div>
+        </div></details>
+        <details class="slide-section" open><summary>Datos y ejemplos</summary><div class="slide-inner">
+          <div class="example-count">✓ 13 problemas · 38 ejemplos preparados</div>
+          <div id="configArea"></div>
+        </div></details>
+      </div>
+    </aside>
+
+    <section class="panel main-panel">
+      <div class="lab-title"><div><h2 id="labName">Mochila 0/1</h2><p id="labSubtitle">Elegir objetos sin superar la capacidad</p></div><span class="badge" id="complexityBadge">O(nW) tiempo · O(nW) espacio</span></div>
+      <div class="controls">
+        <button class="btn" id="prevBtn" title="Paso anterior">◀ <span>Anterior</span></button>
+        <button class="btn primary" id="nextBtn" title="Paso siguiente">Siguiente <span>▶</span></button>
+        <button class="btn soft" id="autoBtn">▶ <span>Automático</span></button>
+        <button class="btn" id="pauseBtn" disabled>Ⅱ <span>Pausar</span></button>
+        <button class="btn" id="resetBtn">↺ <span>Reiniciar</span></button>
+        <button class="btn" id="solveBtn">⚡ <span>Resolver</span></button>
+        <div class="spacer"></div>
+        <label class="speed">Velocidad <input id="speedRange" type="range" min="1" max="5" value="3"></label>
+      </div>
+      <div class="table-shell" id="tableShell">
+        <div class="table-tools"><button class="zoom-btn" id="zoomOut" title="Alejar">−</button><button class="zoom-btn" id="zoomIn" title="Acercar">+</button></div>
+        <div id="tableArea"></div>
+      </div>
+      <div class="legend"><span><i class="dot d-current"></i>Celda actual</span><span><i class="dot d-a"></i>Subproblema 1</span><span><i class="dot d-b"></i>Subproblema 2</span><span><b class="arrow-key arrow-blue">➜</b>Dependencia principal</span><span><b class="arrow-key arrow-violet">➜</b>Alternativa comparada</span><span><i class="dot d-good"></i>Decisión elegida</span><span><i class="dot d-path"></i>Solución reconstruida</span></div>
+    </section>
+
+    <aside class="panel explain-panel">
+      <div class="panel-head"><button class="drawer-toggle" id="toggleRight" title="Plegar panel lateral" aria-label="Plegar panel lateral">▶</button><div class="panel-head-copy"><h3>🧭 Visualización y explicación</h3><p id="stepCounter">Preparado para comenzar</p></div></div>
+      <div class="drawer-content">
+        <details class="slide-section" open><summary>Visualización del problema</summary><div class="visual-zone"><div id="visualStage" class="visual-stage"></div></div></details>
+        <details class="slide-section" open><summary>Paso actual y pseudocódigo</summary><div class="explain-content">
+        <div id="practiceArea"></div>
+        <div class="step-card"><span class="step-label" id="stepLabel">Problema</span><h3 id="stepTitle">Configura y comienza</h3><p id="stepText">Pulsa “Paso siguiente” para construir la solución de izquierda a derecha.</p><div id="decisionArea"></div></div>
+        <div class="section-title">Recurrencia / pseudocódigo sincronizado</div>
+        <div class="formula" id="pseudoArea"></div>
+        <div class="metrics" id="metricsArea"></div>
+        <button class="btn full" id="inspectHelp" style="margin-top:10px">ℹ️ Haz clic en una celda para inspeccionarla</button>
+        <div id="cellInspector" class="cell-inspector" style="margin-top:9px"></div>
+        </div></details>
+      </div>
+    </aside>
+  </main>
+
+  <div class="modal" id="conceptsModal" role="dialog" aria-modal="true" aria-labelledby="conceptsTitle">
+    <div class="modal-card"><div class="modal-head"><h2 id="conceptsTitle">Mapa conceptual de Programación Dinámica</h2><button class="close" data-close>×</button></div><div class="modal-body">
+      <div class="concept-grid" id="conceptGrid"></div>
+      <table class="compare-table"><thead><tr><th>Enfoque</th><th>Cómo decide</th><th>Trabajo repetido</th><th>Garantía / uso</th></tr></thead><tbody>
+        <tr><td><b>Recursión simple</b></td><td>Descompone y vuelve a calcular</td><td>Alto si hay solapamiento</td><td>Clara, pero puede ser exponencial</td></tr>
+        <tr><td><b>Programación dinámica</b></td><td>Guarda cada estado y combina óptimos</td><td>Evita repeticiones</td><td>Óptima si existe subestructura óptima</td></tr>
+        <tr><td><b>Voraz</b></td><td>Toma la mejor opción local inmediata</td><td>Muy bajo</td><td>Solo es óptima en problemas con propiedad voraz</td></tr>
+      </tbody></table>
+    </div></div>
+  </div>
+
+  <div class="modal" id="quizModal" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <div class="modal-card"><div class="modal-head"><h2 id="quizTitle">Evaluación final · 10 preguntas</h2><button class="close" data-close>×</button></div><div class="modal-body"><form id="quizForm"></form><button class="btn primary" id="gradeQuiz">Calificar evaluación</button><button class="btn" id="retryQuiz" hidden>Repetir</button><div id="quizResult"></div></div></div>
+  </div>
+
+  <script>
+  "use strict";
+  /* ================================================================
+     Estado general y utilidades. No hay dependencias externas.
+     ================================================================ */
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const clone=x=>JSON.parse(JSON.stringify(x));
+  const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  const colors=["#2563eb","#16a36a","#e9781d","#7c3aed","#dc3545","#0891b2","#b7791f"];
+  const icons=["📚","💻","📷","⌚","🎧","🔋","🧭","🧰"];
+  /* Ejemplos pedagógicos listos para comparar sin escribir datos manualmente. */
+  const knapsackExamples={
+    excursion:{example:"excursion",capacity:9,items:[{name:"Libro",weight:3,value:6,color:colors[0],icon:"📚"},{name:"Portátil",weight:4,value:10,color:colors[1],icon:"💻"},{name:"Cámara",weight:2,value:7,color:colors[2],icon:"📷"},{name:"Reloj",weight:1,value:3,color:colors[3],icon:"⌚"},{name:"Audífonos",weight:2,value:5,color:colors[4],icon:"🎧"}]},
+    laboratorio:{example:"laboratorio",capacity:8,items:[{name:"Portátil",weight:3,value:8,color:colors[0],icon:"💻"},{name:"Sensor",weight:1,value:4,color:colors[1],icon:"🧭"},{name:"Batería",weight:2,value:6,color:colors[2],icon:"🔋"},{name:"Cámara",weight:3,value:7,color:colors[3],icon:"📷"},{name:"Manual",weight:2,value:3,color:colors[4],icon:"📚"}]},
+    rescate:{example:"rescate",capacity:10,items:[{name:"Botiquín",weight:4,value:9,color:colors[4],icon:"🧰"},{name:"Agua",weight:3,value:6,color:colors[0],icon:"🔋"},{name:"Cuerda",weight:5,value:10,color:colors[2],icon:"🧭"},{name:"Radio",weight:2,value:7,color:colors[3],icon:"🎧"},{name:"Linterna",weight:1,value:4,color:colors[1],icon:"⌚"}]},
+    museo:{example:"museo",capacity:7,items:[{name:"Cuadro",weight:4,value:11,color:colors[0],icon:"📷"},{name:"Escultura",weight:5,value:13,color:colors[2],icon:"🧭"},{name:"Joya",weight:1,value:6,color:colors[3],icon:"⌚"},{name:"Documento",weight:2,value:7,color:colors[1],icon:"📚"},{name:"Moneda",weight:1,value:4,color:colors[5],icon:"🧰"}]},
+    satelite:{example:"satelite",capacity:12,items:[{name:"Cámara",weight:5,value:15,color:colors[0],icon:"📷"},{name:"Sensor",weight:3,value:10,color:colors[1],icon:"🧭"},{name:"Batería",weight:4,value:12,color:colors[2],icon:"🔋"},{name:"Antena",weight:6,value:14,color:colors[3],icon:"🎧"},{name:"Computador",weight:2,value:9,color:colors[4],icon:"💻"}]}
+  };
+  const coinExamples={
+    greedy:{example:"greedy",coins:[1,3,4],target:6,objective:"min"},
+    canonical:{example:"canonical",coins:[1,5,10,25],target:37,objective:"min"},
+    combinations:{example:"combinations",coins:[1,2,5],target:10,objective:"count"},
+    impossible:{example:"impossible",coins:[4,6],target:7,objective:"min"},
+    postage:{example:"postage",coins:[1,7,10],target:14,objective:"min"}
+  };
+  const fibExamples={tree:{example:"tree",n:6,method:"recursion"},memo:{example:"memo",n:10,method:"memo"},table:{example:"table",n:20,method:"tabulation"},large:{example:"large",n:30,method:"tabulation"}};
+  const extraExamples={
+    egg:{classic:{example:"classic",eggs:2,floors:10},tower:{example:"tower",eggs:3,floors:14}},
+    balloons:{classic:{example:"classic",nums:[3,1,5,8]},small:{example:"small",nums:[1,5,3]}},
+    edit:{kitten:{example:"kitten",x:"KITTEN",y:"SITTING"},intention:{example:"intention",x:"INTENTION",y:"EXECUTION"}},
+    lis:{classic:{example:"classic",nums:[10,9,2,5,3,7,101,18]},waves:{example:"waves",nums:[0,1,0,3,2,3]}},
+    matrix:{classic:{example:"classic",dims:[30,35,15,5,10,20,25]},small:{example:"small",dims:[10,30,5,60]}},
+    rod:{classic:{example:"classic",prices:[1,5,8,9,10,17,17,20],length:8},short:{example:"short",prices:[2,5,7,8],length:4}},
+    grid:{classic:{example:"classic",grid:[[1,3,1],[1,5,1],[4,2,1]]},campus:{example:"campus",grid:[[1,4,2,3],[2,8,2,1],[3,2,1,5],[4,3,2,1]]}},
+    robber:{classic:{example:"classic",nums:[2,7,9,3,1]},street:{example:"street",nums:[6,1,2,10,4,2]}},
+    subset:{classic:{example:"classic",nums:[3,34,4,12,5,2],target:9},impossible:{example:"impossible",nums:[2,4,6],target:5}}
+  };
+  const defaults={
+    knapsack:clone(knapsackExamples.excursion),
+    coins:clone(coinExamples.greedy),
+    lcs:{x:"ALGORITMO",y:"LOGARITMO"},
+    fib:clone(fibExamples.tree),
+    egg:clone(extraExamples.egg.classic),balloons:clone(extraExamples.balloons.classic),edit:clone(extraExamples.edit.kitten),
+    lis:clone(extraExamples.lis.classic),matrix:clone(extraExamples.matrix.classic),rod:clone(extraExamples.rod.classic),
+    grid:clone(extraExamples.grid.classic),robber:clone(extraExamples.robber.classic),subset:clone(extraExamples.subset.classic)
+  };
+  let prefs={lab:"knapsack",mode:"guided",speed:3,zoom:42,leftClosed:false,rightClosed:false,data:clone(defaults),quizBest:0};
+  try{const saved=JSON.parse(localStorage.getItem("dpLabPrefs"));if(saved)prefs={...prefs,...saved,data:{...clone(defaults),...(saved.data||{})}}}catch(e){}
+  const app={lab:prefs.lab,mode:prefs.mode,speed:prefs.speed,zoom:prefs.zoom,steps:[],pos:0,running:false,timer:null,model:null,hints:0,answered:false,stats:{correct:0,errors:0,attempts:0,start:Date.now()},inspected:null};
+  function save(){prefs.lab=app.lab;prefs.mode=app.mode;prefs.speed=app.speed;prefs.zoom=app.zoom;localStorage.setItem("dpLabPrefs",JSON.stringify(prefs));const s=$("#savedStatus");s.textContent="✓ Progreso guardado";setTimeout(()=>s.textContent="Progreso guardado localmente",1200)}
+  function elapsed(){return Math.floor((Date.now()-app.stats.start)/1000)}
+  function formatTime(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`}
+  function configLocked(){return app.pos>0||app.running}
+  function stopAuto(){clearInterval(app.timer);app.running=false;app.timer=null;updateControls()}
+  function restart(){stopAuto();app.pos=0;app.hints=0;app.answered=false;app.inspected=null;app.stats={correct:0,errors:0,attempts:0,start:Date.now()};buildModel();renderAll();save()}
+  function currentStep(){return app.steps[Math.min(app.pos,app.steps.length-1)]||null}
+  function isComplete(){return app.steps.length>0&&app.pos>=app.steps.length}
+  function visibleValue(index,value){return index<app.pos?value:"·"}
+  function setData(lab,key,value){prefs.data[lab][key]=value;restart()}
+  function syncDrawers(){
+    const w=$("#workspace");w.classList.toggle("left-closed",!!prefs.leftClosed);w.classList.toggle("right-closed",!!prefs.rightClosed);
+    $("#toggleLeft").textContent=prefs.leftClosed?"▶":"◀";$("#toggleLeft").title=prefs.leftClosed?"Abrir configuración":"Plegar configuración";$("#toggleLeft").setAttribute("aria-label",$("#toggleLeft").title);
+    $("#toggleRight").textContent=prefs.rightClosed?"◀":"▶";$("#toggleRight").title=prefs.rightClosed?"Abrir visualización y explicación":"Plegar visualización y explicación";$("#toggleRight").setAttribute("aria-label",$("#toggleRight").title);
+    setTimeout(drawDependencyArrows,320);
+  }
+  function toggleDrawer(side){if(side==="left")prefs.leftClosed=!prefs.leftClosed;else prefs.rightClosed=!prefs.rightClosed;syncDrawers();save()}
+
+  /* ================================================================
+     Construcción exacta de los cuatro modelos y sus pasos.
+     Cada paso guarda referencias, decisión, explicación y línea activa.
+     ================================================================ */
+  function buildKnapsack(){
+    const d=prefs.data.knapsack,n=d.items.length,W=d.capacity;
+    const dp=Array.from({length:n+1},()=>Array(W+1).fill(0)),steps=[];
+    for(let i=1;i<=n;i++)for(let w=0;w<=W;w++){
+      const it=d.items[i-1],exclude=dp[i-1][w];let include=null,decision="exclude",line=3;
+      if(it.weight>w){dp[i][w]=exclude;line=4}
+      else{include=it.value+dp[i-1][w-it.weight];dp[i][w]=Math.max(exclude,include);decision=include>exclude?"include":"exclude";line=8}
+      const refs=[[i-1,w]];if(include!==null)refs.push([i-1,w-it.weight]);
+      steps.push({r:i,c:w,value:dp[i][w],refs,decision,line,exclude,include,item:it,
+        title:`Estado DP[${i}][${w}]`,
+        text:include===null?`${it.name} pesa ${it.weight} y no cabe en una capacidad ${w}. Lo excluimos y conservamos ${exclude}.`:`${it.name} pesa ${it.weight} y la capacidad disponible es ${w}. Podemos excluirlo y conservar ${exclude}, o incluirlo y obtener ${it.value} + ${dp[i-1][w-it.weight]} = ${include}. Elegimos ${dp[i][w]}.`,
+        operation:include===null?`DP[${i}][${w}] = DP[${i-1}][${w}] = ${exclude}`:`máx(${exclude}, ${it.value} + ${dp[i-1][w-it.weight]}) = ${dp[i][w]}`});
+    }
+    const selected=[],path=[];let i=n,w=W;
+    while(i>0){path.push([i,w]);if(dp[i][w]!==dp[i-1][w]){selected.push(i-1);w-=d.items[i-1].weight}i--}
+    path.push([0,w]);selected.reverse();
+    return{kind:"matrix",dp,steps,path,selected,opt:dp[n][W],totalWeight:selected.reduce((s,k)=>s+d.items[k].weight,0),totalValue:selected.reduce((s,k)=>s+d.items[k].value,0)};
+  }
+  function buildCoins(){
+    const d=prefs.data.coins,coins=[...new Set(d.coins.filter(c=>Number.isInteger(c)&&c>0))].sort((a,b)=>a-b),T=d.target;
+    if(d.objective==="count"){
+      const dp=Array.from({length:coins.length+1},()=>Array(T+1).fill(0)),steps=[];for(let i=0;i<=coins.length;i++)dp[i][0]=1;
+      for(let i=1;i<=coins.length;i++)for(let x=1;x<=T;x++){
+        const c=coins[i-1],without=dp[i-1][x],withCoin=x>=c?dp[i][x-c]:0;dp[i][x]=without+withCoin;
+        steps.push({r:i,c:x,value:dp[i][x],refs:x>=c?[[i-1,x],[i,x-c]]:[[i-1,x]],decision:x>=c?"combine":"exclude",line:x>=c?5:3,
+          title:`Cantidad ${x} con monedas hasta ${c}`,text:x>=c?`Combinaciones sin usar ${c}: ${without}. Combinaciones que sí la usan: ${withCoin}. Sumamos ${without} + ${withCoin} = ${dp[i][x]}.`:`La moneda ${c} supera ${x}; conservamos ${without}.`,operation:x>=c?`${without} + ${withCoin} = ${dp[i][x]}`:`DP[${i-1}][${x}] = ${without}`});
+      }
+      return{kind:"coinCount",dp,steps,coins,opt:dp[coins.length][T],path:[[coins.length,T]]};
+    }
+    const dp=Array(T+1).fill(Infinity),prev=Array(T+1).fill(null),steps=[];dp[0]=0;
+    for(let x=1;x<=T;x++){
+      let best=Infinity,bestCoin=null,refs=[];
+      for(const c of coins)if(c<=x){refs.push([0,x-c]);if(dp[x-c]+1<best){best=dp[x-c]+1;bestCoin=c}}
+      dp[x]=best;prev[x]=bestCoin;
+      steps.push({r:0,c:x,value:best,refs,decision:bestCoin?"include":"impossible",line:5,coin:bestCoin,title:`Cantidad ${x}`,text:bestCoin?`Probamos ${coins.filter(c=>c<=x).join(", ")}. La mejor transición viene de ${x-bestCoin}: usamos una moneda de ${bestCoin} y obtenemos ${best} moneda${best===1?"":"s"}.`:`Ninguna denominación permite formar ${x}.`,operation:bestCoin?`1 + DP[${x-bestCoin}] = ${best}`:"∞"});
+    }
+    const combo=[],path=[];let x=T;while(x>0&&prev[x]){path.push([0,x]);combo.push(prev[x]);x-=prev[x]}path.push([0,x]);
+    const greedy=[];let g=T;for(const c of [...coins].sort((a,b)=>b-a))while(c<=g){greedy.push(c);g-=c}
+    return{kind:"coinMin",dp:[dp],steps,coins,prev,combo,path,opt:dp[T],greedy,greedyRemainder:g};
+  }
+  function buildLCS(){
+    const d=prefs.data.lcs,X=d.x.toUpperCase().slice(0,16),Y=d.y.toUpperCase().slice(0,16),m=X.length,n=Y.length;
+    const dp=Array.from({length:m+1},()=>Array(n+1).fill(0)),steps=[];
+    for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){
+      const match=X[i-1]===Y[j-1];
+      if(match)dp[i][j]=dp[i-1][j-1]+1;else dp[i][j]=Math.max(dp[i-1][j],dp[i][j-1]);
+      steps.push({r:i,c:j,value:dp[i][j],refs:match?[[i-1,j-1]]:[[i-1,j],[i,j-1]],decision:match?"match":"max",line:match?4:6,match,
+        title:`Comparamos ${X[i-1]} con ${Y[j-1]}`,text:match?`Los caracteres coinciden. Extendemos la mejor subsecuencia de DP[${i-1}][${j-1}] = ${dp[i-1][j-1]} y escribimos ${dp[i][j]}.`:`No coinciden. Comparamos arriba (${dp[i-1][j]}) e izquierda (${dp[i][j-1]}) y escribimos el máximo: ${dp[i][j]}.`,operation:match?`${dp[i-1][j-1]} + 1 = ${dp[i][j]}`:`máx(${dp[i-1][j]}, ${dp[i][j-1]}) = ${dp[i][j]}`});
+    }
+    let i=m,j=n,lcs=[],xIndices=[],yIndices=[],path=[];while(i>0&&j>0){path.push([i,j]);if(X[i-1]===Y[j-1]){lcs.push(X[i-1]);xIndices.push(i-1);yIndices.push(j-1);i--;j--}else if(dp[i-1][j]>=dp[i][j-1])i--;else j--}path.push([i,j]);lcs.reverse();xIndices.reverse();yIndices.reverse();
+    return{kind:"matrix",dp,steps,X,Y,path,lcs:lcs.join(""),xIndices,yIndices,opt:dp[m][n]};
+  }
+  function fibValue(n){let a=0,b=1;for(let i=0;i<n;i++)[a,b]=[b,a+b];return a}
+  function buildFib(){
+    const d=prefs.data.fib,n=Math.max(1,Math.min(30,d.n)),steps=[];let values=[0,1];
+    if(d.method==="tabulation"){
+      if(n===1)steps.push({r:0,c:1,value:1,refs:[[0,0]],title:"Caso base F(1)",text:"F(1) = 1 es un caso base; no requiere subproblemas.",operation:"F(1) = 1",line:2});
+      for(let i=2;i<=n;i++){values[i]=values[i-1]+values[i-2];steps.push({r:0,c:i,value:values[i],refs:[[0,i-1],[0,i-2]],decision:"sum",line:4,title:`Calculamos F(${i})`,text:`Sumamos los dos estados anteriores: F(${i-1}) = ${values[i-1]} y F(${i-2}) = ${values[i-2]}.`,operation:`${values[i-1]} + ${values[i-2]} = ${values[i]}`})}
+      return{kind:"fib",steps,values,opt:fibValue(n),operations:Math.max(0,n-1),callsAvoided:0};
+    }
+    if(d.method==="memo"){
+      const memo={0:0,1:1};let calls=0,hits=0;
+      function f(k,depth=0){calls++;if(memo[k]!==undefined){if(k>1)hits++;steps.push({n:k,value:memo[k],cached:true,depth,title:`Recuperamos F(${k})`,text:`F(${k}) ya estaba guardado. Evitamos reconstruir todo su árbol.`,operation:`memo[${k}] = ${memo[k]}`,line:2});return memo[k]}steps.push({n:k,value:fibValue(k),cached:false,stored:false,depth,title:`Primera llamada F(${k})`,text:`El valor no está en memoria. Calcularemos F(${k-1}) + F(${k-2}) y lo guardaremos.`,operation:`F(${k-1}) + F(${k-2}) = ${fibValue(k)}`,line:3});memo[k]=f(k-1,depth+1)+f(k-2,depth+1);values[k]=memo[k];steps.push({n:k,value:memo[k],cached:false,stored:true,depth,title:`Guardamos F(${k})`,text:`El subproblema quedó resuelto. Guardamos F(${k}) = ${memo[k]} para reutilizarlo.`,operation:`memo[${k}] = ${memo[k]}`,line:3});return memo[k]}
+      const opt=f(n);for(let i=0;i<=n;i++)values[i]=memo[i];return{kind:"fib",steps,values,opt,operations:calls,callsAvoided:hits,memo};
+    }
+    const exactCalls=2*fibValue(n+1)-1,limitDepth=Math.min(6,n);
+    function tree(k,depth=0,seen={}){const key=k;seen[key]=(seen[key]||0)+1;const node={n:k,repeat:seen[key]>1,children:[]};steps.push({n:k,value:fibValue(k),cached:false,depth,title:`Llamada recursiva F(${k})`,text:k<2?`Caso base: F(${k}) = ${k}.`:`Se divide en F(${k-1}) y F(${k-2}). Observe cómo los mismos subproblemas aparecen varias veces.`,operation:k<2?`F(${k}) = ${k}`:`F(${k-1}) + F(${k-2}) = ${fibValue(k)}`,line:k<2?2:3});if(k>1&&depth<limitDepth){node.children=[tree(k-1,depth+1,seen),tree(k-2,depth+1,seen)]}else if(k>1)node.truncated=true;return node}
+    const root=tree(n);return{kind:"fib",steps,values:Array.from({length:n+1},(_,i)=>fibValue(i)),opt:fibValue(n),operations:exactCalls,callsAvoided:0,tree,root};
+  }
+  function buildEgg(){
+    const d=prefs.data.egg,E=Math.max(2,Math.min(5,d.eggs)),F=Math.max(1,Math.min(20,d.floors)),dp=Array.from({length:E+1},()=>Array(F+1).fill(Infinity)),choice=Array.from({length:E+1},()=>Array(F+1).fill(0)),steps=[];
+    for(let e=0;e<=E;e++)dp[e][0]=0;for(let f=1;f<=F;f++)dp[1][f]=f;
+    for(let e=2;e<=E;e++)for(let f=1;f<=F;f++){let best=Infinity,xBest=1;for(let x=1;x<=f;x++){const cost=1+Math.max(dp[e-1][x-1],dp[e][f-x]);if(cost<best){best=cost;xBest=x}}dp[e][f]=best;choice[e][f]=xBest;const broken=dp[e-1][xBest-1],survives=dp[e][f-xBest];steps.push({r:e,c:f,value:best,refs:[[e-1,xBest-1],[e,f-xBest]],decision:"min",line:5,title:`${e} huevos y ${f} pisos`,text:`Probamos cada piso. Soltar desde ${xBest} equilibra los peores casos: se rompe (${broken}) o sobrevive (${survives}). Sumamos el intento actual y obtenemos ${best}.`,operation:`1 + máx(${broken}, ${survives}) = ${best}`})}
+    const path=[];let e=E,f=F;while(e>1&&f>0){path.push([e,f]);const x=choice[e][f];if(dp[e-1][x-1]>=dp[e][f-x]){e--;f=x-1}else f-=x}path.push([e,f]);return{kind:"matrix",dp,steps,path,choice,opt:dp[E][F],eggs:E,floors:F};
+  }
+  function buildBalloons(){
+    const d=prefs.data.balloons,original=d.nums.slice(0,8).map(x=>Math.max(1,+x||1)),a=[1,...original,1],n=original.length,dp=Array.from({length:n+2},()=>Array(n+2).fill(0)),choice=Array.from({length:n+2},()=>Array(n+2).fill(-1)),steps=[];
+    for(let len=1;len<=n;len++)for(let l=1;l+len-1<=n;l++){const r=l+len-1;let best=-1,kBest=l;for(let k=l;k<=r;k++){const gain=a[l-1]*a[k]*a[r+1]+dp[l][k-1]+dp[k+1][r];if(gain>best){best=gain;kBest=k}}dp[l][r]=best;choice[l][r]=kBest;const left=dp[l][kBest-1],right=dp[kBest+1][r],coins=a[l-1]*a[kBest]*a[r+1];steps.push({r:l,c:r,value:best,refs:[[l,kBest-1],[kBest+1,r]],decision:"burst",line:6,title:`Intervalo [${l}, ${r}]`,text:`Si el globo ${kBest} es el último del intervalo, aporta ${coins}; los intervalos izquierdo y derecho aportan ${left} y ${right}. Elegimos el mejor último globo.`,operation:`${left} + ${coins} + ${right} = ${best}`})}
+    const path=[];function trace(l,r){if(l>r)return;path.push([l,r]);const k=choice[l][r];trace(l,k-1);trace(k+1,r)}if(n)trace(1,n);return{kind:"matrix",dp,steps,path,choice,opt:n?dp[1][n]:0,nums:original,augmented:a};
+  }
+  function buildEdit(){
+    const d=prefs.data.edit,X=d.x.toUpperCase().slice(0,12),Y=d.y.toUpperCase().slice(0,12),m=X.length,n=Y.length,dp=Array.from({length:m+1},()=>Array(n+1).fill(0)),steps=[];for(let i=0;i<=m;i++)dp[i][0]=i;for(let j=0;j<=n;j++)dp[0][j]=j;
+    for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){const same=X[i-1]===Y[j-1];if(same)dp[i][j]=dp[i-1][j-1];else dp[i][j]=1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);const refs=same?[[i-1,j-1]]:[[i-1,j],[i,j-1],[i-1,j-1]];steps.push({r:i,c:j,value:dp[i][j],refs,decision:same?"match":"edit",line:same?4:6,title:`Transformar “${X.slice(0,i)}” en “${Y.slice(0,j)}”`,text:same?`${X[i-1]} coincide con ${Y[j-1]}; no pagamos una nueva operación.`:`${X[i-1]} y ${Y[j-1]} difieren. Comparamos borrar (${dp[i-1][j]}), insertar (${dp[i][j-1]}) y sustituir (${dp[i-1][j-1]}), y sumamos 1.`,operation:same?`DP[${i-1}][${j-1}] = ${dp[i][j]}`:`1 + mín(${dp[i-1][j]}, ${dp[i][j-1]}, ${dp[i-1][j-1]}) = ${dp[i][j]}`})}
+    const path=[];let i=m,j=n;while(i||j){path.push([i,j]);if(i&&j&&X[i-1]===Y[j-1]){i--;j--}else if(i&&j&&dp[i][j]===dp[i-1][j-1]+1){i--;j--}else if(i&&dp[i][j]===dp[i-1][j]+1)i--;else j--}path.push([0,0]);return{kind:"matrix",dp,steps,path,opt:dp[m][n],X,Y};
+  }
+  function buildLis(){
+    const nums=prefs.data.lis.nums.slice(0,14).map(Number),n=nums.length,dp=Array(n).fill(1),prev=Array(n).fill(-1),steps=[];for(let i=0;i<n;i++){const refs=[];for(let j=0;j<i;j++)if(nums[j]<nums[i]){refs.push([0,j]);if(dp[j]+1>dp[i]){dp[i]=dp[j]+1;prev[i]=j}}steps.push({r:0,c:i,value:dp[i],refs,decision:"extend",line:5,title:`LIS que termina en ${nums[i]}`,text:refs.length?`Consultamos los valores anteriores menores que ${nums[i]}. La mejor subsecuencia se extiende hasta longitud ${dp[i]}.`:`No hay un valor anterior menor; iniciamos una subsecuencia de longitud 1.`,operation:refs.length?`1 + máximo previo = ${dp[i]}`:"DP[i] = 1"})}let end=dp.indexOf(Math.max(...dp)),selected=[];while(end>=0){selected.push(end);end=prev[end]}selected.reverse();return{kind:"matrix",dp:[dp],steps,path:selected.map(i=>[0,i]),selected,opt:dp.length?Math.max(...dp):0,nums,labels:nums.map((x,i)=>`${i}:${x}`)};
+  }
+  function buildMatrix(){
+    const dims=prefs.data.matrix.dims.slice(0,8).map(x=>Math.max(1,+x||1)),n=dims.length-1,dp=Array.from({length:n},()=>Array(n).fill(0)),split=Array.from({length:n},()=>Array(n).fill(-1)),steps=[];for(let len=2;len<=n;len++)for(let i=0;i+len-1<n;i++){const j=i+len-1;let best=Infinity,kBest=i;for(let k=i;k<j;k++){const cost=dp[i][k]+dp[k+1][j]+dims[i]*dims[k+1]*dims[j+1];if(cost<best){best=cost;kBest=k}}dp[i][j]=best;split[i][j]=kBest;steps.push({r:i,c:j,value:best,refs:[[i,kBest],[kBest+1,j]],decision:"split",line:6,title:`Matrices A${i+1}…A${j+1}`,text:`Probamos cada corte. El mejor divide después de A${kBest+1}: costos ${dp[i][kBest]} y ${dp[kBest+1][j]}, más ${dims[i]}×${dims[kBest+1]}×${dims[j+1]} multiplicaciones.`,operation:`${dp[i][kBest]} + ${dp[kBest+1][j]} + ${dims[i]*dims[kBest+1]*dims[j+1]} = ${best}`})}const path=[];function trace(i,j){if(i>j)return;path.push([i,j]);if(i<j){const k=split[i][j];trace(i,k);trace(k+1,j)}}if(n)trace(0,n-1);return{kind:"matrix",dp,steps,path,split,opt:n?dp[0][n-1]:0,dims,labels:Array.from({length:n},(_,i)=>`A${i+1}`)};
+  }
+  function buildRod(){
+    const d=prefs.data.rod,prices=d.prices.slice(0,12).map(Number),N=Math.max(1,Math.min(12,d.length)),dp=Array(N+1).fill(0),choice=Array(N+1).fill(0),steps=[];for(let len=1;len<=N;len++){let best=-Infinity,cut=1,refs=[];for(let c=1;c<=Math.min(len,prices.length);c++){refs.push([0,len-c]);const val=prices[c-1]+dp[len-c];if(val>best){best=val;cut=c}}dp[len]=best;choice[len]=cut;steps.push({r:0,c:len,value:best,refs,decision:"cut",line:5,title:`Varilla de longitud ${len}`,text:`Probamos el primer corte entre 1 y ${Math.min(len,prices.length)}. Cortar ${cut} aporta ${prices[cut-1]} y deja un subproblema de longitud ${len-cut}.`,operation:`${prices[cut-1]} + DP[${len-cut}] = ${best}`})}const cuts=[],path=[];let x=N;while(x>0){path.push([0,x]);cuts.push(choice[x]);x-=choice[x]}path.push([0,0]);return{kind:"matrix",dp:[dp],steps,path,cuts,opt:dp[N],prices,length:N,labels:Array.from({length:N+1},(_,i)=>i)};
+  }
+  function buildGrid(){
+    const grid=prefs.data.grid.grid.slice(0,6).map(r=>r.slice(0,6).map(Number)),R=grid.length,C=Math.min(...grid.map(r=>r.length)),dp=Array.from({length:R},()=>Array(C).fill(0)),steps=[];for(let i=0;i<R;i++)for(let j=0;j<C;j++){const refs=[];if(i)refs.push([i-1,j]);if(j)refs.push([i,j-1]);const before=!i&&!j?0:Math.min(i?dp[i-1][j]:Infinity,j?dp[i][j-1]:Infinity);dp[i][j]=grid[i][j]+before;steps.push({r:i,c:j,value:dp[i][j],refs,decision:"path",line:4,title:`Casilla (${i+1}, ${j+1})`,text:!refs.length?`La casilla inicial cuesta ${grid[i][j]}.`:`Elegimos el menor costo entre arriba e izquierda y sumamos el costo ${grid[i][j]} de la casilla.`,operation:!refs.length?`${grid[i][j]}`:`${grid[i][j]} + ${before} = ${dp[i][j]}`})}const path=[];let i=R-1,j=C-1;while(i>=0&&j>=0){path.push([i,j]);if(!i&&!j)break;if(!i)j--;else if(!j)i--;else if(dp[i-1][j]<=dp[i][j-1])i--;else j--}return{kind:"matrix",dp,steps,path,opt:dp[R-1][C-1],grid,rows:R,cols:C};
+  }
+  function buildRobber(){
+    const nums=prefs.data.robber.nums.slice(0,14).map(Number),n=nums.length,dp=Array(n+1).fill(0),steps=[];for(let i=1;i<=n;i++){const exclude=dp[i-1],include=nums[i-1]+dp[Math.max(0,i-2)];dp[i]=Math.max(exclude,include);steps.push({r:0,c:i,value:dp[i],refs:[[0,i-1],[0,Math.max(0,i-2)]],decision:include>exclude?"rob":"skip",line:5,title:`Casa ${i} · botín ${nums[i-1]}`,text:`Podemos omitirla y conservar ${exclude}, o robarla y sumar ${nums[i-1]} + ${dp[Math.max(0,i-2)]} = ${include}.`,operation:`máx(${exclude}, ${include}) = ${dp[i]}`})}const selected=[];let i=n;while(i>0){if(dp[i]===dp[i-1])i--;else{selected.push(i-1);i-=2}}selected.reverse();return{kind:"matrix",dp:[dp],steps,path:selected.map(i=>[0,i+1]),selected,opt:dp[n],nums,labels:["0",...nums.map((x,i)=>`C${i+1}:${x}`)]};
+  }
+  function buildSubset(){
+    const d=prefs.data.subset,nums=d.nums.slice(0,12).map(x=>Math.max(1,+x||1)),T=Math.max(1,Math.min(40,d.target)),n=nums.length,dp=Array.from({length:n+1},()=>Array(T+1).fill(0)),steps=[];for(let i=0;i<=n;i++)dp[i][0]=1;for(let i=1;i<=n;i++)for(let s=1;s<=T;s++){const without=dp[i-1][s],withIt=s>=nums[i-1]?dp[i-1][s-nums[i-1]]:0;dp[i][s]=without||withIt?1:0;const refs=[[i-1,s]];if(s>=nums[i-1])refs.push([i-1,s-nums[i-1]]);steps.push({r:i,c:s,value:dp[i][s],refs,decision:withIt?"include":"exclude",line:5,title:`Suma ${s} con ${i} elementos`,text:withIt?`La suma ${s-nums[i-1]} ya era alcanzable; incluyendo ${nums[i-1]} alcanzamos ${s}.`:without?`La suma ya era posible sin usar ${nums[i-1]}.`:`Ni incluyendo ni excluyendo ${nums[i-1]} se alcanza ${s}.`,operation:`${without} OR ${withIt} = ${dp[i][s]}`})}const selected=[],path=[];let i=n,s=T;if(dp[i][s])while(i>0&&s>0){path.push([i,s]);if(dp[i-1][s])i--;else{selected.push(i-1);s-=nums[i-1];i--}}path.push([i,s]);selected.reverse();return{kind:"matrix",dp,steps,path,selected,opt:dp[n][T],nums,target:T};
+  }
+  function buildModel(){
+    const builders={knapsack:buildKnapsack,coins:buildCoins,lcs:buildLCS,fib:buildFib,egg:buildEgg,balloons:buildBalloons,edit:buildEdit,lis:buildLis,matrix:buildMatrix,rod:buildRod,grid:buildGrid,robber:buildRobber,subset:buildSubset};app.model=builders[app.lab]();app.steps=app.model.steps;
+  }
+
+  /* ================================================================
+     Render de configuración, tabla, visualización y explicación.
+     ================================================================ */
+  const meta={
+    knapsack:["Mochila 0/1","Elegir objetos sin superar la capacidad","O(nW) tiempo · O(nW) espacio"],
+    coins:["Cambio de monedas","Optimización y conteo con denominaciones reutilizables","O(T·k) tiempo · O(T) espacio"],
+    lcs:["Subsecuencia común más larga","Alinear dos secuencias preservando el orden","O(mn) tiempo · O(mn) espacio"],
+    fib:["Fibonacci comparativo","Recursión, memoización y tabulación","Complejidad según el método"],
+    egg:["Egg Drop","Minimizar intentos en el peor caso","O(EF²) tiempo · O(EF) espacio"],
+    balloons:["Burst Balloons","Elegir cuál globo explotar al final de cada intervalo","O(n³) tiempo · O(n²) espacio"],
+    edit:["Distancia de edición","Insertar, borrar o sustituir caracteres","O(mn) tiempo · O(mn) espacio"],
+    lis:["Subsecuencia creciente más larga · LIS","Extender subsecuencias que terminan en cada posición","O(n²) tiempo · O(n) espacio"],
+    matrix:["Cadena de matrices","Elegir la parentización con menos multiplicaciones","O(n³) tiempo · O(n²) espacio"],
+    rod:["Corte de varilla","Maximizar ingreso combinando cortes óptimos","O(n²) tiempo · O(n) espacio"],
+    grid:["Camino de costo mínimo","Llegar a cada casilla desde arriba o izquierda","O(rc) tiempo · O(rc) espacio"],
+    robber:["House Robber","Maximizar botín sin elegir casas adyacentes","O(n) tiempo · O(n) espacio"],
+    subset:["Subset Sum","Decidir si un subconjunto alcanza la suma objetivo","O(nT) tiempo · O(nT) espacio"]
+  };
+  function renderConfig(){
+    const c=$("#configArea"),locked=configLocked();
+    if(app.lab==="knapsack"){
+      const d=prefs.data.knapsack;c.innerHTML=`<div class="field"><label>Ejemplo preparado · 5 opciones</label><select id="knapsackExample" ${locked?"disabled":""}><option value="excursion" ${d.example==="excursion"||!d.example?"selected":""}>Excursión académica</option><option value="laboratorio" ${d.example==="laboratorio"?"selected":""}>Equipo de laboratorio</option><option value="rescate" ${d.example==="rescate"?"selected":""}>Misión de rescate</option><option value="museo" ${d.example==="museo"?"selected":""}>Colección de museo</option><option value="satelite" ${d.example==="satelite"?"selected":""}>Carga de satélite</option><option value="custom" ${d.example==="custom"?"selected":""}>Datos personalizados</option></select></div><div class="field"><label>Capacidad máxima W</label><input id="capacityInput" type="number" min="1" max="18" value="${d.capacity}" ${locked?"disabled":""}></div><div class="section-title">Icono · color · nombre · peso · valor</div><div class="object-list">${d.items.map((it,i)=>`<div class="object-row"><button class="obj-icon" data-icon="${i}" style="background:${it.color}22;color:${it.color}" title="Cambiar icono" ${locked?"disabled":""}>${it.icon}</button><input type="color" data-i="${i}" data-k="color" value="${it.color}" title="Color" ${locked?"disabled":""}><input data-i="${i}" data-k="name" value="${escapeHTML(it.name)}" ${locked?"disabled":""}><input type="number" min="1" max="15" data-i="${i}" data-k="weight" value="${it.weight}" title="Peso" ${locked?"disabled":""}><input type="number" min="1" max="30" data-i="${i}" data-k="value" value="${it.value}" title="Valor" ${locked?"disabled":""}><button class="remove-object" data-remove="${i}" ${locked||d.items.length<=1?"disabled":""}>×</button></div>`).join("")}</div><div class="btn-grid" style="margin-top:8px"><button class="btn" id="addItem" ${locked||d.items.length>=8?"disabled":""}>＋ Objeto</button><button class="btn" id="randomKnapsack" ${locked?"disabled":""}>🎲 Aleatorio</button><button class="btn full" id="resetExample" ${locked?"disabled":""}>Restablecer ejemplo</button></div>`;
+      $("#knapsackExample").onchange=e=>{if(knapsackExamples[e.target.value])prefs.data.knapsack=clone(knapsackExamples[e.target.value]);restart()};
+      $("#capacityInput").onchange=e=>{d.example="custom";d.capacity=Math.max(1,Math.min(18,+e.target.value||1));restart()};
+      $$('[data-i]').forEach(el=>el.onchange=e=>{const i=+e.target.dataset.i,k=e.target.dataset.k;d.example="custom";d.items[i][k]=k==="name"?e.target.value.slice(0,12):k==="color"?e.target.value:Math.max(1,+e.target.value||1);restart()});
+      $$('[data-icon]').forEach(b=>b.onclick=()=>{const i=+b.dataset.icon,at=icons.indexOf(d.items[i].icon);d.example="custom";d.items[i].icon=icons[(at+1+icons.length)%icons.length];restart()});
+      $$('[data-remove]').forEach(b=>b.onclick=()=>{d.example="custom";d.items.splice(+b.dataset.remove,1);restart()});
+      $("#addItem").onclick=()=>{const i=d.items.length;d.example="custom";d.items.push({name:`Objeto ${i+1}`,weight:1+i%4,value:3+i*2,color:colors[i%colors.length],icon:icons[i%icons.length]});restart()};
+      $("#randomKnapsack").onclick=()=>{const n=4+Math.floor(Math.random()*3);d.example="custom";d.items=Array.from({length:n},(_,i)=>({name:["Mapa","Botella","Linterna","Cuerda","Cámara","Botiquín"][i],weight:1+Math.floor(Math.random()*6),value:2+Math.floor(Math.random()*14),color:colors[i],icon:icons[(i+2)%icons.length]}));d.capacity=7+Math.floor(Math.random()*8);restart()};
+    }else if(app.lab==="coins"){
+      const d=prefs.data.coins;c.innerHTML=`<div class="field"><label>Ejemplo preparado · 5 opciones</label><select id="coinExample" ${locked?"disabled":""}><option value="greedy" ${d.example==="greedy"||!d.example?"selected":""}>Voraz falla: [1,3,4] → 6</option><option value="canonical" ${d.example==="canonical"?"selected":""}>Sistema clásico: [1,5,10,25] → 37</option><option value="combinations" ${d.example==="combinations"?"selected":""}>Contar: [1,2,5] → 10</option><option value="impossible" ${d.example==="impossible"?"selected":""}>Cantidad imposible: [4,6] → 7</option><option value="postage" ${d.example==="postage"?"selected":""}>Sellos: [1,7,10] → 14</option><option value="custom" ${d.example==="custom"?"selected":""}>Datos personalizados</option></select></div><div class="field"><label>Denominaciones (separadas por coma)</label><input id="coinsInput" value="${d.coins.join(", ")}" ${locked?"disabled":""}></div><div class="field"><label>Cantidad objetivo T</label><input id="targetInput" type="number" min="1" max="35" value="${d.target}" ${locked?"disabled":""}></div><div class="field"><label>Objetivo</label><select id="coinObjective" ${locked?"disabled":""}><option value="min" ${d.objective==="min"?"selected":""}>Mínimo número de monedas</option><option value="count" ${d.objective==="count"?"selected":""}>Contar combinaciones</option></select></div><div class="btn-grid"><button class="btn" id="greedyFail" ${locked?"disabled":""}>⚠️ Voraz falla</button><button class="btn" id="randomCoins" ${locked?"disabled":""}>🎲 Aleatorio</button><button class="btn full" id="resetExample" ${locked?"disabled":""}>Restablecer ejemplo</button></div><p style="font-size:10px;color:var(--muted);line-height:1.4">Cada denominación puede utilizarse un número ilimitado de veces.</p>`;
+      $("#coinExample").onchange=e=>{if(coinExamples[e.target.value])prefs.data.coins=clone(coinExamples[e.target.value]);restart()};
+      $("#coinsInput").onchange=e=>{const a=e.target.value.split(/[,; ]+/).map(Number).filter(x=>Number.isInteger(x)&&x>0&&x<=30);d.example="custom";d.coins=a.length?a:[1];restart()};$("#targetInput").onchange=e=>{d.example="custom";d.target=Math.max(1,Math.min(35,+e.target.value||1));restart()};$("#coinObjective").onchange=e=>{d.example="custom";d.objective=e.target.value;restart()};$("#greedyFail").onclick=()=>{prefs.data.coins=clone(coinExamples.greedy);restart()};$("#randomCoins").onclick=()=>{d.example="custom";d.coins=[1,2+Math.floor(Math.random()*3),5+Math.floor(Math.random()*5)];d.target=6+Math.floor(Math.random()*15);restart()};
+    }else if(app.lab==="lcs"){
+      const d=prefs.data.lcs,xy=`${d.x.toUpperCase()}|${d.y.toUpperCase()}`,preparedLcs=["ALGORITMO|LOGARITMO","ABCBDAB|BDCABA","PROGRAMAR|ALGORITMO","BANANA|ATANA","COMPUTACION|PROGRAMACION","ABRACADABRA|BARBACOA"];c.innerHTML=`<div class="field"><label>Ejemplo preparado · 6 opciones</label><select id="lcsExample" ${locked?"disabled":""}><option value="ALGORITMO|LOGARITMO" ${xy==="ALGORITMO|LOGARITMO"?"selected":""}>Palabras similares</option><option value="ABCBDAB|BDCABA" ${xy==="ABCBDAB|BDCABA"?"selected":""}>Ejemplo clásico de LCS</option><option value="PROGRAMAR|ALGORITMO" ${xy==="PROGRAMAR|ALGORITMO"?"selected":""}>Conceptos de algoritmos</option><option value="BANANA|ATANA" ${xy==="BANANA|ATANA"?"selected":""}>Caracteres repetidos</option><option value="COMPUTACION|PROGRAMACION" ${xy==="COMPUTACION|PROGRAMACION"?"selected":""}>Computación y programación</option><option value="ABRACADABRA|BARBACOA" ${xy==="ABRACADABRA|BARBACOA"?"selected":""}>Patrones entre palabras</option><option value="custom" ${!preparedLcs.includes(xy)?"selected":""}>Datos personalizados</option></select></div><div class="field"><label>Secuencia X (máx. 16)</label><input id="lcsX" maxlength="16" value="${escapeHTML(d.x)}" ${locked?"disabled":""}></div><div class="field"><label>Secuencia Y (máx. 16)</label><input id="lcsY" maxlength="16" value="${escapeHTML(d.y)}" ${locked?"disabled":""}></div><div class="btn-grid"><button class="btn" id="randomLcs" ${locked?"disabled":""}>🎲 Nuevas secuencias</button><button class="btn" id="resetExample" ${locked?"disabled":""}>Restablecer</button></div>`;
+      $("#lcsX").onchange=e=>{d.x=e.target.value.replace(/\s/g,"").slice(0,16)||"A";restart()};$("#lcsY").onchange=e=>{d.y=e.target.value.replace(/\s/g,"").slice(0,16)||"A";restart()};$("#lcsExample").onchange=e=>{if(e.target.value!=="custom")[d.x,d.y]=e.target.value.split("|");restart()};$("#randomLcs").onclick=()=>{const A="ABCDE";d.x=Array.from({length:6},()=>A[Math.floor(Math.random()*5)]).join("");d.y=Array.from({length:7},()=>A[Math.floor(Math.random()*5)]).join("");restart()};
+    }else if(app.lab==="fib"){
+      const d=prefs.data.fib,recCalls=2*fibValue(d.n+1)-1;c.innerHTML=`<div class="field"><label>Ejemplo preparado · 4 opciones</label><select id="fibExample" ${locked?"disabled":""}><option value="tree" ${d.example==="tree"||!d.example?"selected":""}>Árbol pequeño: F(6)</option><option value="memo" ${d.example==="memo"?"selected":""}>Memoria y reutilización: F(10)</option><option value="table" ${d.example==="table"?"selected":""}>Tabla creciente: F(20)</option><option value="large" ${d.example==="large"?"selected":""}>Tabulación completa: F(30)</option><option value="custom" ${d.example==="custom"?"selected":""}>Configuración personalizada</option></select></div><div class="field"><label>Valor de n: <b>${d.n}</b></label><input id="fibN" type="range" min="1" max="30" value="${d.n}" ${locked?"disabled":""}></div><div class="field"><label>Método</label><select id="fibMethod" ${locked?"disabled":""}><option value="recursion" ${d.method==="recursion"?"selected":""}>Recursión simple</option><option value="memo" ${d.method==="memo"?"selected":""}>Memoización · top-down</option><option value="tabulation" ${d.method==="tabulation"?"selected":""}>Tabulación · bottom-up</option></select></div><div class="btn-grid"><button class="btn" data-fibex="6" ${locked?"disabled":""}>n = 6</button><button class="btn" data-fibex="10" ${locked?"disabled":""}>n = 10</button><button class="btn" id="randomFib" ${locked?"disabled":""}>🎲 Aleatorio</button><button class="btn" id="resetExample" ${locked?"disabled":""}>Restablecer</button></div><div class="section-title" style="margin-top:14px">Comparación</div><table class="compare-table"><tr><th>Método</th><th>Tiempo</th><th>Mem.</th><th>Trabajo*</th></tr><tr><td>Recursión</td><td>O(2ⁿ)</td><td>O(n)</td><td>${recCalls.toLocaleString("es-CO")}</td></tr><tr><td>Memo</td><td>O(n)</td><td>O(n)</td><td>≤ ${2*d.n-1}</td></tr><tr><td>Tabla</td><td>O(n)</td><td>O(n)</td><td>${Math.max(0,d.n-1)}</td></tr></table><p style="font-size:9px;color:var(--muted)">* Llamadas u operaciones para n = ${d.n}.</p>`;
+      $("#fibExample").onchange=e=>{if(fibExamples[e.target.value])prefs.data.fib=clone(fibExamples[e.target.value]);restart()};$("#fibN").oninput=e=>{d.example="custom";d.n=+e.target.value;restart()};$("#fibMethod").onchange=e=>{d.example="custom";d.method=e.target.value;restart()};$$('[data-fibex]').forEach(b=>b.onclick=()=>{d.example="custom";d.n=+b.dataset.fibex;restart()});$("#randomFib").onclick=()=>{d.example="custom";d.n=3+Math.floor(Math.random()*18);restart()};
+    }else renderExtraConfig(c,locked);
+    const re=$("#resetExample");if(re)re.onclick=()=>{prefs.data[app.lab]=clone(defaults[app.lab]);restart()};
+  }
+  const extraExampleLabels={egg:{classic:"2 huevos · 10 pisos",tower:"3 huevos · 14 pisos"},balloons:{classic:"Clásico [3,1,5,8]",small:"Intervalo corto [1,5,3]"},edit:{kitten:"KITTEN → SITTING",intention:"INTENTION → EXECUTION"},lis:{classic:"Secuencia clásica",waves:"Crecimiento con repeticiones"},matrix:{classic:"Ejemplo CLRS · 6 matrices",small:"Tres matrices"},rod:{classic:"Varilla de longitud 8",short:"Varilla de longitud 4"},grid:{classic:"Rejilla 3×3",campus:"Rejilla 4×4"},robber:{classic:"Calle [2,7,9,3,1]",street:"Calle de 6 casas"},subset:{classic:"Objetivo alcanzable 9",impossible:"Objetivo imposible 5"}};
+  function parseNumbers(text,max=14){return text.split(/[,;\s]+/).map(Number).filter(x=>Number.isFinite(x)&&x>=0).slice(0,max)}
+  function renderExtraConfig(c,locked){
+    const lab=app.lab,d=prefs.data[lab],labels=extraExampleLabels[lab],options=Object.keys(extraExamples[lab]).map(k=>`<option value="${k}" ${d.example===k?"selected":""}>${labels[k]}</option>`).join("");let fields="";
+    if(lab==="egg")fields=`<div class="field"><label>Huevos E</label><input id="extraEggs" type="number" min="2" max="5" value="${d.eggs}" ${locked?"disabled":""}></div><div class="field"><label>Pisos F</label><input id="extraFloors" type="number" min="1" max="20" value="${d.floors}" ${locked?"disabled":""}></div>`;
+    else if(lab==="edit")fields=`<div class="field"><label>Palabra inicial</label><input id="extraX" maxlength="12" value="${escapeHTML(d.x)}" ${locked?"disabled":""}></div><div class="field"><label>Palabra objetivo</label><input id="extraY" maxlength="12" value="${escapeHTML(d.y)}" ${locked?"disabled":""}></div>`;
+    else if(lab==="grid")fields=`<div class="field"><label>Rejilla: filas con ; y valores con coma</label><textarea id="extraGrid" style="width:100%;min-height:76px;border:1px solid #cbd6e4;border-radius:8px;padding:8px" ${locked?"disabled":""}>${d.grid.map(r=>r.join(",")).join(";\n")}</textarea></div>`;
+    else{const key=lab==="matrix"?"dims":lab==="rod"?"prices":"nums",arr=d[key];fields=`<div class="field"><label>${lab==="matrix"?"Dimensiones p₀…pₙ":lab==="rod"?"Precios para longitudes 1…n":"Valores separados por coma"}</label><input id="extraArray" value="${arr.join(", ")}" ${locked?"disabled":""}></div>`;if(lab==="rod")fields+=`<div class="field"><label>Longitud de la varilla</label><input id="extraLength" type="number" min="1" max="12" value="${d.length}" ${locked?"disabled":""}></div>`;if(lab==="subset")fields+=`<div class="field"><label>Suma objetivo T</label><input id="extraTarget" type="number" min="1" max="40" value="${d.target}" ${locked?"disabled":""}></div>`}
+    c.innerHTML=`<div class="field"><label>Ejemplo preparado · 2 opciones</label><select id="extraExample" ${locked?"disabled":""}>${options}<option value="custom" ${d.example==="custom"?"selected":""}>Datos personalizados</option></select></div>${fields}<div class="btn-grid"><button class="btn" id="randomExtra" ${locked?"disabled":""}>🎲 Generar datos</button><button class="btn" id="resetExample" ${locked?"disabled":""}>Restablecer</button></div><p style="font-size:9px;color:var(--muted);line-height:1.45">Los límites mantienen la animación y la tabla legibles.</p>`;
+    $("#extraExample").onchange=e=>{if(extraExamples[lab][e.target.value])prefs.data[lab]=clone(extraExamples[lab][e.target.value]);restart()};
+    if($("#extraEggs"))$("#extraEggs").onchange=e=>{d.example="custom";d.eggs=Math.max(2,Math.min(5,+e.target.value||2));restart()};if($("#extraFloors"))$("#extraFloors").onchange=e=>{d.example="custom";d.floors=Math.max(1,Math.min(20,+e.target.value||1));restart()};
+    if($("#extraX"))$("#extraX").onchange=e=>{d.example="custom";d.x=e.target.value.replace(/\s/g,"").slice(0,12)||"A";restart()};if($("#extraY"))$("#extraY").onchange=e=>{d.example="custom";d.y=e.target.value.replace(/\s/g,"").slice(0,12)||"A";restart()};
+    if($("#extraArray"))$("#extraArray").onchange=e=>{const a=parseNumbers(e.target.value,lab==="matrix"?8:14);d.example="custom";d[lab==="matrix"?"dims":lab==="rod"?"prices":"nums"]=a.length>=(lab==="matrix"?3:1)?a:(lab==="matrix"?[2,3,4]:[1]);restart()};
+    if($("#extraLength"))$("#extraLength").onchange=e=>{d.example="custom";d.length=Math.max(1,Math.min(12,+e.target.value||1));restart()};if($("#extraTarget"))$("#extraTarget").onchange=e=>{d.example="custom";d.target=Math.max(1,Math.min(40,+e.target.value||1));restart()};
+    if($("#extraGrid"))$("#extraGrid").onchange=e=>{const rows=e.target.value.split(/;|\n/).map(r=>parseNumbers(r,6)).filter(r=>r.length),width=Math.min(...rows.map(r=>r.length));if(rows.length&&width){d.example="custom";d.grid=rows.slice(0,6).map(r=>r.slice(0,width))}restart()};
+    $("#randomExtra").onclick=()=>{const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));if(lab==="egg")prefs.data.egg={example:"custom",eggs:ri(2,4),floors:ri(6,16)};else if(lab==="edit"){const A="ABCDE",word=n=>Array.from({length:n},()=>A[ri(0,4)]).join("");prefs.data.edit={example:"custom",x:word(ri(5,8)),y:word(ri(5,8))}}else if(lab==="grid")prefs.data.grid={example:"custom",grid:Array.from({length:ri(3,5)},()=>Array.from({length:ri(3,5)},()=>ri(1,9)))};else if(lab==="matrix")prefs.data.matrix={example:"custom",dims:Array.from({length:ri(4,7)},()=>ri(2,30))};else if(lab==="rod"){const n=ri(5,9);prefs.data.rod={example:"custom",prices:Array.from({length:n},(_,i)=>ri(i+1,(i+1)*4)),length:n}}else if(lab==="subset"){prefs.data.subset={example:"custom",nums:Array.from({length:ri(5,8)},()=>ri(1,15)),target:ri(5,25)}}else prefs.data[lab]={example:"custom",nums:Array.from({length:ri(5,9)},()=>ri(0,20))};restart()};
+  }
+  function rowLabels(){if(app.lab==="knapsack")return["∅",...prefs.data.knapsack.items.map(x=>x.icon)];if(app.lab==="coins"&&app.model.kind==="coinCount")return["∅",...app.model.coins.map(c=>`¢${c}`)];if(app.lab==="lcs"||app.lab==="edit")return["∅",...app.model.X];if(app.lab==="egg")return app.model.dp.map((_,i)=>`${i} 🥚`);if(app.lab==="balloons")return app.model.dp.map((_,i)=>i);if(app.lab==="matrix")return app.model.labels;if(app.lab==="grid")return app.model.dp.map((_,i)=>`F${i+1}`);if(app.lab==="subset")return["∅",...app.model.nums];return["DP"]}
+  function colLabels(){if(app.lab==="lcs"||app.lab==="edit")return["∅",...app.model.Y];if(app.lab==="matrix")return app.model.labels;if(app.model.labels)return app.model.labels;return app.model.dp[0].map((_,i)=>i)}
+  function stepIndexFor(r,c){return app.steps.findIndex(s=>s.r===r&&s.c===c)}
+  function cellClass(r,c,index){const st=currentStep(),refs=st&&app.pos<app.steps.length?st.refs:[],path=isComplete()?app.model.path||[]:[];let cl=[];if(index>=app.pos&&index>=0)cl.push("future");if(st&&app.pos<app.steps.length&&st.r===r&&st.c===c)cl.push("current");if(refs.some((p,i)=>p[0]===r&&p[1]===c&&i===0))cl.push("ref-a");if(refs.some((p,i)=>p[0]===r&&p[1]===c&&i>0))cl.push("ref-b");if(path.some(p=>p[0]===r&&p[1]===c))cl.push("path");if(index>=0&&index<app.pos){const s=app.steps[index];if(s.match)cl.push("match");else if(["include","combine","burst","extend","cut","path","rob"].includes(s.decision))cl.push("include");else cl.push("exclude")}return cl.join(" ")}
+  function renderTable(){
+    if(app.lab==="fib"){renderFibTable();return}
+    const dp=app.model.dp,rows=rowLabels(),cols=colLabels();let h=`<table class="dp"><thead><tr><th>Estado</th>${cols.map(x=>`<th>${escapeHTML(x)}</th>`).join("")}</tr></thead><tbody>`;
+    for(let r=0;r<dp.length;r++){h+=`<tr><th>${escapeHTML(rows[r]??r)}</th>`;for(let c=0;c<dp[r].length;c++){const idx=stepIndexFor(r,c),base=idx<0,val=dp[r][c],clean=Number.isFinite(val)?val:"∞",shown=base?clean:visibleValue(idx,clean);h+=`<td class="${cellClass(r,c,idx)}" data-cell="${r},${c}">${shown}</td>`}h+="</tr>"}h+="</tbody></table>";$("#tableArea").innerHTML=h;$$('[data-cell]').forEach(td=>td.onclick=()=>inspectCell(...td.dataset.cell.split(",").map(Number)));requestAnimationFrame(drawDependencyArrows);
+  }
+  function renderFibTable(){
+    const d=prefs.data.fib,m=app.model,st=currentStep();let h="";
+    if(d.method==="recursion"){h=`<div style="padding:12px"><div class="section-title">Árbol de llamadas (limitado a 6 niveles)</div><div class="tree-wrap">${renderTree(m.root,0,st)}</div></div>`}
+      else{h=`<div style="padding:18px"><div class="section-title">${d.method==="memo"?"Arreglo de memoria":"Tabla construida de izquierda a derecha"}</div><div class="fib-array">${m.values.map((v,i)=>{const solved=d.method==="memo"?i<2||app.steps.slice(0,app.pos).some(s=>s.n===i&&(s.stored||s.cached)):i<2||app.steps.slice(0,app.pos).some(s=>s.c===i);const active=st&&(st.c===i||st.n===i);const source=st&&st.refs&&st.refs.some(p=>p[1]===i);return`<div class="fib-cell ${active?"current":""} ${source?"source":""} ${d.method==="memo"&&solved?"cached":""}" data-fibcell="${i}"><small>F(${i})</small><b>${solved||i<2?v:"·"}</b></div>`}).join("")}</div></div>`}
+    $("#tableArea").innerHTML=h;$$('[data-fibcell]').forEach(x=>x.onclick=()=>inspectFib(+x.dataset.fibcell));requestAnimationFrame(drawDependencyArrows);
+  }
+  /* Dibuja conectores SVG reales entre los subproblemas y el estado actual.
+     Se recalculan en cada paso y al cambiar el zoom o el tamaño de la ventana. */
+  function drawDependencyArrows(){
+    const area=$("#tableArea");if(!area)return;area.querySelector(".dependency-arrows")?.remove();
+    const s=currentStep();if(!s||isComplete()||!s.refs?.length)return;
+    const matrixCell=(r,c)=>[...area.querySelectorAll("[data-cell]")].find(el=>el.dataset.cell===`${r},${c}`);
+    const target=app.lab==="fib"?area.querySelector(`[data-fibcell="${s.c}"]`):matrixCell(s.r,s.c);
+    const sources=app.lab==="fib"?s.refs.map(p=>area.querySelector(`[data-fibcell="${p[1]}"]`)):s.refs.map(p=>matrixCell(p[0],p[1]));
+    if(!target||!sources.some(Boolean))return;
+    const box=area.getBoundingClientRect(),width=Math.max(area.scrollWidth,area.clientWidth),height=Math.max(area.scrollHeight,area.clientHeight);if(!width||!height)return;
+    const ns="http://www.w3.org/2000/svg",svg=document.createElementNS(ns,"svg");svg.classList.add("dependency-arrows");svg.setAttribute("width",width);svg.setAttribute("height",height);svg.setAttribute("viewBox",`0 0 ${width} ${height}`);svg.setAttribute("aria-hidden","true");
+    const defs=document.createElementNS(ns,"defs");defs.innerHTML=`<marker id="depArrowBlue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1677e8"/></marker><marker id="depArrowViolet" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7c3aed"/></marker><marker id="depArrowOrange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e9781d"/></marker>`;svg.appendChild(defs);
+    const tr=target.getBoundingClientRect(),tx=tr.left-box.left+tr.width/2,ty=tr.top-box.top+tr.height/2;
+    sources.slice(0,7).forEach((source,i)=>{if(!source)return;const sr=source.getBoundingClientRect(),sx0=sr.left-box.left+sr.width/2,sy0=sr.top-box.top+sr.height/2,dx=tx-sx0,dy=ty-sy0,len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len,sx=sx0+ux*Math.min(sr.width,sr.height)*.28,sy=sy0+uy*Math.min(sr.width,sr.height)*.28,ex=tx-ux*Math.min(tr.width,tr.height)*.43,ey=ty-uy*Math.min(tr.width,tr.height)*.43,bend=(i-(sources.length-1)/2)*8,mx=(sx+ex)/2-uy*bend,my=(sy+ey)/2+ux*bend,path=document.createElementNS(ns,"path");path.setAttribute("d",`M ${sx} ${sy} Q ${mx} ${my} ${ex} ${ey}`);path.setAttribute("class",i===0?"dep-one":i===1?"dep-two":"dep-more");path.setAttribute("marker-end",`url(#${i===0?"depArrowBlue":i===1?"depArrowViolet":"depArrowOrange"})`);path.style.strokeDashoffset="35";svg.appendChild(path)});
+    area.appendChild(svg);
+  }
+  function renderTree(node,depth,st){if(!node)return"";const active=st&&app.steps[Math.min(app.pos,app.steps.length-1)]?.n===node.n;return`<div class="tree"><div class="tree-node ${node.repeat?"repeat":""} ${active?"active":""}">F(${node.n})${node.truncated?" …":""}</div>${node.children?.length?`<div class="tree-children">${node.children.map(ch=>renderTree(ch,depth+1,st)).join("")}</div>`:""}</div>`}
+  function renderVisual(){
+    const v=$("#visualStage"),m=app.model,done=isComplete();
+    if(app.lab==="knapsack"){
+      const d=prefs.data.knapsack;v.innerHTML=`<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${d.items.map((it,i)=>`<div class="item-card ${done&&m.selected.includes(i)?"flying":""}" style="--item:${it.color};animation-delay:${m.selected.indexOf(i)*.18}s"><span class="emoji">${it.icon}</span><span><strong>${escapeHTML(it.name)}</strong><small>P ${it.weight} · V ${it.value}</small></span></div>`).join("")}</div><div class="bag">Capacidad ${d.capacity}</div>${done?`<div class="complete-banner">Óptimo ${m.opt} · Peso ${m.totalWeight} · Valor ${m.totalValue} · Libre ${d.capacity-m.totalWeight}</div>`:""}`;
+    }else if(app.lab==="coins"){
+      if(prefs.data.coins.objective==="count")v.innerHTML=`<div class="complete-banner" style="background:${done?"var(--green-bg)":"var(--sky)"}">${done?`Hay ${m.opt} combinaciones diferentes para formar ${prefs.data.coins.target}.`:`Construimos combinaciones moneda por moneda para no contar distintos órdenes como soluciones nuevas.`}</div>`;
+      else v.innerHTML=`<div class="greedy-compare"><div class="solution-box"><h4>⚡ Estrategia voraz · ${m.greedy.length} moneda(s)${m.greedyRemainder?" · no completa":""}</h4><div class="coins">${m.greedy.map(c=>`<span class="coin">${c}</span>`).join("")||"Sin solución"}</div></div><div class="solution-box dp-solution"><h4>✓ Programación dinámica · ${Number.isFinite(m.opt)?m.opt:"sin solución"}</h4><div class="coins">${done?m.combo.map(c=>`<span class="coin dpcoin">${c}</span>`).join(""):"Se revelará al reconstruir"}</div></div></div>${prefs.data.coins.coins.join(",")==="1,3,4"&&prefs.data.coins.target===6?`<div class="complete-banner" style="background:var(--orange-bg);border-color:#f3b278;color:#8b470e">Voraz elige 4+1+1 (3 monedas); DP encuentra 3+3 (2 monedas).</div>`:""}`;
+    }else if(app.lab==="lcs"){
+      v.innerHTML=`<div><div class="sequence">${m.X.split("").map((ch,i)=>`<span class="char ${done&&m.xIndices.includes(i)?"selected":""}">${ch}</span>`).join("")}</div><div class="sequence" style="margin-top:7px">${m.Y.split("").map((ch,i)=>`<span class="char ${done&&m.yIndices.includes(i)?"selected":""}">${ch}</span>`).join("")}</div></div>${done?`<div class="complete-banner">LCS = “${m.lcs}” · longitud ${m.opt}</div>`:""}`;
+    }else if(app.lab==="fib"){
+      const d=prefs.data.fib;v.innerHTML=`<div class="metrics" style="width:min(720px,100%);grid-template-columns:repeat(${d.method==="memo"?5:4},1fr)"><div class="metric"><span>Método</span><strong>${d.method==="recursion"?"Recursión":d.method==="memo"?"Memo":"Tabla"}</strong></div><div class="metric"><span>Resultado</span><strong>${done?m.opt:"?"}</strong></div><div class="metric"><span>Llamadas / operaciones</span><strong>${d.method==="recursion"?m.operations:Math.min(app.pos,m.operations)}</strong></div>${d.method==="memo"?`<div class="metric"><span>Recuperaciones</span><strong>${Math.min(app.steps.slice(0,app.pos).filter(s=>s.cached).length,m.callsAvoided)}</strong></div>`:""}<div class="metric"><span>Complejidad</span><strong>${d.method==="recursion"?"O(2ⁿ)":"O(n)"}</strong></div></div>`;
+    }else renderExtraVisual(v,m,done);
+  }
+  function renderExtraVisual(v,m,done){
+    const current=currentStep();
+    if(app.lab==="egg")v.innerHTML=`<div style="display:flex;align-items:end;gap:5px;height:100px">${Array.from({length:m.floors},(_,i)=>`<div style="width:11px;height:${25+(i+1)/m.floors*70}px;background:${current?.c===i+1?"var(--yellow)":"#cfe0f3"};border-radius:3px" title="Piso ${i+1}"></div>`).join("")}</div><div class="metric"><span>Recursos</span><strong>${"🥚".repeat(m.eggs)}</strong></div>${done?`<div class="complete-banner">Peor caso óptimo: ${m.opt} lanzamientos</div>`:""}`;
+    else if(app.lab==="balloons")v.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">${m.nums.map((x,i)=>`<div class="coin" style="width:48px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff,#ff9fc0 60%,#d83b6d);border-color:#b72e5a;color:#6d1231">${x}</div>`).join("")}</div>${done?`<div class="complete-banner">Máximo de monedas: ${m.opt}</div>`:`<div class="complete-banner" style="background:var(--sky)">La tabla decide cuál globo conviene explotar al final de cada intervalo.</div>`}`;
+    else if(app.lab==="edit")v.innerHTML=`<div><div class="sequence">${m.X.split("").map(ch=>`<span class="char">${ch}</span>`).join("")}</div><div style="text-align:center;color:var(--violet);font-weight:900">↓ insertar · borrar · sustituir ↓</div><div class="sequence">${m.Y.split("").map(ch=>`<span class="char">${ch}</span>`).join("")}</div></div>${done?`<div class="complete-banner">Distancia mínima: ${m.opt} operación(es)</div>`:""}`;
+    else if(app.lab==="lis")v.innerHTML=`<div style="display:flex;gap:5px;align-items:end;justify-content:center;flex-wrap:wrap">${m.nums.map((x,i)=>`<div class="fib-cell ${done&&m.selected.includes(i)?"cached":""}"><small>i=${i}</small><b>${x}</b></div>`).join("")}</div>${done?`<div class="complete-banner">LIS: ${m.selected.map(i=>m.nums[i]).join(" → ")} · longitud ${m.opt}</div>`:""}`;
+    else if(app.lab==="matrix")v.innerHTML=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center">${m.labels.map((x,i)=>`<div class="item-card" style="--item:${colors[i%colors.length]}"><span class="emoji">▦</span><span><strong>${x}</strong><small>${m.dims[i]}×${m.dims[i+1]}</small></span></div>${i<m.labels.length-1?" × ":""}`).join("")}</div>${done?`<div class="complete-banner">Costo mínimo: ${m.opt.toLocaleString("es-CO")} multiplicaciones escalares</div>`:""}`;
+    else if(app.lab==="rod")v.innerHTML=`<div style="display:flex;width:min(620px,100%);height:42px;border:3px solid #8b5e34;border-radius:8px;overflow:hidden">${(done?m.cuts:[m.length]).map((c,i)=>`<div style="flex:${c};background:${colors[i%colors.length]}33;border-right:2px dashed #8b5e34;display:grid;place-items:center;font-weight:900">${c}</div>`).join("")}</div>${done?`<div class="complete-banner">Cortes ${m.cuts.join(" + ")} · ingreso máximo ${m.opt}</div>`:""}`;
+    else if(app.lab==="grid")v.innerHTML=`<div style="display:grid;grid-template-columns:repeat(${m.cols},34px);gap:3px">${m.grid.flatMap((row,i)=>row.slice(0,m.cols).map((x,j)=>`<div style="width:34px;height:34px;display:grid;place-items:center;border:1px solid #cbd7e5;border-radius:6px;background:${done&&m.path.some(p=>p[0]===i&&p[1]===j)?"var(--green-bg)":"#fff"};font-weight:850">${x}</div>`)).join("")}</div>${done?`<div class="complete-banner">Costo mínimo del camino: ${m.opt}</div>`:""}`;
+    else if(app.lab==="robber")v.innerHTML=`<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${m.nums.map((x,i)=>`<div class="item-card" style="--item:${done&&m.selected.includes(i)?"var(--green)":"#9aacc0"}"><span class="emoji">🏠</span><span><strong>Casa ${i+1}</strong><small>Botín ${x}</small></span></div>`).join("")}</div>${done?`<div class="complete-banner">Casas ${m.selected.map(i=>i+1).join(", ")} · botín ${m.opt}</div>`:""}`;
+    else v.innerHTML=`<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${m.nums.map((x,i)=>`<div class="fib-cell ${done&&m.selected.includes(i)?"cached":""}"><small>${done&&m.selected.includes(i)?"✓":"n"}</small><b>${x}</b></div>`).join("")}</div><div class="metric"><span>Objetivo</span><strong>${m.target}</strong></div>${done?`<div class="complete-banner" style="background:${m.opt?"var(--green-bg)":"var(--orange-bg)"}">${m.opt?`Sí: ${m.selected.map(i=>m.nums[i]).join(" + ")} = ${m.target}`:`No existe un subconjunto que sume ${m.target}`}</div>`:""}`;
+  }
+  const pseudo={
+    knapsack:["para i desde 1 hasta n:","  para w desde 0 hasta capacidad:","    si peso[i] > w:","      DP[i][w] = DP[i-1][w]","    de lo contrario:","      excluir = DP[i-1][w]","      incluir = valor[i] + DP[i-1][w-peso[i]]","      DP[i][w] = máximo(excluir, incluir)"],
+    coinMin:["DP[0] = 0","para x desde 1 hasta objetivo:","  DP[x] = infinito","  para cada moneda c ≤ x:","    DP[x] = mínimo(DP[x], 1 + DP[x-c])","    guardar la moneda elegida"],
+    coinCount:["DP[i][0] = 1","para cada moneda i:","  para x desde 1 hasta objetivo:","    sinMoneda = DP[i-1][x]","    conMoneda = DP[i][x-moneda[i]]","    DP[i][x] = sinMoneda + conMoneda"],
+    lcs:["para i desde 1 hasta m:","  para j desde 1 hasta n:","    si X[i] = Y[j]:","      DP[i][j] = DP[i-1][j-1] + 1","    de lo contrario:","      DP[i][j] = máximo(DP[i-1][j], DP[i][j-1])"],
+    fibRec:["fib(n):","  si n ≤ 1: retornar n","  retornar fib(n-1) + fib(n-2)"],
+    fibMemo:["fib(n, memo):","  si n está en memo: retornar memo[n]","  memo[n] = fib(n-1) + fib(n-2)","  retornar memo[n]"],
+    fibTab:["F[0] = 0; F[1] = 1","para i desde 2 hasta n:","  F[i] = F[i-1] + F[i-2]","retornar F[n]"],
+    egg:["DP[1][f] = f; DP[e][0] = 0","para e desde 2 hasta E:","  para f desde 1 hasta F:","    para x desde 1 hasta f:","      DP[e][f] = mín(1 + máx(DP[e-1][x-1], DP[e][f-x]))","guardar el mejor piso x"],
+    balloons:["agregar globos centinela de valor 1","para longitud desde 1 hasta n:","  para cada intervalo [l,r]:","    DP[l][r] = 0","    para k desde l hasta r:","      maximizar DP[l][k-1] + a[l-1]·a[k]·a[r+1] + DP[k+1][r]","guardar k como último globo"],
+    edit:["DP[i][0]=i; DP[0][j]=j","para i desde 1 hasta m:","  para j desde 1 hasta n:","    si X[i]=Y[j]: DP[i][j]=DP[i-1][j-1]","    si no:","      DP[i][j]=1+mín(borrar, insertar, sustituir)"],
+    lis:["DP[i] = 1 para todo i","para i desde 0 hasta n-1:","  para j desde 0 hasta i-1:","    si A[j] < A[i]:","      DP[i] = máx(DP[i], DP[j]+1)","respuesta = máximo DP[i]"],
+    matrix:["DP[i][i] = 0","para longitud desde 2 hasta n:","  para cada intervalo [i,j]:","    DP[i][j] = infinito","    para corte k entre i y j-1:","      minimizar DP[i][k]+DP[k+1][j]+p[i]p[k+1]p[j+1]","guardar el mejor corte"],
+    rod:["DP[0] = 0","para longitud L desde 1 hasta n:","  DP[L] = -infinito","  para primer corte c desde 1 hasta L:","    DP[L] = máx(DP[L], precio[c] + DP[L-c])","guardar el corte elegido"],
+    grid:["DP[0][0] = costo[0][0]","recorrer filas y columnas:","  anterior = mín(arriba, izquierda)","  DP[i][j] = costo[i][j] + anterior","reconstruir desde la meta"],
+    robber:["DP[0] = 0","para i desde 1 hasta n:","  omitir = DP[i-1]","  robar = valor[i] + DP[i-2]","  DP[i] = máx(omitir, robar)","reconstruir casas elegidas"],
+    subset:["DP[i][0] = verdadero","para i desde 1 hasta n:","  para suma s desde 1 hasta T:","    excluir = DP[i-1][s]","    incluir = s≥a[i] y DP[i-1][s-a[i]]","    DP[i][s] = excluir O incluir"]
+  };
+  function pseudoKey(){if(app.lab==="coins")return app.model.kind==="coinMin"?"coinMin":"coinCount";if(app.lab==="fib")return prefs.data.fib.method==="recursion"?"fibRec":prefs.data.fib.method==="memo"?"fibMemo":"fibTab";return app.lab}
+  function renderExplanation(){
+    const s=currentStep(),done=isComplete(),total=app.steps.length;$("#stepCounter").textContent=done?`Completado · ${total} pasos`:`Paso ${Math.min(app.pos+1,total)} de ${total}`;
+    if(done){$("#stepLabel").textContent="Solución óptima";$("#stepTitle").textContent="Reconstrucción completada";$("#stepText").textContent=completionText();$("#decisionArea").innerHTML=""}
+    else if(s){$("#stepLabel").textContent=s.decision==="match"?"Coincidencia":s.decision==="include"?"Incluir / combinar":s.cached?"Memoria":"Subproblema actual";$("#stepTitle").textContent=s.title;$("#stepText").textContent=s.text;$("#decisionArea").innerHTML=s.exclude!==undefined?`<div class="decision"><div class="a">Excluir<br>${s.exclude}</div><div class="b">${s.include===null?"No cabe":"Incluir<br>"+s.include}</div></div>`:`<div class="decision"><div class="a">Operación</div><div class="b">${escapeHTML(s.operation)}</div></div>`}
+    const lines=pseudo[pseudoKey()],active=done?-1:(s?.line??1)-1;$("#pseudoArea").innerHTML=lines.map((l,i)=>`<span class="${i===active?"hi":""}">${escapeHTML(l)}</span>`).join("\n");
+    $("#metricsArea").innerHTML=metricsHTML();renderPractice();renderStats();
+  }
+  function completionText(){const m=app.model;if(app.lab==="knapsack")return`El valor máximo es ${m.opt}. Se eligieron ${m.selected.length} objetos con peso total ${m.totalWeight}.`;if(app.lab==="coins")return prefs.data.coins.objective==="min"?Number.isFinite(m.opt)?`El mínimo es ${m.opt}: ${m.combo.join(" + ")}. La reconstrucción siguió las monedas guardadas.`:"La cantidad no puede formarse.":`La tabla cuenta ${m.opt} combinaciones sin duplicar permutaciones.`;if(app.lab==="lcs")return`La subsecuencia reconstruida es “${m.lcs}” y su longitud es ${m.opt}.`;if(app.lab==="fib")return`F(${prefs.data.fib.n}) = ${m.opt}. Compare el trabajo realizado por cada método.`;if(app.lab==="egg")return`Se requieren ${m.opt} lanzamientos en el peor caso con ${m.eggs} huevos y ${m.floors} pisos.`;if(app.lab==="balloons")return`La mejor secuencia de explosiones obtiene ${m.opt} monedas.`;if(app.lab==="edit")return`La distancia mínima entre “${m.X}” y “${m.Y}” es ${m.opt}.`;if(app.lab==="lis")return`La LIS es ${m.selected.map(i=>m.nums[i]).join(" → ")} y mide ${m.opt}.`;if(app.lab==="matrix")return`La parentización óptima usa ${m.opt} multiplicaciones escalares.`;if(app.lab==="rod")return`El ingreso máximo es ${m.opt} con cortes ${m.cuts.join(" + ")}.`;if(app.lab==="grid")return`El camino reconstruido tiene costo mínimo ${m.opt}.`;if(app.lab==="robber")return`El botín máximo es ${m.opt}, eligiendo las casas ${m.selected.map(i=>i+1).join(", ")}.`;return m.opt?`Sí existe: ${m.selected.map(i=>m.nums[i]).join(" + ")} = ${m.target}.`:`No existe un subconjunto que sume ${m.target}.`}
+  function metricsHTML(){let vals,m=app.model;if(app.lab==="knapsack")vals=[["Estados",app.steps.length],["Óptimo",isComplete()?m.opt:"—"],["Tiempo","O(nW)"],["Espacio","O(nW)"]];else if(app.lab==="coins")vals=[["Objetivo",prefs.data.coins.target],["Resultado",isComplete()?m.opt:"—"],["Tiempo","O(T·k)"],["Espacio",m.kind==="coinCount"?"O(Tk)":"O(T)"]];else if(app.lab==="lcs"||app.lab==="edit")vals=[["m × n",`${m.X.length}×${m.Y.length}`],["Resultado",isComplete()?m.opt:"—"],["Tiempo","O(mn)"],["Espacio","O(mn)"]];else if(app.lab==="fib")vals=[["n",prefs.data.fib.n],["Resultado",isComplete()?m.opt:"—"],["Trabajo",m.operations],["Memoria","O(n)"]];else{const complexities={egg:["O(EF²)","O(EF)"],balloons:["O(n³)","O(n²)"],lis:["O(n²)","O(n)"],matrix:["O(n³)","O(n²)"],rod:["O(n²)","O(n)"],grid:["O(rc)","O(rc)"],robber:["O(n)","O(n)"],subset:["O(nT)","O(nT)"]},[time,space]=complexities[app.lab];vals=[["Estados",app.steps.length],["Resultado",isComplete()?m.opt:"—"],["Tiempo",time],["Espacio",space]]}return vals.map(v=>`<div class="metric"><span>${v[0]}</span><strong>${v[1]}</strong></div>`).join("")}
+  function renderStats(){const box=$("#challengeStats");if(app.mode!=="challenge"){box.hidden=true;return}box.hidden=false;const acc=app.stats.attempts?Math.round(app.stats.correct/app.stats.attempts*100):0;box.innerHTML=`<div class="stat"><b>${app.stats.correct}</b><span>Aciertos</span></div><div class="stat"><b>${app.stats.errors}</b><span>Errores</span></div><div class="stat"><b>${acc}%</b><span>Precisión</span></div><div class="stat"><b>${formatTime(elapsed())}</b><span>Tiempo</span></div>`}
+  function renderPractice(){
+    const a=$("#practiceArea");if(app.mode==="guided"||isComplete()||!currentStep()){a.innerHTML="";return}const s=currentStep();let hint="";if(app.hints===1)hint=`Consulta: ${s.refs?.map(p=>`DP[${p[0]}][${p[1]}]`).join(" y ")||"el caso base"}.`;if(app.hints===2)hint=`Recurrencia: ${pseudo[pseudoKey()].find(x=>x.includes("DP[")||x.includes("F[i]"))||s.operation}.`;if(app.hints===3)hint=`Operación: ${s.operation}.`;if(app.hints>=4)hint=`Respuesta: ${Number.isFinite(s.value)?s.value:"∞"}. ${s.text}`;a.innerHTML=`<div class="practice-box"><h4>${app.mode==="practice"?"Tu turno":"Desafío sin ayuda"}: ¿qué valor va aquí?</h4><div class="practice-line"><input id="answerInput" inputmode="numeric" placeholder="Valor"><button class="btn primary" id="checkAnswer">Comprobar</button></div><div id="feedback" class="feedback"></div>${hint?`<div class="hint">💡 ${escapeHTML(hint)}</div>`:""}${app.answered?`<button class="btn full" id="continueAfter" style="margin-top:7px">Continuar</button>`:`<button class="btn full" id="hintBtn" style="margin-top:7px">Pista ${app.hints+1}/4</button>`}</div>`;const input=$("#answerInput");if(input){input.onkeydown=e=>{if(e.key==="Enter")checkPractice()};setTimeout(()=>input.focus(),0)}if($("#checkAnswer"))$("#checkAnswer").onclick=checkPractice;if($("#hintBtn"))$("#hintBtn").onclick=()=>{app.hints=Math.min(4,app.hints+1);renderPractice()};if($("#continueAfter"))$("#continueAfter").onclick=advanceAfterAnswer;
+  }
+  function checkPractice(){if(app.answered)return;const s=currentStep(),raw=$("#answerInput").value.trim(),ans=raw==="∞"?Infinity:Number(raw);app.stats.attempts++;if(ans===s.value){app.stats.correct++;app.answered=true;$("#feedback").className="feedback ok";$("#feedback").textContent="✓ Correcto. "+s.operation;setTimeout(advanceAfterAnswer,app.mode==="practice"?650:900)}else{app.stats.errors++;$("#feedback").className="feedback bad";$("#feedback").textContent="Aún no. Revisa los subproblemas y prueba de nuevo.";app.hints=Math.max(app.hints,1);renderStats()}save()}
+  function advanceAfterAnswer(){if(!app.answered)return;app.pos++;app.answered=false;app.hints=0;renderAll()}
+  function inspectCell(r,c){const idx=stepIndexFor(r,c),s=idx>=0?app.steps[idx]:null,val=app.model.dp[r][c];app.inspected=[r,c];$("#cellInspector").innerHTML=s?`<strong>DP[${r}][${c}] = ${Number.isFinite(val)?val:"∞"}</strong><br>Representa: ${escapeHTML(s.title)}.<br>Subproblemas: ${s.refs.map(p=>`DP[${p[0]}][${p[1]}]`).join(", ")||"ninguno"}.<br>Decisión: ${escapeHTML(s.decision)}.<br>Cálculo: ${escapeHTML(s.operation)}.`:`<strong>DP[${r}][${c}] = ${val}</strong><br>Caso base: solución del problema vacío o capacidad/cantidad cero.`}
+  function inspectFib(i){$("#cellInspector").innerHTML=`<strong>F(${i}) = ${app.model.values[i]}</strong><br>Estado que representa el término ${i}. ${i<2?"Es un caso base.":`Se obtiene con F(${i-1}) + F(${i-2}).`}`}
+  function renderAll(){const [name,sub,complex]=meta[app.lab];$("#labName").textContent=name;$("#labSubtitle").textContent=sub;$("#complexityBadge").textContent=complex;document.documentElement.style.setProperty("--cell",`${app.zoom}px`);renderConfig();renderVisual();renderTable();renderExplanation();updateControls()}
+  function updateControls(){const done=isComplete(),needsAnswer=app.mode!=="guided"&&!app.answered;$("#prevBtn").disabled=app.pos<=0||app.running;$("#nextBtn").disabled=done||app.running||needsAnswer;$("#autoBtn").disabled=done||app.running||app.mode!=="guided";$("#pauseBtn").disabled=!app.running;$("#solveBtn").disabled=done||app.running;$("#resetBtn").disabled=app.pos===0&&!app.running;$$('.problem-link[data-lab]').forEach(x=>x.disabled=app.running)}
+  function next(){if(isComplete())return;if(app.mode!=="guided"&&!app.answered){renderPractice();return}app.pos++;app.answered=false;app.hints=0;renderAll();if(isComplete())stopAuto()}
+  function previous(){if(app.pos>0){app.pos--;app.answered=false;app.hints=0;renderAll()}}
+  function auto(){if(app.mode!=="guided"||isComplete())return;app.running=true;updateControls();const delays={1:1600,2:1100,3:700,4:400,5:180};app.timer=setInterval(next,delays[app.speed])}
+  function solve(){if(app.mode!=="guided"){app.mode="guided";prefs.mode="guided";$$('#modeSelector button').forEach(b=>b.classList.toggle("active",b.dataset.mode==="guided"))}app.pos=app.steps.length;stopAuto();renderAll();save()}
+
+  /* ================================================================
+     Panel conceptual y evaluación final con retroalimentación.
+     ================================================================ */
+  const concepts=[
+    ["Subproblema","Una versión más pequeña del problema original cuya respuesta contribuye a la solución final."],["Estado","Conjunto mínimo de variables que identifica un subproblema, por ejemplo DP[i][w]."],["Caso base","Estado cuya respuesta se conoce sin consultar otros estados, como DP[0][w] = 0."],["Recurrencia","Regla matemática que conecta un estado con subproblemas ya resueltos."],["Decisión","Elección almacenada: incluir/excluir, hacer coincidir o elegir una transición."],["Solución óptima","La mejor respuesta global según el objetivo: máximo, mínimo o longitud mayor."],["Memoización","Top-down: recursión con una memoria que evita recalcular llamadas."],["Tabulación","Bottom-up: llena una tabla desde los casos base hasta el objetivo."],["Subestructura óptima","Una solución óptima puede construirse combinando soluciones óptimas de subproblemas."],["Subproblemas superpuestos","Las mismas preguntas pequeñas aparecen repetidamente; por eso conviene guardarlas."]
+  ];
+  const quiz=[
+    {q:"¿Qué evita principalmente la programación dinámica?",o:["Comparar valores","Recalcular subproblemas","Usar memoria","Definir casos base"],a:1,e:"Guarda resultados para no resolver repetidamente el mismo estado."},
+    {q:"En Mochila 0/1, ¿qué representa DP[i][w]?",o:["Peso del objeto i","Mejor valor con los primeros i objetos y capacidad w","Número de objetos","Capacidad restante"],a:1,e:"El estado combina un prefijo de objetos y una capacidad disponible."},
+    {q:"Si un objeto pesa más que w, ¿qué valor se copia?",o:["DP[i][w-1]","0","DP[i-1][w]","valor[i]"],a:2,e:"El objeto no cabe, por lo que necesariamente se excluye."},
+    {q:"Con monedas [1,3,4] y objetivo 6, ¿cuál es el mínimo?",o:["3: 4+1+1","2: 3+3","2: 4+2","6: seis monedas"],a:1,e:"DP encuentra 3+3; la opción 4+2 no existe."},
+    {q:"¿Cuál es el caso base de mínimo número de monedas?",o:["DP[0]=0","DP[0]=1","DP[1]=0","DP[x]=x+1"],a:0,e:"Se necesitan cero monedas para formar una cantidad cero."},
+    {q:"Si X[i] = Y[j] en LCS, ¿qué transición se usa?",o:["DP[i-1][j]+1","DP[i][j-1]+1","DP[i-1][j-1]+1","máximo de toda la fila"],a:2,e:"Una coincidencia extiende la LCS de ambos prefijos anteriores."},
+    {q:"¿Cuál es la complejidad temporal de LCS con tabla m×n?",o:["O(m+n)","O(log n)","O(mn)","O(2ⁿ)"],a:2,e:"Se calcula una vez cada una de las m·n celdas."},
+    {q:"¿Qué diferencia memoización de tabulación?",o:["Memoización es top-down; tabulación es bottom-up","Solo tabulación guarda valores","Memoización siempre es exponencial","No existe diferencia"],a:0,e:"Ambas guardan estados, pero los visitan en órdenes distintos."},
+    {q:"¿Por qué la recursión simple de Fibonacci es exponencial?",o:["Usa un arreglo","Repite muchas llamadas como F(k)","Tiene dos casos base","Suma números grandes"],a:1,e:"Su árbol contiene copias repetidas de los mismos subproblemas."},
+    {q:"¿Cuándo puede fallar un algoritmo voraz?",o:["Cuando hay un caso base","Cuando la mejor decisión local no conduce al óptimo global","Cuando la tabla es pequeña","Cuando existe una sola opción"],a:1,e:"La propiedad voraz no se cumple en todos los sistemas de monedas ni problemas."}
+  ];
+  function initConcepts(){$("#conceptGrid").innerHTML=concepts.map(c=>`<article class="concept"><h3>${c[0]}</h3><p>${c[1]}</p></article>`).join("")}
+  function initQuiz(){$("#quizForm").innerHTML=quiz.map((q,i)=>`<section class="quiz-question" id="qq${i}"><h3>${i+1}. ${q.q}</h3>${q.o.map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join("")}<div class="feedback" id="qe${i}"></div></section>`).join("")}
+  function gradeQuiz(e){e.preventDefault();let score=0;quiz.forEach((q,i)=>{const chosen=$(`input[name="q${i}"]:checked`),box=$(`#qq${i}`),fb=$(`#qe${i}`),ok=chosen&&+chosen.value===q.a;if(ok)score++;box.classList.toggle("review-ok",ok);box.classList.toggle("review-bad",!ok);fb.className=`feedback ${ok?"ok":"bad"}`;fb.textContent=`${ok?"✓ Correcto":"✗ Respuesta correcta: "+q.o[q.a]}. ${q.e}`});prefs.quizBest=Math.max(prefs.quizBest||0,score);save();$("#quizResult").innerHTML=`<div class="quiz-result"><strong>Resultado: ${score}/10 (${score*10}%)</strong><br>${score>=8?"Excelente dominio conceptual.":score>=6?"Buen avance; revisa las explicaciones marcadas.":"Conviene volver a los laboratorios en modo guiado y práctica."}<br>Mejor puntuación guardada: ${prefs.quizBest}/10.</div>`;$("#gradeQuiz").disabled=true;$("#retryQuiz").hidden=false}
+  function retryQuiz(){initQuiz();$("#quizResult").innerHTML="";$("#gradeQuiz").disabled=false;$("#retryQuiz").hidden=true}
+
+  /* Eventos generales */
+  $("#toggleLeft").onclick=()=>toggleDrawer("left");$("#toggleRight").onclick=()=>toggleDrawer("right");$$('.slide-section').forEach(d=>d.addEventListener("toggle",()=>setTimeout(drawDependencyArrows,80)));
+  $$('.problem-link[data-lab]').forEach(b=>b.onclick=()=>{stopAuto();app.lab=b.dataset.lab;app.pos=0;app.hints=0;app.answered=false;app.stats={correct:0,errors:0,attempts:0,start:Date.now()};$$('.problem-link[data-lab]').forEach(x=>x.classList.toggle("active",x===b));buildModel();renderAll();save()});
+  $$('#modeSelector button').forEach(b=>b.onclick=()=>{stopAuto();app.mode=b.dataset.mode;app.pos=0;app.hints=0;app.answered=false;app.stats={correct:0,errors:0,attempts:0,start:Date.now()};$$('#modeSelector button').forEach(x=>x.classList.toggle("active",x===b));renderAll();save()});
+  $("#prevBtn").onclick=previous;$("#nextBtn").onclick=next;$("#autoBtn").onclick=auto;$("#pauseBtn").onclick=stopAuto;$("#resetBtn").onclick=restart;$("#solveBtn").onclick=solve;
+  $("#speedRange").value=app.speed;$("#speedRange").oninput=e=>{app.speed=+e.target.value;if(app.running){stopAuto();auto()}save()};
+  $("#zoomIn").onclick=()=>{app.zoom=Math.min(66,app.zoom+5);renderAll();save()};$("#zoomOut").onclick=()=>{app.zoom=Math.max(28,app.zoom-5);renderAll();save()};
+  $("#inspectHelp").onclick=()=>$("#cellInspector").innerHTML="<strong>Cómo inspeccionar</strong><br>Haz clic en cualquier celda calculada o futura. Verás el significado del estado, sus dependencias, la recurrencia y la decisión guardada.";
+  $$('[data-modal]').forEach(b=>b.onclick=()=>$(b.dataset.modal==="concepts"?"#conceptsModal":"#quizModal").classList.add("open"));$$('[data-close]').forEach(b=>b.onclick=()=>b.closest(".modal").classList.remove("open"));$$('.modal').forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("open")});document.onkeydown=e=>{if(e.key==="Escape")$$('.modal').forEach(m=>m.classList.remove("open"))};
+  $("#gradeQuiz").onclick=gradeQuiz;$("#retryQuiz").onclick=retryQuiz;
+  window.addEventListener("resize",()=>requestAnimationFrame(drawDependencyArrows));
+  setInterval(()=>{if(app.mode==="challenge")renderStats()},1000);
+  initConcepts();initQuiz();syncDrawers();$$('#modeSelector button').forEach(x=>x.classList.toggle("active",x.dataset.mode===app.mode));$$('.problem-link[data-lab]').forEach(x=>x.classList.toggle("active",x.dataset.lab===app.lab));buildModel();renderAll();
+  </script>
+</body>
+</html>
