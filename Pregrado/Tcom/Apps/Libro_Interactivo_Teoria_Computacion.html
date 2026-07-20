@@ -1,0 +1,2786 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Libro web interactivo autónomo de Teoría de la Computación, capítulos 1 al 9 de K. R. Chowdhary."
+    />
+    <title>Libro Interactivo de Teoría de la Computación · Capítulos 1–9</title>
+    <style>
+      :root {
+        --bg: #f3f7fb;
+        --panel: #fff;
+        --soft: #eef4ff;
+        --text: #17233a;
+        --muted: #60718b;
+        --line: #d7e1ef;
+        --blue: #245bd7;
+        --violet: #703bc5;
+        --green: #0e8a63;
+        --orange: #d46b17;
+        --red: #c83f52;
+        --cyan: #087f9c;
+        --yellow: #f2c94c;
+        --shadow: 0 10px 28px #1e375816;
+        --r: 17px;
+      }
+      [data-theme="dark"] {
+        --bg: #0d1523;
+        --panel: #172237;
+        --soft: #1d2d47;
+        --text: #edf4ff;
+        --muted: #adbad0;
+        --line: #34465f;
+        --blue: #82a2ff;
+        --violet: #bd91ff;
+        --green: #4ed5a7;
+        --orange: #ffad65;
+        --red: #ff7f92;
+        --cyan: #51d3eb;
+        --yellow: #ffdc69;
+        --shadow: 0 12px 30px #0006;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          15px/1.5 Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      .app {
+        display: grid;
+        grid-template-columns: 278px 1fr;
+        min-height: 100vh;
+      }
+      .side {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 15px 13px;
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+        overflow: auto;
+        z-index: 20;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+      }
+      .mark {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        background: linear-gradient(135deg, var(--blue), var(--violet));
+        color: #fff;
+        font-weight: 950;
+      }
+      .brand strong {
+        display: block;
+      }
+      .brand small {
+        color: var(--muted);
+      }
+      .edition {
+        margin: 13px 6px 8px;
+        padding: 9px 11px;
+        border-radius: 12px;
+        background: var(--soft);
+        color: var(--blue);
+        font-weight: 800;
+      }
+      .nav {
+        display: grid;
+        gap: 4px;
+      }
+      .nav button {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 8px 9px;
+        border-radius: 10px;
+        text-align: left;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .nav button:hover,
+      .nav button.on {
+        background: var(--soft);
+        color: var(--blue);
+        font-weight: 800;
+      }
+      .nav .num {
+        min-width: 24px;
+        height: 24px;
+        border: 1px solid currentColor;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+      }
+      .nav button.done .num {
+        background: var(--green);
+        border-color: var(--green);
+        color: #fff;
+      }
+      .side-progress {
+        margin: 15px 6px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+      }
+      .track {
+        height: 8px;
+        border-radius: 20px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--blue), var(--green));
+        transition: 0.3s;
+      }
+      .main {
+        min-width: 0;
+      }
+      .top {
+        height: 65px;
+        position: sticky;
+        top: 0;
+        z-index: 15;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        border-bottom: 1px solid var(--line);
+        background: color-mix(in srgb, var(--panel) 91%, transparent);
+        backdrop-filter: blur(12px);
+      }
+      .crumb {
+        color: var(--muted);
+      }
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .xp {
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: #fff2c6;
+        color: #715000;
+        font-weight: 900;
+      }
+      .icon {
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: var(--panel);
+        color: var(--text);
+      }
+      .menu {
+        display: none;
+      }
+      .content {
+        max-width: 1420px;
+        margin: auto;
+        padding: 23px;
+      }
+      .hero {
+        padding: 34px;
+        border: 1px solid var(--line);
+        border-radius: 25px;
+        background: linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--blue) 13%, var(--panel)),
+          var(--panel),
+          color-mix(in srgb, var(--cyan) 9%, var(--panel))
+        );
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero:after {
+        content: "δ(q,a)";
+        position: absolute;
+        right: 3%;
+        bottom: -35px;
+        font-size: 125px;
+        font-weight: 950;
+        color: color-mix(in srgb, var(--blue) 7%, transparent);
+        transform: rotate(-7deg);
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.18;
+        margin-top: 0;
+      }
+      h1 {
+        font-size: clamp(30px, 4.5vw, 50px);
+        letter-spacing: -1.6px;
+      }
+      h2 {
+        font-size: clamp(24px, 3vw, 35px);
+      }
+      h3 {
+        font-size: 18px;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 900;
+      }
+      .lead {
+        font-size: 17px;
+        color: var(--muted);
+        max-width: 860px;
+      }
+      .btn {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: var(--blue);
+        color: #fff;
+        font-weight: 800;
+      }
+      .btn.sec {
+        background: var(--soft);
+        color: var(--blue);
+        border: 1px solid var(--line);
+      }
+      .btn.red {
+        background: var(--red);
+      }
+      .btn:disabled {
+        opacity: 0.45;
+      }
+      .actions,
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 11px;
+        margin: 16px 0;
+      }
+      .stat,
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        box-shadow: var(--shadow);
+      }
+      .stat {
+        padding: 16px;
+      }
+      .stat b {
+        font-size: 24px;
+        display: block;
+      }
+      .stat span {
+        color: var(--muted);
+      }
+      .map {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 11px;
+      }
+      .map-card {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--panel);
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .map-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--blue);
+      }
+      .map-card .number {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        background: var(--blue);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+      }
+      .map-card:nth-child(3n + 2) .number {
+        background: var(--violet);
+      }
+      .map-card:nth-child(3n) .number {
+        background: var(--green);
+      }
+      .map-card p {
+        min-height: 42px;
+        color: var(--muted);
+      }
+      .tag {
+        display: inline-flex;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .chapter-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 15px;
+      }
+      .tabs {
+        display: flex;
+        gap: 5px;
+        border-bottom: 1px solid var(--line);
+        margin: 14px 0;
+        overflow: auto;
+      }
+      .tab {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        padding: 10px 13px;
+        border-bottom: 3px solid transparent;
+        white-space: nowrap;
+      }
+      .tab.on {
+        color: var(--blue);
+        border-color: var(--blue);
+        font-weight: 850;
+      }
+      .card {
+        padding: 17px;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.82fr);
+        gap: 14px;
+      }
+      .grid3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 11px;
+      }
+      .stack {
+        display: grid;
+        gap: 13px;
+      }
+      .lab {
+        min-height: 380px;
+        position: relative;
+        overflow: auto;
+      }
+      .input-row {
+        display: flex;
+        align-items: end;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .field {
+        display: grid;
+        gap: 4px;
+      }
+      .field label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      input,
+      select,
+      textarea {
+        padding: 9px 10px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: var(--panel);
+        color: var(--text);
+        min-width: 115px;
+      }
+      .formula {
+        font:
+          700 15px/1.55 ui-monospace,
+          SFMono-Regular,
+          Consolas,
+          monospace;
+        padding: 10px;
+        border-radius: 10px;
+        background: var(--soft);
+        color: var(--blue);
+        overflow: auto;
+      }
+      .explain {
+        padding: 11px;
+        border-left: 4px solid var(--blue);
+        border-radius: 9px;
+        background: var(--soft);
+        color: var(--muted);
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+      }
+      .metric {
+        padding: 8px;
+        text-align: center;
+        border-radius: 10px;
+        background: var(--soft);
+      }
+      .metric b {
+        display: block;
+        color: var(--blue);
+        font-size: 18px;
+      }
+      .svg {
+        width: 100%;
+        min-height: 310px;
+      }
+      .tape {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        padding: 65px 12px 30px;
+        min-width: max-content;
+      }
+      .cell {
+        width: 50px;
+        height: 50px;
+        border: 2px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font:
+          800 17px ui-monospace,
+          monospace;
+        position: relative;
+      }
+      .cell.active {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--orange) 18%, transparent);
+      }
+      .cell.active:before {
+        content: "▼";
+        position: absolute;
+        top: -33px;
+        color: var(--orange);
+      }
+      .cell.good {
+        border-color: var(--green);
+        color: var(--green);
+      }
+      .cell.bad {
+        border-color: var(--red);
+        color: var(--red);
+      }
+      .cell.source {
+        border-color: var(--violet);
+        color: var(--violet);
+      }
+      .idx {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .stack-viz {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 5px;
+        align-items: center;
+        min-height: 270px;
+        justify-content: flex-start;
+        padding: 15px;
+      }
+      .stack-cell {
+        width: 90px;
+        height: 39px;
+        border: 2px solid var(--line);
+        border-radius: 7px;
+        background: var(--soft);
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+      }
+      .state-pill {
+        display: inline-grid;
+        place-items: center;
+        min-width: 55px;
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: var(--blue);
+        color: #fff;
+        font-weight: 900;
+      }
+      .table-wrap {
+        overflow: auto;
+      }
+      .matrix {
+        border-collapse: separate;
+        border-spacing: 5px;
+        margin: auto;
+      }
+      .matrix th {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .matrix td {
+        min-width: 46px;
+        height: 38px;
+        text-align: center;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--soft);
+        font-weight: 800;
+        padding: 4px;
+      }
+      .matrix td.active {
+        outline: 3px solid var(--blue);
+        color: var(--blue);
+      }
+      .matrix td.mark {
+        outline: 2px solid var(--red);
+        color: var(--red);
+      }
+      .rule-list {
+        display: grid;
+        gap: 7px;
+      }
+      .rule {
+        padding: 9px 11px;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        background: var(--soft);
+        font:
+          700 14px ui-monospace,
+          monospace;
+      }
+      .rule.on {
+        border-color: var(--orange);
+        background: color-mix(in srgb, var(--orange) 10%, var(--panel));
+      }
+      .token-row {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 30px 5px;
+      }
+      .token {
+        padding: 8px 11px;
+        border-radius: 8px;
+        background: var(--soft);
+        border: 2px solid var(--line);
+        font:
+          800 15px ui-monospace,
+          monospace;
+      }
+      .token.active {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .token.done {
+        border-color: var(--green);
+        color: var(--green);
+      }
+      .partition {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 25px;
+      }
+      .block {
+        padding: 13px;
+        border: 2px solid var(--blue);
+        border-radius: 12px;
+        background: var(--soft);
+        font-weight: 900;
+        min-width: 90px;
+        text-align: center;
+      }
+      .venn {
+        min-height: 330px;
+      }
+      .details {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .details summary {
+        padding: 11px 13px;
+        font-weight: 850;
+        cursor: pointer;
+        background: var(--soft);
+      }
+      .details > div {
+        padding: 12px;
+      }
+      .section-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+      }
+      .section {
+        padding: 9px;
+        border-radius: 9px;
+        background: var(--soft);
+      }
+      .quiz-q {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .opts {
+        display: grid;
+        gap: 7px;
+        margin: 10px 0;
+      }
+      .opt {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        border: 1px solid var(--line);
+        padding: 8px;
+        border-radius: 9px;
+      }
+      .feedback {
+        font-weight: 800;
+        min-height: 24px;
+      }
+      .goodtext {
+        color: var(--green);
+      }
+      .badtext {
+        color: var(--red);
+      }
+      .glossary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .term {
+        padding: 13px;
+        border-left: 4px solid var(--blue);
+        border-radius: 11px;
+        background: var(--panel);
+      }
+      .term b {
+        display: block;
+      }
+      .term span {
+        color: var(--muted);
+      }
+      .progress-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .progress-table th,
+      .progress-table td {
+        text-align: left;
+        padding: 9px;
+        border-bottom: 1px solid var(--line);
+      }
+      .footer-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 18px;
+      }
+      .toast {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        padding: 11px 15px;
+        border-radius: 11px;
+        background: #11213a;
+        color: #fff;
+        opacity: 0;
+        transform: translateY(90px);
+        transition: 0.25s;
+        z-index: 50;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: none;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: #07101cbb;
+        z-index: 60;
+        place-items: center;
+        padding: 20px;
+      }
+      .modal.show {
+        display: grid;
+      }
+      .modal-box {
+        max-width: 520px;
+        background: var(--panel);
+        padding: 22px;
+        border-radius: 18px;
+      }
+      .arrow {
+        color: var(--orange);
+        font-weight: 950;
+        font-size: 22px;
+      }
+      .tree-note {
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      @media (max-width: 1080px) {
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .glossary {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 760px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        .side {
+          position: fixed;
+          left: -290px;
+          width: 278px;
+          transition: 0.25s;
+          box-shadow: var(--shadow);
+        }
+        .side.open {
+          left: 0;
+        }
+        .menu {
+          display: inline-grid;
+          place-items: center;
+        }
+        .content {
+          padding: 14px;
+        }
+        .top {
+          padding: 0 13px;
+        }
+        .map,
+        .grid3,
+        .glossary {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          padding: 23px;
+        }
+        .chapter-head {
+          display: block;
+        }
+        .section-list {
+          grid-template-columns: 1fr;
+        }
+        .lab {
+          min-height: 320px;
+        }
+        .crumb {
+          font-size: 12px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="side" id="side">
+        <div class="brand">
+          <div class="mark">TC</div>
+          <div>
+            <strong>CompuTeoría</strong><small>Autómatas y lenguajes</small>
+          </div>
+        </div>
+        <div class="edition">Capítulos 1–9 · Edición interactiva</div>
+        <nav class="nav" id="nav">
+          <button class="on" data-page="home">
+            <span class="num">⌂</span>Inicio
+          </button>
+        </nav>
+        <div class="side-progress">
+          <b>Progreso global</b>
+          <div class="track" style="margin: 8px 0">
+            <div class="fill" id="progressFill"></div>
+          </div>
+          <small id="progressText">0% completado</small>
+        </div>
+      </aside>
+      <main class="main">
+        <header class="top">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <button class="icon menu" id="menuBtn" aria-label="Abrir menú">
+              ☰
+            </button>
+            <div class="crumb">
+              Libro interactivo / <b id="crumb">Inicio</b>
+            </div>
+          </div>
+          <div class="top-actions">
+            <span class="xp">★ <span id="xp">0</span> XP</span
+            ><button class="icon" id="themeBtn" aria-label="Cambiar tema">
+              ◐
+            </button>
+          </div>
+        </header>
+        <div class="content"><div id="view"></div></div>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="modal" id="resetModal">
+      <div class="modal-box">
+        <h3>¿Borrar todo el progreso?</h3>
+        <p>Se eliminarán laboratorios, evaluaciones y XP.</p>
+        <div class="controls">
+          <button class="btn red" id="resetYes">Borrar</button
+          ><button class="btn sec" id="resetNo">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      (() => {
+        "use strict";
+        const $ = (s, r = document) => r.querySelector(s),
+          $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const chapters = [
+          {
+            n: 1,
+            title: "Preliminares matemáticos",
+            short:
+              "Conjuntos, pruebas, relaciones, funciones, grafos, cadenas y lenguajes",
+            level: "Fundamentos",
+            sections: [
+              "1.1 Introducción",
+              "1.2 Teoría de conjuntos",
+              "1.3 Teoremas y pruebas",
+              "1.4 Paradoja de Russell y diagonalización",
+              "1.5 Relaciones",
+              "1.6 Funciones",
+              "1.7 Teoría de grafos",
+              "1.8 Teoría algebraica de máquinas",
+              "1.9 Operaciones sobre cadenas",
+              "1.10 Cadenas y lenguajes",
+              "1.11 Clausura",
+              "1.12 Representación de lenguajes",
+            ],
+            idea: "Los modelos de computación se formulan con conjuntos, funciones, relaciones y operaciones sobre cadenas.",
+            pre: "Álgebra elemental y razonamiento lógico.",
+            obj: [
+              "Operar conjuntos y lenguajes",
+              "Distinguir relaciones y funciones",
+              "Manipular cadenas y clausuras",
+            ],
+            terms:
+              "conjuntos, pruebas, relaciones, funciones, grafos, semigrupos, homomorfismos, cadenas y lenguajes",
+            lab: "math",
+            errors: [
+              "Confundir ∅ con {ε}",
+              "Tratar concatenación como conmutativa",
+              "Confundir elemento con subconjunto",
+            ],
+            quiz: [
+              [
+                "A∩B contiene…",
+                [
+                  "elementos comunes",
+                  "todos los elementos",
+                  "solo A−B",
+                  "pares ordenados",
+                ],
+                0,
+              ],
+              ["La cadena vacía se denota…", ["ε", "∅", "Σ", "Q"], 0],
+              [
+                "Σ* incluye…",
+                ["ε", "solo cadenas de longitud 1", "ninguna cadena", "solo Σ"],
+                0,
+              ],
+              [
+                "Una relación de equivalencia es…",
+                [
+                  "reflexiva, simétrica y transitiva",
+                  "solo reflexiva",
+                  "inyectiva",
+                  "no transitiva",
+                ],
+                0,
+              ],
+              [
+                "La concatenación de cadenas…",
+                [
+                  "no es conmutativa en general",
+                  "siempre conmuta",
+                  "es una intersección",
+                  "elimina símbolos",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 2,
+            title: "Autómatas finitos y expresiones regulares",
+            short: "Modelo DFA, reconocimiento y aplicaciones",
+            level: "Inicial–intermedio",
+            sections: [
+              "2.1 Introducción",
+              "2.2 Teoría de autómatas",
+              "2.3 Modelado de programas",
+              "2.4 Modelo de autómata finito",
+              "2.5 Expresiones regulares",
+              "2.6 Aplicaciones",
+              "2.7 Conceptos mediante juegos",
+            ],
+            idea: "Un autómata finito reconoce un lenguaje regular cambiando de estado por cada símbolo de entrada.",
+            pre: "Capítulo 1: conjuntos, funciones y cadenas.",
+            obj: [
+              "Ejecutar un DFA",
+              "Interpretar δ y δ*",
+              "Relacionar regex y lenguajes",
+            ],
+            terms:
+              "DFA, función de transición, estado inicial/final, regex, analizador léxico y string matching",
+            lab: "dfa",
+            errors: [
+              "Consumir símbolos fuera de orden",
+              "Aceptar antes de terminar la entrada",
+              "Confundir estado final con estado muerto",
+            ],
+            quiz: [
+              [
+                "Un DFA tiene para cada estado y símbolo…",
+                [
+                  "una transición",
+                  "muchas transiciones obligatorias",
+                  "ninguna transición",
+                  "una pila",
+                ],
+                0,
+              ],
+              [
+                "δ* procesa…",
+                ["cadenas", "solo un símbolo", "gramáticas", "pilas"],
+                0,
+              ],
+              [
+                "Una cadena se acepta si termina en…",
+                [
+                  "estado final",
+                  "estado inicial",
+                  "cualquier estado",
+                  "estado muerto",
+                ],
+                0,
+              ],
+              [
+                "Las regex describen lenguajes…",
+                [
+                  "regulares",
+                  "solo contextuales",
+                  "indecidibles",
+                  "infinitos únicamente",
+                ],
+                0,
+              ],
+              [
+                "Un uso de FA es…",
+                [
+                  "análisis léxico",
+                  "resolver toda CFG",
+                  "memoria ilimitada",
+                  "probar P=NP",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 3,
+            title: "Variantes de autómatas finitos",
+            short: "NFA, equivalencia, Moore, Mealy y transductores",
+            level: "Intermedio",
+            sections: [
+              "3.1 Introducción",
+              "3.2 Modelo NFA",
+              "3.3 Propiedades",
+              "3.4 Equivalencia NFA–DFA",
+              "3.5 FA bidireccional",
+              "3.6 Autómatas con salida",
+              "3.7 Equivalencia Moore–Mealy",
+              "3.8 Transductores",
+            ],
+            idea: "El no determinismo y las máquinas con salida cambian la representación, no el poder de reconocer lenguajes regulares.",
+            pre: "DFA y expresiones regulares.",
+            obj: [
+              "Simular conjuntos de estados",
+              "Aplicar subset construction",
+              "Distinguir Moore y Mealy",
+            ],
+            terms:
+              "NFA, ε-cierre, conjunto potencia, Moore, Mealy, transductor",
+            lab: "nfa",
+            errors: [
+              "Elegir una sola rama del NFA",
+              "Olvidar ε-cierre",
+              "Ubicar salidas Moore en transiciones",
+            ],
+            quiz: [
+              [
+                "Un NFA puede estar en…",
+                [
+                  "varios estados simultáneos",
+                  "un solo estado siempre",
+                  "ningún conjunto",
+                  "una pila",
+                ],
+                0,
+              ],
+              [
+                "NFA y DFA son…",
+                [
+                  "equivalentes en poder",
+                  "de poderes distintos",
+                  "máquinas de Turing",
+                  "gramáticas",
+                ],
+                0,
+              ],
+              [
+                "Moore asocia salida a…",
+                ["estados", "transiciones", "pilas", "regex"],
+                0,
+              ],
+              [
+                "Mealy asocia salida a…",
+                [
+                  "transiciones",
+                  "solo estados finales",
+                  "conjuntos",
+                  "gramáticas",
+                ],
+                0,
+              ],
+              [
+                "Subset construction usa…",
+                ["subconjuntos de Q", "solo F", "una pila", "producciones"],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 4,
+            title: "Minimización de autómatas finitos",
+            short: "Equivalencia, particiones y table filling",
+            level: "Intermedio",
+            sections: [
+              "4.1 Introducción",
+              "4.2 Regex a DFA",
+              "4.3 Formalismo",
+              "4.4 Minimización",
+              "4.5 Homomorfismo NFA",
+              "4.6 Clases de equivalencia",
+              "4.7 Myhill–Nerode",
+              "4.8 Partición del espacio",
+              "4.9 Partition-refine",
+              "4.10 Table-filling",
+              "4.11 Equivalencia de regex",
+            ],
+            idea: "Los estados indistinguibles se fusionan sin cambiar el lenguaje reconocido.",
+            pre: "DFA, equivalencia y particiones.",
+            obj: [
+              "Eliminar inaccesibles",
+              "Refinar particiones",
+              "Construir el DFA mínimo",
+            ],
+            terms:
+              "estados equivalentes, distinguibilidad, partición, refinamiento, Myhill–Nerode",
+            lab: "min",
+            errors: [
+              "Mezclar finales y no finales",
+              "Fusionar antes de estabilizar",
+              "Conservar estados inaccesibles",
+            ],
+            quiz: [
+              [
+                "La partición inicial separa…",
+                [
+                  "finales y no finales",
+                  "pares e impares",
+                  "símbolos",
+                  "aristas",
+                ],
+                0,
+              ],
+              [
+                "Dos estados equivalentes…",
+                [
+                  "aceptan los mismos sufijos",
+                  "tienen el mismo nombre",
+                  "son ambos iniciales",
+                  "no tienen transiciones",
+                ],
+                0,
+              ],
+              [
+                "Myhill–Nerode relaciona clases con…",
+                [
+                  "número de estados mínimos",
+                  "altura de pila",
+                  "cinta TM",
+                  "ambigüedad",
+                ],
+                0,
+              ],
+              [
+                "Table filling marca pares…",
+                [
+                  "distinguibles",
+                  "idénticos por nombre",
+                  "de símbolos",
+                  "de gramáticas",
+                ],
+                0,
+              ],
+              [
+                "Minimizar preserva…",
+                [
+                  "el lenguaje",
+                  "todos los nombres",
+                  "el número de estados",
+                  "la tabla original",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 5,
+            title: "Lenguajes regulares",
+            short: "Clausura, conversiones, pumping lemma y no regularidad",
+            level: "Intermedio–alto",
+            sections: [
+              "5.1 Introducción",
+              "5.2 Lenguajes regulares",
+              "5.3 Propiedades de clausura",
+              "5.4 Regularidad",
+              "5.5 DFA a regex",
+              "5.6 Pumping lemma",
+              "5.7 No regularidad",
+              "5.8 Myhill–Nerode",
+              "5.9 Regex a DFA usando MN",
+            ],
+            idea: "La regularidad puede demostrarse por construcción; la no regularidad, mediante pumping lemma o Myhill–Nerode.",
+            pre: "DFA, NFA, regex y minimización.",
+            obj: [
+              "Aplicar propiedades de clausura",
+              "Jugar el pumping lemma",
+              "Distinguir regular y no regular",
+            ],
+            terms:
+              "clausura, state removal, GNFA, Arden, pumping length, índice de lenguaje",
+            lab: "pump",
+            errors: [
+              "Usar pumping lemma para demostrar regularidad",
+              "Escoger w sin cumplir |w|≥p",
+              "Olvidar cuantificadores del juego",
+            ],
+            quiz: [
+              [
+                "Los regulares son cerrados bajo…",
+                [
+                  "unión",
+                  "solo concatenación",
+                  "ninguna operación",
+                  "derivación CFG únicamente",
+                ],
+                0,
+              ],
+              [
+                "Pumping lemma se usa especialmente para…",
+                [
+                  "probar no regularidad",
+                  "minimizar siempre",
+                  "crear PDA",
+                  "sumar binarios",
+                ],
+                0,
+              ],
+              [
+                "En w=xyz debe cumplirse…",
+                ["|xy|≤p y |y|>0", "y=ε siempre", "|w|<p", "x=z"],
+                0,
+              ],
+              [
+                "aⁿbⁿ es…",
+                [
+                  "no regular",
+                  "finito",
+                  "aceptado por todo DFA",
+                  "igual a a*b*",
+                ],
+                0,
+              ],
+              [
+                "DFA→regex puede hacerse por…",
+                [
+                  "eliminación de estados",
+                  "subset construction",
+                  "CYK únicamente",
+                  "pila vacía",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 6,
+            title: "Gramáticas y lenguajes libres de contexto",
+            short: "Derivaciones, parsing y ambigüedad",
+            level: "Intermedio–alto",
+            sections: [
+              "6.1 Introducción",
+              "6.2 CFG",
+              "6.3 FA y gramáticas regulares",
+              "6.4 Derivación de sentencias",
+              "6.5 Clausura CFL",
+              "6.6 Parsing",
+              "6.7 Expresiones aritméticas",
+              "6.8 Ambigüedad",
+              "6.9 Desambiguación",
+              "6.10 Precedencia",
+              "6.11 Clasificación",
+              "6.12 Gramáticas invertibles",
+            ],
+            idea: "Una CFG genera cadenas reemplazando no terminales y puede describir estructuras anidadas que un DFA no recuerda.",
+            pre: "Lenguajes regulares, árboles y recursión.",
+            obj: [
+              "Ejecutar derivaciones",
+              "Construir árboles sintácticos",
+              "Detectar ambigüedad",
+            ],
+            terms:
+              "CFG, terminal, no terminal, producción, derivación, parse tree, ambigüedad y precedencia",
+            lab: "cfg",
+            errors: [
+              "Dejar partes derechas vacías sin usar ε",
+              "Mezclar derivación izquierda/derecha",
+              "Confundir gramática ambigua con cadena inválida",
+            ],
+            quiz: [
+              [
+                "Una producción CFG tiene a la izquierda…",
+                [
+                  "un no terminal",
+                  "cualquier cadena",
+                  "solo terminales",
+                  "un estado",
+                ],
+                0,
+              ],
+              [
+                "Un parse tree muestra…",
+                ["estructura de derivación", "tabla DFA", "cinta TM", "hash"],
+                0,
+              ],
+              [
+                "Una gramática es ambigua si una cadena tiene…",
+                [
+                  "dos árboles distintos",
+                  "dos terminales",
+                  "una derivación",
+                  "ε",
+                ],
+                0,
+              ],
+              [
+                "S→aSb|ε genera…",
+                ["aⁿbⁿ", "a*b*", "solo ab", "palíndromos arbitrarios"],
+                0,
+              ],
+              [
+                "Precedencia ayuda a…",
+                [
+                  "desambiguar expresiones",
+                  "minimizar DFA",
+                  "vaciar pila",
+                  "crear ε-cierre",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 7,
+            title: "Formas normales de CFG",
+            short: "Simplificación, Chomsky, Greibach y pumping CFL",
+            level: "Alto",
+            sections: [
+              "7.1 Introducción",
+              "7.2 Simplificación",
+              "7.2.1 Eliminar nulas",
+              "7.2.2 Eliminar unitarias",
+              "7.2.3 Eliminar inútiles",
+              "7.3 Forma de Chomsky",
+              "7.4 Forma de Greibach",
+              "7.4.1 Recursión izquierda",
+              "7.5 CNF a GNF",
+              "7.6 Complejidad GNF",
+              "7.7 Pumping CFL",
+              "7.8 Propiedades decidibles",
+            ],
+            idea: "Las formas normales restringen la forma de las producciones preservando el lenguaje esencial.",
+            pre: "CFG, derivaciones y árboles sintácticos.",
+            obj: [
+              "Simplificar gramáticas",
+              "Convertir a CNF",
+              "Reconocer GNF y eliminar recursión izquierda",
+            ],
+            terms:
+              "producción nula, unitaria, símbolo inútil, CNF, GNF y recursión izquierda",
+            lab: "normal",
+            errors: [
+              "Aplicar pasos en orden incorrecto",
+              "Crear una parte derecha vacía accidental",
+              "Olvidar un nuevo símbolo inicial",
+            ],
+            quiz: [
+              [
+                "CNF permite principalmente…",
+                [
+                  "A→BC o A→a",
+                  "A→BCD siempre",
+                  "A→ε para cualquier A",
+                  "dos terminales",
+                ],
+                0,
+              ],
+              [
+                "Una producción unitaria es…",
+                ["A→B", "A→a", "A→BC", "A→aB"],
+                0,
+              ],
+              [
+                "Un símbolo inútil no es…",
+                ["generador o alcanzable", "terminal", "inicial", "mayúscula"],
+                0,
+              ],
+              [
+                "GNF inicia la derecha con…",
+                ["terminal", "dos variables", "ε siempre", "estado"],
+                0,
+              ],
+              [
+                "Antes de CNF se eliminan…",
+                [
+                  "nulas, unitarias e inútiles",
+                  "todos los terminales",
+                  "estados finales",
+                  "transiciones",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 8,
+            title: "Autómatas de pila y parsers",
+            short: "PDA, equivalencia CFG y análisis LL/LR",
+            level: "Alto",
+            sections: [
+              "8.1 Introducción",
+              "8.2 Idea de parsing",
+              "8.3 Modelo PDA",
+              "8.4 Formalismo",
+              "8.5 Simulación",
+              "8.6 DPDA/NPDA",
+              "8.7 Formas de aceptación",
+              "8.8 Equivalencia PDA–CFG",
+              "8.9 Parsers",
+              "8.10 LL(k) y LR(k)",
+              "8.11 LL parser",
+              "8.12 LR parser",
+              "8.13 Paralelización",
+            ],
+            idea: "La pila proporciona memoria no acotada para reconocer estructuras anidadas y lenguajes libres de contexto.",
+            pre: "CFG, CNF/GNF y autómatas finitos.",
+            obj: [
+              "Simular un PDA",
+              "Comparar aceptación",
+              "Ejecutar un parser predictivo",
+            ],
+            terms:
+              "PDA, configuración, stack, aceptación final/vacía, DPDA, NPDA, LL y LR",
+            lab: "pda",
+            errors: [
+              "Confundir cima y fondo de pila",
+              "Consumir entrada en transición ε",
+              "Aceptar sin comprobar entrada completa",
+            ],
+            quiz: [
+              [
+                "El PDA añade al FA una…",
+                ["pila", "segunda entrada", "tabla hash", "matriz"],
+                0,
+              ],
+              [
+                "aⁿbⁿ se reconoce usando la pila para…",
+                [
+                  "contar a y desapilar con b",
+                  "ordenar",
+                  "minimizar",
+                  "crear regex",
+                ],
+                0,
+              ],
+              [
+                "LL analiza típicamente…",
+                [
+                  "de izquierda a derecha con derivación izquierda",
+                  "de derecha a izquierda",
+                  "sin gramática",
+                  "solo DFA",
+                ],
+                0,
+              ],
+              [
+                "Un PDA puede aceptar por…",
+                ["estado final o pila vacía", "solo longitud", "hash", "MST"],
+                0,
+              ],
+              [
+                "CFG y NPDA son…",
+                [
+                  "equivalentes en poder",
+                  "incomparables",
+                  "siempre deterministas",
+                  "finitos",
+                ],
+                0,
+              ],
+            ],
+          },
+          {
+            n: 9,
+            title: "Máquina de Turing y computabilidad",
+            short:
+              "Cinta, configuraciones, reconocimiento y tesis Church–Turing",
+            level: "Alto",
+            sections: [
+              "9.1 Introducción",
+              "9.2 Complejidad algorítmica",
+              "9.3 Computación humana",
+              "9.4 Modelo TM",
+              "9.5 Reconocimiento",
+              "9.6 TM y lenguajes formales",
+              "9.7 Computabilidad",
+              "9.8 Tesis Church–Turing",
+              "9.9 Máquina de Post",
+              "9.10 Simulación TM",
+              "9.11 Más allá del límite",
+            ],
+            idea: "La máquina de Turing formaliza el concepto general de procedimiento efectivo mediante cinta, cabezal y control finito.",
+            pre: "Autómatas, CFG, PDA y algoritmos.",
+            obj: [
+              "Ejecutar transiciones TM",
+              "Leer configuraciones",
+              "Distinguir decidible y reconocible",
+            ],
+            terms:
+              "cinta, alfabeto de cinta, blanco, configuración, halt, reconocedor, decisor y Church–Turing",
+            lab: "tm",
+            errors: [
+              "Confundir detener con aceptar",
+              "Olvidar que la cinta se modifica",
+              "Presentar la tesis como teorema matemático",
+            ],
+            quiz: [
+              [
+                "Una TM puede…",
+                [
+                  "leer, escribir y mover el cabezal",
+                  "solo leer",
+                  "solo usar memoria finita",
+                  "solo aceptar regulares",
+                ],
+                0,
+              ],
+              [
+                "Un decisor…",
+                [
+                  "se detiene en toda entrada",
+                  "puede ciclar en negativos",
+                  "solo acepta",
+                  "no tiene cinta",
+                ],
+                0,
+              ],
+              [
+                "La tesis Church–Turing es…",
+                [
+                  "una tesis sobre computación efectiva",
+                  "un teorema formal probado",
+                  "una regex",
+                  "una CFG",
+                ],
+                0,
+              ],
+              [
+                "Una configuración incluye…",
+                [
+                  "estado, cinta y posición del cabezal",
+                  "solo estado",
+                  "solo entrada",
+                  "producciones",
+                ],
+                0,
+              ],
+              [
+                "Una TM reconocedora puede…",
+                [
+                  "no detenerse en una cadena no miembro",
+                  "no tener estados",
+                  "usar pila únicamente",
+                  "aceptar sin leer",
+                ],
+                0,
+              ],
+            ],
+          },
+        ];
+        const glossary = [
+          ["Alfabeto", "Conjunto finito no vacío de símbolos."],
+          ["Cadena", "Secuencia finita de símbolos."],
+          ["Lenguaje", "Conjunto de cadenas sobre un alfabeto."],
+          ["Kleene star", "Todas las concatenaciones finitas, incluida ε."],
+          ["DFA", "Autómata finito determinista."],
+          ["NFA", "Autómata finito no determinista."],
+          ["ε-cierre", "Estados alcanzables usando solo transiciones ε."],
+          ["Regex", "Expresión que denota un lenguaje regular."],
+          [
+            "Distinguibilidad",
+            "Existencia de un sufijo que separa dos estados.",
+          ],
+          ["Pumping length", "Umbral garantizado por el lema de bombeo."],
+          ["CFG", "Gramática libre de contexto."],
+          ["Derivación", "Secuencia de aplicaciones de producciones."],
+          ["CNF", "Forma de Chomsky: A→BC o A→a."],
+          ["GNF", "Forma de Greibach: lado derecho inicia en terminal."],
+          ["PDA", "Autómata finito equipado con pila."],
+          ["LL(1)", "Parser predictivo con un símbolo de anticipación."],
+          ["TM", "Máquina de Turing."],
+          ["Decidible", "Existe una TM que se detiene siempre y decide."],
+        ];
+        const base = {
+          xp: 0,
+          completed: [],
+          quiz: {},
+          last: "home",
+          theme: "light",
+        };
+        let state;
+        try {
+          state = {
+            ...base,
+            ...JSON.parse(localStorage.getItem("teoriaCompLibro") || "{}"),
+          };
+        } catch (e) {
+          state = { ...base };
+        }
+        let current = "home",
+          tab = "concept";
+        const sim = { timer: null };
+        const save = () => {
+          localStorage.setItem("teoriaCompLibro", JSON.stringify(state));
+          updateProgress();
+        };
+        const toast = (m) => {
+          const t = $("#toast");
+          t.textContent = m;
+          t.classList.add("show");
+          clearTimeout(toast.t);
+          toast.t = setTimeout(() => t.classList.remove("show"), 2200);
+        };
+        function award(id, xp = 25) {
+          if (!state.completed.includes(id)) {
+            state.completed.push(id);
+            state.xp += xp;
+            save();
+            toast(`+${xp} XP · actividad completada`);
+          }
+        }
+        function buildNav() {
+          const nav = $("#nav");
+          chapters.forEach((c) =>
+            nav.insertAdjacentHTML(
+              "beforeend",
+              `<button data-page="${c.n}"><span class="num">${c.n}</span>${c.title}</button>`,
+            ),
+          );
+          nav.insertAdjacentHTML(
+            "beforeend",
+            '<button data-page="glossary"><span class="num">G</span>Glosario y progreso</button>',
+          );
+          $$("#nav button").forEach(
+            (b) => (b.onclick = () => go(b.dataset.page)),
+          );
+        }
+        function stopAuto() {
+          if (sim.timer) {
+            clearInterval(sim.timer);
+            sim.timer = null;
+          }
+        }
+        function go(p) {
+          stopAuto();
+          current = p;
+          state.last = p;
+          save();
+          $$("#nav button").forEach((b) =>
+            b.classList.toggle("on", b.dataset.page === String(p)),
+          );
+          $("#side").classList.remove("open");
+          if (p === "home") renderHome();
+          else if (p === "glossary") renderGlossary();
+          else renderChapter(+p);
+          scrollTo({ top: 0, behavior: "smooth" });
+        }
+        function updateProgress() {
+          const labs = chapters.filter((c) =>
+              state.completed.includes("lab" + c.n),
+            ).length,
+            passed = chapters.filter((c) => (state.quiz[c.n] || 0) >= 4).length,
+            pct = Math.round((100 * (labs + passed)) / 18);
+          $("#progressFill").style.width = pct + "%";
+          $("#progressText").textContent =
+            `${pct}% · ${labs}/9 labs · ${passed}/9 evaluaciones`;
+          $("#xp").textContent = state.xp;
+          $$("#nav button[data-page]").forEach((b) => {
+            const n = +b.dataset.page;
+            b.classList.toggle(
+              "done",
+              n &&
+                state.completed.includes("lab" + n) &&
+                (state.quiz[n] || 0) >= 4,
+            );
+          });
+        }
+        function wireGo() {
+          $$("[data-go]").forEach((x) => (x.onclick = () => go(x.dataset.go)));
+        }
+        function renderHome() {
+          $("#crumb").textContent = "Inicio";
+          $("#view").innerHTML =
+            `<div class="hero"><div class="eyebrow">K. R. Chowdhary · Theory of Computation · 2025</div><h1>Libro Interactivo de<br>Teoría de la Computación</h1><p class="lead">Una experiencia visual basada exclusivamente en los capítulos 1 al 9: desde conjuntos y lenguajes hasta autómatas, gramáticas, parsers y máquinas de Turing.</p><div class="actions"><button class="btn" data-go="${state.last === "home" ? 1 : state.last}">Comenzar o continuar</button><button class="btn sec" data-go="glossary">Ver mi progreso</button></div></div><div class="stats"><div class="stat"><b>9</b><span>capítulos interactivos</span></div><div class="stat"><b>14</b><span>modos de laboratorio</span></div><div class="stat"><b>45</b><span>preguntas evaluativas</span></div><div class="stat"><b>${state.xp}</b><span>XP acumulados</span></div></div><div class="chapter-head"><div><div class="eyebrow">Ruta del libro</div><h2>De los símbolos a la computación universal</h2></div></div><div class="map">${chapters.map((c) => `<article class="map-card" data-go="${c.n}"><div class="number">${c.n}</div><h3>${c.title}</h3><p>${c.short}</p><span class="tag">${c.level}</span></article>`).join("")}</div>`;
+          wireGo();
+        }
+        function renderChapter(n) {
+          const c = chapters[n - 1];
+          $("#crumb").textContent = `Capítulo ${n} · ${c.title}`;
+          $("#view").innerHTML =
+            `<div class="chapter-head"><div><div class="eyebrow">Capítulo ${n} · ${c.level}</div><h2>${c.title}</h2><p class="lead">${c.short}</p></div><span class="tag">${state.completed.includes("lab" + n) ? "✓ Laboratorio completado" : "Laboratorio pendiente"}</span></div><div class="tabs"><button class="tab ${tab === "concept" ? "on" : ""}" data-tab="concept">Conceptos</button><button class="tab ${tab === "lab" ? "on" : ""}" data-tab="lab">Laboratorio</button><button class="tab ${tab === "quiz" ? "on" : ""}" data-tab="quiz">Evaluación</button></div><div id="chapterBody"></div><div class="footer-nav"><button class="btn sec" data-go="${n === 1 ? "home" : n - 1}">← ${n === 1 ? "Inicio" : "Capítulo " + (n - 1)}</button><button class="btn" data-go="${n === 9 ? "glossary" : n + 1}">${n === 9 ? "Progreso" : "Capítulo " + (n + 1)} →</button></div>`;
+          $$(".tab").forEach(
+            (b) =>
+              (b.onclick = () => {
+                tab = b.dataset.tab;
+                renderChapter(n);
+              }),
+          );
+          wireGo();
+          if (tab === "concept") renderConcept(c);
+          if (tab === "lab") renderLab(c);
+          if (tab === "quiz") renderQuiz(c);
+        }
+        function renderConcept(c) {
+          $("#chapterBody").innerHTML =
+            `<div class="grid2"><div class="stack"><div class="card"><h3>Idea central</h3><p class="explain">${c.idea}</p><h3>Objetivos</h3><ul>${c.obj.map((x) => `<li>${x}</li>`).join("")}</ul></div><details class="details" open><summary>Secciones del capítulo</summary><div class="section-list">${c.sections.map((x) => `<div class="section">${x}</div>`).join("")}</div></details><div class="card"><h3>Conceptos cubiertos</h3><p>${c.terms}</p></div></div><div class="stack"><div class="card"><h3>Prerrequisitos</h3><p>${c.pre}</p></div><div class="card"><h3>Errores frecuentes</h3><ul>${c.errors.map((x) => `<li>${x}</li>`).join("")}</ul></div><button class="btn" id="openLab">Abrir laboratorio →</button></div></div>`;
+          $("#openLab").onclick = () => {
+            tab = "lab";
+            renderChapter(c.n);
+          };
+        }
+        function renderLab(c) {
+          $("#chapterBody").innerHTML = '<div id="labHost"></div>';
+          ({
+            math: labMath,
+            dfa: labDFA,
+            nfa: labNFA,
+            min: labMin,
+            pump: labPump,
+            cfg: labCFG,
+            normal: labNormal,
+            pda: labPDA,
+            tm: labTM,
+          })[c.lab](c);
+        }
+        function shell(inputs, side) {
+          $("#labHost").innerHTML =
+            `<div class="input-row">${inputs}</div><div class="grid2"><div class="card lab"><div id="viz"></div><div class="controls" id="controls"></div></div><div class="stack">${side}</div></div>`;
+        }
+        function ctl(prev, next, reset, done) {
+          $("#controls").innerHTML =
+            '<button class="btn sec" id="prev">← Anterior</button><button class="btn" id="next">Siguiente →</button><button class="btn sec" id="auto">▶ Automático</button><button class="btn sec" id="reset">↺ Reiniciar</button>';
+          $("#prev").onclick = prev;
+          $("#next").onclick = next;
+          $("#reset").onclick = reset;
+          $("#auto").onclick = () => {
+            if (sim.timer) {
+              stopAuto();
+              $("#auto").textContent = "▶ Automático";
+              return;
+            }
+            $("#auto").textContent = "⏸ Pausar";
+            sim.timer = setInterval(() => {
+              if (next() === false) {
+                stopAuto();
+                $("#auto").textContent = "▶ Automático";
+                if (done) done();
+              }
+            }, 750);
+          };
+        }
+        const parseSet = (s) => [
+          ...new Set(
+            s
+              .split(",")
+              .map((x) => x.trim())
+              .filter(Boolean),
+          ),
+        ];
+
+        function labMath() {
+          shell(
+            '<div class="field"><label>Modo</label><select id="mode"><option value="sets">Conjuntos</option><option value="lang">Lenguajes</option></select></div><div class="field"><label>A o L₁</label><input id="a" value="a,b,c"></div><div class="field"><label>B o L₂</label><input id="b" value="b,c,d"></div><button class="btn" id="build">Calcular</button>',
+            `<div class="card"><h3>Operación</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="union">—</b>unión</div><div class="metric"><b id="inter">—</b>intersección</div><div class="metric"><b id="size">0</b>elementos</div></div></div><div class="card"><h3>Distinción esencial</h3><p><b>∅</b> es el lenguaje vacío. <b>{ε}</b> contiene una cadena: la cadena vacía.</p></div>`,
+          );
+          function draw() {
+            const A = parseSet($("#a").value),
+              B = parseSet($("#b").value),
+              mode = $("#mode").value;
+            if (mode === "sets") {
+              const U = [...new Set([...A, ...B])],
+                I = A.filter((x) => B.includes(x)),
+                onlyA = A.filter((x) => !B.includes(x)),
+                onlyB = B.filter((x) => !A.includes(x));
+              $("#viz").innerHTML =
+                `<svg class="svg venn" viewBox="0 0 720 350"><circle cx="285" cy="175" r="125" fill="color-mix(in srgb,var(--blue) 25%,transparent)" stroke="var(--blue)" stroke-width="3"/><circle cx="435" cy="175" r="125" fill="color-mix(in srgb,var(--violet) 25%,transparent)" stroke="var(--violet)" stroke-width="3"/><text x="210" y="45" fill="var(--blue)" font-weight="900">A</text><text x="500" y="45" fill="var(--violet)" font-weight="900">B</text><text x="235" y="175" text-anchor="middle" fill="var(--text)" font-size="18">${onlyA.join(", ") || "—"}</text><text x="360" y="175" text-anchor="middle" fill="var(--text)" font-size="18" font-weight="900">${I.join(", ") || "∅"}</text><text x="490" y="175" text-anchor="middle" fill="var(--text)" font-size="18">${onlyB.join(", ") || "—"}</text></svg>`;
+              $("#formula").textContent =
+                `A∪B={${U.join(",")}} · A∩B={${I.join(",")}}`;
+              $("#explain").textContent =
+                "La zona central contiene los elementos comunes.";
+              $("#union").textContent = U.length;
+              $("#inter").textContent = I.length;
+              $("#size").textContent = A.length + B.length;
+              award("lab1");
+            } else {
+              const C = [];
+              A.forEach((x) => B.forEach((y) => C.push(x + y)));
+              const star = [
+                "ε",
+                ...A,
+                ...A.flatMap((x) => A.map((y) => x + y)),
+              ];
+              $("#viz").innerHTML =
+                `<div class="card" style="margin:25px"><h3>Concatenación L₁L₂</h3><div class="token-row">${C.map((x) => `<span class="token">${x || "ε"}</span>`).join("") || "∅"}</div><h3>Aproximación de L₁* hasta longitud 2</h3><div class="token-row">${[...new Set(star)].map((x) => `<span class="token done">${x}</span>`).join("")}</div></div>`;
+              $("#formula").textContent = `L₁L₂={${C.join(",")}}`;
+              $("#explain").textContent =
+                "La concatenación combina cada cadena de L₁ con cada cadena de L₂; el orden importa.";
+              $("#union").textContent = "—";
+              $("#inter").textContent = "—";
+              $("#size").textContent = C.length;
+              award("lab1");
+            }
+          }
+          $("#build").onclick = draw;
+          $("#mode").onchange = draw;
+          draw();
+        }
+
+        const dfaPresets = {
+            ends01: {
+              names: ["q0", "q1", "q2"],
+              start: 0,
+              final: [2],
+              delta: [
+                [1, 0],
+                [1, 2],
+                [1, 0],
+              ],
+              alpha: ["0", "1"],
+              title: "cadenas que terminan en 01",
+            },
+            even1: {
+              names: ["par", "impar"],
+              start: 0,
+              final: [0],
+              delta: [
+                [0, 1],
+                [1, 0],
+              ],
+              alpha: ["0", "1"],
+              title: "cantidad par de 1",
+            },
+          },
+          dfaPos = [
+            [120, 170],
+            [360, 70],
+            [590, 190],
+          ];
+        function graphFA(m, active, sets = []) {
+          const pos =
+            m.names.length === 2
+              ? [
+                  [210, 170],
+                  [510, 170],
+                ]
+              : dfaPos;
+          let h =
+            '<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8Z" fill="var(--muted)"/></marker></defs>';
+          for (let i = 0; i < m.names.length; i++)
+            for (let s = 0; s < m.alpha.length; s++) {
+              const j = m.delta[i][s];
+              if (j == null) continue;
+              const [x1, y1] = pos[i],
+                [x2, y2] = pos[j];
+              if (i === j) {
+                h += `<path d="M${x1 - 18},${y1 - 27} C${x1 - 75},${y1 - 100} ${x1 + 75},${y1 - 100} ${x1 + 18},${y1 - 27}" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr)"/><text x="${x1}" y="${y1 - 78}" text-anchor="middle" fill="var(--text)">${m.alpha[s]}</text>`;
+              } else {
+                const dx = x2 - x1,
+                  dy = y2 - y1,
+                  L = Math.hypot(dx, dy),
+                  ux = dx / L,
+                  uy = dy / L;
+                h += `<line x1="${x1 + ux * 30}" y1="${y1 + uy * 30}" x2="${x2 - ux * 34}" y2="${y2 - uy * 34}" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr)"/><text x="${(x1 + x2) / 2}" y="${(y1 + y2) / 2 - 8}" fill="var(--text)" font-weight="800">${m.alpha[s]}</text>`;
+              }
+            }
+          pos.forEach(([x, y], i) => {
+            const on = Array.isArray(active)
+              ? active.includes(i)
+              : i === active;
+            h += `<circle cx="${x}" cy="${y}" r="29" fill="${on ? "var(--orange)" : "var(--blue)"}" stroke="var(--panel)" stroke-width="4"/>${m.final.includes(i) ? `<circle cx="${x}" cy="${y}" r="23" fill="none" stroke="white" stroke-width="2"/>` : ""}<text x="${x}" y="${y + 5}" text-anchor="middle" fill="white" font-weight="900">${m.names[i]}</text>`;
+          });
+          return h;
+        }
+        function labDFA() {
+          shell(
+            '<div class="field"><label>Lenguaje</label><select id="preset"><option value="ends01">Termina en 01</option><option value="even1">Número par de 1</option></select></div><div class="field"><label>Cadena</label><input id="word" value="1101"></div><button class="btn" id="build">Cargar</button>',
+            `<div class="card"><h3>Configuración</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>símbolos</div><div class="metric"><b id="state">q0</b>estado</div><div class="metric"><b id="status">—</b>resultado</div></div></div><div class="card"><h3>Definición</h3><div class="formula">M=(Q,Σ,δ,q₀,F)</div><p>La transición extendida δ* aplica δ a toda la cadena.</p></div>`,
+          );
+          let m,
+            word,
+            states = [],
+            i = 0;
+          function build() {
+            m = dfaPresets[$("#preset").value];
+            word = $("#word").value.replace(/[^01]/g, "");
+            states = [m.start];
+            for (const ch of word)
+              states.push(m.delta[states.at(-1)][m.alpha.indexOf(ch)]);
+            i = 0;
+            draw();
+          }
+          function draw() {
+            $("#viz").innerHTML =
+              `<svg class="svg" viewBox="0 0 720 330">${graphFA(m, states[i])}</svg><div class="token-row">${[...word].map((x, k) => `<span class="token ${k < i ? "done" : k === i ? "active" : ""}">${x}</span>`).join("") || '<span class="token">ε</span>'}</div>`;
+            $("#formula").textContent = i
+              ? `δ(${m.names[states[i - 1]]}, ${word[i - 1]}) = ${m.names[states[i]]}`
+              : `Inicio en ${m.names[m.start]}`;
+            $("#state").textContent = m.names[states[i]];
+            $("#step").textContent = i;
+            const end = i === word.length,
+              ok = end && m.final.includes(states[i]);
+            $("#status").textContent = end ? (ok ? "ACEPTA" : "RECHAZA") : "—";
+            $("#explain").textContent = end
+              ? ok
+                ? `La cadena pertenece al lenguaje: ${m.title}.`
+                : "La entrada terminó fuera de un estado final."
+              : "El cabezal conceptual consume exactamente un símbolo por transición.";
+            if (end) award("lab2");
+          }
+          function next() {
+            if (i >= word.length) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#preset").onchange = build;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function labNFA() {
+          shell(
+            '<div class="field"><label>Modo</label><select id="mode"><option value="nfa">NFA: contiene ab</option><option value="mealy">Mealy: paridad acumulada</option></select></div><div class="field"><label>Cadena</label><input id="word" value="aabab"></div><button class="btn" id="build">Preparar</button>',
+            `<div class="card"><h3>Estado/conjunto actual</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>posición</div><div class="metric"><b id="states">{q0}</b>activos</div><div class="metric"><b id="output">—</b>salida</div></div></div><div class="card"><h3>Equivalencia</h3><p>En subset construction, cada conjunto alcanzable de estados NFA se convierte en un estado DFA.</p></div>`,
+          );
+          let mode,
+            word,
+            steps = [],
+            i = 0;
+          function build() {
+            mode = $("#mode").value;
+            word = $("#word").value.replace(/[^ab01]/g, "");
+            steps = [];
+            if (mode === "nfa") {
+              word = word.replace(/[^ab]/g, "");
+              let S = [0];
+              steps = [{ S: [0] }];
+              for (const ch of word) {
+                let N = [];
+                for (const q of S) {
+                  if (q === 0) {
+                    N.push(0);
+                    if (ch === "a") N.push(1);
+                  }
+                  if (q === 1 && ch === "b") N.push(2);
+                  if (q === 2) N.push(2);
+                }
+                S = [...new Set(N)];
+                steps.push({ S: [...S], ch });
+              }
+            } else {
+              word = word.replace(/[^01]/g, "");
+              let q = 0,
+                out = "";
+              steps = [{ S: [0], out }];
+              for (const ch of word) {
+                q = (q + Number(ch)) % 2;
+                out += String(q);
+                steps.push({ S: [q], ch, out });
+              }
+            }
+            i = 0;
+            draw();
+          }
+          function draw() {
+            const z = steps[i],
+              model = {
+                names: mode === "nfa" ? ["q0", "q1", "q2"] : ["par", "impar"],
+                start: 0,
+                final: mode === "nfa" ? [2] : [0],
+                alpha: mode === "nfa" ? ["a", "b"] : ["0", "1"],
+                delta:
+                  mode === "nfa"
+                    ? [
+                        [0, 0],
+                        [null, 2],
+                        [2, 2],
+                      ]
+                    : [
+                        [0, 1],
+                        [1, 0],
+                      ],
+              };
+            $("#viz").innerHTML =
+              `<svg class="svg" viewBox="0 0 720 330">${graphFA(model, z.S)}</svg><div class="token-row">${[...word].map((x, k) => `<span class="token ${k < i ? "done" : k === i ? "active" : ""}">${x}</span>`).join("")}</div>`;
+            $("#formula").textContent = i
+              ? `${mode === "nfa" ? "Δ" : "δ"}(${JSON.stringify(steps[i - 1].S)}, ${z.ch}) = {${z.S.map((q) => model.names[q]).join(",")}}`
+              : "Configuración inicial";
+            $("#explain").textContent =
+              mode === "nfa"
+                ? "Todas las ramas posibles permanecen activas; basta una rama final para aceptar."
+                : "La salida Mealy se produce en cada transición.";
+            $("#step").textContent = i;
+            $("#states").textContent =
+              "{" + z.S.map((q) => model.names[q]).join(",") + "}";
+            $("#output").textContent =
+              mode === "mealy"
+                ? z.out || "ε"
+                : i === word.length
+                  ? z.S.includes(2)
+                    ? "ACEPTA"
+                    : "RECHAZA"
+                  : "—";
+            if (i === word.length) award("lab3");
+          }
+          function next() {
+            if (i >= word.length) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#mode").onchange = build;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function labMin() {
+          shell(
+            '<div class="field"><label>Método</label><select id="method"><option value="partition">Partition-refine</option><option value="table">Table filling</option></select></div><button class="btn" id="build">Preparar DFA</button>',
+            `<div class="card"><h3>Refinamiento</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>ronda</div><div class="metric"><b id="blocks">2</b>bloques</div><div class="metric"><b id="minstates">—</b>estados mínimos</div></div></div><div class="card"><h3>DFA de ejemplo</h3><p>Estados A–F, finales C,D,E. Los estados equivalentes terminan en el mismo bloque estable.</p></div>`,
+          );
+          const names = "ABCDEF".split(""),
+            final = new Set([2, 3, 4]),
+            D = [
+              [1, 2],
+              [0, 3],
+              [4, 2],
+              [4, 3],
+              [4, 2],
+              [5, 5],
+            ];
+          let parts = [],
+            i = 0;
+          function refine(P) {
+            const sig = (q) =>
+              D[q].map((t) => P.findIndex((b) => b.includes(t))).join(",");
+            return P.flatMap((B) =>
+              Object.values(
+                Object.groupBy
+                  ? Object.groupBy(B, sig)
+                  : B.reduce((o, x) => ((o[sig(x)] ??= []).push(x), o), {}),
+              ),
+            );
+          }
+          function build() {
+            parts = [
+              [
+                [0, 1, 5],
+                [2, 3, 4],
+              ],
+            ];
+            for (let k = 0; k < 6; k++) {
+              const N = refine(parts.at(-1));
+              if (JSON.stringify(N) === JSON.stringify(parts.at(-1))) break;
+              parts.push(N);
+            }
+            i = 0;
+            draw();
+          }
+          function draw() {
+            const P = parts[i];
+            if ($("#method").value === "partition")
+              $("#viz").innerHTML =
+                `<div class="partition">${P.map((b, k) => `<div class="block">P${k}={${b.map((x) => names[x]).join(",")}}</div>`).join("")}</div><div class="tree-note">Cada ronda separa estados cuyas transiciones llegan a bloques diferentes.</div>`;
+            else {
+              let h =
+                '<table class="matrix"><tr><th></th>' +
+                names.map((x) => `<th>${x}</th>`).join("") +
+                "</tr>";
+              for (let r = 0; r < 6; r++) {
+                h += `<tr><th>${names[r]}</th>`;
+                for (let c = 0; c < 6; c++) {
+                  const same = P.some((b) => b.includes(r) && b.includes(c));
+                  h += `<td class="${r > c && !same ? "mark" : ""}">${r > c ? (same ? "≈" : "×") : ""}</td>`;
+                }
+                h += "</tr>";
+              }
+              $("#viz").innerHTML =
+                '<div class="table-wrap">' + h + "</table></div>";
+            }
+            $("#formula").textContent =
+              `P${i} = ${P.map((b) => "{" + b.map((x) => names[x]).join(",") + "}").join(" ")}`;
+            $("#explain").textContent =
+              i === parts.length - 1
+                ? "La partición ya es estable: cada bloque representa un estado del DFA mínimo."
+                : "Comparamos destinos bajo 0 y 1 para dividir bloques.";
+            $("#step").textContent = i;
+            $("#blocks").textContent = P.length;
+            $("#minstates").textContent =
+              i === parts.length - 1 ? P.length : "—";
+            if (i === parts.length - 1) award("lab4");
+          }
+          function next() {
+            if (i >= parts.length - 1) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#method").onchange = draw;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function labPump() {
+          shell(
+            '<div class="field"><label>Lenguaje</label><select id="lang"><option value="anbn">L={aⁿbⁿ}</option><option value="regular">L=a*b*</option></select></div><div class="field"><label>Longitud p</label><input id="p" type="number" min="2" max="8" value="4"></div><div class="field"><label>Bombear i</label><select id="pow"><option>0</option><option>2</option><option>3</option></select></div><button class="btn" id="play">Jugar</button>',
+            `<div class="card"><h3>Juego de cuantificadores</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="plen">4</b>p</div><div class="metric"><b id="split">—</b>y</div><div class="metric"><b id="result">—</b>resultado</div></div></div><div class="card"><h3>Condiciones</h3><div class="rule-list"><div class="rule">w=xyz</div><div class="rule">|xy|≤p</div><div class="rule">|y|&gt;0</div><div class="rule">xyⁱz∈L para todo i≥0</div></div></div>`,
+          );
+          function play() {
+            const p = Math.max(2, Math.min(8, +$("#p").value)),
+              non = $("#lang").value === "anbn",
+              w = non
+                ? "a".repeat(p) + "b".repeat(p)
+                : "a".repeat(p) + "b".repeat(p),
+              x = "",
+              y = "a",
+              z = w.slice(1),
+              pow = +$("#pow").value,
+              pumped = x + y.repeat(pow) + z;
+            const belongs = non
+              ? /^(a+)(b+)$/.test(pumped) &&
+                pumped.indexOf("b") === pumped.match(/^a+/)[0].length &&
+                pumped.match(/^a+/)[0].length === pumped.match(/b+$/)[0].length
+              : /^a*b*$/.test(pumped);
+            $("#viz").innerHTML =
+              `<div style="padding:35px"><h3>Cadena elegida w</h3><div class="token-row"><span class="token">x=${x || "ε"}</span><span class="token active">y=${y}</span><span class="token">z=${z}</span></div><div class="arrow" style="text-align:center">↓ bombear i=${pow}</div><div class="token-row"><span class="token ${belongs ? "done" : "active"}">${pumped || "ε"}</span></div></div>`;
+            $("#formula").textContent = `xy^${pow}z = ${pumped || "ε"}`;
+            $("#explain").textContent =
+              non && !belongs
+                ? "La cadena bombeada rompe la igualdad entre a y b. Para cualquier p podemos forzar esta contradicción: el lenguaje no es regular."
+                : belongs
+                  ? "La cadena permanece en el lenguaje para esta descomposición y potencia. En un lenguaje regular debe existir una descomposición que funcione para todo i."
+                  : "Esta elección salió del lenguaje.";
+            $("#plen").textContent = p;
+            $("#split").textContent = y;
+            $("#result").textContent = belongs ? "∈ L" : "∉ L";
+            award("lab5");
+          }
+          $("#play").onclick = play;
+          $("#lang").onchange = play;
+          play();
+        }
+
+        function labCFG() {
+          shell(
+            '<div class="field"><label>Modo</label><select id="mode"><option value="derive">Derivación S→aSb|ε</option><option value="amb">Ambigüedad aritmética</option></select></div><div class="field"><label>n</label><input id="n" type="number" min="1" max="5" value="3"></div><button class="btn" id="build">Preparar</button>',
+            `<div class="card"><h3>Producción aplicada</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>derivaciones</div><div class="metric"><b id="leaves">1</b>hojas</div><div class="metric"><b id="status">—</b>estado</div></div></div><div class="card"><h3>Gramática</h3><div class="rule-list" id="rules"></div></div>`,
+          );
+          let steps = [],
+            i = 0,
+            mode;
+          function build() {
+            mode = $("#mode").value;
+            steps = [];
+            if (mode === "derive") {
+              let n = Math.max(1, Math.min(5, +$("#n").value)),
+                s = "S";
+              steps = [{ s, rule: "Inicio" }];
+              for (let k = 0; k < n; k++) {
+                s = s.replace("S", "aSb");
+                steps.push({ s, rule: "S → aSb" });
+              }
+              s = s.replace("S", "ε");
+              steps.push({ s, rule: "S → ε" });
+            } else
+              steps = [
+                { s: "id + id * id", tree: 0, rule: "Árbol 1: + en la raíz" },
+                { s: "id + id * id", tree: 1, rule: "Árbol 2: * en la raíz" },
+              ];
+            i = 0;
+            draw();
+          }
+          function treeSvg(kind) {
+            return kind === 0
+              ? `<svg class="svg" viewBox="0 0 700 310"><g stroke="var(--line)" stroke-width="3">${[
+                  [350, 45, 220, 125],
+                  [350, 45, 480, 125],
+                  [480, 125, 410, 220],
+                  [480, 125, 550, 220],
+                ]
+                  .map(
+                    (x) =>
+                      `<line x1="${x[0]}" y1="${x[1]}" x2="${x[2]}" y2="${x[3]}"/>`,
+                  )
+                  .join("")}</g>${[
+                  [350, 45, "+"],
+                  [220, 125, "id"],
+                  [480, 125, "*"],
+                  [410, 220, "id"],
+                  [550, 220, "id"],
+                ]
+                  .map(
+                    (x) =>
+                      `<circle cx="${x[0]}" cy="${x[1]}" r="27" fill="var(--blue)"/><text x="${x[0]}" y="${x[1] + 6}" text-anchor="middle" fill="white" font-weight="900">${x[2]}</text>`,
+                  )
+                  .join("")}</svg>`
+              : `<svg class="svg" viewBox="0 0 700 310"><g stroke="var(--line)" stroke-width="3">${[
+                  [350, 45, 220, 125],
+                  [350, 45, 480, 125],
+                  [220, 125, 150, 220],
+                  [220, 125, 290, 220],
+                ]
+                  .map(
+                    (x) =>
+                      `<line x1="${x[0]}" y1="${x[1]}" x2="${x[2]}" y2="${x[3]}"/>`,
+                  )
+                  .join("")}</g>${[
+                  [350, 45, "*"],
+                  [220, 125, "+"],
+                  [480, 125, "id"],
+                  [150, 220, "id"],
+                  [290, 220, "id"],
+                ]
+                  .map(
+                    (x) =>
+                      `<circle cx="${x[0]}" cy="${x[1]}" r="27" fill="var(--violet)"/><text x="${x[0]}" y="${x[1] + 6}" text-anchor="middle" fill="white" font-weight="900">${x[2]}</text>`,
+                  )
+                  .join("")}</svg>`;
+          }
+          function draw() {
+            const z = steps[i];
+            if (mode === "derive") {
+              $("#viz").innerHTML =
+                `<div style="display:grid;place-items:center;height:330px"><div class="formula" style="font-size:28px">${z.s}</div></div>`;
+              $("#rules").innerHTML =
+                '<div class="rule">S → aSb</div><div class="rule">S → ε</div>';
+            } else {
+              $("#viz").innerHTML = treeSvg(z.tree);
+              $("#rules").innerHTML =
+                '<div class="rule">E → E+E</div><div class="rule">E → E*E</div><div class="rule">E → id</div>';
+            }
+            $("#formula").textContent = z.rule;
+            $("#explain").textContent =
+              mode === "derive"
+                ? "Una derivación sustituye un no terminal por la parte derecha completa; ε es un símbolo explícito, no una regla vacía."
+                : "La misma cadena tiene dos árboles distintos: la gramática es ambigua sin reglas de precedencia.";
+            $("#step").textContent = i;
+            $("#leaves").textContent =
+              mode === "derive"
+                ? z.s.replace("S", "").replace("ε", "").length
+                : 3;
+            $("#status").textContent =
+              i === steps.length - 1
+                ? mode === "derive"
+                  ? "TERMINAL"
+                  : "AMBIGUA"
+                : "—";
+            if (i === steps.length - 1) award("lab6");
+          }
+          function next() {
+            if (i >= steps.length - 1) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#mode").onchange = build;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function labNormal() {
+          shell(
+            '<div class="field"><label>Conversión</label><select id="mode"><option value="cnf">Simplificación → CNF</option><option value="left">Eliminar recursión izquierda</option></select></div><button class="btn" id="build">Iniciar</button>',
+            `<div class="card"><h3>Paso de transformación</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>paso</div><div class="metric"><b id="rulesN">0</b>reglas</div><div class="metric"><b id="status">—</b>forma</div></div></div><div class="card"><h3>Orden recomendado</h3><div class="rule-list"><div class="rule">1. Nuevo inicio</div><div class="rule">2. Eliminar ε</div><div class="rule">3. Eliminar unitarias</div><div class="rule">4. Eliminar inútiles</div><div class="rule">5. Aislar terminales</div><div class="rule">6. Binarizar</div></div></div>`,
+          );
+          let steps = [],
+            i = 0;
+          function build() {
+            if ($("#mode").value === "cnf")
+              steps = [
+                [
+                  "Gramática original",
+                  ["S → ASA | aB", "A → B | S", "B → b | ε"],
+                  "Cada producción tiene una parte derecha explícita.",
+                ],
+                [
+                  "Nuevo inicio",
+                  ["S₀ → S", "S → ASA | aB", "A → B | S", "B → b | ε"],
+                  "El nuevo símbolo inicial protege la generación de ε.",
+                ],
+                [
+                  "Eliminar ε-producciones",
+                  ["S₀ → S", "S → ASA | aB | a", "A → B | S", "B → b"],
+                  "Como B era anulable, agregamos variantes sin B.",
+                ],
+                [
+                  "Eliminar unitarias",
+                  [
+                    "S₀ → ASA | aB | a",
+                    "S → ASA | aB | a",
+                    "A → ASA | aB | a | b",
+                    "B → b",
+                  ],
+                  "Sustituimos A→B, A→S y S₀→S por sus producciones no unitarias.",
+                ],
+                [
+                  "Aislar terminales",
+                  [
+                    "S₀ → ASA | TₐB | a",
+                    "S → ASA | TₐB | a",
+                    "A → ASA | TₐB | a | b",
+                    "B → b",
+                    "Tₐ → a",
+                  ],
+                  "En cadenas largas, cada terminal recibe su variable.",
+                ],
+                [
+                  "Binarizar: CNF",
+                  [
+                    "S₀ → AX | TₐB | a",
+                    "S → AX | TₐB | a",
+                    "A → AX | TₐB | a | b",
+                    "X → SA",
+                    "B → b",
+                    "Tₐ → a",
+                  ],
+                  "Todas las reglas son A→BC o A→a.",
+                ],
+              ];
+            else
+              steps = [
+                [
+                  "Original",
+                  ["E → E + T | T", "T → id"],
+                  "La producción E→E+T tiene recursión izquierda inmediata.",
+                ],
+                [
+                  "Separar α y β",
+                  ["α = +T", "β = T"],
+                  "Identificamos la parte recursiva y la alternativa no recursiva.",
+                ],
+                [
+                  "Resultado",
+                  ["E → T E′", "E′ → + T E′ | ε", "T → id"],
+                  "La recursión izquierda fue reemplazada por recursión derecha.",
+                ],
+              ];
+            i = 0;
+            draw();
+          }
+          function draw() {
+            const z = steps[i];
+            $("#viz").innerHTML =
+              `<div class="rule-list" style="max-width:650px;margin:28px auto">${z[1].map((r, k) => `<div class="rule ${k === 0 ? "on" : ""}">${r}</div>`).join("")}</div>`;
+            $("#formula").textContent = z[0];
+            $("#explain").textContent = z[2];
+            $("#step").textContent = i;
+            $("#rulesN").textContent = z[1].length;
+            $("#status").textContent =
+              i === steps.length - 1
+                ? $("#mode").value === "cnf"
+                  ? "CNF"
+                  : "SIN REC. IZQ."
+                : "—";
+            if (
+              $("#mode").value === "cnf" &&
+              z[1].some((r) => !r.split("→")[1]?.trim())
+            )
+              throw new Error("Regla sin parte derecha");
+            if (i === steps.length - 1) award("lab7");
+          }
+          function next() {
+            if (i >= steps.length - 1) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#mode").onchange = build;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function labPDA() {
+          shell(
+            '<div class="field"><label>Modo</label><select id="mode"><option value="pda">PDA para aⁿbⁿ</option><option value="ll">Parser LL(1)</option></select></div><div class="field"><label>Entrada</label><input id="word" value="aaabbb"></div><button class="btn" id="build">Preparar</button>',
+            `<div class="card"><h3>Configuración</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>paso</div><div class="metric"><b id="stackTop">Z₀</b>cima</div><div class="metric"><b id="status">—</b>resultado</div></div></div><div class="card"><h3>Notación PDA</h3><div class="formula">(q, entrada, pila) ⊢ (q′, resto, pila′)</div><p>Una transición puede leer entrada, consultar la cima y reemplazarla.</p></div>`,
+          );
+          let steps = [],
+            i = 0,
+            mode;
+          function build() {
+            mode = $("#mode").value;
+            steps = [];
+            if (mode === "pda") {
+              let w = $("#word").value.replace(/[^ab]/g, ""),
+                stack = ["Z₀"],
+                state = "qpush",
+                pos = 0;
+              steps = [{ w, pos, stack: [...stack], state, msg: "Inicio" }];
+              while (pos < w.length) {
+                const ch = w[pos];
+                if (state === "qpush" && ch === "a") {
+                  stack.push("A");
+                  pos++;
+                  steps.push({
+                    w,
+                    pos,
+                    stack: [...stack],
+                    state,
+                    msg: "Leer a y apilar A",
+                  });
+                } else if (ch === "b" && stack.at(-1) === "A") {
+                  state = "qpop";
+                  stack.pop();
+                  pos++;
+                  steps.push({
+                    w,
+                    pos,
+                    stack: [...stack],
+                    state,
+                    msg: "Leer b y desapilar A",
+                  });
+                } else {
+                  steps.push({
+                    w,
+                    pos,
+                    stack: [...stack],
+                    state: "qreject",
+                    msg: "No existe transición válida",
+                    reject: true,
+                  });
+                  break;
+                }
+              }
+              if (pos === w.length && !steps.at(-1).reject)
+                steps.push({
+                  w,
+                  pos,
+                  stack: [...stack],
+                  state: stack.length === 1 ? "qaccept" : "qreject",
+                  msg:
+                    stack.length === 1
+                      ? "Entrada consumida y pila base"
+                      : "Sobran símbolos en pila",
+                  accept: stack.length === 1,
+                });
+            } else {
+              const w = ["id", "+", "id", "$"],
+                stack = ["$", "E"],
+                table = {
+                  E: { id: ["T", "E′"] },
+                  T: { id: ["id"] },
+                  "E′": { "+": ["+", "T", "E′"], $: [] },
+                };
+              let pos = 0;
+              steps = [{ w, pos, stack: [...stack], msg: "Inicio" }];
+              let guard = 0;
+              while (stack.length && guard++ < 30) {
+                const top = stack.at(-1),
+                  look = w[pos];
+                if (top === look) {
+                  stack.pop();
+                  pos++;
+                  steps.push({
+                    w,
+                    pos,
+                    stack: [...stack],
+                    msg: `Emparejar ${look}`,
+                  });
+                } else if (table[top] && table[top][look] != null) {
+                  stack.pop();
+                  const rhs = table[top][look];
+                  for (let k = rhs.length - 1; k >= 0; k--) stack.push(rhs[k]);
+                  steps.push({
+                    w,
+                    pos,
+                    stack: [...stack],
+                    msg: `${top} → ${rhs.join(" ") || "ε"}`,
+                  });
+                } else {
+                  steps.push({
+                    w,
+                    pos,
+                    stack: [...stack],
+                    msg: "Error de parsing",
+                    reject: true,
+                  });
+                  break;
+                }
+              }
+              if (!stack.length && pos === w.length)
+                steps.push({ w, pos, stack: [], msg: "Aceptar", accept: true });
+            }
+            i = 0;
+            draw();
+          }
+          function draw() {
+            const z = steps[i],
+              w = z.w;
+            $("#viz").innerHTML =
+              `<div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px"><div><div class="token-row">${[...w].map((x, k) => `<span class="token ${k < z.pos ? "done" : k === z.pos ? "active" : ""}">${x}</span>`).join("")}</div><div style="text-align:center"><span class="state-pill">${z.state || "parser"}</span></div></div><div><h3 style="text-align:center">Pila</h3><div class="stack-viz">${z.stack.map((x) => `<div class="stack-cell">${x}</div>`).join("") || "<span>vacía</span>"}</div></div></div>`;
+            $("#formula").textContent = z.msg;
+            $("#explain").textContent =
+              mode === "pda"
+                ? "Las a guardan marcas; cada b debe retirar exactamente una marca."
+                : "El parser consulta la cima de pila y el símbolo lookahead para elegir producción.";
+            $("#step").textContent = i;
+            $("#stackTop").textContent = z.stack.at(-1) || "∅";
+            $("#status").textContent = z.accept
+              ? "ACEPTA"
+              : z.reject || z.state === "qreject"
+                ? "RECHAZA"
+                : "—";
+            if (i === steps.length - 1) award("lab8");
+          }
+          function next() {
+            if (i >= steps.length - 1) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#mode").onchange = build;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function labTM() {
+          shell(
+            '<div class="field"><label>Máquina</label><select id="mode"><option value="binary">Incremento binario</option><option value="unary">Incremento unario</option></select></div><div class="field"><label>Entrada</label><input id="word" value="1011"></div><button class="btn" id="build">Cargar cinta</button>',
+            `<div class="card"><h3>Transición actual</h3><div class="formula" id="formula"></div><p class="explain" id="explain"></p><div class="metrics"><div class="metric"><b id="step">0</b>pasos</div><div class="metric"><b id="state">q0</b>estado</div><div class="metric"><b id="status">—</b>resultado</div></div></div><div class="card"><h3>Convención</h3><div class="formula">δ(q,a)=(q′,b,D)</div><p>Lee a, escribe b, cambia a q′ y mueve L/R. □ representa blanco.</p></div>`,
+          );
+          let steps = [],
+            i = 0;
+          function build() {
+            const mode = $("#mode").value,
+              input =
+                $("#word").value.replace(
+                  mode === "binary" ? /[^01]/g : /[^1]/g,
+                  "",
+                ) || "0",
+              t = ["□", "□", ...input, "□", "□"];
+            let head = 2,
+              q = "qscan",
+              guard = 0;
+            steps = [{ t: [...t], head, q, msg: "Inicio" }];
+            while (guard++ < 50 && q !== "qaccept") {
+              const read = t[head];
+              if (q === "qscan") {
+                if (read === "0" || read === "1") {
+                  head++;
+                  steps.push({
+                    t: [...t],
+                    head,
+                    q,
+                    msg: `Leer ${read}; mover R`,
+                  });
+                } else {
+                  q = mode === "unary" ? "qwrite" : "qcarry";
+                  head--;
+                  steps.push({
+                    t: [...t],
+                    head,
+                    q,
+                    msg: "Fin de entrada; preparar incremento",
+                  });
+                }
+              } else if (q === "qwrite") {
+                head++;
+                t[head] = "1";
+                q = "qaccept";
+                steps.push({ t: [...t], head, q, msg: "Escribir 1 y aceptar" });
+              } else if (q === "qcarry") {
+                if (t[head] === "1") {
+                  t[head] = "0";
+                  head--;
+                  steps.push({
+                    t: [...t],
+                    head,
+                    q,
+                    msg: "1→0; propagar acarreo a L",
+                  });
+                } else if (t[head] === "0") {
+                  t[head] = "1";
+                  q = "qaccept";
+                  steps.push({ t: [...t], head, q, msg: "0→1; aceptar" });
+                } else {
+                  t[head] = "1";
+                  q = "qaccept";
+                  steps.push({ t: [...t], head, q, msg: "Blanco→1; aceptar" });
+                }
+              }
+            }
+            i = 0;
+            draw();
+          }
+          function draw() {
+            const z = steps[i];
+            $("#viz").innerHTML =
+              `<div class="tape">${z.t.map((x, k) => `<div><div class="cell ${k === z.head ? "active" : ""}">${x}</div><div class="idx">${k - 2}</div></div>`).join("")}</div><div style="text-align:center"><span class="state-pill">${z.q}</span></div>`;
+            $("#formula").textContent = z.msg;
+            $("#explain").textContent =
+              z.q === "qaccept"
+                ? "La máquina se detuvo en estado de aceptación. La cinta contiene el número incrementado."
+                : "La configuración combina contenido de cinta, posición del cabezal y estado.";
+            $("#step").textContent = i;
+            $("#state").textContent = z.q;
+            $("#status").textContent =
+              z.q === "qaccept" ? "HALT/ACEPTA" : "EJECUTANDO";
+            if (z.q === "qaccept") award("lab9");
+          }
+          function next() {
+            if (i >= steps.length - 1) return false;
+            i++;
+            draw();
+            return true;
+          }
+          function prev() {
+            i = Math.max(0, i - 1);
+            draw();
+          }
+          $("#build").onclick = build;
+          $("#mode").onchange = build;
+          ctl(prev, next, () => {
+            i = 0;
+            draw();
+          });
+          build();
+        }
+
+        function renderQuiz(c) {
+          const best = state.quiz[c.n] || 0;
+          $("#chapterBody").innerHTML =
+            `<form class="card" id="quizForm"><div class="tag">Mejor resultado: ${best}/5 · aprobación 4/5</div>${c.quiz.map((q, i) => `<div class="quiz-q"><h3>${i + 1}. ${q[0]}</h3><div class="opts">${q[1].map((o, j) => `<label class="opt"><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join("")}</div></div>`).join("")}<button class="btn" type="submit">Enviar evaluación</button></form><div class="card" id="quizResult" style="display:none;margin-top:12px"></div>`;
+          $("#quizForm").onsubmit = (e) => {
+            e.preventDefault();
+            let score = 0;
+            c.quiz.forEach((q, i) => {
+              const x = $(`input[name=q${i}]:checked`);
+              if (x && +x.value === q[2]) score++;
+            });
+            const r = $("#quizResult");
+            r.style.display = "block";
+            r.innerHTML = `<h3>${score >= 4 ? "¡Capítulo aprobado!" : "Revisa los conceptos"}</h3><div style="font-size:34px;font-weight:950;color:var(--blue)">${score}/5</div><p>${score >= 4 ? "Comprendes los conceptos centrales." : "Vuelve al laboratorio y sigue las configuraciones paso a paso."}</p>`;
+            if (score > (state.quiz[c.n] || 0)) {
+              if ((state.quiz[c.n] || 0) < 4 && score >= 4) state.xp += 40;
+              state.quiz[c.n] = score;
+              save();
+              if (score >= 4) toast("+40 XP · evaluación aprobada");
+            }
+          };
+        }
+        function renderGlossary() {
+          stopAuto();
+          $("#crumb").textContent = "Glosario y progreso";
+          const labs = chapters.filter((c) =>
+              state.completed.includes("lab" + c.n),
+            ).length,
+            passed = chapters.filter((c) => (state.quiz[c.n] || 0) >= 4).length;
+          $("#view").innerHTML =
+            `<div class="chapter-head"><div><div class="eyebrow">Resumen global</div><h2>Glosario y progreso</h2></div></div><div class="stats"><div class="stat"><b>${labs}/9</b><span>laboratorios</span></div><div class="stat"><b>${passed}/9</b><span>evaluaciones</span></div><div class="stat"><b>${state.xp}</b><span>XP</span></div><div class="stat"><b>${Math.round((100 * (labs + passed)) / 18)}%</b><span>progreso</span></div></div><div class="card"><h3>Estado por capítulo</h3><div class="table-wrap"><table class="progress-table"><thead><tr><th>Capítulo</th><th>Laboratorio</th><th>Evaluación</th><th></th></tr></thead><tbody>${chapters.map((c) => `<tr><td>${c.n}. ${c.title}</td><td>${state.completed.includes("lab" + c.n) ? "✓" : "—"}</td><td>${state.quiz[c.n] || 0}/5</td><td><button class="btn sec" data-go="${c.n}">Abrir</button></td></tr>`).join("")}</tbody></table></div></div><h2 style="margin-top:22px">Glosario esencial</h2><div class="glossary">${glossary.map(([a, b]) => `<div class="term"><b>${a}</b><span>${b}</span></div>`).join("")}</div><div class="card" style="margin-top:15px"><h3>Gestión del progreso</h3><div class="controls"><button class="btn sec" id="export">Exportar JSON</button><button class="btn red" id="reset">Borrar progreso</button></div></div>`;
+          wireGo();
+          $("#export").onclick = () => {
+            const blob = new Blob(
+                [
+                  JSON.stringify(
+                    {
+                      titulo:
+                        "Libro Interactivo de Teoría de la Computación · capítulos 1–9",
+                      fecha: new Date().toISOString(),
+                      ...state,
+                    },
+                    null,
+                    2,
+                  ),
+                ],
+                { type: "application/json" },
+              ),
+              a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "progreso_teoria_computacion.json";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 500);
+          };
+          $("#reset").onclick = () => $("#resetModal").classList.add("show");
+        }
+        $("#themeBtn").onclick = () => {
+          state.theme = state.theme === "dark" ? "light" : "dark";
+          document.documentElement.dataset.theme = state.theme;
+          save();
+        };
+        $("#menuBtn").onclick = () => $("#side").classList.toggle("open");
+        $("#resetNo").onclick = () => $("#resetModal").classList.remove("show");
+        $("#resetYes").onclick = () => {
+          localStorage.removeItem("teoriaCompLibro");
+          state = { ...base, completed: [], quiz: {} };
+          $("#resetModal").classList.remove("show");
+          go("home");
+          toast("Progreso eliminado");
+        };
+        document.documentElement.dataset.theme = state.theme;
+        buildNav();
+        go(state.last || "home");
+        updateProgress();
+      })();
+    </script>
+  </body>
+</html>
