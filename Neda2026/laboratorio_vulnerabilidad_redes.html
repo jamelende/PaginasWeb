@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratorio de Vulnerabilidad en Redes</title>
+<style>
+:root{
+  --bg:#eef3f8; --panel:#ffffff; --ink:#162231; --muted:#5f6f82; --line:#d7e0ea;
+  --blue:#246bfd; --blue2:#174db6; --red:#e94b4b; --orange:#f59e0b; --green:#1f9d68;
+  --violet:#7c3aed; --cyan:#0891b2; --shadow:0 12px 32px rgba(18,35,58,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#eaf1f8 0,#f7f9fc 42%,#edf3f8 100%);color:var(--ink);
+ font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select{font:inherit}
+.app{min-height:100vh;display:grid;grid-template-rows:auto auto 1fr}
+header{background:#112437;color:#fff;padding:14px 22px;display:flex;align-items:center;gap:16px;
+ box-shadow:0 3px 14px rgba(0,0,0,.20);z-index:3}
+.logo{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#39a0ff,#6d5dfc);
+ display:grid;place-items:center;font-size:26px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)}
+header h1{margin:0;font-size:21px;letter-spacing:.1px}
+header p{margin:3px 0 0;color:#bfd0df;font-size:12.5px}
+.head-actions{margin-left:auto;display:flex;gap:8px}
+.topbtn{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;
+ border-radius:8px;padding:8px 11px;cursor:pointer}
+.topbtn:hover{background:rgba(255,255,255,.15)}
+.tabs{background:#fff;border-bottom:1px solid var(--line);padding:0 22px;display:flex;gap:3px;z-index:2}
+.tab{border:0;background:none;padding:12px 16px;border-bottom:3px solid transparent;color:#526276;font-weight:700;cursor:pointer}
+.tab.active{color:var(--blue);border-color:var(--blue)}
+main{padding:14px;min-height:0}
+.page{display:none;height:100%}.page.active{display:block}
+.grid{display:grid;grid-template-columns:310px minmax(520px,1fr) 330px;gap:13px;height:calc(100vh - 139px);min-height:630px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-height:0}
+.sidebar{padding:13px;overflow:auto}
+.panel-title{font-weight:850;font-size:14px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.section{border-top:1px solid #e7edf4;padding-top:11px;margin-top:11px}
+.section:first-of-type{border-top:0;padding-top:0;margin-top:0}
+label{font-size:11.5px;color:#536376;font-weight:750;display:block;margin-bottom:5px}
+select,input[type=number]{width:100%;border:1px solid #cdd8e4;border-radius:8px;padding:8px;background:#fff;color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sliderline{display:flex;align-items:center;gap:9px}
+.value{min-width:52px;text-align:right;font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;color:#2d4661}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:0;border-radius:9px;padding:9px 10px;font-weight:800;cursor:pointer;transition:.15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(.98)}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.dark{background:#203348;color:#fff}
+.btn.danger{background:var(--red);color:#fff}
+.btn.soft{background:#eaf1f8;color:#27435f;border:1px solid #d4dfeb}
+.btn.green{background:var(--green);color:#fff}
+.btn.orange{background:var(--orange);color:#fff}
+.note{background:#f4f8fc;border:1px solid #dce7f2;border-radius:9px;padding:9px;font-size:11.5px;line-height:1.45;color:#4d6075}
+.strategy-info{border-left:4px solid var(--violet);background:#f7f4ff;padding:9px 10px;border-radius:7px;font-size:11.5px;line-height:1.4}
+.center{display:grid;grid-template-rows:minmax(330px,1fr) 265px;gap:13px;min-height:0}
+.canvas-panel{position:relative;overflow:hidden}
+.canvas-toolbar{position:absolute;left:10px;top:10px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.pill{background:rgba(255,255,255,.93);border:1px solid #ccd9e6;padding:6px 8px;border-radius:999px;font-size:11px;
+ font-weight:800;box-shadow:0 3px 10px rgba(20,40,65,.08)}
+canvas{display:block;width:100%;height:100%}
+.legend{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.94);border:1px solid #d5e0eb;border-radius:8px;
+ padding:8px 10px;font-size:10.5px;line-height:1.65}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.charts{display:grid;grid-template-columns:1.05fr .95fr;gap:13px;min-height:0}
+.chart-panel{position:relative;padding:9px}
+.chart-title{font-size:12px;font-weight:850;margin:0 0 3px}
+.chart-sub{font-size:10.5px;color:var(--muted);margin-bottom:4px}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{background:#f7f9fc;border:1px solid #dce5ef;border-radius:9px;padding:9px}
+.metric .k{font-size:10px;color:#637286;font-weight:750;text-transform:uppercase;letter-spacing:.35px}
+.metric .v{font-size:20px;font-weight:900;margin-top:2px}
+.metric .s{font-size:10.5px;color:#6b7a8c;margin-top:1px}
+.health{height:9px;border-radius:999px;background:#e6edf4;overflow:hidden;margin-top:5px}
+.health>span{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--orange),var(--green));width:100%}
+.rank{margin-top:9px;border-top:1px solid #e2e9f0;padding-top:8px}
+.rank-row{display:grid;grid-template-columns:22px 1fr 55px;gap:6px;align-items:center;font-size:11px;margin:5px 0}
+.bar{height:7px;background:#e7edf4;border-radius:99px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--violet)}
+.status{border-radius:8px;padding:9px 10px;background:#12283d;color:#eaf5ff;font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;line-height:1.45}
+.compare-layout{display:grid;grid-template-columns:280px 1fr;gap:13px;height:calc(100vh - 139px);min-height:640px}
+.compare-main{display:grid;grid-template-rows:minmax(310px,1fr) 280px;gap:13px;min-width:0}
+.netcards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;min-height:0}
+.netcard{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-rows:auto 1fr auto}
+.netcard h3{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid #e1e8ef;display:flex;justify-content:space-between}
+.netcard canvas{min-height:240px}
+.mini-stats{padding:8px 10px;border-top:1px solid #e1e8ef;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.mini-stat{text-align:center}.mini-stat b{display:block;font-size:15px}.mini-stat span{font-size:9.5px;color:#64758a}
+.compare-bottom{display:grid;grid-template-columns:1.2fr .8fr;gap:13px}
+.compare-bottom .panel{padding:10px}
+.table-wrap{overflow:auto;max-height:225px;border:1px solid #dce5ee;border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:10.5px}
+th,td{padding:6px 7px;border-bottom:1px solid #e7edf3;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{position:sticky;top:0;background:#eef4fa;z-index:1}
+.learn{max-width:1180px;margin:auto;display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.learn .panel{padding:18px}
+.learn h2{margin-top:0}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-card{border:1px solid #d9e4ef;border-radius:10px;padding:12px;background:#fbfcfe}
+.info-card h3{font-size:13px;margin:0 0 6px}.info-card p{font-size:11.5px;line-height:1.5;color:#526477;margin:0}
+.formula{background:#12283d;color:#eaf5ff;border-radius:8px;padding:11px;font:600 12px ui-monospace,SFMono-Regular,Consolas,monospace}
+.quiz-q{border:1px solid #dce6ef;border-radius:9px;padding:11px;margin:9px 0}
+.quiz-q b{font-size:12px}.quiz-q label{display:flex;gap:7px;align-items:flex-start;margin:7px 0;font-weight:500;color:#33465a}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:9.5px;font-weight:850;background:#e9f1ff;color:#2359b8}
+.tooltip{position:fixed;z-index:20;pointer-events:none;background:#13293d;color:#fff;padding:7px 9px;border-radius:7px;
+ font-size:10.5px;box-shadow:0 5px 18px rgba(0,0,0,.25);display:none;max-width:220px}
+.small{font-size:10.5px;color:#66768a}
+@media(max-width:1100px){
+ .grid{grid-template-columns:280px 1fr;height:auto}.rightbar{grid-column:1/-1}.center{min-height:750px}
+ .compare-layout{grid-template-columns:1fr;height:auto}.netcards{min-height:430px}
+}
+@media(max-width:760px){
+ header{padding:11px}.head-actions{display:none}.tabs{overflow:auto;padding:0 8px}
+ main{padding:8px}.grid,.compare-layout,.learn{display:block;height:auto}
+ .sidebar,.panel{margin-bottom:10px}.center{display:block}.canvas-panel{height:440px;margin-bottom:10px}
+ .charts,.compare-bottom,.netcards,.cards{grid-template-columns:1fr}.chart-panel{height:260px}.netcard canvas{height:280px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">◉</div>
+  <div>
+    <h1>Laboratorio de Vulnerabilidad en Redes</h1>
+    <p>Ataques, fallas, fragmentación y robustez estructural — simulador autónomo estilo NetLogo</p>
+  </div>
+  <div class="head-actions">
+    <button class="topbtn" id="exportJson">Exportar experimento</button>
+    <button class="topbtn" id="helpBtn">Guía rápida</button>
+  </div>
+</header>
+<nav class="tabs">
+  <button class="tab active" data-page="explore">Explorador</button>
+  <button class="tab" data-page="compare">Comparar modelos</button>
+  <button class="tab" data-page="learn">Conceptos y prácticas</button>
+</nav>
+<main>
+<section id="explore" class="page active">
+<div class="grid">
+  <aside class="panel sidebar">
+    <h2 class="panel-title">⚙ Configuración de la red</h2>
+    <div class="section">
+      <label>Modelo de red</label>
+      <select id="model">
+        <option value="er">Aleatoria — Erdős–Rényi</option>
+        <option value="ws">Mundo pequeño — Watts–Strogatz</option>
+        <option value="ba">Libre de escala — Barabási–Albert</option>
+        <option value="grid">Retícula 2D</option>
+        <option value="modular">Comunidades modulares</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Layout visual</label>
+      <select id="layoutModeVuln">
+        <option value="auto" selected>Automático según el modelo</option>
+        <option value="spring">Spring / fuerzas</option>
+        <option value="circular">Circular</option>
+        <option value="random">Aleatorio</option>
+        <option value="grid">Retícula visual</option>
+        <option value="radial">Radial por grado</option>
+        <option value="community">Agrupado por comunidades</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Número de nodos</label>
+      <div class="sliderline"><input id="nNodes" type="range" min="20" max="180" value="80"><span class="value" id="nNodesVal">80</span></div>
+    </div>
+    <div id="erParams" class="section modelParams">
+      <label>Probabilidad de enlace p</label>
+      <div class="sliderline"><input id="erP" type="range" min="0.02" max="0.20" step="0.005" value="0.06"><span class="value" id="erPVal">0.060</span></div>
+    </div>
+    <div id="wsParams" class="section modelParams" style="display:none">
+      <div class="row2">
+        <div><label>Vecinos k</label><input id="wsK" type="number" min="2" max="20" step="2" value="6"></div>
+        <div><label>Reconexion β</label><input id="wsBeta" type="number" min="0" max="1" step="0.05" value="0.12"></div>
+      </div>
+    </div>
+    <div id="baParams" class="section modelParams" style="display:none">
+      <label>Enlaces por nodo nuevo m</label><input id="baM" type="number" min="1" max="8" value="3">
+    </div>
+    <div id="modParams" class="section modelParams" style="display:none">
+      <div class="row2">
+        <div><label>Comunidades</label><input id="communities" type="number" min="2" max="8" value="4"></div>
+        <div><label>Mezcla externa</label><input id="mixing" type="number" min="0.01" max="0.35" step="0.01" value="0.06"></div>
+      </div>
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="setupBtn">SETUP</button>
+      <button class="btn soft" id="relayoutBtn">Reorganizar</button>
+    </div>
+    <div class="section">
+      <h2 class="panel-title">✂ Estrategia de eliminación</h2>
+      <label>Criterio de ataque o falla</label>
+      <select id="strategy">
+        <option value="random">Falla aleatoria</option>
+        <option value="degreeAdaptive">Mayor grado — adaptativo</option>
+        <option value="degreeStatic">Mayor grado — ranking inicial</option>
+        <option value="betweenness">Mayor intermediación — adaptativo</option>
+        <option value="closeness">Mayor cercanía</option>
+        <option value="pagerank">Mayor PageRank</option>
+        <option value="kcore">Mayor coreness k-core</option>
+        <option value="articulation">Puntos de articulación</option>
+        <option value="bridge">Puentes entre comunidades</option>
+        <option value="lowestDegree">Menor grado</option>
+      </select>
+      <div class="strategy-info" id="strategyInfo"></div>
+    </div>
+    <div class="section">
+      <div class="row2">
+        <div>
+          <label>Nodos por paso</label>
+          <input id="batchSize" type="number" min="1" max="20" value="1">
+        </div>
+        <div>
+          <label>Meta eliminada</label>
+          <select id="targetPct">
+            <option value="0.1">10%</option><option value="0.2">20%</option><option value="0.3">30%</option>
+            <option value="0.5" selected>50%</option><option value="0.7">70%</option><option value="0.9">90%</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="section actions">
+      <button class="btn danger" id="stepBtn">Quitar paso</button>
+      <button class="btn orange" id="goBtn">GO</button>
+      <button class="btn soft" id="undoBtn">Deshacer</button>
+      <button class="btn dark" id="resetAttackBtn">Reiniciar ataque</button>
+    </div>
+    <div class="section">
+      <label>Velocidad automática</label>
+      <div class="sliderline"><input id="speed" type="range" min="70" max="900" step="10" value="350"><span class="value" id="speedVal">350 ms</span></div>
+    </div>
+    <div class="section actions">
+      <button class="btn green" id="exportCsv">Exportar CSV</button>
+      <button class="btn soft" id="savePng">Guardar PNG</button>
+    </div>
+    <div class="section note">
+      <b>Interacción:</b> arrastre nodos para moverlos; use la rueda para zoom; haga clic en un nodo activo para inspeccionarlo.
+      Con <b>Shift + clic</b> elimina manualmente un nodo.
+    </div>
+  </aside>
+
+  <section class="center">
+    <div class="panel canvas-panel">
+      <div class="canvas-toolbar">
+        <span class="pill" id="modelPill">Erdős–Rényi</span>
+        <span class="pill" id="attackPill">Sin ataque</span>
+        <span class="pill" id="stepPill">0 eliminados</span>
+      </div>
+      <canvas id="networkCanvas"></canvas>
+      <div class="legend">
+        <div><span class="dot" style="background:#246bfd"></span>Componente gigante</div>
+        <div><span class="dot" style="background:#8aa0b8"></span>Otros componentes</div>
+        <div><span class="dot" style="background:#f59e0b"></span>Nodo seleccionado</div>
+        <div><span class="dot" style="background:#e94b4b"></span>Nodo eliminado</div>
+      </div>
+    </div>
+    <div class="charts">
+      <div class="panel chart-panel">
+        <div class="chart-title">Curva de robustez</div>
+        <div class="chart-sub">Fracción del componente gigante frente a fracción de nodos eliminados</div>
+        <canvas id="robustnessChart"></canvas>
+      </div>
+      <div class="panel chart-panel">
+        <div class="chart-title">Daño estructural</div>
+        <div class="chart-sub">Eficiencia global y número de componentes durante el ataque</div>
+        <canvas id="damageChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel sidebar rightbar">
+    <h2 class="panel-title">📊 Estado de la red</h2>
+    <div class="metric-grid">
+      <div class="metric"><div class="k">Nodos activos</div><div class="v" id="mActive">0</div><div class="s" id="mRemoved">0 eliminados</div></div>
+      <div class="metric"><div class="k">Componente gigante</div><div class="v" id="mGiant">0%</div><div class="s" id="mGiantN">0 nodos</div></div>
+      <div class="metric"><div class="k">Componentes</div><div class="v" id="mComponents">0</div><div class="s" id="mIsolates">0 aislados</div></div>
+      <div class="metric"><div class="k">Eficiencia global</div><div class="v" id="mEfficiency">0</div><div class="s">normalizada</div></div>
+      <div class="metric"><div class="k">Camino promedio</div><div class="v" id="mPath">–</div><div class="s">en componente gigante</div></div>
+      <div class="metric"><div class="k">Diámetro</div><div class="v" id="mDiameter">–</div><div class="s">en componente gigante</div></div>
+      <div class="metric"><div class="k">Clustering</div><div class="v" id="mClustering">0</div><div class="s">coeficiente medio</div></div>
+      <div class="metric"><div class="k">Robustez R</div><div class="v" id="mRobustness">0</div><div class="s">área acumulada</div></div>
+    </div>
+    <div class="section">
+      <label>Integridad estructural</label>
+      <div class="health"><span id="healthBar"></span></div>
+      <div class="small" id="healthText" style="margin-top:6px"></div>
+    </div>
+    <div class="section">
+      <h2 class="panel-title">🏆 Próximos nodos críticos</h2>
+      <div id="ranking" class="rank"></div>
+    </div>
+    <div class="section">
+      <h2 class="panel-title">🔎 Nodo inspeccionado</h2>
+      <div class="note" id="nodeInfo">Seleccione un nodo activo para ver sus propiedades.</div>
+    </div>
+    <div class="section">
+      <h2 class="panel-title">🧾 Registro</h2>
+      <div class="status" id="statusLog">SETUP pendiente.</div>
+    </div>
+  </aside>
+</div>
+</section>
+
+<section id="compare" class="page">
+<div class="compare-layout">
+  <aside class="panel sidebar">
+    <h2 class="panel-title">⚖ Comparación controlada</h2>
+    <div class="note">Las tres redes usan el mismo número de nodos y una densidad aproximadamente comparable. La estrategia se aplica en paralelo.</div>
+    <div class="section">
+      <label>Número de nodos</label>
+      <div class="sliderline"><input id="cmpN" type="range" min="25" max="140" value="70"><span class="value" id="cmpNVal">70</span></div>
+    </div>
+    <div class="section">
+      <label>Grado medio objetivo</label>
+      <div class="sliderline"><input id="cmpDegree" type="range" min="2" max="12" step="1" value="6"><span class="value" id="cmpDegreeVal">6</span></div>
+    </div>
+    <div class="section">
+      <label>Estrategia</label>
+      <select id="cmpStrategy">
+        <option value="random">Falla aleatoria</option>
+        <option value="degreeAdaptive">Mayor grado</option>
+        <option value="betweenness">Mayor intermediación</option>
+        <option value="pagerank">Mayor PageRank</option>
+        <option value="articulation">Puntos de articulación</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Layout de comparación</label>
+      <select id="cmpLayout">
+        <option value="auto" selected>Automático</option>
+        <option value="spring">Spring / fuerzas</option>
+        <option value="circular">Circular</option>
+        <option value="random">Aleatorio</option>
+        <option value="grid">Retícula</option>
+        <option value="radial">Radial por grado</option>
+        <option value="community">Comunidades</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Repeticiones para fallas aleatorias</label>
+      <input id="cmpRuns" type="number" min="1" max="30" value="8">
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="cmpSetup">Generar redes</button>
+      <button class="btn danger" id="cmpStep">Quitar 5%</button>
+      <button class="btn orange" id="cmpRun">Ejecutar hasta 60%</button>
+      <button class="btn dark" id="cmpReset">Reiniciar</button>
+    </div>
+    <div class="section actions">
+      <button class="btn green" id="cmpCsv">Exportar comparación</button>
+      <button class="btn soft" id="cmpSnapshot">Imagen comparativa</button>
+    </div>
+    <div class="section note" id="cmpInterpretation">
+      Genere las redes para comenzar la comparación.
+    </div>
+  </aside>
+  <div class="compare-main">
+    <div class="netcards">
+      <div class="netcard"><h3><span>Aleatoria</span><span class="badge">ER</span></h3><canvas id="cmpEr"></canvas><div class="mini-stats" id="cmpErStats"></div></div>
+      <div class="netcard"><h3><span>Mundo pequeño</span><span class="badge">WS</span></h3><canvas id="cmpWs"></canvas><div class="mini-stats" id="cmpWsStats"></div></div>
+      <div class="netcard"><h3><span>Libre de escala</span><span class="badge">BA</span></h3><canvas id="cmpBa"></canvas><div class="mini-stats" id="cmpBaStats"></div></div>
+    </div>
+    <div class="compare-bottom">
+      <div class="panel">
+        <div class="chart-title">Comparación de curvas de robustez</div>
+        <div class="chart-sub">Un descenso más rápido indica mayor vulnerabilidad ante la estrategia elegida</div>
+        <canvas id="compareChart"></canvas>
+      </div>
+      <div class="panel">
+        <div class="chart-title">Tabla de resultados</div>
+        <div class="table-wrap">
+          <table id="compareTable">
+            <thead><tr><th>Eliminado</th><th>ER GC</th><th>WS GC</th><th>BA GC</th><th>ER Ef.</th><th>WS Ef.</th><th>BA Ef.</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="learn" class="page">
+<div class="learn">
+  <div class="panel">
+    <h2>Conceptos fundamentales</h2>
+    <div class="cards">
+      <div class="info-card"><h3>Robustez y vulnerabilidad</h3><p>Una red es robusta cuando mantiene conectividad y capacidad de comunicación después de fallas. Es vulnerable cuando pequeñas eliminaciones producen fragmentación, aislamiento o grandes aumentos en las distancias.</p></div>
+      <div class="info-card"><h3>Fallas frente a ataques</h3><p>Las fallas aleatorias representan averías no dirigidas. Los ataques dirigidos usan información estructural para remover hubs, intermediarios, articulaciones o nodos con alta influencia.</p></div>
+      <div class="info-card"><h3>Componente gigante</h3><p>Es el componente conectado más grande. Su tamaño relativo S(q) es una medida central: q es la fracción eliminada y S(q) la fracción de nodos originales que aún permanece en el mayor bloque conectado.</p></div>
+      <div class="info-card"><h3>Eficiencia global</h3><p>Promedia el inverso de las distancias entre pares. A diferencia del camino medio, sigue siendo útil cuando la red se desconecta, pues pares sin camino aportan cero.</p></div>
+      <div class="info-card"><h3>Hubs en redes BA</h3><p>La conexión preferencial produce pocos nodos con grado muy alto. Esto suele hacer la red resistente a fallas aleatorias, pero frágil ante ataques que identifican y remueven hubs.</p></div>
+      <div class="info-card"><h3>Atajos en mundo pequeño</h3><p>Los atajos reducen distancias globales. Al remover nodos que sostienen esos enlaces, la longitud de camino puede crecer mucho antes de una fragmentación total.</p></div>
+    </div>
+    <div class="section">
+      <h3>Métricas usadas</h3>
+      <div class="formula">S(q) = |GC(q)| / N₀
+E = [1 / (N(N−1))] · Σᵢ≠ⱼ 1/d(i,j)
+R ≈ Σq S(q)·Δq</div>
+    </div>
+    <div class="section">
+      <h3>Prácticas sugeridas</h3>
+      <div class="info-card"><h3>Práctica 1 — Tolerancia a fallas</h3><p>Compare ER, WS y BA bajo eliminación aleatoria. Repita varias veces. Observe cuál conserva por más tiempo el componente gigante y explique la variabilidad entre ejecuciones.</p></div>
+      <div class="info-card" style="margin-top:8px"><h3>Práctica 2 — Ataque a hubs</h3><p>Use “mayor grado adaptativo”. Compare el umbral aproximado en el cual cada red pierde la mitad de su componente gigante. Contraste con la falla aleatoria.</p></div>
+      <div class="info-card" style="margin-top:8px"><h3>Práctica 3 — Intermediación</h3><p>Construya una red modular. Ataque por intermediación y por grado. Explique por qué los conectores entre comunidades pueden ser más críticos que los nodos más populares.</p></div>
+      <div class="info-card" style="margin-top:8px"><h3>Práctica 4 — Diseño resiliente</h3><p>Busque una combinación de topología y parámetros que mantenga S(q) ≥ 0.70 después de remover 20% de nodos por grado. Documente qué redundancias estructurales ayudan.</p></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Autoevaluación</h2>
+    <div class="quiz-q"><b>1. ¿Qué red suele resistir mejor fallas aleatorias pero peor ataques a hubs?</b>
+      <label><input type="radio" name="q1" value="0"> Retícula regular</label>
+      <label><input type="radio" name="q1" value="1"> Red libre de escala</label>
+      <label><input type="radio" name="q1" value="0"> Árbol binario</label>
+    </div>
+    <div class="quiz-q"><b>2. Un punto de articulación es un nodo cuya eliminación…</b>
+      <label><input type="radio" name="q2" value="0"> aumenta siempre el grado medio</label>
+      <label><input type="radio" name="q2" value="1"> incrementa el número de componentes</label>
+      <label><input type="radio" name="q2" value="0"> elimina todos los triángulos</label>
+    </div>
+    <div class="quiz-q"><b>3. ¿Por qué la eficiencia global sirve en redes desconectadas?</b>
+      <label><input type="radio" name="q3" value="1"> Los pares sin camino contribuyen con cero</label>
+      <label><input type="radio" name="q3" value="0"> Ignora todos los nodos aislados</label>
+      <label><input type="radio" name="q3" value="0"> Usa únicamente los grados</label>
+    </div>
+    <div class="quiz-q"><b>4. En un ataque adaptativo, el ranking…</b>
+      <label><input type="radio" name="q4" value="1"> se recalcula después de cada eliminación</label>
+      <label><input type="radio" name="q4" value="0"> permanece fijo desde el inicio</label>
+      <label><input type="radio" name="q4" value="0"> se escoge sin observar la red</label>
+    </div>
+    <button class="btn primary" id="gradeQuiz">Calificar</button>
+    <div id="quizResult" class="note" style="margin-top:10px">Seleccione una respuesta en cada pregunta.</div>
+    <div class="section">
+      <h3>Guía de interpretación</h3>
+      <p class="small">No confunda conectividad con eficiencia. Una red puede seguir conectada, pero con caminos mucho más largos. Tampoco asuma que el nodo de mayor grado es siempre el más crítico: en redes modulares, un nodo puente de grado moderado puede separar comunidades completas.</p>
+      <p class="small">Para comparar estrategias, mantenga fija la red inicial. Para comparar modelos, use tamaños y grados medios similares. En fallas aleatorias, repita y promedie.</p>
+    </div>
+  </div>
+</div>
+</section>
+</main>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const rnd=(a=1,b=0)=>b+Math.random()*(a-b);
+const fmt=(x,d=3)=>Number.isFinite(x)?x.toFixed(d):"–";
+const deepCopy=o=>JSON.parse(JSON.stringify(o));
+const STRATEGY_TEXT={
+ random:"Elimina nodos al azar. Representa fallas, averías o pérdidas no coordinadas.",
+ degreeAdaptive:"Recalcula los grados después de cada paso y elimina los hubs actuales.",
+ degreeStatic:"Usa el ranking de grado de la red inicial. No se adapta a la fragmentación.",
+ betweenness:"Prioriza nodos situados en muchos caminos mínimos. Es costoso, pero detecta intermediarios.",
+ closeness:"Prioriza nodos con menor distancia promedio al resto del componente alcanzable.",
+ pagerank:"Prioriza nodos conectados con otros nodos importantes.",
+ kcore:"Ataca primero el núcleo estructural de mayor índice k.",
+ articulation:"Elimina nodos cuya ausencia aumenta el número de componentes; si no existen, usa grado.",
+ bridge:"Prioriza nodos con enlaces distribuidos entre varias comunidades detectadas.",
+ lowestDegree:"Elimina primero nodos periféricos. Sirve como contraste con ataques dirigidos."
+};
+const MODEL_NAMES={er:"Erdős–Rényi",ws:"Watts–Strogatz",ba:"Barabási–Albert",grid:"Retícula 2D",modular:"Red modular"};
+
+class Graph{
+ constructor(n=0){this.n=n;this.nodes=[];this.adj=[];this.initialAdj=[];this.removed=new Set();this.communities=[];this.pos=[];this.initialScores={};}
+ init(n){this.n=n;this.nodes=Array.from({length:n},(_,i)=>i);this.adj=Array.from({length:n},()=>new Set());this.removed=new Set();this.communities=Array(n).fill(0);this.pos=[];}
+ addEdge(a,b){if(a===b||this.adj[a].has(b))return;this.adj[a].add(b);this.adj[b].add(a);}
+ hasEdge(a,b){return this.adj[a].has(b)}
+ activeNodes(){return this.nodes.filter(i=>!this.removed.has(i))}
+ activeNeighbors(i){return [...this.adj[i]].filter(j=>!this.removed.has(j))}
+ degree(i){return this.removed.has(i)?0:this.activeNeighbors(i).length}
+ edges(activeOnly=true){const e=[];for(let i=0;i<this.n;i++){if(activeOnly&&this.removed.has(i))continue;for(const j of this.adj[i])if(j>i&&(!activeOnly||!this.removed.has(j)))e.push([i,j]);}return e}
+ clone(){const g=new Graph(this.n);g.nodes=[...this.nodes];g.adj=this.adj.map(s=>new Set(s));g.initialAdj=this.initialAdj.map(a=>[...a]);g.removed=new Set(this.removed);g.communities=[...this.communities];g.pos=this.pos.map(p=>({...p}));g.initialScores=deepCopy(this.initialScores);return g}
+ snapshot(){return {removed:[...this.removed]}}
+ restore(s){this.removed=new Set(s.removed)}
+ finalize(){this.initialAdj=this.adj.map(s=>[...s]);}
+ resetRemoved(){this.removed.clear()}
+}
+
+function makeER(n,p){const g=new Graph();g.init(n);for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(Math.random()<p)g.addEdge(i,j);ensureConnectedBackbone(g);g.finalize();return g}
+function makeWS(n,k,beta){const g=new Graph();g.init(n);k=Math.max(2,Math.min(n-1,Math.floor(k/2)*2));
+ for(let i=0;i<n;i++)for(let d=1;d<=k/2;d++)g.addEdge(i,(i+d)%n);
+ for(let i=0;i<n;i++)for(let d=1;d<=k/2;d++){let j=(i+d)%n;if(i<j&&Math.random()<beta){g.adj[i].delete(j);g.adj[j].delete(i);let cand;let tries=0;do{cand=Math.floor(Math.random()*n);tries++}while((cand===i||g.adj[i].has(cand))&&tries<100);if(cand!==i&&!g.adj[i].has(cand))g.addEdge(i,cand);else g.addEdge(i,j)}}
+ g.finalize();return g}
+function weightedChoice(items,weights){let s=weights.reduce((a,b)=>a+b,0),r=Math.random()*s;for(let i=0;i<items.length;i++){r-=weights[i];if(r<=0)return items[i]}return items[items.length-1]}
+function makeBA(n,m){const g=new Graph();g.init(n);m=Math.max(1,Math.min(m,n-1));const seed=Math.min(n,m+1);
+ for(let i=0;i<seed;i++)for(let j=i+1;j<seed;j++)g.addEdge(i,j);
+ for(let v=seed;v<n;v++){const targets=new Set();while(targets.size<m){const items=Array.from({length:v},(_,i)=>i);const weights=items.map(i=>g.adj[i].size+0.2);targets.add(weightedChoice(items,weights))}targets.forEach(t=>g.addEdge(v,t))}
+ g.finalize();return g}
+function makeGrid(n){const g=new Graph();g.init(n);const cols=Math.ceil(Math.sqrt(n));for(let i=0;i<n;i++){const r=Math.floor(i/cols),c=i%cols;if(c+1<cols&&i+1<n)g.addEdge(i,i+1);if(i+cols<n)g.addEdge(i,i+cols)}g.finalize();return g}
+function makeModular(n,c,mix){const g=new Graph();g.init(n);c=Math.max(2,Math.min(c,n));for(let i=0;i<n;i++)g.communities[i]=Math.floor(i*c/n);
+ const pin=Math.min(.5,Math.max(.06,5*c/n));for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const p=g.communities[i]===g.communities[j]?pin:mix;if(Math.random()<p)g.addEdge(i,j)}ensureConnectedBackbone(g);g.finalize();return g}
+function ensureConnectedBackbone(g){const comps=components(g);for(let i=1;i<comps.length;i++)g.addEdge(comps[i-1][Math.floor(Math.random()*comps[i-1].length)],comps[i][Math.floor(Math.random()*comps[i].length)])}
+
+function components(g){const seen=new Set(),out=[];for(const s of g.activeNodes()){if(seen.has(s))continue;const q=[s],comp=[];seen.add(s);while(q.length){const u=q.shift();comp.push(u);for(const v of g.activeNeighbors(u))if(!seen.has(v)){seen.add(v);q.push(v)}}out.push(comp)}return out.sort((a,b)=>b.length-a.length)}
+function bfsDistances(g,s,allowed=null){const d=Array(g.n).fill(Infinity);if(g.removed.has(s))return d;d[s]=0;const q=[s];let h=0;while(h<q.length){const u=q[h++];for(const v of g.activeNeighbors(u)){if(allowed&&!allowed.has(v))continue;if(d[v]===Infinity){d[v]=d[u]+1;q.push(v)}}}return d}
+function globalEfficiency(g){const nodes=g.activeNodes(),n=nodes.length;if(n<2)return 0;let sum=0;for(const s of nodes){const d=bfsDistances(g,s);for(const t of nodes)if(t!==s&&isFinite(d[t]))sum+=1/d[t]}return sum/(n*(n-1))}
+function pathMetrics(g){const comps=components(g);if(!comps.length)return {avg:0,diam:0};const giant=comps[0],A=new Set(giant);if(giant.length<2)return {avg:0,diam:0};let sum=0,c=0,diam=0;for(const s of giant){const d=bfsDistances(g,s,A);for(const t of giant)if(t>s&&isFinite(d[t])){sum+=d[t];c++;diam=Math.max(diam,d[t])}}return {avg:c?sum/c:0,diam}}
+function clustering(g){const nodes=g.activeNodes();if(!nodes.length)return 0;let s=0;for(const u of nodes){const nb=g.activeNeighbors(u),k=nb.length;if(k<2)continue;let e=0;for(let i=0;i<k;i++)for(let j=i+1;j<k;j++)if(g.hasEdge(nb[i],nb[j]))e++;s+=2*e/(k*(k-1))}return s/nodes.length}
+function degreeScores(g){const o={};g.activeNodes().forEach(i=>o[i]=g.degree(i));return o}
+function betweennessScores(g){const nodes=g.activeNodes(),C={};nodes.forEach(v=>C[v]=0);
+ for(const s of nodes){const S=[],P={};nodes.forEach(v=>P[v]=[]);const sigma={},dist={};nodes.forEach(v=>{sigma[v]=0;dist[v]=-1});sigma[s]=1;dist[s]=0;const Q=[s];let qi=0;
+  while(qi<Q.length){const v=Q[qi++];S.push(v);for(const w of g.activeNeighbors(v)){if(dist[w]<0){Q.push(w);dist[w]=dist[v]+1}if(dist[w]===dist[v]+1){sigma[w]+=sigma[v];P[w].push(v)}}}
+  const delta={};nodes.forEach(v=>delta[v]=0);while(S.length){const w=S.pop();for(const v of P[w])delta[v]+=sigma[v]/sigma[w]*(1+delta[w]);if(w!==s)C[w]+=delta[w]}}
+ nodes.forEach(v=>C[v]/=2);return C}
+function closenessScores(g){const o={};for(const s of g.activeNodes()){const d=bfsDistances(g,s);let sum=0,reached=0;for(const t of g.activeNodes())if(t!==s&&isFinite(d[t])){sum+=d[t];reached++}o[s]=sum?reached*reached/((g.activeNodes().length-1)*sum):0}return o}
+function pageRankScores(g,it=35,d=.85){const nodes=g.activeNodes(),n=nodes.length,o={};if(!n)return o;nodes.forEach(i=>o[i]=1/n);for(let k=0;k<it;k++){const z={};nodes.forEach(i=>z[i]=(1-d)/n);let dangling=0;for(const u of nodes){const nb=g.activeNeighbors(u);if(!nb.length)dangling+=o[u];else for(const v of nb)z[v]+=d*o[u]/nb.length}nodes.forEach(i=>z[i]+=d*dangling/n);Object.assign(o,z)}return o}
+function kcoreScores(g){const nodes=g.activeNodes(),deg={};nodes.forEach(v=>deg[v]=g.degree(v));const rem=new Set(nodes),core={};let k=0;while(rem.size){let changed=true;while(changed){changed=false;for(const v of [...rem])if(deg[v]<=k){core[v]=k;rem.delete(v);for(const w of g.activeNeighbors(v))if(rem.has(w))deg[w]--;changed=true}}k++}return core}
+function articulationSet(g){let time=0;const disc={},low={},par={},ap=new Set();for(const root of g.activeNodes()){if(disc[root]!=null)continue;let children=0;const dfs=u=>{disc[u]=low[u]=++time;for(const v of g.activeNeighbors(u)){if(disc[v]==null){par[v]=u;if(u===root)children++;dfs(v);low[u]=Math.min(low[u],low[v]);if(u!==root&&low[v]>=disc[u])ap.add(u)}else if(v!==par[u])low[u]=Math.min(low[u],disc[v])}};dfs(root);if(children>1)ap.add(root)}return ap}
+function bridgeParticipationScores(g){const comps=labelCommunities(g),o={};for(const u of g.activeNodes()){const counts={};for(const v of g.activeNeighbors(u)){const c=comps[v];counts[c]=(counts[c]||0)+1}const vals=Object.values(counts),k=vals.reduce((a,b)=>a+b,0);o[u]=k?1-vals.reduce((s,x)=>s+(x/k)**2,0):0}return o}
+function labelCommunities(g){const labels={};g.activeNodes().forEach(i=>labels[i]=i);for(let t=0;t<12;t++){for(const u of shuffle(g.activeNodes())){const count={};for(const v of g.activeNeighbors(u)){const l=labels[v];count[l]=(count[l]||0)+1}let best=labels[u],bv=-1;for(const [l,c] of Object.entries(count))if(c>bv){bv=c;best=+l}labels[u]=best}}return labels}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rankedNodes(g,strategy,initialScores=null){
+ let scores={};if(strategy==="random")return shuffle(g.activeNodes());
+ if(strategy==="degreeAdaptive")scores=degreeScores(g);
+ if(strategy==="degreeStatic")scores=initialScores?.degree||degreeScores(g);
+ if(strategy==="betweenness")scores=betweennessScores(g);
+ if(strategy==="closeness")scores=closenessScores(g);
+ if(strategy==="pagerank")scores=pageRankScores(g);
+ if(strategy==="kcore")scores=kcoreScores(g);
+ if(strategy==="bridge")scores=bridgeParticipationScores(g);
+ if(strategy==="lowestDegree")return g.activeNodes().sort((a,b)=>g.degree(a)-g.degree(b)||a-b);
+ if(strategy==="articulation"){const ap=articulationSet(g);if(ap.size){scores={};g.activeNodes().forEach(i=>scores[i]=ap.has(i)?100000+g.degree(i):g.degree(i))}else scores=degreeScores(g)}
+ return g.activeNodes().sort((a,b)=>(scores[b]??-Infinity)-(scores[a]??-Infinity)||g.degree(b)-g.degree(a)||a-b)
+}
+function graphMetrics(g,N0=g.n){const comps=components(g),giant=comps[0]||[],active=g.activeNodes().length,pm=pathMetrics(g);
+ return {removed:g.removed.size,q:g.removed.size/N0,active,giant:giant.length,giantFrac:giant.length/N0,giantOfActive:active?giant.length/active:0,
+ components:comps.length,isolates:comps.filter(c=>c.length===1).length,efficiency:globalEfficiency(g),path:pm.avg,diameter:pm.diam,
+ clustering:clustering(g),avgDegree:active?g.edges().length*2/active:0}
+}
+
+function forceLayout(g,w,h,iterations=180){
+ const n=g.n,cx=w/2,cy=h/2,margin=clamp(Math.min(w,h)*.095,38,70),rx=Math.max(65,w/2-margin),ry=Math.max(65,h/2-margin);
+ const seedR=Math.min(rx,ry)*.42;
+ g.pos=Array.from({length:n},(_,i)=>{const a=i*2*Math.PI/Math.max(1,n)-Math.PI/2,j=(Math.random()-.5)*seedR*.32;return{x:cx+Math.cos(a)*(seedR+j),y:cy+Math.sin(a)*(seedR+j),vx:0,vy:0}});
+ const k=Math.sqrt(Math.PI*rx*ry/Math.max(1,n))*.80;
+ for(let it=0;it<iterations;it++){
+  const temp=(1-it/iterations)*Math.min(rx,ry)*.055+.28;
+  for(let i=0;i<n;i++){g.pos[i].vx=0;g.pos[i].vy=0}
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+   const dx=g.pos[i].x-g.pos[j].x,dy=g.pos[i].y-g.pos[j].y,d=Math.hypot(dx,dy)+.3,f=k*k/d,fx=dx/d*f,fy=dy/d*f;
+   g.pos[i].vx+=fx;g.pos[i].vy+=fy;g.pos[j].vx-=fx;g.pos[j].vy-=fy}
+  for(const [a,b] of g.edges(false)){
+   const dx=g.pos[b].x-g.pos[a].x,dy=g.pos[b].y-g.pos[a].y,d=Math.hypot(dx,dy)+.2,f=d*d/k*.050,fx=dx/d*f,fy=dy/d*f;
+   g.pos[a].vx+=fx;g.pos[a].vy+=fy;g.pos[b].vx-=fx;g.pos[b].vy-=fy}
+  for(let i=0;i<n;i++){
+   const p=g.pos[i];p.vx+=(cx-p.x)*.0065;p.vy+=(cy-p.y)*.0065;
+   const speed=Math.hypot(p.vx,p.vy)||1,step=Math.min(speed,temp);
+   p.x+=p.vx/speed*step;p.y+=p.vy/speed*step;
+   const q=Math.hypot((p.x-cx)/rx,(p.y-cy)/ry);
+   if(q>.92){const target=.865;p.x=cx+(p.x-cx)*(target/q);p.y=cy+(p.y-cy)*(target/q)}
+  }
+ }
+ const mx=g.pos.reduce((a,p)=>a+p.x,0)/Math.max(1,n),my=g.pos.reduce((a,p)=>a+p.y,0)/Math.max(1,n);
+ let maxNorm=0;for(const p of g.pos)maxNorm=Math.max(maxNorm,Math.hypot((p.x-mx)/rx,(p.y-my)/ry));
+ const scale=maxNorm?clamp(.80/maxNorm,.72,1.22):1;
+ for(const p of g.pos){p.x=cx+(p.x-mx)*scale;p.y=cy+(p.y-my)*scale;const q=Math.hypot((p.x-cx)/rx,(p.y-cy)/ry);if(q>.86){p.x=cx+(p.x-cx)*(.86/q);p.y=cy+(p.y-cy)*(.86/q)}}
+}
+function circleLayout(g,w,h){const r=Math.min(w,h)*.38,cx=w/2,cy=h/2;g.pos=Array.from({length:g.n},(_,i)=>({x:cx+r*Math.cos(2*Math.PI*i/g.n),y:cy+r*Math.sin(2*Math.PI*i/g.n)}))}
+function gridLayout(g,w,h){const cols=Math.ceil(Math.sqrt(g.n)),rows=Math.ceil(g.n/cols),sx=(w-60)/Math.max(1,cols-1),sy=(h-60)/Math.max(1,rows-1);g.pos=Array.from({length:g.n},(_,i)=>({x:30+(i%cols)*sx,y:30+Math.floor(i/cols)*sy}))}
+function randomLayout(g,w,h){g.pos=Array.from({length:g.n},()=>({x:35+Math.random()*Math.max(1,w-70),y:35+Math.random()*Math.max(1,h-70)}))}
+function radialLayout(g,w,h){const order=[...g.nodes].sort((a,b)=>g.degree(b)-g.degree(a)||a-b),cx=w/2,cy=h/2,ringSize=Math.max(6,Math.ceil(Math.sqrt(g.n)*2));g.pos=Array(g.n);order.forEach((node,idx)=>{if(idx===0)g.pos[node]={x:cx,y:cy};else{const ring=Math.floor((idx-1)/ringSize)+1,pos=(idx-1)%ringSize,count=Math.min(ringSize,g.n-1-(ring-1)*ringSize),r=Math.min(w,h)*(.12+.105*ring),a=2*Math.PI*pos/Math.max(1,count)-Math.PI/2;g.pos[node]={x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r}}})}
+function communityLayout(g,w,h,model=''){let labels;if(model==='modular'&&g.communities.some(x=>x!==g.communities[0])){labels={};g.nodes.forEach(i=>labels[i]=g.communities[i])}else labels=labelCommunities(g);const ids=[...new Set(g.nodes.map(i=>labels[i]))],centers=new Map();ids.forEach((id,k)=>{const a=2*Math.PI*k/Math.max(1,ids.length)-Math.PI/2;centers.set(id,{x:w/2+Math.cos(a)*Math.min(w,h)*.29,y:h/2+Math.sin(a)*Math.min(w,h)*.29})});const used={};g.pos=Array(g.n);g.nodes.forEach(i=>{const id=labels[i],z=centers.get(id),k=used[id]||0,a=k*2.399963,r=10+7*Math.sqrt(k);g.pos[i]={x:z.x+Math.cos(a)*r,y:z.y+Math.sin(a)*r};used[id]=k+1})}
+function applyLayoutChoice(g,w,h,choice='auto',model='',iterations=145){let mode=choice;if(mode==='auto'){if(model==='grid')mode='grid';else if(model==='ws')mode='circular';else if(model==='modular')mode='community';else mode='spring'}if(mode==='spring')forceLayout(g,w,h,iterations);else if(mode==='circular')circleLayout(g,w,h);else if(mode==='random')randomLayout(g,w,h);else if(mode==='grid')gridLayout(g,w,h);else if(mode==='radial')radialLayout(g,w,h);else if(mode==='community')communityLayout(g,w,h,model)}
+
+
+class NetworkView{
+ constructor(canvas,gGetter){this.canvas=canvas;this.ctx=canvas.getContext("2d");this.gGetter=gGetter;this.scale=1;this.ox=0;this.oy=0;this.drag=null;this.pan=null;this.selected=null;this.hover=null;this.showRemoved=true;this.bind();this.resize()}
+ resize(){const r=this.canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;this.canvas.width=Math.max(10,r.width*d);this.canvas.height=Math.max(10,r.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.w=r.width;this.h=r.height;this.draw()}
+ world(x,y){return {x:(x-this.ox)/this.scale,y:(y-this.oy)/this.scale}}
+ screen(p){return {x:p.x*this.scale+this.ox,y:p.y*this.scale+this.oy}}
+ hit(x,y){const g=this.gGetter();if(!g)return null;const q=this.world(x,y);let best=null,bd=11/this.scale;for(let i=0;i<g.n;i++){const p=g.pos[i];if(!p)continue;const d=Math.hypot(q.x-p.x,q.y-p.y);if(d<bd){bd=d;best=i}}return best}
+ bind(){
+  this.canvas.addEventListener("mousedown",e=>{const r=this.canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,h=this.hit(x,y);if(h!=null){this.drag=h;this.selected=h;this.onSelect&&this.onSelect(h);if(e.shiftKey)this.onShiftRemove&&this.onShiftRemove(h)}else this.pan={x:e.clientX,y:e.clientY,ox:this.ox,oy:this.oy}});
+  window.addEventListener("mousemove",e=>{if(this.drag!=null){const r=this.canvas.getBoundingClientRect(),p=this.world(e.clientX-r.left,e.clientY-r.top),g=this.gGetter();if(g&&g.pos[this.drag]){g.pos[this.drag].x=p.x;g.pos[this.drag].y=p.y;this.draw()}}else if(this.pan){this.ox=this.pan.ox+e.clientX-this.pan.x;this.oy=this.pan.oy+e.clientY-this.pan.y;this.draw()}});
+  window.addEventListener("mouseup",()=>{this.drag=null;this.pan=null});
+  this.canvas.addEventListener("mousemove",e=>{const r=this.canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;this.hover=this.hit(x,y);this.draw();if(this.hover!=null){const g=this.gGetter(),i=this.hover;showTip(e.clientX,e.clientY,`Nodo ${i}<br>grado: ${g.degree(i)}${g.removed.has(i)?"<br>eliminado":""}`)}else hideTip()});
+  this.canvas.addEventListener("mouseleave",()=>{this.hover=null;hideTip();this.draw()});
+  this.canvas.addEventListener("wheel",e=>{e.preventDefault();const r=this.canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,b=this.world(mx,my),f=e.deltaY<0?1.12:.89;this.scale=clamp(this.scale*f,.35,3.5);this.ox=mx-b.x*this.scale;this.oy=my-b.y*this.scale;this.draw()},{passive:false});
+ }
+ draw(){
+  const g=this.gGetter(),c=this.ctx;if(!this.w)return;c.clearRect(0,0,this.w,this.h);c.save();c.translate(this.ox,this.oy);c.scale(this.scale,this.scale);
+  const comps=g?components(g):[],giantSet=new Set(comps[0]||[]);
+  if(g){for(const [a,b] of g.edges(false)){const pa=g.pos[a],pb=g.pos[b],dead=g.removed.has(a)||g.removed.has(b);if(dead&&!this.showRemoved)continue;c.strokeStyle=dead?"rgba(220,72,72,.13)":"rgba(72,98,126,.25)";c.lineWidth=dead?.7:1;c.beginPath();c.moveTo(pa.x,pa.y);c.lineTo(pb.x,pb.y);c.stroke()}
+   const maxD=Math.max(1,...g.nodes.map(i=>g.degree(i)));for(let i=0;i<g.n;i++){const p=g.pos[i];if(!p)continue;const dead=g.removed.has(i),r=dead?4.5:4.8+4.4*Math.sqrt(g.degree(i)/maxD);c.beginPath();c.arc(p.x,p.y,r,0,Math.PI*2);
+    let fill=dead?"#e94b4b":giantSet.has(i)?"#246bfd":"#8aa0b8";if(this.selected===i&&!dead)fill="#f59e0b";if(this.hover===i&&!dead)fill="#7c3aed";c.fillStyle=fill;c.fill();c.strokeStyle="#fff";c.lineWidth=1.1;c.stroke();if(dead){c.strokeStyle="#8c2525";c.lineWidth=1;c.beginPath();c.moveTo(p.x-r*.7,p.y-r*.7);c.lineTo(p.x+r*.7,p.y+r*.7);c.stroke()}}
+  }else{c.fillStyle="#6b7b8e";c.font="14px sans-serif";c.textAlign="center";c.fillText("Presione SETUP para generar una red",this.w/2,this.h/2)}
+  c.restore();
+ }
+}
+function showTip(x,y,html){const t=$("#tooltip");t.innerHTML=html;t.style.display="block";t.style.left=(x+12)+"px";t.style.top=(y+12)+"px"}
+function hideTip(){$("#tooltip").style.display="none"}
+
+function lineChart(canvas,series,opts={}){
+ const c=canvas.getContext("2d"),r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;canvas.width=Math.max(10,r.width*d);canvas.height=Math.max(10,r.height*d);c.setTransform(d,0,0,d,0,0);
+ const w=r.width,h=r.height,p={l:42,r:15,t:15,b:30};c.clearRect(0,0,w,h);c.strokeStyle="#dbe4ed";c.lineWidth=1;
+ for(let i=0;i<=5;i++){const y=p.t+(h-p.t-p.b)*i/5;c.beginPath();c.moveTo(p.l,y);c.lineTo(w-p.r,y);c.stroke()}
+ for(let i=0;i<=5;i++){const x=p.l+(w-p.l-p.r)*i/5;c.beginPath();c.moveTo(x,p.t);c.lineTo(x,h-p.b);c.stroke()}
+ c.fillStyle="#617286";c.font="10px sans-serif";c.textAlign="right";for(let i=0;i<=5;i++){const val=(opts.yMax??1)*(1-i/5);c.fillText((opts.yFormat?opts.yFormat(val):val.toFixed(1)),p.l-6,p.t+(h-p.t-p.b)*i/5+3)}
+ c.textAlign="center";for(let i=0;i<=5;i++){const val=(opts.xMax??1)*i/5;c.fillText((opts.xFormat?opts.xFormat(val):Math.round(val*100)+"%"),p.l+(w-p.l-p.r)*i/5,h-9)}
+ const colors=["#246bfd","#e94b4b","#1f9d68","#7c3aed","#f59e0b","#0891b2"];
+ series.forEach((s,si)=>{if(!s.data.length)return;c.strokeStyle=s.color||colors[si%colors.length];c.lineWidth=2.3;c.beginPath();s.data.forEach((pt,i)=>{const x=p.l+(w-p.l-p.r)*(pt.x/(opts.xMax??1)),y=p.t+(h-p.t-p.b)*(1-pt.y/(opts.yMax??1));i?c.lineTo(x,y):c.moveTo(x,y)});c.stroke();
+  const last=s.data[s.data.length-1],x=p.l+(w-p.l-p.r)*(last.x/(opts.xMax??1)),y=p.t+(h-p.t-p.b)*(1-last.y/(opts.yMax??1));c.fillStyle=s.color||colors[si%colors.length];c.beginPath();c.arc(x,y,3,0,Math.PI*2);c.fill()});
+ if(opts.legend){c.textAlign="left";c.font="10px sans-serif";opts.legend.forEach((l,i)=>{c.fillStyle=l.color||colors[i%colors.length];c.fillRect(p.l+i*90,p.t-11,12,3);c.fillStyle="#3d4f62";c.fillText(l.name,p.l+16+i*90,p.t-7)})}
+}
+function dualChart(canvas,a,b){const maxComp=Math.max(1,...b.map(x=>x.y));lineChart(canvas,[{data:a,color:"#7c3aed"},{data:b.map(x=>({x:x.x,y:x.y/maxComp})),color:"#e94b4b"}],{xMax:1,yMax:1,legend:[{name:"Eficiencia",color:"#7c3aed"},{name:"Componentes*",color:"#e94b4b"}]})}
+
+let graph=null,view=null,history=[],initialGraph=null,metricsHistory=[],timer=null,selectedNode=null;
+function currentParams(){
+ const model=$("#model").value,n=+$("#nNodes").value;if(model==="er")return {model,n,p:+$("#erP").value};if(model==="ws")return {model,n,k:+$("#wsK").value,beta:+$("#wsBeta").value};if(model==="ba")return {model,n,m:+$("#baM").value};if(model==="grid")return {model,n};return {model,n,c:+$("#communities").value,mix:+$("#mixing").value}
+}
+function generate(p){let g;if(p.model==="er")g=makeER(p.n,p.p);if(p.model==="ws")g=makeWS(p.n,p.k,p.beta);if(p.model==="ba")g=makeBA(p.n,p.m);if(p.model==="grid")g=makeGrid(p.n);if(p.model==="modular")g=makeModular(p.n,p.c,p.mix);return g}
+function setup(){
+ stopGo();const p=currentParams();graph=generate(p);const cw=$("#networkCanvas").getBoundingClientRect();applyLayoutChoice(graph,cw.width,cw.height,$("#layoutModeVuln").value,p.model,p.n>120?100:170);
+ graph.initialScores={degree:degreeScores(graph)};initialGraph=graph.clone();history=[];selectedNode=null;view.selected=null;metricsHistory=[graphMetrics(graph)];log(`SETUP: ${MODEL_NAMES[p.model]}, N=${p.n}, enlaces=${graph.edges().length}.`);refresh();
+}
+function robustnessArea(hist){if(hist.length<2)return hist[0]?.giantFrac||0;let a=0;for(let i=1;i<hist.length;i++){const dx=hist[i].q-hist[i-1].q;a+=(hist[i].giantFrac+hist[i-1].giantFrac)*dx/2}return a}
+function removeStep(manualNode=null){
+ if(!graph)return;if(graph.activeNodes().length===0)return;history.push({snap:graph.snapshot(),hist:deepCopy(metricsHistory)});
+ const k=manualNode!=null?1:Math.max(1,+$("#batchSize").value),str=$("#strategy").value;
+ let targets=manualNode!=null?[manualNode]:rankedNodes(graph,str,graph.initialScores).slice(0,k);targets=targets.filter(i=>!graph.removed.has(i));
+ targets.forEach(i=>graph.removed.add(i));const m=graphMetrics(graph);metricsHistory.push(m);log(`Paso ${metricsHistory.length-1}: eliminados ${targets.join(", ")} · GC=${m.giant}/${graph.n} · componentes=${m.components}.`);refresh();
+ if(m.q>=+$("#targetPct").value)stopGo();
+}
+function undo(){stopGo();const x=history.pop();if(!x)return;graph.restore(x.snap);metricsHistory=x.hist;log("Se deshizo el último paso.");refresh()}
+function resetAttack(){stopGo();if(!initialGraph)return;graph=initialGraph.clone();history=[];metricsHistory=[graphMetrics(graph)];selectedNode=null;view.selected=null;log("Ataque reiniciado; se restauró la red inicial.");refresh()}
+function startGo(){if(timer){stopGo();return}$("#goBtn").textContent="STOP";timer=setInterval(()=>{if(!graph||graph.removed.size/graph.n>=+$("#targetPct").value||graph.activeNodes().length===0){stopGo();return}removeStep()},+$("#speed").value)}
+function stopGo(){if(timer)clearInterval(timer);timer=null;if($("#goBtn"))$("#goBtn").textContent="GO"}
+function log(s){$("#statusLog").textContent=s}
+function inspectNode(i){selectedNode=i;if(!graph)return;const deg=graph.degree(i),bt=betweennessScores(graph)[i]||0,pr=pageRankScores(graph)[i]||0,kc=kcoreScores(graph)[i]||0,ap=articulationSet(graph).has(i);
+ $("#nodeInfo").innerHTML=`<b>Nodo ${i}</b>${graph.removed.has(i)?" — eliminado":""}<br>Grado: ${deg}<br>Intermediación: ${fmt(bt,2)}<br>PageRank: ${fmt(pr,4)}<br>k-core: ${kc}<br>Punto de articulación: ${ap?"sí":"no"}`;
+}
+function rankingDisplay(){
+ if(!graph)return;const str=$("#strategy").value,rank=rankedNodes(graph,str,graph.initialScores).slice(0,7);let scoreMap={};if(str.includes("degree")||str==="lowestDegree"||str==="articulation")scoreMap=degreeScores(graph);else if(str==="betweenness")scoreMap=betweennessScores(graph);else if(str==="closeness")scoreMap=closenessScores(graph);else if(str==="pagerank")scoreMap=pageRankScores(graph);else if(str==="kcore")scoreMap=kcoreScores(graph);else if(str==="bridge")scoreMap=bridgeParticipationScores(graph);else rank.forEach((i,k)=>scoreMap[i]=rank.length-k);
+ const max=Math.max(1,...rank.map(i=>scoreMap[i]||0));$("#ranking").innerHTML=rank.map((i,k)=>`<div class="rank-row"><b>${k+1}</b><div><div>Nodo ${i}</div><div class="bar"><span style="width:${100*(scoreMap[i]||0)/max}%"></span></div></div><span>${fmt(scoreMap[i]||0,2)}</span></div>`).join("")||"<div class='small'>No hay nodos activos.</div>";
+}
+function refresh(){
+ if(!graph)return;view.draw();const m=metricsHistory[metricsHistory.length-1]||graphMetrics(graph),R=robustnessArea(metricsHistory);
+ $("#modelPill").textContent=MODEL_NAMES[$("#model").value];$("#attackPill").textContent=$("#strategy").selectedOptions[0].textContent;$("#stepPill").textContent=`${m.removed} eliminados`;
+ $("#mActive").textContent=m.active;$("#mRemoved").textContent=`${m.removed} eliminados`;$("#mGiant").textContent=Math.round(m.giantFrac*100)+"%";$("#mGiantN").textContent=`${m.giant} nodos`;
+ $("#mComponents").textContent=m.components;$("#mIsolates").textContent=`${m.isolates} aislados`;$("#mEfficiency").textContent=fmt(m.efficiency);$("#mPath").textContent=m.path?fmt(m.path,2):"–";$("#mDiameter").textContent=m.diameter||"–";$("#mClustering").textContent=fmt(m.clustering);$("#mRobustness").textContent=fmt(R);
+ $("#healthBar").style.width=Math.round(m.giantFrac*100)+"%";$("#healthText").textContent=m.giantFrac>.8?"Red ampliamente conectada":m.giantFrac>.5?"Daño moderado: la red conserva un bloque dominante":m.giantFrac>.2?"Fragmentación severa":"Colapso estructural";
+ const robustData=metricsHistory.map(x=>({x:x.q,y:x.giantFrac}));lineChart($("#robustnessChart"),[{data:robustData,color:"#246bfd"}],{xMax:1,yMax:1});
+ dualChart($("#damageChart"),metricsHistory.map(x=>({x:x.q,y:x.efficiency})),metricsHistory.map(x=>({x:x.q,y:x.components})));
+ rankingDisplay();if(selectedNode!=null)inspectNode(selectedNode);
+}
+function relayout(){if(!graph)return;const r=$("#networkCanvas").getBoundingClientRect();applyLayoutChoice(graph,r.width,r.height,$("#layoutModeVuln").value,$("#model").value,graph.n>120?85:145);view.scale=1;view.ox=view.oy=0;view.draw();log(`Layout aplicado: ${$("#layoutModeVuln").selectedOptions[0].textContent}.`)}
+
+function csvDownload(name,rows){const csv=rows.map(r=>r.map(v=>typeof v==="string"&&/[,"\n]/.test(v)?`"${v.replaceAll('"','""')}"`:v).join(",")).join("\n");downloadBlob(name,new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}))}
+function downloadBlob(name,blob){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function exportCSV(){if(!metricsHistory.length)return;const rows=[["step","removed","fraction_removed","active","giant","giant_fraction","components","isolates","efficiency","avg_path","diameter","clustering","avg_degree"]];metricsHistory.forEach((m,i)=>rows.push([i,m.removed,m.q,m.active,m.giant,m.giantFrac,m.components,m.isolates,m.efficiency,m.path,m.diameter,m.clustering,m.avgDegree]));csvDownload("vulnerabilidad_red_resultados.csv",rows)}
+function exportJSON(){if(!graph)return;const payload={title:"Laboratorio de Vulnerabilidad en Redes",created:new Date().toISOString(),params:currentParams(),strategy:$("#strategy").value,removed:[...graph.removed],edges:graph.edges(false),positions:graph.pos,history:metricsHistory};downloadBlob("experimento_vulnerabilidad.json",new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}))}
+function saveCanvas(canvas,name){const a=document.createElement("a");a.href=canvas.toDataURL("image/png");a.download=name;a.click()}
+
+let cmp={graphs:{},initial:{},hist:{er:[],ws:[],ba:[]},step:0};
+function cmpGenerate(){
+ const n=+$("#cmpN").value,k=+$("#cmpDegree").value,p=k/(n-1),m=Math.max(1,Math.round(k/2));
+ cmp.graphs={er:makeER(n,p),ws:makeWS(n,Math.max(2,Math.floor(k/2)*2),.12),ba:makeBA(n,m)};cmp.initial={er:cmp.graphs.er.clone(),ws:cmp.graphs.ws.clone(),ba:cmp.graphs.ba.clone()};cmp.hist={er:[],ws:[],ba:[]};cmp.step=0;
+ for(const key of ["er","ws","ba"]){cmp.graphs[key].initialScores={degree:degreeScores(cmp.graphs[key])};const cv=$(`#cmp${key[0].toUpperCase()+key.slice(1)}`).getBoundingClientRect();applyLayoutChoice(cmp.graphs[key],cv.width,cv.height,$("#cmpLayout").value,key,95);cmp.initial[key]=cmp.graphs[key].clone();cmp.hist[key]=[graphMetrics(cmp.graphs[key])]}
+ drawCompare();$("#cmpInterpretation").textContent="Redes listas. Aplique una estrategia y compare la caída del componente gigante.";updateCmpTable();
+}
+function cmpStep(amount=.05){
+ if(!cmp.graphs.er)return;const str=$("#cmpStrategy").value,n=+$("#cmpN").value,k=Math.max(1,Math.round(n*amount));
+ for(const key of ["er","ws","ba"]){const g=cmp.graphs[key],targets=rankedNodes(g,str,g.initialScores).slice(0,k);targets.forEach(i=>g.removed.add(i));cmp.hist[key].push(graphMetrics(g))}
+ cmp.step++;drawCompare();updateCmpTable();interpretCompare();
+}
+function cmpRun(){if(!cmp.graphs.er)cmpGenerate();while(cmp.graphs.er.removed.size/cmp.graphs.er.n<.6)cmpStep(.05)}
+function cmpReset(){if(!cmp.initial.er)return;for(const k of ["er","ws","ba"]){cmp.graphs[k]=cmp.initial[k].clone();cmp.hist[k]=[graphMetrics(cmp.graphs[k])]}cmp.step=0;drawCompare();updateCmpTable()}
+function miniDraw(canvas,g){
+ const c=canvas.getContext("2d"),r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;canvas.width=r.width*d;canvas.height=r.height*d;c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);const comps=components(g),G=new Set(comps[0]||[]);
+ for(const [a,b] of g.edges(false)){const pa=g.pos[a],pb=g.pos[b],dead=g.removed.has(a)||g.removed.has(b);c.strokeStyle=dead?"rgba(220,70,70,.1)":"rgba(70,92,118,.22)";c.beginPath();c.moveTo(pa.x,pa.y);c.lineTo(pb.x,pb.y);c.stroke()}
+ for(let i=0;i<g.n;i++){const p=g.pos[i],dead=g.removed.has(i);c.fillStyle=dead?"#e94b4b":G.has(i)?"#246bfd":"#9aaabd";c.beginPath();c.arc(p.x,p.y,dead?2.6:3.4,0,Math.PI*2);c.fill()}
+}
+function drawCompare(){
+ for(const key of ["er","ws","ba"]){const g=cmp.graphs[key];if(!g)continue;const cap=key[0].toUpperCase()+key.slice(1),cv=$(`#cmp${cap}`);miniDraw(cv,g);const m=cmp.hist[key][cmp.hist[key].length-1];$(`#cmp${cap}Stats`).innerHTML=`<div class="mini-stat"><b>${Math.round(m.giantFrac*100)}%</b><span>GC</span></div><div class="mini-stat"><b>${fmt(m.efficiency,2)}</b><span>Eficiencia</span></div><div class="mini-stat"><b>${m.components}</b><span>Componentes</span></div>`}
+ const colors={er:"#246bfd",ws:"#1f9d68",ba:"#e94b4b"};lineChart($("#compareChart"),["er","ws","ba"].map(k=>({data:cmp.hist[k].map(m=>({x:m.q,y:m.giantFrac})),color:colors[k]})),{xMax:.65,yMax:1,legend:[{name:"ER",color:colors.er},{name:"WS",color:colors.ws},{name:"BA",color:colors.ba}]})
+}
+function updateCmpTable(){
+ const tb=$("#compareTable tbody");tb.innerHTML="";const len=Math.max(...["er","ws","ba"].map(k=>cmp.hist[k].length));for(let i=0;i<len;i++){const vals=["er","ws","ba"].map(k=>cmp.hist[k][i]||cmp.hist[k][cmp.hist[k].length-1]);const tr=document.createElement("tr");tr.innerHTML=`<td>${Math.round((vals[0]?.q||0)*100)}%</td><td>${fmt(vals[0]?.giantFrac,2)}</td><td>${fmt(vals[1]?.giantFrac,2)}</td><td>${fmt(vals[2]?.giantFrac,2)}</td><td>${fmt(vals[0]?.efficiency,2)}</td><td>${fmt(vals[1]?.efficiency,2)}</td><td>${fmt(vals[2]?.efficiency,2)}</td>`;tb.appendChild(tr)}
+}
+function interpretCompare(){
+ const last={};for(const k of ["er","ws","ba"])last[k]=cmp.hist[k][cmp.hist[k].length-1];const order=Object.entries(last).sort((a,b)=>b[1].giantFrac-a[1].giantFrac);$("#cmpInterpretation").innerHTML=`Con ${Math.round(last.er.q*100)}% eliminado, <b>${order[0][0].toUpperCase()}</b> conserva el mayor componente gigante (${Math.round(order[0][1].giantFrac*100)}%). La más dañada es <b>${order[2][0].toUpperCase()}</b> (${Math.round(order[2][1].giantFrac*100)}%).`;
+}
+function cmpExport(){const rows=[["fraction_removed","ER_giant","WS_giant","BA_giant","ER_eff","WS_eff","BA_eff"]],len=Math.max(...Object.values(cmp.hist).map(a=>a.length));for(let i=0;i<len;i++){const a=cmp.hist.er[i],b=cmp.hist.ws[i],c=cmp.hist.ba[i];if(a&&b&&c)rows.push([a.q,a.giantFrac,b.giantFrac,c.giantFrac,a.efficiency,b.efficiency,c.efficiency])}csvDownload("comparacion_vulnerabilidad.csv",rows)}
+function cmpSnapshot(){
+ const canvases=["cmpEr","cmpWs","cmpBa","compareChart"].map(id=>$("#"+id)),W=1200,H=760,out=document.createElement("canvas");out.width=W;out.height=H;const c=out.getContext("2d");c.fillStyle="#fff";c.fillRect(0,0,W,H);c.fillStyle="#14283c";c.font="bold 26px sans-serif";c.fillText("Comparación de vulnerabilidad en redes",30,38);
+ canvases.slice(0,3).forEach((cv,i)=>c.drawImage(cv,20+i*390,70,370,340));c.drawImage(canvases[3],50,430,1100,300);saveCanvas(out,"comparacion_vulnerabilidad.png");
+}
+
+function bindUI(){
+ view=new NetworkView($("#networkCanvas"),()=>graph);view.onSelect=i=>{selectedNode=i;inspectNode(i);view.draw()};view.onShiftRemove=i=>removeStep(i);
+ $$(".tab").forEach(t=>t.onclick=()=>{$$(".tab").forEach(x=>x.classList.remove("active"));$$(".page").forEach(x=>x.classList.remove("active"));t.classList.add("active");$("#"+t.dataset.page).classList.add("active");setTimeout(()=>{view.resize();refresh();drawCompare()},30)});
+ $("#model").onchange=()=>{$$(".modelParams").forEach(x=>x.style.display="none");const m=$("#model").value;if(m==="er")$("#erParams").style.display="block";if(m==="ws")$("#wsParams").style.display="block";if(m==="ba")$("#baParams").style.display="block";if(m==="modular")$("#modParams").style.display="block"};
+ $("#nNodes").oninput=e=>$("#nNodesVal").textContent=e.target.value;$("#erP").oninput=e=>$("#erPVal").textContent=(+e.target.value).toFixed(3);$("#speed").oninput=e=>$("#speedVal").textContent=e.target.value+" ms";
+ $("#strategy").onchange=()=>{$("#strategyInfo").textContent=STRATEGY_TEXT[$("#strategy").value];refresh()};$("#strategyInfo").textContent=STRATEGY_TEXT.random;
+ $("#setupBtn").onclick=setup;$("#stepBtn").onclick=()=>removeStep();$("#goBtn").onclick=startGo;$("#undoBtn").onclick=undo;$("#resetAttackBtn").onclick=resetAttack;$("#relayoutBtn").onclick=relayout;$("#layoutModeVuln").onchange=relayout;$("#cmpLayout").onchange=()=>{if(cmp.graphs.er)cmpGenerate()};
+ $("#exportCsv").onclick=exportCSV;$("#exportJson").onclick=exportJSON;$("#savePng").onclick=()=>saveCanvas($("#networkCanvas"),"red_vulnerabilidad.png");
+ $("#helpBtn").onclick=()=>alert("1. Genere una red con SETUP.\\n2. Seleccione una estrategia.\\n3. Use Quitar paso o GO.\\n4. Observe componente gigante, eficiencia y fragmentación.\\n5. Use Comparar modelos para ejecutar el mismo ataque en ER, WS y BA.");
+ $("#cmpN").oninput=e=>$("#cmpNVal").textContent=e.target.value;$("#cmpDegree").oninput=e=>$("#cmpDegreeVal").textContent=e.target.value;
+ $("#cmpSetup").onclick=cmpGenerate;$("#cmpStep").onclick=()=>cmpStep(.05);$("#cmpRun").onclick=cmpRun;$("#cmpReset").onclick=cmpReset;$("#cmpCsv").onclick=cmpExport;$("#cmpSnapshot").onclick=cmpSnapshot;
+ $("#gradeQuiz").onclick=()=>{let s=0,done=0;for(let i=1;i<=4;i++){const x=document.querySelector(`input[name=q${i}]:checked`);if(x){done++;s+=+x.value}}$("#quizResult").textContent=done<4?"Faltan preguntas por responder.":`Resultado: ${s}/4. ${s===4?"Excelente: distingue fallas, ataques y métricas.":s>=3?"Buen dominio; revise la pregunta incorrecta.":"Revise los conceptos y repita los experimentos."}`};
+ window.addEventListener("resize",()=>{view.resize();refresh();drawCompare()});
+}
+bindUI();setup();
+</script>
+</body>
+</html>

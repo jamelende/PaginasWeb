@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GraphML Studio — Laboratorio Interactivo</title>
+<style>
+:root{
+  --bg:#eef3f8;--panel:#fff;--ink:#152234;--muted:#617186;--line:#d8e1eb;
+  --blue:#2563eb;--cyan:#0891b2;--green:#159766;--orange:#f59e0b;--red:#e34d59;
+  --violet:#7c3aed;--navy:#12263a;--shadow:0 10px 28px rgba(20,38,58,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#e8f0f8,#f7f9fc 45%,#edf3f8)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-rows:auto auto 1fr}
+header{background:var(--navy);color:#fff;padding:13px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 15px rgba(0,0,0,.22);z-index:4}
+.logo{width:49px;height:49px;border-radius:14px;background:linear-gradient(135deg,#23a8ff,#6b4eff);display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24)}
+header h1{margin:0;font-size:21px}
+header p{margin:3px 0 0;color:#bfd0df;font-size:12.5px}
+.header-actions{margin-left:auto;display:flex;gap:8px}
+.hbtn{border:1px solid rgba(255,255,255,.22);color:#fff;background:rgba(255,255,255,.08);padding:8px 11px;border-radius:8px;font-size:12px;font-weight:750}.hselect{border:1px solid rgba(255,255,255,.25);color:#fff;background:#20364b;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:750;max-width:190px}.hselect option{color:#152234;background:#fff}
+.hbtn:hover{background:rgba(255,255,255,.16)}
+.tabs{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:2px;padding:0 18px;overflow-x:auto;z-index:3}
+.tab{border:0;background:none;color:#56677a;font-weight:800;font-size:12px;padding:12px 14px;border-bottom:3px solid transparent;white-space:nowrap}
+.tab.active{color:var(--blue);border-color:var(--blue)}
+main{padding:13px;min-height:0}
+.page{display:none}.page.active{display:block}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.workspace{display:grid;grid-template-columns:285px minmax(520px,1fr) 320px;gap:12px;height:calc(100vh - 134px);min-height:640px}
+.sidebar{padding:13px;overflow:auto;min-height:0}
+.section{border-top:1px solid #e6edf4;margin-top:11px;padding-top:11px}
+.section:first-child{border-top:0;margin-top:0;padding-top:0}
+.title{font-size:13px;font-weight:900;margin:0 0 9px;display:flex;align-items:center;gap:7px}
+label{display:block;font-size:11.5px;font-weight:800;color:#526477;margin-bottom:5px}
+select,input[type=number]{width:100%;border:1px solid #ccd8e4;border-radius:8px;background:#fff;padding:8px;color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.slider{display:flex;align-items:center;gap:8px}
+.val{min-width:50px;text-align:right;color:#2e4862;font:700 11px ui-monospace,SFMono-Regular,Consolas,monospace}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn{border:0;border-radius:9px;padding:9px 10px;font-weight:850;font-size:12px;transition:.15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(.98)}
+.primary{background:var(--blue);color:#fff}.dark{background:#21364b;color:#fff}.soft{background:#eaf1f8;color:#28445f;border:1px solid #d5e0eb}
+.green{background:var(--green);color:#fff}.orange{background:var(--orange);color:#fff}.danger{background:var(--red);color:#fff}.violet{background:var(--violet);color:#fff}
+.note{font-size:11.3px;line-height:1.45;color:#526579;background:#f5f8fb;border:1px solid #dce6ef;border-radius:9px;padding:9px}
+.callout{font-size:11.3px;line-height:1.45;background:#f4f1ff;border:1px solid #dfd7fb;border-left:4px solid var(--violet);border-radius:8px;padding:9px}
+.center{display:grid;grid-template-rows:minmax(345px,1fr) 245px;gap:12px;min-height:0}
+.canvas-panel{position:relative;overflow:hidden}
+canvas{display:block;width:100%;height:100%}
+.canvas-tools{position:absolute;left:10px;top:10px;z-index:2;display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:10.5px;font-weight:850;background:rgba(255,255,255,.94);border:1px solid #cfdae6;border-radius:999px;padding:6px 8px;box-shadow:0 3px 10px rgba(20,40,65,.08)}
+.legend{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.94);border:1px solid #d3deea;border-radius:8px;padding:7px 9px;font-size:10px;line-height:1.65}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0}
+.subpanel{padding:10px;position:relative;overflow:hidden}
+.subhead{font-size:12px;font-weight:900;margin:0 0 3px}.subtext{font-size:10.5px;color:var(--muted);margin-bottom:6px}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{background:#f7f9fc;border:1px solid #dce5ef;border-radius:9px;padding:9px}
+.metric .k{font-size:9.5px;color:#66768a;font-weight:850;text-transform:uppercase;letter-spacing:.35px}
+.metric .v{font-size:19px;font-weight:900;margin-top:2px}
+.metric .s{font-size:10px;color:#6d7c8d}
+.matrix{overflow:auto;border:1px solid #dae4ee;border-radius:8px;max-height:205px}
+.matrix table{border-collapse:collapse;width:100%;font-size:10px}
+.matrix th,.matrix td{border-right:1px solid #e6edf4;border-bottom:1px solid #e6edf4;padding:5px;text-align:center}
+.matrix th{position:sticky;top:0;background:#eef4fa;z-index:1}
+.matrix td.hot{background:#dbeafe;font-weight:850;color:#174ab0}.matrix td.labA{background:#dff6eb;color:#0d7349}.matrix td.labB{background:#ffe8ea;color:#ae2635}
+.rank{margin-top:8px}.rank-row{display:grid;grid-template-columns:25px 1fr 58px;gap:6px;align-items:center;font-size:10.5px;margin:5px 0}
+.bar{height:7px;background:#e7edf3;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:var(--violet)}
+.status{background:#12283d;color:#edf6ff;border-radius:8px;padding:9px;font:600 10.5px ui-monospace,SFMono-Regular,Consolas,monospace;line-height:1.5}
+.progress{height:10px;background:#e6edf4;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--violet));width:0}
+.tooltip{position:fixed;z-index:30;display:none;pointer-events:none;background:#12263a;color:#fff;padding:7px 9px;border-radius:7px;font-size:10px;box-shadow:0 5px 18px rgba(0,0,0,.25)}
+/* Embeddings */
+.lab-layout{display:grid;grid-template-columns:300px 1fr;gap:12px;height:calc(100vh - 134px);min-height:640px}
+.lab-main{display:grid;grid-template-rows:minmax(370px,1fr) 235px;gap:12px;min-width:0}
+.dualview{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0}
+.dualview .panel{position:relative;overflow:hidden}
+.panel-label{position:absolute;left:10px;top:10px;z-index:2;background:rgba(255,255,255,.94);border:1px solid #d5dfeb;border-radius:999px;padding:6px 9px;font-size:10.5px;font-weight:850}
+.embedding-bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lossbox{padding:10px}.similarity{padding:10px}
+.neighbor-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.neighbor{border:1px solid #dce5ef;border-radius:8px;padding:7px;font-size:10.5px;background:#fafcfe}
+/* GNN */
+.gnn-flow{display:grid;grid-template-columns:1fr 46px 1fr 46px 1fr;align-items:center;gap:5px;margin:10px 0}
+.viznode{border:1px solid #d8e2ec;border-radius:10px;padding:10px;background:#fbfcfe;text-align:center;font-size:11px;min-height:83px;display:grid;place-items:center}
+.arrow{text-align:center;color:var(--blue);font-size:24px;font-weight:900}
+.feature-bars{display:flex;align-items:flex-end;justify-content:center;gap:7px;height:105px;margin-top:8px}
+.fbar{width:24px;border-radius:5px 5px 0 0;background:var(--blue);min-height:3px;position:relative}
+.fbar span{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:#637286}
+.eq{background:#12283d;color:#ecf6ff;border-radius:8px;padding:10px;font:600 11px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap}
+/* Tasks */
+.task-grid{max-width:1180px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.task-card{padding:15px}
+.task-card h3{font-size:14px;margin:0 0 5px}.task-card p{font-size:11.5px;color:#576a7e;line-height:1.45}
+.task-icon{width:42px;height:42px;border-radius:12px;background:#eaf1ff;color:#245fd4;display:grid;place-items:center;font-size:21px;margin-bottom:10px}
+.pipeline{grid-column:1/-1;padding:16px}
+.pipe{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:center}
+.pipe-step{border:1px solid #dce5ef;background:#fbfcfe;border-radius:9px;padding:9px;text-align:center;font-size:10.5px;min-height:64px;display:grid;place-items:center}
+.pipe-arrow{text-align:center;font-weight:900;color:#4e6f91}
+.quiz{max-width:1050px;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+.quiz .panel{padding:17px}
+.q{border:1px solid #dce5ef;border-radius:9px;padding:10px;margin:9px 0}.q b{font-size:11.5px}
+.q label{font-weight:500;color:#33485c;display:flex;gap:7px;align-items:flex-start;margin:7px 0}
+.small{font-size:10.5px;color:#66778b;line-height:1.45}
+@media(max-width:1100px){
+ .workspace{grid-template-columns:270px 1fr;height:auto}.workspace>.sidebar:last-child{grid-column:1/-1}
+ .center{min-height:750px}.lab-layout{grid-template-columns:270px 1fr;height:auto}.lab-main{min-height:700px}
+}
+@media(max-width:760px){
+ header{padding:10px}.header-actions{display:none}.tabs{padding:0 7px}main{padding:7px}
+ .workspace,.lab-layout,.quiz{display:block;height:auto}.sidebar,.panel{margin-bottom:9px}.center,.lab-main{display:block;min-height:0}
+ .canvas-panel{height:430px;margin-bottom:9px}.bottom,.dualview,.embedding-bottom,.task-grid{grid-template-columns:1fr}
+ .subpanel,.lossbox,.similarity{min-height:235px}.dualview .panel{height:360px}
+ .pipe{grid-template-columns:1fr}.pipe-arrow{transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">GML</div>
+  <div>
+    <h1>GraphML Studio</h1>
+    <p>Laboratorio interactivo de aprendizaje automático sobre grafos</p>
+  </div>
+  <div class="header-actions">
+    <select id="globalLayout" class="hselect" aria-label="Layout visual">
+      <option value="auto" selected>Layout: automático</option>
+      <option value="spring">Layout: spring</option>
+      <option value="circular">Layout: circular</option>
+      <option value="random">Layout: aleatorio</option>
+      <option value="grid">Layout: retícula</option>
+      <option value="radial">Layout: radial</option>
+      <option value="community">Layout: comunidades</option>
+    </select>
+    <button class="hbtn" id="applyGlobalLayout">Aplicar layout</button>
+    <button class="hbtn" id="exportBtn">Exportar sesión</button>
+    <button class="hbtn" id="guideBtn">Guía rápida</button>
+  </div>
+</header>
+<nav class="tabs">
+  <button class="tab active" data-page="data">1. Datos y características</button>
+  <button class="tab" data-page="tasks">2. Tareas Graph ML</button>
+  <button class="tab" data-page="embeddings">3. Embeddings</button>
+  <button class="tab" data-page="gnn">4. Message Passing</button>
+  <button class="tab" data-page="classification">5. Clasificación de nodos</button>
+  <button class="tab" data-page="links">6. Predicción de enlaces</button>
+  <button class="tab" data-page="quiz">7. Prácticas y quiz</button>
+</nav>
+<main>
+
+<section id="data" class="page active">
+<div class="workspace">
+  <aside class="panel sidebar">
+    <div class="section">
+      <h2 class="title">⚙ Dataset de grafo</h2>
+      <label>Escenario</label>
+      <select id="dataset">
+        <option value="karate">Club social — dos grupos</option>
+        <option value="citation">Red de citaciones</option>
+        <option value="social">Comunidades sociales</option>
+        <option value="molecule">Molécula simplificada</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Número de nodos</label>
+      <div class="slider"><input id="nodeCount" type="range" min="12" max="70" value="34"><span class="val" id="nodeCountVal">34</span></div>
+    </div>
+    <div class="section">
+      <label>Densidad / conectividad</label>
+      <div class="slider"><input id="density" type="range" min="0.03" max="0.30" step="0.01" value="0.10"><span class="val" id="densityVal">0.10</span></div>
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="setupData">SETUP</button>
+      <button class="btn soft" id="relayoutData">Reorganizar</button>
+    </div>
+    <div class="section">
+      <h2 class="title">🧩 Vista del dato</h2>
+      <label>Color de los nodos</label>
+      <select id="nodeColorMode">
+        <option value="label">Etiqueta real</option>
+        <option value="degree">Grado</option>
+        <option value="feature">Característica seleccionada</option>
+        <option value="community">Comunidad</option>
+      </select>
+      <label style="margin-top:8px">Característica</label>
+      <select id="featureSelect">
+        <option value="0">x₁ — actividad</option>
+        <option value="1">x₂ — afinidad</option>
+        <option value="2">x₃ — centralidad local</option>
+        <option value="3">x₄ — señal contextual</option>
+      </select>
+    </div>
+    <div class="section">
+      <h2 class="title">✏ Edición del grafo</h2>
+      <div class="actions">
+        <button class="btn orange" id="addNode">Añadir nodo</button>
+        <button class="btn soft" id="toggleEdgeMode">Añadir arista</button>
+        <button class="btn danger" id="deleteSelected">Eliminar nodo</button>
+        <button class="btn dark" id="resetGraph">Restaurar</button>
+      </div>
+      <div class="note" id="editHint" style="margin-top:8px">Arrastre nodos para moverlos. Seleccione un nodo para inspeccionarlo.</div>
+    </div>
+    <div class="section note">
+      En Graph ML, el objeto de entrada no es solo una matriz: combina <b>estructura</b> (A), <b>características</b> (X), etiquetas conocidas y, a veces, atributos de aristas.
+    </div>
+  </aside>
+
+  <section class="center">
+    <div class="panel canvas-panel">
+      <div class="canvas-tools">
+        <span class="pill" id="datasetPill">Club social</span>
+        <span class="pill" id="nodesPill">34 nodos</span>
+        <span class="pill" id="edgesPill">0 aristas</span>
+      </div>
+      <canvas id="dataCanvas"></canvas>
+      <div class="legend" id="dataLegend"></div>
+    </div>
+    <div class="bottom">
+      <div class="panel subpanel">
+        <div class="subhead">Matriz de características X</div>
+        <div class="subtext">Cada fila representa un nodo; cada columna, una variable numérica.</div>
+        <div class="matrix" id="featureMatrix"></div>
+      </div>
+      <div class="panel subpanel">
+        <div class="subhead">Matriz de adyacencia A</div>
+        <div class="subtext">Aᵢⱼ = 1 indica una relación entre los nodos i y j.</div>
+        <div class="matrix" id="adjMatrix"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel sidebar">
+    <h2 class="title">📊 Resumen del grafo</h2>
+    <div class="metric-grid">
+      <div class="metric"><div class="k">Nodos</div><div class="v" id="dNodes">0</div><div class="s">entidades</div></div>
+      <div class="metric"><div class="k">Aristas</div><div class="v" id="dEdges">0</div><div class="s">relaciones</div></div>
+      <div class="metric"><div class="k">Grado medio</div><div class="v" id="dDegree">0</div><div class="s">vecinos por nodo</div></div>
+      <div class="metric"><div class="k">Densidad</div><div class="v" id="dDensity">0</div><div class="s">fracción posible</div></div>
+      <div class="metric"><div class="k">Clustering</div><div class="v" id="dClustering">0</div><div class="s">triángulos locales</div></div>
+      <div class="metric"><div class="k">Homofilia</div><div class="v" id="dHomophily">0</div><div class="s">aristas misma clase</div></div>
+    </div>
+    <div class="section">
+      <h2 class="title">🔎 Nodo seleccionado</h2>
+      <div class="note" id="nodeInspector">Seleccione un nodo para observar sus atributos.</div>
+    </div>
+    <div class="section">
+      <h2 class="title">🧠 Pregunta pedagógica</h2>
+      <div class="callout" id="pedagogicalPrompt">¿Dos nodos con características similares necesariamente deben estar conectados?</div>
+    </div>
+    <div class="section">
+      <h2 class="title">🧾 Registro</h2>
+      <div class="status" id="dataStatus">SETUP pendiente.</div>
+    </div>
+  </aside>
+</div>
+</section>
+
+<section id="tasks" class="page">
+<div class="task-grid">
+  <div class="panel task-card"><div class="task-icon">●</div><h3>Clasificación de nodos</h3><p>Predice una etiqueta por nodo usando características propias y contexto de vecinos. Ejemplos: área de investigación, riesgo de fraude, rol social.</p><span class="pill">Salida: yᵥ</span></div>
+  <div class="panel task-card"><div class="task-icon">↔</div><h3>Predicción de enlaces</h3><p>Estima qué pares de nodos deberían conectarse o qué enlaces faltan. Ejemplos: recomendación de amistad, interacción proteína-proteína.</p><span class="pill">Salida: p(u,v)</span></div>
+  <div class="panel task-card"><div class="task-icon">⬡</div><h3>Clasificación de grafos</h3><p>Genera una etiqueta para el grafo completo. Ejemplos: molécula tóxica/no tóxica, programa vulnerable/seguro, estructura química activa/inactiva.</p><span class="pill">Salida: yᴳ</span></div>
+  <div class="panel task-card"><div class="task-icon">◎</div><h3>Clustering y comunidades</h3><p>Agrupa nodos sin etiquetas mediante patrones de conexión, proximidad estructural o embeddings.</p><span class="pill">No supervisado</span></div>
+  <div class="panel task-card"><div class="task-icon">⚠</div><h3>Detección de anomalías</h3><p>Busca nodos, aristas o grafos con comportamiento raro respecto al patrón dominante.</p><span class="pill">Riesgo / rareza</span></div>
+  <div class="panel task-card"><div class="task-icon">Σ</div><h3>Regresión sobre grafos</h3><p>Predice valores continuos, por ejemplo solubilidad molecular, demanda en una red o intensidad de interacción.</p><span class="pill">Salida numérica</span></div>
+  <div class="panel pipeline">
+    <h2 class="title">Pipeline general de Graph Machine Learning</h2>
+    <div class="pipe">
+      <div class="pipe-step"><b>1. Grafo</b><br>nodos y aristas</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step"><b>2. Atributos</b><br>X, A, E</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step"><b>3. Representación</b><br>features o embeddings</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step"><b>4. Modelo</b><br>LP, embeddings, GNN</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step"><b>5. Predicción</b><br>nodo, enlace o grafo</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step"><b>6. Evaluación</b><br>accuracy, F1, AUC</div>
+    </div>
+    <div class="row2" style="margin-top:12px">
+      <div class="note"><b>Transductivo:</b> el entrenamiento conoce la estructura completa, aunque algunas etiquetas estén ocultas.</div>
+      <div class="note"><b>Inductivo:</b> el modelo debe generalizar a nodos o grafos no observados durante el entrenamiento.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="embeddings" class="page">
+<div class="lab-layout">
+  <aside class="panel sidebar">
+    <h2 class="title">🧭 Laboratorio de embeddings</h2>
+    <div class="note">Un embedding transforma cada nodo en un vector compacto. Nodos similares deben quedar cercanos en el espacio latente.</div>
+    <div class="section">
+      <label>Método conceptual</label>
+      <select id="embedMethod">
+        <option value="structure">Proximidad estructural</option>
+        <option value="walk">Caminatas aleatorias</option>
+        <option value="features">Solo características</option>
+        <option value="hybrid">Estructura + características</option>
+      </select>
+    </div>
+    <div class="section">
+      <label>Dimensión visual</label>
+      <select id="embedDim"><option value="2">2 dimensiones</option><option value="3">3 dimensiones proyectadas</option></select>
+    </div>
+    <div class="section">
+      <label>Longitud de caminata</label>
+      <div class="slider"><input id="walkLength" type="range" min="2" max="12" value="6"><span class="val" id="walkLengthVal">6</span></div>
+    </div>
+    <div class="section">
+      <label>Épocas</label>
+      <div class="slider"><input id="embedEpochs" type="range" min="10" max="150" step="10" value="60"><span class="val" id="embedEpochsVal">60</span></div>
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="trainEmbed">Entrenar</button>
+      <button class="btn orange" id="stepEmbed">Una época</button>
+      <button class="btn dark" id="resetEmbed">Reiniciar</button>
+      <button class="btn green" id="exportEmbed">Exportar CSV</button>
+    </div>
+    <div class="section">
+      <label>Nodo de consulta</label>
+      <select id="queryNode"></select>
+      <div class="note" id="embedExplanation" style="margin-top:8px">Entrene para observar cómo cambia el espacio latente.</div>
+    </div>
+    <div class="section">
+      <label>Progreso</label>
+      <div class="progress"><span id="embedProgress"></span></div>
+      <div class="small" id="embedProgressText" style="margin-top:5px">0 épocas</div>
+    </div>
+  </aside>
+  <div class="lab-main">
+    <div class="dualview">
+      <div class="panel"><span class="panel-label">Grafo original</span><canvas id="embedGraphCanvas"></canvas></div>
+      <div class="panel"><span class="panel-label">Espacio de embeddings</span><canvas id="embedCanvas"></canvas></div>
+    </div>
+    <div class="embedding-bottom">
+      <div class="panel lossbox">
+        <div class="subhead">Pérdida conceptual</div>
+        <div class="subtext">Disminuye cuando vecinos y nodos estructuralmente similares se acercan.</div>
+        <canvas id="lossCanvas"></canvas>
+      </div>
+      <div class="panel similarity">
+        <div class="subhead">Nodos más similares</div>
+        <div class="subtext">Similitud coseno respecto al nodo elegido.</div>
+        <div class="neighbor-list" id="similarNodes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="gnn" class="page">
+<div class="workspace">
+  <aside class="panel sidebar">
+    <h2 class="title">📡 Message Passing</h2>
+    <div class="note">Una GNN actualiza el vector de cada nodo combinando su estado con mensajes recibidos desde sus vecinos.</div>
+    <div class="section">
+      <label>Nodo focal</label>
+      <select id="gnnNode"></select>
+    </div>
+    <div class="section">
+      <label>Agregador</label>
+      <select id="aggregator"><option value="mean">Media</option><option value="sum">Suma</option><option value="max">Máximo</option></select>
+    </div>
+    <div class="section">
+      <label>Número de capas</label>
+      <div class="slider"><input id="gnnLayers" type="range" min="1" max="4" value="2"><span class="val" id="gnnLayersVal">2</span></div>
+    </div>
+    <div class="section">
+      <label>Peso del propio nodo α</label>
+      <div class="slider"><input id="selfWeight" type="range" min="0" max="1" step="0.05" value="0.45"><span class="val" id="selfWeightVal">0.45</span></div>
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="gnnStep">Propagar una capa</button>
+      <button class="btn orange" id="gnnRun">Ejecutar capas</button>
+      <button class="btn dark" id="gnnReset">Reiniciar</button>
+      <button class="btn soft" id="toggleNormalize">Normalizar: sí</button>
+    </div>
+    <div class="section callout" id="receptiveText">Con una capa, el nodo recibe información de sus vecinos inmediatos.</div>
+  </aside>
+  <section class="center">
+    <div class="panel canvas-panel">
+      <div class="canvas-tools"><span class="pill" id="layerPill">Capa 0</span><span class="pill" id="receptivePill">0-hop</span></div>
+      <canvas id="gnnCanvas"></canvas>
+      <div class="legend"><div><span class="dot" style="background:#f59e0b"></span>Nodo focal</div><div><span class="dot" style="background:#7c3aed"></span>Campo receptivo</div><div><span class="dot" style="background:#2563eb"></span>Otros nodos</div></div>
+    </div>
+    <div class="bottom">
+      <div class="panel subpanel">
+        <div class="subhead">Flujo de una capa GNN</div>
+        <div class="gnn-flow">
+          <div class="viznode"><b>Mensajes</b><br>hᵤ de cada vecino</div><div class="arrow">→</div>
+          <div class="viznode"><b>Agregación</b><br><span id="aggName">media</span></div><div class="arrow">→</div>
+          <div class="viznode"><b>Actualización</b><br>combina nodo + vecindario</div>
+        </div>
+        <div class="eq" id="gnnEquation">hᵥ⁽¹⁾ = σ( α·hᵥ⁽⁰⁾ + (1−α)·MEAN({hᵤ⁽⁰⁾ : u∈N(v)}) )</div>
+      </div>
+      <div class="panel subpanel">
+        <div class="subhead">Vector del nodo focal</div>
+        <div class="subtext">Las barras muestran las cuatro dimensiones del estado oculto.</div>
+        <div class="feature-bars" id="gnnFeatureBars"></div>
+      </div>
+    </div>
+  </section>
+  <aside class="panel sidebar">
+    <h2 class="title">📐 Diagnóstico de representación</h2>
+    <div class="metric-grid">
+      <div class="metric"><div class="k">Capa actual</div><div class="v" id="gLayer">0</div><div class="s">propagaciones</div></div>
+      <div class="metric"><div class="k">Campo receptivo</div><div class="v" id="gReach">1</div><div class="s">nodos alcanzados</div></div>
+      <div class="metric"><div class="k">Cambio vectorial</div><div class="v" id="gChange">0</div><div class="s">distancia L2</div></div>
+      <div class="metric"><div class="k">Suavizado</div><div class="v" id="gSmooth">0</div><div class="s">similitud vecinal</div></div>
+    </div>
+    <div class="section">
+      <h2 class="title">⚠ Oversmoothing</h2>
+      <div class="note" id="oversmoothNote">Con pocas capas, cada nodo conserva identidad local. Demasiadas capas pueden volver muy similares los vectores de todos los nodos.</div>
+    </div>
+    <div class="section">
+      <h2 class="title">🧾 Registro</h2>
+      <div class="status" id="gnnStatus">Seleccione un nodo y propague mensajes.</div>
+    </div>
+  </aside>
+</div>
+</section>
+
+<section id="classification" class="page">
+<div class="workspace">
+  <aside class="panel sidebar">
+    <h2 class="title">🎯 Clasificación de nodos</h2>
+    <div class="note">Algunas etiquetas son visibles para entrenar; las demás se predicen usando estructura y atributos.</div>
+    <div class="section">
+      <label>Modelo</label>
+      <select id="classifier"><option value="features">KNN sobre características</option><option value="propagation">Propagación de etiquetas</option><option value="embedding">KNN sobre embeddings</option><option value="gcn">GCN simplificada</option></select>
+    </div>
+    <div class="section">
+      <label>Porcentaje de etiquetas visibles</label>
+      <div class="slider"><input id="labelRate" type="range" min="10" max="80" step="5" value="35"><span class="val" id="labelRateVal">35%</span></div>
+    </div>
+    <div class="section">
+      <label>Iteraciones</label>
+      <div class="slider"><input id="classIters" type="range" min="1" max="30" value="12"><span class="val" id="classItersVal">12</span></div>
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="splitLabels">Crear partición</button>
+      <button class="btn orange" id="classStep">Una iteración</button>
+      <button class="btn violet" id="classTrain">Entrenar</button>
+      <button class="btn dark" id="classReset">Reiniciar</button>
+    </div>
+    <div class="section">
+      <label>Visualización</label>
+      <select id="classView"><option value="prediction">Predicción</option><option value="truth">Etiqueta real</option><option value="confidence">Confianza</option><option value="errors">Errores</option></select>
+    </div>
+    <div class="section note">
+      Los nodos con borde grueso son ejemplos etiquetados. Los demás forman el conjunto de prueba transductivo.
+    </div>
+  </aside>
+  <section class="center">
+    <div class="panel canvas-panel">
+      <div class="canvas-tools"><span class="pill" id="classModelPill">KNN características</span><span class="pill" id="classIterPill">Iteración 0</span></div>
+      <canvas id="classCanvas"></canvas>
+      <div class="legend"><div><span class="dot" style="background:#159766"></span>Clase A</div><div><span class="dot" style="background:#e34d59"></span>Clase B</div><div><span class="dot" style="background:#9aaabd"></span>Sin decidir</div></div>
+    </div>
+    <div class="bottom">
+      <div class="panel subpanel">
+        <div class="subhead">Evolución del desempeño</div>
+        <div class="subtext">Accuracy y macro-F1 sobre nodos no etiquetados.</div>
+        <canvas id="classChart"></canvas>
+      </div>
+      <div class="panel subpanel">
+        <div class="subhead">Matriz de confusión</div>
+        <div class="matrix" id="confusionMatrix" style="max-height:none"></div>
+        <div class="note" id="classInterpretation" style="margin-top:8px">Cree una partición para comenzar.</div>
+      </div>
+    </div>
+  </section>
+  <aside class="panel sidebar">
+    <h2 class="title">📊 Evaluación</h2>
+    <div class="metric-grid">
+      <div class="metric"><div class="k">Accuracy</div><div class="v" id="cAcc">0%</div><div class="s">aciertos totales</div></div>
+      <div class="metric"><div class="k">Macro-F1</div><div class="v" id="cF1">0%</div><div class="s">balance entre clases</div></div>
+      <div class="metric"><div class="k">Train</div><div class="v" id="cTrain">0</div><div class="s">etiquetas visibles</div></div>
+      <div class="metric"><div class="k">Test</div><div class="v" id="cTest">0</div><div class="s">nodos predichos</div></div>
+    </div>
+    <div class="section">
+      <h2 class="title">🔬 Ablación conceptual</h2>
+      <div class="actions"><button class="btn soft" id="shuffleFeatures">Barajar X</button><button class="btn soft" id="rewireGraph">Reconfigurar A</button></div>
+      <div class="note" id="ablationText" style="margin-top:8px">Altere X o A para comprobar qué fuente de información usa el modelo.</div>
+    </div>
+    <div class="section">
+      <h2 class="title">🧾 Registro</h2>
+      <div class="status" id="classStatus">Partición pendiente.</div>
+    </div>
+  </aside>
+</div>
+</section>
+
+<section id="links" class="page">
+<div class="workspace">
+  <aside class="panel sidebar">
+    <h2 class="title">🔗 Predicción de enlaces</h2>
+    <div class="note">El objetivo es asignar una puntuación a pares no conectados. Una puntuación alta indica que el enlace es plausible.</div>
+    <div class="section">
+      <label>Heurística</label>
+      <select id="linkMethod"><option value="common">Vecinos comunes</option><option value="jaccard">Jaccard</option><option value="adamic">Adamic–Adar</option><option value="preferential">Conexión preferencial</option><option value="embedding">Coseno de embeddings</option></select>
+    </div>
+    <div class="section">
+      <label>Enlaces ocultos para prueba</label>
+      <div class="slider"><input id="hiddenEdges" type="range" min="1" max="15" value="6"><span class="val" id="hiddenEdgesVal">6</span></div>
+    </div>
+    <div class="section actions">
+      <button class="btn primary" id="hideLinks">Ocultar enlaces</button>
+      <button class="btn orange" id="scoreLinks">Calcular scores</button>
+      <button class="btn green" id="revealBest">Añadir mejor enlace</button>
+      <button class="btn dark" id="resetLinks">Reiniciar</button>
+    </div>
+    <div class="section">
+      <label>Número de candidatos mostrados</label>
+      <div class="slider"><input id="topLinks" type="range" min="3" max="15" value="8"><span class="val" id="topLinksVal">8</span></div>
+    </div>
+    <div class="section callout" id="linkConcept">Los vecinos comunes explotan cierre triádico: dos personas con muchos amigos compartidos tienen mayor probabilidad de conectarse.</div>
+  </aside>
+  <section class="center">
+    <div class="panel canvas-panel">
+      <div class="canvas-tools"><span class="pill" id="linkMethodPill">Vecinos comunes</span><span class="pill" id="hiddenPill">0 ocultos</span></div>
+      <canvas id="linkCanvas"></canvas>
+      <div class="legend"><div><span class="dot" style="background:#2563eb"></span>Arista observada</div><div><span class="dot" style="background:#f59e0b"></span>Candidato</div><div><span class="dot" style="background:#e34d59"></span>Enlace oculto real</div></div>
+    </div>
+    <div class="bottom">
+      <div class="panel subpanel">
+        <div class="subhead">Ranking de enlaces candidatos</div>
+        <div id="linkRanking" class="rank"></div>
+      </div>
+      <div class="panel subpanel">
+        <div class="subhead">Curva Precision@K</div>
+        <div class="subtext">Proporción de enlaces ocultos recuperados entre los primeros K candidatos.</div>
+        <canvas id="precisionCanvas"></canvas>
+      </div>
+    </div>
+  </section>
+  <aside class="panel sidebar">
+    <h2 class="title">📊 Evaluación del ranking</h2>
+    <div class="metric-grid">
+      <div class="metric"><div class="k">Precision@5</div><div class="v" id="lP5">0%</div><div class="s">aciertos top 5</div></div>
+      <div class="metric"><div class="k">Recall@10</div><div class="v" id="lR10">0%</div><div class="s">ocultos recuperados</div></div>
+      <div class="metric"><div class="k">MRR</div><div class="v" id="lMRR">0</div><div class="s">rango recíproco</div></div>
+      <div class="metric"><div class="k">Candidatos</div><div class="v" id="lCandidates">0</div><div class="s">pares evaluados</div></div>
+    </div>
+    <div class="section">
+      <h2 class="title">🧠 Interpretación</h2>
+      <div class="note" id="linkInterpretation">Oculte algunos enlaces y calcule puntuaciones.</div>
+    </div>
+    <div class="section">
+      <h2 class="title">🧾 Registro</h2>
+      <div class="status" id="linkStatus">Experimento pendiente.</div>
+    </div>
+  </aside>
+</div>
+</section>
+
+<section id="quiz" class="page">
+<div class="quiz">
+  <div class="panel">
+    <h2>Prácticas sugeridas</h2>
+    <div class="note"><b>Práctica 1 — Estructura frente a atributos:</b> entrene clasificación con KNN de características y con propagación de etiquetas. Después baraje X y reconfigure A. Explique qué modelo se deteriora en cada caso.</div>
+    <div class="note" style="margin-top:8px"><b>Práctica 2 — Campo receptivo:</b> seleccione un nodo periférico y aplique 1, 2, 3 y 4 capas. Registre cuántos nodos pueden influir en su representación.</div>
+    <div class="note" style="margin-top:8px"><b>Práctica 3 — Embeddings:</b> compare “solo características” con “caminatas aleatorias”. Identifique pares cercanos en un método y lejanos en el otro.</div>
+    <div class="note" style="margin-top:8px"><b>Práctica 4 — Link prediction:</b> oculte los mismos enlaces y compare Jaccard, Adamic–Adar y conexión preferencial mediante Precision@5 y MRR.</div>
+    <div class="note" style="margin-top:8px"><b>Práctica 5 — Homofilia:</b> genere una red con fuerte separación de clases y otra con enlaces cruzados. Analice cuándo la propagación de etiquetas funciona o falla.</div>
+    <div class="section">
+      <h3>Mapa conceptual</h3>
+      <div class="eq">G = (V, E)
+X ∈ ℝᴺˣᶠ  → atributos de nodos
+A ∈ {0,1}ᴺˣᴺ → estructura
+Z ∈ ℝᴺˣᵈ → embeddings
+ŷ = f(A, X) → predicciones</div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Autoevaluación</h2>
+    <div class="q"><b>1. ¿Qué aporta una GNN respecto a un clasificador tabular?</b>
+      <label><input type="radio" name="q1" value="1"> Integra atributos propios y contexto de vecinos</label>
+      <label><input type="radio" name="q1" value="0"> Elimina la necesidad de datos</label>
+      <label><input type="radio" name="q1" value="0"> Solo ordena nodos por grado</label>
+    </div>
+    <div class="q"><b>2. Dos capas de message passing permiten recibir información de…</b>
+      <label><input type="radio" name="q2" value="0"> únicamente el propio nodo</label>
+      <label><input type="radio" name="q2" value="1"> vecinos de hasta dos saltos</label>
+      <label><input type="radio" name="q2" value="0"> todos los grafos posibles</label>
+    </div>
+    <div class="q"><b>3. En link prediction, Adamic–Adar da más peso a…</b>
+      <label><input type="radio" name="q3" value="1"> vecinos comunes poco conectados</label>
+      <label><input type="radio" name="q3" value="0"> cualquier nodo aislado</label>
+      <label><input type="radio" name="q3" value="0"> aristas ya eliminadas solamente</label>
+    </div>
+    <div class="q"><b>4. Oversmoothing significa que…</b>
+      <label><input type="radio" name="q4" value="0"> el grafo gana demasiadas aristas</label>
+      <label><input type="radio" name="q4" value="1"> las representaciones de nodos se vuelven demasiado parecidas</label>
+      <label><input type="radio" name="q4" value="0"> la pérdida siempre aumenta</label>
+    </div>
+    <button class="btn primary" id="gradeQuiz">Calificar</button>
+    <div class="note" id="quizResult" style="margin-top:9px">Responda las cuatro preguntas.</div>
+  </div>
+</div>
+</section>
+
+</main>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toFixed(d):"–";
+function seeded(seed){let s=seed>>>0;return()=>((s=Math.imul(1664525,s)+1013904223>>>0)/4294967296)}
+function shuffle(a,r=Math.random){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function download(name,text,type="text/plain"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)}
+function csv(name,rows){download(name,"\ufeff"+rows.map(r=>r.map(v=>typeof v==="string"&&/[,\n"]/.test(v)?`"${v.replaceAll('"','""')}"`:v).join(",")).join("\n"),"text/csv;charset=utf-8")}
+function showTip(e,html){const t=$("#tooltip");t.innerHTML=html;t.style.display="block";t.style.left=(e.clientX+12)+"px";t.style.top=(e.clientY+12)+"px"}
+function hideTip(){$("#tooltip").style.display="none"}
+
+class Graph{
+ constructor(){this.nodes=[];this.adj=[];this.features=[];this.labels=[];this.communities=[];this.pos=[];this.name="";this.hiddenEdges=[]}
+ init(n){this.nodes=Array.from({length:n},(_,i)=>i);this.adj=Array.from({length:n},()=>new Set());this.features=Array.from({length:n},()=>[0,0,0,0]);this.labels=Array(n).fill(0);this.communities=Array(n).fill(0);this.pos=[];this.hiddenEdges=[]}
+ addEdge(a,b){if(a===b||a<0||b<0||a>=this.nodes.length||b>=this.nodes.length||this.adj[a].has(b))return false;this.adj[a].add(b);this.adj[b].add(a);return true}
+ removeEdge(a,b){this.adj[a]?.delete(b);this.adj[b]?.delete(a)}
+ edges(){const e=[];for(let i=0;i<this.nodes.length;i++)for(const j of this.adj[i])if(j>i)e.push([i,j]);return e}
+ degree(i){return this.adj[i]?.size||0}
+ clone(){const g=new Graph();g.nodes=[...this.nodes];g.adj=this.adj.map(s=>new Set(s));g.features=this.features.map(x=>[...x]);g.labels=[...this.labels];g.communities=[...this.communities];g.pos=this.pos.map(p=>({...p}));g.name=this.name;g.hiddenEdges=this.hiddenEdges.map(e=>[...e]);return g}
+}
+function commonNeighbors(g,a,b){let c=[];for(const x of g.adj[a])if(g.adj[b].has(x))c.push(x);return c}
+function graphStats(g){const n=g.nodes.length,m=g.edges().length,deg=n?2*m/n:0,density=n>1?2*m/(n*(n-1)):0;let cl=0;
+ for(let u=0;u<n;u++){const nb=[...g.adj[u]],k=nb.length;if(k<2)continue;let e=0;for(let i=0;i<k;i++)for(let j=i+1;j<k;j++)if(g.adj[nb[i]].has(nb[j]))e++;cl+=2*e/(k*(k-1))}
+ let same=0;for(const [a,b] of g.edges())if(g.labels[a]===g.labels[b])same++;
+ return {n,m,degree:deg,density,clustering:n?cl/n:0,homophily:m?same/m:0}
+}
+function generateGraph(type,n,density){
+ const g=new Graph();g.init(n);const r=seeded(1000+n+Math.floor(density*1000)+type.length*37);g.name=type;
+ if(type==="molecule"){
+  for(let i=0;i<n-1;i++)g.addEdge(i,i+1);
+  for(let i=2;i<n-2;i+=4)if(i+3<n)g.addEdge(i,i+3);
+  for(let i=0;i<n;i++){g.labels[i]=(i%5===0||i%7===0)?1:0;g.communities[i]=Math.floor(i/5);g.features[i]=[i%3===0?1:.2,r(),g.degree(i)/4,(i%2)*.8+.1*r()]}
+ }else{
+  const split=Math.floor(n*.52);
+  for(let i=0;i<n;i++){g.labels[i]=i<split?0:1;g.communities[i]=g.labels[i];const base=g.labels[i]?0.72:0.28;g.features[i]=[clamp(base+(r()-.5)*.35,0,1),clamp((1-base)+(r()-.5)*.35,0,1),r(),clamp(base*.55+r()*.45,0,1)]}
+  if(type==="karate"){
+   const pIn=Math.max(.12,density*1.75),pOut=Math.max(.015,density*.23);
+   for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(r()<(g.labels[i]===g.labels[j]?pIn:pOut))g.addEdge(i,j);
+   if(n>3){g.addEdge(0,split);g.addEdge(Math.max(1,split-1),Math.min(n-1,split+1))}
+  }else if(type==="citation"){
+   for(let i=1;i<n;i++){let candidates=[];for(let j=0;j<i;j++){const sim=1-Math.abs(g.features[i][0]-g.features[j][0]);const bias=g.labels[i]===g.labels[j]?1.5:.55;candidates.push([j,(g.degree(j)+1)*sim*bias])}candidates.sort((a,b)=>b[1]-a[1]);const k=Math.max(1,Math.round(density*18));for(let q=0;q<Math.min(k,candidates.length);q++)if(r()<.82)g.addEdge(i,candidates[Math.floor(r()*Math.min(candidates.length,Math.max(k*3,3)))][0])}
+  }else{
+   const c=3;for(let i=0;i<n;i++){g.communities[i]=Math.floor(i*c/n);g.labels[i]=g.communities[i]===2?1:0}
+   for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const pin=Math.max(.09,density*2),pout=Math.max(.01,density*.18);if(r()<(g.communities[i]===g.communities[j]?pin:pout))g.addEdge(i,j)}
+  }
+ }
+ for(let i=1;i<n;i++)if(g.degree(i)===0)g.addEdge(i,Math.floor(r()*i));
+ assignStructuralFeature(g);return g
+}
+function assignStructuralFeature(g){const max=Math.max(1,...g.nodes.map(i=>g.degree(i)));for(const i of g.nodes){g.features[i][2]=g.degree(i)/max;g.features[i][3]=clamp(g.features[i][3]*.65+g.features[i][2]*.35,0,1)}}
+function forceLayout(g,w,h,it=150){
+ const rnd=seeded(72+g.nodes.length),cx=w/2,cy=h/2,n=g.nodes.length,margin=clamp(Math.min(w,h)*.095,38,70),rx=Math.max(65,w/2-margin),ry=Math.max(65,h/2-margin);
+ const seedR=Math.min(rx,ry)*.40;
+ g.pos=Array.from({length:n},(_,i)=>{const a=i*2*Math.PI/Math.max(1,n)-Math.PI/2,j=(rnd()-.5)*seedR*.34;return{x:cx+Math.cos(a)*(seedR+j),y:cy+Math.sin(a)*(seedR+j),vx:0,vy:0}});
+ const k=Math.sqrt(Math.PI*rx*ry/Math.max(1,n))*.80;
+ for(let t=0;t<it;t++){
+  const temp=(1-t/it)*Math.min(rx,ry)*.055+.28;
+  for(const p of g.pos){p.vx=0;p.vy=0}
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+   const dx=g.pos[i].x-g.pos[j].x,dy=g.pos[i].y-g.pos[j].y,d=Math.hypot(dx,dy)+.3,f=k*k/d,fx=dx/d*f,fy=dy/d*f;
+   g.pos[i].vx+=fx;g.pos[i].vy+=fy;g.pos[j].vx-=fx;g.pos[j].vy-=fy}
+  for(const [a,b] of g.edges()){
+   const dx=g.pos[b].x-g.pos[a].x,dy=g.pos[b].y-g.pos[a].y,d=Math.hypot(dx,dy)+.2,f=d*d/k*.050,fx=dx/d*f,fy=dy/d*f;
+   g.pos[a].vx+=fx;g.pos[a].vy+=fy;g.pos[b].vx-=fx;g.pos[b].vy-=fy}
+  for(const p of g.pos){
+   p.vx+=(cx-p.x)*.0065;p.vy+=(cy-p.y)*.0065;
+   const speed=Math.hypot(p.vx,p.vy)||1,step=Math.min(speed,temp);
+   p.x+=p.vx/speed*step;p.y+=p.vy/speed*step;
+   const q=Math.hypot((p.x-cx)/rx,(p.y-cy)/ry);
+   if(q>.92){const target=.865;p.x=cx+(p.x-cx)*(target/q);p.y=cy+(p.y-cy)*(target/q)}
+  }
+ }
+ const mx=g.pos.reduce((a,p)=>a+p.x,0)/Math.max(1,n),my=g.pos.reduce((a,p)=>a+p.y,0)/Math.max(1,n);
+ let maxNorm=0;for(const p of g.pos)maxNorm=Math.max(maxNorm,Math.hypot((p.x-mx)/rx,(p.y-my)/ry));
+ const scale=maxNorm?clamp(.80/maxNorm,.72,1.22):1;
+ for(const p of g.pos){p.x=cx+(p.x-mx)*scale;p.y=cy+(p.y-my)*scale;const q=Math.hypot((p.x-cx)/rx,(p.y-cy)/ry);if(q>.86){p.x=cx+(p.x-cx)*(.86/q);p.y=cy+(p.y-cy)*(.86/q)}}
+}
+function randomGraphLayout(g,w,h){g.pos=Array.from({length:g.nodes.length},()=>({x:35+Math.random()*Math.max(1,w-70),y:35+Math.random()*Math.max(1,h-70)}))}
+function circularGraphLayout(g,w,h){const r=Math.min(w,h)*.37,cx=w/2,cy=h/2;g.pos=Array.from({length:g.nodes.length},(_,i)=>({x:cx+Math.cos(2*Math.PI*i/Math.max(1,g.nodes.length)-Math.PI/2)*r,y:cy+Math.sin(2*Math.PI*i/Math.max(1,g.nodes.length)-Math.PI/2)*r}))}
+function gridGraphLayout(g,w,h){const cols=Math.ceil(Math.sqrt(g.nodes.length)),rows=Math.ceil(g.nodes.length/cols),sx=(w-70)/Math.max(1,cols-1),sy=(h-70)/Math.max(1,rows-1);g.pos=Array.from({length:g.nodes.length},(_,i)=>({x:35+(i%cols)*sx,y:35+Math.floor(i/cols)*sy}))}
+function radialGraphLayout(g,w,h){const order=[...g.nodes].sort((a,b)=>g.degree(b)-g.degree(a)||a-b),cx=w/2,cy=h/2,ringSize=Math.max(6,Math.ceil(Math.sqrt(g.nodes.length)*2));g.pos=Array(g.nodes.length);order.forEach((node,idx)=>{if(idx===0)g.pos[node]={x:cx,y:cy};else{const ring=Math.floor((idx-1)/ringSize)+1,pos=(idx-1)%ringSize,count=Math.min(ringSize,g.nodes.length-1-(ring-1)*ringSize),r=Math.min(w,h)*(.12+.105*ring),a=2*Math.PI*pos/Math.max(1,count)-Math.PI/2;g.pos[node]={x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r}}})}
+function communityGraphLayout(g,w,h){const groups=g.communities?.length?g.communities:g.labels,ids=[...new Set(groups)],centers=new Map();ids.forEach((id,k)=>{const a=2*Math.PI*k/Math.max(1,ids.length)-Math.PI/2;centers.set(id,{x:w/2+Math.cos(a)*Math.min(w,h)*.29,y:h/2+Math.sin(a)*Math.min(w,h)*.29})});const used={};g.pos=Array(g.nodes.length);g.nodes.forEach(i=>{const id=groups[i],z=centers.get(id),k=used[id]||0,a=k*2.399963,r=11+7*Math.sqrt(k);g.pos[i]={x:z.x+Math.cos(a)*r,y:z.y+Math.sin(a)*r};used[id]=k+1})}
+function applyGraphLayout(g,w,h,mode='auto',iterations=130){let chosen=mode;if(chosen==='auto'){if(g.name==='social')chosen='community';else if(g.name==='molecule')chosen='circular';else if(g.name==='citation')chosen='radial';else chosen='spring'}if(chosen==='spring')forceLayout(g,w,h,iterations);else if(chosen==='circular')circularGraphLayout(g,w,h);else if(chosen==='random')randomGraphLayout(g,w,h);else if(chosen==='grid')gridGraphLayout(g,w,h);else if(chosen==='radial')radialGraphLayout(g,w,h);else if(chosen==='community')communityGraphLayout(g,w,h)}
+class GraphView{
+ constructor(canvas,getGraph,mode="data"){this.canvas=canvas;this.ctx=canvas.getContext("2d");this.getGraph=getGraph;this.mode=mode;this.selected=null;this.hover=null;this.scale=1;this.ox=0;this.oy=0;this.drag=null;this.pan=null;this.colorFn=null;this.edgeFn=null;this.nodeStrokeFn=null;this.highlightNodes=new Set();this.highlightEdges=[];this.bind();this.resize()}
+ resize(){const r=this.canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;this.canvas.width=Math.max(10,r.width*d);this.canvas.height=Math.max(10,r.height*d);this.ctx.setTransform(d,0,0,d,0,0);this.w=r.width;this.h=r.height;this.draw()}
+ world(x,y){return{x:(x-this.ox)/this.scale,y:(y-this.oy)/this.scale}}
+ hit(x,y){const g=this.getGraph();if(!g)return null;const q=this.world(x,y);let best=null,bd=12/this.scale;for(const i of g.nodes){const p=g.pos[i];if(!p)continue;const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<bd){bd=d;best=i}}return best}
+ bind(){
+  this.canvas.addEventListener("mousedown",e=>{const r=this.canvas.getBoundingClientRect(),h=this.hit(e.clientX-r.left,e.clientY-r.top);if(h!=null){this.selected=h;this.drag=h;this.onSelect&&this.onSelect(h,e);this.draw()}else this.pan={x:e.clientX,y:e.clientY,ox:this.ox,oy:this.oy}});
+  window.addEventListener("mousemove",e=>{if(this.drag!=null){const r=this.canvas.getBoundingClientRect(),p=this.world(e.clientX-r.left,e.clientY-r.top),g=this.getGraph();if(g?.pos[this.drag]){g.pos[this.drag].x=p.x;g.pos[this.drag].y=p.y;this.draw()}}else if(this.pan){this.ox=this.pan.ox+e.clientX-this.pan.x;this.oy=this.pan.oy+e.clientY-this.pan.y;this.draw()}});
+  window.addEventListener("mouseup",()=>{this.drag=null;this.pan=null});
+  this.canvas.addEventListener("mousemove",e=>{const r=this.canvas.getBoundingClientRect();this.hover=this.hit(e.clientX-r.left,e.clientY-r.top);this.draw();const g=this.getGraph();if(this.hover!=null)showTip(e,`Nodo ${this.hover}<br>grado: ${g.degree(this.hover)}<br>clase: ${g.labels[this.hover]?"B":"A"}`);else hideTip()});
+  this.canvas.addEventListener("mouseleave",()=>{this.hover=null;hideTip();this.draw()});
+  this.canvas.addEventListener("wheel",e=>{e.preventDefault();const r=this.canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,b=this.world(mx,my),f=e.deltaY<0?1.12:.89;this.scale=clamp(this.scale*f,.4,3.3);this.ox=mx-b.x*this.scale;this.oy=my-b.y*this.scale;this.draw()},{passive:false})
+ }
+ draw(){
+  const g=this.getGraph(),c=this.ctx;if(!this.w)return;c.clearRect(0,0,this.w,this.h);if(!g)return;c.save();c.translate(this.ox,this.oy);c.scale(this.scale,this.scale);
+  for(const [a,b] of g.edges()){const p=g.pos[a],q=g.pos[b];c.strokeStyle=this.edgeFn?this.edgeFn(a,b):"rgba(78,102,130,.27)";c.lineWidth=1;c.beginPath();c.moveTo(p.x,p.y);c.lineTo(q.x,q.y);c.stroke()}
+  for(const e of this.highlightEdges){const p=g.pos[e[0]],q=g.pos[e[1]];c.strokeStyle=e[2]||"#f59e0b";c.lineWidth=3;c.setLineDash(e[3]?[5,4]:[]);c.beginPath();c.moveTo(p.x,p.y);c.lineTo(q.x,q.y);c.stroke();c.setLineDash([])}
+  const maxD=Math.max(1,...g.nodes.map(i=>g.degree(i)));for(const i of g.nodes){const p=g.pos[i],r=5+4*Math.sqrt(g.degree(i)/maxD);let fill=this.colorFn?this.colorFn(i):(g.labels[i]?"#e34d59":"#159766");if(this.highlightNodes.has(i))fill="#7c3aed";if(this.selected===i)fill="#f59e0b";if(this.hover===i)fill="#0891b2";c.beginPath();c.arc(p.x,p.y,r,0,Math.PI*2);c.fillStyle=fill;c.fill();c.strokeStyle=this.nodeStrokeFn?this.nodeStrokeFn(i):"#fff";c.lineWidth=this.nodeStrokeFn?2.5:1.2;c.stroke()}
+  c.restore()
+ }
+}
+function lineChart(canvas,series,xMax=1,yMax=1,legend=[]){
+ const c=canvas.getContext("2d"),r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;canvas.width=Math.max(10,r.width*d);canvas.height=Math.max(10,r.height*d);c.setTransform(d,0,0,d,0,0);const w=r.width,h=r.height,p={l:38,r:12,t:17,b:26};c.clearRect(0,0,w,h);c.strokeStyle="#dce5ee";
+ for(let i=0;i<=4;i++){const y=p.t+(h-p.t-p.b)*i/4;c.beginPath();c.moveTo(p.l,y);c.lineTo(w-p.r,y);c.stroke();c.fillStyle="#64758a";c.font="9px sans-serif";c.textAlign="right";c.fillText((yMax*(1-i/4)).toFixed(1),p.l-5,y+3)}
+ for(let i=0;i<=4;i++){const x=p.l+(w-p.l-p.r)*i/4;c.beginPath();c.moveTo(x,p.t);c.lineTo(x,h-p.b);c.stroke();c.fillStyle="#64758a";c.textAlign="center";c.fillText(Math.round(xMax*i/4),x,h-8)}
+ const colors=["#2563eb","#e34d59","#159766","#7c3aed"];series.forEach((s,si)=>{if(!s.data.length)return;c.strokeStyle=s.color||colors[si%4];c.lineWidth=2.3;c.beginPath();s.data.forEach((pt,i)=>{const x=p.l+(w-p.l-p.r)*pt.x/xMax,y=p.t+(h-p.t-p.b)*(1-pt.y/yMax);i?c.lineTo(x,y):c.moveTo(x,y)});c.stroke()});
+ c.font="9px sans-serif";c.textAlign="left";legend.forEach((x,i)=>{c.fillStyle=colors[i];c.fillRect(p.l+i*88,p.t-11,11,3);c.fillStyle="#465a70";c.fillText(x,p.l+15+i*88,p.t-7)})
+}
+let graph=null,originalGraph=null,dataView,embedGraphView,gnnView,classView,linkView,selectedNode=null,edgeMode=false,edgeStart=null;
+function datasetName(v){return{karate:"Club social",citation:"Citaciones",social:"Comunidades",molecule:"Molécula"}[v]}
+function setupGraph(){
+ const type=$("#dataset").value,n=+$("#nodeCount").value,d=+$("#density").value;graph=generateGraph(type,n,d);const r=$("#dataCanvas").getBoundingClientRect();applyGraphLayout(graph,r.width,r.height,$("#globalLayout").value,n>55?100:150);originalGraph=graph.clone();selectedNode=null;dataView.selected=null;edgeMode=false;edgeStart=null;populateNodeSelects();refreshData();resetEmbed();resetGNN();resetClassification();resetLinks();$("#dataStatus").textContent=`SETUP: ${datasetName(type)}, ${n} nodos, ${graph.edges().length} aristas.`
+}
+function featureColor(v){const x=clamp(v,0,1),r=Math.round(35+220*x),b=Math.round(235-180*x),g=Math.round(125+70*(1-Math.abs(x-.5)*2));return`rgb(${r},${g},${b})`}
+function dataColor(i){const mode=$("#nodeColorMode").value;if(mode==="label")return graph.labels[i]?"#e34d59":"#159766";if(mode==="degree")return featureColor(graph.degree(i)/Math.max(1,...graph.nodes.map(j=>graph.degree(j))));if(mode==="feature")return featureColor(graph.features[i][+$("#featureSelect").value]);const colors=["#2563eb","#e34d59","#159766","#7c3aed","#f59e0b","#0891b2"];return colors[graph.communities[i]%colors.length]}
+function refreshData(){
+ if(!graph)return;dataView.colorFn=dataColor;dataView.draw();const s=graphStats(graph);$("#datasetPill").textContent=datasetName($("#dataset").value);$("#nodesPill").textContent=s.n+" nodos";$("#edgesPill").textContent=s.m+" aristas";$("#dNodes").textContent=s.n;$("#dEdges").textContent=s.m;$("#dDegree").textContent=fmt(s.degree);$("#dDensity").textContent=fmt(s.density,3);$("#dClustering").textContent=fmt(s.clustering);$("#dHomophily").textContent=fmt(s.homophily);
+ const mode=$("#nodeColorMode").value;$("#dataLegend").innerHTML=mode==="label"?'<div><span class="dot" style="background:#159766"></span>Clase A</div><div><span class="dot" style="background:#e34d59"></span>Clase B</div>':mode==="degree"||mode==="feature"?'<div>Azul: valor bajo</div><div>Rojo: valor alto</div>':'<div>Color = comunidad</div>';
+ renderMatrices();if(selectedNode!=null)inspectNode(selectedNode)
+}
+function renderMatrices(){
+ const limit=Math.min(graph.nodes.length,14);let h="<table><thead><tr><th>nodo</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>y</th></tr></thead><tbody>";for(let i=0;i<limit;i++)h+=`<tr><td>${i}</td>${graph.features[i].map(v=>`<td>${fmt(v)}</td>`).join("")}<td class="${graph.labels[i]?"labB":"labA"}">${graph.labels[i]?"B":"A"}</td></tr>`;h+="</tbody></table>";$("#featureMatrix").innerHTML=h;
+ h="<table><thead><tr><th>A</th>"+Array.from({length:limit},(_,i)=>`<th>${i}</th>`).join("")+"</tr></thead><tbody>";for(let i=0;i<limit;i++){h+=`<tr><th>${i}</th>`;for(let j=0;j<limit;j++)h+=`<td class="${graph.adj[i].has(j)?"hot":""}">${graph.adj[i].has(j)?1:0}</td>`;h+="</tr>"}h+="</tbody></table>";$("#adjMatrix").innerHTML=h
+}
+function inspectNode(i){selectedNode=i;const f=graph.features[i];$("#nodeInspector").innerHTML=`<b>Nodo ${i}</b><br>Etiqueta: clase ${graph.labels[i]?"B":"A"}<br>Grado: ${graph.degree(i)}<br>Vecinos: ${[...graph.adj[i]].join(", ")||"ninguno"}<br>Vector X: [${f.map(x=>fmt(x)).join(", ")}]`}
+function addNode(){
+ const i=graph.nodes.length;graph.nodes.push(i);graph.adj.push(new Set());const cls=Math.random()<.5?0:1;graph.labels.push(cls);graph.communities.push(cls);graph.features.push([Math.random(),Math.random(),0,Math.random()]);const r=$("#dataCanvas").getBoundingClientRect();graph.pos.push({x:r.width/2+(Math.random()-.5)*80,y:r.height/2+(Math.random()-.5)*80});if(i>0)graph.addEdge(i,Math.floor(Math.random()*i));assignStructuralFeature(graph);refreshData();populateNodeSelects();$("#dataStatus").textContent=`Nodo ${i} añadido.`
+}
+function deleteSelected(){if(selectedNode==null||graph.nodes.length<3)return;const del=selectedNode,last=graph.nodes.length-1;if(del!==last){graph.adj[del]=new Set([...graph.adj[last]].map(x=>x));for(const nb of graph.adj[del]){graph.adj[nb].delete(last);graph.adj[nb].add(del)}graph.features[del]=graph.features[last];graph.labels[del]=graph.labels[last];graph.communities[del]=graph.communities[last];graph.pos[del]=graph.pos[last]}for(const nb of graph.adj[last])graph.adj[nb].delete(last);graph.nodes.pop();graph.adj.pop();graph.features.pop();graph.labels.pop();graph.communities.pop();graph.pos.pop();selectedNode=null;dataView.selected=null;assignStructuralFeature(graph);refreshData();populateNodeSelects();$("#dataStatus").textContent=`Nodo ${del} eliminado.`
+}
+function populateNodeSelects(){for(const id of ["queryNode","gnnNode"]){const el=$("#"+id),old=+el.value||0;el.innerHTML=graph.nodes.map(i=>`<option value="${i}">Nodo ${i}</option>`).join("");el.value=Math.min(old,graph.nodes.length-1)}}
+function reLayout(){if(!graph)return;const r=$("#dataCanvas").getBoundingClientRect();applyGraphLayout(graph,r.width,r.height,$("#globalLayout").value,120);dataView.scale=1;dataView.ox=dataView.oy=0;dataView.draw();syncAllPositions();$("#dataStatus").textContent=`Layout aplicado: ${$("#globalLayout").selectedOptions[0].textContent.replace("Layout: ","")}.`}
+
+let embeddings=[],embedEpoch=0,embedLoss=[],embedTimer=null,embedView;
+function resetEmbed(){
+ if(embedTimer)clearInterval(embedTimer);embedTimer=null;embedEpoch=0;embedLoss=[];const r=seeded(887+graph.nodes.length);embeddings=graph.nodes.map(()=>[(r()-.5)*2,(r()-.5)*2,(r()-.5)*2]);$("#embedProgress").style.width="0%";$("#embedProgressText").textContent="0 épocas";refreshEmbed()
+}
+function targetSimilarity(i,j,method){
+ const fi=graph.features[i],fj=graph.features[j],fd=1-Math.sqrt(fi.reduce((s,x,k)=>s+(x-fj[k])**2,0))/2;
+ const cn=commonNeighbors(graph,i,j).length,sd=graph.adj[i].has(j)?1:.2+Math.min(.8,cn/4);if(method==="features")return clamp(fd,0,1);if(method==="structure")return clamp(sd,0,1);if(method==="walk"){let score=graph.adj[i].has(j)?.9:.1;score+=Math.min(.8,cn*.17);return clamp(score,0,1)}return clamp(.55*sd+.45*fd,0,1)
+}
+function embedOneEpoch(){
+ const method=$("#embedMethod").value,n=graph.nodes.length,lr=.045;let loss=0;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const t=targetSimilarity(i,j,method),dx=embeddings[i][0]-embeddings[j][0],dy=embeddings[i][1]-embeddings[j][1],d=Math.hypot(dx,dy)+.001,p=Math.exp(-d),err=p-t;loss+=err*err;const grad=-2*err*p,ux=dx/d,uy=dy/d;embeddings[i][0]-=lr*grad*ux;embeddings[i][1]-=lr*grad*uy;embeddings[j][0]+=lr*grad*ux;embeddings[j][1]+=lr*grad*uy}
+ for(const e of embeddings){e[0]*=.997;e[1]*=.997}embedEpoch++;embedLoss.push(loss/(n*(n-1)/2));refreshEmbed()
+}
+function trainEmbed(){
+ if(embedTimer){clearInterval(embedTimer);embedTimer=null;return}const target=+$("#embedEpochs").value;embedTimer=setInterval(()=>{if(embedEpoch>=target){clearInterval(embedTimer);embedTimer=null;return}embedOneEpoch()},35)
+}
+function drawEmbedding(){
+ const cv=$("#embedCanvas"),c=cv.getContext("2d"),r=cv.getBoundingClientRect(),dpr=devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,r.width,r.height);if(!embeddings.length)return;let xs=embeddings.map(e=>e[0]),ys=embeddings.map(e=>e[1]),minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys),pad=35;
+ c.strokeStyle="#e0e8f0";for(let i=1;i<5;i++){let x=pad+(r.width-2*pad)*i/5;c.beginPath();c.moveTo(x,pad);c.lineTo(x,r.height-pad);c.stroke();let y=pad+(r.height-2*pad)*i/5;c.beginPath();c.moveTo(pad,y);c.lineTo(r.width-pad,y);c.stroke()}
+ const q=+$("#queryNode").value;for(const i of graph.nodes){const x=pad+(r.width-2*pad)*(embeddings[i][0]-minx)/(maxx-minx||1),y=pad+(r.height-2*pad)*(embeddings[i][1]-miny)/(maxy-miny||1);c.fillStyle=i===q?"#f59e0b":graph.labels[i]?"#e34d59":"#159766";c.beginPath();c.arc(x,y,i===q?7:5,0,Math.PI*2);c.fill();c.strokeStyle="#fff";c.stroke()}
+}
+function cosine(a,b){let dot=0,na=0,nb=0;for(let i=0;i<a.length;i++){dot+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i]}return dot/(Math.sqrt(na*nb)+1e-9)}
+function refreshEmbed(){
+ if(!graph)return;embedGraphView.draw();drawEmbedding();const target=+$("#embedEpochs").value;$("#embedProgress").style.width=Math.min(100,100*embedEpoch/target)+"%";$("#embedProgressText").textContent=`${embedEpoch} de ${target} épocas`;lineChart($("#lossCanvas"),[{data:embedLoss.map((y,i)=>({x:i+1,y})),color:"#7c3aed"}],Math.max(1,target),Math.max(.01,...embedLoss,1),["Pérdida"]);
+ const q=+$("#queryNode").value,sim=graph.nodes.filter(i=>i!==q).map(i=>[i,cosine(embeddings[q],embeddings[i])]).sort((a,b)=>b[1]-a[1]).slice(0,6);$("#similarNodes").innerHTML=sim.map(([i,s])=>`<div class="neighbor"><b>Nodo ${i}</b><br>coseno: ${fmt(s,3)}<br>clase ${graph.labels[i]?"B":"A"}</div>`).join("");$("#embedExplanation").innerHTML=embedEpoch?`El nodo ${q} quedó más cerca de ${sim.slice(0,3).map(x=>"nodo "+x[0]).join(", ")}.`:"Entrene para observar cómo cambia el espacio latente."
+}
+
+let gnnFeatures=[],gnnLayer=0,gnnNormalize=true,gnnPrev=[];
+function resetGNN(){gnnFeatures=graph.features.map(x=>[...x]);gnnPrev=gnnFeatures.map(x=>[...x]);gnnLayer=0;refreshGNN()}
+function receptiveSet(root,k){const seen=new Set([root]);let frontier=[root];for(let t=0;t<k;t++){const next=[];for(const u of frontier)for(const v of graph.adj[u])if(!seen.has(v)){seen.add(v);next.push(v)}frontier=next}return seen}
+function aggregate(v,features,type){
+ const nb=[...graph.adj[v]];if(!nb.length)return[0,0,0,0];const vals=[0,1,2,3].map(k=>nb.map(u=>features[u][k]));if(type==="sum")return vals.map(a=>a.reduce((s,x)=>s+x,0));if(type==="max")return vals.map(a=>Math.max(...a));return vals.map(a=>a.reduce((s,x)=>s+x,0)/a.length)
+}
+function gnnOne(){
+ const old=gnnFeatures.map(x=>[...x]),alpha=+$("#selfWeight").value,agg=$("#aggregator").value;gnnPrev=old;gnnFeatures=graph.nodes.map(v=>{const m=aggregate(v,old,agg),z=old[v].map((x,k)=>Math.max(0,alpha*x+(1-alpha)*m[k]));if(gnnNormalize){const norm=Math.sqrt(z.reduce((s,x)=>s+x*x,0))||1;return z.map(x=>x/norm)}return z});gnnLayer++;refreshGNN();$("#gnnStatus").textContent=`Capa ${gnnLayer}: mensajes agregados con ${agg}.`
+}
+function runGNN(){const target=+$("#gnnLayers").value;while(gnnLayer<target)gnnOne()}
+function averageNeighborSimilarity(){let s=0,c=0;for(const[a,b]of graph.edges()){s+=cosine(gnnFeatures[a],gnnFeatures[b]);c++}return c?s/c:0}
+function refreshGNN(){
+ if(!graph)return;const q=+$("#gnnNode").value,reach=receptiveSet(q,gnnLayer);gnnView.highlightNodes=new Set([...reach].filter(x=>x!==q));gnnView.selected=q;gnnView.draw();$("#layerPill").textContent=`Capa ${gnnLayer}`;$("#receptivePill").textContent=`${gnnLayer}-hop`;$("#gLayer").textContent=gnnLayer;$("#gReach").textContent=reach.size;
+ const change=Math.sqrt(gnnFeatures[q].reduce((s,x,k)=>s+(x-(gnnPrev[q]?.[k]||0))**2,0));const sm=averageNeighborSimilarity();$("#gChange").textContent=fmt(change,3);$("#gSmooth").textContent=fmt(sm,2);$("#receptiveText").textContent=`Con ${gnnLayer} capa(s), el nodo ${q} puede recibir información de ${reach.size} nodos dentro de ${gnnLayer} salto(s).`;$("#oversmoothNote").textContent=sm>.93?"Advertencia: las representaciones vecinas son casi idénticas; aparece oversmoothing.":sm>.78?"El suavizado es alto, pero aún hay diversidad local.":"Los nodos todavía conservan diferencias claras.";
+ const vec=gnnFeatures[q],max=Math.max(.001,...vec);$("#gnnFeatureBars").innerHTML=vec.map((x,i)=>`<div class="fbar" style="height:${8+85*x/max}px"><span>h${i+1}</span></div>`).join("");$("#aggName").textContent={mean:"media",sum:"suma",max:"máximo"}[$("#aggregator").value];$("#gnnEquation").textContent=`hᵥ⁽${gnnLayer+1}⁾ = σ( α·hᵥ⁽${gnnLayer}⁾ + (1−α)·${$("#aggregator").value.toUpperCase()}({hᵤ⁽${gnnLayer}⁾ : u∈N(v)}) )`
+}
+
+let trainSet=new Set(),pred=[],confidence=[],classIter=0,classHist=[],classOriginal=null;
+function splitLabels(){
+ const r=seeded(985+graph.nodes.length+ +$("#labelRate").value),rate=+$("#labelRate").value/100;trainSet=new Set();for(const cls of [0,1]){const nodes=shuffle(graph.nodes.filter(i=>graph.labels[i]===cls),r),k=Math.max(1,Math.round(nodes.length*rate));nodes.slice(0,k).forEach(i=>trainSet.add(i))}
+ pred=graph.nodes.map(i=>trainSet.has(i)?graph.labels[i]:-1);confidence=graph.nodes.map(i=>trainSet.has(i)?1:.5);classIter=0;classHist=[];classOriginal=graph.clone();refreshClassification();$("#classStatus").textContent=`Partición creada: ${trainSet.size} train, ${graph.nodes.length-trainSet.size} test.`
+}
+function featureKNN(i,space){
+ let cand=[...trainSet].map(j=>[j,Math.sqrt(space[i].reduce((s,x,k)=>s+(x-space[j][k])**2,0))]).sort((a,b)=>a[1]-b[1]).slice(0,Math.min(5,trainSet.size));let p=cand.reduce((s,[j,d])=>s+graph.labels[j]/(d+.05),0)/cand.reduce((s,[j,d])=>s+1/(d+.05),0);return[p>=.5?1:0,Math.max(p,1-p)]
+}
+function classOne(){
+ if(!trainSet.size)splitLabels();const model=$("#classifier").value;let next=[...pred],conf=[...confidence];
+ if(model==="features"||model==="embedding"){const space=model==="features"?graph.features:embeddings;for(const i of graph.nodes)if(!trainSet.has(i))[next[i],conf[i]]=featureKNN(i,space)}
+ if(model==="propagation"||model==="gcn"){
+  for(const i of graph.nodes)if(!trainSet.has(i)){const nb=[...graph.adj[i]],scores=nb.map(j=>pred[j]).filter(x=>x>=0);let p=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:.5;if(model==="gcn"){const own=graph.features[i][0],featP=own>.5?.75:.25;p=.65*p+.35*featP}next[i]=p>=.5?1:0;conf[i]=Math.max(p,1-p)}
+ }
+ pred=next;confidence=conf;classIter++;const ev=evaluateClass();classHist.push({x:classIter,acc:ev.acc,f1:ev.f1});refreshClassification();$("#classStatus").textContent=`Iteración ${classIter}: accuracy ${Math.round(ev.acc*100)}%, macro-F1 ${Math.round(ev.f1*100)}%.`
+}
+function trainClass(){const n=+$("#classIters").value;for(let i=0;i<n;i++)classOne()}
+function evaluateClass(){
+ let tp=0,tn=0,fp=0,fn=0,total=0,ok=0;for(const i of graph.nodes)if(!trainSet.has(i)&&pred[i]>=0){total++;if(pred[i]===graph.labels[i])ok++;if(graph.labels[i]===1&&pred[i]===1)tp++;if(graph.labels[i]===0&&pred[i]===0)tn++;if(graph.labels[i]===0&&pred[i]===1)fp++;if(graph.labels[i]===1&&pred[i]===0)fn++}
+ const f1a=2*tn/(2*tn+fp+fn||1),f1b=2*tp/(2*tp+fp+fn||1);return{acc:total?ok/total:0,f1:(f1a+f1b)/2,tp,tn,fp,fn,total}
+}
+function refreshClassification(){
+ if(!graph)return;classView.nodeStrokeFn=i=>trainSet.has(i)?"#14283c":"#fff";const mode=$("#classView").value;classView.colorFn=i=>{if(mode==="truth")return graph.labels[i]?"#e34d59":"#159766";if(mode==="confidence")return featureColor(confidence[i]||.5);if(mode==="errors"){if(pred[i]<0)return"#9aaabd";return pred[i]===graph.labels[i]?"#159766":"#e34d59"}return pred[i]<0?"#9aaabd":pred[i]?"#e34d59":"#159766"};classView.draw();
+ const ev=evaluateClass();$("#cAcc").textContent=Math.round(ev.acc*100)+"%";$("#cF1").textContent=Math.round(ev.f1*100)+"%";$("#cTrain").textContent=trainSet.size;$("#cTest").textContent=graph.nodes.length-trainSet.size;$("#classIterPill").textContent=`Iteración ${classIter}`;$("#classModelPill").textContent=$("#classifier").selectedOptions[0].textContent;
+ lineChart($("#classChart"),[{data:classHist.map(x=>({x:x.x,y:x.acc})),color:"#2563eb"},{data:classHist.map(x=>({x:x.x,y:x.f1})),color:"#e34d59"}],Math.max(1,+$("#classIters").value),1,["Accuracy","Macro-F1"]);
+ $("#confusionMatrix").innerHTML=`<table><thead><tr><th>Real \\ Pred.</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>A</th><td class="labA">${ev.tn}</td><td>${ev.fp}</td></tr><tr><th>B</th><td>${ev.fn}</td><td class="labB">${ev.tp}</td></tr></tbody></table>`;
+ $("#classInterpretation").textContent=ev.total?`El modelo acertó ${Math.round(ev.acc*100)}% de los nodos no etiquetados. Compare accuracy y F1 para detectar efectos de desbalance.`:"Cree una partición para comenzar."
+}
+function resetClassification(){trainSet=new Set();pred=graph.nodes.map(()=>-1);confidence=graph.nodes.map(()=>.5);classIter=0;classHist=[];refreshClassification()}
+function shuffleFeatures(){graph.features=shuffle(graph.features,seeded(301)).map(x=>[...x]);$("#ablationText").textContent="Las características X fueron barajadas entre nodos. Los modelos basados en atributos deberían deteriorarse.";resetClassification()}
+function rewireGraph(){const m=graph.edges().length;graph.adj=graph.nodes.map(()=>new Set());const r=seeded(711);let c=0;while(c<m){const a=Math.floor(r()*graph.nodes.length),b=Math.floor(r()*graph.nodes.length);if(graph.addEdge(a,b))c++}assignStructuralFeature(graph);syncAllPositions();$("#ablationText").textContent="La estructura A fue reconfigurada conservando aproximadamente el número de aristas. La información de vecindario perdió coherencia.";resetClassification()}
+
+let linkGraph=null,linkBase=null,linkScores=[],hiddenSet=new Set();
+function resetLinks(){linkGraph=graph.clone();linkBase=graph.clone();linkScores=[];hiddenSet=new Set();if(linkView)linkView.highlightEdges=[];refreshLinks()}
+function edgeKey(a,b){return a<b?`${a}-${b}`:`${b}-${a}`}
+function hideLinks(){
+ resetLinks();const k=Math.min(+$("#hiddenEdges").value,Math.max(1,linkGraph.edges().length-1)),e=shuffle(linkGraph.edges(),seeded(551+k)).slice(0,k);for(const[a,b]of e){linkGraph.removeEdge(a,b);hiddenSet.add(edgeKey(a,b))}linkGraph.hiddenEdges=e;$("#linkStatus").textContent=`Se ocultaron ${k} enlaces reales.`;refreshLinks()
+}
+function linkScore(a,b,method){
+ const cn=commonNeighbors(linkGraph,a,b);if(method==="common")return cn.length;if(method==="jaccard"){const union=new Set([...linkGraph.adj[a],...linkGraph.adj[b]]);return union.size?cn.length/union.size:0}if(method==="adamic")return cn.reduce((s,z)=>s+1/Math.log(Math.max(2,linkGraph.degree(z))),0);if(method==="preferential")return linkGraph.degree(a)*linkGraph.degree(b);return cosine(embeddings[a],embeddings[b])
+}
+function scoreLinks(){
+ if(!hiddenSet.size)hideLinks();const method=$("#linkMethod").value;linkScores=[];for(let i=0;i<linkGraph.nodes.length;i++)for(let j=i+1;j<linkGraph.nodes.length;j++)if(!linkGraph.adj[i].has(j))linkScores.push({a:i,b:j,score:linkScore(i,j,method),real:hiddenSet.has(edgeKey(i,j))});linkScores.sort((x,y)=>y.score-x.score);$("#linkStatus").textContent=`${linkScores.length} pares candidatos evaluados con ${$("#linkMethod").selectedOptions[0].textContent}.`;refreshLinks()
+}
+function refreshLinks(){
+ if(!linkGraph)return;linkView.highlightEdges=[];if(linkScores.length){const top=linkScores.slice(0,+$("#topLinks").value);linkView.highlightEdges=top.map(x=>[x.a,x.b,x.real?"#e34d59":"#f59e0b",true])}linkView.draw();$("#hiddenPill").textContent=`${hiddenSet.size} ocultos`;$("#linkMethodPill").textContent=$("#linkMethod").selectedOptions[0].textContent;
+ const top=linkScores.slice(0,+$("#topLinks").value),max=Math.max(.001,...top.map(x=>x.score));$("#linkRanking").innerHTML=top.map((x,i)=>`<div class="rank-row"><b>${i+1}</b><div><div>${x.a} ↔ ${x.b} ${x.real?"✓":""}</div><div class="bar"><span style="width:${100*x.score/max}%"></span></div></div><span>${fmt(x.score,3)}</span></div>`).join("")||"<div class='small'>Calcule puntuaciones para generar el ranking.</div>";
+ const p5=precisionAt(5),r10=recallAt(10),mrr=meanReciprocalRank();$("#lP5").textContent=Math.round(p5*100)+"%";$("#lR10").textContent=Math.round(r10*100)+"%";$("#lMRR").textContent=fmt(mrr,3);$("#lCandidates").textContent=linkScores.length;
+ const pts=[];for(let k=1;k<=Math.min(20,linkScores.length);k++)pts.push({x:k,y:precisionAt(k)});lineChart($("#precisionCanvas"),[{data:pts,color:"#2563eb"}],Math.max(1,pts.length),1,["Precision@K"]);
+ $("#linkInterpretation").textContent=linkScores.length?`Entre los 5 primeros candidatos, ${Math.round(p5*100)}% corresponden a enlaces ocultos reales. Un ranking útil coloca positivos cerca de la parte superior.`:"Oculte algunos enlaces y calcule puntuaciones."
+}
+function precisionAt(k){const a=linkScores.slice(0,k);return a.length?a.filter(x=>x.real).length/a.length:0}
+function recallAt(k){return hiddenSet.size?linkScores.slice(0,k).filter(x=>x.real).length/hiddenSet.size:0}
+function meanReciprocalRank(){const idx=linkScores.findIndex(x=>x.real);return idx>=0?1/(idx+1):0}
+function revealBest(){if(!linkScores.length)return;const x=linkScores.shift();linkGraph.addEdge(x.a,x.b);hiddenSet.delete(edgeKey(x.a,x.b));$("#linkStatus").textContent=`Se añadió el enlace candidato ${x.a}–${x.b}${x.real?" (era un enlace oculto real)":""}.`;scoreLinks()}
+
+function syncAllPositions(){
+ const views=[embedGraphView,gnnView,classView];for(const v of views){if(v){const g=v.getGraph();if(g)g.pos=graph.pos.map(p=>({...p}));v.draw()}}
+ if(linkGraph){linkGraph.pos=graph.pos.map(p=>({...p}));linkView?.draw()}
+}
+function exportSession(){const obj={dataset:$("#dataset").value,nodes:graph.nodes,edges:graph.edges(),features:graph.features,labels:graph.labels,embeddings,classifier:$("#classifier").value,predictions:pred,hiddenEdges:[...hiddenSet]};download("graphml_session.json",JSON.stringify(obj,null,2),"application/json")}
+function bind(){
+ dataView=new GraphView($("#dataCanvas"),()=>graph);dataView.onSelect=(i)=>{if(edgeMode){if(edgeStart==null){edgeStart=i;$("#editHint").textContent=`Nodo ${i} seleccionado como origen. Seleccione el destino.`}else{if(graph.addEdge(edgeStart,i)){assignStructuralFeature(graph);$("#dataStatus").textContent=`Arista ${edgeStart}–${i} añadida.`}edgeStart=null;refreshData();$("#editHint").textContent="Modo arista activo: seleccione dos nodos."}}else{inspectNode(i)}};
+ embedGraphView=new GraphView($("#embedGraphCanvas"),()=>graph);gnnView=new GraphView($("#gnnCanvas"),()=>graph);classView=new GraphView($("#classCanvas"),()=>graph);linkView=new GraphView($("#linkCanvas"),()=>linkGraph);
+ $$(".tab").forEach(t=>t.addEventListener("click",()=>{$$(".tab").forEach(x=>x.classList.remove("active"));$$(".page").forEach(x=>x.classList.remove("active"));t.classList.add("active");$("#"+t.dataset.page).classList.add("active");setTimeout(()=>{[dataView,embedGraphView,gnnView,classView,linkView].forEach(v=>v.resize());refreshData();refreshEmbed();refreshGNN();refreshClassification();refreshLinks()},30)}));
+ $("#nodeCount").addEventListener("input",e=>$("#nodeCountVal").textContent=e.target.value);$("#density").addEventListener("input",e=>$("#densityVal").textContent=(+e.target.value).toFixed(2));$("#setupData").addEventListener("click",setupGraph);$("#relayoutData").addEventListener("click",reLayout);$("#nodeColorMode").addEventListener("change",refreshData);$("#featureSelect").addEventListener("change",refreshData);
+ $("#addNode").addEventListener("click",addNode);$("#deleteSelected").addEventListener("click",deleteSelected);$("#resetGraph").addEventListener("click",()=>{graph=originalGraph.clone();selectedNode=null;dataView.selected=null;populateNodeSelects();refreshData();syncAllPositions()});$("#toggleEdgeMode").addEventListener("click",()=>{edgeMode=!edgeMode;edgeStart=null;$("#toggleEdgeMode").textContent=edgeMode?"Salir modo arista":"Añadir arista";$("#editHint").textContent=edgeMode?"Modo arista activo: seleccione dos nodos.":"Arrastre nodos para moverlos. Seleccione un nodo para inspeccionarlo."});
+ $("#walkLength").addEventListener("input",e=>$("#walkLengthVal").textContent=e.target.value);$("#embedEpochs").addEventListener("input",e=>$("#embedEpochsVal").textContent=e.target.value);$("#trainEmbed").addEventListener("click",trainEmbed);$("#stepEmbed").addEventListener("click",embedOneEpoch);$("#resetEmbed").addEventListener("click",resetEmbed);$("#queryNode").addEventListener("change",refreshEmbed);$("#embedMethod").addEventListener("change",resetEmbed);$("#exportEmbed").addEventListener("click",()=>csv("embeddings_nodos.csv",[["node","z1","z2","z3","label"],...embeddings.map((e,i)=>[i,...e,graph.labels[i]])]));
+ $("#gnnLayers").addEventListener("input",e=>$("#gnnLayersVal").textContent=e.target.value);$("#selfWeight").addEventListener("input",e=>{$("#selfWeightVal").textContent=(+e.target.value).toFixed(2);refreshGNN()});$("#gnnNode").addEventListener("change",refreshGNN);$("#aggregator").addEventListener("change",refreshGNN);$("#gnnStep").addEventListener("click",gnnOne);$("#gnnRun").addEventListener("click",runGNN);$("#gnnReset").addEventListener("click",resetGNN);$("#toggleNormalize").addEventListener("click",e=>{gnnNormalize=!gnnNormalize;e.target.textContent=`Normalizar: ${gnnNormalize?"sí":"no"}`;resetGNN()});
+ $("#labelRate").addEventListener("input",e=>$("#labelRateVal").textContent=e.target.value+"%");$("#classIters").addEventListener("input",e=>$("#classItersVal").textContent=e.target.value);$("#splitLabels").addEventListener("click",splitLabels);$("#classStep").addEventListener("click",classOne);$("#classTrain").addEventListener("click",trainClass);$("#classReset").addEventListener("click",resetClassification);$("#classView").addEventListener("change",refreshClassification);$("#classifier").addEventListener("change",resetClassification);$("#shuffleFeatures").addEventListener("click",shuffleFeatures);$("#rewireGraph").addEventListener("click",rewireGraph);
+ $("#hiddenEdges").addEventListener("input",e=>$("#hiddenEdgesVal").textContent=e.target.value);$("#topLinks").addEventListener("input",e=>{$("#topLinksVal").textContent=e.target.value;refreshLinks()});$("#hideLinks").addEventListener("click",hideLinks);$("#scoreLinks").addEventListener("click",scoreLinks);$("#revealBest").addEventListener("click",revealBest);$("#resetLinks").addEventListener("click",resetLinks);$("#linkMethod").addEventListener("change",()=>{const t={common:"Los vecinos comunes explotan cierre triádico.",jaccard:"Jaccard normaliza los vecinos comunes por el tamaño de la unión.",adamic:"Adamic–Adar da más peso a vecinos comunes poco conectados.",preferential:"La conexión preferencial favorece pares de hubs.",embedding:"El coseno compara proximidad en el espacio latente."};$("#linkConcept").textContent=t[$("#linkMethod").value];if(linkScores.length)scoreLinks()});
+ $("#gradeQuiz").addEventListener("click",()=>{let s=0,n=0;for(let i=1;i<=4;i++){const x=document.querySelector(`input[name=q${i}]:checked`);if(x){n++;s+=+x.value}}$("#quizResult").textContent=n<4?"Faltan preguntas por responder.":`Resultado: ${s}/4. ${s===4?"Excelente dominio conceptual.":s>=3?"Buen resultado; revise la respuesta incorrecta.":"Repase los laboratorios y vuelva a intentarlo."}`});
+ $("#applyGlobalLayout").addEventListener("click",reLayout);$("#globalLayout").addEventListener("change",reLayout); $("#exportBtn").addEventListener("click",exportSession);$("#guideBtn").addEventListener("click",()=>alert("Recorrido recomendado:\\n1. Explore A y X.\\n2. Revise las tareas de Graph ML.\\n3. Entrene embeddings.\\n4. Propague mensajes.\\n5. Compare clasificadores.\\n6. Evalúe predicción de enlaces."));
+ window.addEventListener("resize",()=>[dataView,embedGraphView,gnnView,classView,linkView].forEach(v=>v.resize()))
+}
+bind();setupGraph();
+</script>
+</body>
+</html>
