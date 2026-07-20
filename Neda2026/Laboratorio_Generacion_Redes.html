@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laboratorio de Generación de Redes</title>
+  <style>
+    :root{--bg:#f3f6fb;--panel:#fff;--ink:#14213d;--muted:#65718b;--line:#dfe6f1;--blue:#2563eb;--blue2:#60a5fa;--teal:#0f9f91;--orange:#f59e0b;--red:#ef4444;--purple:#7c3aed;--shadow:0 12px 35px rgba(27,48,87,.09)}
+    *{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+    button,select,input{font:inherit}.app{height:100%;display:grid;grid-template-rows:auto 1fr}.topbar{height:66px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 20px;z-index:5}.brand{display:flex;align-items:center;gap:12px;min-width:310px}.brandmark{width:39px;height:39px;border-radius:12px;background:linear-gradient(145deg,#245eea,#1ba7a1);position:relative;box-shadow:0 8px 18px #2563eb33}.brandmark:before,.brandmark:after{content:"";position:absolute;border:2px solid #fff;border-radius:50%;width:7px;height:7px;top:8px;left:8px;box-shadow:15px 5px 0 -2px #fff,6px 16px 0 -2px #fff}.brandmark:after{width:22px;height:2px;border:0;background:#fff;top:19px;left:8px;transform:rotate(31deg);box-shadow:none}.brand h1{font-size:17px;margin:0}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.model-tabs{display:flex;gap:7px;flex:1;justify-content:center}.model-btn{border:1px solid var(--line);background:#f9fbff;color:#43506a;border-radius:11px;padding:9px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;font-size:12px;transition:.2s}.model-btn:hover{border-color:#93b4ff}.model-btn.active{background:#eaf1ff;border-color:#8bb0ff;color:#174fc1}.dot{width:9px;height:9px;border-radius:50%;background:currentColor}.header-actions{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#526079;cursor:pointer}.icon-btn:hover{background:#f1f5fb;color:var(--blue)}
+    .workspace{min-height:0;display:grid;grid-template-columns:282px minmax(420px,1fr) 324px;gap:12px;padding:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);min-height:0}.sidebar{overflow:auto;padding:15px}.section{padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--line)}.section:last-child{border:0;margin:0}.section-title{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#76839b;font-weight:800;margin:0 0 12px}.select-wrap select{width:100%;height:42px;border:1px solid var(--line);border-radius:10px;padding:0 11px;color:var(--ink);background:#fbfcff;font-weight:650}.param{margin:12px 0}.param-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:7px}.param-head span:first-child{color:#48556e;font-weight:650}.value{color:var(--blue);font-weight:800;background:#edf3ff;border-radius:6px;padding:2px 7px}.param input[type=range]{width:100%;accent-color:var(--blue)}.hint{font-size:11px;color:var(--muted);line-height:1.45}.transport{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.transport button{height:39px;border:1px solid var(--line);background:#fff;border-radius:9px;cursor:pointer;color:#44516a;font-weight:800}.transport button:hover{background:#eef4ff;color:var(--blue)}.transport .primary{background:var(--blue);color:#fff;border-color:var(--blue)}.transport button:disabled{opacity:.35;cursor:not-allowed}.speedrow{display:flex;align-items:center;gap:8px;margin-top:10px}.speedrow input{flex:1;accent-color:var(--teal)}.speedrow span{font-size:11px;color:var(--muted);white-space:nowrap}.phasebox{border-radius:12px;background:#f4f8ff;border:1px solid #dce7fb;padding:11px}.phase-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);font-weight:850}.phase-title{font-size:13px;font-weight:800;margin:4px 0}.phase-text{font-size:11px;line-height:1.45;color:#58657d;min-height:47px}.progress{height:6px;border-radius:99px;background:#dfe8f6;margin-top:9px;overflow:hidden}.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));width:0;transition:width .25s}.prob-list{max-height:132px;overflow:auto}.prob-row{display:grid;grid-template-columns:35px 1fr 38px;gap:6px;align-items:center;font-size:10px;margin:6px 0}.prob-bar{height:7px;background:#edf1f7;border-radius:8px;overflow:hidden}.prob-bar i{display:block;height:100%;background:var(--purple);border-radius:8px}
+    .stage{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 45%,#fff 0,#fbfdff 54%,#f0f5fb 100%)}#networkCanvas{display:block;width:100%;height:100%;touch-action:none}.stage-toolbar{position:absolute;top:12px;left:12px;display:flex;gap:7px;background:#ffffffde;border:1px solid var(--line);border-radius:11px;padding:5px;backdrop-filter:blur(8px)}.stage-toolbar select{height:31px;border:0;background:transparent;color:#41506a;font-size:11px;font-weight:700;padding:0 4px}.stage-toolbar button{width:31px;height:31px;border:0;border-radius:8px;background:transparent;color:#59657b;cursor:pointer}.stage-toolbar button:hover{background:#eaf1ff;color:var(--blue)}.stage-badge{position:absolute;top:13px;right:13px;border-radius:99px;background:#fff;border:1px solid var(--line);box-shadow:0 5px 15px #17325d15;padding:7px 11px;font-size:10px;font-weight:800;color:#4e5b73}.legend{position:absolute;bottom:12px;left:12px;display:flex;gap:13px;background:#ffffffdf;border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:10px;color:#58657b}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:8px;height:8px;border-radius:50%;background:var(--blue)}.legend .new{background:var(--orange)}.legend .sel{background:var(--purple)}.toast{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:#14213de8;color:#fff;border-radius:9px;padding:8px 13px;font-size:11px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1}.tooltip{position:absolute;pointer-events:none;background:#14213df3;color:#fff;border-radius:8px;padding:7px 9px;font-size:10px;line-height:1.45;display:none;z-index:4}
+    .analytics{overflow:auto;padding:13px}.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.metric{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fbfcff}.metric b{display:block;font-size:17px;letter-spacing:-.03em}.metric span{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#7b879c;font-weight:750}.chart-card{border:1px solid var(--line);border-radius:12px;margin-top:10px;padding:10px;background:#fff}.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}.chart-head b{font-size:11px}.chart-head select{border:0;color:var(--blue);font-size:10px;font-weight:750;background:#eff4ff;border-radius:6px;padding:4px}.chart-card canvas{display:block;width:100%;height:132px}.formula{margin-top:10px;border-radius:11px;padding:10px 11px;color:#fff;background:linear-gradient(135deg,#1d3c75,#1f697a)}.formula b{font-size:11px}.formula p{font-size:10px;line-height:1.45;margin:5px 0 0;color:#e5f1ff}.comparison{width:100%;border-collapse:collapse;font-size:10px;margin-top:5px}.comparison td{padding:6px 3px;border-bottom:1px solid var(--line)}.comparison td:last-child{text-align:right;font-weight:800}.status-pill{display:inline-block;padding:2px 6px;border-radius:99px;background:#e6f7f2;color:#08766a;font-weight:800}
+    @media(max-width:1100px){.workspace{grid-template-columns:255px 1fr}.analytics{position:absolute;right:12px;top:78px;bottom:12px;width:310px;z-index:6;transform:translateX(calc(100% + 20px));transition:.25s}.analytics.open{transform:none}.model-tabs{justify-content:flex-start;overflow:auto}.model-btn span.label{display:none}.brand{min-width:260px}}
+    @media(max-width:760px){body{overflow:auto}.app{height:auto;min-height:100%}.topbar{height:auto;padding:10px;flex-wrap:wrap}.brand{min-width:calc(100% - 90px)}.model-tabs{order:3;width:100%}.model-btn{flex:1;justify-content:center}.model-btn span.label{display:inline}.workspace{display:flex;flex-direction:column;padding:8px}.sidebar{order:1}.stage{order:2;height:520px}.analytics{order:3;position:static;width:auto;transform:none}.header-actions{margin-left:auto}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brandmark"></div><div><h1>Laboratorio de Generación de Redes</h1><small>Construcción paso a paso · Ciencia de Redes</small></div></div>
+    <nav class="model-tabs" aria-label="Tipo de red">
+      <button class="model-btn active" data-model="er"><i class="dot"></i><span class="label">Aleatoria</span></button>
+      <button class="model-btn" data-model="ba"><i class="dot"></i><span class="label">Preferencial</span></button>
+      <button class="model-btn" data-model="ws"><i class="dot"></i><span class="label">Mundo pequeño</span></button>
+    </nav>
+    <div class="header-actions"><button class="icon-btn" id="analyticsToggle" title="Panel de métricas">▥</button><button class="icon-btn" id="helpBtn" title="Ayuda">?</button></div>
+  </header>
+  <main class="workspace">
+    <aside class="panel sidebar">
+      <section class="section">
+        <h2 class="section-title">Modelo de generación</h2>
+        <div class="select-wrap"><select id="modelSelect"><option value="er">Erdős–Rényi G(n,p)</option><option value="ba">Barabási–Albert</option><option value="ws">Watts–Strogatz</option></select></div>
+        <p class="hint" id="modelHint"></p>
+      </section>
+      <section class="section" id="params"></section>
+      <section class="section">
+        <h2 class="section-title">Simulación</h2>
+        <div class="transport"><button id="resetBtn" title="Reiniciar">↺</button><button id="backBtn" title="Paso atrás">◀</button><button id="playBtn" class="primary" title="Reproducir">▶</button><button id="stepBtn" title="Un paso">▶|</button></div>
+        <div class="speedrow"><span>Lento</span><input id="speed" type="range" min="1" max="10" value="6"><span>Rápido</span></div>
+      </section>
+      <section class="section">
+        <h2 class="section-title">Paso actual</h2>
+        <div class="phasebox"><div class="phase-label" id="phaseLabel">Preparado</div><div class="phase-title" id="phaseTitle">Red vacía</div><div class="phase-text" id="phaseText">Pulse “un paso” o “reproducir” para iniciar.</div><div class="progress"><i id="progressBar"></i></div></div>
+      </section>
+      <section class="section" id="probSection" hidden>
+        <h2 class="section-title">Probabilidad de ser elegido</h2><div class="prob-list" id="probList"></div>
+      </section>
+    </aside>
+
+    <section class="panel stage" id="stage">
+      <canvas id="networkCanvas"></canvas>
+      <div class="stage-toolbar"><select id="layoutSelect"><option value="force">Layout: fuerzas</option><option value="circle">Layout: circular</option><option value="random">Layout: aleatorio</option></select><button id="fitBtn" title="Centrar">⌖</button><button id="labelsBtn" title="Etiquetas">Aa</button><button id="pngBtn" title="Exportar imagen">⇩</button></div>
+      <div class="stage-badge" id="stageBadge">0 nodos · 0 aristas</div>
+      <div class="legend"><span><i></i>Nodo</span><span><i class="new"></i>Nuevo</span><span><i class="sel"></i>Seleccionado</span></div>
+      <div class="toast" id="toast"></div><div class="tooltip" id="tooltip"></div>
+    </section>
+
+    <aside class="panel analytics" id="analytics">
+      <h2 class="section-title">Métricas en tiempo real</h2>
+      <div class="metric-grid">
+        <div class="metric"><b id="mN">0</b><span>Nodos</span></div><div class="metric"><b id="mE">0</b><span>Aristas</span></div>
+        <div class="metric"><b id="mK">0.00</b><span>Grado medio</span></div><div class="metric"><b id="mDens">0.000</b><span>Densidad</span></div>
+        <div class="metric"><b id="mC">0.000</b><span>Clustering</span></div><div class="metric"><b id="mL">—</b><span>Camino medio</span></div>
+        <div class="metric"><b id="mDiam">—</b><span>Diámetro</span></div><div class="metric"><b id="mComp">0</b><span>Componentes</span></div>
+      </div>
+      <div class="chart-card"><div class="chart-head"><b>Distribución de grado P(k)</b><span class="status-pill" id="maxDegree">k máx. 0</span></div><canvas id="degreeChart"></canvas></div>
+      <div class="chart-card"><div class="chart-head"><b>Evolución durante la construcción</b><select id="historyMetric"><option value="avgDegree">Grado medio</option><option value="clustering">Clustering</option><option value="path">Camino medio</option><option value="density">Densidad</option><option value="components">Componentes</option></select></div><canvas id="historyChart"></canvas></div>
+      <div class="formula"><b id="formulaTitle">Erdős–Rényi</b><p id="formulaText"></p></div>
+      <div class="chart-card"><div class="chart-head"><b>Lectura estructural</b></div><table class="comparison"><tr><td>Tendencia del grado</td><td id="readDegree">—</td></tr><tr><td>Conectividad</td><td id="readConn">—</td></tr><tr><td>Transitividad</td><td id="readCluster">—</td></tr></table></div>
+    </aside>
+  </main>
+</div>
+<script>
+(()=>{
+  'use strict';
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const models={
+    er:{name:'Erdős–Rényi G(n,p)',hint:'Se crean n nodos y luego se examina cada posible pareja. La arista aparece con probabilidad independiente p.',formula:'Para cada pareja (i,j):  P(arista)=p.  El grado esperado es ⟨k⟩≈p(n−1).'},
+    ba:{name:'Barabási–Albert',hint:'Cada nodo nuevo se conecta con m nodos existentes. Los nodos con mayor grado tienen ventaja acumulativa.',formula:'Probabilidad de elegir i:  Π(i)=kᵢ / Σⱼkⱼ.  Produce colas pesadas y hubs.'},
+    ws:{name:'Watts–Strogatz',hint:'Comienza con un anillo regular de grado k. Cada arista se reconecta con probabilidad β, creando atajos.',formula:'β=0 conserva el anillo; β≈0.01–0.2 genera atajos con clustering alto; β=1 se acerca a una red aleatoria.'}
+  };
+  const defaults={er:{n:22,p:.16},ba:{n:28,m:2},ws:{n:24,k:4,beta:.12}};
+  let model='er', cfg={...defaults.er}, state, playing=false, timer=null, history=[], layout='force', showLabels=true;
+  let view={zoom:1,panX:0,panY:0,drag:null,panning:false,lastX:0,lastY:0,hover:null};
+  const canvas=$('#networkCanvas'),ctx=canvas.getContext('2d'), degreeCanvas=$('#degreeChart'),historyCanvas=$('#historyChart');
+
+  function freshState(){return {nodes:[],edges:[],algo:{phase:'nodes',cursor:0},rngState:((Date.now()&0xffffffff)^(model.charCodeAt(0)*2654435761))>>>0,lastEvent:null,done:false,stepNo:0,metricsHistory:[]}}
+  function rnd(){let x=state.rngState|0;x^=x<<13;x^=x>>>17;x^=x<<5;state.rngState=x>>>0;return state.rngState/4294967296}
+  function clone(o){return JSON.parse(JSON.stringify(o))}
+  function snapshot(){history.push(clone(state));if(history.length>1600)history.shift()}
+  function addNode(id){const total=cfg.n,a=2*Math.PI*id/Math.max(total,1)-Math.PI/2,r=170;state.nodes.push({id,x:Math.cos(a)*r,y:Math.sin(a)*r,vx:0,vy:0,born:state.stepNo,pinned:false})}
+  function hasEdge(a,b){return state.edges.some(e=>(e.a===a&&e.b===b)||(e.a===b&&e.b===a))}
+  function addEdge(a,b,extra={}){if(a!==b&&!hasEdge(a,b))state.edges.push({id:'e'+state.stepNo+'-'+a+'-'+b,a,b,born:state.stepNo,...extra})}
+  function degree(id){let d=0;for(const e of state.edges)if(e.a===id||e.b===id)d++;return d}
+  function neighbors(id){const s=new Set;for(const e of state.edges){if(e.a===id)s.add(e.b);else if(e.b===id)s.add(e.a)}return s}
+
+  function doStep(){
+    if(state.done)return stop();snapshot();state.stepNo++;state.lastEvent=null;
+    if(model==='er')stepER();else if(model==='ba')stepBA();else stepWS();
+    const met=metrics();state.metricsHistory.push({step:state.stepNo,...met});updateAll();
+    if(state.done)stop();
+  }
+  function stepER(){const a=state.algo;
+    if(a.phase==='nodes'){
+      addNode(a.cursor);state.lastEvent={kind:'node',nodes:[a.cursor],title:'Creación de nodos',text:`Se incorpora el nodo ${a.cursor+1}. Todavía no se evalúan conexiones.`};a.cursor++;
+      if(a.cursor>=cfg.n){a.phase='edges';a.pairs=[];for(let i=0;i<cfg.n;i++)for(let j=i+1;j<cfg.n;j++)a.pairs.push([i,j]);a.cursor=0}
+    }else{
+      if(a.cursor>=a.pairs.length){state.done=true;state.lastEvent={kind:'done',title:'Red aleatoria terminada',text:'Todas las parejas posibles fueron examinadas.'};return}
+      const [i,j]=a.pairs[a.cursor++],u=rnd(),ok=u<cfg.p;if(ok)addEdge(i,j,{accepted:true});state.lastEvent={kind:ok?'edge':'reject',nodes:[i,j],edge:[i,j],title:ok?'Arista aceptada':'Arista rechazada',text:`Sorteo u=${u.toFixed(3)} ${ok?'<':'≥'} p=${cfg.p.toFixed(2)}. ${ok?'Se crea':'No se crea'} la arista (${i+1}, ${j+1}).`};
+      if(a.cursor>=a.pairs.length)state.done=true;
+    }
+  }
+  function stepBA(){const a=state.algo,seed=cfg.m+1;
+    if(a.phase==='nodes'){
+      addNode(a.cursor);state.lastEvent={kind:'node',nodes:[a.cursor],title:'Núcleo inicial',text:`Se añade el nodo semilla ${a.cursor+1} de ${seed}.`};a.cursor++;
+      if(a.cursor>=seed){a.phase='seedEdges';a.cursor=0;a.pairs=[];for(let i=0;i<seed;i++)for(let j=i+1;j<seed;j++)a.pairs.push([i,j])}
+    }else if(a.phase==='seedEdges'){
+      const [i,j]=a.pairs[a.cursor++];addEdge(i,j,{seed:true});state.lastEvent={kind:'edge',nodes:[i,j],edge:[i,j],title:'Conexión del núcleo',text:`El núcleo se hace conectado: arista (${i+1}, ${j+1}).`};
+      if(a.cursor>=a.pairs.length){a.phase='growth';a.newId=seed;a.targets=[];a.needNew=true}
+    }else if(a.phase==='growth'){
+      if(a.newId>=cfg.n){state.done=true;state.lastEvent={kind:'done',title:'Red preferencial terminada',text:'Todos los nodos se añadieron por conexión preferencial.'};return}
+      if(a.needNew){addNode(a.newId);a.targets=[];a.needNew=false;state.lastEvent={kind:'node',nodes:[a.newId],title:'Llega un nodo nuevo',text:`El nodo ${a.newId+1} entra a la red y debe escoger ${cfg.m} vecinos.`};return}
+      const candidates=state.nodes.filter(n=>n.id!==a.newId&&!a.targets.includes(n.id));let weights=candidates.map(n=>degree(n.id));let sum=weights.reduce((x,y)=>x+y,0);if(sum===0){weights=weights.map(()=>1);sum=weights.length}
+      let u=rnd()*sum,chosen=candidates[candidates.length-1].id;for(let q=0;q<candidates.length;q++){u-=weights[q];if(u<=0){chosen=candidates[q].id;break}}
+      const chosenProb=(degree(chosen)/sum);addEdge(a.newId,chosen,{preferential:true});a.targets.push(chosen);state.lastEvent={kind:'edge',nodes:[a.newId,chosen],edge:[a.newId,chosen],title:'Elección preferencial',text:`El nodo ${chosen+1} tenía grado ${degree(chosen)-1} y probabilidad aproximada ${(chosenProb*100).toFixed(1)}%. Se crea la arista.`};
+      if(a.targets.length>=cfg.m){a.newId++;a.needNew=true;if(a.newId>=cfg.n)state.done=true}
+    }
+  }
+  function stepWS(){const a=state.algo;
+    if(a.phase==='nodes'){
+      addNode(a.cursor);state.lastEvent={kind:'node',nodes:[a.cursor],title:'Anillo de nodos',text:`Se coloca el nodo ${a.cursor+1} sobre la circunferencia.`};a.cursor++;
+      if(a.cursor>=cfg.n){a.phase='lattice';a.cursor=0;a.lattice=[];for(let i=0;i<cfg.n;i++)for(let d=1;d<=cfg.k/2;d++)a.lattice.push({i,j:(i+d)%cfg.n,d,id:`ws-${i}-${d}`})}
+    }else if(a.phase==='lattice'){
+      const z=a.lattice[a.cursor++];addEdge(z.i,z.j,{id:z.id,lattice:true});state.lastEvent={kind:'edge',nodes:[z.i,z.j],edge:[z.i,z.j],title:'Construcción de la red regular',text:`El nodo ${z.i+1} se conecta con su vecino ${z.j+1} a distancia ${z.d}.`};
+      if(a.cursor>=a.lattice.length){a.phase='rewire';a.cursor=0}
+    }else if(a.phase==='rewire'){
+      if(a.cursor>=a.lattice.length){state.done=true;state.lastEvent={kind:'done',title:'Mundo pequeño terminado',text:'Todas las aristas del anillo fueron revisadas.'};return}
+      const z=a.lattice[a.cursor++],u=rnd(),edge=state.edges.find(e=>e.id===z.id);let target=edge?edge.b:z.j,rewired=false;
+      if(edge&&u<cfg.beta){const blocked=neighbors(z.i);blocked.add(z.i);const choices=state.nodes.map(n=>n.id).filter(id=>!blocked.has(id));if(choices.length){target=choices[Math.floor(rnd()*choices.length)];edge.b=target;edge.rewired=true;rewired=true}}
+      state.lastEvent={kind:rewired?'rewire':'keep',nodes:[z.i,target],edge:[z.i,target],oldEdge:[z.i,z.j],title:rewired?'¡Atajo creado!':'Arista conservada',text:`Sorteo u=${u.toFixed(3)} ${u<cfg.beta?'<':'≥'} β=${cfg.beta.toFixed(2)}. ${rewired?`Se reconecta ${z.i+1}→${target+1}.`:`Permanece ${z.i+1}→${z.j+1}.`}`};
+      if(a.cursor>=a.lattice.length)state.done=true;
+    }
+  }
+
+  function metrics(){const n=state.nodes.length,m=state.edges.length,adj=Array.from({length:n},()=>[]);for(const e of state.edges){if(e.a<n&&e.b<n){adj[e.a].push(e.b);adj[e.b].push(e.a)}}
+    let triangles3=0,triples=0;for(let i=0;i<n;i++){const d=adj[i].length;triples+=d*(d-1)/2;for(let x=0;x<d;x++)for(let y=x+1;y<d;y++)if(adj[adj[i][x]].includes(adj[i][y]))triangles3++}
+    let totalDist=0,pairs=0,diam=0,components=0,seen=new Set;for(let s=0;s<n;s++){if(!seen.has(s)){components++;const q=[s];seen.add(s);for(let h=0;h<q.length;h++)for(const v of adj[q[h]])if(!seen.has(v)){seen.add(v);q.push(v)}}const dist=Array(n).fill(-1);dist[s]=0;const q=[s];for(let h=0;h<q.length;h++)for(const v of adj[q[h]])if(dist[v]<0){dist[v]=dist[q[h]]+1;q.push(v)}for(let t=s+1;t<n;t++)if(dist[t]>=0){totalDist+=dist[t];pairs++;diam=Math.max(diam,dist[t])}}
+    return {n,m,avgDegree:n?2*m/n:0,density:n>1?2*m/(n*(n-1)):0,clustering:triples?triangles3/triples:0,path:pairs?totalDist/pairs:null,diam:n>1&&pairs?diam:null,components:n?components:0,degrees:adj.map(x=>x.length)}
+  }
+  function totalSteps(){if(model==='er')return cfg.n+cfg.n*(cfg.n-1)/2;if(model==='ba'){const s=cfg.m+1;return s+s*(s-1)/2+(cfg.n-s)*(cfg.m+1)}return cfg.n+cfg.n*cfg.k/2*2}
+  function phaseInfo(){const e=state.lastEvent;if(!e)return {label:'Preparado',title:'Red vacía',text:'Pulse “un paso” o “reproducir” para iniciar.'};return {label:state.done?'Completado':`Paso ${state.stepNo} de ≈${totalSteps()}`,title:e.title,text:e.text}}
+
+  function buildParams(){const p=$('#params');p.innerHTML='<h2 class="section-title">Parámetros</h2>';
+    const defs=model==='er'?[['n','Número de nodos',8,45,1],['p','Probabilidad p',.02,.7,.01]]:model==='ba'?[['n','Número de nodos',8,50,1],['m','Enlaces por nodo m',1,5,1]]:[['n','Número de nodos',10,50,2],['k','Vecinos regulares k',2,10,2],['beta','Rewiring β',0,1,.01]];
+    for(const [key,label,min,max,step] of defs){const div=document.createElement('div');div.className='param';div.innerHTML=`<div class="param-head"><span>${label}</span><span class="value" id="v-${key}">${fmtParam(key,cfg[key])}</span></div><input aria-label="${label}" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${cfg[key]}">`;p.appendChild(div)}
+    p.insertAdjacentHTML('beforeend','<p class="hint">Cambiar un parámetro reinicia la construcción para conservar la lógica del modelo.</p>');
+    p.querySelectorAll('input').forEach(inp=>inp.oninput=()=>{const key=inp.dataset.key;cfg[key]=Number(inp.value);if(model==='ws'&&key==='k'&&cfg.k>=cfg.n)cfg.k=Math.max(2,cfg.n-2);if(model==='ba'&&key==='m'&&cfg.m>=cfg.n)cfg.m=cfg.n-2;$('#v-'+key).textContent=fmtParam(key,cfg[key]);reset()})
+  }
+  function fmtParam(k,v){return ['p','beta'].includes(k)?Number(v).toFixed(2):v}
+  function setModel(m){model=m;cfg={...defaults[m]};$('#modelSelect').value=m;$$('.model-btn').forEach(b=>b.classList.toggle('active',b.dataset.model===m));$('#modelHint').textContent=models[m].hint;$('#formulaTitle').textContent=models[m].name;$('#formulaText').textContent=models[m].formula;layout=m==='ws'?'circle':'force';$('#layoutSelect').value=layout;buildParams();reset()}
+  function reset(){stop();state=freshState();history=[];view={...view,zoom:1,panX:0,panY:0,drag:null,hover:null};updateAll()}
+  function back(){if(!history.length)return;stop();state=history.pop();updateAll()}
+  function play(){if(playing){stop();return}playing=true;$('#playBtn').textContent='Ⅱ';schedule()}
+  function schedule(){if(!playing)return;if(state.done){stop();return}doStep();const delay=1050-(Number($('#speed').value)-1)*105;timer=setTimeout(schedule,Math.max(45,delay))}
+  function stop(){playing=false;clearTimeout(timer);timer=null;$('#playBtn').textContent='▶'}
+
+  function updateAll(){const met=metrics(),ph=phaseInfo();$('#phaseLabel').textContent=ph.label;$('#phaseTitle').textContent=ph.title;$('#phaseText').textContent=ph.text;$('#progressBar').style.width=Math.min(100,state.stepNo/Math.max(1,totalSteps())*100)+'%';$('#stageBadge').textContent=`${met.n} nodos · ${met.m} aristas`;$('#backBtn').disabled=!history.length;$('#stepBtn').disabled=state.done;$('#mN').textContent=met.n;$('#mE').textContent=met.m;$('#mK').textContent=met.avgDegree.toFixed(2);$('#mDens').textContent=met.density.toFixed(3);$('#mC').textContent=met.clustering.toFixed(3);$('#mL').textContent=met.path==null?'—':met.path.toFixed(2);$('#mDiam').textContent=met.diam==null?'—':met.diam;$('#mComp').textContent=met.components;$('#maxDegree').textContent='k máx. '+Math.max(0,...met.degrees);updateReadings(met);updateProbabilities();drawCharts(met);drawNetwork()}
+  function updateReadings(m){const ds=m.degrees;if(!ds.length){$('#readDegree').textContent=$('#readConn').textContent=$('#readCluster').textContent='—';return}const max=Math.max(...ds),avg=m.avgDegree;$('#readDegree').textContent=max>avg*2&&max>=4?'Hubs emergentes':(max- Math.min(...ds)<=2?'Homogénea':'Dispersa');$('#readConn').textContent=m.components===1?'Conectada':`${m.components} componentes`;$('#readCluster').textContent=m.clustering>.35?'Alta':m.clustering>.12?'Media':'Baja'}
+  function updateProbabilities(){const sec=$('#probSection'),list=$('#probList');if(model!=='ba'||state.algo.phase!=='growth'||state.algo.needNew){sec.hidden=true;return}sec.hidden=false;const newId=state.algo.newId,blocked=state.algo.targets||[],cand=state.nodes.filter(n=>n.id!==newId&&!blocked.includes(n.id));const sum=cand.reduce((s,n)=>s+degree(n.id),0)||cand.length;list.innerHTML=cand.sort((a,b)=>degree(b.id)-degree(a.id)).slice(0,10).map(n=>{const p=(sum?degree(n.id)/sum:0);return `<div class="prob-row"><b>N${n.id+1}</b><span class="prob-bar"><i style="width:${p*100}%"></i></span><span>${(p*100).toFixed(1)}%</span></div>`}).join('')}
+
+  function resizeCanvas(c){const r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(c.width!==Math.round(r.width*d)||c.height!==Math.round(r.height*d)){c.width=Math.round(r.width*d);c.height=Math.round(r.height*d)}const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return {w:r.width,h:r.height,x}}
+  function drawCharts(m){drawDegree(m);drawHistory()}
+  function chartBase(c,title){const {w,h,x}=resizeCanvas(c);x.clearRect(0,0,w,h);x.strokeStyle='#e3e9f2';x.lineWidth=1;x.beginPath();x.moveTo(29,8);x.lineTo(29,h-22);x.lineTo(w-5,h-22);x.stroke();x.fillStyle='#7b879b';x.font='9px system-ui';return {w,h,x,L:29,R:w-6,T:8,B:h-22}}
+  function drawDegree(m){const g=chartBase(degreeCanvas),{x,L,R,T,B}=g;if(!m.degrees.length)return;const counts={};m.degrees.forEach(k=>counts[k]=(counts[k]||0)+1);const maxK=Math.max(...m.degrees,1),probs=Object.values(counts).map(c=>c/m.n),maxP=Math.max(...probs,1/m.n),bw=(R-L)/(maxK+1);for(let k=0;k<=maxK;k++){const p=(counts[k]||0)/m.n,bh=(B-T-5)*p/maxP;x.fillStyle=k===maxK?'#f59e0b':'#4d7ff0';x.beginPath();x.roundRect(L+k*bw+2,B-bh,Math.max(2,bw-4),bh,3);x.fill();if(maxK<16||k%2===0){x.fillStyle='#718096';x.fillText(k,L+k*bw+bw/2-2,B+13)}}x.fillStyle='#718096';x.fillText(maxP.toFixed(2),2,T+5);x.fillText('0',14,B+3)}
+  function drawHistory(){const g=chartBase(historyCanvas),{x,L,R,T,B}=g,key=$('#historyMetric').value,data=state.metricsHistory.map(d=>d[key]).filter(v=>v!=null);if(data.length<2)return;const min=Math.min(...data,0),max=Math.max(...data,1e-6),range=max-min||1;x.strokeStyle='#0f9f91';x.lineWidth=2;x.beginPath();data.forEach((v,i)=>{const px=L+i/(data.length-1)*(R-L),py=B-(v-min)/range*(B-T-5);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();x.fillStyle='#66758d';x.fillText(max.toFixed(max<2?2:1),2,T+4);x.fillText(min.toFixed(min<2?2:0),2,B);x.fillText(`paso ${state.stepNo}`,R-44,B+14)}
+
+  function nodeScreen(n,w,h){return {x:w/2+view.panX+n.x*view.zoom,y:h/2+view.panY+n.y*view.zoom}}
+  function drawNetwork(){const {w,h,x}=resizeCanvas(canvas);x.clearRect(0,0,w,h);drawGrid(x,w,h);const ev=state.lastEvent||{};for(const e of state.edges){const a=state.nodes.find(n=>n.id===e.a),b=state.nodes.find(n=>n.id===e.b);if(!a||!b)continue;const A=nodeScreen(a,w,h),B=nodeScreen(b,w,h),hot=ev.edge&&((ev.edge[0]===e.a&&ev.edge[1]===e.b)||(ev.edge[1]===e.a&&ev.edge[0]===e.b));x.strokeStyle=hot?'#f59e0b':e.rewired?'#7c3aed':'#a9b8ce';x.lineWidth=(hot?3:e.rewired?1.8:1.15)*Math.min(1.3,view.zoom);x.globalAlpha=hot?1:.7;x.beginPath();x.moveTo(A.x,A.y);x.lineTo(B.x,B.y);x.stroke()}
+    x.globalAlpha=1;if(ev.kind==='reject'&&ev.edge){const a=state.nodes[ev.edge[0]],b=state.nodes[ev.edge[1]];if(a&&b){const A=nodeScreen(a,w,h),B=nodeScreen(b,w,h);x.setLineDash([6,5]);x.strokeStyle='#ef4444';x.lineWidth=2;x.beginPath();x.moveTo(A.x,A.y);x.lineTo(B.x,B.y);x.stroke();x.setLineDash([])}}
+    const degs=state.nodes.map(n=>degree(n.id)),maxD=Math.max(...degs,1);for(const n of state.nodes){const p=nodeScreen(n,w,h),d=degree(n.id),isNew=ev.kind==='node'&&ev.nodes?.includes(n.id),selected=ev.nodes?.includes(n.id);const r=(7+7*Math.sqrt(d/maxD))*Math.min(1.2,Math.max(.7,view.zoom));if(model==='ba'&&state.algo.phase==='growth'&&n.id!==state.algo.newId){const sum=state.nodes.reduce((s,z)=>s+(z.id===state.algo.newId?0:degree(z.id)),0);const prob=sum?d/sum:0;x.fillStyle=`rgba(124,58,237,${prob*.5})`;x.beginPath();x.arc(p.x,p.y,r+5+prob*30,0,Math.PI*2);x.fill()}x.shadowColor='rgba(34,63,112,.2)';x.shadowBlur=7;x.shadowOffsetY=2;x.fillStyle=isNew?'#f59e0b':selected?'#7c3aed':colorFor(d,maxD);x.beginPath();x.arc(p.x,p.y,r,0,Math.PI*2);x.fill();x.shadowColor='transparent';x.strokeStyle='#fff';x.lineWidth=2;x.stroke();if(showLabels){x.fillStyle='#fff';x.font=`${Math.max(8,Math.min(11,r*.75))}px system-ui`;x.textAlign='center';x.textBaseline='middle';x.fillText(n.id+1,p.x,p.y)}}x.textAlign='left';x.textBaseline='alphabetic'}
+  function drawGrid(x,w,h){x.strokeStyle='#e8edf5';x.lineWidth=.7;const gap=32;for(let i=(view.panX+w/2)%gap;i<w;i+=gap){x.beginPath();x.moveTo(i,0);x.lineTo(i,h);x.stroke()}for(let j=(view.panY+h/2)%gap;j<h;j+=gap){x.beginPath();x.moveTo(0,j);x.lineTo(w,j);x.stroke()}}
+  function colorFor(d,max){const t=d/max;const r=Math.round(38+12*t),g=Math.round(112-38*t),b=Math.round(235-18*t);return `rgb(${r},${g},${b})`}
+  function simulateForces(){
+    if(layout!=='force'||!state?.nodes.length||view.drag){requestAnimationFrame(simulateForces);return}
+    const ns=state.nodes,byId=new Map(ns.map(n=>[n.id,n])),repulsion=1050,restLength=66,maxSpeed=4.8;
+    const viewportMin=Math.min(canvas.clientWidth||700,canvas.clientHeight||600),softRadius=Math.max(110,Math.min(225,(viewportMin-110)/(2*Math.max(view.zoom,.65))));
+    // Repulsión entre nodos. La fuerza se calcula sobre el vector unitario para evitar explosiones numéricas.
+    for(let i=0;i<ns.length;i++)for(let j=i+1;j<ns.length;j++){
+      let dx=ns[j].x-ns[i].x,dy=ns[j].y-ns[i].y,d2=Math.max(dx*dx+dy*dy,25),d=Math.sqrt(d2),f=repulsion/d2,fx=f*dx/d,fy=f*dy/d;
+      ns[i].vx-=fx;ns[i].vy-=fy;ns[j].vx+=fx;ns[j].vy+=fy;
+    }
+    // Resortes normalizados: antes se multiplicaba dos veces por la distancia y la red podía salir disparada.
+    for(const e of state.edges){
+      const a=byId.get(e.a),b=byId.get(e.b);if(!a||!b)continue;
+      let dx=b.x-a.x,dy=b.y-a.y,d=Math.max(Math.hypot(dx,dy),1),f=(d-restLength)*.012,fx=f*dx/d,fy=f*dy/d;
+      a.vx+=fx;a.vy+=fy;b.vx-=fx;b.vy-=fy;
+    }
+    for(const n of ns){
+      // Gravedad central y contención circular suave: no crea el efecto de borde cuadrado.
+      n.vx+=-n.x*.0014;n.vy+=-n.y*.0014;
+      const radius=Math.hypot(n.x,n.y);if(radius>softRadius){const pull=(radius-softRadius)*.012;n.vx-=pull*n.x/radius;n.vy-=pull*n.y/radius}
+      n.vx*=.84;n.vy*=.84;
+      const speed=Math.hypot(n.vx,n.vy);if(speed>maxSpeed){n.vx=n.vx/speed*maxSpeed;n.vy=n.vy/speed*maxSpeed}
+      n.x+=n.vx;n.y+=n.vy;
+      if(!Number.isFinite(n.x)||!Number.isFinite(n.y)){n.x=0;n.y=0;n.vx=n.vy=0}
+    }
+    drawNetwork();requestAnimationFrame(simulateForces);
+  }
+  function applyLayout(v){layout=v;if(v==='circle'){state.nodes.forEach((n,i)=>{const a=2*Math.PI*i/Math.max(state.nodes.length,cfg.n)-Math.PI/2,r=180;n.x=Math.cos(a)*r;n.y=Math.sin(a)*r;n.vx=n.vy=0})}else if(v==='random'){state.nodes.forEach(n=>{n.x=(Math.random()-.5)*360;n.y=(Math.random()-.5)*300;n.vx=n.vy=0})}else state.nodes.forEach(n=>{n.vx=(Math.random()-.5)*2;n.vy=(Math.random()-.5)*2});drawNetwork()}
+  function fit(){if(!state.nodes.length){view.zoom=1;view.panX=view.panY=0;return drawNetwork()}const xs=state.nodes.map(n=>n.x),ys=state.nodes.map(n=>n.y),w=canvas.clientWidth,h=canvas.clientHeight;view.zoom=Math.min((w-100)/(Math.max(...xs)-Math.min(...xs)+40),(h-100)/(Math.max(...ys)-Math.min(...ys)+40),1.6);view.panX=-(Math.max(...xs)+Math.min(...xs))/2*view.zoom;view.panY=-(Math.max(...ys)+Math.min(...ys))/2*view.zoom;drawNetwork()}
+  function nodeAt(sx,sy){const w=canvas.clientWidth,h=canvas.clientHeight;for(let i=state.nodes.length-1;i>=0;i--){const n=state.nodes[i],p=nodeScreen(n,w,h);if(Math.hypot(p.x-sx,p.y-sy)<17)return n}return null}
+  canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,n=nodeAt(x,y);canvas.setPointerCapture(e.pointerId);view.lastX=x;view.lastY=y;if(n)view.drag=n;else view.panning=true});
+  canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(view.drag){view.drag.x+=(x-view.lastX)/view.zoom;view.drag.y+=(y-view.lastY)/view.zoom;view.drag.vx=view.drag.vy=0}else if(view.panning){view.panX+=x-view.lastX;view.panY+=y-view.lastY}else{const n=nodeAt(x,y),tip=$('#tooltip');if(n){tip.style.display='block';tip.style.left=(x+14)+'px';tip.style.top=(y+14)+'px';tip.innerHTML=`<b>Nodo ${n.id+1}</b><br>Grado: ${degree(n.id)}<br>Vecinos: ${[...neighbors(n.id)].map(v=>v+1).join(', ')||'ninguno'}`}else tip.style.display='none'}view.lastX=x;view.lastY=y;drawNetwork()});
+  canvas.addEventListener('pointerup',()=>{view.drag=null;view.panning=false});canvas.addEventListener('pointerleave',()=>{$('#tooltip').style.display='none';view.drag=null;view.panning=false});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left-canvas.clientWidth/2-view.panX,my=e.clientY-r.top-canvas.clientHeight/2-view.panY,old=view.zoom;view.zoom=Math.max(.35,Math.min(3,view.zoom*(e.deltaY<0?1.12:.89)));view.panX-=mx*(view.zoom/old-1);view.panY-=my*(view.zoom/old-1);drawNetwork()},{passive:false});
+  function exportPNG(){drawNetwork();const a=document.createElement('a');a.download=`red-${model}.png`;a.href=canvas.toDataURL('image/png');a.click();toast('Imagen exportada')}
+  function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1600)}
+
+  $$('.model-btn').forEach(b=>b.onclick=()=>setModel(b.dataset.model));$('#modelSelect').onchange=e=>setModel(e.target.value);$('#resetBtn').onclick=reset;$('#backBtn').onclick=back;$('#stepBtn').onclick=doStep;$('#playBtn').onclick=play;$('#layoutSelect').onchange=e=>applyLayout(e.target.value);$('#fitBtn').onclick=fit;$('#labelsBtn').onclick=()=>{showLabels=!showLabels;drawNetwork()};$('#pngBtn').onclick=exportPNG;$('#historyMetric').onchange=drawHistory;$('#analyticsToggle').onclick=()=>$('#analytics').classList.toggle('open');$('#helpBtn').onclick=()=>alert('1. Seleccione un modelo y sus parámetros.\n2. Use ▶| para observar una decisión a la vez.\n3. Use ◀ para regresar.\n4. Haga zoom con la rueda, arrastre el fondo para mover la vista y arrastre nodos.\n5. Observe cómo cambian la distribución de grado y las métricas.');
+  window.addEventListener('resize',updateAll);setModel('er');requestAnimationFrame(simulateForces);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laboratorio de Centralidades — Small Worlds</title>
+  <style>
+    :root{
+      --ink:#172033;--muted:#657087;--paper:#f4f6fb;--panel:#fff;--line:#dfe4ef;
+      --violet:#35285d;--violet2:#6552a3;--lav:#eeeafd;--orange:#f4a62a;
+      --cyan:#1aa6a6;--blue:#3b82f6;--green:#2a9d70;--red:#e85d75;--shadow:0 14px 34px rgba(31,38,70,.10)
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;background:linear-gradient(135deg,#f7f8fc 0,#eef1f8 100%);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+    button,select,input{font:inherit} button{cursor:pointer}
+    .topbar{height:64px;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;box-shadow:0 5px 18px rgba(35,24,72,.18);position:sticky;top:0;z-index:40}
+    .brand{display:flex;align-items:center;gap:13px;min-width:0}.mark{width:38px;height:38px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:900;background:linear-gradient(145deg,#806cc0,#35285d)}
+    .brand h1{font-size:16px;line-height:1.1;margin:0;white-space:nowrap}.brand p{margin:3px 0 0;color:#d9d2f1;font-size:11px}
+    .top-actions{display:flex;gap:8px}.top-actions button{border:1px solid #76699c;background:#4a3a75;color:#fff;border-radius:9px;padding:8px 11px;font-weight:700}.top-actions button:hover{background:#5b498a}
+    .shell{max-width:1600px;margin:auto;padding:16px;display:grid;grid-template-columns:260px minmax(520px,1fr) 310px;gap:14px;min-height:calc(100vh - 64px)}
+    .panel{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);min-width:0}
+    .side{padding:14px;height:calc(100vh - 96px);overflow:auto;position:sticky;top:80px}.side::-webkit-scrollbar{width:6px}.side::-webkit-scrollbar-thumb{background:#c8ccda;border-radius:8px}
+    .section-title{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:900;margin:6px 0 9px}
+    .scenario-list,.metric-grid{display:grid;gap:7px}.scenario{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px;text-align:left;color:var(--ink);transition:.2s;display:grid;grid-template-columns:28px 1fr;gap:7px;align-items:start}.scenario b{font-size:12px}.scenario small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.scenario .n{width:25px;height:25px;border-radius:8px;background:#edf0f8;display:grid;place-items:center;font-weight:900;color:var(--violet)}.scenario:hover,.scenario.active{border-color:#8d7bc4;background:#f5f2ff;transform:translateY(-1px)}
+    .metric-grid{grid-template-columns:1fr 1fr}.metric{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 7px;display:flex;align-items:center;gap:7px;font-weight:800;color:#44506a}.metric i{width:9px;height:9px;border-radius:50%;background:var(--mc)}.metric:hover,.metric.active{border-color:var(--mc);box-shadow:0 0 0 2px color-mix(in srgb,var(--mc) 15%,transparent);color:var(--ink)}
+    .divider{height:1px;background:var(--line);margin:14px 0}.tutorial{display:grid;gap:4px}.lesson{display:flex;gap:8px;align-items:center;width:100%;border:0;background:transparent;border-radius:9px;padding:7px;color:#58647b;text-align:left}.lesson span{width:22px;height:22px;border:1px solid #d8ddea;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:900;flex:none}.lesson:hover{background:#f3f5fa}.lesson.active{background:var(--lav);color:var(--violet);font-weight:900}.lesson.active span{background:var(--violet);color:#fff;border-color:var(--violet)}
+    .playbar{display:grid;grid-template-columns:38px 1fr 38px;gap:6px;margin-top:10px}.playbar button{height:34px;border:1px solid var(--line);background:#fff;border-radius:9px;color:var(--violet);font-weight:900}.playbar .play{background:var(--violet);color:#fff;border-color:var(--violet)}
+    .main{display:flex;flex-direction:column;min-height:700px;overflow:hidden}.stage-head{padding:14px 16px 10px;border-bottom:1px solid var(--line);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}.stage-head h2{font-size:18px;margin:0}.stage-head p{margin:3px 0 0;color:var(--muted);font-size:11px}.scenario-badge{padding:5px 9px;border-radius:20px;background:#f4f0ff;color:var(--violet);font-size:10px;font-weight:900;white-space:nowrap}
+    .toolbar{padding:8px 12px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#fbfcfe}.toolbar button,.toolbar select{height:32px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:0 9px;color:#44506a;font-weight:700}.toolbar button:hover{border-color:#8c80b0;color:var(--violet)}.toolbar .primary{background:var(--violet);color:#fff;border-color:var(--violet)}.toolbar .spacer{flex:1}.toolbar label{font-size:10px;color:var(--muted);font-weight:900}.toggle.on{background:#ece8fb;color:var(--violet);border-color:#a89bd1}
+    .canvas-wrap{position:relative;flex:1;min-height:520px;background:radial-gradient(circle at 50% 45%,#fff 0,#f9faff 52%,#f0f2f9 100%);overflow:hidden;touch-action:none}.canvas-wrap:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#b9c0d1 1px,transparent 1px);background-size:22px 22px;opacity:.2;pointer-events:none}
+    #network{width:100%;height:100%;min-height:520px;display:block;position:relative}.edge{stroke:#aab2c4;stroke-width:2.2;stroke-linecap:round;transition:.35s;vector-effect:non-scaling-stroke}.edge.dim{opacity:.12}.edge.hot{stroke:var(--orange);stroke-width:4;filter:drop-shadow(0 0 4px rgba(244,166,42,.55));stroke-dasharray:8 7;animation:flow .65s linear infinite}.edge.new{stroke:var(--green);stroke-width:4;animation:newedge .8s ease both}.edge.removing{stroke:var(--red);stroke-dasharray:5 5;opacity:.25}.node{cursor:grab}.node:active{cursor:grabbing}.node .halo{fill:none;stroke:var(--node-color,#6552a3);stroke-width:2;opacity:0;transition:.3s;vector-effect:non-scaling-stroke}.node .body{fill:#fff;stroke:var(--node-color,#6552a3);stroke-width:4;transition:.35s;filter:drop-shadow(0 4px 6px rgba(27,34,57,.20));vector-effect:non-scaling-stroke}.node .initial{font-size:12px;font-weight:900;fill:var(--node-color,#6552a3);text-anchor:middle;dominant-baseline:central;pointer-events:none}.node .label{font-size:13px;font-weight:850;fill:#273047;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round;pointer-events:none}.node:hover .halo,.node.selected .halo{opacity:.25;stroke-width:13}.node.selected .body{stroke-width:6}.node.dim{opacity:.18}.node.reached .halo{animation:ring .85s ease-out}.node.removed{opacity:.16;pointer-events:none}.node.component-0{--node-color:#3b82f6}.node.component-1{--node-color:#e85d75}.node.component-2{--node-color:#f4a62a}
+    .pulse-dot{fill:var(--orange);filter:drop-shadow(0 0 5px #f4a62a)}
+    .legend{position:absolute;left:12px;bottom:10px;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:10px;padding:7px 10px;display:flex;gap:12px;font-size:10px;color:var(--muted);backdrop-filter:blur(6px)}.legend span{display:flex;align-items:center;gap:4px}.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+    .zoom-hint{position:absolute;right:12px;bottom:10px;color:#7a8397;background:rgba(255,255,255,.88);border:1px solid var(--line);padding:5px 8px;border-radius:8px;font-size:9px}
+    .status{padding:9px 14px;border-top:1px solid var(--line);min-height:39px;display:flex;align-items:center;gap:8px;font-size:11px;color:#56627b;background:#fbfcfe}.status i{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 0 4px #def5eb}.status strong{color:var(--ink)}
+    .insight-card{padding:14px}.eyebrow{font-size:10px;color:var(--mc,var(--violet));font-weight:950;text-transform:uppercase;letter-spacing:.1em}.insight-card h2{margin:5px 0 6px;font-size:21px;line-height:1.1}.insight-card .lead{color:#5b657a;margin:0 0 12px;font-size:12px}.formula{background:#f4f2fa;border:1px solid #e4def3;border-radius:11px;padding:10px;color:var(--violet);font:700 12px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}.formula small{font:10px/1.3 Inter,sans-serif;color:#766f88;display:block;margin-top:4px}.node-card{margin-top:12px;border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}.node-title{display:flex;align-items:center;justify-content:space-between}.node-title h3{margin:0;font-size:15px}.rank{font-size:10px;font-weight:900;padding:4px 7px;border-radius:20px;background:#f1edfc;color:var(--violet)}
+    .score{display:flex;align-items:end;justify-content:space-between;margin:9px 0 4px}.score strong{font-size:28px;line-height:1;color:var(--mc,var(--violet))}.score span{font-size:9px;color:var(--muted);text-align:right}.bar{height:7px;background:#edf0f6;border-radius:20px;overflow:hidden}.bar i{height:100%;display:block;background:var(--mc,var(--violet));width:20%;border-radius:20px;transition:.5s}
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.mini{background:#f7f8fb;border-radius:8px;padding:7px}.mini small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;font-weight:900}.mini b{font-size:12px}.explain{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);font-size:11px;color:#56627b}.explain strong{color:var(--ink)}
+    .ranking{margin-top:12px}.rank-row{display:grid;grid-template-columns:56px 1fr 37px;gap:6px;align-items:center;margin:7px 0;font-size:10px}.rank-row .rb{height:6px;background:#edf0f5;border-radius:10px;overflow:hidden}.rank-row .rb i{display:block;height:100%;background:var(--mc,var(--violet));border-radius:10px}.rank-row b{text-align:right}
+    .compare{margin-top:13px;border:1px solid var(--line);border-radius:11px;padding:10px;background:#fafbfe}.compare h4{font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 7px;color:var(--muted)}.delta-row{display:flex;justify-content:space-between;font-size:10px;margin:5px 0}.up{color:var(--green)}.down{color:var(--red)}.same{color:var(--muted)}
+    .drawer{grid-column:1/-1;overflow:hidden}.tabs{display:flex;gap:4px;padding:8px 10px 0;border-bottom:1px solid var(--line);overflow-x:auto}.tab{border:0;background:transparent;padding:9px 12px;border-radius:9px 9px 0 0;color:#68738a;font-weight:800;font-size:11px;white-space:nowrap}.tab.active{color:var(--violet);background:#f0ecfb}.tab-content{display:none;padding:14px}.tab-content.active{display:block}.table-wrap{overflow:auto;max-height:300px}table{border-collapse:collapse;width:100%;font-size:11px}th,td{padding:8px 9px;border-bottom:1px solid #e8ebf2;text-align:right;white-space:nowrap}th{position:sticky;top:0;background:#f8f9fc;color:#59657c;font-size:9px;text-transform:uppercase;letter-spacing:.04em}th:first-child,td:first-child{text-align:left;font-weight:850}.best{background:#f3effe;color:var(--violet);font-weight:900}.matrix{font-family:ui-monospace,monospace}.matrix td,.matrix th{text-align:center;padding:6px 9px}.matrix td.on{background:#e9e3fa;color:var(--violet);font-weight:900;border-radius:5px}.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.how{border:1px solid var(--line);border-radius:12px;padding:11px}.how b{display:block;margin-bottom:4px}.how p{margin:0;color:var(--muted);font-size:10px}.quiz{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.q{border:1px solid var(--line);border-radius:12px;padding:12px}.q p{margin:0 0 8px;font-weight:800;font-size:11px}.q button{width:100%;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px;margin:3px 0;text-align:left;font-size:10px}.q button.correct{background:#e6f6ef;border-color:#72c7a3;color:#176e4c}.q button.wrong{background:#fff0f3;border-color:#f1a1b0;color:#9e3149}.quiz-feedback{font-size:10px;color:var(--muted);min-height:16px;margin-top:5px}.failure-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.failure-controls select,.failure-controls button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px}.failure-controls button{background:var(--violet);color:#fff}.component-report{margin-top:10px;color:#56627b;font-size:11px}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#20283a;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 10px 35px rgba(20,27,43,.25);opacity:0;pointer-events:none;transition:.25s;z-index:100;font-size:11px}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @keyframes flow{to{stroke-dashoffset:-15}}@keyframes ring{0%{opacity:.8;stroke-width:4}100%{opacity:0;stroke-width:28}}@keyframes newedge{0%{stroke-dasharray:1 500;opacity:0}100%{stroke-dasharray:500 0;opacity:1}}
+    @media(max-width:1120px){.shell{grid-template-columns:230px 1fr}.right{grid-column:1/-1;position:static;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}.drawer{grid-column:1/-1}}
+    @media(max-width:760px){.topbar{padding:0 12px}.brand p,.top-actions .optional{display:none}.shell{display:block;padding:8px}.side{position:static;height:auto;margin-bottom:8px}.left .tutorial,.left .playbar{display:none}.metric-grid{grid-template-columns:repeat(4,1fr)}.scenario-list{grid-template-columns:repeat(3,1fr)}.scenario{display:block;text-align:center;padding:7px}.scenario .n{margin:auto}.main{min-height:650px;margin-bottom:8px}.right{display:block;margin-bottom:8px}.how-grid,.quiz{grid-template-columns:1fr}.canvas-wrap,#network{min-height:470px}.stage-head{align-items:center}.brand h1{font-size:13px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="mark">C</div><div><h1>Laboratorio de Centralidades</h1><p>El ejemplo de los investigadores · Small Worlds</p></div></div>
+    <div class="top-actions"><button id="btnHelp" class="optional">¿Cómo usar?</button><button id="btnReset">↺ Reiniciar</button></div>
+  </header>
+
+  <main class="shell">
+    <aside class="panel side left">
+      <div class="section-title">Estructura de la red</div>
+      <div class="scenario-list">
+        <button class="scenario active" data-scenario="original"><span class="n">1</span><span><b>Red original</b><small>Dos grupos y dos puentes</small></span></button>
+        <button class="scenario" data-scenario="shortcut"><span class="n">2</span><span><b>Fred consulta a David</b><small>Nuevo atajo entre grupos</small></span></button>
+        <button class="scenario" data-scenario="efficient"><span class="n">3</span><span><b>Fred deja a John</b><small>Menor costo relacional</small></span></button>
+      </div>
+      <div class="divider"></div>
+      <div class="section-title">¿Qué significa “importante”?</div>
+      <div class="metric-grid">
+        <button class="metric active" style="--mc:#6552a3" data-metric="degree"><i></i>Grado</button>
+        <button class="metric" style="--mc:#e87833" data-metric="betweenness"><i></i>Intermediación</button>
+        <button class="metric" style="--mc:#1aa6a6" data-metric="closeness"><i></i>Cercanía</button>
+        <button class="metric" style="--mc:#3b82f6" data-metric="eigenvector"><i></i>Eigenvector</button>
+      </div>
+      <div class="divider"></div>
+      <div class="section-title">Recorrido guiado</div>
+      <div class="tutorial" id="tutorial"></div>
+      <div class="playbar"><button id="prevStep" aria-label="Paso anterior">‹</button><button id="playTour" class="play">▶ Recorrer</button><button id="nextStep" aria-label="Paso siguiente">›</button></div>
+    </aside>
+
+    <section class="panel main">
+      <div class="stage-head"><div><h2 id="stageTitle">¿Quién es más importante en esta red?</h2><p id="stageSub">Los vínculos representan consultas diarias y son recíprocos.</p></div><span class="scenario-badge" id="scenarioBadge">Red original · 16 vínculos</span></div>
+      <div class="toolbar">
+        <label for="nodeSelect">Explorar</label><select id="nodeSelect"></select>
+        <button id="animateMetric" class="primary">▶ Animar grado</button>
+        <button id="toggleLabels" class="toggle on">Etiquetas</button>
+        <button id="fitGraph" title="Restablecer vista">Centrar</button>
+        <span class="spacer"></span>
+        <button id="zoomOut" aria-label="Alejar">−</button><button id="zoomIn" aria-label="Acercar">＋</button>
+      </div>
+      <div class="canvas-wrap" id="canvasWrap">
+        <svg id="network" viewBox="0 0 740 630" role="img" aria-label="Red de investigadores interactiva">
+          <g id="viewport"><g id="edges"></g><g id="effects"></g><g id="nodes"></g></g>
+        </svg>
+        <div class="legend"><span><i style="background:#8876bd"></i>Grupo pequeño</span><span><i style="background:#27a4a4"></i>Grupo denso</span><span><i style="background:#f4a62a"></i>Ruta animada</span></div>
+        <div class="zoom-hint">Rueda: zoom · arrastre: mover nodo</div>
+      </div>
+      <div class="status"><i></i><span id="statusText"><strong>Seleccione un nodo</strong> para ver por qué su posición importa.</span></div>
+    </section>
+
+    <aside class="panel side right" id="rightPanel">
+      <div class="insight-card" id="insight" style="--mc:#6552a3">
+        <div class="eyebrow" id="metricEyebrow">Centralidad de grado</div><h2 id="metricTitle">Popularidad local</h2><p class="lead" id="metricLead"></p>
+        <div class="formula" id="formula"></div>
+        <div class="node-card">
+          <div class="node-title"><h3 id="selectedName">Fred</h3><span class="rank" id="selectedRank">#1 de 10</span></div>
+          <div class="score"><strong id="selectedScore">10</strong><span id="scoreUnit">grado total<br>recíproco</span></div><div class="bar"><i id="scoreBar"></i></div>
+          <div class="mini-grid"><div class="mini"><small>Vecinos</small><b id="neighborsCount">5</b></div><div class="mini"><small>Distancia total</small><b id="distanceSum">16</b></div></div>
+          <div class="explain" id="nodeExplain"></div>
+        </div>
+        <div class="ranking"><div class="section-title">Clasificación actual</div><div id="rankingList"></div></div>
+        <div class="compare" id="compareBox"><h4>Cambio frente a la red original</h4><div id="deltaList"></div></div>
+      </div>
+    </aside>
+
+    <section class="panel drawer">
+      <nav class="tabs" aria-label="Paneles de análisis">
+        <button class="tab active" data-tab="table">Tabla dinámica</button><button class="tab" data-tab="matrix">Matriz de adyacencia</button><button class="tab" data-tab="failure">Puntos de falla</button><button class="tab" data-tab="method">Cómo se calcula</button><button class="tab" data-tab="quiz">Reto rápido</button>
+      </nav>
+      <div class="tab-content active" id="tab-table"><div class="table-wrap"><table id="centralityTable"></table></div></div>
+      <div class="tab-content" id="tab-matrix"><div class="table-wrap"><table id="matrixTable" class="matrix"></table></div></div>
+      <div class="tab-content" id="tab-failure"><div class="failure-controls"><b>Retirar temporalmente:</b><select id="removeSelect"></select><button id="simulateRemoval">Simular ausencia</button><button id="restoreRemoval" style="background:#fff;color:#44506a">Restaurar</button></div><div class="component-report" id="componentReport">Pruebe retirar a Brian, Evan o Fred y observe si la red se fragmenta.</div></div>
+      <div class="tab-content" id="tab-method"><div class="how-grid"><div class="how"><b style="color:#6552a3">Grado</b><p>Cuente los vecinos directos. La fuente suma entrada y salida en cada relación recíproca: 2 × vecinos.</p></div><div class="how"><b style="color:#e87833">Intermediación</b><p>Para cada par ordenado, cuente qué fracción de sus caminos mínimos atraviesa el nodo.</p></div><div class="how"><b style="color:#1aa6a6">Cercanía</b><p>Sume las distancias mínimas desde el nodo hacia todos los demás y calcule su inverso.</p></div><div class="how"><b style="color:#3b82f6">Eigenvector</b><p>Un vecino importante aporta más que uno periférico. Se itera hasta estabilizar y se normaliza al máximo.</p></div></div></div>
+      <div class="tab-content" id="tab-quiz"><div class="quiz" id="quiz"></div></div>
+      <div style="padding:7px 14px 10px;color:#8a91a2;font-size:9px;border-top:1px solid #eef0f5">Ejemplo adaptado de Ian McCulloh, Helen Armstrong y Anthony Johnson, <em>Social Network Analysis with Applications</em> (2013), siguiendo la presentación suministrada.</div>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  'use strict';
+  const names=['Abe','Brian','Colin','David','Evan','Fred','Greg','Hui','Ivan','John'];
+  const baseEdges=[['Abe','Brian'],['Brian','Colin'],['Brian','David'],['Colin','David'],['Brian','Evan'],['Evan','Fred'],['Fred','Greg'],['Fred','Hui'],['Fred','Ivan'],['Fred','John'],['Greg','Hui'],['Greg','Ivan'],['Greg','John'],['Hui','Ivan'],['Hui','John'],['Ivan','John']];
+  const scenarios={
+    original:{name:'Red original',subtitle:'Dos comunidades unidas por Brian–Evan–Fred.',edges:baseEdges},
+    shortcut:{name:'Fred consulta a David',subtitle:'El vínculo Fred–David crea una segunda ruta entre comunidades.',edges:[...baseEdges,['Fred','David']]},
+    efficient:{name:'Fred deja de consultar a John',subtitle:'Se conserva el atajo Fred–David y se retira Fred–John.',edges:[...baseEdges,['Fred','David']].filter(e=>!sameEdge(e,['Fred','John']))}
+  };
+  const startPos={Abe:[250,65],Brian:[345,155],Colin:[455,60],David:[500,145],Evan:[350,290],Fred:[355,415],Greg:[220,500],Hui:[300,575],Ivan:[435,575],John:[520,485]};
+  const group={Abe:'#8876bd',Brian:'#8876bd',Colin:'#8876bd',David:'#8876bd',Evan:'#e87833',Fred:'#e87833',Greg:'#27a4a4',Hui:'#27a4a4',Ivan:'#27a4a4',John:'#27a4a4'};
+  const metricInfo={
+    degree:{name:'Centralidad de grado',title:'Popularidad local',color:'#6552a3',lead:'¿Con cuántas personas consulta directamente? Mide acceso inmediato, no necesariamente control.',formula:'Cᴅ(v) = 2 × número de vecinos',note:'La presentación cuenta entrada y salida porque cada relación es recíproca.',unit:'grado total<br>recíproco'},
+    betweenness:{name:'Centralidad de intermediación',title:'Control de los flujos',color:'#e87833',lead:'¿Cuántos caminos mínimos necesitan atravesar esta persona? Identifica brokers y cuellos de botella.',formula:'Cʙ(v) = Σ σₛₜ(v) / σₛₜ',note:'Se cuentan pares ordenados, como en la tabla de la presentación.',unit:'caminos mínimos<br>intermediados'},
+    closeness:{name:'Centralidad de cercanía',title:'Rapidez de alcance',color:'#1aa6a6',lead:'¿Qué tan rápido puede una persona alcanzar a toda la red? Una distancia total menor produce mayor cercanía.',formula:'Cᴄ(v) = 1 / Σ d(v,u)',note:'Se usa la cercanía no normalizada del ejemplo.',unit:'inverso de la<br>distancia total'},
+    eigenvector:{name:'Centralidad de eigenvector',title:'Prestigio por asociación',color:'#3b82f6',lead:'No basta con tener contactos: importa que esos contactos también estén bien conectados.',formula:'xᵥ = (1/λ) Σ Aᵥᵤ xᵤ',note:'El vector se normaliza para que el valor máximo sea 1.',unit:'prestigio<br>normalizado'}
+  };
+  const lessons=[
+    {t:'1. El contexto',scenario:'original',metric:'degree',node:'Fred',msg:'Los nodos son investigadores; un enlace significa que consultan diariamente.'},
+    {t:'2. Grado: el hub',scenario:'original',metric:'degree',node:'Fred',animate:true,msg:'Fred tiene cinco vecinos: su grado total recíproco es 10.'},
+    {t:'3. Intermediación',scenario:'original',metric:'betweenness',node:'Brian',animate:true,msg:'Brian, Evan y Fred controlan rutas entre diferentes zonas.'},
+    {t:'4. Cercanía',scenario:'original',metric:'closeness',node:'Evan',animate:true,msg:'Evan y Fred alcanzan al resto con la menor distancia total.'},
+    {t:'5. Eigenvector',scenario:'original',metric:'eigenvector',node:'Fred',animate:true,msg:'Fred se conecta con un grupo muy denso: su prestigio llega al máximo.'},
+    {t:'6. Crear un atajo',scenario:'shortcut',metric:'betweenness',node:'David',animate:true,msg:'El nuevo vínculo Fred–David reduce la dependencia de Brian y Evan.'},
+    {t:'7. Probar fallas',scenario:'shortcut',metric:'betweenness',node:'Fred',failure:'Evan',msg:'Ahora retirar a Evan no fragmenta la red; Fred–David ofrece una ruta alternativa.'},
+    {t:'8. Reducir un costo',scenario:'efficient',metric:'eigenvector',node:'Greg',animate:true,msg:'Fred puede dejar a John sin perder intermediación; Greg, Hui e Ivan ganan prestigio.'},
+    {t:'9. Conclusión',scenario:'efficient',metric:'betweenness',node:'Fred',msg:'La importancia depende de la pregunta: popularidad, control, rapidez o prestigio.'}
+  ];
+  let state={scenario:'original',metric:'degree',selected:'Fred',lesson:0,playing:false,removed:null,showLabels:true,scale:1,tx:0,ty:0,positions:JSON.parse(JSON.stringify(startPos)),timers:[]};
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const ns='http://www.w3.org/2000/svg';
+  const svgEl=(tag,attrs={})=>{const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));return e};
+  function sameEdge(a,b){return (a[0]===b[0]&&a[1]===b[1])||(a[0]===b[1]&&a[1]===b[0])}
+  function edgeKey(a,b){return [a,b].sort().join('|')}
+  function edges(){return scenarios[state.scenario].edges.filter(e=>!state.removed||!e.includes(state.removed))}
+  function graph(){const g=Object.fromEntries(names.filter(n=>n!==state.removed).map(n=>[n,[]]));edges().forEach(([a,b])=>{if(g[a]&&g[b]){g[a].push(b);g[b].push(a)}});return g}
+  function clearTimers(){state.timers.forEach(t=>clearTimeout(t));state.timers=[];$('#effects').innerHTML='';$$('.edge').forEach(e=>e.classList.remove('hot','dim'));$$('.node').forEach(n=>n.classList.remove('dim','reached'))}
+  function later(fn,ms){const t=setTimeout(fn,ms);state.timers.push(t);return t}
+
+  function metricsFor(scenario=state.scenario,removed=state.removed){
+    const oldS=state.scenario,oldR=state.removed;state.scenario=scenario;state.removed=removed;const g=graph(), active=Object.keys(g);state.scenario=oldS;state.removed=oldR;
+    const degree={},closeness={},distanceSum={},between=Object.fromEntries(active.map(n=>[n,0]));
+    active.forEach(s=>{
+      degree[s]=2*g[s].length;
+      const stack=[],pred=Object.fromEntries(active.map(v=>[v,[]])),sigma=Object.fromEntries(active.map(v=>[v,0])),dist=Object.fromEntries(active.map(v=>[v,-1]));sigma[s]=1;dist[s]=0;const q=[s];
+      while(q.length){const v=q.shift();stack.push(v);for(const w of g[v]){if(dist[w]<0){dist[w]=dist[v]+1;q.push(w)}if(dist[w]===dist[v]+1){sigma[w]+=sigma[v];pred[w].push(v)}}}
+      distanceSum[s]=active.reduce((z,n)=>z+(dist[n]>0?dist[n]:0),0);closeness[s]=distanceSum[s]?1/distanceSum[s]:0;
+      const delta=Object.fromEntries(active.map(v=>[v,0]));while(stack.length){const w=stack.pop();for(const v of pred[w])delta[v]+=(sigma[v]/sigma[w])*(1+delta[w]);if(w!==s)between[w]+=delta[w]}
+    });
+    let vec=Object.fromEntries(active.map(n=>[n,1]));for(let k=0;k<100;k++){const next={};active.forEach(n=>next[n]=g[n].reduce((z,v)=>z+vec[v],0));const max=Math.max(...Object.values(next),1);active.forEach(n=>next[n]/=max);const diff=Math.max(...active.map(n=>Math.abs(next[n]-vec[n])));vec=next;if(diff<1e-10)break}
+    const result={};active.forEach(n=>result[n]={degree:degree[n],betweenness:between[n],closeness:closeness[n],eigenvector:vec[n],distanceSum:distanceSum[n],neighbors:g[n].length});return result;
+  }
+  function shortestPath(source,target,g=graph()){
+    const q=[source],prev={[source]:null};while(q.length){const v=q.shift();if(v===target)break;for(const w of g[v])if(!(w in prev)){prev[w]=v;q.push(w)}}if(!(target in prev))return[];const p=[];for(let v=target;v!=null;v=prev[v])p.unshift(v);return p;
+  }
+  function components(){const g=graph(),seen=new Set(),all=[];for(const n of Object.keys(g))if(!seen.has(n)){const c=[],q=[n];seen.add(n);while(q.length){const v=q.shift();c.push(v);for(const w of g[v])if(!seen.has(w)){seen.add(w);q.push(w)}}all.push(c)}return all.sort((a,b)=>b.length-a.length)}
+  function format(metric,v){if(metric==='degree'||metric==='betweenness')return Math.round(v).toString();return v.toFixed(3)}
+  function value(n,m=state.metric,data=metricsFor()){return data[n]?.[m]??0}
+
+  function renderGraph(){
+    clearTimers();const edgeLayer=$('#edges'),nodeLayer=$('#nodes');edgeLayer.innerHTML='';nodeLayer.innerHTML='';const activeEdges=edges(),base=scenarios.original.edges;
+    activeEdges.forEach(([a,b])=>{const [x1,y1]=state.positions[a],[x2,y2]=state.positions[b],line=svgEl('line',{x1,y1,x2,y2,'data-edge':edgeKey(a,b),class:'edge'});if(!base.some(e=>sameEdge(e,[a,b])))line.classList.add('new');edgeLayer.appendChild(line)});
+    const data=metricsFor(),max=Math.max(...Object.values(data).map(d=>d[state.metric]),1e-9),cs=state.removed?components():[];
+    names.forEach(n=>{const [x,y]=state.positions[n],v=data[n]?.[state.metric]||0,r=state.removed===n?17:17+13*Math.sqrt(v/max),g=svgEl('g',{class:'node'+(n===state.selected?' selected':'')+(n===state.removed?' removed':''),'data-node':n,transform:`translate(${x} ${y})`});g.style.setProperty('--node-color',group[n]);if(cs.length>1){const ci=cs.findIndex(c=>c.includes(n));if(ci>=0)g.classList.add('component-'+ci)}
+      g.append(svgEl('circle',{class:'halo',r:r+2}),svgEl('circle',{class:'body',r}),svgEl('text',{class:'initial',y:1}));g.querySelector('.initial').textContent=n[0];const label=svgEl('text',{class:'label',x:r+8,y:4});label.textContent=n;label.style.display=state.showLabels?'block':'none';g.append(label);g.addEventListener('click',e=>{e.stopPropagation();selectNode(n)});makeDraggable(g,n);nodeLayer.appendChild(g)});
+    updateTransform();updateAll();
+  }
+  function refreshGeometry(){edges().forEach(([a,b])=>{const l=$(`[data-edge="${edgeKey(a,b)}"]`);if(l){l.setAttribute('x1',state.positions[a][0]);l.setAttribute('y1',state.positions[a][1]);l.setAttribute('x2',state.positions[b][0]);l.setAttribute('y2',state.positions[b][1])}})}
+  function makeDraggable(el,n){let drag=false,last;el.addEventListener('pointerdown',e=>{drag=true;last=[e.clientX,e.clientY];el.setPointerCapture(e.pointerId)});el.addEventListener('pointermove',e=>{if(!drag)return;const dx=(e.clientX-last[0])/state.scale,dy=(e.clientY-last[1])/state.scale;state.positions[n][0]+=dx;state.positions[n][1]+=dy;last=[e.clientX,e.clientY];el.setAttribute('transform',`translate(${state.positions[n][0]} ${state.positions[n][1]})`);refreshGeometry()});el.addEventListener('pointerup',()=>drag=false)}
+  function updateTransform(){$('#viewport').setAttribute('transform',`translate(${state.tx} ${state.ty}) scale(${state.scale})`)}
+  function selectNode(n){if(n===state.removed)return;state.selected=n;$$('.node').forEach(e=>e.classList.toggle('selected',e.dataset.node===n));$('#nodeSelect').value=n;updateAll();setStatus(`<strong>${n}</strong> seleccionado. Pulse “Animar” para observar la centralidad.`)}
+  function setMetric(m,doAnimate=false){state.metric=m;const info=metricInfo[m];document.documentElement.style.setProperty('--current',info.color);$$('.metric').forEach(b=>b.classList.toggle('active',b.dataset.metric===m));$('#animateMetric').textContent='▶ Animar '+({degree:'grado',betweenness:'rutas',closeness:'alcance',eigenvector:'prestigio'}[m]);renderGraph();if(doAnimate)later(animateMetric,250)}
+  function setScenario(s,doAnimate=false){const prior=state.scenario;state.scenario=s;state.removed=null;$$('.scenario').forEach(b=>b.classList.toggle('active',b.dataset.scenario===s));renderGraph();const d=scenarios[s];$('#scenarioBadge').textContent=`${d.name} · ${d.edges.length} vínculos`;$('#stageSub').textContent=d.subtitle;if(doAnimate&&prior!==s)later(()=>animateScenarioChange(prior,s),250)}
+  function updateAll(){const data=metricsFor(),info=metricInfo[state.metric],n=state.selected in data?state.selected:Object.keys(data)[0];if(n!==state.selected)state.selected=n;$('#insight').style.setProperty('--mc',info.color);$('#metricEyebrow').textContent=info.name;$('#metricTitle').textContent=info.title;$('#metricLead').textContent=info.lead;$('#formula').innerHTML=`${info.formula}<small>${info.note}</small>`;$('#selectedName').textContent=n;const sorted=Object.keys(data).sort((a,b)=>data[b][state.metric]-data[a][state.metric]||a.localeCompare(b)),rank=sorted.indexOf(n)+1,max=data[sorted[0]][state.metric]||1;$('#selectedRank').textContent=`#${rank} de ${sorted.length}`;$('#selectedScore').textContent=format(state.metric,data[n][state.metric]);$('#scoreUnit').innerHTML=info.unit;$('#scoreBar').style.width=(100*data[n][state.metric]/max)+'%';$('#neighborsCount').textContent=data[n].neighbors;$('#distanceSum').textContent=data[n].distanceSum;
+    $('#nodeExplain').innerHTML=explanation(n,data);renderRanking(data);renderDeltas(data);renderTable(data);renderMatrix();
+  }
+  function explanation(n,d){const m=state.metric,v=d[n][m];if(m==='degree')return `<strong>${n}</strong> consulta directamente con ${d[n].neighbors} persona${d[n].neighbors===1?'':'s'}. Al contar ambos sentidos, obtiene ${v}.`;
+    if(m==='betweenness')return v?`<strong>${n}</strong> aparece en ${Math.round(v)} rutas mínimas ponderadas entre pares ordenados; puede filtrar o acelerar información.`:`<strong>${n}</strong> no intermedia rutas mínimas de otras personas en esta estructura.`;
+    if(m==='closeness')return `Las distancias desde <strong>${n}</strong> suman ${d[n].distanceSum}; su inverso es ${v.toFixed(3)}. Menor suma significa acceso más rápido.`;
+    return `<strong>${n}</strong> obtiene ${v.toFixed(3)} porque sus vecinos aportan valor según su propia conectividad.`}
+  function renderRanking(data){const sorted=Object.keys(data).sort((a,b)=>data[b][state.metric]-data[a][state.metric]||a.localeCompare(b)),max=data[sorted[0]][state.metric]||1;$('#rankingList').innerHTML=sorted.slice(0,5).map(n=>`<div class="rank-row"><span>${n}</span><span class="rb"><i style="width:${100*data[n][state.metric]/max}%"></i></span><b>${format(state.metric,data[n][state.metric])}</b></div>`).join('')}
+  function renderDeltas(data){const original=metricsFor('original',null),n=state.selected,items=['degree','betweenness','closeness','eigenvector'];$('#deltaList').innerHTML=items.map(m=>{const a=original[n]?.[m]??0,b=data[n]?.[m]??0,d=b-a,cls=Math.abs(d)<1e-8?'same':d>0?'up':'down',arrow=Math.abs(d)<1e-8?'—':d>0?'▲':'▼';return `<div class="delta-row"><span>${metricInfo[m].name.replace('Centralidad de ','')}</span><b class="${cls}">${arrow} ${format(m,Math.abs(d))}</b></div>`}).join('')}
+  function renderTable(data){const sorted=Object.keys(data);let h='<thead><tr><th>Investigador</th><th>Grado</th><th>Intermediación</th><th>Cercanía</th><th>Eigenvector</th><th>Vecinos</th></tr></thead><tbody>';const maxima=Object.fromEntries(['degree','betweenness','closeness','eigenvector'].map(m=>[m,Math.max(...sorted.map(n=>data[n][m]))]));for(const n of sorted){h+=`<tr><td>${n}</td>${['degree','betweenness','closeness','eigenvector'].map(m=>`<td class="${Math.abs(data[n][m]-maxima[m])<1e-8?'best':''}">${format(m,data[n][m])}</td>`).join('')}<td>${data[n].neighbors}</td></tr>`}$('#centralityTable').innerHTML=h+'</tbody>'}
+  function renderMatrix(){const g=graph(),active=Object.keys(g);let h='<thead><tr><th></th>'+active.map(n=>`<th title="${n}">${n[0]}</th>`).join('')+'</tr></thead><tbody>';for(const a of active)h+=`<tr><th>${a}</th>`+active.map(b=>`<td class="${g[a].includes(b)?'on':''}">${g[a].includes(b)?1:0}</td>`).join('')+'</tr>';$('#matrixTable').innerHTML=h+'</tbody>'}
+  function setStatus(html){$('#statusText').innerHTML=html}
+  function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');later(()=>t.classList.remove('show'),2300)}
+
+  function animateMetric(){clearTimers();({degree:animateDegree,betweenness:animateBetweenness,closeness:animateCloseness,eigenvector:animateEigenvector}[state.metric])()}
+  function dimAll(){ $$('.edge').forEach(e=>e.classList.add('dim'));$$('.node').forEach(n=>n.classList.add('dim')) }
+  function hotNode(n){const e=$(`[data-node="${n}"]`);if(e){e.classList.remove('dim');e.classList.add('reached');later(()=>e.classList.remove('reached'),900)}}
+  function hotEdge(a,b){const e=$(`[data-edge="${edgeKey(a,b)}"]`);if(e){e.classList.remove('dim');e.classList.add('hot')}}
+  function animateDegree(){const g=graph(),n=state.selected;dimAll();hotNode(n);setStatus(`<strong>Grado de ${n}:</strong> contamos sus ${g[n].length} vínculos directos.`);g[n].forEach((v,i)=>later(()=>{hotEdge(n,v);hotNode(v);setStatus(`<strong>${i+1}/${g[n].length}</strong> vínculo directo: ${n} ↔ ${v}. Grado total recíproco parcial: ${(i+1)*2}.`)},i*520));later(()=>{setStatus(`<strong>Resultado:</strong> ${g[n].length} vecinos × 2 sentidos = ${g[n].length*2}.`);},g[n].length*520+250)}
+  function pathsThrough(n){const g=graph(),active=Object.keys(g),out=[];for(let i=0;i<active.length;i++)for(let j=i+1;j<active.length;j++){const p=shortestPath(active[i],active[j],g);if(p.slice(1,-1).includes(n))out.push(p)}return out.sort((a,b)=>b.length-a.length)}
+  function animateBetweenness(){const n=state.selected,paths=pathsThrough(n);if(!paths.length){dimAll();hotNode(n);setStatus(`<strong>${n}</strong> no se encuentra en caminos mínimos entre otras personas.`);return}dimAll();hotNode(n);const shown=paths.slice(0,Math.min(5,paths.length));shown.forEach((p,i)=>later(()=>{ $$('.edge').forEach(e=>e.classList.remove('hot'));$$('.node').forEach(e=>e.classList.add('dim'));p.forEach(hotNode);for(let k=0;k<p.length-1;k++)hotEdge(p[k],p[k+1]);setStatus(`<strong>Ruta ${i+1}:</strong> ${p.join(' → ')}. ${n} actúa como intermediario.`)},i*1150));later(()=>setStatus(`<strong>${n}</strong> intermedia ${Math.round(metricsFor()[n].betweenness)} rutas mínimas ponderadas por pares ordenados.`),shown.length*1150)}
+  function animateCloseness(){const g=graph(),s=state.selected,dist={[s]:0},q=[s];while(q.length){const v=q.shift();for(const w of g[v])if(!(w in dist)){dist[w]=dist[v]+1;q.push(w)}}dimAll();const max=Math.max(...Object.values(dist));for(let d=0;d<=max;d++)later(()=>{Object.keys(dist).filter(n=>dist[n]===d).forEach(n=>{hotNode(n);if(d>0){const p=shortestPath(s,n,g);hotEdge(p[p.length-2],n)}});setStatus(d===0?`<strong>Origen:</strong> ${s}.`:`<strong>Distancia ${d}:</strong> alcanzamos ${Object.keys(dist).filter(n=>dist[n]===d).join(', ')}.`)},d*900);later(()=>setStatus(`<strong>Resultado:</strong> las distancias suman ${metricsFor()[s].distanceSum}; cercanía = ${metricsFor()[s].closeness.toFixed(3)}.`),(max+1)*900)}
+  function animateEigenvector(){const g=graph(),active=Object.keys(g);let vec=Object.fromEntries(active.map(n=>[n,1]));setStatus('<strong>Iteración 0:</strong> todos comienzan con el mismo prestigio.');for(let k=1;k<=10;k++){later(()=>{const next={};active.forEach(n=>next[n]=g[n].reduce((z,v)=>z+vec[v],0));const max=Math.max(...Object.values(next));active.forEach(n=>next[n]/=max);vec=next;active.forEach(n=>{const el=$(`[data-node="${n}"] .body`);if(el)el.setAttribute('r',17+25*Math.sqrt(vec[n]))});setStatus(`<strong>Iteración ${k}/10:</strong> cada nodo recibe prestigio de sus vecinos.`)},k*420)}later(()=>{renderGraph();setStatus(`<strong>Convergencia:</strong> ${state.selected} alcanza ${metricsFor()[state.selected].eigenvector.toFixed(3)}.`)},4900)}
+  function animateScenarioChange(oldS,newS){const old=scenarios[oldS].edges,now=scenarios[newS].edges,added=now.filter(e=>!old.some(x=>sameEdge(x,e))),removed=old.filter(e=>!now.some(x=>sameEdge(x,e)));added.forEach(([a,b])=>{const el=$(`[data-edge="${edgeKey(a,b)}"]`);if(el)el.classList.add('new');setStatus(`<strong>Nuevo vínculo:</strong> ${a} ↔ ${b}. Recalculamos todas las posiciones de poder.`)});if(removed.length){setStatus(`<strong>Vínculo retirado:</strong> ${removed.map(e=>e.join(' ↔ ')).join(', ')}. Observe qué centralidades cambian.`)}updateAll()}
+
+  function simulateRemoval(n){state.removed=n;renderGraph();const cs=components();let note='';if(state.scenario!=='original'&&n==='Brian'&&cs.length>1)note=' <em>Nota crítica:</em> el atajo mantiene unidos los dos grupos principales, pero Abe queda aislado porque solo estaba conectado con Brian.';$('#componentReport').innerHTML=(cs.length===1?`Al retirar <strong>${n}</strong>, la red permanece conectada (${cs[0].length} personas). Hay una ruta alternativa.`:`Al retirar <strong>${n}</strong>, aparecen <strong>${cs.length} componentes</strong>: ${cs.map((c,i)=>`grupo ${i+1} [${c.join(', ')}]`).join('; ')}.`)+note;setStatus(cs.length===1?`<strong>Red resiliente:</strong> retirar a ${n} no la fragmenta.`:`<strong>Punto de falla:</strong> retirar a ${n} fragmenta la red en ${cs.length} partes.`)}
+  function restoreRemoval(){state.removed=null;renderGraph();$('#componentReport').textContent='Red restaurada. Pruebe retirar a Brian, Evan o Fred y compare escenarios.'}
+
+  function renderLessons(){const el=$('#tutorial');el.innerHTML=lessons.map((l,i)=>`<button class="lesson ${i===state.lesson?'active':''}" data-lesson="${i}"><span>${i+1}</span>${l.t.replace(/^\d+\. /,'')}</button>`).join('');$$('.lesson').forEach(b=>b.onclick=()=>runLesson(+b.dataset.lesson))}
+  function runLesson(i){clearTimers();state.lesson=(i+lessons.length)%lessons.length;const l=lessons[state.lesson];state.selected=l.node;setScenario(l.scenario,false);setMetric(l.metric,false);selectNode(l.node);renderLessons();$('#stageTitle').textContent=l.t;setStatus(l.msg);if(l.failure){openTab('failure');$('#removeSelect').value=l.failure;later(()=>simulateRemoval(l.failure),500)}else if(l.animate)later(animateMetric,420)}
+  function playTour(){state.playing=!state.playing;$('#playTour').textContent=state.playing?'■ Pausar':'▶ Recorrer';if(state.playing)advanceTour()}
+  function advanceTour(){if(!state.playing)return;runLesson(state.lesson);later(()=>{if(state.playing){state.lesson=(state.lesson+1)%lessons.length;advanceTour()}},state.lesson===0||state.lesson===8?3800:6500)}
+  function openTab(id){$$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));$$('.tab-content').forEach(c=>c.classList.toggle('active',c.id==='tab-'+id));if(innerWidth<760)$('#tab-'+id).scrollIntoView({behavior:'smooth',block:'start'})}
+  function renderQuiz(){const qs=[{q:'¿Quién posee mayor grado en la red original?',a:'Fred',opts:['Brian','Fred','Evan'],why:'Fred tiene 5 vecinos; el grado total recíproco es 10.'},{q:'¿Qué vínculo reduce la dependencia de Brian y Evan?',a:'Fred–David',opts:['Abe–Fred','Fred–David','Colin–Evan'],why:'Fred–David crea una ruta alternativa entre las comunidades.'},{q:'¿Cuál de estas personas sigue siendo punto de falla tras crear el atajo?',a:'Fred',opts:['Evan','David','Fred'],why:'Sin Fred, el grupo denso todavía se separa del resto.'}];$('#quiz').innerHTML=qs.map((x,i)=>`<div class="q"><p>${i+1}. ${x.q}</p>${x.opts.map(o=>`<button data-q="${i}" data-o="${o}">${o}</button>`).join('')}<div class="quiz-feedback" id="fb${i}"></div></div>`).join('');$$('.q button').forEach(b=>b.onclick=()=>{const x=qs[+b.dataset.q],correct=b.dataset.o===x.a;b.closest('.q').querySelectorAll('button').forEach(z=>z.disabled=true);b.classList.add(correct?'correct':'wrong');if(!correct)[...b.closest('.q').querySelectorAll('button')].find(z=>z.dataset.o===x.a).classList.add('correct');$('#fb'+b.dataset.q).textContent=x.why})}
+  function populate(){names.forEach(n=>{$('#nodeSelect').add(new Option(n,n));$('#removeSelect').add(new Option(n,n))});$('#nodeSelect').value=state.selected;$('#removeSelect').value='Brian';renderLessons();renderQuiz()}
+  function reset(){clearTimers();state={scenario:'original',metric:'degree',selected:'Fred',lesson:0,playing:false,removed:null,showLabels:true,scale:1,tx:0,ty:0,positions:JSON.parse(JSON.stringify(startPos)),timers:[]};$('#playTour').textContent='▶ Recorrer';$('#toggleLabels').classList.add('on');setScenario('original');setMetric('degree');runLesson(0);toast('Laboratorio reiniciado')}
+
+  $$('.scenario').forEach(b=>b.onclick=()=>setScenario(b.dataset.scenario,true));$$('.metric').forEach(b=>b.onclick=()=>setMetric(b.dataset.metric));$('#nodeSelect').onchange=e=>selectNode(e.target.value);$('#animateMetric').onclick=animateMetric;$('#toggleLabels').onclick=()=>{state.showLabels=!state.showLabels;$('#toggleLabels').classList.toggle('on',state.showLabels);$$('.node .label').forEach(l=>l.style.display=state.showLabels?'block':'none')};$('#fitGraph').onclick=()=>{state.scale=1;state.tx=0;state.ty=0;state.positions=JSON.parse(JSON.stringify(startPos));renderGraph()};$('#zoomIn').onclick=()=>{state.scale=Math.min(2,state.scale+.12);updateTransform()};$('#zoomOut').onclick=()=>{state.scale=Math.max(.55,state.scale-.12);updateTransform()};$('#canvasWrap').addEventListener('wheel',e=>{e.preventDefault();state.scale=Math.max(.55,Math.min(2,state.scale+(e.deltaY<0?.08:-.08)));updateTransform()},{passive:false});$('#network').onclick=()=>clearTimers();$('#simulateRemoval').onclick=()=>simulateRemoval($('#removeSelect').value);$('#restoreRemoval').onclick=restoreRemoval;$$('.tab').forEach(t=>t.onclick=()=>openTab(t.dataset.tab));$('#prevStep').onclick=()=>runLesson(state.lesson-1);$('#nextStep').onclick=()=>runLesson(state.lesson+1);$('#playTour').onclick=playTour;$('#btnReset').onclick=reset;$('#btnHelp').onclick=()=>{openTab('method');toast('Elija una métrica, un nodo y pulse “Animar”. También puede seguir el recorrido guiado.')};
+  populate();renderGraph();runLesson(0);
+})();
+</script>
+</body>
+</html>
