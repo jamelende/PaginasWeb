@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Arquitecturas Deep Learning</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-legend,
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<div id="deep-architecture-studio">
+  <style>
+    #deep-architecture-studio{width:100%;color:var(--foreground);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    #deep-architecture-studio *{box-sizing:border-box}
+    #deep-architecture-studio .shell{border:1px solid var(--border);border-radius:18px;background:var(--background);overflow:hidden}
+    #deep-architecture-studio .top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--card)}
+    #deep-architecture-studio .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    #deep-architecture-studio .logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--primary);color:var(--primary-foreground);font-weight:700}
+    #deep-architecture-studio .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #deep-architecture-studio .tag{color:var(--muted-foreground);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #deep-architecture-studio .arch-select{min-width:255px;padding:8px 10px;border:1px solid var(--input);border-radius:9px;background:var(--background);color:var(--foreground);font:inherit}
+    #deep-architecture-studio .workspace{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:770px}
+    #deep-architecture-studio .side{padding:14px;border-right:1px solid var(--border);background:var(--card)}
+    #deep-architecture-studio .main{padding:14px;min-width:0}
+    #deep-architecture-studio .controls{display:grid;gap:11px;margin-bottom:16px}
+    #deep-architecture-studio .controls h3{margin:0;color:var(--muted-foreground);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+    #deep-architecture-studio label{display:grid;gap:5px;font-size:13px}
+    #deep-architecture-studio select,#deep-architecture-studio input[type="range"]{width:100%}
+    #deep-architecture-studio select{padding:8px;border:1px solid var(--input);border-radius:9px;background:var(--background);color:var(--foreground);font:inherit}
+    #deep-architecture-studio button{padding:8px 10px;border:1px solid var(--border);border-radius:9px;background:var(--background);color:var(--foreground);font:inherit;cursor:pointer}
+    #deep-architecture-studio button.primary{border-color:var(--primary);background:var(--primary);color:var(--primary-foreground)}
+    #deep-architecture-studio button:disabled{opacity:.45;cursor:not-allowed}
+    #deep-architecture-studio .button-row{display:flex;gap:7px}
+    #deep-architecture-studio .button-row button{flex:1}
+    #deep-architecture-studio .note{padding:9px;border-radius:9px;background:var(--muted);color:var(--muted-foreground);font-size:12px;line-height:1.42}
+    #deep-architecture-studio .concept-list{display:grid;gap:6px}
+    #deep-architecture-studio .concept{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;background:var(--background);font-size:12px}
+    #deep-architecture-studio .concept i{width:8px;height:8px;border-radius:50%;background:var(--viz-series-1)}
+    #deep-architecture-studio .head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+    #deep-architecture-studio .head h2{margin:0 0 3px;font-size:20px}
+    #deep-architecture-studio .head p{margin:0;color:var(--muted-foreground);font-size:13px}
+    #deep-architecture-studio .badge{padding:5px 9px;border-radius:999px;background:var(--muted);color:var(--muted-foreground);font-size:12px;white-space:nowrap}
+    #deep-architecture-studio .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
+    #deep-architecture-studio .stat{padding:10px;border:1px solid var(--border);border-radius:11px;background:var(--card)}
+    #deep-architecture-studio .stat span{display:block;color:var(--muted-foreground);font-size:11px}
+    #deep-architecture-studio .stat strong{display:block;margin-top:2px;font-size:16px}
+    #deep-architecture-studio .diagram-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.72fr);gap:10px}
+    #deep-architecture-studio .panel{padding:11px;border:1px solid var(--border);border-radius:12px;background:var(--card);min-width:0}
+    #deep-architecture-studio .panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:13px;font-weight:650}
+    #deep-architecture-studio .panel-head small{font-weight:400;color:var(--muted-foreground)}
+    #deep-architecture-studio .diagram-wrap{height:330px;border-radius:9px;background:var(--background);overflow:hidden}
+    #deep-architecture-studio svg{display:block;width:100%;height:100%}
+    #deep-architecture-studio .edge{stroke:var(--border);stroke-width:2;fill:none;marker-end:url(#dl-arrow)}
+    #deep-architecture-studio .edge.active{stroke:var(--viz-series-1);stroke-width:3}
+    #deep-architecture-studio .node{cursor:pointer}
+    #deep-architecture-studio .node rect{fill:var(--card);stroke:var(--border);stroke-width:1.5}
+    #deep-architecture-studio .node circle{fill:color-mix(in srgb,var(--viz-series-1) 18%,var(--card));stroke:var(--viz-series-1);stroke-width:1.5}
+    #deep-architecture-studio .node text{fill:var(--foreground);font-size:12px;text-anchor:middle;pointer-events:none}
+    #deep-architecture-studio .node .sub{fill:var(--muted-foreground);font-size:9px}
+    #deep-architecture-studio .node.active rect,#deep-architecture-studio .node.active circle{fill:color-mix(in srgb,var(--viz-series-1) 22%,var(--card));stroke:var(--viz-series-1);stroke-width:2.5}
+    #deep-architecture-studio .node.selected rect,#deep-architecture-studio .node.selected circle{stroke:var(--foreground);stroke-width:2.5}
+    #deep-architecture-studio .packet{fill:var(--viz-series-2);filter:drop-shadow(0 0 4px var(--viz-series-2))}
+    #deep-architecture-studio .block-detail{display:grid;gap:10px}
+    #deep-architecture-studio .block-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,var(--viz-series-1) 18%,var(--card));font-weight:700}
+    #deep-architecture-studio .block-detail h3{margin:0;font-size:16px}
+    #deep-architecture-studio .block-detail p{margin:0;color:var(--muted-foreground);font-size:12px;line-height:1.45}
+    #deep-architecture-studio .detail-row{display:grid;grid-template-columns:75px 1fr;gap:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px}
+    #deep-architecture-studio .detail-row span{color:var(--muted-foreground)}
+    #deep-architecture-studio .formula{padding:9px;border-radius:8px;background:var(--background);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;overflow:auto}
+    #deep-architecture-studio .progress{height:7px;border-radius:999px;background:var(--muted);overflow:hidden;margin-top:10px}
+    #deep-architecture-studio .progress b{display:block;height:100%;background:var(--viz-series-1);transition:width .25s}
+    #deep-architecture-studio .step-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px}
+    #deep-architecture-studio .step-controls span{font-size:12px;color:var(--muted-foreground)}
+    #deep-architecture-studio .lower{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    #deep-architecture-studio canvas{display:block;width:100%;height:220px;border-radius:8px;background:var(--background)}
+    #deep-architecture-studio .use-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    #deep-architecture-studio .use-item{padding:8px;border-radius:8px;background:var(--muted)}
+    #deep-architecture-studio .use-item strong{display:block;font-size:12px}
+    #deep-architecture-studio .use-item span{display:block;margin-top:2px;color:var(--muted-foreground);font-size:10px}
+    #deep-architecture-studio .quiz{margin-top:10px}
+    #deep-architecture-studio .quiz p{margin:0 0 7px;font-size:12px}
+    #deep-architecture-studio .quiz-options{display:grid;gap:6px}
+    #deep-architecture-studio .quiz-options button{text-align:left;font-size:11px;padding:7px 8px}
+    #deep-architecture-studio .quiz-options button.correct{border-color:var(--viz-series-2);background:color-mix(in srgb,var(--viz-series-2) 16%,var(--card))}
+    #deep-architecture-studio .quiz-options button.wrong{border-color:var(--destructive);background:color-mix(in srgb,var(--destructive) 12%,var(--card))}
+    #deep-architecture-studio .quiz-feedback{min-height:18px;margin-top:6px;color:var(--muted-foreground);font-size:11px}
+    @media(max-width:860px){
+      #deep-architecture-studio .workspace{grid-template-columns:1fr}
+      #deep-architecture-studio .side{border-right:0;border-bottom:1px solid var(--border)}
+      #deep-architecture-studio .controls{grid-template-columns:repeat(3,minmax(0,1fr))}
+      #deep-architecture-studio .controls h3,#deep-architecture-studio .note,#deep-architecture-studio .concept-list{grid-column:1/-1}
+    }
+    @media(max-width:680px){
+      #deep-architecture-studio .diagram-grid,#deep-architecture-studio .lower{grid-template-columns:1fr}
+      #deep-architecture-studio .diagram-wrap{height:300px}
+    }
+    @media(max-width:520px){
+      #deep-architecture-studio .top{align-items:flex-start;flex-direction:column}
+      #deep-architecture-studio .arch-select{width:100%;min-width:0}
+      #deep-architecture-studio .controls{grid-template-columns:1fr}
+      #deep-architecture-studio .stats{grid-template-columns:1fr}
+    }
+  </style>
+
+  <section class="shell" aria-label="Explorador interactivo de arquitecturas de deep learning">
+    <header class="top">
+      <div class="brand"><div class="logo">DL</div><div><div class="name">Arquitecturas de Deep Learning</div><div class="tag">Explora, anima y comprende cómo fluye la información</div></div></div>
+      <select id="dl-arch" class="arch-select" aria-label="Seleccionar arquitectura">
+        <option value="cnn">CNN · Visión por computador</option>
+        <option value="rnn">RNN / LSTM · Secuencias</option>
+        <option value="autoencoder">Autoencoder · Representaciones</option>
+        <option value="gan">GAN · Generación adversaria</option>
+        <option value="transformer">Transformer · Atención</option>
+        <option value="diffusion">Difusión · Generación iterativa</option>
+      </select>
+    </header>
+
+    <div class="workspace">
+      <aside class="side">
+        <div class="controls">
+          <h3>Experimento</h3>
+          <label>Ejemplo
+            <select id="dl-example"></select>
+          </label>
+          <label id="param-label">Tamaño del kernel <span id="param-value">3 × 3</span>
+            <input id="dl-param" type="range" min="1" max="5" value="3">
+          </label>
+          <label>Velocidad de animación <span id="speed-value">1.0×</span>
+            <input id="dl-speed" type="range" min="5" max="20" value="10">
+          </label>
+          <div class="button-row"><button id="dl-play" class="primary" type="button">▶ Animar</button><button id="dl-reset" type="button">Reiniciar</button></div>
+          <div class="note" id="arch-note"></div>
+        </div>
+        <div class="controls">
+          <h3>Ideas clave</h3>
+          <div class="concept-list" id="concept-list"></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="head"><div><h2 id="arch-title"></h2><p id="arch-subtitle"></p></div><span class="badge" id="arch-badge"></span></div>
+        <div class="stats">
+          <div class="stat"><span>Entrada</span><strong id="stat-input"></strong></div>
+          <div class="stat"><span>Representación interna</span><strong id="stat-hidden"></strong></div>
+          <div class="stat"><span>Salida</span><strong id="stat-output"></strong></div>
+        </div>
+
+        <div class="diagram-grid">
+          <section class="panel">
+            <div class="panel-head"><span>Flujo de la arquitectura</span><small>Haz clic en cualquier bloque</small></div>
+            <div class="diagram-wrap"><svg id="arch-svg" viewBox="0 0 720 330" role="img" aria-label="Diagrama interactivo de arquitectura neuronal"></svg></div>
+            <div class="progress"><b id="step-progress" style="width:0%"></b></div>
+            <div class="step-controls"><button id="dl-prev" type="button">← Paso anterior</button><span id="step-label">Paso 1</span><button id="dl-next" type="button">Paso siguiente →</button></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><span>Inspector del bloque</span><small id="block-index"></small></div>
+            <div class="block-detail">
+              <div class="block-icon" id="block-icon">X</div>
+              <h3 id="block-title"></h3><p id="block-text"></p>
+              <div class="detail-row"><span>Tensor</span><strong id="block-shape"></strong></div>
+              <div class="detail-row"><span>Aprende</span><strong id="block-learns"></strong></div>
+              <div class="formula" id="block-formula"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="lower">
+          <section class="panel">
+            <div class="panel-head"><span id="visual-title">Activaciones internas</span><small id="visual-caption"></small></div>
+            <canvas id="concept-canvas" aria-label="Visualización conceptual de activaciones"></canvas>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><span>Cuándo utilizarla</span><small>Fortalezas y límites</small></div>
+            <div class="use-grid" id="use-grid"></div>
+            <div class="quiz"><p id="quiz-question"></p><div class="quiz-options" id="quiz-options"></div><div class="quiz-feedback" id="quiz-feedback"></div></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script>
+  (()=>{
+    const root=document.getElementById('deep-architecture-studio'),$=s=>root.querySelector(s),css=n=>getComputedStyle(root).getPropertyValue(n).trim();
+    const state={arch:'cnn',step:0,selected:0,playing:false,timer:null,phase:0};
+    const common={
+      cnn:{title:'Red Convolucional (CNN)',subtitle:'Detecta patrones espaciales mediante filtros compartidos.',badge:'Aprendizaje supervisado',examples:['Clasificar animales','Detectar defectos','Reconocer dígitos'],param:['Tamaño del kernel',1,5,3,v=>v+' × '+v],stats:['Imagen 64 × 64 × 3','Mapas de características','Probabilidad por clase'],note:'Una CNN aprende bordes, texturas y formas sin diseñar manualmente cada detector.',concepts:['Filtros locales','Pesos compartidos','Jerarquía espacial'],uses:[['Ideal','Imágenes y video'],['Ventaja','Invarianza local'],['Limitación','Contexto global costoso'],['Salida','Clase, caja o máscara']],quiz:['¿Qué aprende un filtro convolucional?',['Patrones locales','Una lista de imágenes','Reglas escritas a mano'],0],nodes:[
+        ['Imagen','64×64×3','Píxeles de entrada. Cada canal contiene intensidad de color.','—','X','Imagen'],['Convolución','62×62×16','Los kernels recorren la imagen y responden a patrones locales.','Filtros y sesgos','Y = X * K + b','K'],['ReLU','62×62×16','Introduce no linealidad y conserva activaciones positivas.','No tiene parámetros','max(0, x)','ƒ'],['Pooling','31×31×16','Reduce resolución y conserva la evidencia más fuerte.','No tiene parámetros','max(ventana)','↓'],['Clasificador','10 clases','Combina características de alto nivel para decidir una clase.','Pesos densos','softmax(Wz+b)','P']]},
+      rnn:{title:'RNN / LSTM',subtitle:'Procesa secuencias manteniendo una memoria del pasado.',badge:'Datos secuenciales',examples:['Predecir palabras','Series temporales','Clasificar audio'],param:['Longitud de secuencia',4,12,7,v=>v+' pasos'],stats:['Secuencia de tokens','Estado oculto hₜ','Predicción temporal'],note:'LSTM añade compuertas para decidir qué recordar, olvidar y exponer.',concepts:['Estado recurrente','Orden temporal','Compuertas LSTM'],uses:[['Ideal','Series y señales'],['Ventaja','Memoria temporal'],['Limitación','Cálculo secuencial'],['Salida','Valor o secuencia']],quiz:['¿Qué transporta información entre pasos?',['El estado oculto','El tamaño del lote','La función de pérdida'],0],nodes:[
+        ['Token xₜ','d_model','Elemento actual de la secuencia.','Embedding','xₜ','x'],['Olvido','h','Decide qué información anterior deja de ser útil.','Pesos de compuerta','fₜ=σ(W[xₜ,hₜ₋₁])','F'],['Entrada','h','Selecciona qué información nueva guardar en la memoria.','Pesos de compuerta','iₜ⊙c̃ₜ','I'],['Memoria cₜ','h','Combina pasado retenido e información nueva.','Estado aprendido','cₜ=fₜcₜ₋₁+iₜc̃ₜ','M'],['Salida hₜ','h','Expone la parte de la memoria necesaria para predecir.','Pesos de salida','hₜ=oₜ⊙tanh(cₜ)','O']]},
+      autoencoder:{title:'Autoencoder',subtitle:'Comprime datos y aprende a reconstruirlos.',badge:'Aprendizaje auto-supervisado',examples:['Eliminar ruido','Detectar anomalías','Comprimir imágenes'],param:['Tamaño latente',2,10,4,v=>v+' variables'],stats:['Vector x de 64 rasgos','Código latente z','Reconstrucción x̂'],note:'El cuello de botella obliga a conservar únicamente la información más importante.',concepts:['Encoder','Espacio latente','Reconstrucción'],uses:[['Ideal','Representaciones'],['Ventaja','No exige etiquetas'],['Limitación','Puede copiar trivialmente'],['Salida','Dato reconstruido']],quiz:['¿Por qué sirve el cuello de botella?',['Fuerza una compresión útil','Aumenta las etiquetas','Elimina la función de pérdida'],0],nodes:[
+        ['Entrada x','64','Dato original que se quiere representar.','—','x','x'],['Encoder','64→16','Transforma la entrada en características cada vez más compactas.','Pesos del encoder','z=fθ(x)','E'],['Latente z','4','Código comprimido que captura factores esenciales.','Representación','z∈ℝᵈ','z'],['Decoder','16→64','Expande el código para reconstruir el dato original.','Pesos del decoder','x̂=gφ(z)','D'],['Reconstrucción','64','Se compara con la entrada para calcular el error.','—','L=||x-x̂||²','x̂']]},
+      gan:{title:'Red Generativa Adversaria (GAN)',subtitle:'Un generador y un discriminador compiten para crear datos realistas.',badge:'Juego adversario',examples:['Generar rostros','Crear estilos','Aumentar datos'],param:['Dimensión del ruido',16,128,64,v=>v+' valores'],stats:['Ruido aleatorio z','Imagen sintética','Real / falsa'],note:'El generador intenta engañar; el discriminador aprende a detectar falsificaciones.',concepts:['Generador G','Discriminador D','Competencia min–max'],uses:[['Ideal','Síntesis visual'],['Ventaja','Resultados nítidos'],['Limitación','Entrenamiento inestable'],['Salida','Muestra sintética']],quiz:['¿Qué recibe el generador como entrada?',['Ruido latente','La etiqueta correcta siempre','La matriz de confusión'],0],nodes:[
+        ['Ruido z','64','Semilla aleatoria muestreada de una distribución simple.','—','z~N(0,I)','z'],['Generador G','imagen','Convierte la semilla en una muestra sintética.','Pesos generativos','x_fake=G(z)','G'],['Muestra falsa','64×64×3','Candidato generado que debe parecer real.','—','x̃','x̃'],['Discriminador D','0…1','Compara ejemplos reales y falsos y estima autenticidad.','Pesos discriminativos','D(x)','D'],['Pérdida','escalar','Actualiza G y D con objetivos opuestos.','Gradientes','minG maxD V(D,G)','L']]},
+      transformer:{title:'Transformer',subtitle:'Relaciona todos los tokens mediante atención paralela.',badge:'Atención global',examples:['Traducir texto','Responder preguntas','Analizar documentos'],param:['Cabezas de atención',1,8,4,v=>v+' cabezas'],stats:['Tokens + posición','Contexto por token','Tokens de salida'],note:'La atención calcula qué tokens son relevantes para interpretar cada posición.',concepts:['Self-attention','Codificación posicional','Bloques paralelos'],uses:[['Ideal','Texto y multimodal'],['Ventaja','Contexto global'],['Limitación','Costo cuadrático'],['Salida','Token o embedding']],quiz:['¿Para qué sirve QKᵀ en atención?',['Medir relevancia entre tokens','Comprimir una imagen','Elegir la tasa de aprendizaje'],0],nodes:[
+        ['Tokens','n×d','Palabras o fragmentos convertidos en vectores con posición.','Embeddings','X+P','T'],['Q, K, V','n×d','Tres proyecciones: consultas, claves y valores.','WQ, WK, WV','Q=XWQ; K=XWK; V=XWV','Q'],['Atención','n×n','Mide afinidades y mezcla información de todos los tokens.','Proyecciones','softmax(QKᵀ/√d)V','A'],['Feed-forward','n×d','Procesa cada posición con una red no lineal.','Pesos densos','FFN(x)=W₂σ(W₁x)','F'],['Salida','n×d','Representación contextual lista para predecir o decodificar.','Capa de salida','softmax(Wh)','Y']]},
+      diffusion:{title:'Modelo de Difusión',subtitle:'Aprende a revertir ruido paso a paso hasta formar una muestra.',badge:'Generación iterativa',examples:['Generar imágenes','Editar fotografías','Crear audio'],param:['Pasos de denoising',4,20,10,v=>v+' pasos'],stats:['Ruido gaussiano','Estados xₜ','Imagen generada'],note:'La red predice el ruido presente y lo elimina gradualmente, condicionada por texto u otra señal.',concepts:['Proceso de ruido','Denoising iterativo','Condicionamiento'],uses:[['Ideal','Generación de alta calidad'],['Ventaja','Entrenamiento estable'],['Limitación','Muestreo lento'],['Salida','Imagen o señal']],quiz:['¿Qué aprende a predecir la red?',['El ruido añadido','La clase positiva','Una tabla de usuarios'],0],nodes:[
+        ['Ruido xₜ','64×64×3','El proceso comienza con ruido casi puro.','—','x_T~N(0,I)','N'],['Condición','embedding','El texto guía qué contenido debe aparecer.','Encoder de texto','c=Encoder(prompt)','C'],['U-Net','ε estimado','Predice el componente de ruido en el estado actual.','Pesos de denoising','εθ(xₜ,t,c)','U'],['Paso t−1','64×64×3','Se resta una fracción del ruido y aparece más estructura.','—','xₜ₋₁=step(xₜ,εθ)','−'],['Imagen x₀','64×64×3','Tras varios pasos queda una muestra limpia.','—','x₀','I']]}
+    };
+    const escapeHTML=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    function current(){return common[state.arch]}
+    function setupArch(){
+      clearTimeout(state.timer);state.playing=false;state.step=0;state.selected=0;state.phase=0;$('#dl-play').textContent='▶ Animar';const a=current();
+      $('#arch-title').textContent=a.title;$('#arch-subtitle').textContent=a.subtitle;$('#arch-badge').textContent=a.badge;$('#stat-input').textContent=a.stats[0];$('#stat-hidden').textContent=a.stats[1];$('#stat-output').textContent=a.stats[2];$('#arch-note').textContent=a.note;
+      $('#dl-example').innerHTML=a.examples.map((x,i)=>'<option value="'+i+'">'+escapeHTML(x)+'</option>').join('');
+      const [label,min,max,val,fmt]=a.param;$('#param-label').childNodes[0].nodeValue=label+' ';$('#dl-param').min=min;$('#dl-param').max=max;$('#dl-param').value=val;$('#param-value').textContent=fmt(val);
+      $('#concept-list').innerHTML=a.concepts.map((x,i)=>'<div class="concept"><i style="background:var(--viz-series-'+(i+1)+')"></i>'+escapeHTML(x)+'</div>').join('');
+      $('#use-grid').innerHTML=a.uses.map(x=>'<div class="use-item"><strong>'+escapeHTML(x[0])+'</strong><span>'+escapeHTML(x[1])+'</span></div>').join('');
+      $('#quiz-question').textContent=a.quiz[0];$('#quiz-options').innerHTML=a.quiz[1].map((x,i)=>'<button type="button" data-answer="'+i+'">'+escapeHTML(x)+'</button>').join('');$('#quiz-feedback').textContent='';
+      $('#quiz-options').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>answerQuiz(Number(b.dataset.answer))));
+      renderDiagram();selectNode(0);renderStep();drawConcept();
+    }
+    function positions(){const a=current(),n=a.nodes.length;if(state.arch==='gan')return [[80,155],[225,95],[360,95],[505,155],[640,155]];if(state.arch==='diffusion')return [[75,165],[210,75],[350,165],[500,165],[645,165]];return a.nodes.map((_,i)=>[72+i*(576/(n-1)),155+(i%2? -28:28)])}
+    function renderDiagram(){
+      const a=current(),pos=positions(),svg=$('#arch-svg');let edges='<defs><marker id="dl-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="var(--border)"/></marker></defs>';
+      for(let i=0;i<pos.length-1;i++)edges+='<path class="edge '+(i<state.step?'active':'')+'" data-edge="'+i+'" d="M '+(pos[i][0]+50)+' '+pos[i][1]+' C '+(pos[i][0]+78)+' '+pos[i][1]+', '+(pos[i+1][0]-78)+' '+pos[i+1][1]+', '+(pos[i+1][0]-50)+' '+pos[i+1][1]+'"/>';
+      if(state.arch==='gan')edges+='<path class="edge" d="M 360 120 C 390 205, 465 205, 505 172"/><path class="edge" d="M 505 140 C 440 35, 260 35, 225 70"/>';
+      const nodes=a.nodes.map((n,i)=>'<g class="node '+(i===state.step?'active ':'')+(i===state.selected?'selected':'')+'" data-node="'+i+'" transform="translate('+(pos[i][0]-50)+' '+(pos[i][1]-31)+')"><rect width="100" height="62" rx="12"/><circle cx="50" cy="0" r="13"/><text x="50" y="25">'+escapeHTML(n[0])+'</text><text class="sub" x="50" y="43">'+escapeHTML(n[1])+'</text></g>').join('');
+      const packet=state.step<pos.length-1?'<circle class="packet" cx="'+(pos[state.step][0]+54)+'" cy="'+pos[state.step][1]+'" r="5"/>':'';svg.innerHTML=edges+nodes+packet;
+      svg.querySelectorAll('[data-node]').forEach(g=>g.addEventListener('click',()=>selectNode(Number(g.dataset.node))));
+    }
+    function selectNode(i){state.selected=i;const n=current().nodes[i];$('#block-index').textContent='Bloque '+(i+1)+' de '+current().nodes.length;$('#block-icon').textContent=n[5];$('#block-title').textContent=n[0];$('#block-text').textContent=n[2];$('#block-shape').textContent=n[1];$('#block-learns').textContent=n[3];$('#block-formula').textContent=n[4];renderDiagram()}
+    function renderStep(){const total=current().nodes.length;$('#step-label').textContent='Paso '+(state.step+1)+' de '+total;$('#step-progress').style.width=((state.step+1)/total*100)+'%';$('#dl-prev').disabled=state.step===0;$('#dl-next').disabled=state.step===total-1;selectNode(state.step);drawConcept()}
+    function next(auto=false){if(state.step<current().nodes.length-1){state.step++;renderStep()}else if(auto){state.playing=false;$('#dl-play').textContent='▶ Animar';return}if(auto&&state.playing)schedule()}
+    function schedule(){clearTimeout(state.timer);state.timer=setTimeout(()=>next(true),1300/(Number($('#dl-speed').value)/10))}
+    function togglePlay(){state.playing=!state.playing;$('#dl-play').textContent=state.playing?'⏸ Pausar':'▶ Animar';if(state.playing){if(state.step===current().nodes.length-1){state.step=0;renderStep()}schedule()}else clearTimeout(state.timer)}
+    function answerQuiz(i){const correct=current().quiz[2];$('#quiz-options').querySelectorAll('button').forEach((b,j)=>{b.classList.remove('correct','wrong');if(j===correct)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('#quiz-feedback').textContent=i===correct?'Correcto: esa es la idea central.':'Revisa la arquitectura y vuelve a intentarlo.'}
+    function fit(canvas){const r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);const ctx=canvas.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height}}
+    function drawConcept(){
+      const {ctx,w,h}=fit($('#concept-canvas')),a=current(),accent=css('--viz-series-1'),accent2=css('--viz-series-2'),muted=css('--muted'),fg=css('--foreground'),border=css('--border');ctx.clearRect(0,0,w,h);ctx.fillStyle=fg;ctx.font='11px system-ui';
+      $('#visual-title').textContent=state.arch==='transformer'?'Mapa de atención':state.arch==='cnn'?'Mapa de activaciones':state.arch==='gan'?'Competencia adversaria':state.arch==='autoencoder'?'Cuello de botella':state.arch==='rnn'?'Memoria a través del tiempo':'Eliminación progresiva de ruido';$('#visual-caption').textContent='Vista conceptual · paso '+(state.step+1);
+      if(state.arch==='transformer'){
+        const n=7,size=Math.min(24,(w-70)/n);for(let y=0;y<n;y++)for(let x=0;x<n;x++){const v=.08+.8*Math.abs(Math.sin((x+1)*(y+2)+state.step));ctx.fillStyle=muted;ctx.fillRect(38+x*size,20+y*size,size-2,size-2);ctx.globalAlpha=v;ctx.fillStyle=accent;ctx.fillRect(38+x*size,20+y*size,size-2,size-2);ctx.globalAlpha=1}ctx.fillStyle=fg;ctx.fillText('consulta →',38,18);ctx.save();ctx.translate(14,115);ctx.rotate(-Math.PI/2);ctx.fillText('clave →',0,0);ctx.restore();
+      }else if(state.arch==='cnn'){
+        const cols=12,rows=7,cw=(w-50)/cols,ch=(h-45)/rows;for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const v=(Math.sin(x*.9+state.step)+Math.cos(y*1.2-state.step)+2)/4;ctx.fillStyle=v>.58?accent:muted;ctx.globalAlpha=.35+.65*v;ctx.fillRect(25+x*cw,18+y*ch,cw-2,ch-2)}ctx.globalAlpha=1;ctx.strokeStyle=accent2;ctx.lineWidth=2;ctx.strokeRect(25+(state.step*2%9)*cw,18+(state.step%4)*ch,cw*3,ch*3);
+      }else if(state.arch==='gan'){
+        const mid=h/2;ctx.strokeStyle=border;ctx.beginPath();ctx.moveTo(28,mid);ctx.lineTo(w-22,mid);ctx.stroke();for(let i=0;i<16;i++){const real=i<8,x=35+i*(w-65)/15,y=mid+(real?-1:1)*(18+28*Math.abs(Math.sin(i*1.7+state.step)));ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle=real?accent:accent2;ctx.fill()}ctx.fillStyle=fg;ctx.fillText('reales',28,16);ctx.fillText('generadas',28,h-12);
+      }else if(state.arch==='autoencoder'){
+        const widths=[72,50,22,50,72],gap=(w-70)/4;for(let i=0;i<5;i++){const x=35+i*gap;for(let j=0;j<widths[i]/8;j++){const y=h/2-(widths[i]/2)+j*8;ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=i===2?accent2:accent;ctx.globalAlpha=.35+.65*Math.abs(Math.sin(j+i+state.step));ctx.fill()}}ctx.globalAlpha=1;ctx.fillStyle=fg;ctx.fillText('entrada',18,h-10);ctx.fillText('latente',w/2-20,h-10);ctx.fillText('reconstrucción',w-96,h-10);
+      }else{
+        const count=state.arch==='rnn'?Number($('#dl-param').value):10;for(let i=0;i<count;i++){const x=28+i*(w-56)/(count-1),v=state.arch==='diffusion'?1-i/(count-1):.3+.7*Math.abs(Math.sin(i*.8+state.step*.5));ctx.beginPath();ctx.arc(x,h/2,8+16*v,0,Math.PI*2);ctx.fillStyle=i<=state.step*(count-1)/(current().nodes.length-1)?accent:muted;ctx.globalAlpha=.45+.5*v;ctx.fill();ctx.globalAlpha=1;if(i<count-1){ctx.strokeStyle=border;ctx.beginPath();ctx.moveTo(x+12,h/2);ctx.lineTo(x+(w-56)/(count-1)-12,h/2);ctx.stroke()}}ctx.fillStyle=fg;ctx.fillText(state.arch==='rnn'?'pasos temporales →':'ruido → estructura',25,h-18);
+      }
+    }
+    $('#dl-arch').addEventListener('change',e=>{state.arch=e.target.value;setupArch()});
+    $('#dl-param').addEventListener('input',e=>{$('#param-value').textContent=current().param[4](e.target.value);drawConcept()});$('#dl-speed').addEventListener('input',e=>{$('#speed-value').textContent=(Number(e.target.value)/10).toFixed(1)+'×';if(state.playing)schedule()});
+    $('#dl-play').addEventListener('click',togglePlay);$('#dl-reset').addEventListener('click',()=>{clearTimeout(state.timer);state.playing=false;state.step=0;$('#dl-play').textContent='▶ Animar';renderStep()});$('#dl-prev').addEventListener('click',()=>{state.step=Math.max(0,state.step-1);renderStep()});$('#dl-next').addEventListener('click',()=>next(false));
+    new ResizeObserver(drawConcept).observe(root);setupArch();
+  })();
+  </script>
+</div>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Laboratorio Reinforcement Learning</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-legend,
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<div id="rl-grid-lab">
+  <style>
+    #rl-grid-lab{width:100%;color:var(--foreground);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    #rl-grid-lab *{box-sizing:border-box}
+    #rl-grid-lab .shell{border:1px solid var(--border);border-radius:18px;background:var(--background);overflow:hidden}
+    #rl-grid-lab .top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--card)}
+    #rl-grid-lab .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    #rl-grid-lab .logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--primary);color:var(--primary-foreground);font-weight:700}
+    #rl-grid-lab .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #rl-grid-lab .tag{color:var(--muted-foreground);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #rl-grid-lab .status{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:999px;background:var(--muted);color:var(--muted-foreground);font-size:12px;white-space:nowrap}
+    #rl-grid-lab .status i{width:8px;height:8px;border-radius:50%;background:var(--viz-series-2)}
+    #rl-grid-lab .workspace{display:grid;grid-template-columns:268px minmax(0,1fr);min-height:800px}
+    #rl-grid-lab .side{padding:13px;border-right:1px solid var(--border);background:var(--card)}
+    #rl-grid-lab .main{padding:13px;min-width:0}
+    #rl-grid-lab .group{display:grid;gap:9px;margin-bottom:15px}
+    #rl-grid-lab .group h3{margin:0;color:var(--muted-foreground);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+    #rl-grid-lab label{display:grid;gap:4px;font-size:12px}
+    #rl-grid-lab select,#rl-grid-lab input[type="range"]{width:100%}
+    #rl-grid-lab select{padding:7px 8px;border:1px solid var(--input);border-radius:8px;background:var(--background);color:var(--foreground);font:inherit}
+    #rl-grid-lab button{padding:7px 9px;border:1px solid var(--border);border-radius:8px;background:var(--background);color:var(--foreground);font:inherit;font-size:12px;cursor:pointer}
+    #rl-grid-lab button.primary{border-color:var(--primary);background:var(--primary);color:var(--primary-foreground)}
+    #rl-grid-lab button:disabled{opacity:.45;cursor:not-allowed}
+    #rl-grid-lab .button-row{display:flex;gap:6px;flex-wrap:wrap}
+    #rl-grid-lab .button-row button{flex:1;min-width:60px}
+    #rl-grid-lab .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+    #rl-grid-lab .tool{padding:7px 3px;font-size:10px}
+    #rl-grid-lab .tool[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--primary-foreground)}
+    #rl-grid-lab .hint{padding:8px;border-radius:8px;background:var(--muted);color:var(--muted-foreground);font-size:11px;line-height:1.4}
+    #rl-grid-lab .learn-progress{height:7px;border-radius:999px;background:var(--muted);overflow:hidden}
+    #rl-grid-lab .learn-progress b{display:block;height:100%;width:0;background:var(--viz-series-1);transition:width .15s}
+    #rl-grid-lab .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:9px}
+    #rl-grid-lab .metric{padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:var(--card)}
+    #rl-grid-lab .metric span{display:block;color:var(--muted-foreground);font-size:10px}
+    #rl-grid-lab .metric strong{display:block;margin-top:2px;font-size:18px}
+    #rl-grid-lab .main-grid{display:grid;grid-template-columns:minmax(390px,1.35fr) minmax(250px,.72fr);gap:9px}
+    #rl-grid-lab .panel{padding:10px;border:1px solid var(--border);border-radius:11px;background:var(--card);min-width:0}
+    #rl-grid-lab .panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;font-size:12px;font-weight:650}
+    #rl-grid-lab .panel-head small{color:var(--muted-foreground);font-weight:400}
+    #rl-grid-lab canvas{display:block;width:100%;border-radius:8px;background:var(--background)}
+    #rl-grid-lab #world{height:490px;cursor:crosshair}
+    #rl-grid-lab #reward-chart{height:210px}
+    #rl-grid-lab .view-tabs{display:flex;gap:5px;flex-wrap:wrap}
+    #rl-grid-lab .view-tabs button{padding:5px 7px;font-size:10px}
+    #rl-grid-lab .view-tabs button.is-active{background:var(--primary);border-color:var(--primary);color:var(--primary-foreground)}
+    #rl-grid-lab .side-stack{display:grid;gap:9px}
+    #rl-grid-lab .state-box{display:grid;gap:8px}
+    #rl-grid-lab .state-title{display:flex;align-items:center;gap:8px}
+    #rl-grid-lab .robot-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:color-mix(in srgb,var(--viz-series-1) 18%,var(--card));font-size:20px}
+    #rl-grid-lab .state-title strong{display:block;font-size:13px}
+    #rl-grid-lab .state-title span{display:block;color:var(--muted-foreground);font-size:10px}
+    #rl-grid-lab .q-list{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+    #rl-grid-lab .q-item{display:flex;align-items:center;justify-content:space-between;padding:7px;border-radius:7px;background:var(--muted);font-size:11px}
+    #rl-grid-lab .q-item.best{background:color-mix(in srgb,var(--viz-series-2) 18%,var(--card));font-weight:650}
+    #rl-grid-lab .formula{padding:8px;border-radius:8px;background:var(--background);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;overflow:auto}
+    #rl-grid-lab .legend{display:grid;grid-template-columns:1fr 1fr;gap:6px;color:var(--muted-foreground);font-size:10px}
+    #rl-grid-lab .legend span{display:flex;align-items:center;gap:5px}
+    #rl-grid-lab .legend i{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:5px;background:var(--muted);font-style:normal}
+    #rl-grid-lab .log{display:grid;gap:5px;max-height:145px;overflow:auto}
+    #rl-grid-lab .log-row{display:grid;grid-template-columns:44px 1fr 44px;gap:6px;padding:6px;border-radius:7px;background:var(--muted);font-size:10px}
+    #rl-grid-lab .log-row span:last-child{text-align:right;font-weight:650}
+    #rl-grid-lab .bottom{display:grid;grid-template-columns:1.35fr .65fr;gap:9px;margin-top:9px}
+    #rl-grid-lab .explain{padding:10px;border-left:3px solid var(--primary);border-radius:0 9px 9px 0;background:var(--muted)}
+    #rl-grid-lab .explain strong{display:block;margin-bottom:3px;font-size:12px}
+    #rl-grid-lab .explain p{margin:0;color:var(--muted-foreground);font-size:11px;line-height:1.45}
+    #rl-grid-lab .stepper{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:8px}
+    #rl-grid-lab .stepper span{font-size:10px;color:var(--muted-foreground)}
+    @media(max-width:900px){
+      #rl-grid-lab .workspace{grid-template-columns:1fr}
+      #rl-grid-lab .side{border-right:0;border-bottom:1px solid var(--border)}
+      #rl-grid-lab .side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      #rl-grid-lab .group{margin:0}
+    }
+    @media(max-width:720px){
+      #rl-grid-lab .main-grid,#rl-grid-lab .bottom{grid-template-columns:1fr}
+      #rl-grid-lab #world{height:430px}
+    }
+    @media(max-width:520px){
+      #rl-grid-lab .top{align-items:flex-start;flex-direction:column}
+      #rl-grid-lab .side{grid-template-columns:1fr}
+      #rl-grid-lab .metrics{grid-template-columns:1fr 1fr}
+      #rl-grid-lab #world{height:360px}
+    }
+  </style>
+
+  <section class="shell" aria-label="Laboratorio interactivo de reinforcement learning">
+    <header class="top">
+      <div class="brand"><div class="logo">RL</div><div><div class="name">Robot GridWorld · Reinforcement Learning</div><div class="tag">Aprende mediante recompensas, exploración y experiencia</div></div></div>
+      <div class="status"><i></i><span id="rl-status">Entorno listo</span></div>
+    </header>
+    <div class="workspace">
+      <aside class="side">
+        <div class="group">
+          <h3>Modelo y escenario</h3>
+          <label>Algoritmo
+            <select id="algorithm"><option value="qlearning">Q-Learning</option><option value="sarsa">SARSA</option><option value="value">Value Iteration</option></select>
+          </label>
+          <label>Escenario
+            <select id="scenario"><option value="warehouse">Almacén robotizado</option><option value="delivery">Entrega urbana</option><option value="minefield">Campo de penalizaciones</option><option value="custom">Personalizado</option></select>
+          </label>
+          <label>Episodios <span id="episodes-value">500</span><input id="episodes" type="range" min="50" max="1500" step="50" value="500"></label>
+          <label>Learning rate α <span id="alpha-value">0.20</span><input id="alpha" type="range" min="1" max="80" value="20"></label>
+          <label>Descuento γ <span id="gamma-value">0.92</span><input id="gamma" type="range" min="50" max="99" value="92"></label>
+          <label>Exploración ε <span id="epsilon-value">0.25</span><input id="epsilon" type="range" min="0" max="80" value="25"></label>
+          <button id="train" class="primary" type="button">Entrenar agente</button>
+          <div class="learn-progress"><b id="train-progress"></b></div>
+        </div>
+        <div class="group">
+          <h3>Editar grid con el mouse</h3>
+          <div class="tools">
+            <button class="tool" data-tool="robot" aria-pressed="true">🤖 Robot</button><button class="tool" data-tool="goal">🏁 Meta</button><button class="tool" data-tool="object">📦 Objeto</button>
+            <button class="tool" data-tool="penalty">⚠ Penal.</button><button class="tool" data-tool="wall">■ Muro</button><button class="tool" data-tool="erase">⌫ Borrar</button>
+          </div>
+          <div class="hint">Selecciona una herramienta y haz clic en una celda. Editar el mundo reinicia el aprendizaje.</div>
+          <div class="button-row"><button id="undo" type="button">Deshacer</button><button id="clear-learning" type="button">Borrar aprendizaje</button></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="metrics">
+          <div class="metric"><span>Recompensa actual</span><strong id="metric-reward">0.00</strong></div>
+          <div class="metric"><span>Pasos del robot</span><strong id="metric-steps">0</strong></div>
+          <div class="metric"><span>Éxito reciente</span><strong id="metric-success">—</strong></div>
+          <div class="metric"><span>Valor inicial V(s₀)</span><strong id="metric-value">0.00</strong></div>
+        </div>
+
+        <div class="main-grid">
+          <section class="panel">
+            <div class="panel-head"><span>Mundo del robot</span><div class="view-tabs"><button data-view="world" class="is-active">Mundo</button><button data-view="policy">Política</button><button data-view="qvalues">Valores Q</button><button data-view="visits">Visitas</button></div></div>
+            <canvas id="world" aria-label="GridWorld editable con robot, objetos, meta y penalizaciones"></canvas>
+          </section>
+          <div class="side-stack">
+            <section class="panel state-box">
+              <div class="panel-head"><span>Estado seleccionado</span><small id="state-coord">fila 1 · columna 1</small></div>
+              <div class="state-title"><div class="robot-icon">🤖</div><div><strong id="state-action">Sin política aprendida</strong><span id="state-desc">Selecciona una celda del grid</span></div></div>
+              <div class="q-list" id="q-list"></div>
+              <div class="formula" id="update-formula">Q(s,a) ← Q(s,a) + α[r + γ max Q(s′,a′) − Q(s,a)]</div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><span>Control del agente</span><small>política ε-greedy</small></div>
+              <div class="button-row"><button id="agent-step" type="button">Un paso</button><button id="agent-run" class="primary" type="button">▶ Ejecutar</button><button id="agent-reset" type="button">Reiniciar</button></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><span>Objetos del mundo</span><small>recompensas</small></div>
+              <div class="legend"><span><i>🤖</i>Agente</span><span><i>🏁</i>Meta +10</span><span><i>📦</i>Objeto +2</span><span><i>⚠</i>Penalización −4</span><span><i>■</i>Muro</span><span><i>·</i>Paso −0.04</span></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><span>Registro de decisiones</span><small id="log-count">0 acciones</small></div><div class="log" id="action-log"></div>
+            </section>
+          </div>
+        </div>
+
+        <div class="bottom">
+          <section class="panel"><div class="panel-head"><span>Aprendizaje por episodio</span><small>recompensa acumulada y promedio</small></div><canvas id="reward-chart" aria-label="Curva de recompensa durante el entrenamiento"></canvas></section>
+          <section class="panel">
+            <div class="panel-head"><span>Guía didáctica</span><small id="lesson-count">1 / 5</small></div>
+            <div class="explain"><strong id="lesson-title"></strong><p id="lesson-text"></p></div>
+            <div class="stepper"><button id="lesson-prev" type="button">Anterior</button><span>concepto actual</span><button id="lesson-next" type="button">Siguiente</button></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script>
+  (()=>{
+    const root=document.getElementById('rl-grid-lab'),$=s=>root.querySelector(s),$$=s=>[...root.querySelectorAll(s)],css=n=>getComputedStyle(root).getPropertyValue(n).trim();
+    const N=8,A=[[-1,0],[0,1],[1,0],[0,-1]],arrows=['↑','→','↓','←'],names=['Arriba','Derecha','Abajo','Izquierda'];
+    const state={cells:[],start:56,robot:56,goal:7,tool:'robot',view:'world',Q:null,V:null,visits:null,rewards:[],successes:[],runTimer:null,trainTimer:null,training:false,episodeReward:0,steps:0,collected:new Set(),log:[],history:[],selected:56,lesson:0,seed:19};
+    function rand(){state.seed=(state.seed*1664525+1013904223)>>>0;return state.seed/4294967296}
+    const scenarios={
+      warehouse:{start:56,goal:7,walls:[18,19,20,21,34,42,50],objects:[24,30,45],penalties:[11,27,53]},
+      delivery:{start:63,goal:0,walls:[9,10,11,28,36,44,45,46],objects:[15,33,48],penalties:[6,22,41]},
+      minefield:{start:56,goal:7,walls:[17,18,37,38],objects:[8,31,47],penalties:[10,12,20,26,29,35,43,52]}
+    };
+    function emptyTables(){state.Q=Array.from({length:N*N},()=>[0,0,0,0]);state.V=Array(N*N).fill(0);state.visits=Array(N*N).fill(0);state.rewards=[];state.successes=[];$('#train-progress').style.width='0%'}
+    function loadScenario(key){
+      clearTimers();const s=scenarios[key]||scenarios.warehouse;state.cells=Array(N*N).fill('empty');s.walls.forEach(i=>state.cells[i]='wall');s.objects.forEach(i=>state.cells[i]='object');s.penalties.forEach(i=>state.cells[i]='penalty');state.start=s.start;state.robot=s.start;state.goal=s.goal;state.cells[s.goal]='goal';state.collected=new Set();state.episodeReward=0;state.steps=0;state.log=[];state.history=[];state.selected=s.start;emptyTables();updateAll();
+    }
+    function clearTimers(){clearTimeout(state.runTimer);clearTimeout(state.trainTimer);state.training=false;$('#train').disabled=false;$('#agent-run').textContent='▶ Ejecutar'}
+    function resetAgent(){clearTimeout(state.runTimer);state.robot=state.start;state.collected=new Set();state.episodeReward=0;state.steps=0;state.log=[];updateAll()}
+    function transition(s,a,collected=new Set()){
+      const r=Math.floor(s/N),c=s%N,nr=r+A[a][0],nc=c+A[a][1];let ns=s,reward=-.04,done=false,type='Paso normal';
+      if(nr<0||nr>=N||nc<0||nc>=N){reward=-.6;type='Borde del mundo'}else{const candidate=nr*N+nc;if(state.cells[candidate]==='wall'){reward=-.8;type='Choque con muro'}else ns=candidate}
+      const cell=state.cells[ns];if(cell==='goal'){reward=10;done=true;type='Meta alcanzada'}else if(cell==='penalty'){reward=-4;type='Penalización'}else if(cell==='object'&&!collected.has(ns)){reward=2;type='Objeto recogido'}
+      return{ns,reward,done,type};
+    }
+    function validState(s){return state.cells[s]!=='wall'}
+    function greedy(s){const q=state.Q[s],max=Math.max(...q),best=q.map((x,i)=>x===max?i:-1).filter(i=>i>=0);return best[Math.floor(rand()*best.length)]}
+    function policyAction(s,epsilon){return rand()<epsilon?Math.floor(rand()*4):greedy(s)}
+    function trainEpisode(algo,alpha,gamma,epsilon){
+      let s=state.start,total=0,success=false,localCollected=new Set(),a=policyAction(s,epsilon);for(let step=0;step<180;step++){
+        const tr=transition(s,a,localCollected);if(state.cells[tr.ns]==='object')localCollected.add(tr.ns);state.visits[s]++;
+        if(algo==='sarsa'){const nextA=policyAction(tr.ns,epsilon),target=tr.reward+(tr.done?0:gamma*state.Q[tr.ns][nextA]);state.Q[s][a]+=alpha*(target-state.Q[s][a]);a=nextA}else{const target=tr.reward+(tr.done?0:gamma*Math.max(...state.Q[tr.ns]));state.Q[s][a]+=alpha*(target-state.Q[s][a]);a=policyAction(tr.ns,epsilon)}
+        total+=tr.reward;s=tr.ns;if(tr.done){success=true;break}
+      }return{total,success};
+    }
+    function valueIteration(iterations,gamma){
+      const collectedObjects=new Set(state.cells.map((x,i)=>x==='object'?i:-1).filter(i=>i>=0));
+      for(let it=0;it<iterations;it++){const next=state.V.slice();for(let s=0;s<N*N;s++)if(validState(s)&&s!==state.goal){const vals=A.map((_,a)=>{const tr=transition(s,a,collectedObjects);return tr.reward+(tr.done?0:gamma*state.V[tr.ns])});next[s]=Math.max(...vals);state.Q[s]=vals}state.V=next}
+      state.visits=state.visits.map((_,i)=>validState(i)?iterations:0);
+    }
+    function train(){
+      clearTimers();emptyTables();state.training=true;$('#train').disabled=true;const total=Number($('#episodes').value),algo=$('#algorithm').value,alpha=Number($('#alpha').value)/100,gamma=Number($('#gamma').value)/100,epsilon0=Number($('#epsilon').value)/100;let ep=0;
+      $('#rl-status').textContent='Entrenando '+algo+'…';function chunk(){const end=Math.min(total,ep+30);if(algo==='value'){valueIteration(Math.max(1,Math.round((end-ep)/4)),gamma);for(;ep<end;ep++){state.rewards.push(state.V[state.start]);state.successes.push(true)}}else for(;ep<end;ep++){const epsilon=Math.max(.02,epsilon0*(1-ep/total)),r=trainEpisode(algo,alpha,gamma,epsilon);state.rewards.push(r.total);state.successes.push(r.success)}$('#train-progress').style.width=(ep/total*100)+'%';drawReward();drawWorld();if(ep<total){state.trainTimer=setTimeout(chunk,0)}else{state.training=false;$('#train').disabled=false;$('#rl-status').textContent='Entrenamiento completado · política lista';resetAgent();updateAll()}}chunk();
+    }
+    function manualStep(){
+      if(state.robot===state.goal)resetAgent();const epsilon=0,a=policyAction(state.robot,epsilon),from=state.robot,tr=transition(from,a,state.collected);if(state.cells[tr.ns]==='object')state.collected.add(tr.ns);state.robot=tr.ns;state.episodeReward+=tr.reward;state.steps++;state.visits[from]++;state.log.unshift({a:names[a],type:tr.type,reward:tr.reward});state.log=state.log.slice(0,12);state.selected=state.robot;updateAll();if(tr.done){$('#rl-status').textContent='¡Meta alcanzada! Recompensa '+state.episodeReward.toFixed(2);return true}return state.steps>=120;
+    }
+    function runAgent(){if(state.runTimer){clearTimeout(state.runTimer);state.runTimer=null;$('#agent-run').textContent='▶ Ejecutar';return}$('#agent-run').textContent='⏸ Pausar';function tick(){const done=manualStep();if(!done)state.runTimer=setTimeout(tick,180);else{state.runTimer=null;$('#agent-run').textContent='▶ Ejecutar'}}tick()}
+    function fit(canvas){const r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);const ctx=canvas.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height}}
+    function colorAlpha(color,alpha){if(/^#/.test(color)){const h=color.slice(1),n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);return'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+alpha+')'}return color}
+    function roundedRect(ctx,x,y,w,h,r){const q=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+q,y);ctx.arcTo(x+w,y,x+w,y+h,q);ctx.arcTo(x+w,y+h,x,y+h,q);ctx.arcTo(x,y+h,x,y,q);ctx.arcTo(x,y,x+w,y,q);ctx.closePath()}
+    function drawRobot(ctx,cx,cy,size){
+      const s=size*.72;ctx.save();ctx.translate(cx,cy);ctx.shadowColor='rgba(15,23,42,.22)';ctx.shadowBlur=6;ctx.shadowOffsetY=3;
+      ctx.fillStyle='#1d4ed8';roundedRect(ctx,-s*.31,-s*.28,s*.62,s*.48,s*.11);ctx.fill();ctx.shadowColor='transparent';
+      ctx.fillStyle='#dbeafe';roundedRect(ctx,-s*.25,-s*.22,s*.5,s*.27,s*.08);ctx.fill();
+      ctx.fillStyle='#0f172a';ctx.beginPath();ctx.arc(-s*.11,-s*.09,s*.045,0,Math.PI*2);ctx.arc(s*.11,-s*.09,s*.045,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#60a5fa';ctx.lineWidth=Math.max(1.5,s*.035);ctx.beginPath();ctx.moveTo(-s*.1,s*.04);ctx.quadraticCurveTo(0,s*.11,s*.1,s*.04);ctx.stroke();
+      ctx.fillStyle='#2563eb';roundedRect(ctx,-s*.26,s*.17,s*.52,s*.23,s*.07);ctx.fill();
+      ctx.fillStyle='#93c5fd';roundedRect(ctx,-s*.13,s*.22,s*.26,s*.08,s*.03);ctx.fill();
+      ctx.strokeStyle='#1e3a8a';ctx.lineWidth=Math.max(1.5,s*.04);ctx.beginPath();ctx.moveTo(0,-s*.28);ctx.lineTo(0,-s*.42);ctx.stroke();ctx.fillStyle='#f97316';ctx.beginPath();ctx.arc(0,-s*.44,s*.055,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#334155';ctx.beginPath();ctx.arc(-s*.22,s*.41,s*.09,0,Math.PI*2);ctx.arc(s*.22,s*.41,s*.09,0,Math.PI*2);ctx.fill();ctx.restore();
+    }
+    function drawWorld(){
+      const {ctx,w,h}=fit($('#world')),pad=12,size=Math.min((w-pad*2)/N,(h-pad*2)/N),ox=(w-size*N)/2,oy=(h-size*N)/2,view=state.view,maxVisit=Math.max(1,...state.visits),vals=state.Q.map(q=>Math.max(...q)),maxAbs=Math.max(1,...vals.map(Math.abs));ctx.clearRect(0,0,w,h);ctx.textAlign='center';ctx.textBaseline='middle';
+      for(let i=0;i<N*N;i++){const r=Math.floor(i/N),c=i%N,x=ox+c*size,y=oy+r*size,cell=state.cells[i];
+        ctx.fillStyle=(r+c)%2===0?'#e8f5e9':'#dff1e3';if(cell==='wall')ctx.fillStyle='#64748b';else if(cell==='goal')ctx.fillStyle='#bbf7d0';else if(cell==='penalty')ctx.fillStyle='#fecaca';else if(cell==='object')ctx.fillStyle='#fef3c7';
+        if(view==='visits'&&cell!=='wall')ctx.fillStyle='rgba(14,165,233,'+(.1+.72*state.visits[i]/maxVisit)+')';if(view==='qvalues'&&cell!=='wall')ctx.fillStyle=vals[i]>=0?'rgba(34,197,94,'+(.1+.55*Math.abs(vals[i])/maxAbs)+')':'rgba(239,68,68,'+(.1+.5*Math.abs(vals[i])/maxAbs)+')';ctx.fillRect(x+1,y+1,size-2,size-2);
+        ctx.strokeStyle=i===state.selected?'#0f172a':'rgba(71,85,105,.24)';ctx.lineWidth=i===state.selected?2.5:1;ctx.strokeRect(x+.5,y+.5,size-1,size-1);
+        if(cell==='wall'){
+          ctx.fillStyle='#475569';ctx.fillRect(x+size*.07,y+size*.12,size*.86,size*.76);ctx.strokeStyle='#94a3b8';ctx.lineWidth=1;for(let by=0;by<3;by++){const yy=y+size*(.12+(by+1)*.19);ctx.beginPath();ctx.moveTo(x+size*.07,yy);ctx.lineTo(x+size*.93,yy);ctx.stroke();const shift=by%2?0:.18;for(let bx=1;bx<3;bx++){const xx=x+size*(.07+shift+bx*.28);ctx.beginPath();ctx.moveTo(xx,yy-size*.19);ctx.lineTo(xx,yy);ctx.stroke()}}
+        }else if(cell==='goal'){
+          ctx.fillStyle='rgba(34,197,94,.22)';ctx.beginPath();ctx.arc(x+size/2,y+size/2,size*.36,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#166534';ctx.lineWidth=Math.max(2,size*.045);ctx.beginPath();ctx.moveTo(x+size*.36,y+size*.73);ctx.lineTo(x+size*.36,y+size*.24);ctx.stroke();ctx.fillStyle='#22c55e';ctx.beginPath();ctx.moveTo(x+size*.38,y+size*.25);ctx.lineTo(x+size*.72,y+size*.36);ctx.lineTo(x+size*.38,y+size*.48);ctx.closePath();ctx.fill();
+        }else if(cell==='penalty'){
+          ctx.fillStyle='#dc2626';roundedRect(ctx,x+size*.14,y+size*.15,size*.72,size*.7,size*.12);ctx.fill();ctx.fillStyle='#fff';ctx.font='700 '+Math.max(13,size*.34)+'px system-ui';ctx.fillText('!',x+size/2,y+size*.43);ctx.font='600 '+Math.max(8,size*.13)+'px system-ui';ctx.fillText('−4',x+size/2,y+size*.68);
+        }else if(cell==='object'&&!state.collected.has(i)){
+          ctx.shadowColor='rgba(120,53,15,.2)';ctx.shadowBlur=4;ctx.shadowOffsetY=2;ctx.fillStyle='#d97706';roundedRect(ctx,x+size*.2,y+size*.25,size*.6,size*.52,size*.06);ctx.fill();ctx.shadowColor='transparent';ctx.fillStyle='#fbbf24';ctx.fillRect(x+size*.23,y+size*.28,size*.54,size*.13);ctx.fillStyle='#fde68a';ctx.fillRect(x+size*.46,y+size*.25,size*.08,size*.52);ctx.fillStyle='#78350f';ctx.font='700 '+Math.max(8,size*.13)+'px system-ui';ctx.fillText('+2',x+size/2,y+size*.58);
+        }
+        if((view==='policy'||view==='qvalues')&&cell!=='wall'&&cell!=='goal'){const q=state.Q[i],best=q.indexOf(Math.max(...q));ctx.fillStyle=css('--foreground');ctx.font=Math.max(11,size*.3)+'px system-ui';ctx.fillText(view==='policy'?arrows[best]:Math.max(...q).toFixed(1),x+size/2,y+size*.75)}
+        if(view==='visits'&&cell!=='wall'){ctx.fillStyle=css('--foreground');ctx.font=Math.max(9,size*.19)+'px system-ui';ctx.fillText(state.visits[i],x+size/2,y+size*.78)}
+      }
+      const rr=Math.floor(state.robot/N),rc=state.robot%N;drawRobot(ctx,ox+(rc+.5)*size,oy+(rr+.5)*size,size);
+      $('#world')._geom={ox,oy,size};
+    }
+    function drawReward(){
+      const {ctx,w,h}=fit($('#reward-chart')),m={l:38,r:12,t:12,b:28},data=state.rewards;ctx.clearRect(0,0,w,h);ctx.strokeStyle=css('--border');ctx.fillStyle=css('--muted-foreground');ctx.font='10px system-ui';for(let i=0;i<=4;i++){const y=m.t+i*(h-m.t-m.b)/4;ctx.beginPath();ctx.moveTo(m.l,y);ctx.lineTo(w-m.r,y);ctx.stroke()}if(!data.length){ctx.fillText('Entrena el agente para ver su curva de aprendizaje',m.l+15,h/2);return}const min=Math.min(-5,...data),max=Math.max(10,...data),X=i=>m.l+i/Math.max(1,data.length-1)*(w-m.l-m.r),Y=v=>m.t+(max-v)/(max-min)*(h-m.t-m.b);ctx.strokeStyle=css('--viz-series-1');ctx.lineWidth=1.3;ctx.beginPath();data.forEach((v,i)=>i?ctx.lineTo(X(i),Y(v)):ctx.moveTo(X(i),Y(v)));ctx.stroke();ctx.strokeStyle=css('--viz-series-2');ctx.lineWidth=2;ctx.beginPath();data.forEach((_,i)=>{const start=Math.max(0,i-24),avg=data.slice(start,i+1).reduce((a,b)=>a+b,0)/(i-start+1);i?ctx.lineTo(X(i),Y(avg)):ctx.moveTo(X(i),Y(avg))});ctx.stroke();ctx.fillStyle=css('--muted-foreground');ctx.fillText('episodios →',w-66,h-8);
+    }
+    function renderState(){const s=state.selected,r=Math.floor(s/N),c=s%N,q=state.Q[s],best=q.indexOf(Math.max(...q));$('#state-coord').textContent='fila '+(r+1)+' · columna '+(c+1);$('#state-action').textContent=state.rewards.length?'Mejor acción: '+names[best]:'Sin política aprendida';$('#state-desc').textContent='Valor estimado '+Math.max(...q).toFixed(2);$('#q-list').innerHTML=q.map((v,i)=>'<div class="q-item '+(i===best?'best':'')+'"><span>'+arrows[i]+' '+names[i]+'</span><strong>'+v.toFixed(2)+'</strong></div>').join('');
+      const algo=$('#algorithm').value;$('#update-formula').textContent=algo==='sarsa'?'Q ← Q + α[r + γQ(s′,a′) − Q]':algo==='value'?'V(s) ← maxₐ [r + γV(s′)]':'Q ← Q + α[r + γ maxₐ′Q(s′,a′) − Q]';
+    }
+    function updateAll(){drawWorld();drawReward();renderState();$('#metric-reward').textContent=state.episodeReward.toFixed(2);$('#metric-steps').textContent=state.steps;const recent=state.successes.slice(-50);$('#metric-success').textContent=recent.length?Math.round(100*recent.filter(Boolean).length/recent.length)+'%':'—';$('#metric-value').textContent=Math.max(...state.Q[state.start]).toFixed(2);$('#log-count').textContent=state.log.length+' acciones';$('#action-log').innerHTML=state.log.length?state.log.map((x,i)=>'<div class="log-row"><span>#'+(state.steps-i)+'</span><span>'+x.a+' · '+x.type+'</span><span>'+(x.reward>0?'+':'')+x.reward.toFixed(2)+'</span></div>').join(''):'<div class="hint">Ejecuta el agente para observar sus decisiones.</div>'}
+    function editCell(i){
+      state.history.push({cells:state.cells.slice(),start:state.start,goal:state.goal});const t=state.tool;if(t==='robot'&&state.cells[i]!=='wall'){state.start=i;state.robot=i}else if(t==='goal'&&state.cells[i]!=='wall'){state.cells[state.goal]='empty';state.goal=i;state.cells[i]='goal'}else if(t==='erase'){if(i===state.goal)return;state.cells[i]='empty'}else if(i!==state.start&&i!==state.goal)state.cells[i]=t;$('#scenario').value='custom';emptyTables();resetAgent();state.selected=i;updateAll();
+    }
+    const lessons=[
+      ['1. Agente, estado y acción','El robot es el agente; su celda es el estado. En cada paso elige arriba, derecha, abajo o izquierda.'],
+      ['2. Recompensas y penalizaciones','Objetos y meta producen recompensa; muros, peligros y pasos innecesarios penalizan. El objetivo es maximizar la recompensa acumulada.'],
+      ['3. Exploración vs. explotación','Con probabilidad ε el agente prueba una acción al azar. El resto del tiempo explota la mejor acción conocida.'],
+      ['4. Diferencia entre algoritmos','Q-Learning aprende hacia la mejor acción futura; SARSA aprende usando la acción que realmente seguirá; Value Iteration planifica con un modelo del entorno.'],
+      ['5. Política aprendida','La política asigna una acción a cada estado. Abre la vista Política para ver las flechas que guían al robot.']
+    ];
+    function renderLesson(){const x=lessons[state.lesson];$('#lesson-title').textContent=x[0];$('#lesson-text').textContent=x[1];$('#lesson-count').textContent=(state.lesson+1)+' / '+lessons.length;$('#lesson-prev').disabled=state.lesson===0;$('#lesson-next').disabled=state.lesson===lessons.length-1}
+    $('#scenario').addEventListener('change',e=>{if(e.target.value!=='custom')loadScenario(e.target.value)});$('#algorithm').addEventListener('change',()=>{emptyTables();resetAgent();updateAll()});$('#train').addEventListener('click',train);$('#clear-learning').addEventListener('click',()=>{emptyTables();resetAgent();updateAll()});
+    [['episodes','episodes-value',v=>v],['alpha','alpha-value',v=>(v/100).toFixed(2)],['gamma','gamma-value',v=>(v/100).toFixed(2)],['epsilon','epsilon-value',v=>(v/100).toFixed(2)]].forEach(([id,out,fmt])=>$('#'+id).addEventListener('input',e=>$('#'+out).textContent=fmt(Number(e.target.value))));
+    $$('.tool').forEach(b=>b.addEventListener('click',()=>{state.tool=b.dataset.tool;$$('.tool').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))}));$$('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;$$('[data-view]').forEach(x=>x.classList.toggle('is-active',x===b));drawWorld()}));
+    $('#world').addEventListener('click',e=>{const g=e.currentTarget._geom;if(!g)return;const r=e.currentTarget.getBoundingClientRect(),c=Math.floor((e.clientX-r.left-g.ox)/g.size),row=Math.floor((e.clientY-r.top-g.oy)/g.size);if(c<0||c>=N||row<0||row>=N)return;const i=row*N+c;state.selected=i;editCell(i)});
+    $('#undo').addEventListener('click',()=>{const h=state.history.pop();if(!h)return;state.cells=h.cells;state.start=h.start;state.goal=h.goal;emptyTables();resetAgent();updateAll()});$('#agent-step').addEventListener('click',manualStep);$('#agent-run').addEventListener('click',runAgent);$('#agent-reset').addEventListener('click',resetAgent);
+    $('#lesson-prev').addEventListener('click',()=>{state.lesson=Math.max(0,state.lesson-1);renderLesson()});$('#lesson-next').addEventListener('click',()=>{state.lesson=Math.min(lessons.length-1,state.lesson+1);renderLesson()});
+    new ResizeObserver(()=>{drawWorld();drawReward()}).observe(root);renderLesson();loadScenario('warehouse');
+  })();
+  </script>
+</div>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>
