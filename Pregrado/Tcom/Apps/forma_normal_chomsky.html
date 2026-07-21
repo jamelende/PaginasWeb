@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Puente CFG → Forma Normal de Chomsky</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .card { background: white; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .pill { border-radius: 999px; padding: .35rem .75rem; font-size: .85rem; }
+    .good { background:#e8f7ee; color:#11643a; }
+    .warn { background:#fff4db; color:#8a5a00; }
+    .bad { background:#fde8e8; color:#9b1c1c; }
+    .mono { font-family: "Courier New", monospace; }
+    textarea { resize: vertical; }
+    .choice-btn.correct { border-color: #16a34a; background: #f0fdf4; }
+    .choice-btn.incorrect { border-color: #dc2626; background: #fef2f2; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <div class="max-w-7xl mx-auto p-6 md:p-8">
+    <header class="mb-8">
+      <div class="card p-6 md:p-8">
+        <h1 class="text-3xl md:text-4xl font-bold mb-3">Clase puente: de gramáticas básicas a Forma Normal de Chomsky</h1>
+        <p class="text-lg text-slate-600 mb-4">Aplicación interactiva para ayudar a tus estudiantes a entender <strong>por qué</strong> limpiamos una gramática antes de llevarla a CNF.</p>
+        <div class="flex flex-wrap gap-3">
+          <span class="pill good">Clasificar producciones</span>
+          <span class="pill warn">Detectar problemas estructurales</span>
+          <span class="pill bad">Transformar paso a paso</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid lg:grid-cols-3 gap-6 mb-8">
+      <div class="card p-6 lg:col-span-2">
+        <h2 class="text-2xl font-semibold mb-3">1) Idea central</h2>
+        <p class="mb-4">Una gramática puede <strong>generar bien</strong> un lenguaje y aun así ser incómoda para analizar, comparar o usar en algoritmos de parsing. La Forma Normal de Chomsky no es un capricho: es una forma <strong>estándar, limpia y útil para computar</strong>.</p>
+        <div class="bg-slate-100 rounded-2xl p-4 mono text-sm leading-7">
+          S → AB | a<br>
+          A → aA | ε<br>
+          B → bB | ε
+        </div>
+        <div class="mt-4 text-slate-700">
+          <p><strong>Pregunta para iniciar:</strong> ¿la gramática funciona? Sí. ¿es cómoda para un algoritmo? No tanto.</p>
+        </div>
+      </div>
+      <div class="card p-6">
+        <h2 class="text-xl font-semibold mb-3">Meta de aprendizaje</h2>
+        <ul class="space-y-3 text-slate-700 list-disc pl-5">
+          <li>Reconocer tipos de producciones.</li>
+          <li>Detectar ε-producciones y unitarias.</li>
+          <li>Entender la limpieza previa a CNF.</li>
+          <li>Visualizar la transformación paso a paso.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">2) Clasificador de producciones</h2>
+      <p class="mb-4 text-slate-600">Haz clic sobre cada producción para clasificarla. Luego revisa las respuestas.</p>
+      <div id="classificationArea" class="grid md:grid-cols-2 gap-4"></div>
+      <div class="mt-4 flex gap-3">
+        <button id="checkClassification" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Revisar</button>
+        <button id="resetClassification" class="px-4 py-2 rounded-xl bg-slate-200">Reiniciar</button>
+      </div>
+      <div id="classificationFeedback" class="mt-4"></div>
+    </section>
+
+    <section class="card p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">3) Detector de problemas en una gramática</h2>
+      <p class="text-slate-600 mb-4">Usa una gramática dada o escribe la tuya. El detector resalta si encuentra ε-producciones, unitarias, producciones largas o terminales mezclados con variables.</p>
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div>
+          <label class="block font-medium mb-2">Gramática</label>
+          <textarea id="grammarInput" class="w-full border rounded-2xl p-4 mono text-sm h-64">S -> ASA | aB
+A -> B | S | ε
+B -> b</textarea>
+          <div class="flex flex-wrap gap-3 mt-3">
+            <button id="loadExample1" class="px-4 py-2 rounded-xl bg-slate-200">Ejemplo 1</button>
+            <button id="loadExample2" class="px-4 py-2 rounded-xl bg-slate-200">Ejemplo 2</button>
+            <button id="analyzeGrammar" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Analizar</button>
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium mb-2">Resultado</label>
+          <div id="analysisOutput" class="border rounded-2xl p-4 bg-slate-50 min-h-[260px]"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">4) Transformación guiada hacia CNF</h2>
+      <p class="text-slate-600 mb-4">Ejemplo guiado: partimos de una gramática con ε-producciones, unitarias y producciones largas.</p>
+      <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div>
+          <div class="bg-slate-100 rounded-2xl p-4 mono text-sm leading-7 mb-4" id="stepGrammarView"></div>
+          <div class="flex flex-wrap gap-3">
+            <button id="prevStep" class="px-4 py-2 rounded-xl bg-slate-200">← Atrás</button>
+            <button id="nextStep" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Siguiente →</button>
+            <button id="restartSteps" class="px-4 py-2 rounded-xl bg-slate-200">Reiniciar</button>
+          </div>
+        </div>
+        <div>
+          <div id="stepExplanation" class="border rounded-2xl p-5 bg-slate-50 min-h-[230px]"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">5) Mini quiz</h2>
+      <div id="quizArea" class="space-y-6"></div>
+      <div class="mt-4 flex gap-3">
+        <button id="checkQuiz" class="px-4 py-2 rounded-xl bg-slate-900 text-white">Calificar quiz</button>
+        <button id="resetQuiz" class="px-4 py-2 rounded-xl bg-slate-200">Reiniciar quiz</button>
+      </div>
+      <div id="quizFeedback" class="mt-4"></div>
+    </section>
+
+    <section class="card p-6">
+      <h2 class="text-2xl font-semibold mb-4">6) Cierre didáctico</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="border rounded-2xl p-4 bg-slate-50">
+          <h3 class="font-semibold mb-2">Mensaje clave</h3>
+          <p>Una gramática correcta no siempre es una gramática útil para algoritmos.</p>
+        </div>
+        <div class="border rounded-2xl p-4 bg-slate-50">
+          <h3 class="font-semibold mb-2">Puente conceptual</h3>
+          <p>Antes de CNF, conviene aprender a detectar y eliminar “ruido estructural”.</p>
+        </div>
+        <div class="border rounded-2xl p-4 bg-slate-50">
+          <h3 class="font-semibold mb-2">Transición natural</h3>
+          <p>Luego de esta clase, ya tiene sentido formalizar el algoritmo completo para convertir a CNF.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const classificationData = [
+      { prod: 'A → a', answer: 'terminal' },
+      { prod: 'A → BC', answer: 'binary' },
+      { prod: 'A → ε', answer: 'epsilon' },
+      { prod: 'A → B', answer: 'unit' },
+      { prod: 'A → aB', answer: 'mixed' },
+      { prod: 'S → ABC', answer: 'long' }
+    ];
+
+    const categoryLabels = {
+      terminal: 'Terminal pura',
+      binary: 'Dos variables',
+      epsilon: 'Épsilon',
+      unit: 'Unitaria',
+      mixed: 'Mixta',
+      long: 'Larga'
+    };
+
+    const classificationArea = document.getElementById('classificationArea');
+    function renderClassification() {
+      classificationArea.innerHTML = '';
+      classificationData.forEach((item, idx) => {
+        const options = Object.entries(categoryLabels).map(([value, label]) =>
+          `<option value="${value}">${label}</option>`).join('');
+        classificationArea.innerHTML += `
+          <div class="border rounded-2xl p-4 bg-slate-50">
+            <div class="mono text-lg mb-3">${item.prod}</div>
+            <select data-idx="${idx}" class="classification-select w-full border rounded-xl p-2 bg-white">
+              <option value="">Selecciona una categoría</option>
+              ${options}
+            </select>
+            <div id="classfb-${idx}" class="mt-2 text-sm"></div>
+          </div>`;
+      });
+    }
+    renderClassification();
+
+    document.getElementById('checkClassification').onclick = () => {
+      let score = 0;
+      classificationData.forEach((item, idx) => {
+        const sel = document.querySelector(`select[data-idx="${idx}"]`);
+        const fb = document.getElementById(`classfb-${idx}`);
+        if (sel.value === item.answer) {
+          score++;
+          fb.innerHTML = '<span class="text-green-700">Correcto.</span>';
+        } else {
+          fb.innerHTML = `<span class="text-red-700">No. La respuesta correcta es: ${categoryLabels[item.answer]}.</span>`;
+        }
+      });
+      document.getElementById('classificationFeedback').innerHTML = `<strong>Puntaje:</strong> ${score} / ${classificationData.length}`;
+    };
+    document.getElementById('resetClassification').onclick = () => {
+      document.querySelectorAll('.classification-select').forEach(s => s.value = '');
+      document.querySelectorAll('[id^="classfb-"]').forEach(d => d.innerHTML = '');
+      document.getElementById('classificationFeedback').innerHTML = '';
+    };
+
+    const examples = {
+      1: `S -> ASA | aB\nA -> B | S | ε\nB -> b`,
+      2: `S -> aAB | B\nA -> a | ε\nB -> bB | b`
+    };
+    document.getElementById('loadExample1').onclick = () => document.getElementById('grammarInput').value = examples[1];
+    document.getElementById('loadExample2').onclick = () => document.getElementById('grammarInput').value = examples[2];
+
+    function analyzeGrammarText(text) {
+      const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
+      let epsilon = [], unit = [], mixed = [], long = [], binary = [], terminal = [];
+      for (const line of lines) {
+        const parts = line.split(/->|→/);
+        if (parts.length < 2) continue;
+        const lhs = parts[0].trim();
+        const rhss = parts[1].split('|').map(r => r.trim());
+        rhss.forEach(rhs => {
+          if (rhs === 'ε') epsilon.push(`${lhs} → ε`);
+          else if (/^[A-Z]$/.test(rhs)) unit.push(`${lhs} → ${rhs}`);
+          else if (/^[a-z]$/.test(rhs)) terminal.push(`${lhs} → ${rhs}`);
+          else if (/^[A-Z]{2}$/.test(rhs)) binary.push(`${lhs} → ${rhs}`);
+          else if (rhs.length > 2) long.push(`${lhs} → ${rhs}`);
+          else if (/[a-z]/.test(rhs) && /[A-Z]/.test(rhs)) mixed.push(`${lhs} → ${rhs}`);
+        });
+      }
+      return { epsilon, unit, mixed, long, binary, terminal };
+    }
+
+    document.getElementById('analyzeGrammar').onclick = () => {
+      const text = document.getElementById('grammarInput').value;
+      const a = analyzeGrammarText(text);
+      const blocks = [];
+      const makeBlock = (title, arr, cls) => `
+        <div class="mb-4">
+          <div class="font-semibold ${cls}">${title} (${arr.length})</div>
+          <div class="mt-1 mono text-sm">${arr.length ? arr.join('<br>') : 'Ninguna'}</div>
+        </div>`;
+      blocks.push(makeBlock('ε-producciones', a.epsilon, 'text-amber-700'));
+      blocks.push(makeBlock('Producciones unitarias', a.unit, 'text-red-700'));
+      blocks.push(makeBlock('Producciones mixtas', a.mixed, 'text-blue-700'));
+      blocks.push(makeBlock('Producciones largas', a.long, 'text-purple-700'));
+      blocks.push(makeBlock('Ya en forma A → BC', a.binary, 'text-green-700'));
+      blocks.push(makeBlock('Ya en forma A → a', a.terminal, 'text-green-700'));
+
+      let conclusion = '<div class="mt-4 p-3 rounded-xl bg-slate-100">';
+      if (a.epsilon.length || a.unit.length || a.mixed.length || a.long.length) {
+        conclusion += '<strong>Conclusión:</strong> la gramática todavía necesita limpieza antes de CNF.';
+      } else {
+        conclusion += '<strong>Conclusión:</strong> la gramática ya está muy cerca de CNF o ya cumple con ella.';
+      }
+      conclusion += '</div>';
+
+      document.getElementById('analysisOutput').innerHTML = blocks.join('') + conclusion;
+    };
+
+    const steps = [
+      {
+        grammar: `S → aAB | B\nA → a | ε\nB → bB | b`,
+        explanation: `<h3 class="text-xl font-semibold mb-2">Paso 0: Gramática original</h3>
+        <p class="mb-2">Tenemos tres tipos de problemas:</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><span class="mono">A → ε</span> es una ε-producción.</li>
+          <li><span class="mono">S → B</span> es una producción unitaria.</li>
+          <li><span class="mono">S → aAB</span> mezcla terminales y variables y además tiene longitud mayor que 2.</li>
+        </ul>`
+      },
+      {
+        grammar: `S → aAB | aB | B\nA → a\nB → bB | b`,
+        explanation: `<h3 class="text-xl font-semibold mb-2">Paso 1: Eliminar ε-producciones</h3>
+        <p>Como <span class="mono">A</span> era anulable por <span class="mono">A → ε</span>, debemos agregar versiones donde <span class="mono">A</span> desaparece en las producciones donde participa.</p>
+        <p class="mt-2">Por eso <span class="mono">S → aAB</span> genera también <span class="mono">S → aB</span>.</p>`
+      },
+      {
+        grammar: `S → aAB | aB | bB | b\nA → a\nB → bB | b`,
+        explanation: `<h3 class="text-xl font-semibold mb-2">Paso 2: Eliminar unitarias</h3>
+        <p>La producción <span class="mono">S → B</span> se reemplaza por las producciones no unitarias de <span class="mono">B</span>, es decir, <span class="mono">bB</span> y <span class="mono">b</span>.</p>`
+      },
+      {
+        grammar: `S → XAB | XB | YB | b\nA → a\nB → YB | b\nX → a\nY → b`,
+        explanation: `<h3 class="text-xl font-semibold mb-2">Paso 3: Separar terminales cuando aparecen dentro de producciones largas</h3>
+        <p>En CNF, si una producción tiene dos variables, debe ser exactamente de la forma <span class="mono">A → BC</span>. Los terminales mezclados dentro de reglas más largas se reemplazan por nuevas variables auxiliares.</p>`
+      },
+      {
+        grammar: `S → XZ | XB | YB | b\nZ → AB\nA → a\nB → YB | b\nX → a\nY → b`,
+        explanation: `<h3 class="text-xl font-semibold mb-2">Paso 4: Romper producciones largas</h3>
+        <p>La regla <span class="mono">S → XAB</span> todavía tiene tres símbolos. La convertimos en dos reglas binarias usando una nueva variable: <span class="mono">Z → AB</span> y luego <span class="mono">S → XZ</span>.</p>
+        <p class="mt-2"><strong>Ahora la gramática quedó en CNF.</strong></p>`
+      }
+    ];
+
+    let currentStep = 0;
+    function renderStep() {
+      document.getElementById('stepGrammarView').innerHTML = steps[currentStep].grammar.replace(/\n/g, '<br>');
+      document.getElementById('stepExplanation').innerHTML = steps[currentStep].explanation + `<div class="mt-4 text-sm text-slate-500">Paso ${currentStep} de ${steps.length - 1}</div>`;
+    }
+    renderStep();
+    document.getElementById('nextStep').onclick = () => { if (currentStep < steps.length - 1) currentStep++; renderStep(); };
+    document.getElementById('prevStep').onclick = () => { if (currentStep > 0) currentStep--; renderStep(); };
+    document.getElementById('restartSteps').onclick = () => { currentStep = 0; renderStep(); };
+
+    const quizData = [
+      {
+        q: '¿Cuál de estas producciones es una producción unitaria?',
+        options: ['A → a', 'A → BC', 'A → B', 'A → ε'],
+        answer: 2,
+        exp: 'Una producción unitaria tiene exactamente una variable en el lado derecho.'
+      },
+      {
+        q: '¿Por qué eliminamos ε-producciones antes de CNF?',
+        options: ['Porque hacen la gramática más bonita', 'Porque rompen la forma estándar requerida por algoritmos', 'Porque cambian el lenguaje siempre', 'Porque impiden usar terminales'],
+        answer: 1,
+        exp: 'CNF restringe las producciones a formas muy específicas; ε suele eliminarse salvo casos especiales del símbolo inicial.'
+      },
+      {
+        q: '¿Cuál de estas formas sí pertenece a CNF?',
+        options: ['A → aB', 'A → B', 'A → BC', 'A → ABC'],
+        answer: 2,
+        exp: 'En CNF solo se permiten A → BC y A → a, con excepciones muy controladas.'
+      }
+    ];
+
+    const quizArea = document.getElementById('quizArea');
+    function renderQuiz() {
+      quizArea.innerHTML = '';
+      quizData.forEach((item, i) => {
+        quizArea.innerHTML += `
+          <div class="border rounded-2xl p-4 bg-slate-50">
+            <div class="font-medium mb-3">${i + 1}. ${item.q}</div>
+            <div class="space-y-2">
+              ${item.options.map((opt, j) => `
+                <label class="block border rounded-xl p-3 bg-white cursor-pointer choice-btn">
+                  <input type="radio" name="q${i}" value="${j}" class="mr-2"> ${opt}
+                </label>`).join('')}
+            </div>
+            <div id="quiz-exp-${i}" class="mt-2 text-sm"></div>
+          </div>`;
+      });
+    }
+    renderQuiz();
+
+    document.getElementById('checkQuiz').onclick = () => {
+      let score = 0;
+      quizData.forEach((item, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const exp = document.getElementById(`quiz-exp-${i}`);
+        const labels = [...document.querySelectorAll(`input[name="q${i}"]`)].map(x => x.parentElement);
+        labels.forEach(l => l.classList.remove('correct', 'incorrect'));
+        if (selected) {
+          if (Number(selected.value) === item.answer) {
+            score++;
+            selected.parentElement.classList.add('correct');
+            exp.innerHTML = `<span class="text-green-700">Correcto.</span> ${item.exp}`;
+          } else {
+            selected.parentElement.classList.add('incorrect');
+            labels[item.answer].classList.add('correct');
+            exp.innerHTML = `<span class="text-red-700">Incorrecto.</span> ${item.exp}`;
+          }
+        } else {
+          labels[item.answer].classList.add('correct');
+          exp.innerHTML = `<span class="text-amber-700">Sin responder.</span> ${item.exp}`;
+        }
+      });
+      document.getElementById('quizFeedback').innerHTML = `<strong>Resultado:</strong> ${score} / ${quizData.length}`;
+    };
+
+    document.getElementById('resetQuiz').onclick = () => {
+      document.querySelectorAll('#quizArea input[type="radio"]').forEach(i => i.checked = false);
+      document.querySelectorAll('.choice-btn').forEach(l => l.classList.remove('correct', 'incorrect'));
+      quizData.forEach((_, i) => document.getElementById(`quiz-exp-${i}`).innerHTML = '');
+      document.getElementById('quizFeedback').innerHTML = '';
+    };
+  </script>
+</body>
+</html>
