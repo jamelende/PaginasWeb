@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Modelos de Computación</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --panel:#ffffff;
+    --panel-2:#f8fafc;
+    --text:#10233f;
+    --muted:#5f6f86;
+    --line:#d9e2ee;
+    --primary:#2563eb;
+    --primary-2:#dbeafe;
+    --accent:#7c3aed;
+    --success:#15803d;
+    --danger:#dc2626;
+    --warning:#d97706;
+    --shadow:0 16px 45px rgba(15,35,65,.10);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:var(--bg)}
+  body{background:
+    radial-gradient(circle at 15% 0%, rgba(37,99,235,.10), transparent 30rem),
+    radial-gradient(circle at 90% 5%, rgba(124,58,237,.09), transparent 28rem),
+    var(--bg);
+  }
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  .app{max-width:1600px;margin:auto;padding:20px}
+  .hero{
+    background:linear-gradient(135deg,#102a56,#1d4ed8 55%,#6d28d9);
+    color:white;border-radius:26px;padding:25px 28px;box-shadow:var(--shadow);
+    display:grid;grid-template-columns:1.5fr 1fr;gap:24px;align-items:center
+  }
+  .hero h1{margin:0 0 8px;font-size:clamp(1.7rem,3vw,2.7rem);line-height:1.08}
+  .hero p{margin:0;color:#dbeafe;max-width:850px;font-size:1.02rem}
+  .hero-flow{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+  .flow-chip{padding:9px 12px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);border-radius:999px;font-size:.84rem;font-weight:700}
+  .arrow{opacity:.7}
+  .topbar{margin-top:16px;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:18px;padding:10px;display:flex;gap:8px;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(15,35,65,.06)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{border:0;background:transparent;color:var(--muted);padding:11px 15px;border-radius:12px;font-weight:800}
+  .tab.active{background:var(--primary);color:white;box-shadow:0 7px 18px rgba(37,99,235,.25)}
+  .global-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:white;color:var(--text);padding:9px 12px;border-radius:11px;font-weight:750;transition:.18s}
+  .btn:hover{transform:translateY(-1px);border-color:#a9b9cf}
+  .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+  .btn.danger{color:var(--danger);border-color:#fecaca;background:#fff7f7}
+  .btn.success{color:white;background:var(--success);border-color:var(--success)}
+  .btn.warning{color:white;background:var(--warning);border-color:var(--warning)}
+  .btn.small{padding:7px 9px;font-size:.82rem}
+  .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(330px,.7fr);gap:16px;margin-top:16px}
+  .card{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 9px 28px rgba(15,35,65,.06);overflow:hidden}
+  .card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);background:linear-gradient(#fff,#fbfdff)}
+  .card-head h2,.card-head h3{margin:0;font-size:1rem}
+  .card-body{padding:15px}
+  .editor-toolbar{display:flex;gap:7px;flex-wrap:wrap;padding:10px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+  .tool{border:1px solid var(--line);background:white;padding:8px 10px;border-radius:10px;font-weight:750;font-size:.84rem}
+  .tool.active{color:white;background:var(--accent);border-color:var(--accent)}
+  .canvas-wrap{position:relative;height:540px;background:
+    linear-gradient(rgba(50,90,140,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(50,90,140,.06) 1px,transparent 1px),
+    #fbfdff;background-size:24px 24px;overflow:hidden}
+  svg{width:100%;height:100%;touch-action:none;user-select:none}
+  .canvas-hint{position:absolute;left:12px;bottom:10px;background:rgba(255,255,255,.90);border:1px solid var(--line);padding:7px 10px;border-radius:10px;font-size:.78rem;color:var(--muted);pointer-events:none}
+  .status-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;font-size:.78rem;font-weight:800;background:#eef2ff;color:#4338ca}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+  .side-stack{display:grid;gap:16px}
+  .explain{line-height:1.55;color:var(--muted);font-size:.92rem}
+  .explain strong{color:var(--text)}
+  .formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#eff6ff;color:#1d4ed8;padding:10px;border-radius:11px;margin-top:10px}
+  .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .field{display:grid;gap:6px;flex:1;min-width:135px}
+  .field label{font-size:.78rem;color:var(--muted);font-weight:800}
+  .field input,.field select{
+    width:100%;border:1px solid var(--line);background:white;border-radius:10px;padding:9px 10px;color:var(--text)
+  }
+  .field input:focus,.field select:focus{outline:3px solid rgba(37,99,235,.13);border-color:var(--primary)}
+  .sim-controls{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+  .config-box{border:1px solid var(--line);background:#f8fafc;border-radius:13px;padding:12px;min-height:78px}
+  .config-line{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;margin:4px 0}
+  .config-line span:first-child{color:var(--muted)}
+  .input-strip{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;min-height:34px}
+  .symbol{width:31px;height:31px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;background:white;font-family:ui-monospace,monospace;font-weight:800}
+  .symbol.active{background:#fef3c7;border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.13)}
+  .symbol.done{background:#dcfce7;border-color:#86efac;color:#166534}
+  .stack-view{display:flex;flex-direction:column-reverse;align-items:stretch;gap:4px;max-height:165px;overflow:auto;margin-top:10px}
+  .stack-cell{padding:7px;text-align:center;border:1px solid #c7d2fe;background:#eef2ff;border-radius:8px;font-family:ui-monospace,monospace;font-weight:800}
+  .stack-top{border-color:#7c3aed;background:#ede9fe;color:#5b21b6}
+  .tape{display:flex;gap:4px;overflow-x:auto;padding:13px 2px 4px}
+  .tape-cell{min-width:43px;height:53px;border:1px solid var(--line);background:white;border-radius:8px;display:grid;place-items:center;position:relative;font-family:ui-monospace,monospace;font-size:1.05rem;font-weight:800}
+  .tape-cell.head{background:#fef3c7;border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.14)}
+  .tape-cell.head:after{content:"▲";position:absolute;bottom:-20px;color:#d97706;font-size:.75rem}
+  .tape-index{position:absolute;top:2px;left:4px;font-size:.57rem;color:#94a3b8;font-weight:600}
+  .log{max-height:170px;overflow:auto;background:#0f172a;color:#dbeafe;border-radius:11px;padding:10px;font:12px/1.5 ui-monospace,monospace}
+  .log div{border-bottom:1px solid rgba(255,255,255,.06);padding:3px 0}
+  .log .ok{color:#86efac}.log .bad{color:#fca5a5}.log .info{color:#93c5fd}
+  .inspector-empty{color:var(--muted);font-size:.9rem;padding:10px 0}
+  .checkline{display:flex;gap:8px;align-items:center;font-size:.85rem;font-weight:750}
+  .checkline input{width:auto}
+  .bottom-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
+  .table-wrap{overflow:auto;max-height:310px}
+  table{width:100%;border-collapse:collapse;font-size:.84rem}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  th{position:sticky;top:0;background:#f8fafc;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+  tr.selected-row{background:#eef2ff}
+  .badge{display:inline-flex;padding:4px 7px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:.72rem;font-weight:800}
+  .learn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .learn-card{border:1px solid var(--line);background:#fbfdff;border-radius:12px;padding:11px}
+  .learn-card h4{margin:0 0 5px;font-size:.85rem}.learn-card p{margin:0;color:var(--muted);font-size:.79rem;line-height:1.45}
+  .toast{position:fixed;right:20px;bottom:20px;z-index:1000;background:#0f172a;color:white;padding:11px 14px;border-radius:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.56);display:none;align-items:center;justify-content:center;z-index:2000;padding:18px}
+  .modal-backdrop.show{display:flex}
+  .modal{width:min(500px,100%);background:white;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden}
+  .modal header{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal header h3{margin:0}.modal main{padding:18px}.modal footer{padding:13px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+  .close-x{border:0;background:transparent;font-size:1.25rem;color:var(--muted)}
+  .hidden{display:none!important}
+  .kbd{font:11px ui-monospace,monospace;border:1px solid #cbd5e1;border-bottom-width:2px;background:#fff;border-radius:5px;padding:2px 5px;color:#475569}
+  @media(max-width:1050px){
+    .hero{grid-template-columns:1fr}.hero-flow{justify-content:flex-start}
+    .grid,.bottom-grid{grid-template-columns:1fr}
+    .canvas-wrap{height:480px}
+  }
+  @media(max-width:650px){
+    .app{padding:10px}.hero{padding:19px}.topbar{align-items:flex-start;flex-direction:column}
+    .canvas-wrap{height:430px}.learn-grid{grid-template-columns:1fr}
+    .tab{padding:9px 10px}.global-actions{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div>
+      <h1>Laboratorio de Modelos de Computación</h1>
+      <p>Construye, edita y ejecuta autómatas finitos, autómatas de pila y máquinas de Turing. Observa cada configuración y comprende cómo aumenta el poder de cómputo.</p>
+    </div>
+    <div class="hero-flow">
+      <span class="flow-chip">Lenguaje regular</span><span class="arrow">→</span>
+      <span class="flow-chip">Memoria en pila</span><span class="arrow">→</span>
+      <span class="flow-chip">Cinta infinita</span>
+    </div>
+  </section>
+
+  <nav class="topbar">
+    <div class="tabs">
+      <button class="tab active" data-lab="fa">1. Autómata finito</button>
+      <button class="tab" data-lab="pda">2. Autómata de pila</button>
+      <button class="tab" data-lab="tm">3. Máquina de Turing</button>
+    </div>
+    <div class="global-actions">
+      <button class="btn small" id="saveBtn">Guardar local</button>
+      <button class="btn small" id="loadBtn">Recuperar</button>
+      <button class="btn small" id="exportBtn">Exportar JSON</button>
+      <button class="btn small" id="importBtn">Importar JSON</button>
+      <input type="file" id="importFile" accept=".json,application/json" class="hidden">
+    </div>
+  </nav>
+
+  <main class="grid">
+    <section class="card">
+      <div class="card-head">
+        <h2 id="editorTitle">Constructor de autómata finito</h2>
+        <span class="status-pill"><span class="status-dot"></span><span id="modeLabel">Modo: seleccionar</span></span>
+      </div>
+      <div class="editor-toolbar">
+        <button class="tool active" data-tool="select">↖ Seleccionar / mover</button>
+        <button class="tool" data-tool="addState">＋ Estado</button>
+        <button class="tool" data-tool="addTransition">↗ Transición</button>
+        <button class="tool" data-tool="setInitial">▶ Inicial</button>
+        <button class="tool" data-tool="toggleAccept">◎ Aceptación</button>
+        <button class="tool" data-tool="delete">⌫ Eliminar</button>
+        <button class="tool" id="clearBtn">Limpiar</button>
+      </div>
+      <div class="canvas-wrap">
+        <svg id="graph" viewBox="0 0 900 540" aria-label="Área para construir el autómata"></svg>
+        <div class="canvas-hint">Crea estados haciendo clic en la cuadrícula. Arrástralos para moverlos. <span class="kbd">Supr</span> elimina la selección.</div>
+      </div>
+    </section>
+
+    <aside class="side-stack">
+      <section class="card">
+        <div class="card-head"><h3 id="conceptTitle">¿Qué modela?</h3></div>
+        <div class="card-body">
+          <div class="explain" id="conceptText"></div>
+          <div class="formula" id="formalDef"></div>
+          <div class="row" style="margin-top:12px">
+            <div class="field">
+              <label>Ejemplo didáctico</label>
+              <select id="presetSelect"></select>
+            </div>
+            <button class="btn primary" id="loadPresetBtn">Cargar</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h3>Inspector</h3><span class="badge" id="selectionBadge">Sin selección</span></div>
+        <div class="card-body" id="inspector"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h3 id="simTitle">Simulador</h3><span class="badge" id="simStatus">Preparado</span></div>
+        <div class="card-body">
+          <div class="field">
+            <label id="inputLabel">Cadena de entrada</label>
+            <input id="inputWord" value="1011" autocomplete="off">
+          </div>
+          <div class="sim-controls">
+            <button class="btn primary" id="resetSimBtn">Preparar</button>
+            <button class="btn" id="stepBtn">Paso</button>
+            <button class="btn success" id="runBtn">Ejecutar</button>
+            <button class="btn warning" id="pauseBtn">Pausar</button>
+          </div>
+          <div class="config-box" id="configuration"></div>
+          <div id="inputVisual"></div>
+          <div id="memoryVisual"></div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <section class="bottom-grid">
+    <div class="card">
+      <div class="card-head"><h3 id="transitionTitle">Función de transición</h3><span class="badge" id="transitionCount">0 transiciones</span></div>
+      <div class="table-wrap"><table id="transitionTable"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Traza de ejecución</h3><button class="btn small" id="clearLogBtn">Borrar traza</button></div>
+      <div class="card-body"><div class="log" id="log"></div></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <div class="card-head"><h3>Comparación conceptual</h3></div>
+    <div class="card-body">
+      <div class="learn-grid">
+        <article class="learn-card"><h4>Autómata finito</h4><p>Solo recuerda el estado actual. Reconoce lenguajes regulares y se usa en validadores, analizadores léxicos y controladores.</p></article>
+        <article class="learn-card"><h4>Autómata de pila</h4><p>Añade una pila LIFO. Reconoce lenguajes libres de contexto, como paréntesis balanceados y estructuras anidadas.</p></article>
+        <article class="learn-card"><h4>Máquina de Turing</h4><p>Usa una cinta de lectura y escritura. Es un modelo general de algoritmo y puede simular cualquier procedimiento computable.</p></article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true">
+    <header><h3 id="modalTitle">Nueva transición</h3><button class="close-x" id="modalClose">×</button></header>
+    <main id="modalBody"></main>
+    <footer><button class="btn" id="modalCancel">Cancelar</button><button class="btn primary" id="modalSave">Guardar transición</button></footer>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const EPS = "ε";
+  const BLANK = "□";
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const deepCopy = o => JSON.parse(JSON.stringify(o));
+  const uid = p => p + Math.random().toString(36).slice(2,8);
+
+  const labs = {
+    fa: {states:[], transitions:[], type:"fa"},
+    pda:{states:[], transitions:[], type:"pda", initialStack:"Z"},
+    tm: {states:[], transitions:[], type:"tm", blank:BLANK}
+  };
+
+  const meta = {
+    fa:{
+      editor:"Constructor de autómata finito",
+      conceptTitle:"Autómata finito: memoria limitada",
+      concept:`Un <strong>autómata finito</strong> lee la entrada de izquierda a derecha. Su única memoria es el estado actual. Una cadena se acepta si, al terminar, el autómata está en un estado de aceptación.`,
+      formal:"AF = (Q, Σ, δ, q₀, F)",
+      sim:"Simulador de cadena",
+      inputLabel:"Cadena de entrada",
+      transitionTitle:"δ(estado, símbolo) = estado",
+      presets:[
+        ["parity","Paridad de unos"],
+        ["ends01","Cadenas que terminan en 01"]
+      ]
+    },
+    pda:{
+      editor:"Constructor de autómata de pila",
+      conceptTitle:"Autómata de pila: memoria LIFO",
+      concept:`Un <strong>autómata de pila</strong> combina estados con una pila. Cada transición puede leer una entrada, retirar el símbolo superior y colocar nuevos símbolos. Es ideal para estructuras anidadas.`,
+      formal:"AP = (Q, Σ, Γ, δ, q₀, Z₀, F)",
+      sim:"Simulador con pila",
+      inputLabel:"Cadena de entrada",
+      transitionTitle:"δ(q, entrada, cima) = (q', reemplazo)",
+      presets:[
+        ["anbn","Lenguaje aⁿbⁿ"],
+        ["parentheses","Paréntesis balanceados"]
+      ]
+    },
+    tm:{
+      editor:"Constructor de máquina de Turing",
+      conceptTitle:"Máquina de Turing: lectura y escritura",
+      concept:`Una <strong>máquina de Turing</strong> posee una cinta dividida en celdas. En cada paso lee, escribe, mueve el cabezal y cambia de estado. Es un modelo universal de computación.`,
+      formal:"MT = (Q, Σ, Γ, δ, q₀, □, F)",
+      sim:"Simulador de cinta",
+      inputLabel:"Contenido inicial de la cinta",
+      transitionTitle:"δ(q, leído) = (q', escrito, movimiento)",
+      presets:[
+        ["unary","Incremento unario"],
+        ["complement","Complemento binario"]
+      ]
+    }
+  };
+
+  const presets = {
+    parity:{
+      type:"fa", input:"1010",
+      states:[
+        {id:"q0",x:270,y:260,label:"q0",initial:true,accept:true},
+        {id:"q1",x:600,y:260,label:"q1",initial:false,accept:false}
+      ],
+      transitions:[
+        {id:"t1",from:"q0",to:"q0",symbols:"0"},
+        {id:"t2",from:"q0",to:"q1",symbols:"1"},
+        {id:"t3",from:"q1",to:"q1",symbols:"0"},
+        {id:"t4",from:"q1",to:"q0",symbols:"1"}
+      ]
+    },
+    ends01:{
+      type:"fa", input:"1101",
+      states:[
+        {id:"e0",x:180,y:270,label:"q0",initial:true,accept:false},
+        {id:"e1",x:450,y:170,label:"q1",initial:false,accept:false},
+        {id:"e2",x:700,y:270,label:"q2",initial:false,accept:true}
+      ],
+      transitions:[
+        {id:"e01",from:"e0",to:"e1",symbols:"0"},
+        {id:"e02",from:"e0",to:"e0",symbols:"1"},
+        {id:"e03",from:"e1",to:"e1",symbols:"0"},
+        {id:"e04",from:"e1",to:"e2",symbols:"1"},
+        {id:"e05",from:"e2",to:"e1",symbols:"0"},
+        {id:"e06",from:"e2",to:"e0",symbols:"1"}
+      ]
+    },
+    anbn:{
+      type:"pda", input:"aaabbb", initialStack:"Z",
+      states:[
+        {id:"p0",x:170,y:270,label:"q0",initial:true,accept:false},
+        {id:"p1",x:470,y:270,label:"q1",initial:false,accept:false},
+        {id:"pf",x:740,y:270,label:"qf",initial:false,accept:true}
+      ],
+      transitions:[
+        {id:"p01",from:"p0",to:"p0",input:"a",pop:EPS,push:"A"},
+        {id:"p02",from:"p0",to:"p1",input:"b",pop:"A",push:EPS},
+        {id:"p03",from:"p1",to:"p1",input:"b",pop:"A",push:EPS},
+        {id:"p04",from:"p0",to:"pf",input:EPS,pop:"Z",push:"Z"},
+        {id:"p05",from:"p1",to:"pf",input:EPS,pop:"Z",push:"Z"}
+      ]
+    },
+    parentheses:{
+      type:"pda", input:"(()())", initialStack:"Z",
+      states:[
+        {id:"b0",x:260,y:270,label:"q0",initial:true,accept:false},
+        {id:"bf",x:650,y:270,label:"qf",initial:false,accept:true}
+      ],
+      transitions:[
+        {id:"b01",from:"b0",to:"b0",input:"(",pop:EPS,push:"("},
+        {id:"b02",from:"b0",to:"b0",input:")",pop:"(",push:EPS},
+        {id:"b03",from:"b0",to:"bf",input:EPS,pop:"Z",push:"Z"}
+      ]
+    },
+    unary:{
+      type:"tm", input:"111",
+      states:[
+        {id:"m0",x:250,y:270,label:"q0",initial:true,accept:false},
+        {id:"mf",x:650,y:270,label:"qf",initial:false,accept:true}
+      ],
+      transitions:[
+        {id:"m01",from:"m0",to:"m0",read:"1",write:"1",move:"R"},
+        {id:"m02",from:"m0",to:"mf",read:BLANK,write:"1",move:"S"}
+      ]
+    },
+    complement:{
+      type:"tm", input:"10110",
+      states:[
+        {id:"c0",x:250,y:270,label:"q0",initial:true,accept:false},
+        {id:"cf",x:650,y:270,label:"qf",initial:false,accept:true}
+      ],
+      transitions:[
+        {id:"c01",from:"c0",to:"c0",read:"0",write:"1",move:"R"},
+        {id:"c02",from:"c0",to:"c0",read:"1",write:"0",move:"R"},
+        {id:"c03",from:"c0",to:"cf",read:BLANK,write:BLANK,move:"S"}
+      ]
+    }
+  };
+
+  let current = "fa";
+  let tool = "select";
+  let selected = null;
+  let transitionSource = null;
+  let drag = null;
+  let runTimer = null;
+  let modalContext = null;
+  let sim = makeSim();
+
+  function makeSim(){
+    return {
+      status:"idle", state:null, pos:0, input:"",
+      stack:[], tape:{}, head:0, steps:0
+    };
+  }
+
+  function lab(){ return labs[current]; }
+  function stateById(id){ return lab().states.find(s=>s.id===id); }
+  function labelOf(id){ return stateById(id)?.label || id; }
+
+  function toast(msg){
+    const el=$("#toast"); el.textContent=msg; el.classList.add("show");
+    setTimeout(()=>el.classList.remove("show"),1800);
+  }
+
+  function stopRun(){
+    if(runTimer){ clearInterval(runTimer); runTimer=null; }
+  }
+
+  function setTool(name){
+    tool=name; transitionSource=null;
+    $$(".tool[data-tool]").forEach(b=>b.classList.toggle("active",b.dataset.tool===name));
+    const labels={
+      select:"seleccionar y mover",addState:"agregar estado",addTransition:"crear transición",
+      setInitial:"definir inicial",toggleAccept:"alternar aceptación",delete:"eliminar"
+    };
+    $("#modeLabel").textContent="Modo: "+labels[name];
+    renderGraph();
+  }
+
+  function switchLab(name){
+    stopRun(); current=name; selected=null; transitionSource=null; sim=makeSim();
+    $$(".tab").forEach(b=>b.classList.toggle("active",b.dataset.lab===name));
+    $("#editorTitle").textContent=meta[name].editor;
+    $("#conceptTitle").textContent=meta[name].conceptTitle;
+    $("#conceptText").innerHTML=meta[name].concept;
+    $("#formalDef").textContent=meta[name].formal;
+    $("#simTitle").textContent=meta[name].sim;
+    $("#inputLabel").textContent=meta[name].inputLabel;
+    $("#transitionTitle").textContent=meta[name].transitionTitle;
+    const sel=$("#presetSelect");
+    sel.innerHTML=meta[name].presets.map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
+    setTool("select");
+    renderAll();
+  }
+
+  function loadPreset(key){
+    const p=deepCopy(presets[key]);
+    labs[p.type].states=p.states;
+    labs[p.type].transitions=p.transitions;
+    if(p.initialStack) labs[p.type].initialStack=p.initialStack;
+    $("#inputWord").value=p.input;
+    selected=null; transitionSource=null; sim=makeSim(); stopRun();
+    renderAll();
+    toast("Ejemplo cargado");
+  }
+
+  function clearLab(){
+    if(!confirm("¿Eliminar todos los estados y transiciones del laboratorio actual?")) return;
+    lab().states=[]; lab().transitions=[]; selected=null; transitionSource=null; sim=makeSim(); stopRun();
+    renderAll();
+  }
+
+  function renderAll(){
+    renderGraph(); renderInspector(); renderTransitionTable(); renderSimulator();
+  }
+
+  function svgEl(tag,attrs={}){
+    const e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+    return e;
+  }
+
+  function renderGraph(){
+    const svg=$("#graph"); svg.innerHTML="";
+    const defs=svgEl("defs");
+    const marker=svgEl("marker",{id:"arrowhead",markerWidth:"10",markerHeight:"7",refX:"9",refY:"3.5",orient:"auto"});
+    marker.appendChild(svgEl("polygon",{points:"0 0, 10 3.5, 0 7",fill:"#334155"}));
+    defs.appendChild(marker); svg.appendChild(defs);
+
+    lab().transitions.forEach((t,index)=>drawTransition(svg,t,index));
+    lab().states.forEach(s=>drawState(svg,s));
+  }
+
+  function drawTransition(svg,t,index){
+    const from=stateById(t.from), to=stateById(t.to);
+    if(!from||!to) return;
+    const selectedEdge=selected?.type==="transition"&&selected.id===t.id;
+    const g=svgEl("g",{"data-transition":t.id});
+    let d,labelX,labelY;
+    if(from.id===to.id){
+      d=`M ${from.x-24} ${from.y-32} C ${from.x-72} ${from.y-105}, ${from.x+72} ${from.y-105}, ${from.x+24} ${from.y-32}`;
+      labelX=from.x; labelY=from.y-92;
+    }else{
+      const dx=to.x-from.x,dy=to.y-from.y,len=Math.hypot(dx,dy)||1;
+      const ux=dx/len,uy=dy/len;
+      const sx=from.x+ux*42,sy=from.y+uy*42;
+      const ex=to.x-ux*45,ey=to.y-uy*45;
+      const pairs=lab().transitions.filter(x=>x.from===t.to&&x.to===t.from);
+      const bend=pairs.length ? (t.from<t.to?26:-26) : 0;
+      const nx=-uy,ny=ux;
+      const cx=(sx+ex)/2+nx*bend,cy=(sy+ey)/2+ny*bend;
+      d=`M ${sx} ${sy} Q ${cx} ${cy} ${ex} ${ey}`;
+      labelX=cx+nx*10; labelY=cy+ny*10;
+    }
+    const hit=svgEl("path",{d,fill:"none",stroke:"transparent","stroke-width":"18"});
+    hit.style.cursor="pointer";
+    hit.addEventListener("click",e=>{e.stopPropagation(); selected={type:"transition",id:t.id}; renderAll();});
+    g.appendChild(hit);
+    const path=svgEl("path",{d,fill:"none",stroke:selectedEdge?"#7c3aed":"#334155","stroke-width":selectedEdge?"3":"2","marker-end":"url(#arrowhead)"});
+    if(selectedEdge) path.setAttribute("stroke-dasharray","7 4");
+    g.appendChild(path);
+    const label=svgEl("text",{x:labelX,y:labelY,"text-anchor":"middle","dominant-baseline":"middle",fill:"#0f172a","font-size":"14","font-weight":"700"});
+    label.textContent=transitionLabel(t);
+    label.setAttribute("paint-order","stroke");
+    label.setAttribute("stroke","#fff");
+    label.setAttribute("stroke-width","6");
+    label.setAttribute("stroke-linejoin","round");
+    g.appendChild(label);
+    svg.appendChild(g);
+  }
+
+  function transitionLabel(t){
+    if(current==="fa") return t.symbols;
+    if(current==="pda") return `${t.input}, ${t.pop} → ${t.push}`;
+    return `${t.read} → ${t.write}, ${t.move}`;
+  }
+
+  function drawState(svg,s){
+    const g=svgEl("g",{transform:`translate(${s.x} ${s.y})`,"data-state":s.id});
+    g.style.cursor=tool==="addTransition"?"crosshair":"grab";
+    const isSel=selected?.type==="state"&&selected.id===s.id;
+    if(s.initial){
+      const line=svgEl("line",{x1:"-90",y1:"0",x2:"-44",y2:"0",stroke:"#2563eb","stroke-width":"3","marker-end":"url(#arrowhead)"});
+      g.appendChild(line);
+    }
+    const circle=svgEl("circle",{r:"39",fill:isSel?"#ede9fe":(transitionSource===s.id?"#fef3c7":"#ffffff"),stroke:isSel?"#7c3aed":(sim.state===s.id?"#f59e0b":"#2563eb"),"stroke-width":sim.state===s.id?"5":"3"});
+    g.appendChild(circle);
+    if(s.accept) g.appendChild(svgEl("circle",{r:"32",fill:"none",stroke:"#2563eb","stroke-width":"2"}));
+    const text=svgEl("text",{"text-anchor":"middle","dominant-baseline":"middle",fill:"#0f172a","font-size":"16","font-weight":"800"});
+    text.textContent=s.label; g.appendChild(text);
+    if(sim.state===s.id){
+      const active=svgEl("text",{x:"0",y:"58","text-anchor":"middle",fill:"#d97706","font-size":"12","font-weight":"800"});
+      active.textContent="ACTUAL"; g.appendChild(active);
+    }
+
+    g.addEventListener("pointerdown",e=>{
+      e.stopPropagation();
+      if(tool==="select"){
+        e.preventDefault();
+        const pt=svgPoint(e);
+        drag={id:s.id,dx:pt.x-s.x,dy:pt.y-s.y,moved:false};
+      }
+    });
+    g.addEventListener("click",e=>{
+      e.stopPropagation();
+      if(tool!=="select") handleStateClick(s);
+    });
+    svg.appendChild(g);
+  }
+
+  function svgPoint(e){
+    const svg=$("#graph"),pt=svg.createSVGPoint(); pt.x=e.clientX;pt.y=e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  function handleStateClick(s){
+    if(tool==="select"){ selected={type:"state",id:s.id}; renderAll(); return; }
+    if(tool==="setInitial"){
+      lab().states.forEach(x=>x.initial=false); s.initial=true; selected={type:"state",id:s.id}; renderAll(); return;
+    }
+    if(tool==="toggleAccept"){ s.accept=!s.accept; selected={type:"state",id:s.id}; renderAll(); return; }
+    if(tool==="delete"){ deleteState(s.id); return; }
+    if(tool==="addTransition"){
+      if(!transitionSource){ transitionSource=s.id; selected={type:"state",id:s.id}; renderAll(); toast("Selecciona el estado destino"); }
+      else{ openTransitionModal(transitionSource,s.id); transitionSource=null; }
+    }
+  }
+
+  function addStateAt(x,y){
+    let n=0; while(lab().states.some(s=>s.label===`q${n}`)) n++;
+    const s={id:uid("q"),x,y,label:`q${n}`,initial:lab().states.length===0,accept:false};
+    lab().states.push(s); selected={type:"state",id:s.id}; setTool("select"); renderAll();
+  }
+
+  function deleteState(id){
+    lab().states=lab().states.filter(s=>s.id!==id);
+    lab().transitions=lab().transitions.filter(t=>t.from!==id&&t.to!==id);
+    selected=null; renderAll();
+  }
+
+  function deleteSelection(){
+    if(!selected) return;
+    if(selected.type==="state") deleteState(selected.id);
+    else{
+      lab().transitions=lab().transitions.filter(t=>t.id!==selected.id);
+      selected=null; renderAll();
+    }
+  }
+
+  function renderInspector(){
+    const box=$("#inspector"),badge=$("#selectionBadge");
+    if(!selected){
+      badge.textContent="Sin selección";
+      box.innerHTML=`<div class="inspector-empty">Selecciona un estado o una transición para editar sus propiedades.</div>`;
+      return;
+    }
+    if(selected.type==="state"){
+      const s=stateById(selected.id);
+      if(!s){selected=null;renderInspector();return}
+      badge.textContent="Estado "+s.label;
+      box.innerHTML=`
+        <div class="field"><label>Nombre del estado</label><input id="stateLabelEdit" value="${esc(s.label)}"></div>
+        <div class="row" style="margin-top:12px">
+          <label class="checkline"><input type="checkbox" id="stateInitialEdit" ${s.initial?"checked":""}> Estado inicial</label>
+          <label class="checkline"><input type="checkbox" id="stateAcceptEdit" ${s.accept?"checked":""}> Estado de aceptación</label>
+        </div>
+        <div class="row" style="margin-top:13px">
+          <button class="btn primary small" id="saveStateEdit">Aplicar cambios</button>
+          <button class="btn danger small" id="deleteInspector">Eliminar estado</button>
+        </div>`;
+      $("#saveStateEdit").onclick=()=>{
+        const val=$("#stateLabelEdit").value.trim()||s.label;
+        s.label=val;
+        if($("#stateInitialEdit").checked){lab().states.forEach(x=>x.initial=false);s.initial=true}else s.initial=false;
+        s.accept=$("#stateAcceptEdit").checked; renderAll();
+      };
+      $("#deleteInspector").onclick=()=>deleteState(s.id);
+    }else{
+      const t=lab().transitions.find(t=>t.id===selected.id);
+      if(!t){selected=null;renderInspector();return}
+      badge.textContent="Transición";
+      box.innerHTML=transitionFields(t,true)+`
+        <div class="row" style="margin-top:13px">
+          <button class="btn primary small" id="saveTransEdit">Aplicar cambios</button>
+          <button class="btn danger small" id="deleteInspector">Eliminar transición</button>
+        </div>`;
+      $("#saveTransEdit").onclick=()=>{ readTransitionFields(t); renderAll(); };
+      $("#deleteInspector").onclick=()=>{lab().transitions=lab().transitions.filter(x=>x.id!==t.id);selected=null;renderAll();};
+    }
+  }
+
+  function stateOptions(selectedId){
+    return lab().states.map(s=>`<option value="${s.id}" ${s.id===selectedId?"selected":""}>${esc(s.label)}</option>`).join("");
+  }
+
+  function transitionFields(t,withStates=false){
+    const stateFields=withStates?`
+      <div class="row">
+        <div class="field"><label>Origen</label><select id="tFrom">${stateOptions(t.from)}</select></div>
+        <div class="field"><label>Destino</label><select id="tTo">${stateOptions(t.to)}</select></div>
+      </div>`:"";
+    if(current==="fa") return stateFields+`
+      <div class="field" style="margin-top:10px"><label>Símbolos separados por coma</label><input id="tSymbols" value="${esc(t.symbols||"")}"></div>`;
+    if(current==="pda") return stateFields+`
+      <div class="row" style="margin-top:10px">
+        <div class="field"><label>Entrada</label><input id="tInput" value="${esc(t.input||EPS)}"></div>
+        <div class="field"><label>Retirar de pila</label><input id="tPop" value="${esc(t.pop||EPS)}"></div>
+        <div class="field"><label>Colocar en pila</label><input id="tPush" value="${esc(t.push||EPS)}"></div>
+      </div>
+      <div class="explain" style="margin-top:8px">Usa <strong>ε</strong> para “no consumir”, “no retirar” o “no colocar”. El primer símbolo escrito en “colocar” quedará arriba.</div>`;
+    return stateFields+`
+      <div class="row" style="margin-top:10px">
+        <div class="field"><label>Leer</label><input id="tRead" value="${esc(t.read||BLANK)}"></div>
+        <div class="field"><label>Escribir</label><input id="tWrite" value="${esc(t.write||BLANK)}"></div>
+        <div class="field"><label>Movimiento</label><select id="tMove"><option ${t.move==="L"?"selected":""}>L</option><option ${t.move==="R"?"selected":""}>R</option><option ${t.move==="S"?"selected":""}>S</option></select></div>
+      </div>`;
+  }
+
+  function readTransitionFields(t){
+    if($("#tFrom")) t.from=$("#tFrom").value;
+    if($("#tTo")) t.to=$("#tTo").value;
+    if(current==="fa") t.symbols=$("#tSymbols").value.trim()||EPS;
+    if(current==="pda"){
+      t.input=$("#tInput").value.trim()||EPS;
+      t.pop=$("#tPop").value.trim()||EPS;
+      t.push=$("#tPush").value.trim()||EPS;
+    }
+    if(current==="tm"){
+      t.read=$("#tRead").value.trim()||BLANK;
+      t.write=$("#tWrite").value.trim()||BLANK;
+      t.move=$("#tMove").value;
+    }
+  }
+
+  function openTransitionModal(from,to){
+    modalContext={from,to};
+    $("#modalTitle").textContent=`Nueva transición: ${labelOf(from)} → ${labelOf(to)}`;
+    const temp={from,to};
+    if(current==="fa") temp.symbols="0";
+    if(current==="pda") Object.assign(temp,{input:"a",pop:EPS,push:"A"});
+    if(current==="tm") Object.assign(temp,{read:"0",write:"0",move:"R"});
+    $("#modalBody").innerHTML=transitionFields(temp,false);
+    $("#modalBackdrop").classList.add("show");
+    setTimeout(()=>$("#modalBody input")?.focus(),50);
+  }
+
+  function closeModal(){
+    $("#modalBackdrop").classList.remove("show"); modalContext=null;
+  }
+
+  function saveModalTransition(){
+    if(!modalContext)return;
+    const t={id:uid("t"),from:modalContext.from,to:modalContext.to};
+    readTransitionFields(t);
+    lab().transitions.push(t);
+    selected={type:"transition",id:t.id}; closeModal(); setTool("select"); renderAll();
+  }
+
+  function renderTransitionTable(){
+    const table=$("#transitionTable");
+    $("#transitionCount").textContent=`${lab().transitions.length} transición${lab().transitions.length===1?"":"es"}`;
+    let head="",rows="";
+    if(current==="fa"){
+      head="<tr><th>Origen</th><th>Símbolo(s)</th><th>Destino</th></tr>";
+      rows=lab().transitions.map(t=>`<tr data-row="${t.id}" class="${selected?.id===t.id?"selected-row":""}"><td>${esc(labelOf(t.from))}</td><td>${esc(t.symbols)}</td><td>${esc(labelOf(t.to))}</td></tr>`).join("");
+    }else if(current==="pda"){
+      head="<tr><th>Origen</th><th>Entrada</th><th>Cima</th><th>Reemplazo</th><th>Destino</th></tr>";
+      rows=lab().transitions.map(t=>`<tr data-row="${t.id}" class="${selected?.id===t.id?"selected-row":""}"><td>${esc(labelOf(t.from))}</td><td>${esc(t.input)}</td><td>${esc(t.pop)}</td><td>${esc(t.push)}</td><td>${esc(labelOf(t.to))}</td></tr>`).join("");
+    }else{
+      head="<tr><th>Origen</th><th>Lee</th><th>Escribe</th><th>Mueve</th><th>Destino</th></tr>";
+      rows=lab().transitions.map(t=>`<tr data-row="${t.id}" class="${selected?.id===t.id?"selected-row":""}"><td>${esc(labelOf(t.from))}</td><td>${esc(t.read)}</td><td>${esc(t.write)}</td><td>${esc(t.move)}</td><td>${esc(labelOf(t.to))}</td></tr>`).join("");
+    }
+    table.innerHTML=`<thead>${head}</thead><tbody>${rows||`<tr><td colspan="6" style="color:#64748b">Aún no hay transiciones.</td></tr>`}</tbody>`;
+    table.querySelectorAll("[data-row]").forEach(r=>r.onclick=()=>{selected={type:"transition",id:r.dataset.row};renderAll();});
+  }
+
+  function initialState(){
+    return lab().states.find(s=>s.initial);
+  }
+
+  function resetSimulation(){
+    stopRun(); sim=makeSim();
+    const init=initialState();
+    sim.input=$("#inputWord").value;
+    if(!init){
+      sim.status="error"; setStatus("Falta estado inicial","bad"); log("Define un estado inicial antes de simular.","bad"); renderAll(); return;
+    }
+    sim.state=init.id; sim.status="running"; sim.pos=0; sim.steps=0;
+    if(current==="pda") sim.stack=[lab().initialStack||"Z"];
+    if(current==="tm"){
+      sim.tape={}; [...sim.input].forEach((c,i)=>sim.tape[i]=c); sim.head=0;
+    }
+    $("#log").innerHTML="";
+    log(`Configuración inicial en ${init.label}.`,"info");
+    setStatus("En ejecución","info"); renderAll();
+  }
+
+  function stepSimulation(){
+    if(sim.status==="idle"||sim.status==="error") resetSimulation();
+    if(sim.status!=="running") return false;
+    sim.steps++;
+    if(sim.steps>1000){finish("error","Límite de 1000 pasos alcanzado.");return false}
+    if(current==="fa") return stepFA();
+    if(current==="pda") return stepPDA();
+    return stepTM();
+  }
+
+  function stepFA(){
+    const state=stateById(sim.state);
+    if(sim.pos>=sim.input.length){
+      return finish(state?.accept?"accepted":"rejected",state?.accept?"Cadena aceptada.":"La entrada terminó en un estado no final.");
+    }
+    const ch=sim.input[sim.pos];
+    const t=lab().transitions.find(t=>t.from===sim.state && (t.symbols||"").split(",").map(x=>x.trim()).includes(ch));
+    if(!t) return finish("rejected",`No existe transición desde ${state.label} con “${ch}”.`);
+    sim.state=t.to; sim.pos++;
+    log(`Paso ${sim.steps}: ${state.label} --${ch}→ ${labelOf(t.to)}`,"info");
+    const now=stateById(sim.state);
+    if(sim.pos===sim.input.length && now.accept) finish("accepted","Cadena aceptada.");
+    else renderAll();
+    return sim.status==="running";
+  }
+
+  function pdaMatches(t,ch,top){
+    const inOk=t.input===EPS || t.input===ch;
+    const popOk=t.pop===EPS || t.pop===top;
+    return inOk&&popOk;
+  }
+
+  function stepPDA(){
+    const state=stateById(sim.state);
+    if(sim.pos>=sim.input.length && state?.accept) return finish("accepted","Cadena aceptada por estado final.");
+    const ch=sim.input[sim.pos];
+    const top=sim.stack.at(-1);
+    const candidates=lab().transitions.filter(t=>t.from===sim.state&&pdaMatches(t,ch,top))
+      .sort((a,b)=>(a.input===EPS)-(b.input===EPS));
+    const t=candidates[0];
+    if(!t) return finish("rejected",`No existe transición válida desde ${state.label}. Entrada: ${ch??"fin"}, cima: ${top??"vacía"}.`);
+    if(t.input!==EPS) sim.pos++;
+    if(t.pop!==EPS) sim.stack.pop();
+    if(t.push!==EPS){
+      [...t.push].reverse().forEach(c=>sim.stack.push(c));
+    }
+    sim.state=t.to;
+    log(`Paso ${sim.steps}: ${state.label} --(${t.input}, ${t.pop}→${t.push})→ ${labelOf(t.to)}`,"info");
+    const now=stateById(sim.state);
+    if(sim.pos>=sim.input.length && now?.accept) finish("accepted","Cadena aceptada por estado final.");
+    else renderAll();
+    return sim.status==="running";
+  }
+
+  function tapeRead(i){ return Object.prototype.hasOwnProperty.call(sim.tape,i)?sim.tape[i]:(lab().blank||BLANK); }
+
+  function stepTM(){
+    const state=stateById(sim.state);
+    if(state?.accept) return finish("accepted","La máquina se detuvo en un estado de aceptación.");
+    const read=tapeRead(sim.head);
+    const t=lab().transitions.find(t=>t.from===sim.state&&t.read===read);
+    if(!t) return finish("rejected",`La máquina se detuvo: no existe transición para ${state.label} leyendo “${read}”.`);
+    sim.tape[sim.head]=t.write;
+    if(t.move==="L") sim.head--;
+    if(t.move==="R") sim.head++;
+    sim.state=t.to;
+    log(`Paso ${sim.steps}: ${state.label}, lee ${read}, escribe ${t.write}, mueve ${t.move}, va a ${labelOf(t.to)}.`,"info");
+    if(stateById(sim.state)?.accept) finish("accepted","La máquina se detuvo en un estado de aceptación.");
+    else renderAll();
+    return sim.status==="running";
+  }
+
+  function finish(status,msg){
+    sim.status=status; stopRun();
+    setStatus(status==="accepted"?"Aceptada":status==="rejected"?"Rechazada":"Error",status==="accepted"?"ok":"bad");
+    log(msg,status==="accepted"?"ok":"bad"); renderAll(); return false;
+  }
+
+  function runSimulation(){
+    if(sim.status!=="running") resetSimulation();
+    if(sim.status!=="running") return;
+    stopRun();
+    runTimer=setInterval(()=>{ if(!stepSimulation()) stopRun(); },550);
+  }
+
+  function pauseSimulation(){
+    stopRun(); if(sim.status==="running"){setStatus("Pausado","info");log("Ejecución pausada.","info")}
+  }
+
+  function setStatus(text,kind){
+    $("#simStatus").textContent=text;
+    $("#simStatus").style.background=kind==="ok"?"#dcfce7":kind==="bad"?"#fee2e2":"#eef2ff";
+    $("#simStatus").style.color=kind==="ok"?"#166534":kind==="bad"?"#991b1b":"#4338ca";
+  }
+
+  function renderSimulator(){
+    if(sim.status==="idle") setStatus("Preparado","info");
+    const state=sim.state?labelOf(sim.state):"—";
+    let html=`<div class="config-line"><span>Estado actual</span><strong>${esc(state)}</strong></div>
+      <div class="config-line"><span>Pasos ejecutados</span><strong>${sim.steps}</strong></div>`;
+    if(current!=="tm") html+=`<div class="config-line"><span>Posición de lectura</span><strong>${sim.pos}</strong></div>`;
+    $("#configuration").innerHTML=html;
+
+    if(current==="fa"||current==="pda"){
+      const chars=[...sim.input];
+      $("#inputVisual").innerHTML=`<div class="input-strip">${chars.map((c,i)=>`<span class="symbol ${i<sim.pos?"done":i===sim.pos&&sim.status==="running"?"active":""}">${esc(c)}</span>`).join("") || '<span style="color:#64748b;font-size:.82rem">Entrada vacía</span>'}</div>`;
+    }else $("#inputVisual").innerHTML="";
+
+    if(current==="pda"){
+      const cells=sim.stack.map((c,i)=>`<div class="stack-cell ${i===sim.stack.length-1?"stack-top":""}">${esc(c)}</div>`).join("");
+      $("#memoryVisual").innerHTML=`<div style="margin-top:12px;font-size:.78rem;color:#64748b;font-weight:800">PILA — la cima está arriba</div><div class="stack-view">${cells||'<div class="stack-cell">vacía</div>'}</div>`;
+    }else if(current==="tm"){
+      const keys=Object.keys(sim.tape).map(Number);
+      const min=Math.min(sim.head-6,...(keys.length?keys:[0]));
+      const max=Math.max(sim.head+6,...(keys.length?keys:[0]));
+      let cells="";
+      for(let i=min;i<=max;i++) cells+=`<div class="tape-cell ${i===sim.head?"head":""}"><span class="tape-index">${i}</span>${esc(tapeRead(i))}</div>`;
+      $("#memoryVisual").innerHTML=`<div style="margin-top:12px;font-size:.78rem;color:#64748b;font-weight:800">CINTA</div><div class="tape">${cells}</div>`;
+    }else $("#memoryVisual").innerHTML="";
+    renderGraph();
+  }
+
+  function log(msg,kind=""){
+    const el=document.createElement("div");el.className=kind;el.textContent=msg;$("#log").appendChild(el);$("#log").scrollTop=$("#log").scrollHeight;
+  }
+
+  function saveLocal(){
+    localStorage.setItem("computationModelsLab",JSON.stringify({labs,input:$("#inputWord").value,current}));
+    toast("Proyecto guardado en este navegador");
+  }
+
+  function loadLocal(){
+    const raw=localStorage.getItem("computationModelsLab");
+    if(!raw){toast("No hay proyecto guardado");return}
+    try{
+      const data=JSON.parse(raw);
+      ["fa","pda","tm"].forEach(k=>{if(data.labs?.[k])labs[k]=data.labs[k]});
+      $("#inputWord").value=data.input||"";
+      switchLab(data.current||"fa");
+      toast("Proyecto recuperado");
+    }catch(e){toast("No se pudo recuperar el proyecto")}
+  }
+
+  function exportJSON(){
+    const data=JSON.stringify({version:1,labs},null,2);
+    const blob=new Blob([data],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="laboratorio-modelos-computacion.json";a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function importJSON(file){
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const data=JSON.parse(r.result);
+        if(!data.labs) throw new Error();
+        ["fa","pda","tm"].forEach(k=>{if(data.labs[k])labs[k]=data.labs[k]});
+        selected=null;sim=makeSim();renderAll();toast("Proyecto importado");
+      }catch(e){toast("Archivo JSON no válido")}
+    };
+    r.readAsText(file);
+  }
+
+  function esc(v){
+    return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+  }
+
+  document.addEventListener("pointermove",e=>{
+    if(!drag) return;
+    const s=stateById(drag.id);
+    if(!s){drag=null;return}
+    const pt=svgPoint(e);
+    const nx=Math.max(55,Math.min(845,pt.x-drag.dx));
+    const ny=Math.max(55,Math.min(485,pt.y-drag.dy));
+    if(Math.abs(nx-s.x)>1 || Math.abs(ny-s.y)>1) drag.moved=true;
+    s.x=nx; s.y=ny;
+    renderGraph();
+  });
+  document.addEventListener("pointerup",()=>{
+    if(!drag) return;
+    const id=drag.id; drag=null;
+    selected={type:"state",id};
+    renderAll();
+  });
+
+  $("#graph").addEventListener("click",e=>{
+    if(e.target!==$("#graph")) return;
+    if(tool==="addState"){
+      const p=svgPoint(e); addStateAt(p.x,p.y);
+    }else{selected=null;transitionSource=null;renderAll()}
+  });
+  $$(".tool[data-tool]").forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
+  $$(".tab").forEach(b=>b.onclick=()=>switchLab(b.dataset.lab));
+  $("#clearBtn").onclick=clearLab;
+  $("#loadPresetBtn").onclick=()=>loadPreset($("#presetSelect").value);
+  $("#resetSimBtn").onclick=resetSimulation;
+  $("#stepBtn").onclick=stepSimulation;
+  $("#runBtn").onclick=runSimulation;
+  $("#pauseBtn").onclick=pauseSimulation;
+  $("#clearLogBtn").onclick=()=>$("#log").innerHTML="";
+  $("#modalClose").onclick=closeModal;
+  $("#modalCancel").onclick=closeModal;
+  $("#modalSave").onclick=saveModalTransition;
+  $("#modalBackdrop").onclick=e=>{if(e.target===$("#modalBackdrop"))closeModal()};
+  $("#saveBtn").onclick=saveLocal;
+  $("#loadBtn").onclick=loadLocal;
+  $("#exportBtn").onclick=exportJSON;
+  $("#importBtn").onclick=()=>$("#importFile").click();
+  $("#importFile").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value=""};
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Delete"&&!$("#modalBackdrop").classList.contains("show")) deleteSelection();
+    if(e.key==="Escape"){closeModal();setTool("select")}
+  });
+
+  loadPreset("parity");
+  switchLab("fa");
+})();
+</script>
+</body>
+</html>
