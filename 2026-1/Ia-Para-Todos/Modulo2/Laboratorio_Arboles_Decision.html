@@ -1,0 +1,1271 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Decision Tree Lab</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --red: light-dark(rgb(186 38 35), rgb(250 66 62));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The bundled tooltip runtime owns [data-tooltip]. AppBlock's CSS-only
+   pseudo-tooltip can widen dense grids even while hidden. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--interactive-label-primary-default, var(--primary-foreground));
+  background: var(--interactive-bg-primary-default, var(--foreground));
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(
+    in srgb,
+    var(--interactive-label-primary-default, var(--primary-foreground)) 50%,
+    transparent
+  );
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<div id="dtlab-root">
+  <style>
+    #dtlab-root{--dt-a:var(--viz-series-1,#2563eb);--dt-b:var(--viz-series-2,#e11d48);--dt-c:var(--viz-series-3,#16a34a);--dt-warn:var(--viz-series-4,#f59e0b);color:var(--foreground,#172033);background:var(--background,#f7f8fb);padding:12px;min-height:760px}
+    #dtlab-root *{box-sizing:border-box}
+    #dtlab-root .dt-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+    #dtlab-root .dt-title h1{margin:0;font-size:1.35rem;font-weight:500}#dtlab-root .dt-title p{margin:2px 0 0;color:var(--muted-foreground,#64748b)}
+    #dtlab-root .dt-tabs,#dtlab-root .dt-controls,#dtlab-root .dt-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+    #dtlab-root .dt-tab[aria-selected="true"]{background:var(--primary);color:var(--primary-foreground)}
+    #dtlab-root .dt-view{display:none}#dtlab-root .dt-view.is-active{display:block}
+    #dtlab-root .dt-lab{display:grid;grid-template-columns:250px minmax(390px,1fr) 350px;gap:10px;align-items:start}
+    #dtlab-root .dt-panel{padding:12px}#dtlab-root details{border-bottom:1px solid var(--border);padding:6px 0}#dtlab-root details:last-child{border-bottom:0}#dtlab-root summary{cursor:pointer;font-weight:500;padding:3px 0}
+    #dtlab-root .dt-field{margin:9px 0}#dtlab-root .dt-field label{display:block;margin-bottom:4px;color:var(--muted-foreground)}#dtlab-root .dt-field select,#dtlab-root .dt-field input[type="number"],#dtlab-root textarea{width:100%}
+    #dtlab-root .dt-main{display:grid;gap:10px;min-width:0}#dtlab-root .dt-plotbox{height:455px;position:relative;overflow:hidden;padding:0}#dtlab-root canvas{width:100%;height:100%;display:block;touch-action:none}
+    #dtlab-root .dt-overlay{position:absolute;left:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}#dtlab-root .dt-legend{position:absolute;right:10px;bottom:8px;background:color-mix(in srgb,var(--card) 90%,transparent);padding:5px 8px;border-radius:8px}
+    #dtlab-root .dt-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px}#dtlab-root .dt-dot.a{background:var(--dt-a)}#dtlab-root .dt-dot.b{background:var(--dt-b)}
+    #dtlab-root .dt-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}#dtlab-root .dt-stat{padding:9px}#dtlab-root .dt-stat strong{font-size:1.15rem;font-weight:500;display:block}#dtlab-root .dt-stat span{color:var(--muted-foreground)}
+    #dtlab-root .dt-right{display:grid;gap:10px}#dtlab-root .dt-treebox{height:285px;padding:5px;overflow:hidden}#dtlab-root .dt-treebox svg{width:100%;height:100%;display:block;touch-action:none}
+    #dtlab-root .dt-explain{padding:12px}#dtlab-root .dt-explain h3{margin:0 0 6px}#dtlab-root .dt-formula{padding:8px;background:var(--muted);color:var(--muted-foreground);border-radius:8px;margin-top:7px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    #dtlab-root .dt-tablewrap{max-height:215px;overflow:auto}#dtlab-root .dt-table tr.is-best{background:color-mix(in srgb,var(--dt-warn) 18%,transparent)}#dtlab-root .dt-table tr:hover{background:var(--accent)}
+    #dtlab-root .dt-note{font-size:.88rem;color:var(--muted-foreground)}#dtlab-root .dt-question{border-left:3px solid var(--dt-warn);padding:7px 9px;background:color-mix(in srgb,var(--dt-warn) 10%,transparent);margin-top:7px}
+    #dtlab-root .dt-predict{padding:10px;margin-top:8px}#dtlab-root .dt-predict-path{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}#dtlab-root .dt-pathnode{padding:4px 7px;border-radius:6px;background:var(--muted)}#dtlab-root .dt-pathnode.is-active{background:var(--primary);color:var(--primary-foreground)}
+    #dtlab-root .dt-wide{max-width:1400px;margin:0 auto}#dtlab-root .dt-hero{padding:16px;margin-bottom:10px}#dtlab-root .dt-hero h2{margin-top:0}
+    #dtlab-root .dt-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}#dtlab-root .dt-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}#dtlab-root .dt-mini{padding:10px}#dtlab-root .dt-mini canvas{height:230px;border:1px solid var(--border)}
+    #dtlab-root .dt-chart{height:245px;padding:8px}#dtlab-root .dt-chart svg{width:100%;height:100%}#dtlab-root .dt-compare-title{margin:0 0 5px;font-weight:500}
+    #dtlab-root .dt-concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}#dtlab-root .dt-concept{padding:12px}#dtlab-root .dt-concept h3{margin-top:0}
+    #dtlab-root .dt-quiz{max-width:900px;margin:auto}#dtlab-root .dt-q{padding:14px;margin-bottom:9px}#dtlab-root .dt-option{display:block;width:100%;text-align:left;margin-top:5px}#dtlab-root .dt-option.is-correct{background:color-mix(in srgb,var(--green) 22%,var(--card))}#dtlab-root .dt-option.is-wrong{background:color-mix(in srgb,var(--red) 18%,var(--card))}#dtlab-root .dt-feedback{display:none;margin-top:7px;color:var(--muted-foreground)}#dtlab-root .dt-feedback.is-show{display:block}
+    #dtlab-root .dt-modal{position:fixed;inset:0;background:color-mix(in srgb,var(--foreground) 55%,transparent);z-index:99;display:grid;place-items:center;padding:16px}#dtlab-root .dt-modal[hidden]{display:none}#dtlab-root .dt-modalbox{max-width:680px;padding:22px}#dtlab-root .dt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}#dtlab-root .dt-step{padding:10px;background:var(--muted);border-radius:8px}
+    #dtlab-root .dt-toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--foreground);color:var(--background);padding:8px 13px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:120}#dtlab-root .dt-toast.is-show{opacity:1}
+    @media(max-width:1100px){#dtlab-root .dt-lab{grid-template-columns:220px 1fr}#dtlab-root .dt-right{grid-column:1/-1;grid-template-columns:1fr 1fr}#dtlab-root .dt-grid4{grid-template-columns:1fr 1fr}}
+    @media(max-width:740px){#dtlab-root{padding:7px}#dtlab-root .dt-lab{display:block}#dtlab-root .dt-lab>*{margin-bottom:8px}#dtlab-root .dt-right{display:block}#dtlab-root .dt-right>*{margin-bottom:8px}#dtlab-root .dt-grid2,#dtlab-root .dt-grid4,#dtlab-root .dt-concepts,#dtlab-root .dt-steps{grid-template-columns:1fr}#dtlab-root .dt-stats{grid-template-columns:1fr 1fr}#dtlab-root .dt-plotbox{height:390px}}
+  </style>
+
+  <header class="dt-head">
+    <div class="dt-title"><h1>Laboratorio Interactivo de Árboles de Decisión</h1><p>De la impureza a una secuencia de preguntas</p></div>
+    <nav class="dt-tabs" aria-label="Módulos">
+      <button class="btn dt-tab" data-view="lab" aria-selected="true">Laboratorio</button>
+      <button class="btn dt-tab" data-view="overfit" aria-selected="false">Sobreajuste y poda</button>
+      <button class="btn dt-tab" data-view="compare" aria-selected="false">Comparador</button>
+      <button class="btn dt-tab" data-view="learn" aria-selected="false">Conceptos y evaluación</button>
+    </nav>
+  </header>
+
+  <section class="dt-view is-active" data-page="lab">
+    <div class="dt-lab">
+      <aside class="card dt-panel">
+        <details open><summary>Datos</summary>
+          <div class="dt-field"><label for="dt-dataset">Conjunto</label><select id="dt-dataset" class="form-select"></select></div>
+          <div id="dt-question" class="dt-question"></div>
+          <div class="dt-row"><button id="dt-new" class="btn">Nueva muestra</button><button id="dt-clear" class="btn btn-ghost">Limpiar</button></div>
+          <div class="dt-field"><label for="dt-class">Clase al añadir</label><select id="dt-class" class="form-select"><option value="0">Azul ●</option><option value="1">Roja ■</option></select></div>
+          <p class="dt-note">Clic: añadir · arrastrar: mover · clic derecho: borrar · doble clic: cambiar clase.</p>
+        </details>
+        <details open><summary>Entrenamiento</summary>
+          <div class="dt-field"><label for="dt-criterion">Criterio</label><select id="dt-criterion" class="form-select"><option value="gini">Índice Gini</option><option value="entropy">Entropía</option><option value="error">Error de clasificación</option></select></div>
+          <div class="dt-field"><label for="dt-depth">Profundidad máxima: <b id="dt-depth-v">4</b></label><input id="dt-depth" class="form-range" type="range" min="1" max="9" value="4"></div>
+          <div class="dt-field"><label for="dt-minsplit">Mínimo por nodo: <b id="dt-minsplit-v">2</b></label><input id="dt-minsplit" class="form-range" type="range" min="2" max="10" value="2"></div>
+          <div class="dt-field"><label for="dt-mingain">Ganancia mínima: <b id="dt-mingain-v">0.001</b></label><input id="dt-mingain" class="form-range" type="range" min="0" max="0.2" step="0.001" value="0.001"></div>
+          <div class="dt-field"><label for="dt-train">Entrenamiento: <b id="dt-train-v">75%</b></label><input id="dt-train" class="form-range" type="range" min="50" max="90" step="5" value="75"></div>
+        </details>
+        <details open><summary>Visualización</summary>
+          <label class="form-check"><input id="dt-regions" class="form-check-input" type="checkbox" checked><span class="form-check-label">Regiones de decisión</span></label>
+          <label class="form-check"><input id="dt-boundaries" class="form-check-input" type="checkbox" checked><span class="form-check-label">Fronteras</span></label>
+          <label class="form-check"><input id="dt-labels" class="form-check-input" type="checkbox"><span class="form-check-label">Etiquetas</span></label>
+          <label class="form-check"><input id="dt-challenge" class="form-check-input" type="checkbox"><span class="form-check-label">Elige el mejor corte</span></label>
+        </details>
+        <details><summary>Importar y exportar</summary>
+          <div class="dt-field"><label for="dt-csv">CSV: etiqueta,x,y,clase</label><textarea id="dt-csv" class="form-control" rows="4" placeholder="A,20,30,0&#10;B,70,80,1"></textarea></div>
+          <div class="dt-row"><button id="dt-import" class="btn">Importar</button><button id="dt-export" class="btn">Exportar CSV</button></div>
+        </details>
+      </aside>
+
+      <main class="dt-main">
+        <div class="card dt-plotbox"><canvas id="dt-plot" role="img" aria-label="Plano de datos y regiones de decisión"></canvas><div class="dt-overlay"><span id="dt-step-badge" class="viz-badge">Paso 0</span><span id="dt-node-badge" class="viz-badge">Nodo raíz</span></div><div class="dt-legend text-small"><span class="dt-dot a"></span>Clase azul&nbsp;&nbsp;<span class="dt-dot b"></span>Clase roja&nbsp;&nbsp;◇ prueba</div></div>
+        <div class="dt-stats">
+          <div class="card dt-stat"><strong id="dt-train-acc">—</strong><span>Exactitud entrenamiento</span></div>
+          <div class="card dt-stat"><strong id="dt-test-acc">—</strong><span>Exactitud prueba</span></div>
+          <div class="card dt-stat"><strong id="dt-leaves">1</strong><span>Hojas visibles</span></div>
+          <div class="card dt-stat"><strong id="dt-tree-depth">0</strong><span>Profundidad</span></div>
+        </div>
+        <div class="dt-controls" aria-label="Controles paso a paso">
+          <button id="dt-first" class="btn">Inicio</button><button id="dt-prev" class="btn">Anterior</button><button id="dt-play" class="btn btn-primary">Reproducir</button><button id="dt-next" class="btn">Siguiente</button><button id="dt-last" class="btn">Final</button><button id="dt-rebuild" class="btn btn-ghost">Reconstruir</button>
+          <label for="dt-speed">Velocidad</label><input id="dt-speed" class="form-range" type="range" min="250" max="1600" value="900">
+        </div>
+      </main>
+
+      <aside class="dt-right">
+        <div class="card dt-treebox"><svg id="dt-tree" role="img" aria-label="Árbol de decisión construido progresivamente"><title>Árbol de decisión</title></svg></div>
+        <div class="card dt-explain"><h3 id="dt-explain-title">Nodo raíz</h3><div id="dt-explain-text">Cada dato de entrenamiento comienza en la raíz.</div><div id="dt-formula" class="dt-formula"></div>
+          <div id="dt-predict" class="card dt-predict"><b>Predecir un nuevo caso</b><div class="dt-row"><label>X <input id="dt-px" class="form-control" type="number" min="0" max="100" value="68"></label><label>Y <input id="dt-py" class="form-control" type="number" min="0" max="100" value="42"></label><button id="dt-predict-btn" class="btn">Recorrer</button><button id="dt-predict-next" class="btn">Paso</button></div><div id="dt-predict-msg" class="dt-note">También puedes hacer Alt+clic en el plano.</div><div id="dt-predict-path" class="dt-predict-path"></div></div>
+        </div>
+        <div class="card dt-explain"><h3>Cortes candidatos</h3><div class="dt-row"><button id="dt-cand-prev" class="btn">←</button><button id="dt-cand-next" class="btn">→</button><span id="dt-cand-pos" class="text-muted"></span></div><div class="dt-tablewrap"><table class="table table-sm dt-table"><thead><tr><th>Variable</th><th>Umbral</th><th>Izq.</th><th>Der.</th><th>Imp. pond.</th><th>Ganancia</th></tr></thead><tbody id="dt-candidates"></tbody></table></div></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="dt-view" data-page="overfit"><div class="dt-wide"><div class="card dt-hero"><h2>Sobreajuste y poda previa</h2><p>El mismo conjunto se entrena con dos complejidades. Ajusta la profundidad y observa cuándo la exactitud de prueba deja de mejorar.</p><div class="dt-controls"><label for="dt-over-depth">Profundidad del árbol complejo: <b id="dt-over-depth-v">7</b></label><input id="dt-over-depth" class="form-range" type="range" min="2" max="10" value="7"><button id="dt-prune" class="btn btn-primary">Podar un nivel</button><button id="dt-unprune" class="btn">Deshacer poda</button></div></div><div class="dt-grid2"><div class="card dt-mini"><h3>Árbol simple · profundidad 2</h3><canvas id="dt-shallow" aria-label="Regiones de un árbol poco profundo"></canvas><p id="dt-shallow-info"></p></div><div class="card dt-mini"><h3>Árbol complejo</h3><canvas id="dt-deep" aria-label="Regiones de un árbol profundo"></canvas><p id="dt-deep-info"></p></div></div><div class="card dt-chart"><svg id="dt-curve" role="img" aria-label="Exactitud según profundidad"><title>Exactitud de entrenamiento y prueba según profundidad</title></svg></div></div></section>
+
+  <section class="dt-view" data-page="compare"><div class="dt-wide"><div class="card dt-hero"><h2>Comparador sincronizado</h2><p>Todos los paneles utilizan exactamente la misma partición de entrenamiento y prueba.</p><div class="dt-controls"><label for="dt-compare-step">Divisiones visibles: <b id="dt-compare-v">1</b></label><input id="dt-compare-step" class="form-range" type="range" min="1" max="12" value="1"></div></div><div id="dt-compare-grid" class="dt-grid4"></div></div></section>
+
+  <section class="dt-view" data-page="learn"><div class="dt-wide"><div class="card dt-hero"><h2>Conceptos y evaluación</h2><p>Un árbol aprende preguntas que reducen impureza; una hoja convierte el recorrido en una predicción.</p></div><div id="dt-concepts" class="dt-concepts"></div><div class="dt-quiz"><h2>Evaluación final</h2><div class="card dt-stat"><strong id="dt-score">0/12</strong><span>Resultado</span></div><div id="dt-quiz"></div><button id="dt-reset-quiz" class="btn">Repetir evaluación</button></div></div></section>
+
+  <div id="dt-intro" class="dt-modal"><div class="card dt-modalbox"><span class="viz-badge">Recorrido inicial</span><h2>Un árbol aprende haciendo preguntas</h2><p>Cada corte intenta dejar clases más puras a sus lados. El árbol conserva el corte que más reduce la impureza y repite el proceso en los nodos hijos.</p><div class="dt-steps"><div class="dt-step"><b>1. Medir</b><br>Calcula la mezcla del nodo.</div><div class="dt-step"><b>2. Comparar</b><br>Evalúa umbrales en X e Y.</div><div class="dt-step"><b>3. Dividir</b><br>Crea hijos y regiones.</div></div><div class="dt-row"><button id="dt-skip" class="btn">Omitir</button><button id="dt-start" class="btn btn-primary">Comenzar</button></div></div></div>
+  <div id="dt-toast" class="dt-toast" role="status"></div>
+
+  <script>
+  (()=>{
+    'use strict';
+    const root=document.getElementById('dtlab-root');
+    const $=s=>root.querySelector(s), $$=s=>Array.from(root.querySelectorAll(s));
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const fmt=(v,n=3)=>Number.isFinite(v)?v.toFixed(n):'—';
+    const COLORS=['#2563eb','#e11d48'];
+    let points=[],trainIds=new Set(),tree=null,events=[],step=0,timer=null,activeCandidate=0,drag=null,predictPoint={x:68,y:42},predictPath=[],predictStep=-1,seed=31;
+
+    const datasets={
+      vertical:['Separación vertical','¿Qué variable y umbral separan las clases en un solo corte?',()=>clouds([[28,52,0],[73,50,1]],15,28)],
+      horizontal:['Separación horizontal','¿Elegirá el árbol primero la variable Y?',()=>clouds([[50,27,0],[50,75,1]],15,28)],
+      levels:['Varios niveles','¿Por qué una sola pregunta no basta?',()=>clouds([[22,25,0],[28,74,1],[75,28,1],[72,73,0]],12,36)],
+      xor:['Patrón XOR','¿Cuántas regiones rectangulares necesita para representar XOR?',()=>clouds([[24,24,0],[26,75,1],[75,24,1],[75,75,0]],13,40)],
+      circles:['Círculos concéntricos','¿Cómo aproxima un árbol una frontera circular con cortes rectos?',()=>makeCircles(44)],
+      moons:['Dos lunas','¿Qué forma escalonada producen las divisiones del árbol?',()=>makeMoons(44)],
+      noise:['Datos con ruido','¿Qué ocurre si el árbol intenta memorizar cada excepción?',()=>{const p=clouds([[28,35,0],[70,65,1]],22,40);for(let i=0;i<7;i++)p[i].c=1-p[i].c;return p}],
+      imbalance:['Clases desbalanceadas','¿La exactitud por sí sola describe bien este modelo?',()=>{const p=clouds([[38,48,0]],28,34);return p.concat(clouds([[75,65,1]],13,8))}],
+      outliers:['Valores atípicos','¿Cuántas hojas pequeñas aparecen para aislar outliers?',()=>clouds([[27,35,0],[72,65,1]],18,36).concat(raw([[83,15,0],[12,84,1]]))],
+      admission:['Admisión ficticia','X: examen, Y: nota escolar. ¿Qué preguntas producen una decisión?',()=>clouds([[35,42,0],[72,68,1]],24,42)],
+      health:['Riesgo clínico ficticio','Datos simulados: X colesterol, Y presión. No representa diagnóstico.',()=>clouds([[30,34,0],[69,70,1]],25,42)],
+      iris:['Iris simplificado','X: longitud del pétalo, Y: anchura. ¿Aparece un corte casi puro?',()=>clouds([[25,28,0],[70,68,1]],16,36)]
+    };
+    function rng(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+    function raw(arr){return arr.map((p,i)=>({id:1000+i,x:p[0],y:p[1],c:p[2],label:'P'+(i+1)}))}
+    function clouds(spec,spread,total){const out=[];for(let i=0;i<total;i++){const s=spec[i%spec.length];out.push({id:i,x:clamp(s[0]+(rng()-.5)*spread*2,3,97),y:clamp(s[1]+(rng()-.5)*spread*2,3,97),c:s[2],label:'P'+(i+1)})}return out}
+    function makeCircles(n){const a=[];for(let i=0;i<n;i++){const c=i<n/2?0:1,r=c?28+rng()*15:8+rng()*13,t=rng()*Math.PI*2;a.push({id:i,x:50+Math.cos(t)*r,y:50+Math.sin(t)*r,c,label:'P'+(i+1)})}return a}
+    function makeMoons(n){const a=[];for(let i=0;i<n;i++){const c=i%2,t=rng()*Math.PI,x=c?55-31*Math.cos(t):43+31*Math.cos(t),y=c?48-23*Math.sin(t):48+23*Math.sin(t);a.push({id:i,x:clamp(x+(rng()-.5)*7,2,98),y:clamp(y+(rng()-.5)*7,2,98),c,label:'P'+(i+1)})}return a}
+
+    function impurity(items,criterion=$('#dt-criterion').value){if(!items.length)return 0;const p=items.filter(d=>d.c===1).length/items.length;if(criterion==='entropy'){const h=q=>q? -q*Math.log2(q):0;return h(p)+h(1-p)}if(criterion==='error')return 1-Math.max(p,1-p);return 1-p*p-(1-p)*(1-p)}
+    function candidates(items,criterion=$('#dt-criterion').value){const parent=impurity(items,criterion),out=[];['x','y'].forEach(feature=>{const vals=Array.from(new Set(items.map(d=>d[feature]))).sort((a,b)=>a-b);for(let i=0;i<vals.length-1;i++){const threshold=(vals[i]+vals[i+1])/2,L=items.filter(d=>d[feature]<=threshold),R=items.filter(d=>d[feature]>threshold);if(!L.length||!R.length)continue;const il=impurity(L,criterion),ir=impurity(R,criterion),weighted=(L.length*il+R.length*ir)/items.length;out.push({feature,threshold,L,R,il,ir,weighted,gain:parent-weighted})}});return out.sort((a,b)=>b.gain-a.gain)}
+    function majority(items){const n1=items.filter(d=>d.c===1).length;return n1>items.length/2?1:0}
+    function build(opts={}){const maxDepth=opts.maxDepth??+$('#dt-depth').value,minSplit=opts.minSplit??+$('#dt-minsplit').value,minGain=opts.minGain??+$('#dt-mingain').value,criterion=opts.criterion??$('#dt-criterion').value,subset=points.filter(p=>trainIds.has(p.id));let uid=0,ev=[];
+      function grow(items,depth,bounds){const node={id:'n'+uid++,depth,ids:items.map(d=>d.id),n:items.length,impurity:impurity(items,criterion),prediction:majority(items),bounds,leaf:true,reason:'',left:null,right:null};ev.push({type:'inspect',nodeId:node.id,message:`Evaluar nodo con ${items.length} muestras`});
+        if(!items.length){node.reason='Sin muestras';return node}if(node.impurity<1e-12){node.reason='Nodo puro';ev.push({type:'stop',nodeId:node.id,message:'El nodo ya es puro'});return node}if(depth>=maxDepth){node.reason='Profundidad máxima';ev.push({type:'stop',nodeId:node.id,message:'Se alcanzó la profundidad máxima'});return node}if(items.length<minSplit){node.reason='Muy pocas muestras';ev.push({type:'stop',nodeId:node.id,message:'No hay suficientes muestras para dividir'});return node}
+        const cand=candidates(items,criterion);node.candidates=cand.map(c=>({feature:c.feature,threshold:c.threshold,il:c.il,ir:c.ir,weighted:c.weighted,gain:c.gain,nL:c.L.length,nR:c.R.length}));if(!cand.length||cand[0].gain<minGain){node.reason='Ganancia insuficiente';ev.push({type:'stop',nodeId:node.id,message:'Ningún corte mejora lo suficiente'});return node}const best=cand[0];node.leaf=false;node.feature=best.feature;node.threshold=best.threshold;node.gain=best.gain;ev.push({type:'split',nodeId:node.id,feature:best.feature,threshold:best.threshold,gain:best.gain,message:`Mejor corte: ${best.feature.toUpperCase()} ≤ ${fmt(best.threshold,1)}`});const lb={...bounds},rb={...bounds};if(best.feature==='x'){lb.x1=best.threshold;rb.x0=best.threshold}else{lb.y1=best.threshold;rb.y0=best.threshold}node.left=grow(best.L,depth+1,lb);node.right=grow(best.R,depth+1,rb);return node}
+      const t=grow(subset,0,{x0:0,x1:100,y0:0,y1:100});return{tree:t,events:ev,criterion,maxDepth}}
+    function predict(t,p,path=[]){let n=t;if(!n)return{pred:0,path};while(n){path.push(n.id);if(n.leaf)return{pred:n.prediction,path,node:n};n=p[n.feature]<=n.threshold?n.left:n.right}return{pred:0,path}}
+    function nodes(t,out=[]){if(!t)return out;out.push(t);nodes(t.left,out);nodes(t.right,out);return out}
+    function visibleNodeIds(){if(!events.length)return new Set();const ids=new Set([tree.id]);events.slice(0,step).forEach(e=>ids.add(e.nodeId));let changed=true;while(changed){changed=false;nodes(tree).forEach(n=>{if(n.left&&ids.has(n.left.id)&&!ids.has(n.id)){ids.add(n.id);changed=true}if(n.right&&ids.has(n.right.id)&&!ids.has(n.id)){ids.add(n.id);changed=true}})}return ids}
+    function visibleTree(){const ids=visibleNodeIds();function copy(n){if(!n||!ids.has(n.id))return null;const c={...n};c.left=copy(n.left);c.right=copy(n.right);if(!c.left&&!c.right)c.leaf=true;return c}return copy(tree)}
+    function splitData(){const pct=+$('#dt-train').value/100;trainIds=new Set();points.forEach((p,i)=>{const hash=((p.id*2654435761)>>>0)%100; if(hash<pct*100)trainIds.add(p.id)});[0,1].forEach(c=>{if(!points.some(p=>p.c===c&&trainIds.has(p.id))){const p=points.find(p=>p.c===c);if(p)trainIds.add(p.id)}})}
+    function rebuild(keepSplit=false){stop();if(!keepSplit)splitData();const b=build();tree=b.tree;events=b.events;step=0;activeCandidate=0;predictPath=[];predictStep=-1;$('#dt-compare-step').max=Math.max(1,events.length);renderAll()}
+
+    function sizeCanvas(canvas){const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);const w=Math.max(300,Math.round(r.width)),h=Math.max(220,Math.round(r.height));if(canvas.width!==w*dpr||canvas.height!==h*dpr){canvas.width=w*dpr;canvas.height=h*dpr}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return{ctx,w,h}}
+    function drawPlot(canvas,t=visibleTree(),subset=points,interactive=true){const {ctx,w,h}=sizeCanvas(canvas),pad=34,W=w-2*pad,H=h-2*pad,sx=x=>pad+x/100*W,sy=y=>h-pad-y/100*H;ctx.clearRect(0,0,w,h);ctx.fillStyle=getCss('--card','#fff');ctx.fillRect(0,0,w,h);
+      if(t&&$('#dt-regions').checked){const cell=5;for(let px=pad;px<w-pad;px+=cell)for(let py=pad;py<h-pad;py+=cell){const x=(px-pad)/W*100,y=(h-pad-py)/H*100,pred=predict(t,{x,y},[]).pred;ctx.fillStyle=pred?'rgba(225,29,72,.10)':'rgba(37,99,235,.10)';ctx.fillRect(px,py,cell+.5,cell+.5)}}
+      ctx.strokeStyle=getCss('--border','#dbe3ef');ctx.lineWidth=1;for(let i=0;i<=10;i++){const x=pad+i*W/10,y=pad+i*H/10;ctx.beginPath();ctx.moveTo(x,pad);ctx.lineTo(x,h-pad);ctx.stroke();ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke()}
+      if(t&&$('#dt-boundaries').checked){nodes(t).filter(n=>!n.leaf).forEach(n=>{ctx.beginPath();ctx.strokeStyle='rgba(245,158,11,.85)';ctx.lineWidth=2;if(n.feature==='x'){ctx.moveTo(sx(n.threshold),sy(n.bounds.y0));ctx.lineTo(sx(n.threshold),sy(n.bounds.y1))}else{ctx.moveTo(sx(n.bounds.x0),sy(n.threshold));ctx.lineTo(sx(n.bounds.x1),sy(n.threshold))}ctx.stroke()})}
+      const ae=events[Math.max(0,step-1)],an=ae&&nodes(tree).find(n=>n.id===ae.nodeId);if(an&&an.candidates?.length){const c=an.candidates[clamp(activeCandidate,0,an.candidates.length-1)];if(c){ctx.setLineDash([7,5]);ctx.strokeStyle='rgba(124,58,237,.9)';ctx.lineWidth=3;ctx.beginPath();if(c.feature==='x'){ctx.moveTo(sx(c.threshold),sy(an.bounds.y0));ctx.lineTo(sx(c.threshold),sy(an.bounds.y1))}else{ctx.moveTo(sx(an.bounds.x0),sy(c.threshold));ctx.lineTo(sx(an.bounds.x1),sy(c.threshold))}ctx.stroke();ctx.setLineDash([])}}
+      subset.forEach(p=>{const x=sx(p.x),y=sy(p.y),train=trainIds.has(p.id);ctx.save();ctx.fillStyle=COLORS[p.c];ctx.strokeStyle=train?'#fff':COLORS[p.c];ctx.lineWidth=train?2:2.5;if(p.c===0){ctx.beginPath();ctx.arc(x,y,train?6:7,0,Math.PI*2);train?ctx.fill():null;ctx.stroke()}else{const s=train?10:12;train?ctx.fillRect(x-s/2,y-s/2,s,s):ctx.strokeRect(x-s/2,y-s/2,s,s)}if($('#dt-labels').checked){ctx.fillStyle=getCss('--foreground','#172033');ctx.font='11px system-ui';ctx.fillText(p.label,x+8,y-8)}ctx.restore()});
+      if(predictPath.length){ctx.beginPath();ctx.arc(sx(predictPoint.x),sy(predictPoint.y),9,0,Math.PI*2);ctx.fillStyle='#16a34a';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke()}
+      ctx.fillStyle=getCss('--muted-foreground','#64748b');ctx.font='11px system-ui';ctx.fillText('X',w-18,h-pad+4);ctx.fillText('Y',pad-4,16);return{sx,sy,pad,W,H}}
+    function getCss(name,fallback){return getComputedStyle(root).getPropertyValue(name).trim()||fallback}
+
+    function treeLayout(t,w,h){const ns=nodes(t),leaves=ns.filter(n=>!n.left&&!n.right),pos={},pad=28;leaves.forEach((n,i)=>pos[n.id]={x:pad+(i+.5)*(w-2*pad)/Math.max(1,leaves.length),y:35+n.depth*70});function place(n){if(pos[n.id])return pos[n.id];const l=n.left?place(n.left):null,r=n.right?place(n.right):null;pos[n.id]={x:l&&r?(l.x+r.x)/2:(l||r)?.x||w/2,y:35+n.depth*70};return pos[n.id]}place(t);return pos}
+    function renderTree(){const svg=$('#dt-tree'),w=svg.clientWidth||340,h=svg.clientHeight||275;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.innerHTML='<title>Árbol de decisión construido progresivamente</title>';const t=visibleTree();if(!t)return;const pos=treeLayout(t,w,h),ns=nodes(t);ns.forEach(n=>{['left','right'].forEach((side,idx)=>{const ch=n[side];if(!ch)return;const a=pos[n.id],b=pos[ch.id],line=document.createElementNS('http://www.w3.org/2000/svg','line');attrs(line,{x1:a.x,y1:a.y+18,x2:b.x,y2:b.y-18,stroke:getCss('--border','#cbd5e1'),'stroke-width':2});svg.append(line);const tx=document.createElementNS('http://www.w3.org/2000/svg','text');attrs(tx,{x:(a.x+b.x)/2+(idx?-7:7),y:(a.y+b.y)/2,'font-size':9,fill:getCss('--muted-foreground','#64748b')});tx.textContent=idx?'No':'Sí';svg.append(tx)})});ns.forEach(n=>{const p=pos[n.id],g=document.createElementNS('http://www.w3.org/2000/svg','g');g.style.cursor='pointer';g.dataset.node=n.id;const r=document.createElementNS('http://www.w3.org/2000/svg','rect');attrs(r,{x:p.x-42,y:p.y-18,width:84,height:36,rx:8,fill:n.leaf?(n.prediction?'rgba(225,29,72,.18)':'rgba(37,99,235,.18)'):getCss('--card','#fff'),stroke:n.id===events[Math.max(0,step-1)]?.nodeId?getCss('--primary','#2563eb'):getCss('--border','#cbd5e1'),'stroke-width':n.id===events[Math.max(0,step-1)]?.nodeId?3:1.5});g.append(r);const t1=document.createElementNS('http://www.w3.org/2000/svg','text');attrs(t1,{x:p.x,y:p.y-3,'text-anchor':'middle','font-size':10,fill:getCss('--foreground','#172033')});t1.textContent=n.leaf?`Hoja: ${n.prediction?'roja':'azul'}`:`${n.feature.toUpperCase()} ≤ ${fmt(n.threshold,1)}`;g.append(t1);const t2=document.createElementNS('http://www.w3.org/2000/svg','text');attrs(t2,{x:p.x,y:p.y+10,'text-anchor':'middle','font-size':8,fill:getCss('--muted-foreground','#64748b')});t2.textContent=`n=${n.n} · I=${fmt(n.impurity,2)}`;g.append(t2);g.addEventListener('click',()=>{const idx=events.findIndex(e=>e.nodeId===n.id);if(idx>=0){step=idx+1;activeCandidate=0;renderAll()}});svg.append(g)})}
+    function attrs(el,o){Object.entries(o).forEach(([k,v])=>el.setAttribute(k,String(v)))}
+    function currentNode(){const e=events[Math.max(0,step-1)];return e?nodes(tree).find(n=>n.id===e.nodeId):tree}
+    function renderCandidates(){const n=currentNode(),cs=n?.candidates||[];activeCandidate=clamp(activeCandidate,0,Math.max(0,cs.length-1));$('#dt-cand-pos').textContent=cs.length?`${activeCandidate+1}/${cs.length}`:'Sin candidatos';$('#dt-candidates').innerHTML=cs.slice(0,20).map((c,i)=>`<tr data-i="${i}" class="${i===0?'is-best':''}"><td>${c.feature.toUpperCase()}</td><td>${fmt(c.threshold,1)}</td><td>${c.nL}</td><td>${c.nR}</td><td>${fmt(c.weighted)}</td><td>${fmt(c.gain)}</td></tr>`).join('');$$('#dt-candidates tr').forEach(tr=>tr.addEventListener('mouseenter',()=>{activeCandidate=+tr.dataset.i;drawPlot($('#dt-plot'))}));renderExplain()}
+    function renderExplain(){const n=currentNode(),e=events[Math.max(0,step-1)];if(!n)return;$('#dt-explain-title').textContent=e?.message||'Nodo raíz';const n1=n.ids.map(id=>points.find(p=>p.id===id)).filter(Boolean).filter(p=>p.c===1).length,n0=n.n-n1,p0=n.n?n0/n.n:0,p1=n.n?n1/n.n:0;$('#dt-explain-text').textContent=`Nodo de profundidad ${n.depth}: ${n0} azules y ${n1} rojos. ${n.leaf&&n.reason?'Se detiene: '+n.reason+'.':'Se comparan cortes entre valores consecutivos.'}`;const crit=$('#dt-criterion').value;if(crit==='entropy')$('#dt-formula').textContent=`H = −(${fmt(p0,2)} log₂ ${fmt(p0,2)} + ${fmt(p1,2)} log₂ ${fmt(p1,2)}) = ${fmt(n.impurity)}`;else if(crit==='error')$('#dt-formula').textContent=`Error = 1 − max(${fmt(p0,2)}, ${fmt(p1,2)}) = ${fmt(n.impurity)}`;else $('#dt-formula').textContent=`Gini = 1 − ${fmt(p0,2)}² − ${fmt(p1,2)}² = ${fmt(n.impurity)}`}
+    function metrics(t,subset){if(!subset.length)return{acc:NaN,cm:[[0,0],[0,0]]};let ok=0,cm=[[0,0],[0,0]];subset.forEach(p=>{const y=predict(t,p,[]).pred;cm[p.c][y]++;if(y===p.c)ok++});return{acc:ok/subset.length,cm}}
+    function renderMetrics(){const vt=visibleTree(),tr=points.filter(p=>trainIds.has(p.id)),te=points.filter(p=>!trainIds.has(p.id)),a=metrics(vt,tr),b=metrics(vt,te),ns=nodes(vt);$('#dt-train-acc').textContent=Number.isFinite(a.acc)?Math.round(a.acc*100)+'%':'—';$('#dt-test-acc').textContent=Number.isFinite(b.acc)?Math.round(b.acc*100)+'%':'—';$('#dt-leaves').textContent=ns.filter(n=>n.leaf).length;$('#dt-tree-depth').textContent=Math.max(0,...ns.map(n=>n.depth));$('#dt-step-badge').textContent=`Paso ${step}/${events.length}`;$('#dt-node-badge').textContent=currentNode()?`Nodo ${currentNode().id} · n=${currentNode().n}`:'Sin nodo';$('#dt-first').disabled=$('#dt-prev').disabled=step===0;$('#dt-last').disabled=$('#dt-next').disabled=step>=events.length}
+    function renderAll(){drawPlot($('#dt-plot'));renderTree();renderMetrics();renderCandidates();renderPrediction()}
+    function setStep(v){step=clamp(v,0,events.length);activeCandidate=0;renderAll()}
+    function play(){if(timer){stop();return}$('#dt-play').textContent='Pausar';timer=setInterval(()=>{if(step>=events.length){stop();return}setStep(step+1)},Math.max(180,1800-+$('#dt-speed').value))}
+    function stop(){if(timer)clearInterval(timer);timer=null;if($('#dt-play'))$('#dt-play').textContent='Reproducir'}
+    function renderPrediction(){const box=$('#dt-predict-path');box.innerHTML=predictPath.map((id,i)=>`<span class="dt-pathnode ${i===predictStep?'is-active':''}">${id}</span>`).join('');if(predictPath.length&&predictStep>=0){const n=nodes(tree).find(n=>n.id===predictPath[predictStep]);if(n?.leaf)$('#dt-predict-msg').textContent=`Hoja alcanzada: predicción ${n.prediction?'roja':'azul'}.`;else if(n){const val=predictPoint[n.feature],yes=val<=n.threshold;$('#dt-predict-msg').textContent=`${n.feature.toUpperCase()}=${fmt(val,1)} ${yes?'≤':'>'} ${fmt(n.threshold,1)} → rama ${yes?'Sí':'No'}.`}}}
+    function startPrediction(){predictPoint={x:clamp(+$ ('#dt-px').value,0,100),y:clamp(+$ ('#dt-py').value,0,100)};predictPath=predict(tree,predictPoint,[]).path;predictStep=0;renderAll()}
+
+    function drawModelCanvas(canvas,t){drawPlot(canvas,t,points,false)}
+    function renderOverfit(){let depth=+$('#dt-over-depth').value;$('#dt-over-depth-v').textContent=depth;const shallow=build({maxDepth:2}).tree,deep=build({maxDepth:depth,minGain:0}).tree;drawModelCanvas($('#dt-shallow'),shallow);drawModelCanvas($('#dt-deep'),deep);const tr=points.filter(p=>trainIds.has(p.id)),te=points.filter(p=>!trainIds.has(p.id));const sm1=metrics(shallow,tr),sm2=metrics(shallow,te),dm1=metrics(deep,tr),dm2=metrics(deep,te);$('#dt-shallow-info').textContent=`Entrenamiento ${Math.round(sm1.acc*100)}% · Prueba ${Math.round(sm2.acc*100)}% · ${nodes(shallow).filter(n=>n.leaf).length} hojas`;$('#dt-deep-info').textContent=`Entrenamiento ${Math.round(dm1.acc*100)}% · Prueba ${Math.round(dm2.acc*100)}% · ${nodes(deep).filter(n=>n.leaf).length} hojas`;renderCurve()}
+    function renderCurve(){const svg=$('#dt-curve'),w=svg.clientWidth||900,h=svg.clientHeight||230,pad={l:42,r:20,t:20,b:30},tr=points.filter(p=>trainIds.has(p.id)),te=points.filter(p=>!trainIds.has(p.id)),vals=[];for(let d=1;d<=10;d++){const t=build({maxDepth:d,minGain:0}).tree;vals.push({d,tr:metrics(t,tr).acc,te:metrics(t,te).acc})}svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.innerHTML='<title>Exactitud según profundidad</title>';const x=d=>pad.l+(d-1)/9*(w-pad.l-pad.r),y=v=>h-pad.b-v*(h-pad.t-pad.b);for(let i=0;i<=4;i++){const yy=y(.5+i*.125),line=document.createElementNS('http://www.w3.org/2000/svg','line');attrs(line,{x1:pad.l,y1:yy,x2:w-pad.r,y2:yy,stroke:getCss('--border','#ddd')});svg.append(line)}[['tr','#2563eb','Entrenamiento'],['te','#e11d48','Prueba']].forEach(([key,color,label],si)=>{const path=document.createElementNS('http://www.w3.org/2000/svg','path');attrs(path,{d:vals.map((v,i)=>(i?'L':'M')+x(v.d)+','+y(v[key])).join(' '),fill:'none',stroke:color,'stroke-width':3});svg.append(path);vals.forEach(v=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');attrs(c,{cx:x(v.d),cy:y(v[key]),r:3,fill:color});svg.append(c)});const tx=document.createElementNS('http://www.w3.org/2000/svg','text');attrs(tx,{x:w-pad.r-5,y:pad.t+si*15,'text-anchor':'end','font-size':11,fill:getCss('--foreground','#222')});tx.textContent=label;svg.append(tx)});for(let d=1;d<=10;d++){const tx=document.createElementNS('http://www.w3.org/2000/svg','text');attrs(tx,{x:x(d),y:h-8,'text-anchor':'middle','font-size':10,fill:getCss('--muted-foreground','#777')});tx.textContent=d;svg.append(tx)}}
+    const compareConfigs=[['Gini','gini',5],['Entropía','entropy',5],['Profundidad 2','gini',2],['Sin poda','gini',10]];
+    function renderCompare(){const grid=$('#dt-compare-grid'),cut=+$('#dt-compare-step').value;$('#dt-compare-v').textContent=cut;if(!grid.children.length)grid.innerHTML=compareConfigs.map((c,i)=>`<article class="card dt-mini"><h3 class="dt-compare-title">${c[0]}</h3><canvas id="dt-mini-${i}" aria-label="Comparación ${c[0]}"></canvas><p id="dt-mini-info-${i}" class="dt-note"></p></article>`).join('');compareConfigs.forEach((c,i)=>{const built=build({criterion:c[1],maxDepth:c[2],minGain:0}),ids=new Set([built.tree.id]);built.events.slice(0,cut).forEach(e=>ids.add(e.nodeId));function cp(n){if(!n||!ids.has(n.id))return null;const z={...n,left:cp(n.left),right:cp(n.right)};if(!z.left&&!z.right)z.leaf=true;return z}const t=cp(built.tree),tr=points.filter(p=>trainIds.has(p.id)),te=points.filter(p=>!trainIds.has(p.id));drawModelCanvas($('#dt-mini-'+i),t);$('#dt-mini-info-'+i).textContent=`Entr. ${Math.round(metrics(t,tr).acc*100)}% · Prueba ${Math.round(metrics(t,te).acc*100)}% · ${nodes(t).filter(n=>n.leaf).length} hojas`})}
+
+    const concepts=[['Nodo raíz','Contiene todas las muestras de entrenamiento antes de la primera pregunta.'],['Nodo interno','Aplica una condición y dirige cada caso hacia uno de dos hijos.'],['Hoja','Produce la clase y su probabilidad estimada.'],['Impureza','Cuantifica cuánto se mezclan las clases en un nodo.'],['Ganancia','Reducción de impureza obtenida por un corte.'],['Profundidad','Número de preguntas desde la raíz hasta un nodo.'],['Poda','Reduce ramas para controlar complejidad y mejorar generalización.'],['Sobreajuste','El árbol memoriza detalles del entrenamiento que no se repiten.'],['Generalización','Capacidad de predecir correctamente casos nuevos.'],['Frontera','Con variables numéricas, el árbol forma regiones rectangulares.'],['Clasificación','Las hojas predicen categorías.'],['Regresión','Las hojas predicen valores, normalmente promedios.']];
+    const quiz=[
+      ['¿Qué busca maximizar un corte?',['Profundidad','Ganancia de impureza','Número de variables'],1,'El corte elegido produce la mayor reducción de impureza.'],
+      ['Un nodo puro tiene Gini…',['0','0.5','1'],0,'Si todos pertenecen a una clase, la impureza es cero.'],
+      ['La raíz contiene…',['Una sola clase siempre','Todas las muestras de entrenamiento','Solo los errores'],1,'El aprendizaje comienza con los datos de entrenamiento en la raíz.'],
+      ['¿Dónde se genera la predicción?',['En una hoja','En el eje X','En la matriz'],0,'El recorrido termina en una hoja.'],
+      ['Una profundidad muy alta puede causar…',['Normalización','Sobreajuste','Más datos'],1,'Un árbol muy complejo puede memorizar ruido.'],
+      ['La poda busca…',['Aumentar ramas','Reducir complejidad','Eliminar clases'],1,'La poda simplifica el árbol.'],
+      ['Gini para proporciones 0.5 y 0.5 es…',['0','0.5','1'],1,'1−0.5²−0.5²=0.5.'],
+      ['El conjunto de prueba debe…',['Entrenar el árbol','Evaluar generalización','Definir los cortes'],1,'No se utiliza para elegir las divisiones.'],
+      ['Un corte X≤40 produce una frontera…',['Vertical','Horizontal','Circular'],0,'El umbral de X aparece como línea vertical.'],
+      ['La entropía de un nodo puro es…',['0','1','Infinita'],0,'No existe incertidumbre de clase.'],
+      ['En regresión, una hoja suele predecir…',['Una clase','La media regional','Un color'],1,'Los árboles de regresión producen valores numéricos.'],
+      ['Mayor exactitud de entrenamiento garantiza mejor prueba…',['Verdadero','Falso'],1,'Una mejora en entrenamiento puede ser sobreajuste.']
+    ];
+    function renderQuiz(){let answered=0,correct=0;$('#dt-score').textContent='0/12';$('#dt-quiz').innerHTML=quiz.map((q,i)=>`<article class="card dt-q" data-q="${i}"><b>${i+1}. ${q[0]}</b>${q[1].map((o,j)=>`<button class="btn dt-option" data-o="${j}">${o}</button>`).join('')}<div class="dt-feedback">${q[3]}</div></article>`).join('');$$('.dt-q').forEach(card=>card.querySelectorAll('.dt-option').forEach(btn=>btn.addEventListener('click',()=>{if(card.dataset.done)return;card.dataset.done='1';answered++;const q=quiz[+card.dataset.q],ok=+btn.dataset.o===q[2];if(ok){correct++;btn.classList.add('is-correct')}else{btn.classList.add('is-wrong');card.querySelectorAll('.dt-option')[q[2]].classList.add('is-correct')}card.querySelector('.dt-feedback').classList.add('is-show');$('#dt-score').textContent=`${correct}/12${answered===12?(correct>=10?' · Dominio sólido':correct>=7?' · Buen avance':' · Revisa impureza y poda'):''}`})))}
+    function toast(msg){const t=$('#dt-toast');t.textContent=msg;t.classList.add('is-show');setTimeout(()=>t.classList.remove('is-show'),1700)}
+    function loadDataset(key){seed=31;points=datasets[key][2]();points.forEach((p,i)=>{p.id=i;p.label='P'+(i+1)});$('#dt-question').textContent=datasets[key][1];rebuild()}
+    function bind(){Object.entries(datasets).forEach(([k,v])=>$('#dt-dataset').add(new Option(v[0],k)));$$('.dt-tab').forEach(b=>b.addEventListener('click',()=>{$$('.dt-tab').forEach(x=>x.setAttribute('aria-selected','false'));$$('.dt-view').forEach(x=>x.classList.remove('is-active'));b.setAttribute('aria-selected','true');$(`[data-page="${b.dataset.view}"]`).classList.add('is-active');requestAnimationFrame(()=>{if(b.dataset.view==='overfit')renderOverfit();if(b.dataset.view==='compare')renderCompare();if(b.dataset.view==='lab')renderAll()})}));$('#dt-start').onclick=$('#dt-skip').onclick=()=>$('#dt-intro').hidden=true;$('#dt-next').onclick=()=>setStep(step+1);$('#dt-prev').onclick=()=>setStep(step-1);$('#dt-first').onclick=()=>setStep(0);$('#dt-last').onclick=()=>setStep(events.length);$('#dt-play').onclick=play;$('#dt-rebuild').onclick=()=>rebuild(true);['criterion','depth','minsplit','mingain'].forEach(id=>$('#dt-'+id).addEventListener('input',()=>{$('#dt-'+id+'-v').textContent=$('#dt-'+id).value;rebuild(true)}));$('#dt-train').oninput=()=>{$('#dt-train-v').textContent=$('#dt-train').value+'%';rebuild()};['regions','boundaries','labels'].forEach(id=>$('#dt-'+id).onchange=renderAll);$('#dt-dataset').onchange=e=>loadDataset(e.target.value);$('#dt-new').onclick=()=>{seed=(Date.now()>>>0);loadDataset($('#dt-dataset').value)};$('#dt-clear').onclick=()=>{points=[];rebuild()};$('#dt-cand-prev').onclick=()=>{activeCandidate=Math.max(0,activeCandidate-1);renderAll()};$('#dt-cand-next').onclick=()=>{const n=currentNode();activeCandidate=Math.min((n?.candidates?.length||1)-1,activeCandidate+1);renderAll()};$('#dt-predict-btn').onclick=startPrediction;$('#dt-predict-next').onclick=()=>{if(!predictPath.length)startPrediction();else{predictStep=Math.min(predictPath.length-1,predictStep+1);renderAll()}};
+      $('#dt-over-depth').oninput=e=>{e.stopPropagation();renderOverfit()};$('#dt-prune').onclick=()=>{$('#dt-over-depth').value=Math.max(2,+$('#dt-over-depth').value-1);renderOverfit()};$('#dt-unprune').onclick=()=>{$('#dt-over-depth').value=Math.min(10,+$('#dt-over-depth').value+1);renderOverfit()};$('#dt-compare-step').oninput=renderCompare;$('#dt-reset-quiz').onclick=renderQuiz;
+      $('#dt-import').onclick=()=>{const rows=$('#dt-csv').value.trim().split(/\n+/).map(r=>r.split(',').map(x=>x.trim())).filter(r=>r.length>=4&&isFinite(r[1])&&isFinite(r[2])&&[0,1].includes(+r[3]));if(rows.length<4){toast('Incluye al menos cuatro filas válidas');return}points=rows.map((r,i)=>({id:i,label:r[0]||'P'+(i+1),x:clamp(+r[1],0,100),y:clamp(+r[2],0,100),c:+r[3]}));rebuild();toast('Datos importados')};$('#dt-export').onclick=()=>{const csv='etiqueta,x,y,clase,particion\n'+points.map(p=>`${p.label},${fmt(p.x)},${fmt(p.y)},${p.c},${trainIds.has(p.id)?'entrenamiento':'prueba'}`).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='datos_arbol_decision.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+      const canvas=$('#dt-plot');canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left-34)/(r.width-68)*100,y=100-(e.clientY-r.top-34)/(r.height-68)*100;if(e.altKey){predictPoint={x:clamp(x,0,100),y:clamp(y,0,100)};$('#dt-px').value=fmt(predictPoint.x,1);$('#dt-py').value=fmt(predictPoint.y,1);startPrediction();return}let nearest=null,nd=Infinity;points.forEach(p=>{const d=Math.hypot(p.x-x,p.y-y);if(d<nd){nd=d;nearest=p}});if(nearest&&nd<4){drag={p:nearest};canvas.setPointerCapture(e.pointerId)}else if(x>=0&&x<=100&&y>=0&&y<=100){points.push({id:points.length?Math.max(...points.map(p=>p.id))+1:0,label:'P'+(points.length+1),x,y,c:+$('#dt-class').value});rebuild()}});canvas.addEventListener('pointermove',e=>{if(!drag)return;const r=canvas.getBoundingClientRect();drag.p.x=clamp((e.clientX-r.left-34)/(r.width-68)*100,0,100);drag.p.y=clamp(100-(e.clientY-r.top-34)/(r.height-68)*100,0,100);drawPlot(canvas)});canvas.addEventListener('pointerup',()=>{if(drag){drag=null;rebuild()}});canvas.addEventListener('contextmenu',e=>{e.preventDefault();const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left-34)/(r.width-68)*100,y=100-(e.clientY-r.top-34)/(r.height-68)*100;let q=null,d=Infinity;points.forEach(p=>{const z=Math.hypot(p.x-x,p.y-y);if(z<d){d=z;q=p}});if(q&&d<5){points=points.filter(p=>p!==q);rebuild()}});canvas.addEventListener('dblclick',e=>{e.preventDefault();const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left-34)/(r.width-68)*100,y=100-(e.clientY-r.top-34)/(r.height-68)*100;let q=null,d=Infinity;points.forEach(p=>{const z=Math.hypot(p.x-x,p.y-y);if(z<d){d=z;q=p}});if(q&&d<5){q.c=1-q.c;rebuild()}});window.addEventListener('resize',()=>{if($('[data-page="lab"]').classList.contains('is-active'))renderAll();if($('[data-page="overfit"]').classList.contains('is-active'))renderOverfit();if($('[data-page="compare"]').classList.contains('is-active'))renderCompare()})}
+    function init(){bind();$('#dt-concepts').innerHTML=concepts.map(c=>`<article class="card dt-concept"><h3>${c[0]}</h3><p>${c[1]}</p></article>`).join('');renderQuiz();loadDataset('levels')}
+    init();
+  })();
+  </script>
+</div>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>
