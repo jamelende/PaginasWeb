@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Huggy RL Lab — Reinforcement Learning</title>
+<style>
+:root{
+  --ink:#132238;--muted:#607086;--paper:#f6f8fb;--card:#fff;--line:#dbe3ec;
+  --blue:#3157d5;--blue2:#7790ed;--green:#15a477;--amber:#f3a72f;--red:#dc5b60;
+  --shadow:0 12px 36px rgba(25,42,75,.10)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.topbar{height:64px;padding:0 clamp(16px,3vw,42px);display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:12px;font-weight:850;font-size:18px;letter-spacing:-.02em}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#ffd377,#ec9c3b);display:grid;place-items:center;box-shadow:inset 0 -3px 0 #d9872d;font-size:23px}
+.top-actions{display:flex;gap:8px;align-items:center}
+.pill{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px}
+.layout{max-width:1500px;margin:auto;padding:18px;display:grid;grid-template-columns:280px minmax(440px,1fr) 320px;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.panel{padding:16px}
+.panel h2,.panel h3{margin:0 0 12px;letter-spacing:-.02em}
+.panel h2{font-size:17px}.panel h3{font-size:14px}
+.sub{color:var(--muted);font-size:12px}
+.control{margin:13px 0}
+.labelrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px;font-weight:750}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btn{border:0;border-radius:11px;padding:10px 12px;font-weight:800;background:#edf1f7;color:var(--ink);transition:.18s}
+.btn:hover{transform:translateY(-1px);filter:brightness(.98)}
+.btn.primary{background:var(--blue);color:#fff}.btn.success{background:var(--green);color:#fff}.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.divider{height:1px;background:var(--line);margin:15px 0}
+.reward-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px dashed #e4e9ef;font-size:12px}
+.reward-row:last-child{border:0}.tag{font-weight:850;border-radius:7px;padding:2px 7px;background:#eef2f7}
+.tag.pos{color:#087b58;background:#e3f6ef}.tag.neg{color:#b34549;background:#fdebed}
+.center{min-width:0}
+.sim-card{overflow:hidden}
+.sim-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.sim-title{font-weight:850}.status{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+#world{width:100%;height:auto;display:block;background:#dfeec9;touch-action:none}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
+.metric{padding:12px 13px}.metric .k{font-size:11px;color:var(--muted);font-weight:700}.metric .v{font-size:22px;line-height:1.2;font-weight:900;letter-spacing:-.04em;margin-top:3px}.metric .trend{font-size:10px;color:var(--green)}
+.chart-card{margin-top:12px;padding:14px}
+.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.chart-head strong{font-size:13px}
+#chart{width:100%;height:145px;display:block}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:800}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.explain{background:linear-gradient(135deg,#eef1ff,#f5f7ff);border:1px solid #d9dfff;border-radius:14px;padding:13px;margin-bottom:12px}
+.explain .step{color:var(--blue);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.explain p{margin:5px 0 0;font-size:12px}
+.formula{background:#15243a;color:#eaf0ff;border-radius:12px;padding:12px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;overflow:auto;margin-bottom:12px}
+.qtable{width:100%;border-collapse:collapse;font-size:11px}
+.qtable th,.qtable td{border-bottom:1px solid var(--line);padding:7px 4px;text-align:center}
+.qtable th:first-child,.qtable td:first-child{text-align:left}
+.best{color:var(--green);font-weight:900;background:#e9f8f2}
+.accordion{margin-top:12px}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;padding:0 11px}
+summary{cursor:pointer;font-weight:800;padding:10px 0;font-size:12px}
+details p,details ul{font-size:11px;color:var(--muted);margin:0 0 11px;padding-left:16px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,20px);background:#172438;color:#fff;border-radius:12px;padding:10px 16px;font-weight:750;opacity:0;pointer-events:none;transition:.25s;z-index:8}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.kbd{display:inline-block;border:1px solid #bbc5d1;border-bottom-width:2px;border-radius:5px;padding:1px 5px;background:#fff;color:#4c5c70;font-size:10px}
+@media(max-width:1100px){.layout{grid-template-columns:250px 1fr}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.right>.card{height:fit-content}}
+@media(max-width:760px){.topbar{height:auto;padding:10px 13px}.top-actions .hide-sm{display:none}.layout{grid-template-columns:1fr;padding:10px}.left{order:2}.center{order:1}.right{order:3;display:block}.metrics{grid-template-columns:1fr 1fr}.brand{font-size:15px}.sim-head{align-items:flex-start;gap:10px}.status{flex-direction:column;align-items:flex-end}.panel{padding:13px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">🐶</span><span>Huggy RL Lab</span></div>
+  <div class="top-actions">
+    <span class="pill hide-sm"><span class="dot"></span><span data-i="offline">100% offline</span></span>
+    <button class="pill" id="langBtn" aria-label="Change language">ES</button>
+    <button class="pill" id="helpBtn">?</button>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="left">
+    <section class="card panel">
+      <h2 data-i="training">Training controls</h2>
+      <p class="sub" data-i="trainingSub">Train Huggy to reach the stick using Q-learning.</p>
+      <div class="control">
+        <div class="labelrow"><span data-i="speed">Animation speed</span><span id="speedOut">8×</span></div>
+        <input id="speed" type="range" min="1" max="30" value="8">
+      </div>
+      <div class="control">
+        <div class="labelrow"><span>α · <span data-i="learningRate">learning rate</span></span><span id="alphaOut">0.20</span></div>
+        <input id="alpha" type="range" min="1" max="100" value="20">
+      </div>
+      <div class="control">
+        <div class="labelrow"><span>γ · <span data-i="discount">discount factor</span></span><span id="gammaOut">0.95</span></div>
+        <input id="gamma" type="range" min="0" max="100" value="95">
+      </div>
+      <div class="control">
+        <div class="labelrow"><span>ε · <span data-i="exploration">exploration</span></span><span id="epsilonOut">1.00</span></div>
+        <input id="epsilon" type="range" min="0" max="100" value="100">
+      </div>
+      <div class="seg">
+        <button class="btn primary" id="oneBtn" data-i="oneEpisode">1 episode</button>
+        <button class="btn primary" id="hundredBtn">+100</button>
+        <button class="btn success" id="autoBtn" data-i="autoTrain">Auto train</button>
+        <button class="btn" id="testBtn" data-i="testPolicy">Test policy</button>
+      </div>
+      <div class="divider"></div>
+      <div class="seg">
+        <button class="btn" id="policyBtn" data-i="showPolicy">Show policy</button>
+        <button class="btn danger" id="resetBtn" data-i="reset">Reset</button>
+      </div>
+      <p class="sub" style="margin:12px 0 0" data-i="tip">Tip: click any empty cell to move the stick. Use arrow keys to control Huggy manually.</p>
+    </section>
+    <section class="card panel" style="margin-top:12px">
+      <h3 data-i="rewardSystem">Reward system</h3>
+      <div class="reward-row"><span>🦴 <span data-i="reach">Reach the stick</span></span><span class="tag pos">+1.00</span></div>
+      <div class="reward-row"><span>📍 <span data-i="closer">Move one cell closer</span></span><span class="tag pos">+0.04</span></div>
+      <div class="reward-row"><span>👣 <span data-i="eachStep">Each step</span></span><span class="tag neg">−0.01</span></div>
+      <div class="reward-row"><span>🧱 <span data-i="wall">Hit wall / rock</span></span><span class="tag neg">−0.15</span></div>
+      <div class="reward-row"><span>⏱️ <span data-i="timeout">Timeout</span></span><span class="tag neg">−0.30</span></div>
+    </section>
+  </aside>
+
+  <section class="center">
+    <div class="card sim-card">
+      <div class="sim-head">
+        <div><div class="sim-title" data-i="environment">Training environment</div><div class="sub" id="modeText">Exploration: Huggy sometimes tries random actions.</div></div>
+        <div class="status"><span id="episodeStatus">Episode ready</span><span class="pill" id="rewardBadge">R = 0.00</span></div>
+      </div>
+      <canvas id="world" width="960" height="560" aria-label="Interactive reinforcement learning environment"></canvas>
+      <div class="legend">
+        <span><i style="background:#e9bf5a"></i><span data-i="agent">Agent: Huggy</span></span>
+        <span><i style="background:#3157d5"></i><span data-i="goal">Goal: stick</span></span>
+        <span><i style="background:#89959f"></i><span data-i="obstacle">Obstacle</span></span>
+        <span><span class="kbd">↑</span> <span class="kbd">↓</span> <span class="kbd">←</span> <span class="kbd">→</span> <span data-i="manual">manual control</span></span>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="card metric"><div class="k" data-i="episodes">Episodes</div><div class="v" id="episodesVal">0</div><div class="trend" data-i="experience">experience</div></div>
+      <div class="card metric"><div class="k" data-i="successRate">Success rate</div><div class="v" id="successVal">0%</div><div class="trend" id="successTrend">last 100</div></div>
+      <div class="card metric"><div class="k" data-i="averageReward">Average reward</div><div class="v" id="avgVal">0.00</div><div class="trend" data-i="last100">last 100</div></div>
+      <div class="card metric"><div class="k" data-i="steps">Steps</div><div class="v" id="stepsVal">0</div><div class="trend" data-i="currentEpisode">current episode</div></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head"><strong data-i="learningCurve">Learning curve</strong><span class="sub"><span style="color:#3157d5">●</span> <span data-i="movingReward">moving reward</span> &nbsp; <span style="color:#15a477">●</span> <span data-i="successLine">success %</span></span></div>
+      <canvas id="chart" width="900" height="180"></canvas>
+    </div>
+  </section>
+
+  <aside class="right">
+    <section class="card panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="learn" data-i="learn">Learn</button>
+        <button class="tab" data-tab="inspect" data-i="inspect">Inspect Q</button>
+      </div>
+      <div id="learnPane">
+        <div class="explain">
+          <div class="step" id="phaseLabel">1 · Observe</div>
+          <p id="phaseText">Huggy observes the relative position of the stick and the nearby obstacles.</p>
+        </div>
+        <h3 data-i="qUpdate">Q-learning update</h3>
+        <div class="formula">Q(s,a) ← Q(s,a) + α[r + γ max Q(s′,a′) − Q(s,a)]</div>
+        <p class="sub" data-i="formulaExplain">The value of an action improves when it leads to immediate reward or to a promising future state.</p>
+        <div class="accordion">
+          <details open><summary data-i="howWorks">How does the agent learn?</summary><p data-i="howWorksText">It alternates exploration (random actions) and exploitation (the best-known action). Epsilon slowly decreases as experience grows.</p></details>
+          <details><summary data-i="courseLink">Connection to the Hugging Face course</summary><p data-i="courseText">The original Huggy activity uses Unity ML-Agents and PPO. This browser lab keeps the same agent–environment–reward idea, but uses transparent tabular Q-learning so every update can be inspected.</p></details>
+          <details><summary data-i="challenge">Suggested challenge</summary><p data-i="challengeText">Train 500 episodes. Then set exploration to zero, move the stick by clicking the field, and test whether Huggy follows the learned policy.</p></details>
+        </div>
+      </div>
+      <div id="inspectPane" hidden>
+        <p class="sub" data-i="inspectHelp">Click a cell in the field to inspect the values for the corresponding relative goal position.</p>
+        <table class="qtable">
+          <thead><tr><th data-i="action">Action</th><th>Q(s,a)</th><th data-i="choice">Choice</th></tr></thead>
+          <tbody id="qBody"></tbody>
+        </table>
+        <div class="divider"></div>
+        <div class="labelrow"><span data-i="selectedState">Selected state</span><span id="stateLabel">Δx = 0, Δy = 0</span></div>
+        <p class="sub" id="stateMeaning">The stick is in the same cell as Huggy.</p>
+      </div>
+    </section>
+  </aside>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{
+"use strict";
+const COLS=12,ROWS=7,MAX_STEPS=55,ACTIONS=[[0,-1],[1,0],[0,1],[-1,0]],NAMES=["↑ North","→ East","↓ South","← West"];
+const canvas=document.querySelector("#world"),ctx=canvas.getContext("2d"),chart=document.querySelector("#chart"),cctx=chart.getContext("2d");
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const obstacles=new Set(["3,1","3,2","3,3","7,3","8,3","9,3","6,5"]);
+let q=new Map(),dog={x:1,y:5},goal={x:10,y:1},steps=0,totalReward=0,episodes=0,rewards=[],wins=[],running=false,timer=null,showPolicy=false,testing=false,selected={x:dog.x,y:dog.y},lang="en";
+let alpha=.2,gamma=.95,epsilon=1,speed=8;
+const tr={
+en:{offline:"100% offline",training:"Training controls",trainingSub:"Train Huggy to reach the stick using Q-learning.",speed:"Animation speed",learningRate:"learning rate",discount:"discount factor",exploration:"exploration",oneEpisode:"1 episode",autoTrain:"Auto train",stop:"Stop",testPolicy:"Test policy",showPolicy:"Show policy",hidePolicy:"Hide policy",reset:"Reset",tip:"Tip: click any empty cell to move the stick. Use arrow keys to control Huggy manually.",rewardSystem:"Reward system",reach:"Reach the stick",closer:"Move one cell closer",eachStep:"Each step",wall:"Hit wall / rock",timeout:"Timeout",environment:"Training environment",agent:"Agent: Huggy",goal:"Goal: stick",obstacle:"Obstacle",manual:"manual control",episodes:"Episodes",experience:"experience",successRate:"Success rate",averageReward:"Average reward",last100:"last 100",steps:"Steps",currentEpisode:"current episode",learningCurve:"Learning curve",movingReward:"moving reward",successLine:"success %",learn:"Learn",inspect:"Inspect Q",qUpdate:"Q-learning update",formulaExplain:"The value of an action improves when it leads to immediate reward or to a promising future state.",howWorks:"How does the agent learn?",howWorksText:"It alternates exploration (random actions) and exploitation (the best-known action). Epsilon slowly decreases as experience grows.",courseLink:"Connection to the Hugging Face course",courseText:"The original Huggy activity uses Unity ML-Agents and PPO. This browser lab keeps the same agent–environment–reward idea, but uses transparent tabular Q-learning so every update can be inspected.",challenge:"Suggested challenge",challengeText:"Train 500 episodes. Then set exploration to zero, move the stick by clicking the field, and test whether Huggy follows the learned policy.",inspectHelp:"Click a cell in the field to inspect the values for the corresponding relative goal position.",action:"Action",choice:"Choice",selectedState:"Selected state",best:"best",explore:"Exploration: Huggy sometimes tries random actions.",exploit:"Exploitation: Huggy uses the best action it knows.",ready:"Episode ready",trainingNow:"Training…",testingNow:"Testing learned policy…",goalFound:"Goal reached! +1 reward",timedOut:"Episode ended: timeout",resetDone:"Training reset",help:"Train with +100 or Auto train. Blue arrows show the best learned action. Click the field to reposition the stick.",observe:"Observe",observeText:"Huggy observes where the stick is relative to its own position.",act:"Act",actText:"An action is chosen: explore randomly or exploit the highest Q-value.",reward:"Reward",rewardText:"The environment returns a reward and the next state.",update:"Update",updateText:"The Q-value is updated using the temporal-difference error.",same:"The stick is in the same cell as Huggy.",relative:"The stick is {h} and {v} from Huggy.",east:"east",west:"west",north:"north",south:"south",aligned:"aligned"},
+es:{offline:"100% autónoma",training:"Controles de entrenamiento",trainingSub:"Entrena a Huggy para llegar al palo usando Q-learning.",speed:"Velocidad de animación",learningRate:"tasa de aprendizaje",discount:"factor de descuento",exploration:"exploración",oneEpisode:"1 episodio",autoTrain:"Entrenar automático",stop:"Detener",testPolicy:"Probar política",showPolicy:"Mostrar política",hidePolicy:"Ocultar política",reset:"Reiniciar",tip:"Consejo: haz clic en una celda vacía para mover el palo. Usa las flechas para controlar a Huggy.",rewardSystem:"Sistema de recompensas",reach:"Alcanzar el palo",closer:"Acercarse una celda",eachStep:"Cada paso",wall:"Chocar con muro / roca",timeout:"Tiempo agotado",environment:"Entorno de entrenamiento",agent:"Agente: Huggy",goal:"Objetivo: palo",obstacle:"Obstáculo",manual:"control manual",episodes:"Episodios",experience:"experiencia",successRate:"Tasa de éxito",averageReward:"Recompensa promedio",last100:"últimos 100",steps:"Pasos",currentEpisode:"episodio actual",learningCurve:"Curva de aprendizaje",movingReward:"recompensa móvil",successLine:"éxito %",learn:"Aprender",inspect:"Inspeccionar Q",qUpdate:"Actualización Q-learning",formulaExplain:"El valor de una acción mejora cuando produce una recompensa inmediata o conduce a un estado futuro prometedor.",howWorks:"¿Cómo aprende el agente?",howWorksText:"Alterna exploración (acciones aleatorias) y explotación (la mejor acción conocida). Épsilon disminuye lentamente con la experiencia.",courseLink:"Relación con el curso de Hugging Face",courseText:"La actividad original de Huggy utiliza Unity ML-Agents y PPO. Este laboratorio conserva la idea agente–entorno–recompensa, pero usa Q-learning tabular para que puedas inspeccionar cada actualización.",challenge:"Reto sugerido",challengeText:"Entrena 500 episodios. Luego lleva la exploración a cero, mueve el palo haciendo clic y prueba si Huggy sigue la política aprendida.",inspectHelp:"Haz clic en una celda del campo para inspeccionar los valores de la posición relativa del objetivo.",action:"Acción",choice:"Elección",selectedState:"Estado seleccionado",best:"mejor",explore:"Exploración: Huggy algunas veces prueba acciones aleatorias.",exploit:"Explotación: Huggy usa la mejor acción que conoce.",ready:"Episodio listo",trainingNow:"Entrenando…",testingNow:"Probando la política aprendida…",goalFound:"¡Objetivo alcanzado! Recompensa +1",timedOut:"Episodio terminado: tiempo agotado",resetDone:"Entrenamiento reiniciado",help:"Entrena con +100 o Entrenamiento automático. Las flechas azules muestran la mejor acción aprendida. Haz clic en el campo para mover el palo.",observe:"Observar",observeText:"Huggy observa dónde está el palo con respecto a su posición.",act:"Actuar",actText:"Elige una acción: explorar al azar o explotar el mayor valor Q.",reward:"Recompensa",rewardText:"El entorno devuelve una recompensa y el siguiente estado.",update:"Actualizar",updateText:"El valor Q se actualiza con el error de diferencia temporal.",same:"El palo está en la misma celda que Huggy.",relative:"El palo está al {h} y al {v} de Huggy.",east:"este",west:"oeste",north:"norte",south:"sur",aligned:"alineado"}};
+const T=k=>tr[lang][k]||k;
+function stateKey(px=dog.x,py=dog.y,gx=goal.x,gy=goal.y){
+  const blocked=(x,y)=>x<0||x>=COLS||y<0||y>=ROWS||obstacles.has(`${x},${y}`)?1:0;
+  return `${gx-px},${gy-py}|${blocked(px,py-1)}${blocked(px+1,py)}${blocked(px,py+1)}${blocked(px-1,py)}`
+}
+function qs(k){if(!q.has(k))q.set(k,[0,0,0,0]);return q.get(k)}
+function bestAction(k){const a=qs(k),m=Math.max(...a),ids=a.map((v,i)=>v===m?i:-1).filter(i=>i>=0);return ids[Math.floor(Math.random()*ids.length)]}
+function randomEmpty(excludeDog=false){let p;do{p={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)}}while(obstacles.has(`${p.x},${p.y}`)||(excludeDog&&p.x===dog.x&&p.y===dog.y));return p}
+function resetEpisode(randomize=true,render=true){steps=0;totalReward=0;if(randomize){dog=randomEmpty();goal=randomEmpty(true)}else dog={x:1,y:5};if(render){updateUI();draw()}}
+function chooseAction(){return !testing&&Math.random()<epsilon?Math.floor(Math.random()*4):bestAction(stateKey())}
+function phase(n){const data=[[T("observe"),T("observeText")],[T("act"),T("actText")],[T("reward"),T("rewardText")],[T("update"),T("updateText")]][n];$("#phaseLabel").textContent=`${n+1} · ${data[0]}`;$("#phaseText").textContent=data[1]}
+function envStep(action,learn=true,render=true){
+  phase(1);const oldKey=stateKey(),oldDistance=Math.abs(goal.x-dog.x)+Math.abs(goal.y-dog.y),[dx,dy]=ACTIONS[action];let nx=dog.x+dx,ny=dog.y+dy,reward=-.01,done=false,win=false;
+  if(nx<0||nx>=COLS||ny<0||ny>=ROWS||obstacles.has(`${nx},${ny}`)){nx=dog.x;ny=dog.y;reward=-.15}
+  else reward+=(oldDistance-(Math.abs(goal.x-nx)+Math.abs(goal.y-ny)))*.04;
+  dog={x:nx,y:ny};steps++;
+  if(dog.x===goal.x&&dog.y===goal.y){reward=1;done=true;win=true}
+  else if(steps>=MAX_STEPS){reward=-.3;done=true}
+  totalReward+=reward;phase(2);
+  if(learn){const arr=qs(oldKey),future=done?0:Math.max(...qs(stateKey()));arr[action]+=alpha*(reward+gamma*future-arr[action]);phase(3)}
+  if(render){updateUI();draw();inspect(selected.x,selected.y)}
+  return {done,win,reward}
+}
+function finish(win,silent=false){
+  episodes++;rewards.push(totalReward);wins.push(win?1:0);if(rewards.length>500)rewards.shift(),wins.shift();
+  if(!testing)epsilon=Math.max(.02,epsilon*.992);$("#epsilon").value=Math.round(epsilon*100);
+  if(!silent){toast(win?T("goalFound"):T("timedOut"));updateUI();drawChart();phase(0)}
+}
+async function animateEpisode(test=false){
+  if(running)return;running=true;testing=test;toggleButtons();
+  resetEpisode(true);$("#episodeStatus").textContent=test?T("testingNow"):T("trainingNow");
+  while(running){phase(0);await delay(Math.max(18,270-speed*8));if(!running)break;const r=envStep(chooseAction(),!test);if(r.done){finish(r.win);break}}
+  running=false;testing=false;toggleButtons();$("#episodeStatus").textContent=T("ready")
+}
+function fastEpisodes(n){
+  if(running)return;for(let e=0;e<n;e++){resetEpisode(true,false);let result;while(!(result=envStep(chooseAction(),true,false)).done){}finish(result.win,true)}
+  resetEpisode(true);phase(0);updateUI();draw();drawChart()
+}
+function autoTrain(){
+  if(running){running=false;clearTimeout(timer);toggleButtons();return}
+  running=true;testing=false;toggleButtons();let left=1000;
+  const batch=()=>{if(!running||left<=0){running=false;toggleButtons();$("#episodeStatus").textContent=T("ready");return}
+    const n=Math.min(speed*2,left);for(let i=0;i<n;i++){resetEpisode(true,false);let result;while(!(result=envStep(chooseAction(),true,false)).done){}finish(result.win,true)}left-=n;
+    resetEpisode(true);$("#episodeStatus").textContent=`${T("trainingNow")} ${1000-left}/1000`;updateUI();draw();drawChart();timer=setTimeout(batch,18)
+  };batch()
+}
+function toggleButtons(){$("#oneBtn").disabled=running;$("#hundredBtn").disabled=running;$("#testBtn").disabled=running;$("#autoBtn").textContent=running?T("stop"):T("autoTrain")}
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+function updateUI(){
+  $("#episodesVal").textContent=episodes.toLocaleString();const w=wins.slice(-100);$("#successVal").textContent=(w.length?100*w.reduce((a,b)=>a+b,0)/w.length:0).toFixed(0)+"%";
+  const rr=rewards.slice(-100);$("#avgVal").textContent=(rr.length?rr.reduce((a,b)=>a+b,0)/rr.length:0).toFixed(2);$("#stepsVal").textContent=steps;$("#rewardBadge").textContent=`R = ${totalReward.toFixed(2)}`;
+  $("#epsilonOut").textContent=epsilon.toFixed(2);$("#alphaOut").textContent=alpha.toFixed(2);$("#gammaOut").textContent=gamma.toFixed(2);$("#speedOut").textContent=speed+"×";
+  $("#modeText").textContent=epsilon>.05?T("explore"):T("exploit")
+}
+function rounded(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+function draw(){
+  const w=canvas.width,h=canvas.height,cw=w/COLS,ch=h/ROWS;ctx.clearRect(0,0,w,h);
+  const grd=ctx.createLinearGradient(0,0,0,h);grd.addColorStop(0,"#eaf3d8");grd.addColorStop(1,"#cfe4b6");ctx.fillStyle=grd;ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="rgba(68,103,51,.12)";ctx.lineWidth=1;for(let x=0;x<=COLS;x++){ctx.beginPath();ctx.moveTo(x*cw,0);ctx.lineTo(x*cw,h);ctx.stroke()}for(let y=0;y<=ROWS;y++){ctx.beginPath();ctx.moveTo(0,y*ch);ctx.lineTo(w,y*ch);ctx.stroke()}
+  obstacles.forEach(s=>{const [x,y]=s.split(",").map(Number),cx=x*cw+cw/2,cy=y*ch+ch/2;ctx.fillStyle="#7f8c91";ctx.beginPath();ctx.ellipse(cx,cy+6,cw*.32,ch*.25,-.12,0,Math.PI*2);ctx.fill();ctx.fillStyle="#aab4b4";ctx.beginPath();ctx.ellipse(cx-7,cy-3,cw*.19,ch*.12,-.2,0,Math.PI*2);ctx.fill()});
+  if(showPolicy&&q.size){ctx.save();ctx.font=`700 ${Math.min(cw,ch)*.27}px system-ui`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="rgba(49,87,213,.55)";for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){if(obstacles.has(`${x},${y}`)||(x===goal.x&&y===goal.y))continue;const k=stateKey(x,y),arr=q.get(k);if(arr&&arr.some(v=>v!==0))ctx.fillText(["↑","→","↓","←"][bestAction(k)],x*cw+cw/2,y*ch+ch/2)}ctx.restore()}
+  const gx=goal.x*cw+cw/2,gy=goal.y*ch+ch/2;ctx.save();ctx.translate(gx,gy);ctx.rotate(-.35);ctx.fillStyle="#3157d5";rounded(-cw*.26,-ch*.08,cw*.52,ch*.16,10);ctx.fill();ctx.fillStyle="#ecf2ff";ctx.beginPath();ctx.arc(-cw*.27,0,ch*.11,0,Math.PI*2);ctx.arc(cw*.27,0,ch*.11,0,Math.PI*2);ctx.fill();ctx.restore();
+  const x=dog.x*cw+cw/2,y=dog.y*ch+ch/2,sc=Math.min(cw,ch)/68;ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);
+  ctx.fillStyle="rgba(32,48,35,.17)";ctx.beginPath();ctx.ellipse(0,27,30,9,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#d99235";ctx.beginPath();ctx.ellipse(0,6,25,22,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#efb95b";ctx.beginPath();ctx.arc(0,-14,24,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#a8672c";ctx.beginPath();ctx.ellipse(-21,-14,9,18,-.38,0,Math.PI*2);ctx.ellipse(21,-14,9,18,.38,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(-8,-18,6,0,Math.PI*2);ctx.arc(8,-18,6,0,Math.PI*2);ctx.fill();ctx.fillStyle="#263246";ctx.beginPath();ctx.arc(-7,-17,2.6,0,Math.PI*2);ctx.arc(9,-17,2.6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#34302f";ctx.beginPath();ctx.ellipse(0,-7,6,4,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#a86631";ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-5,10,0.2,Math.PI-.2);ctx.stroke();
+  ctx.strokeStyle="#d99235";ctx.lineWidth=8;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(18,9);ctx.quadraticCurveTo(36,-2,31,-17);ctx.stroke();ctx.restore();
+  ctx.strokeStyle="rgba(49,87,213,.75)";ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.strokeRect(selected.x*cw+4,selected.y*ch+4,cw-8,ch-8);ctx.setLineDash([])
+}
+function drawChart(){
+  const W=chart.width,H=chart.height,p={l:35,r:35,t:12,b:25};cctx.clearRect(0,0,W,H);cctx.fillStyle="#fff";cctx.fillRect(0,0,W,H);
+  cctx.strokeStyle="#e1e7ef";cctx.lineWidth=1;for(let i=0;i<4;i++){let y=p.t+i*(H-p.t-p.b)/3;cctx.beginPath();cctx.moveTo(p.l,y);cctx.lineTo(W-p.r,y);cctx.stroke()}
+  cctx.fillStyle="#7a8798";cctx.font="10px system-ui";cctx.fillText("1",8,p.t+4);cctx.fillText("0",12,H-p.b);cctx.fillText("−1",6,H-p.b-(H-p.t-p.b)/2);
+  const data=rewards.slice(-120),winData=[];for(let i=0;i<data.length;i++){const st=Math.max(0,wins.length-data.length+i-19),en=wins.length-data.length+i+1,s=wins.slice(st,en);winData.push(s.length?s.reduce((a,b)=>a+b,0)/s.length:0)}
+  function line(arr,color,map){if(arr.length<2)return;cctx.strokeStyle=color;cctx.lineWidth=2.5;cctx.beginPath();arr.forEach((v,i)=>{let x=p.l+i*(W-p.l-p.r)/(Math.max(119,arr.length-1)),y=p.t+(1-map(v))*(H-p.t-p.b);i?cctx.lineTo(x,y):cctx.moveTo(x,y)});cctx.stroke()}
+  line(data,"#3157d5",v=>Math.max(0,Math.min(1,(v+1)/2)));line(winData,"#15a477",v=>v);cctx.fillStyle="#7a8798";cctx.fillText(Math.max(0,episodes-data.length),p.l,H-6);cctx.fillText(episodes,W-p.r-20,H-6)
+}
+function inspect(x,y){selected={x,y};const key=stateKey(x,y),arr=qs(key),best=Math.max(...arr);$("#qBody").innerHTML=arr.map((v,i)=>`<tr class="${v===best?"best":""}"><td>${NAMES[i]}</td><td>${v.toFixed(3)}</td><td>${v===best?T("best"):"—"}</td></tr>`).join("");const dx=goal.x-x,dy=goal.y-y;$("#stateLabel").textContent=`Δx = ${dx}, Δy = ${dy}`;if(!dx&&!dy)$("#stateMeaning").textContent=T("same");else $("#stateMeaning").textContent=T("relative").replace("{h}",dx?`${Math.abs(dx)} ${T(dx>0?"east":"west")}`:T("aligned")).replace("{v}",dy?`${Math.abs(dy)} ${T(dy>0?"south":"north")}`:T("aligned"));draw()}
+function toast(msg){const el=$("#toast");el.textContent=msg;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),2200)}
+function applyLang(){document.documentElement.lang=lang;$$("[data-i]").forEach(el=>el.textContent=T(el.dataset.i));$("#langBtn").textContent=lang==="en"?"ES":"EN";$("#policyBtn").textContent=T(showPolicy?"hidePolicy":"showPolicy");toggleButtons();updateUI();inspect(selected.x,selected.y)}
+$("#speed").oninput=e=>{speed=+e.target.value;updateUI()};$("#alpha").oninput=e=>{alpha=+e.target.value/100;updateUI()};$("#gamma").oninput=e=>{gamma=+e.target.value/100;updateUI()};$("#epsilon").oninput=e=>{epsilon=+e.target.value/100;updateUI()};
+$("#oneBtn").onclick=()=>animateEpisode(false);$("#hundredBtn").onclick=()=>fastEpisodes(100);$("#autoBtn").onclick=autoTrain;$("#testBtn").onclick=()=>animateEpisode(true);
+$("#policyBtn").onclick=()=>{showPolicy=!showPolicy;$("#policyBtn").textContent=T(showPolicy?"hidePolicy":"showPolicy");draw()};
+$("#resetBtn").onclick=()=>{running=false;clearTimeout(timer);q=new Map();episodes=0;rewards=[];wins=[];epsilon=1;$("#epsilon").value=100;resetEpisode(false);drawChart();toggleButtons();toast(T("resetDone"))};
+$("#langBtn").onclick=()=>{lang=lang==="en"?"es":"en";applyLang()};$("#helpBtn").onclick=()=>toast(T("help"));
+$$(".tab").forEach(b=>b.onclick=()=>{$$(".tab").forEach(x=>x.classList.toggle("active",x===b));$("#learnPane").hidden=b.dataset.tab!=="learn";$("#inspectPane").hidden=b.dataset.tab!=="inspect"});
+canvas.addEventListener("click",e=>{const r=canvas.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*COLS),y=Math.floor((e.clientY-r.top)/r.height*ROWS);if(x<0||x>=COLS||y<0||y>=ROWS)return;if(!obstacles.has(`${x},${y}`)&&!(x===dog.x&&y===dog.y))goal={x,y};inspect(x,y);draw()});
+window.addEventListener("keydown",e=>{const m={ArrowUp:0,ArrowRight:1,ArrowDown:2,ArrowLeft:3};if(m[e.key]!==undefined&&!running){e.preventDefault();const r=envStep(m[e.key],false);if(r.done){finish(r.win);resetEpisode(true)}}});
+resetEpisode(false);inspect(dog.x,dog.y);drawChart();applyLang()
+})();
+</script>
+</body>
+</html>
