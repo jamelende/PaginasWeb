@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AutómataLab — Myhill–Nerode y RIP</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;--panel:#fff;--ink:#172033;--muted:#667085;--line:#d8e0eb;
+      --brand:#3157d5;--brand2:#6d45d8;--cyan:#10a6a6;--ok:#16865a;--warn:#c27a0d;
+      --bad:#c83f49;--soft:#edf2ff;--shadow:0 10px 30px rgba(28,42,77,.09);
+      --radius:16px
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.42 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh;display:flex;flex-direction:column}
+    header{height:64px;display:flex;align-items:center;gap:18px;padding:0 22px;background:#111a31;color:#fff}
+    .brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;letter-spacing:-.3px;white-space:nowrap}
+    .brand-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#6585ff,#a76cf4);box-shadow:0 6px 18px #0004}
+    .brand small{display:block;font-weight:500;font-size:10px;color:#b9c3de;letter-spacing:.4px}
+    .tabs{display:flex;align-self:stretch;gap:4px}
+    .tab{border:0;background:transparent;color:#aeb9d5;padding:0 18px;border-bottom:3px solid transparent;font-weight:700}
+    .tab:hover{color:#fff}.tab.active{color:#fff;border-color:#7e9aff;background:#ffffff08}
+    .head-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .pill{background:#ffffff12;border:1px solid #ffffff1c;border-radius:999px;padding:5px 10px;color:#d9e0f4;font-size:12px}
+    main{flex:1;display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:14px;padding:14px;min-height:0}
+    .panel{background:var(--panel);border:1px solid #e3e8f0;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .editor{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+    .panel-head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+    .panel-head h2{font-size:14px;margin:0}.panel-head .hint{margin-left:auto;color:var(--muted);font-size:11px}
+    .tools{padding:10px;display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line)}
+    .btn{border:1px solid var(--line);border-radius:9px;background:#fff;color:#344054;padding:7px 10px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px}
+    .btn:hover{border-color:#9dafdf;background:#f8faff}.btn.active{background:var(--soft);border-color:#8ea6ed;color:var(--brand)}
+    .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+    .btn.primary:hover{background:#2749bd}.btn.danger{color:var(--bad)}.btn.small{font-size:12px;padding:5px 8px;min-height:29px}
+    .btn:disabled{opacity:.42;cursor:not-allowed}
+    .icon{font-size:15px;line-height:1}
+    .canvas-wrap{position:relative;min-height:280px;flex:1;background-color:#fbfcff;background-image:radial-gradient(#d7dfed 1px,transparent 1px);background-size:18px 18px;overflow:hidden}
+    #editorSvg{width:100%;height:100%;display:block;touch-action:none;min-height:300px}
+    .canvas-tip{position:absolute;left:10px;bottom:8px;padding:5px 8px;border-radius:7px;background:#fffde8dd;color:#6f5a1e;font-size:10px;border:1px solid #efe3a7;pointer-events:none}
+    .properties{padding:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .field{display:flex;flex-direction:column;gap:4px}.field.full{grid-column:1/-1}
+    label{font-size:11px;color:var(--muted);font-weight:650}
+    input,select{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 8px;background:#fff;color:var(--ink)}
+    input:focus,select:focus{outline:3px solid #3157d51c;border-color:#7f98e5}
+    .check-row{display:flex;gap:12px;align-items:center}.check-row label{display:flex;gap:6px;align-items:center;color:#344054}.check-row input{width:auto}
+    .statusbar{grid-column:1/-1;display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;background:#f4f6fa;font-size:11px;color:var(--muted)}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+    .workspace{min-width:0;display:flex;flex-direction:column;gap:12px}
+    .topbar{display:flex;align-items:center;gap:8px;padding:10px 12px;flex-wrap:wrap}
+    .example-select{width:auto;min-width:195px}
+    .spacer{flex:1}
+    .step-count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;min-width:72px;text-align:center}
+    .lab-grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(310px,.82fr);gap:12px;min-height:0}
+    .card{background:#fff;border:1px solid #e1e7f0;border-radius:14px;overflow:hidden;min-width:0}
+    .card-title{padding:10px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-weight:750}
+    .card-title small{margin-left:auto;color:var(--muted);font-weight:500}
+    .stage{height:360px;position:relative;background:linear-gradient(180deg,#fbfdff,#f7f9fd)}
+    .stage svg{width:100%;height:100%;display:block}
+    .legend{position:absolute;right:10px;bottom:8px;background:#fffffff2;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:10px;color:var(--muted);display:flex;gap:9px}
+    .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+    .explain{padding:14px 15px;background:linear-gradient(135deg,#eef3ff,#f5f0ff);border-bottom:1px solid #dfe5f6}
+    .explain .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--brand);font-weight:800;margin-bottom:4px}
+    .explain h3{font-size:16px;margin:0 0 5px}.explain p{margin:0;color:#4e5b74}
+    .compare{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .compare .full{grid-column:1/-1}.result{border-radius:9px;padding:9px 10px;background:#f5f7fb;color:#4d5970;min-height:39px}
+    .result.ok{background:#eaf8f1;color:#176b4c}.result.bad{background:#fff0f1;color:#a22d37}
+    .section{padding:12px}
+    .section h3{font-size:13px;margin:0 0 8px;display:flex;align-items:center;gap:6px}
+    .scroll{overflow:auto;max-height:300px}
+    table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}
+    th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;text-align:center;white-space:nowrap}
+    th{background:#f4f6fa;color:#4f5b70;position:sticky;top:0;z-index:1}
+    tr:first-child th{border-top:1px solid var(--line)}th:first-child,td:first-child{border-left:1px solid var(--line)}
+    th:first-child{border-top-left-radius:7px}th:last-child{border-top-right-radius:7px}
+    td.marked{background:#ffe7e9;color:#ad313a;font-weight:800}.td-equivalent{background:#e9f7f0;color:#16704e;font-weight:800}.td-current{box-shadow:inset 0 0 0 2px #f2a72d}
+    .classes{display:flex;flex-wrap:wrap;gap:6px}.class-chip{padding:6px 9px;border-radius:999px;background:#e9efff;color:#2f51b8;font-weight:750}
+    .hidden{display:none!important}
+    .rip-grid{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(280px,.72fr);gap:12px}
+    .rip-controls{padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+    .rip-controls .field{min-width:150px;flex:1}
+    .formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#15203a;color:#e9efff;border-radius:9px;padding:10px 11px;overflow:auto;white-space:nowrap}
+    .history{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+    .history li{border-left:3px solid #ccd6eb;background:#f6f8fc;padding:7px 9px;border-radius:0 7px 7px 0}
+    .history li.active{border-color:var(--brand);background:#edf2ff}.history b{display:block;font-size:11px}.history span{font-size:10px;color:var(--muted)}
+    .validation{display:flex;gap:8px;align-items:flex-start;padding:10px;border-radius:9px;background:#f5f7fa;color:#4f5c73}
+    .validation.good{background:#e9f8f1;color:#176f4e}.validation.warn{background:#fff6e7;color:#8e5b10}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,15px);background:#172033;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 10px 30px #0004;opacity:0;pointer-events:none;transition:.22s;z-index:20}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .node circle{fill:#fff;stroke:#526581;stroke-width:2.4}.node text{font-weight:800;fill:#29364d;pointer-events:none}
+    .node.final circle:first-child{stroke:var(--cyan)}.node.selected circle{fill:#edf2ff;stroke:var(--brand);stroke-width:3.5}
+    .node.hot circle{fill:#fff1cc;stroke:#e89a18;stroke-width:4}.node.merged circle{fill:#eaf8f1;stroke:var(--ok)}
+    .edge path{fill:none;stroke:#7b8aa5;stroke-width:2}.edge polygon{fill:#7b8aa5}.edge text{font-size:12px;font-weight:700;fill:#495870;paint-order:stroke;stroke:#fff;stroke-width:5;stroke-linejoin:round}
+    .edge.hot path{stroke:#e49316;stroke-width:4}.edge.hot polygon{fill:#e49316}.edge.changed path{stroke:var(--brand2);stroke-width:4}.edge.changed polygon{fill:var(--brand2)}.edge.changed text{fill:var(--brand2)}
+    .start-arrow{stroke:#526581;stroke-width:2;fill:none}.start-head{fill:#526581}
+    .empty-note{height:100%;display:grid;place-items:center;color:var(--muted);text-align:center;padding:25px}
+    .kbd{font:10px ui-monospace,monospace;border:1px solid #cbd3df;border-bottom-width:2px;border-radius:4px;padding:1px 4px;background:white}
+    @media(max-width:1050px){main{grid-template-columns:310px minmax(0,1fr)}.lab-grid,.rip-grid{grid-template-columns:1fr}.stage{height:330px}}
+    @media(max-width:760px){header{height:auto;min-height:60px;padding:8px 12px;flex-wrap:wrap}.brand small,.head-right{display:none}.tabs{order:2;width:100%;height:42px}.tab{flex:1;padding:0 8px}main{grid-template-columns:1fr;padding:8px}.editor{max-height:none}.canvas-wrap{height:330px;flex:none}.topbar{position:sticky;top:0;z-index:5}.stage{height:300px}.properties{grid-template-columns:1fr 1fr}.pill{display:none}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><span class="brand-mark">λ</span><span>AutómataLab<small>MINIMIZACIÓN Y EXPRESIONES REGULARES</small></span></div>
+    <nav class="tabs" aria-label="Algoritmos">
+      <button class="tab active" data-tab="myhill">Myhill–Nerode</button>
+      <button class="tab" data-tab="rip">RIP · Eliminación</button>
+    </nav>
+    <div class="head-right"><span class="pill">100% local</span><span class="pill">AFD / AFN</span></div>
+  </header>
+
+  <main>
+    <aside class="panel editor">
+      <div class="panel-head"><h2>Editor del autómata</h2><span class="hint">clic y arrastrar</span></div>
+      <div class="tools">
+        <button class="btn small active tool" data-tool="select"><span class="icon">↖</span> Seleccionar</button>
+        <button class="btn small tool" data-tool="state"><span class="icon">●</span> Estado</button>
+        <button class="btn small tool" data-tool="edge"><span class="icon">↗</span> Transición</button>
+        <button class="btn small danger" id="deleteBtn"><span class="icon">⌫</span> Eliminar</button>
+        <button class="btn small" id="fitBtn">Centrar</button>
+      </div>
+      <div class="canvas-wrap">
+        <svg id="editorSvg" viewBox="0 0 340 360" aria-label="Editor gráfico del autómata"></svg>
+        <div class="canvas-tip" id="canvasTip">Selecciona y arrastra estados · doble clic crea uno</div>
+      </div>
+      <div class="properties">
+        <div class="field"><label>Nombre</label><input id="stateName" maxlength="8" disabled></div>
+        <div class="field"><label>Alfabeto</label><input id="alphabet" value="0,1" aria-label="Alfabeto"></div>
+        <div class="field full">
+          <div class="check-row">
+            <label><input type="checkbox" id="isInitial" disabled> Inicial</label>
+            <label><input type="checkbox" id="isFinal" disabled> Final</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label>Transición seleccionada (símbolos o ER)</label>
+          <input id="edgeLabel" disabled placeholder="Ej.: 0,1 o a+b">
+        </div>
+        <div class="statusbar"><span class="status-dot" id="statusDot"></span><span id="editorStatus">AFD válido · 4 estados · alfabeto {0, 1}</span></div>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div class="panel topbar">
+        <label for="exampleSelect">Ejemplo</label>
+        <select id="exampleSelect" class="example-select"></select>
+        <button class="btn" id="newExampleBtn">Nuevo ejemplo</button>
+        <span class="spacer"></span>
+        <button class="btn" id="prevBtn">← Anterior</button>
+        <span class="step-count" id="stepCount">Paso 1 / 1</span>
+        <button class="btn primary" id="nextBtn">Siguiente →</button>
+        <button class="btn" id="autoBtn">▶ Automático</button>
+        <button class="btn" id="resetBtn">↺ Reiniciar</button>
+      </div>
+
+      <div id="myhillLab">
+        <div class="lab-grid">
+          <div class="card">
+            <div class="card-title">Evolución del autómata <small id="graphMode">AFD original</small></div>
+            <div class="stage"><svg id="myhillSvg" viewBox="0 0 700 380"></svg>
+              <div class="legend"><span><i class="dot" style="background:#e89a18"></i>par actual</span><span><i class="dot" style="background:#16865a"></i>clase equivalente</span></div>
+            </div>
+            <div class="explain">
+              <div class="eyebrow" id="myhillPhase">Preparación</div>
+              <h3 id="myhillTitle">Construye la tabla de pares</h3>
+              <p id="myhillText">Validaremos el AFD y analizaremos sus pares de estados.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Comparador de estados <small>cadena testigo</small></div>
+            <div class="compare">
+              <div class="field"><label>Estado p</label><select id="compareP"></select></div>
+              <div class="field"><label>Estado q</label><select id="compareQ"></select></div>
+              <div class="field full"><label>Cadena de prueba (vacío = ε)</label><input id="testString" placeholder="Ej.: 0101"></div>
+              <button class="btn primary full" id="compareBtn">Procesar cadena desde ambos estados</button>
+              <div class="result full" id="compareResult">Elige dos estados y una cadena.</div>
+            </div>
+            <div class="section">
+              <h3>Clases de equivalencia</h3>
+              <div class="classes" id="classes"><span class="class-chip">Se mostrarán al finalizar</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="card-title">Tabla de distinguibilidad <small>× distinguibles · ≡ equivalentes</small></div>
+          <div class="section scroll" id="pairTable"></div>
+        </div>
+      </div>
+
+      <div id="ripLab" class="hidden">
+        <div class="rip-grid">
+          <div class="card">
+            <div class="card-title">Autómata generalizado (GNFA) <small id="ripRemaining">—</small></div>
+            <div class="stage"><svg id="ripSvg" viewBox="0 0 760 400"></svg>
+              <div class="legend"><span><i class="dot" style="background:#e89a18"></i>eliminado</span><span><i class="dot" style="background:#6d45d8"></i>ER modificada</span></div>
+            </div>
+            <div class="rip-controls">
+              <div class="field"><label>Estado que se eliminará</label><select id="ripStateSelect"></select></div>
+              <button class="btn primary" id="eliminateBtn">Eliminar estado</button>
+              <button class="btn" id="bestBtn">Sugerir el más simple</button>
+            </div>
+            <div class="explain">
+              <div class="eyebrow" id="ripPhase">Preparación</div>
+              <h3 id="ripTitle">Transformar a GNFA</h3>
+              <p id="ripText">Se agregará un nuevo inicio y un único estado final.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Actualización algebraica</div>
+            <div class="section">
+              <div class="formula" id="ripFormula">Rᵢⱼ ← Rᵢⱼ + Rᵢₖ(Rₖₖ)*Rₖⱼ</div>
+            </div>
+            <div class="section" style="border-top:1px solid var(--line)">
+              <h3>Historial de eliminación</h3>
+              <div class="scroll" style="max-height:210px"><ol class="history" id="ripHistory"></ol></div>
+            </div>
+            <div class="section" style="border-top:1px solid var(--line)">
+              <h3>Expresión regular resultante</h3>
+              <div class="formula" id="finalRegex">Pendiente…</div>
+              <div class="validation" id="regexValidation" style="margin-top:9px">La validación se ejecutará al terminar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const deep = o => JSON.parse(JSON.stringify(o));
+  const EPS = "ε", EMPTY = "∅";
+  const colors = ["#3157d5","#10a6a6","#d36c25","#7b4fd6","#c84367","#558b2f"];
+
+  const examples = {
+    myhill: [
+      {name:"AFD con estados equivalentes", alphabet:["0","1"], states:[
+        {id:"A",x:75,y:105,initial:true,final:false},{id:"B",x:205,y:65,initial:false,final:true},
+        {id:"C",x:205,y:155,initial:false,final:true},{id:"D",x:95,y:255,initial:false,final:false}
+      ], edges:[
+        {from:"A",to:"B",label:"0"},{from:"A",to:"C",label:"1"},{from:"B",to:"B",label:"0"},{from:"B",to:"D",label:"1"},
+        {from:"C",to:"B",label:"0"},{from:"C",to:"D",label:"1"},{from:"D",to:"D",label:"0,1"}
+      ]},
+      {name:"Paridad de unos",alphabet:["0","1"],states:[
+        {id:"q0",x:95,y:110,initial:true,final:true},{id:"q1",x:240,y:110,initial:false,final:false}
+      ],edges:[{from:"q0",to:"q0",label:"0"},{from:"q0",to:"q1",label:"1"},{from:"q1",to:"q1",label:"0"},{from:"q1",to:"q0",label:"1"}]},
+      {name:"Terminación en 01",alphabet:["0","1"],states:[
+        {id:"q0",x:65,y:135,initial:true,final:false},{id:"q1",x:175,y:65,initial:false,final:false},{id:"q2",x:275,y:135,initial:false,final:true}
+      ],edges:[{from:"q0",to:"q0",label:"0"},{from:"q0",to:"q1",label:"1"},{from:"q1",to:"q2",label:"0"},{from:"q1",to:"q1",label:"1"},{from:"q2",to:"q0",label:"0"},{from:"q2",to:"q1",label:"1"}]}
+    ],
+    rip: [
+      {name:"Cadenas que terminan en ab",alphabet:["a","b"],states:[
+        {id:"q0",x:65,y:135,initial:true,final:false},{id:"q1",x:175,y:65,initial:false,final:false},{id:"q2",x:275,y:135,initial:false,final:true}
+      ],edges:[{from:"q0",to:"q1",label:"a"},{from:"q0",to:"q0",label:"b"},{from:"q1",to:"q1",label:"a"},{from:"q1",to:"q2",label:"b"},{from:"q2",to:"q1",label:"a"},{from:"q2",to:"q0",label:"b"}]},
+      {name:"AFN con alternativa",alphabet:["a","b"],states:[
+        {id:"s",x:65,y:125,initial:true,final:false},{id:"p",x:180,y:65,initial:false,final:false},{id:"f",x:280,y:125,initial:false,final:true}
+      ],edges:[{from:"s",to:"p",label:"a,b"},{from:"s",to:"f",label:"b"},{from:"p",to:"p",label:"a"},{from:"p",to:"f",label:"b"}]},
+      {name:"Lenguaje a*b",alphabet:["a","b"],states:[
+        {id:"q0",x:90,y:120,initial:true,final:false},{id:"q1",x:245,y:120,initial:false,final:true}
+      ],edges:[{from:"q0",to:"q0",label:"a"},{from:"q0",to:"q1",label:"b"}]}
+    ]
+  };
+
+  let activeTab="myhill", automaton=deep(examples.myhill[0]), selected=null, tool="select", edgeStart=null, drag=null;
+  let myhill={steps:[],index:0,auto:null}, rip={steps:[],index:0,auto:null,original:null};
+
+  function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2200)}
+  function symbols(label){return label.split(",").map(x=>x.trim()).filter(Boolean)}
+  function alphabet(){return $("#alphabet").value.split(",").map(x=>x.trim()).filter(Boolean)}
+  function state(id){return automaton.states.find(s=>s.id===id)}
+  function transitionMap(a=automaton){
+    const m={}; a.states.forEach(s=>m[s.id]={});
+    a.edges.forEach(e=>symbols(e.label).forEach(c=>{(m[e.from][c]??=[]).push(e.to)})); return m;
+  }
+  function validate(a=automaton, needDfa=activeTab==="myhill"){
+    const issues=[], alpha=alphabet(), initials=a.states.filter(s=>s.initial), finals=a.states.filter(s=>s.final), map=transitionMap(a);
+    if(!a.states.length) issues.push("Agrega al menos un estado");
+    if(initials.length!==1) issues.push("Debe existir exactamente un estado inicial");
+    if(!finals.length) issues.push("Define al menos un estado final");
+    if(!alpha.length) issues.push("Define el alfabeto");
+    a.edges.forEach(e=>symbols(e.label).forEach(c=>{if(c!==EPS&&!alpha.includes(c))issues.push(`El símbolo “${c}” no pertenece al alfabeto`)}));
+    if(needDfa) a.states.forEach(s=>alpha.forEach(c=>{
+      const ds=map[s.id]?.[c]||[]; if(ds.length===0) issues.push(`Falta δ(${s.id}, ${c})`); if(ds.length>1)issues.push(`δ(${s.id}, ${c}) no es determinista`);
+    }));
+    return {ok:!issues.length,issues:[...new Set(issues)],type:needDfa?"AFD":"AFD/AFN"};
+  }
+
+  function svgEl(tag,attrs={},text=""){const e=document.createElementNS("http://www.w3.org/2000/svg",tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text)e.textContent=text;return e}
+  function edgeGeometry(a,b,index=0,total=1){
+    if(a.id===b.id){
+      const side=(index%2?1:-1), x=a.x+side*8;
+      return {d:`M ${x-18} ${a.y-22} C ${x-48} ${a.y-82}, ${x+48} ${a.y-82}, ${x+18} ${a.y-22}`,lx:x,ly:a.y-66,ax:x+19,ay:a.y-23,angle:57};
+    }
+    const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=-uy,py=ux;
+    const curve=total>1?(index-(total-1)/2)*35:0;
+    const sx=a.x+ux*27,sy=a.y+uy*27,tx=b.x-ux*29,ty=b.y-uy*29,cx=(sx+tx)/2+px*curve,cy=(sy+ty)/2+py*curve;
+    const angle=Math.atan2(ty-cy,tx-cx)*180/Math.PI;
+    return {d:`M ${sx} ${sy} Q ${cx} ${cy} ${tx} ${ty}`,lx:(sx+2*cx+tx)/4,ly:(sy+2*cy+ty)/4-6,ax:tx,ay:ty,angle};
+  }
+  function arrowPoints(x,y,angle){const r=7,a=angle*Math.PI/180;return [[x,y],[x-r*Math.cos(a-.55),y-r*Math.sin(a-.55)],[x-r*Math.cos(a+.55),y-r*Math.sin(a+.55)]].map(p=>p.join(",")).join(" ")}
+  function renderGraph(svg,a,opts={}){
+    svg.innerHTML="";
+    if(!a.states.length){const fo=svgEl("foreignObject",{x:0,y:0,width:"100%",height:"100%"});fo.innerHTML='<div class="empty-note">No hay estados para mostrar.</div>';svg.append(fo);return}
+    const vb=svg.viewBox.baseVal, sx=opts.scaleX||1, sy=opts.scaleY||1;
+    const groups={};a.edges.forEach(e=>{const k=e.from+"→"+e.to;(groups[k]??=[]).push(e)});
+    a.edges.forEach(e=>{
+      const aa=a.states.find(s=>s.id===e.from),bb=a.states.find(s=>s.id===e.to);if(!aa||!bb)return;
+      const list=groups[e.from+"→"+e.to],idx=list.indexOf(e),g=edgeGeometry({ ...aa,x:aa.x*sx,y:aa.y*sy},{...bb,x:bb.x*sx,y:bb.y*sy},idx,list.length);
+      const cls=["edge"]; if(opts.hotEdges?.some(x=>x.from===e.from&&x.to===e.to))cls.push("hot");if(opts.changedEdges?.some(x=>x.from===e.from&&x.to===e.to))cls.push("changed");
+      if(selected?.type==="edge"&&selected.ref===e&&opts.editor)cls.push("changed");
+      const eg=svgEl("g",{class:cls.join(" "),"data-from":e.from,"data-to":e.to});
+      eg.append(svgEl("path",{d:g.d}));eg.append(svgEl("polygon",{points:arrowPoints(g.ax,g.ay,g.angle)}));eg.append(svgEl("text",{x:g.lx,y:g.ly,"text-anchor":"middle"},e.label));
+      if(opts.editor)eg.addEventListener("pointerdown",ev=>{ev.stopPropagation();selectEdge(e)});
+      svg.append(eg);
+    });
+    a.states.filter(s=>s.initial).forEach(s=>{const x=s.x*sx,y=s.y*sy;svg.append(svgEl("path",{class:"start-arrow",d:`M ${x-65} ${y} L ${x-31} ${y}`}));svg.append(svgEl("polygon",{class:"start-head",points:`${x-27},${y} ${x-38},${y-6} ${x-38},${y+6}`}))});
+    a.states.forEach((s,i)=>{
+      const x=s.x*sx,y=s.y*sy,cls=["node"];if(s.final)cls.push("final");if(selected?.type==="state"&&selected.ref===s&&opts.editor)cls.push("selected");if(opts.hotStates?.includes(s.id))cls.push("hot");if(opts.classMap?.[s.id]!=null)cls.push("merged");
+      const ng=svgEl("g",{class:cls.join(" "),"data-id":s.id,transform:`translate(${x},${y})`});
+      ng.append(svgEl("circle",{r:27}));if(s.final)ng.append(svgEl("circle",{r:21,fill:"none",stroke:"currentColor","stroke-width":2}));
+      ng.append(svgEl("text",{x:0,y:5,"text-anchor":"middle"},s.id));
+      if(opts.classMap?.[s.id]!=null)ng.querySelector("circle").style.fill=colors[opts.classMap[s.id]%colors.length]+"20";
+      if(opts.editor){
+        ng.style.cursor=tool==="edge"?"crosshair":"grab";
+        ng.addEventListener("pointerdown",ev=>onStatePointer(ev,s));
+      } else if(opts.onStateClick) ng.addEventListener("click",()=>opts.onStateClick(s.id));
+      svg.append(ng);
+    });
+  }
+
+  function renderEditor(){
+    renderGraph($("#editorSvg"),automaton,{editor:true});
+    const v=validate();$("#statusDot").style.background=v.ok?"var(--ok)":"var(--bad)";
+    $("#editorStatus").textContent=v.ok?`${v.type} válido · ${automaton.states.length} estados · alfabeto {${alphabet().join(", ")}}`:v.issues[0];
+    fillProperties();
+  }
+  function selectState(s){selected={type:"state",ref:s};renderEditor()}
+  function selectEdge(e){selected={type:"edge",ref:e};renderEditor()}
+  function clearSelection(){selected=null;edgeStart=null;renderEditor()}
+  function fillProperties(){
+    const s=selected?.type==="state"?selected.ref:null,e=selected?.type==="edge"?selected.ref:null;
+    $("#stateName").disabled=!s;$("#isInitial").disabled=!s;$("#isFinal").disabled=!s;$("#edgeLabel").disabled=!e;
+    $("#stateName").value=s?.id||"";$("#isInitial").checked=!!s?.initial;$("#isFinal").checked=!!s?.final;$("#edgeLabel").value=e?.label||"";
+  }
+  function svgPoint(svg,ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+  function addStateAt(p){
+    let n=0,id="q0";while(state(id))id="q"+(++n);
+    const s={id,x:Math.max(35,Math.min(305,p.x)),y:Math.max(35,Math.min(325,p.y)),initial:!automaton.states.length,final:false};
+    automaton.states.push(s);selectState(s);invalidateAlgorithms();
+  }
+  function onStatePointer(ev,s){
+    ev.stopPropagation();
+    if(tool==="edge"){
+      if(!edgeStart){edgeStart=s;selected={type:"state",ref:s};$("#canvasTip").textContent=`Origen ${s.id}: ahora elige el destino`;renderEditor()}
+      else{const label=prompt(`Símbolo(s) para ${edgeStart.id} → ${s.id}:`,alphabet()[0]||"a");if(label?.trim()){const existing=automaton.edges.find(e=>e.from===edgeStart.id&&e.to===s.id);if(existing)existing.label=unionLabels(existing.label,label.trim());else automaton.edges.push({from:edgeStart.id,to:s.id,label:label.trim()});invalidateAlgorithms()}edgeStart=null;tool="select";updateToolUI();clearSelection()}
+      return;
+    }
+    selectState(s);drag={s,start:svgPoint($("#editorSvg"),ev),ox:s.x,oy:s.y};$("#editorSvg").setPointerCapture?.(ev.pointerId);
+  }
+  $("#editorSvg").addEventListener("pointermove",ev=>{if(!drag)return;const p=svgPoint($("#editorSvg"),ev);drag.s.x=Math.max(30,Math.min(310,drag.ox+p.x-drag.start.x));drag.s.y=Math.max(30,Math.min(330,drag.oy+p.y-drag.start.y));renderEditor()});
+  $("#editorSvg").addEventListener("pointerup",()=>drag=null);
+  $("#editorSvg").addEventListener("pointerdown",ev=>{if(ev.target.closest?.(".node,.edge"))return;const p=svgPoint($("#editorSvg"),ev);if(tool==="state")addStateAt(p);else clearSelection()});
+  $("#editorSvg").addEventListener("dblclick",ev=>{if(!ev.target.closest?.(".node,.edge"))addStateAt(svgPoint($("#editorSvg"),ev))});
+  function unionLabels(a,b){const parts=[...symbols(a),...symbols(b)];return [...new Set(parts)].join(",")}
+  $$(".tool").forEach(b=>b.onclick=()=>{tool=b.dataset.tool;edgeStart=null;updateToolUI()});
+  function updateToolUI(){$$(".tool").forEach(b=>b.classList.toggle("active",b.dataset.tool===tool));$("#canvasTip").textContent=tool==="state"?"Haz clic en el lienzo para crear estados":tool==="edge"?"Haz clic en el estado origen y luego en el destino":"Selecciona y arrastra estados · doble clic crea uno";renderEditor()}
+  $("#deleteBtn").onclick=()=>{if(!selected)return toast("Selecciona un estado o una transición");if(selected.type==="state"){const id=selected.ref.id;automaton.states=automaton.states.filter(s=>s!==selected.ref);automaton.edges=automaton.edges.filter(e=>e.from!==id&&e.to!==id)}else automaton.edges=automaton.edges.filter(e=>e!==selected.ref);selected=null;invalidateAlgorithms();renderAll()};
+  $("#stateName").onchange=e=>{const s=selected?.ref,id=e.target.value.trim();if(!s||!id||automaton.states.some(x=>x!==s&&x.id===id))return toast("El nombre está vacío o ya existe");const old=s.id;s.id=id;automaton.edges.forEach(x=>{if(x.from===old)x.from=id;if(x.to===old)x.to=id});invalidateAlgorithms();renderAll()};
+  $("#isInitial").onchange=e=>{if(!selected)return;automaton.states.forEach(s=>s.initial=false);selected.ref.initial=e.target.checked;invalidateAlgorithms();renderAll()};
+  $("#isFinal").onchange=e=>{if(!selected)return;selected.ref.final=e.target.checked;invalidateAlgorithms();renderAll()};
+  $("#edgeLabel").onchange=e=>{if(selected?.type!=="edge")return;selected.ref.label=e.target.value.trim()||EMPTY;invalidateAlgorithms();renderAll()};
+  $("#alphabet").onchange=()=>{automaton.alphabet=alphabet();invalidateAlgorithms();renderAll()};
+  $("#fitBtn").onclick=()=>{layoutCircle(automaton,165,180,110);renderAll()};
+
+  function layoutCircle(a,cx=350,cy=190,r=130){
+    const n=a.states.length;a.states.forEach((s,i)=>{const ang=-Math.PI/2+i*2*Math.PI/n;s.x=cx+r*Math.cos(ang);s.y=cy+r*Math.sin(ang)});
+  }
+  function loadExample(i){
+    automaton=deep(examples[activeTab][i]);$("#alphabet").value=automaton.alphabet.join(",");selected=null;tool="select";edgeStart=null;updateToolUI();rebuildAlgorithm();renderAll()
+  }
+  function populateExamples(){
+    $("#exampleSelect").innerHTML=examples[activeTab].map((e,i)=>`<option value="${i}">${e.name}</option>`).join("");
+  }
+  $("#exampleSelect").onchange=e=>loadExample(+e.target.value);
+  $("#newExampleBtn").onclick=()=>{automaton={alphabet:["0","1"],states:[],edges:[]};$("#alphabet").value="0,1";selected=null;invalidateAlgorithms();renderAll();toast("Lienzo vacío: crea tu primer estado")};
+
+  function invalidateAlgorithms(){stopAuto();myhill.steps=[];rip.steps=[];myhill.index=rip.index=0}
+  function renderAll(){renderEditor();activeTab==="myhill"?renderMyhill():renderRip()}
+  function rebuildAlgorithm(){stopAuto();if(activeTab==="myhill")buildMyhillSteps();else buildRipSteps()}
+
+  function pairKey(a,b){return [a,b].sort().join("|")}
+  function buildMyhillSteps(){
+    const v=validate(automaton,true);myhill.steps=[];myhill.index=0;
+    if(!v.ok){myhill.steps.push({phase:"Validación",title:"El AFD necesita ajustes",text:v.issues.join(" · "),marks:{},classes:[],hot:[]});return}
+    const ids=automaton.states.map(s=>s.id), finals=new Set(automaton.states.filter(s=>s.final).map(s=>s.id)),map=transitionMap();
+    const marks={}, reasons={}; const pairs=[];
+    for(let i=1;i<ids.length;i++)for(let j=0;j<i;j++)pairs.push([ids[i],ids[j]]);
+    myhill.steps.push({phase:"Paso 0 · Validación",title:"AFD completo y determinista",text:`Hay ${ids.length} estados y ${pairs.length} pares sin ordenar por analizar.`,marks:deep(marks),reasons:deep(reasons),classes:[],hot:[]});
+    pairs.forEach(([a,b])=>{if(finals.has(a)!==finals.has(b)){marks[pairKey(a,b)]=true;reasons[pairKey(a,b)]="uno es final y el otro no"}});
+    myhill.steps.push({phase:"Paso 1 · Partición inicial",title:"Separar finales de no finales",text:"Todo par formado por un estado final y uno no final queda marcado inmediatamente como distinguible.",marks:deep(marks),reasons:deep(reasons),classes:[],hot:pairs.filter(p=>marks[pairKey(...p)]).flat()});
+    let changed=true,round=1;
+    while(changed){changed=false;round++;for(const [a,b] of pairs){const k=pairKey(a,b);if(marks[k])continue;for(const c of alphabet()){const da=map[a][c][0],db=map[b][c][0],dk=pairKey(da,db);if(da!==db&&marks[dk]){marks[k]=true;reasons[k]=`con “${c}” llegan a (${da}, ${db}), ya distinguible`;changed=true;myhill.steps.push({phase:`Paso ${round} · Propagación`,title:`Marcar (${a}, ${b})`,text:`Al leer “${c}”, ${a} llega a ${da} y ${b} a ${db}. Ese par ya estaba marcado, por lo que (${a}, ${b}) también es distinguible.`,marks:deep(marks),reasons:deep(reasons),classes:[],hot:[a,b],hotEdges:[{from:a,to:da},{from:b,to:db}]});break}}}}
+    const parent={};ids.forEach(x=>parent[x]=x);const find=x=>parent[x]===x?x:parent[x]=find(parent[x]);const join=(a,b)=>{a=find(a);b=find(b);if(a!==b)parent[b]=a};
+    pairs.forEach(([a,b])=>{if(!marks[pairKey(a,b)])join(a,b)});
+    const groups={};ids.forEach(x=>(groups[find(x)]??=[]).push(x));const classes=Object.values(groups);
+    myhill.steps.push({phase:"Clases de equivalencia",title:`Se obtienen ${classes.length} clases`,text:"Los pares que quedaron sin marcar aceptan exactamente las mismas continuaciones y se fusionan.",marks:deep(marks),reasons:deep(reasons),classes,hot:[]});
+    const min=minimizeAutomaton(classes,map);
+    myhill.steps.push({phase:"Resultado",title:"AFD mínimo construido",text:`El autómata se redujo de ${ids.length} a ${min.states.length} estados. Cada nuevo estado representa una clase de equivalencia.`,marks:deep(marks),reasons:deep(reasons),classes,hot:[],min});
+  }
+  function minimizeAutomaton(classes,map){
+    const classOf={};classes.forEach((g,i)=>g.forEach(x=>classOf[x]=i));
+    const states=classes.map((g,i)=>({id:`[${g.join(",")}]`,x:0,y:0,initial:g.some(x=>state(x).initial),final:g.some(x=>state(x).final)}));
+    layoutCircle({states},350,190,125);const edges=[];
+    classes.forEach((g,i)=>alphabet().forEach(c=>{const j=classOf[map[g[0]][c][0]],from=states[i].id,to=states[j].id,ex=edges.find(e=>e.from===from&&e.to===to);if(ex)ex.label=unionLabels(ex.label,c);else edges.push({from,to,label:c})}));
+    return {states,edges};
+  }
+  function renderMyhill(){
+    if(!myhill.steps.length)buildMyhillSteps();const st=myhill.steps[myhill.index];
+    $("#myhillPhase").textContent=st.phase;$("#myhillTitle").textContent=st.title;$("#myhillText").textContent=st.text;
+    $("#graphMode").textContent=st.min?"AFD mínimo":"AFD original";
+    const classMap={};st.classes?.forEach((g,i)=>g.forEach(x=>classMap[x]=i));
+    const a=st.min||scaledAutomaton(automaton,2.05,1.05);
+    renderGraph($("#myhillSvg"),a,{hotStates:st.hot,hotEdges:st.hotEdges,classMap:st.min?null:classMap});
+    renderPairTable(st);renderClasses(st.classes);populateCompare();updateNav();
+  }
+  function scaledAutomaton(a,sx,sy){const x=deep(a);x.states.forEach(s=>{s.x*=sx;s.y*=sy});return x}
+  function renderPairTable(st){
+    const ids=automaton.states.map(s=>s.id);if(ids.length<2){$("#pairTable").innerHTML='<div class="validation warn">Se necesitan al menos dos estados.</div>';return}
+    let h='<table><tr><th>Estado</th>'+ids.map(x=>`<th>${x}</th>`).join("")+"</tr>";
+    ids.forEach((r,i)=>{h+=`<tr><th>${r}</th>`;ids.forEach((c,j)=>{
+      if(j>=i)h+='<td style="background:#f8fafc;color:#bbc3d0">—</td>';else{const k=pairKey(r,c),marked=st.marks[k],cur=st.hot?.includes(r)&&st.hot?.includes(c);h+=`<td title="${st.reasons?.[k]||"aún no marcado"}" class="${marked?"marked":st.classes?.length?"td-equivalent":""} ${cur?"td-current":""}">${marked?"×":st.classes?.length?"≡":"·"}</td>`}
+    });h+="</tr>"});h+="</table>";$("#pairTable").innerHTML=h;
+  }
+  function renderClasses(cs){$("#classes").innerHTML=cs?.length?cs.map((g,i)=>`<span class="class-chip" style="background:${colors[i%colors.length]}18;color:${colors[i%colors.length]}">{${g.join(", ")}}</span>`).join(""):'<span class="class-chip">Se mostrarán al finalizar</span>'}
+  function populateCompare(){const opts=automaton.states.map(s=>`<option>${s.id}</option>`).join("");const p=$("#compareP").value,q=$("#compareQ").value;$("#compareP").innerHTML=opts;$("#compareQ").innerHTML=opts;$("#compareP").value=state(p)?p:automaton.states[0]?.id||"";$("#compareQ").value=state(q)?q:automaton.states[1]?.id||automaton.states[0]?.id||""}
+  function runDfa(start,w){const map=transitionMap();let cur=start;for(const c of [...w]){if(!map[cur]?.[c]?.length)return {end:null,accept:false,error:c};cur=map[cur][c][0]}return {end:cur,accept:!!state(cur)?.final}}
+  $("#compareBtn").onclick=()=>{const p=$("#compareP").value,q=$("#compareQ").value,w=$("#testString").value.trim(),r1=runDfa(p,w),r2=runDfa(q,w),el=$("#compareResult");if(r1.error||r2.error){el.className="result full bad";el.textContent="La cadena contiene un símbolo inválido o falta una transición.";return}const dist=r1.accept!==r2.accept;el.className="result full "+(dist?"bad":"ok");el.innerHTML=`${p} → <b>${r1.end}</b> (${r1.accept?"acepta":"rechaza"}) · ${q} → <b>${r2.end}</b> (${r2.accept?"acepta":"rechaza"})<br><b>${dist?"La cadena distingue este par.":"Esta cadena no distingue el par."}</b>`};
+
+  function rUnion(a,b){if(!a||a===EMPTY)return b||EMPTY;if(!b||b===EMPTY)return a;if(a===b)return a;return `(${a}+${b})`}
+  function needParen(x){return x.length>1&&!(/^\\(.+\\)$/.test(x))&&!(/^[^+]*\\*$/.test(x))}
+  function rStar(a){if(!a||a===EMPTY||a===EPS)return EPS;if(a.endsWith("*"))return a;return (needParen(a)?`(${a})`:a)+"*"}
+  function rConcat(...xs){const a=xs.filter(x=>x&&x!==EPS);if(xs.some(x=>x===EMPTY)||!a.length&&xs.some(x=>x===EMPTY))return EMPTY;if(!a.length)return EPS;return a.map(x=>x.includes("+")&&!(/^\\(.+\\)$/.test(x))?`(${x})`:x).join("")}
+  function edgeRegexLabel(label){const ss=symbols(label);return ss.length?ss.reduce((a,b)=>rUnion(a,b),EMPTY):EMPTY}
+  function buildGNFA(){
+    const a=deep(automaton),startId=uniqueId(a,"I"),finalId=uniqueId(a,"F");
+    const states=[{id:startId,x:45,y:200,initial:true,final:false,locked:true},...a.states.map(s=>({...s,initial:false,final:false})),{id:finalId,x:700,y:200,initial:false,final:true,locked:true}];
+    layoutLine(states.slice(1,-1),130,610,200);const rel={};const set=(i,j,v)=>rel[i+"→"+j]=v,get=(i,j)=>rel[i+"→"+j]||EMPTY;
+    a.edges.forEach(e=>set(e.from,e.to,rUnion(get(e.from,e.to),edgeRegexLabel(e.label))));
+    const oldStart=a.states.find(s=>s.initial);if(oldStart)set(startId,oldStart.id,EPS);
+    a.states.filter(s=>s.final).forEach(s=>set(s.id,finalId,rUnion(get(s.id,finalId),EPS)));
+    return {states,rel,startId,finalId,original:deep(automaton)};
+  }
+  function uniqueId(a,base){let x=base,n=0;while(a.states.some(s=>s.id===x))x=base+(++n);return x}
+  function layoutLine(ss,x1,x2,cy){const n=ss.length;ss.forEach((s,i)=>{const t=(i+1)/(n+1),wave=(i%2?70:-70);s.x=x1+(x2-x1)*t;s.y=cy+(n>2?wave:0)})}
+  function gnfaEdges(g){return Object.entries(g.rel).filter(([,v])=>v&&v!==EMPTY).map(([k,label])=>{const [from,to]=k.split("→");return {from,to,label}})}
+  function buildRipSteps(){
+    const v=validate(automaton,false);rip.steps=[];rip.index=0;rip.original=deep(automaton);
+    if(!v.ok){rip.steps.push({phase:"Validación",title:"El autómata necesita ajustes",text:v.issues.join(" · "),gnfa:{states:deep(automaton.states),rel:{},startId:"",finalId:""},history:[]});return}
+    const g=buildGNFA();rip.steps.push({phase:"Paso 0 · GNFA",title:"Nuevo inicio y único final",text:"Se añaden transiciones ε desde el nuevo inicio y hacia el nuevo final. Las transiciones paralelas se unen con +.",gnfa:deep(g),history:[],formula:"Rᵢⱼ ← Rᵢⱼ + Rᵢₖ(Rₖₖ)*Rₖⱼ"});
+  }
+  function eliminateState(g,k){
+    const ng=deep(g),ids=ng.states.map(s=>s.id),incoming=ids.filter(i=>i!==k&&(ng.rel[i+"→"+k]||EMPTY)!==EMPTY),outgoing=ids.filter(j=>j!==k&&(ng.rel[k+"→"+j]||EMPTY)!==EMPTY);
+    const loop=ng.rel[k+"→"+k]||EMPTY,changes=[];
+    for(const i of incoming)for(const j of outgoing){const old=ng.rel[i+"→"+j]||EMPTY,via=rConcat(ng.rel[i+"→"+k],rStar(loop),ng.rel[k+"→"+j]),val=rUnion(old,via);ng.rel[i+"→"+j]=val;changes.push({from:i,to:j,old,via,val})}
+    Object.keys(ng.rel).forEach(key=>{const [i,j]=key.split("→");if(i===k||j===k)delete ng.rel[key]});ng.states=ng.states.filter(s=>s.id!==k);
+    return {gnfa:ng,changes,loop};
+  }
+  function ripCandidates(g){return g.states.filter(s=>s.id!==g.startId&&s.id!==g.finalId)}
+  function bestCandidate(g){const ids=g.states.map(s=>s.id);return ripCandidates(g).sort((a,b)=>cost(a.id)-cost(b.id))[0]?.id;function cost(k){const ins=ids.filter(i=>i!==k&&(g.rel[i+"→"+k]||EMPTY)!==EMPTY).length,outs=ids.filter(j=>j!==k&&(g.rel[k+"→"+j]||EMPTY)!==EMPTY).length,loop=(g.rel[k+"→"+k]||EMPTY)===EMPTY?0:1;return ins*outs+loop}}
+  function addRipStep(k){
+    if(!rip.steps.length)buildRipSteps();const cur=rip.steps[rip.index];if(!cur?.gnfa||!ripCandidates(cur.gnfa).some(s=>s.id===k))return;
+    if(rip.index<rip.steps.length-1)rip.steps=rip.steps.slice(0,rip.index+1);
+    const out=eliminateState(cur.gnfa,k),n=rip.steps.length,main=out.changes[0];
+    const formula=main?`R(${main.from},${main.to}) ← ${main.old} + ${cur.gnfa.rel[main.from+"→"+k]||EMPTY}(${out.loop})*${cur.gnfa.rel[k+"→"+main.to]||EMPTY} = ${main.val}`:`Eliminar ${k}: no crea rutas nuevas`;
+    const history=[...cur.history,{state:k,changes:out.changes.length,formula}];
+    rip.steps.push({phase:`Paso ${n} · Eliminación`,title:`Eliminar el estado ${k}`,text:out.changes.length?`Se combinaron ${out.changes.length} pares entrada–salida aplicando Rᵢⱼ + Rᵢₖ(Rₖₖ)*Rₖⱼ.`:"El estado no conectaba una entrada con una salida; basta retirar sus transiciones.",gnfa:out.gnfa,history,eliminated:k,changed:out.changes.map(x=>({from:x.from,to:x.to})),formula});
+    rip.index=rip.steps.length-1;renderRip();
+  }
+  function renderRip(){
+    if(!rip.steps.length)buildRipSteps();const st=rip.steps[rip.index],g=st.gnfa;
+    $("#ripPhase").textContent=st.phase;$("#ripTitle").textContent=st.title;$("#ripText").textContent=st.text;$("#ripFormula").textContent=st.formula||"—";
+    const ga={states:g.states||[],edges:gnfaEdges(g)};renderGraph($("#ripSvg"),ga,{changedEdges:st.changed,onStateClick:id=>{if(ripCandidates(g).some(s=>s.id===id)){$("#ripStateSelect").value=id;toast(`Estado ${id} seleccionado para eliminar`)}}});
+    const cand=ripCandidates(g);$("#ripStateSelect").innerHTML=cand.map(s=>`<option>${s.id}</option>`).join("");$("#eliminateBtn").disabled=!cand.length;$("#bestBtn").disabled=!cand.length;
+    $("#ripRemaining").textContent=cand.length?`${cand.length} estados eliminables`:"Solo inicio y final";
+    $("#ripHistory").innerHTML=st.history.length?st.history.map((h,i)=>`<li class="${i===st.history.length-1?"active":""}"><b>${i+1}. Eliminado ${h.state}</b><span>${h.changes} expresiones actualizadas</span></li>`).join(""):'<li><b>GNFA preparado</b><span>Aún no se han eliminado estados</span></li>';
+    const done=!cand.length&&g.startId&&g.finalId,regex=done?(g.rel[g.startId+"→"+g.finalId]||EMPTY):"Pendiente…";$("#finalRegex").textContent=regex;
+    if(done)validateRegex(regex,rip.original);else{$("#regexValidation").className="validation";$("#regexValidation").textContent="La validación se ejecutará al terminar."}
+    updateNav();
+  }
+  $("#eliminateBtn").onclick=()=>addRipStep($("#ripStateSelect").value);
+  $("#bestBtn").onclick=()=>{const g=rip.steps[rip.index].gnfa,k=bestCandidate(g);if(k){$("#ripStateSelect").value=k;toast(`${k} genera pocas combinaciones nuevas`)}};
+
+  function epsilonClosure(set,map){const out=new Set(set),stack=[...set];while(stack.length){const s=stack.pop();for(const t of map[s]?.[EPS]||[])if(!out.has(t)){out.add(t);stack.push(t)}}return out}
+  function runNfa(a,w){const map=transitionMap(a),start=a.states.find(s=>s.initial);if(!start)return false;let cur=epsilonClosure(new Set([start.id]),map);for(const c of [...w]){const nx=new Set();cur.forEach(s=>(map[s]?.[c]||[]).forEach(t=>nx.add(t)));cur=epsilonClosure(nx,map)}return [...cur].some(id=>a.states.find(s=>s.id===id)?.final)}
+  function regexToJS(r){
+    if(r===EMPTY)return "(?!)";let x=r.replaceAll(EPS,"");
+    x=x.replace(/([+])/g,"|");return `^(?:${x})$`;
+  }
+  function allStrings(alpha,max){const out=[""];for(let n=1;n<=max;n++){const prev=out.filter(x=>x.length===n-1);for(const p of prev)for(const c of alpha)out.push(p+c)}return out}
+  function validateRegex(regex,a){
+    const el=$("#regexValidation");try{const re=new RegExp(regexToJS(regex)),tests=allStrings(a.alphabet||alphabet(),5),bad=tests.filter(w=>runNfa(a,w)!==re.test(w));if(!bad.length){el.className="validation good";el.innerHTML=`✓ <span><b>Validación superada.</b> Coincide con el autómata en ${tests.length} cadenas de longitud 0 a 5. La eliminación algebraica garantiza la equivalencia general.</span>`}else{el.className="validation warn";el.textContent=`Revisión necesaria: difiere en ${bad.slice(0,4).map(x=>x||EPS).join(", ")}.`}}catch(e){el.className="validation warn";el.textContent="La expresión se obtuvo algebraicamente, pero el verificador acotado no pudo interpretarla."}
+  }
+
+  function updateNav(){
+    const obj=activeTab==="myhill"?myhill:rip,len=obj.steps.length;$("#stepCount").textContent=`Paso ${obj.index+1} / ${len}`;
+    $("#prevBtn").disabled=obj.index===0;$("#nextBtn").disabled=activeTab==="myhill"?obj.index>=len-1:(!ripCandidates(obj.steps[obj.index]?.gnfa||{states:[]}).length);
+    $("#nextBtn").textContent=activeTab==="rip"&&obj.index>=len-1?"Eliminar →":"Siguiente →";
+  }
+  $("#prevBtn").onclick=()=>{const o=activeTab==="myhill"?myhill:rip;if(o.index>0)o.index--;renderAll()};
+  $("#nextBtn").onclick=()=>{const o=activeTab==="myhill"?myhill:rip;if(activeTab==="myhill"){if(o.index<o.steps.length-1)o.index++}else if(o.index<o.steps.length-1)o.index++;else{const k=bestCandidate(o.steps[o.index].gnfa);if(k)addRipStep(k);return}renderAll()};
+  $("#resetBtn").onclick=()=>{stopAuto();if(activeTab==="myhill"){buildMyhillSteps();myhill.index=0}else buildRipSteps();renderAll()};
+  $("#autoBtn").onclick=()=>{const o=activeTab==="myhill"?myhill:rip;if(o.auto){stopAuto();return}$("#autoBtn").textContent="Ⅱ Pausar";o.auto=setInterval(()=>{if(activeTab==="myhill"){if(myhill.index<myhill.steps.length-1){myhill.index++;renderMyhill()}else stopAuto()}else{const st=rip.steps[rip.index],k=bestCandidate(st.gnfa);if(k)addRipStep(k);else stopAuto()}},1100)};
+  function stopAuto(){[myhill,rip].forEach(o=>{if(o.auto)clearInterval(o.auto);o.auto=null});$("#autoBtn").textContent="▶ Automático"}
+
+  $$(".tab").forEach(b=>b.onclick=()=>{if(b.dataset.tab===activeTab)return;stopAuto();activeTab=b.dataset.tab;$$(".tab").forEach(x=>x.classList.toggle("active",x===b));$("#myhillLab").classList.toggle("hidden",activeTab!=="myhill");$("#ripLab").classList.toggle("hidden",activeTab!=="rip");populateExamples();loadExample(0)});
+  document.addEventListener("keydown",e=>{if(["INPUT","SELECT"].includes(document.activeElement.tagName))return;if(e.key==="ArrowRight")$("#nextBtn").click();if(e.key==="ArrowLeft")$("#prevBtn").click();if(e.key==="Delete")$("#deleteBtn").click()});
+
+  populateExamples();$("#alphabet").value=automaton.alphabet.join(",");buildMyhillSteps();renderAll();
+})();
+</script>
+</body>
+</html>
