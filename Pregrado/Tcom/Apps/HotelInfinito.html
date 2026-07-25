@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>El Hotel Infinito de Hilbert</title>
+  <style>
+    :root{
+      --bg:#f5f1e8;--panel:#fffdf8;--panel2:#f0eadf;--ink:#1d2730;--muted:#63717c;
+      --brand:#0d6b68;--brand2:#074b4a;--gold:#e0a326;--blue:#2d6cdf;--red:#c84b4b;
+      --green:#21875a;--line:#d9d2c5;--shadow:0 12px 28px rgba(42,39,31,.1);
+      --radius:16px;--speed:.55s;
+    }
+    [data-theme="dark"]{
+      --bg:#10171b;--panel:#172127;--panel2:#202e35;--ink:#eef4f4;--muted:#a7b6bb;
+      --brand:#45c0b7;--brand2:#8ee2dc;--gold:#f1bd4b;--blue:#76a3ff;--red:#ff7a7a;
+      --green:#6fd39c;--line:#33444b;--shadow:0 14px 32px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 55%,transparent);outline-offset:2px}
+    .topbar{min-height:68px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 18px;position:sticky;top:0;z-index:30}
+    .brand{display:flex;align-items:center;gap:11px;min-width:260px}
+    .sign{width:42px;height:42px;border-radius:12px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:23px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+    .brand h1{font-family:Georgia,serif;font-size:clamp(1.05rem,2.2vw,1.45rem);margin:0;line-height:1.05}
+    .brand small{display:block;color:var(--muted);font-size:.73rem;margin-top:3px}
+    .top-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .icon-btn,.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:8px 11px;transition:.18s ease}
+    .icon-btn:hover,.btn:hover{border-color:var(--brand);transform:translateY(-1px)}
+    .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+    .btn.gold{background:var(--gold);border-color:var(--gold);color:#221803;font-weight:750}
+    .btn.danger{color:var(--red)}
+    .btn.small{font-size:.8rem;padding:6px 9px}
+    .app{display:grid;grid-template-columns:230px minmax(0,1fr) 300px;gap:12px;padding:12px;max-width:1800px;margin:auto}
+    .controls,.explain{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;height:calc(100vh - 92px);position:sticky;top:80px;overflow:auto}
+    .control-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:5px 0 8px}
+    .scenario-list{display:grid;gap:6px}
+    .scenario-btn{width:100%;border:1px solid transparent;border-radius:11px;background:var(--panel2);color:var(--ink);text-align:left;padding:9px 10px;display:flex;align-items:center;gap:8px}
+    .scenario-btn:hover{border-color:var(--brand)}
+    .scenario-btn.active{background:color-mix(in srgb,var(--brand) 15%,var(--panel));border-color:var(--brand);font-weight:760}
+    .scenario-btn span{width:25px;text-align:center}
+    .control-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+    .control-grid .wide{grid-column:1/-1}
+    .range-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    input[type="range"]{accent-color:var(--brand);width:100%}
+    .main{min-width:0}
+    .hotel-stage{background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 92%,var(--brand)),var(--panel));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;position:sticky;top:80px;z-index:20}
+    .hotel-head{padding:9px 13px;background:var(--brand2);color:#fff;display:flex;align-items:center;gap:10px;min-height:47px}
+    [data-theme="dark"] .hotel-head{color:#071a1a}
+    .hotel-head strong{font-family:Georgia,serif;letter-spacing:.03em}
+    .infinity-light{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:.76rem}
+    .pulse{width:8px;height:8px;border-radius:50%;background:#8bf0a7;box-shadow:0 0 0 4px rgba(139,240,167,.17);animation:pulse 2s infinite}
+    @keyframes pulse{50%{transform:scale(1.35)}}
+    .stage-tools{display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap;font-size:.78rem;color:var(--muted)}
+    .window-badge{background:var(--panel2);border-radius:999px;padding:4px 9px;margin-left:auto}
+    .rooms-wrap{position:relative;padding:15px 12px 9px;overflow-x:auto;scrollbar-color:var(--brand) transparent}
+    .rooms{display:grid;grid-template-columns:repeat(var(--rooms),minmax(82px,1fr));gap:8px;min-width:max-content}
+    .door{position:relative;width:86px;min-height:122px;border:2px solid #7b5a43;border-radius:10px 10px 3px 3px;background:linear-gradient(90deg,#855f45,#a47a58 50%,#805b43);color:#fff;padding:7px 6px 5px;text-align:center;box-shadow:inset 0 0 0 3px rgba(255,255,255,.08);transition:transform var(--speed),opacity var(--speed),border-color .2s,filter .2s}
+    .door::after{content:"";position:absolute;right:8px;top:57%;width:6px;height:6px;border-radius:50%;background:#e9c26a}
+    .door.free{background:repeating-linear-gradient(135deg,#e8ece7,#e8ece7 8px,#d8e5da 8px,#d8e5da 16px);color:#24402f;border-color:var(--green)}
+    .door.reserved{background:repeating-linear-gradient(135deg,#f1de9a,#f1de9a 8px,#e7c96a 8px,#e7c96a 16px);color:#473807;border-color:var(--gold)}
+    [data-theme="dark"] .door.free{background:repeating-linear-gradient(135deg,#254336,#254336 8px,#2d5342 8px,#2d5342 16px);color:#e9fff0}
+    [data-theme="dark"] .door.reserved{background:repeating-linear-gradient(135deg,#5a4a1c,#5a4a1c 8px,#6d5922 8px,#6d5922 16px);color:#fff2bd}
+    .door.old{border-color:#72a6ff}
+    .door.new{border-color:#ffcc56}
+    .door.highlight{transform:translateY(-8px) scale(1.03);filter:drop-shadow(0 9px 8px rgba(45,108,223,.28));outline:3px solid var(--blue)}
+    .door-number{font-weight:900;font-size:.78rem;background:rgba(0,0,0,.22);border-radius:6px;padding:2px 5px;display:inline-block}
+    .guest{font-size:1.65rem;line-height:1.2;margin-top:9px;transition:transform var(--speed)}
+    .guest.arrive{animation:arrive var(--speed) ease both}
+    @keyframes arrive{from{transform:translateY(-20px);opacity:0}to{transform:none;opacity:1}}
+    .guest-id{font-size:.68rem;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .status{font-size:.61rem;margin-top:3px;opacity:.92;text-transform:uppercase;letter-spacing:.04em}
+    .move-chip{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;border-radius:999px;padding:2px 6px;font-size:.58rem;white-space:nowrap;z-index:3}
+    .infinity-tail{min-width:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--brand);font-weight:850}
+    .infinity-tail b{font-size:2.1rem;letter-spacing:.1em;line-height:1}
+    .stage-foot{border-top:1px solid var(--line);padding:8px 12px;display:flex;gap:8px;align-items:center;font-size:.75rem;color:var(--muted);flex-wrap:wrap}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto}
+    .dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:0}
+    .dot.old{background:var(--blue)}.dot.new{background:var(--gold)}.dot.free{background:var(--green)}
+    .module-nav{display:flex;gap:7px;overflow-x:auto;padding:12px 2px 9px;scrollbar-width:thin}
+    .module-tab{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:var(--panel);color:var(--muted);font-size:.78rem}
+    .module-tab.active{background:var(--brand);border-color:var(--brand);color:#fff}
+    .content-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+    .module{display:none}.module.active{display:block;animation:fade .25s ease}
+    @keyframes fade{from{opacity:.4;transform:translateY(5px)}}
+    h2{font-family:Georgia,serif;font-size:1.35rem;margin:0 0 5px}
+    h3{font-size:1rem;margin:14px 0 7px}
+    .lede{color:var(--muted);margin:0 0 12px;max-width:75ch}
+    .callout{border-left:4px solid var(--brand);background:color-mix(in srgb,var(--brand) 8%,var(--panel));padding:10px 12px;border-radius:0 10px 10px 0;margin:10px 0}
+    .prediction{border:1px dashed var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--panel));border-radius:12px;padding:12px;margin:10px 0}
+    .prediction-options,.choice-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+    .feedback{min-height:24px;margin-top:8px;font-weight:720}
+    .feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+    .formula-stack{display:grid;gap:9px}
+    .formula-level{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px}
+    .formula-level small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:3px}
+    .formula{font-family:"Cambria Math",Georgia,serif;font-size:1.17rem;color:var(--brand)}
+    .explain h2{font-size:1.15rem}
+    .step-chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border-radius:999px;padding:4px 9px;font-size:.75rem;margin:6px 0 10px}
+    .explain-list{padding-left:19px;color:var(--muted);font-size:.87rem}
+    .explain-list li{margin:6px 0}
+    .math-toggles{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}
+    .table-shell{overflow:auto;border:1px solid var(--line);border-radius:12px}
+    table{border-collapse:collapse;width:100%;font-size:.8rem}
+    th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+    th{background:var(--panel2);color:var(--muted);position:sticky;top:0;cursor:pointer}
+    tr:hover td{background:color-mix(in srgb,var(--blue) 8%,var(--panel))}
+    .pattern-row td{text-align:center;color:var(--muted);font-weight:800}
+    .number-line{overflow-x:auto;padding:28px 6px 8px}
+    .ticks{display:flex;min-width:max-content;border-top:3px solid var(--ink);position:relative}
+    .tick{width:55px;text-align:center;position:relative;padding-top:12px;font-size:.72rem}
+    .tick::before{content:"";position:absolute;left:50%;top:-7px;width:2px;height:12px;background:var(--ink)}
+    .tick.occupied{color:var(--blue);font-weight:850}.tick.free{color:var(--green);font-weight:850}
+    .tick .jump{position:absolute;left:50%;bottom:25px;color:var(--gold);font-size:.9rem}
+    .bus-scene{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;overflow:auto}
+    .bus{min-width:170px;background:var(--gold);color:#251b04;border-radius:12px 22px 7px 7px;padding:9px;box-shadow:inset 0 -7px 0 #a87311}
+    .bus-windows{display:flex;gap:5px}.bus-windows span{background:#d9f2ff;border:2px solid #5f8290;border-radius:4px;padding:4px}
+    .wheel{display:inline-block;width:18px;height:18px;background:#27323a;border-radius:50%;margin:8px 12px -14px}
+    .infinite-grid{display:grid;grid-template-columns:52px repeat(var(--cols),55px);gap:5px;overflow:auto;max-height:390px}
+    .grid-cell{min-width:52px;min-height:43px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);display:grid;place-items:center;font-size:.72rem;text-align:center;padding:3px}
+    .grid-cell.head{font-weight:800;background:var(--brand);color:#fff;position:sticky;top:0;z-index:2}
+    .grid-cell.selected{background:var(--gold);color:#281d03;border-color:#9b6b0f;transform:scale(1.06)}
+    .grid-cell.visited{background:color-mix(in srgb,var(--brand) 18%,var(--panel))}
+    .rule-lab{display:grid;grid-template-columns:minmax(230px,.75fr) 1.25fr;gap:14px}
+    .field{display:grid;gap:4px;margin:8px 0}
+    .field label{font-size:.75rem;color:var(--muted);font-weight:750}
+    .field input,.field select{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;padding:8px}
+    .result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    .result-item{border:1px solid var(--line);border-radius:10px;padding:9px;background:var(--panel2);font-size:.78rem}
+    .result-item b{display:block;margin-bottom:3px}
+    .result-item.ok{border-color:var(--green)}.result-item.warn{border-color:var(--red)}
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .mini-hotel{border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--panel2)}
+    .mini-rooms{display:flex;gap:4px;overflow:hidden;margin:10px 0}
+    .mini-room{flex:1;min-width:31px;height:54px;background:#986d4e;color:#fff;border-radius:6px 6px 2px 2px;display:grid;place-items:center;font-size:.7rem}
+    .mini-room.free{background:var(--green)}.mini-room.blocked{outline:3px solid var(--red)}
+    .concept-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .concept{border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--panel2);min-height:150px}
+    .concept .symbol{font-size:1.8rem}.concept h3{margin:5px 0}.concept p{font-size:.8rem;color:var(--muted)}
+    .concept-detail{display:none;font-size:.78rem;border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+    .concept.open .concept-detail{display:block}
+    .challenge-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px}
+    .challenge-list{display:grid;gap:6px}
+    .challenge-btn{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;text-align:left;padding:8px}
+    .challenge-btn.active{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 13%,var(--panel))}
+    .progress-track{height:9px;background:var(--panel2);border-radius:999px;overflow:hidden;margin:7px 0}
+    .progress-bar{height:100%;background:linear-gradient(90deg,var(--brand),var(--gold));width:0;transition:.3s}
+    .badge-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .achievement{filter:grayscale(1);opacity:.45;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:.75rem}
+    .achievement.earned{filter:none;opacity:1;border-color:var(--gold)}
+    .teacher-tools{display:none;background:color-mix(in srgb,var(--gold) 12%,var(--panel));border:1px solid var(--gold);border-radius:12px;padding:10px;margin-top:10px}
+    body.teacher .teacher-tools{display:block}
+    body.teacher.hide-explanations .explain .teacher-hide,body.teacher.hide-explanations .module .teacher-hide{filter:blur(6px);user-select:none}
+    .ending{background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff}
+    [data-theme="dark"] .ending{color:#062423}
+    .ending ul{columns:2;gap:30px}
+    .big-question{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:13px;padding:14px;font-family:Georgia,serif;font-size:1.25rem;margin-top:12px}
+    .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,80px);opacity:0;background:var(--ink);color:var(--panel);padding:9px 14px;border-radius:999px;z-index:60;transition:.25s;box-shadow:var(--shadow)}
+    .toast.show{transform:translate(-50%,0);opacity:1}
+    .noscript{margin:20px;padding:15px;background:#fee;border:1px solid #d77;color:#600;border-radius:10px}
+    @media(max-width:1180px){
+      .app{grid-template-columns:205px minmax(0,1fr)}
+      .explain{position:relative;top:auto;height:auto;grid-column:1/-1}
+      .explain .formula-stack{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:760px){
+      .topbar{position:relative;padding:9px 11px}.brand{min-width:0}.brand small{display:none}
+      .top-actions .label{display:none}
+      .app{display:block;padding:8px}
+      .controls{position:relative;top:auto;height:auto;margin-bottom:8px;padding:9px}
+      .scenario-list{display:flex;overflow-x:auto}.scenario-btn{flex:0 0 155px}
+      .control-grid{grid-template-columns:repeat(4,1fr)}.control-grid .wide{grid-column:auto}
+      .hotel-stage{top:0}
+      .stage-tools{display:grid;grid-template-columns:1fr auto}.window-badge{grid-column:1/-1;margin:0}
+      .rule-lab,.challenge-layout{grid-template-columns:1fr}
+      .concept-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .explain .formula-stack{grid-template-columns:1fr}
+    }
+    @media(max-width:480px){
+      .top-actions{gap:4px}.icon-btn{padding:7px 8px}
+      .control-grid{grid-template-columns:repeat(3,1fr)}
+      .control-grid .btn{font-size:0}.control-grid .btn::first-letter{font-size:1rem}
+      .hotel-head{font-size:.82rem}.rooms-wrap{padding-left:8px;padding-right:8px}
+      .compare-grid,.result-grid,.concept-grid{grid-template-columns:1fr}
+      .ending ul{columns:1}
+    }
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <noscript><div class="noscript">Esta aplicación necesita JavaScript para ejecutar las simulaciones.</div></noscript>
+  <header class="topbar">
+    <div class="brand">
+      <div class="sign" aria-hidden="true">∞</div>
+      <div><h1>El Hotel Infinito de Hilbert</h1><small>Recepción abierta… para siempre</small></div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="teacherToggle" title="Modo profesor">🎓 <span class="label">Profesor</span></button>
+      <button class="icon-btn" id="themeToggle" title="Cambiar tema">🌙 <span class="label">Tema</span></button>
+      <button class="icon-btn" id="fullscreenBtn" title="Pantalla completa">⛶ <span class="label">Pantalla</span></button>
+    </div>
+  </header>
+
+  <div class="app">
+    <aside class="controls" aria-label="Panel de control">
+      <div class="control-title">Escenarios</div>
+      <div class="scenario-list" id="scenarioList">
+        <button class="scenario-btn active" data-scenario="filled"><span>🏨</span> Hotel lleno</button>
+        <button class="scenario-btn" data-scenario="single"><span>🧍</span> Llega 1 huésped</button>
+        <button class="scenario-btn" data-scenario="finite"><span>👥</span> Grupo finito</button>
+        <button class="scenario-btn" data-scenario="bus"><span>🚌</span> Bus infinito</button>
+        <button class="scenario-btn" data-scenario="buses"><span>🚍</span> Varios buses</button>
+      </div>
+      <div class="control-title">Reproducción</div>
+      <div class="control-grid">
+        <button class="btn" id="prevBtn" title="Paso anterior">◀ Anterior</button>
+        <button class="btn primary" id="nextBtn" title="Siguiente paso">Siguiente ▶</button>
+        <button class="btn" id="autoBtn">▶ Auto</button>
+        <button class="btn" id="pauseBtn">⏸ Pausa</button>
+        <button class="btn danger wide" id="resetBtn">↺ Reiniciar escenario</button>
+      </div>
+      <div class="control-title">Parámetros</div>
+      <div class="field" id="kField">
+        <label for="kInput">Nuevos huéspedes: k = <b id="kValue">5</b></label>
+        <input id="kInput" type="range" min="1" max="100" value="5">
+      </div>
+      <div class="field">
+        <label for="roomCount">Habitaciones visibles: <b id="roomValue">12</b></label>
+        <input id="roomCount" type="range" min="8" max="20" value="12">
+      </div>
+      <div class="field">
+        <label for="windowStart">Comenzar ventana en: <b id="windowValue">1</b></label>
+        <input id="windowStart" type="range" min="1" max="81" value="1">
+      </div>
+      <div class="field">
+        <label for="speed">Velocidad</label>
+        <select id="speed">
+          <option value="1100">Lenta</option>
+          <option value="650" selected>Media</option>
+          <option value="330">Rápida</option>
+        </select>
+      </div>
+      <button class="btn gold" id="newChallengeBtn" style="width:100%">🎲 Nuevo desafío</button>
+      <div class="teacher-tools">
+        <b>Herramientas del profesor</b>
+        <div class="field"><label for="focusGuest">Seleccionar huésped</label><input id="focusGuest" type="number" min="1" value="8"></div>
+        <div class="choice-row">
+          <button class="btn small" id="focusBtn">Resaltar</button>
+          <button class="btn small" id="hideExplainBtn">Ocultar explicación</button>
+          <button class="btn small" id="formulaBtn">Fórmulas</button>
+        </div>
+        <small>También puedes tocar una puerta para resaltarla.</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="hotel-stage" aria-label="Visualización del Hotel Infinito">
+        <div class="hotel-head">
+          <span aria-hidden="true">🛎️</span><strong>HOTEL INFINITO</strong>
+          <span id="scenarioTitle">Todas las habitaciones ocupadas</span>
+          <div class="infinity-light"><i class="pulse"></i> continúa hasta el infinito →</div>
+        </div>
+        <div class="stage-tools">
+          <span id="ruleBanner">Regla activa: habitación n → n</span>
+          <span id="stepBanner">Estado inicial</span>
+          <span class="window-badge" id="windowBadge">Ventana: habitaciones 1–12 de un patrón infinito</span>
+        </div>
+        <div class="rooms-wrap" id="roomsWrap">
+          <div class="rooms" id="rooms" style="--rooms:13"></div>
+        </div>
+        <div class="stage-foot">
+          <span>Solo vemos una ventana finita; el patrón no termina.</span>
+          <div class="legend">
+            <span><i class="dot old"></i>Huésped antiguo</span>
+            <span><i class="dot new"></i>Nueva llegada</span>
+            <span><i class="dot free"></i>Libre</span>
+          </div>
+        </div>
+      </section>
+
+      <nav class="module-nav" aria-label="Módulos">
+        <button class="module-tab active" data-module="experiment">Experimento</button>
+        <button class="module-tab" data-module="tables">Tabla y línea</button>
+        <button class="module-tab" data-module="rules">Laboratorio de reglas</button>
+        <button class="module-tab" data-module="compare">Finito vs. infinito</button>
+        <button class="module-tab" data-module="concepts">Conceptos</button>
+        <button class="module-tab" data-module="challenges">Desafíos</button>
+        <button class="module-tab" data-module="closing">¿Qué aprendimos?</button>
+      </nav>
+
+      <section class="module active" id="module-experiment">
+        <div class="content-card">
+          <h2 id="experimentTitle">Un hotel lleno… ¿sin espacio?</h2>
+          <p class="lede teacher-hide" id="experimentLead">Cada habitación numerada con un natural está ocupada. Cambia el número de puertas visibles: el hotel no se vuelve más grande ni más pequeño; solo cambia nuestra ventana.</p>
+          <div class="prediction" id="predictionBox">
+            <b>🔮 Predice antes de mover</b>
+            <div id="predictionQuestion">¿Puede un hotel completamente lleno alojar a alguien más?</div>
+            <div class="prediction-options" id="predictionOptions"></div>
+            <div class="feedback" id="predictionFeedback"></div>
+          </div>
+          <div id="scenarioExtra"></div>
+          <div class="callout teacher-hide" id="conclusionBox">En un hotel finito, lleno significa que no hay lugar. Todavía no hemos intentado reorganizar este hotel infinito.</div>
+        </div>
+      </section>
+
+      <section class="module" id="module-tables">
+        <div class="content-card">
+          <h2>Correspondencias sincronizadas</h2>
+          <p class="lede">Cada fila representa a una persona. Pasa el cursor sobre una fila para iluminar su habitación de destino.</p>
+          <div class="range-row" style="max-width:360px;margin-bottom:9px">
+            <label for="tableRows">Registros visibles</label>
+            <select id="tableRows"><option>5</option><option selected>10</option><option>15</option><option>20</option></select>
+          </div>
+          <div class="table-shell">
+            <table id="mappingTable">
+              <thead><tr><th data-sort="guest">Huésped ↕</th><th data-sort="from">Habitación anterior ↕</th><th>Regla</th><th data-sort="to">Habitación nueva ↕</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="lede" style="margin-top:8px">⋯ La tabla termina en la pantalla, pero la correspondencia continúa para todo número natural.</p>
+        </div>
+        <div class="content-card">
+          <h2>Línea de números naturales</h2>
+          <p class="lede">Azul = ocupada; verde = libre. Las flechas muestran el salto producido por la regla activa.</p>
+          <div class="number-line"><div class="ticks" id="ticks"></div></div>
+        </div>
+      </section>
+
+      <section class="module" id="module-rules">
+        <div class="content-card">
+          <h2>Laboratorio de reglas</h2>
+          <p class="lede">Prueba una regla sobre una ventana de 30 huéspedes. Primero observa qué sucede; después relaciona el resultado con el vocabulario matemático.</p>
+          <div class="rule-lab">
+            <div>
+              <div class="field"><label for="rulePreset">Reglas precargadas</label>
+                <select id="rulePreset"><option>n + 1</option><option>n + k</option><option>2n</option><option>2n - 1</option><option>3n</option><option>n²</option><option>n - 1</option><option value="custom">Escribir otra…</option></select>
+              </div>
+              <div class="field"><label for="ruleInput">Tu regla</label><input id="ruleInput" value="n + 1" aria-describedby="ruleHelp"></div>
+              <div class="field"><label for="labK">Valor de k</label><input id="labK" type="number" min="1" max="100" value="5"></div>
+              <small id="ruleHelp">Usa n, k, +, −, ×, ÷, paréntesis y ^. Ejemplo: 2n + 1.</small>
+              <button class="btn primary" id="analyzeRuleBtn" style="width:100%;margin-top:10px">Analizar y visualizar</button>
+            </div>
+            <div>
+              <div class="result-grid" id="ruleResults"></div>
+              <div class="feedback" id="ruleFeedback"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="module" id="module-compare">
+        <div class="content-card">
+          <h2>El mismo problema, dos hoteles</h2>
+          <p class="lede">Ambos empiezan llenos. Presiona el botón y observa por qué “lleno” no se comporta igual cuando la lista de habitaciones no termina.</p>
+          <div class="compare-grid">
+            <div class="mini-hotel"><h3>🏢 Hotel finito: 8 habitaciones</h3><div class="mini-rooms" id="finiteHotel"></div><p id="finiteResult">8 habitaciones, 8 huéspedes. No queda espacio.</p></div>
+            <div class="mini-hotel"><h3>🏨 Hotel infinito: 1, 2, 3, …</h3><div class="mini-rooms" id="infiniteHotel"></div><p id="infiniteResult">Todas ocupadas, pero no existe una última habitación.</p></div>
+          </div>
+          <button class="btn gold" id="compareBtn" style="margin-top:12px">Llega una persona a ambos hoteles</button>
+        </div>
+      </section>
+
+      <section class="module" id="module-concepts">
+        <div class="content-card">
+          <h2>Exploración conceptual</h2>
+          <p class="lede">Abre las tarjetas después de experimentar. La idea visual aparece antes que el nombre formal.</p>
+          <div class="concept-grid" id="conceptGrid"></div>
+        </div>
+      </section>
+
+      <section class="module" id="module-challenges">
+        <div class="content-card">
+          <h2>Desafíos de recepción</h2>
+          <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+          <small id="progressText">0 de 6 resueltos</small>
+          <div class="challenge-layout" style="margin-top:12px">
+            <div class="challenge-list" id="challengeList"></div>
+            <div>
+              <h3 id="challengeTitle"></h3><p id="challengePrompt"></p>
+              <div class="choice-row" id="challengeChoices"></div>
+              <div class="feedback" id="challengeFeedback"></div>
+              <div class="choice-row"><button class="btn small" id="hintBtn">💡 Pista</button><button class="btn small" id="retryBtn">↺ Reintentar</button></div>
+              <p id="hintText" class="lede"></p>
+            </div>
+          </div>
+          <div class="badge-row">
+            <span class="achievement" id="badge1">🔑 Primera llave</span>
+            <span class="achievement" id="badge3">🛎️ Recepcionista</span>
+            <span class="achievement" id="badge6">♾️ Maestro del infinito</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="module" id="module-closing">
+        <div class="content-card ending">
+          <h2>¿Qué aprendimos?</h2>
+          <ul>
+            <li>Un hotel infinito se comporta de forma distinta a uno finito.</li>
+            <li>Un conjunto infinito puede corresponderse con una parte propia de sí mismo.</li>
+            <li>Los naturales y los números pares tienen la misma cardinalidad.</li>
+            <li>Agregar una cantidad finita no cambia el tamaño de un conjunto numerable.</li>
+            <li>Varios conjuntos numerables pueden combinarse y seguir siendo numerables.</li>
+            <li>La clave es construir una correspondencia uno a uno.</li>
+          </ul>
+          <div class="big-question">Próxima parada: ¿todos los infinitos tienen el mismo tamaño?</div>
+          <p>No la responderemos todavía. Esta pregunta abre la puerta a los números reales, la diagonalización de Cantor y los infinitos no numerables.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside class="explain" aria-label="Panel de explicación">
+      <h2>Qué está ocurriendo</h2>
+      <div class="step-chip"><span id="stepDot">●</span><span id="stepText">Paso 0 de 0</span></div>
+      <p class="teacher-hide" id="whatText">El hotel está lleno: cada huésped n ocupa la habitación n.</p>
+      <ul class="explain-list teacher-hide" id="detailList"></ul>
+      <div class="math-toggles">
+        <button class="btn small" data-level="intuitive">Intuitivo</button>
+        <button class="btn small" data-level="examples">Ejemplos</button>
+        <button class="btn small" data-level="symbolic">Símbolo</button>
+      </div>
+      <div class="formula-stack">
+        <div class="formula-level level-intuitive"><small>Nivel intuitivo</small><span id="intuitiveText">Cada huésped permanece donde está.</span></div>
+        <div class="formula-level level-examples"><small>Con ejemplos</small><span id="examplesText">1→1, 2→2, 3→3</span></div>
+        <div class="formula-level level-symbolic"><small>Nivel simbólico</small><span class="formula" id="symbolicText">f(n) = n</span></div>
+      </div>
+      <div class="callout teacher-hide" id="mathConclusion"><b>Idea clave:</b> infinito no significa “un número enorme”; describe que la lista no tiene final.</div>
+    </aside>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    "use strict";
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const state={
+      scenario:"filled",step:0,k:5,roomCount:12,windowStart:1,timer:null,
+      speed:650,focusedRoom:null,sort:"guest",sortDir:1,tableRows:10,
+      diagonal:0,busRows:5,busCols:6,teacher:false,formulaVisible:true,
+      solved:new Set(JSON.parse(localStorage.getItem("hilbertSolved")||"[]"))
+    };
+    const maxSteps={filled:0,single:7,finite:6,bus:8,buses:20};
+    const scenarioMeta={
+      filled:{title:"Todas las habitaciones ocupadas",rule:"habitación n → n"},
+      single:{title:"Llega una persona nueva",rule:"n → n + 1"},
+      finite:{title:"Llega un grupo finito",rule:"n → n + k"},
+      bus:{title:"Llega un bus con infinitos pasajeros",rule:"n → 2n"},
+      buses:{title:"Llegan varios buses infinitos",rule:"recorrido diagonal"}
+    };
+    const predictions={
+      filled:{q:"¿Qué significa que este hotel infinito está lleno?",opts:["Existe una última puerta ocupada","Cada habitación natural está ocupada","Hay muchísimas, pero finitas"],ok:1,why:"Correcto: para cada número natural n, la habitación n tiene un huésped."},
+      single:{q:"¿Será posible alojar a una persona nueva sin expulsar a nadie?",opts:["Sí","No"],ok:0,why:"Sí. La simulación mostrará una reorganización completa."},
+      finite:{q:"Si llegan k personas, ¿qué habitaciones conviene liberar?",opts:["Las primeras k","Las últimas k","Solo las pares"],ok:0,why:"Mover a cada huésped k lugares libera exactamente 1, 2, …, k."},
+      bus:{q:"¿Qué tipo de habitaciones quedará libre al mover n → 2n?",opts:["Las pares","Las impares","Ninguna"],ok:1,why:"2n siempre es par; las habitaciones impares quedan disponibles."},
+      buses:{q:"¿Podemos ordenar parejas (bus, pasajero) en una sola lista?",opts:["Sí, recorriendo diagonales","No, una cuadrícula no se puede listar"],ok:0,why:"Cada diagonal contiene una cantidad finita de parejas y podemos recorrerlas una tras otra."}
+    };
+
+    function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove("show"),2300)}
+    function occupantAt(room){
+      const s=state.scenario,step=state.step,k=state.k;
+      if(s==="filled"||step===0) return {id:room,type:"old",label:`Huésped ${room}`};
+      if(s==="single"){
+        if(step<6){
+          const sampleMove=step===2&&room===1 || step===3&&room<=3 || step===4&&room===8 || step===5&&[1,2,3,8].includes(room);
+          return {id:room,type:"old",label:`Huésped ${room}`,moving:sampleMove,dest:room+1};
+        }
+        if(step===6) return room===1?null:{id:room-1,type:"old",label:`Huésped ${room-1}`,moving:true,dest:room};
+        return room===1?{id:"N1",type:"new",label:"Nueva N1",moving:true}:{id:room-1,type:"old",label:`Huésped ${room-1}`};
+      }
+      if(s==="finite"){
+        if(step<5) return step<2?{id:room,type:"old",label:`Huésped ${room}`}:(room<=k?null:{id:room-k,type:"old",label:`Huésped ${room-k}`,moving:step===3});
+        return room<=k?{id:`N${room}`,type:"new",label:`Nuevo N${room}`,moving:step===5}:{id:room-k,type:"old",label:`Huésped ${room-k}`};
+      }
+      if(s==="bus"){
+        if(step<4) return {id:room,type:"old",label:`Huésped ${room}`};
+        if(step<7) return room%2===0?{id:room/2,type:"old",label:`Huésped ${room/2}`,moving:step===4}:null;
+        return room%2===0?{id:room/2,type:"old",label:`Huésped ${room/2}`}:{id:`P${(room+1)/2}`,type:"new",label:`Pasajero ${(room+1)/2}`,moving:step===7};
+      }
+      return {id:room,type:"old",label:`Huésped ${room}`};
+    }
+    function roomStatus(room,occ){
+      if(occ) return occ.type==="new"?"Nueva llegada":"Ocupada";
+      if(state.scenario==="finite"&&room<=state.k&&state.step>=2&&state.step<5)return"Reservada";
+      if(state.scenario==="single"&&room===1&&state.step>=2&&state.step<7)return"Reservada";
+      return"Libre";
+    }
+    function ruleForScenario(){
+      if(state.scenario==="filled")return{expr:"n",intuitive:"Cada huésped permanece en su habitación.",examples:"1→1, 2→2, 3→3",symbolic:"f(n) = n"};
+      if(state.scenario==="single")return{expr:"n + 1",intuitive:"Cada huésped avanza una habitación.",examples:"1→2, 2→3, 3→4",symbolic:"f(n) = n + 1"};
+      if(state.scenario==="finite")return{expr:`n + ${state.k}`,intuitive:`Cada huésped avanza ${state.k} habitaciones.`,examples:`1→${1+state.k}, 2→${2+state.k}, 3→${3+state.k}`,symbolic:`f(n) = n + k, con k = ${state.k}`};
+      if(state.scenario==="bus")return{expr:"2n",intuitive:"Cada huésped antiguo va a una habitación par.",examples:"1→2, 2→4, 3→6",symbolic:"f(n) = 2n"};
+      return{expr:"diagonal",intuitive:"Recorremos la cuadrícula diagonal por diagonal.",examples:"(1,1), luego (1,2), (2,1), …",symbolic:"pareja (b,p) ↔ un natural"};
+    }
+    function stepInfo(){
+      const s=state.scenario,st=state.step,k=state.k;
+      if(s==="filled")return{what:"El hotel está lleno: cada huésped n ocupa la habitación n.",details:["No hay una última habitación.","Cambiar la ventana visible no cambia el hotel.","∞ no es el número de habitaciones; indica un patrón sin final."],conclusion:"Infinito no significa “muy grande”: significa que la lista 1, 2, 3, … no termina.",box:"En un hotel finito, lleno significa que no hay lugar. Todavía no hemos intentado reorganizar este hotel infinito."};
+      if(s==="single"){
+        const arr=[
+          ["Antes de mover, formula una predicción.",["Todas las habitaciones visibles están ocupadas.","La persona nueva espera en recepción."],"Aún no hemos creado espacio."],
+          ["La recepción anuncia la regla n → n + 1.",["Cada huésped tiene un destino diferente.","La regla se aplica a todos, no solo a las puertas visibles."],"Definimos el plan antes de mover."],
+          ["Trazamos el primer movimiento antes de ejecutarlo.",["Huésped 1 tendrá como destino la habitación 2.","Cuando todos se muevan, la habitación 1 quedará disponible."],"Nadie es expulsado: el huésped 1 sí tiene destino."],
+          ["Continuamos trazando el patrón.",["Huésped 2 tendrá como destino 3.","Huésped 3 tendrá como destino 4."],"Cada origen tiene un destino único."],
+          ["Mira a un huésped más lejano.",["Huésped 8: 8 → 9.","La misma regla funciona para cualquier n."],"No importa qué tan lejos miremos."],
+          ["Generalizamos el movimiento.",["n pasa a n + 1.","No existe un huésped final que quede sin mover."],"El patrón continúa indefinidamente."],
+          ["Verificamos que no hay colisiones.",["Si n₁ ≠ n₂, entonces n₁+1 ≠ n₂+1.","Cada huésped ocupa una puerta distinta."],"La asignación es uno a uno."],
+          ["La persona nueva entra en la habitación 1.",["Los antiguos ocupan 2, 3, 4, …","La nueva persona ocupa 1."],"Aunque estaba lleno, el hotel alojó una persona más."]
+        ][st];return{what:arr[0],details:arr[1],conclusion:arr[2],box:st===7?"Aunque el hotel estaba lleno, fue posible alojar una persona más.":"Sigue los pasos para descubrir dónde aparecerá el espacio."};
+      }
+      if(s==="finite"){
+        const arr=[
+          [`Llegan ${k} personas nuevas.`,["El hotel continúa lleno.","Necesitamos liberar k habitaciones."],"Predice qué bloque conviene liberar."],
+          ["Anunciamos la regla n → n + k.",[`Aquí k = ${k}.`,`Todos los huéspedes avanzan ${k} puertas.`],"La misma receta sirve para cualquier cantidad finita k."],
+          [`Las habitaciones 1 a ${k} comienzan a liberarse.`,[`Huésped 1 va a ${1+k}.`,`Huésped 2 va a ${2+k}.`],"Cada huésped conserva un destino."],
+          ["Aplicamos el patrón a todos.",[`n → n + ${k}.`,`La ventana puede ocultar algunos destinos, pero siguen existiendo.`],"No usamos una última habitación."],
+          ["Reservamos el primer bloque.",[`Quedan disponibles exactamente 1, 2, …, ${k}.`,"No hay colisiones entre huéspedes antiguos."],"Tenemos k llaves libres."],
+          ["Entra el grupo nuevo.",[`Nuevo 1 → habitación 1.`,`Nuevo ${k} → habitación ${k}.`],"El hotel vuelve a estar lleno."],
+          ["Comprobamos el resultado.",["Antiguos y nuevos tienen habitaciones distintas.","Nadie desapareció del modelo."],"Agregar una cantidad finita no cambia la cardinalidad numerable."]
+        ][st];return{what:arr[0],details:arr[1],conclusion:arr[2],box:st>=5?`Llegaron ${k} personas y todas encontraron habitación.`:"Las primeras k puertas serán la zona de llegada."};
+      }
+      if(s==="bus"){
+        const arr=[
+          ["Llega un bus con pasajeros 1, 2, 3, …",["Hay infinitos pasajeros.","Mover una cantidad fija no libera infinitas puertas."],"Necesitamos separar las habitaciones en dos listas infinitas."],
+          ["Observamos pares e impares.",["Pares: 2, 4, 6, …","Impares: 1, 3, 5, …"],"Ambas listas continúan sin final."],
+          ["Anunciamos la regla n → 2n.",["Todo número 2n es par.","Distintos n producen distintos pares."],"Los huéspedes antiguos irán a las pares."],
+          ["Probamos casos concretos.",["1→2, 2→4, 3→6, 4→8.","La habitación 8 recibe al huésped 4."],"Los ejemplos revelan el patrón."],
+          ["Movemos a todos los huéspedes antiguos.",["Las pares quedan ocupadas.","Las impares quedan libres."],"Hemos liberado infinitas habitaciones."],
+          ["Asignamos una regla al bus.",["Pasajero m → habitación 2m−1.","1→1, 2→3, 3→5, …"],"Cada pasajero recibe un impar diferente."],
+          ["Comprobamos los dos grupos.",["Antiguos: habitaciones pares.","Nuevos: habitaciones impares."],"Ningún par es impar: no hay colisiones."],
+          ["Los pasajeros entran.",["Ambos grupos son infinitos.","Toda habitación queda ocupada por exactamente una persona."],"Una copia completa cabe en una parte propia."],
+          ["Concluimos.",["Naturales ↔ pares mediante n→2n.","La correspondencia uno a uno conserva cardinalidad."],"Un infinito numerable más otro sigue siendo numerable."]
+        ][st];return{what:arr[0],details:arr[1],conclusion:arr[2],box:st>=7?"Un conjunto infinito puede contener una copia completa de sí mismo y dejar espacio para otro conjunto infinito.":"Buscamos una regla que libere no una, sino infinitas puertas."};
+      }
+      const pair=cantorPairByIndex(st), room=st+1;
+      return{what:st===0?"Hay una cuadrícula: cada fila es un bus y cada columna, un pasajero.":`Seleccionamos la pareja (${pair[0]}, ${pair[1]}).`,details:["Recorremos una diagonal completa antes de pasar a la siguiente.",st===0?"Comenzaremos en (1,1).":`Esta pareja recibe la habitación ${room}.`,"Toda pareja aparecerá después de una cantidad finita de pasos."],conclusion:"Una cuadrícula infinita puede enumerarse con 1, 2, 3, …",box:"El recorrido diagonal convierte cada pareja (bus, pasajero) en una posición única de una lista."};
+    }
+    function cantorPairByIndex(index){
+      let count=0;
+      for(let sum=2;sum<1000;sum++){
+        for(let b=1;b<sum;b++){
+          const p=sum-b;
+          if(count===index)return[b,p];
+          count++;
+        }
+      }
+      return[1,1];
+    }
+    function pairRoom(b,p){
+      const s=b+p-2;
+      return s*(s+1)/2+b;
+    }
+
+    function renderRooms(){
+      const el=$("#rooms");el.innerHTML="";el.style.setProperty("--rooms",state.roomCount+1);
+      const start=state.windowStart,end=start+state.roomCount-1;
+      for(let room=start;room<=end;room++){
+        const occ=occupantAt(room),status=roomStatus(room,occ);
+        const d=document.createElement("button");
+        d.className=`door ${occ?occ.type:(status==="Reservada"?"reserved":"free")} ${state.focusedRoom===room?"highlight":""}`;
+        d.dataset.room=room;d.setAttribute("aria-label",`Habitación ${room}, ${status}${occ?", "+occ.label:""}`);
+        d.innerHTML=`${occ&&occ.moving?`<span class="move-chip">→ ${occ.dest??room}</span>`:""}<span class="door-number">Habitación ${room}</span><div class="guest ${occ&&occ.moving?"arrive":""}">${occ?(occ.type==="new"?"🧳":"🧍"):"◇"}</div><div class="guest-id">${occ?occ.label:"Sin huésped"}</div><div class="status">${status}</div>`;
+        d.addEventListener("click",()=>{state.focusedRoom=room;renderRooms();toast(`Habitación ${room} resaltada`)});
+        el.appendChild(d);
+      }
+      const tail=document.createElement("div");tail.className="infinity-tail";tail.innerHTML="<b>··· →</b><span>continúa hasta ∞</span>";el.appendChild(tail);
+      $("#windowBadge").textContent=`Ventana: habitaciones ${start}–${end} de un patrón infinito`;
+    }
+    function renderExperiment(){
+      const s=state.scenario,extra=$("#scenarioExtra");
+      const titles={filled:"Un hotel lleno… ¿sin espacio?",single:"Una llave para una persona",finite:`Llegan ${state.k} huéspedes`,bus:"Un bus que nunca termina",buses:"Una terminal infinita"};
+      const leads={
+        filled:"Cada habitación numerada con un natural está ocupada. Cambia el número de puertas visibles: solo cambia nuestra ventana.",
+        single:"Observa la regla n → n + 1 paso a paso. No existe un último huésped que quede sin destino.",
+        finite:`Usaremos n → n + ${state.k} para abrir las primeras ${state.k} habitaciones.`,
+        bus:"Separaremos las habitaciones pares e impares para alojar dos grupos infinitos.",
+        buses:"Cada persona se identifica por (bus, pasajero). El recorrido diagonal las coloca en una sola lista."
+      };
+      $("#experimentTitle").textContent=titles[s];$("#experimentLead").textContent=leads[s];
+      extra.innerHTML="";
+      if(s==="single"){
+        extra.innerHTML=`<div class="choice-row"><button class="btn primary" id="applyMove">Aplicar siguiente movimiento</button><button class="btn gold" id="moveAll">Mover todos</button></div>`;
+        $("#applyMove").onclick=nextStep;$("#moveAll").onclick=()=>{state.step=maxSteps.single;renderAll();toast("Patrón completo aplicado")};
+      } else if(s==="finite"){
+        extra.innerHTML=`<div class="callout"><b>Ejemplo actual:</b> 1→${1+state.k}, 2→${2+state.k}, 3→${3+state.k}, en general n→n+${state.k}.</div>`;
+      } else if(s==="bus"){
+        extra.innerHTML=`<div class="bus-scene"><div class="bus"><b>BUS ∞</b><div class="bus-windows"><span>🧍1</span><span>🧍2</span><span>🧍3</span><span>···</span></div><i class="wheel"></i><i class="wheel"></i></div><span>Pasajeros 1, 2, 3, … → recepción</span></div>`;
+      } else if(s==="buses"){
+        extra.innerHTML=`<div class="range-row" style="max-width:410px"><label>Buses visibles <input id="busRows" type="range" min="3" max="8" value="${state.busRows}"></label><label>Pasajeros visibles <input id="busCols" type="range" min="3" max="8" value="${state.busCols}"></label></div><div class="infinite-grid" id="infiniteGrid" style="--cols:${state.busCols}"></div>`;
+        $("#busRows").oninput=e=>{state.busRows=+e.target.value;renderBusGrid()};
+        $("#busCols").oninput=e=>{state.busCols=+e.target.value;renderExperiment()};
+        renderBusGrid();
+      }
+      const info=stepInfo();$("#conclusionBox").textContent=info.box;
+    }
+    function renderBusGrid(){
+      const grid=$("#infiniteGrid");if(!grid)return;grid.innerHTML="";grid.style.setProperty("--cols",state.busCols);
+      grid.append(makeCell("Bus ↓","head"));for(let p=1;p<=state.busCols;p++)grid.append(makeCell(`Pas. ${p}`,"head"));
+      const current=cantorPairByIndex(state.step);
+      for(let b=1;b<=state.busRows;b++){
+        grid.append(makeCell(`Bus ${b}`,"head"));
+        for(let p=1;p<=state.busCols;p++){
+          const r=pairRoom(b,p),cl=(b===current[0]&&p===current[1])?"selected":(r<=state.step+1?"visited":"");
+          grid.append(makeCell(`(${b},${p})${r<=state.step+1?` → H${r}`:""}`,cl));
+        }
+      }
+    }
+    function makeCell(txt,cl){const x=document.createElement("div");x.className=`grid-cell ${cl||""}`;x.textContent=txt;return x}
+    function renderPrediction(){
+      const p=predictions[state.scenario],box=$("#predictionOptions");$("#predictionQuestion").textContent=p.q;box.innerHTML="";$("#predictionFeedback").textContent="";$("#predictionFeedback").className="feedback";
+      p.opts.forEach((o,i)=>{const b=document.createElement("button");b.className="btn small";b.textContent=o;b.onclick=()=>{$("#predictionFeedback").textContent=i===p.ok?p.why:`No exactamente. ${p.why}`;$("#predictionFeedback").className=`feedback ${i===p.ok?"good":"bad"}`};box.appendChild(b)});
+    }
+    function renderExplanation(){
+      const info=stepInfo(),rule=ruleForScenario(),max=maxSteps[state.scenario];
+      $("#whatText").textContent=info.what;$("#detailList").innerHTML=info.details.map(x=>`<li>${x}</li>`).join("");
+      $("#mathConclusion").innerHTML=`<b>Idea clave:</b> ${info.conclusion}`;
+      $("#intuitiveText").textContent=rule.intuitive;$("#examplesText").textContent=rule.examples;$("#symbolicText").textContent=rule.symbolic;
+      $("#stepText").textContent=`Paso ${state.step} de ${max}`;$("#stepBanner").textContent=max?`Paso ${state.step}/${max}`:"Estado inicial";
+      $("#ruleBanner").textContent=`Regla activa: ${scenarioMeta[state.scenario].rule.replace("k",state.k)}`;
+    }
+    function mappingRows(){
+      const r=[],s=state.scenario,k=state.k,limit=Math.max(state.tableRows,20);
+      if(s==="buses"){
+        for(let i=0;i<limit;i++){const p=cantorPairByIndex(i);r.push({guest:`Bus ${p[0]}, P${p[1]}`,from:`(${p[0]},${p[1]})`,rule:"diagonal",to:i+1})}
+      }else{
+        for(let n=1;n<=limit;n++){
+          let to=n,rule="n";
+          if(s==="single"){to=n+1;rule="n + 1"}
+          if(s==="finite"){to=n+k;rule=`n + ${k}`}
+          if(s==="bus"){to=2*n;rule="2n"}
+          r.push({guest:`Huésped ${n}`,from:n,rule,to});
+        }
+      }
+      return r;
+    }
+    function renderTable(){
+      let rows=mappingRows();rows.sort((a,b)=>String(a[state.sort]).localeCompare(String(b[state.sort]),undefined,{numeric:true})*state.sortDir);
+      const firstCount=Math.ceil(state.tableRows/2),lastCount=Math.floor(state.tableRows/2);
+      rows=[...rows.slice(0,firstCount),{ellipsis:true},...rows.slice(-lastCount)];
+      const body=$("#mappingTable tbody");body.innerHTML=rows.map(x=>x.ellipsis?`<tr class="pattern-row"><td colspan="4">⋮ filas intermedias de la ventana simulada ⋮</td></tr>`:`<tr data-room="${x.to}"><td>${x.guest}</td><td>${x.from}</td><td>${x.rule}</td><td>${x.to}${x.to>state.windowStart+state.roomCount-1?' <small>(fuera de ventana)</small>':""}</td></tr>`).join("")+`<tr class="pattern-row"><td colspan="4">⋮ el patrón continúa indefinidamente ⋮</td></tr>`;
+      $$("tbody tr[data-room]").forEach(tr=>{tr.onmouseenter=()=>{state.focusedRoom=+tr.dataset.room;renderRooms()};tr.onmouseleave=()=>{state.focusedRoom=null;renderRooms()}});
+    }
+    function renderNumberLine(customTargets){
+      const ticks=$("#ticks");ticks.innerHTML="";const rule=ruleForScenario();
+      for(let n=1;n<=18;n++){
+        let occupied=true,free=false,jump="";
+        if(customTargets){occupied=customTargets.has(n);free=!occupied}
+        else if(state.scenario==="bus"&&state.step>=4){occupied=n%2===0||state.step>=7;free=n%2===1&&state.step<7;jump=n%2===0?`↗${n}`:""}
+        else if(state.scenario==="single"&&state.step>=2){free=n===1&&state.step<7;jump=n>1?`↗${n}`:""}
+        else if(state.scenario==="finite"&&state.step>=2){free=n<=state.k&&state.step<5;jump=n>state.k?`↗${n}`:""}
+        const t=document.createElement("div");t.className=`tick ${free?"free":occupied?"occupied":""}`;t.innerHTML=`${jump?`<span class="jump">${jump}</span>`:""}${n}<br><small>${free?"libre":"ocupada"}</small>`;ticks.appendChild(t);
+      }
+    }
+    function renderAll({prediction=false}={}){
+      $("#scenarioTitle").textContent=scenarioMeta[state.scenario].title;
+      $$(".scenario-btn").forEach(b=>b.classList.toggle("active",b.dataset.scenario===state.scenario));
+      renderRooms();renderExperiment();renderExplanation();renderTable();renderNumberLine();
+      $("#prevBtn").disabled=state.step===0;$("#nextBtn").disabled=state.step>=maxSteps[state.scenario];
+      $("#kField").style.display=state.scenario==="finite"?"grid":"none";
+      if(prediction)renderPrediction();
+    }
+    function setScenario(s){
+      pause();state.scenario=s;state.step=0;state.focusedRoom=null;state.windowStart=1;$("#windowStart").value=1;$("#windowValue").textContent=1;renderAll({prediction:true});
+    }
+    function nextStep(){if(state.step<maxSteps[state.scenario]){state.step++;renderAll()}}
+    function prevStep(){if(state.step>0){state.step--;renderAll()}}
+    function auto(){pause();if(state.step>=maxSteps[state.scenario])state.step=0;state.timer=setInterval(()=>{if(state.step>=maxSteps[state.scenario]){pause();return}nextStep()},state.speed);$("#autoBtn").classList.add("primary")}
+    function pause(){clearInterval(state.timer);state.timer=null;$("#autoBtn").classList.remove("primary")}
+
+    function normalizeExpr(raw){
+      let x=raw.trim().toLowerCase().replace(/²/g,"^2").replace(/×/g,"*").replace(/÷/g,"/").replace(/\s+/g,"");
+      x=x.replace(/(\d)([nk])/g,"$1*$2").replace(/([nk])(\d)/g,"$1*$2").replace(/\^/g,"**");
+      if(!/^[0-9nk+\-*/().]+$/.test(x)||x.includes("///")||x.length>40)throw Error("Usa solo números, n, k y operadores matemáticos.");
+      return x;
+    }
+    function evaluateRule(){
+      let fn,expr=$("#ruleInput").value,k=clamp(+$("#labK").value||1,1,100),targets=[],invalid=[],collisions=[];
+      try{const safe=normalizeExpr(expr);fn=new Function("n","k",`return (${safe})`)}catch(e){$("#ruleFeedback").textContent=e.message;$("#ruleFeedback").className="feedback bad";return}
+      const seen=new Map();
+      for(let n=1;n<=30;n++){
+        let v;try{v=fn(n,k)}catch(e){v=NaN}
+        if(!Number.isFinite(v)||v<1||!Number.isInteger(v)){invalid.push(n);continue}
+        if(seen.has(v))collisions.push([seen.get(v),n,v]);else seen.set(v,n);targets.push(v);
+      }
+      const free=[];for(let r=1;r<=30;r++)if(!seen.has(r))free.push(r);
+      const injective=collisions.length===0&&invalid.length===0,surjective=free.length===0&&invalid.length===0;
+      const results=[
+        {ok:invalid.length===0,title:"¿Todos hallan puerta válida?",text:invalid.length?`No. Falla para n = ${invalid.slice(0,4).join(", ")}.`:"Sí. Cada resultado es un natural positivo."},
+        {ok:collisions.length===0,title:"¿Hay colisiones?",text:collisions.length?`${collisions[0][0]} y ${collisions[0][1]} intentan H${collisions[0][2]}.`:"No. Todos llegan a puertas diferentes."},
+        {ok:true,title:"¿Quedan puertas libres?",text:free.length?`Sí: ${free.slice(0,8).join(", ")}${free.length>8?", …":""}`:"No dentro de 1–30."},
+        {ok:injective,title:"Término: inyectiva",text:injective?"Sí: destinos diferentes.":"No: hay destino inválido o compartido."},
+        {ok:surjective,title:"Término: sobreyectiva (1–30)",text:surjective?"Sí: todas las puertas consideradas se alcanzan.":"No: alguna puerta considerada no recibe huésped."},
+        {ok:injective&&surjective,title:"Término: biyección",text:injective&&surjective?"En esta ventana parece uno a uno y cubre todo.":"No es una biyección sobre esta ventana."}
+      ];
+      $("#ruleResults").innerHTML=results.map(r=>`<div class="result-item ${r.ok?"ok":"warn"}"><b>${r.ok?"✓":"!"} ${r.title}</b>${r.text}</div>`).join("");
+      $("#ruleFeedback").textContent=invalid.length?"La regla no asigna una habitación natural válida a todas las personas.":collisions.length?"Dos huéspedes intentaron ocupar la misma habitación.":`Todas las personas encontraron una habitación diferente. ${free.length?"Quedaron habitaciones libres.":"No quedaron huecos en la ventana."}`;
+      $("#ruleFeedback").className=`feedback ${invalid.length||collisions.length?"bad":"good"}`;
+      renderNumberLine(new Set(targets.filter(x=>x<=18)));$("#ruleBanner").textContent=`Regla del laboratorio: ${expr}`;
+      toast("Regla analizada sobre los primeros 30 huéspedes");
+    }
+
+    const concepts=[
+      ["📦","Conjunto finito","Puede terminarse de contar.","Mueve una persona extra a 3 sillas ocupadas: falta una silla.","¿Un conjunto finito tiene un último elemento al ordenarlo?","Sí"],
+      ["♾️","Conjunto infinito","El conteo no tiene último elemento.","1, 2, 3, … siempre permite sumar 1.","¿Existe el último número natural?","No"],
+      ["🔢","Infinito numerable","Puede organizarse como una lista 1, 2, 3, …","Cada huésped recibe un número de habitación.","¿“Numerable” significa necesariamente “finito”?","No"],
+      ["🤝","Correspondencia uno a uno","Cada elemento tiene una pareja exclusiva.","1↔2, 2↔4, 3↔6 para naturales y pares.","¿Una misma pareja puede pertenecer a dos elementos de origen?","No"],
+      ["➡️","Inyección","Personas distintas no chocan en la misma puerta.","n→2n nunca manda dos n diferentes al mismo par.","¿Una inyección puede dejar habitaciones libres?","Sí"],
+      ["🎯","Sobreyectividad","Todas las puertas del destino reciben a alguien.","n→n cubre 1, 2, 3, …","¿Una función sobreyectiva deja puertas del destino sin usar?","No"],
+      ["🔁","Biyección","Uno a uno y sin puertas olvidadas.","Naturales ↔ pares si el destino considerado son los pares.","¿Una biyección es a la vez inyectiva y sobreyectiva?","Sí"],
+      ["⚖️","Cardinalidad","Es una forma de hablar del tamaño de un conjunto.","Si hay biyección, los conjuntos tienen igual cardinalidad.","¿Una biyección permite afirmar que dos conjuntos tienen igual cardinalidad?","Sí"],
+      ["🏷️","Números naturales","Las etiquetas 1, 2, 3, …","No hay un natural final.","¿Después de cualquier natural n existe n+1?","Sí"],
+      ["2️⃣","Pares y naturales","Hay tantos pares como naturales.","n→2n empareja cada natural con un par.","¿Los pares pueden ponerse uno a uno con todos los naturales?","Sí"],
+      ["1️⃣","Impares y naturales","Los impares también se pueden listar.","m→2m−1 produce 1, 3, 5, …","¿2m−1 genera siempre una habitación impar?","Sí"],
+      ["📏","Muy grande vs. infinito","Un millón termina; los naturales no.","Un hotel de un billón de cuartos sí tiene una última puerta.","¿Un billón es infinito?","No"]
+    ];
+    function renderConcepts(){
+      const g=$("#conceptGrid");g.innerHTML=concepts.map((c,i)=>`<article class="concept"><div class="symbol">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p><button class="btn small concept-btn" data-i="${i}">Ver explicación</button><div class="concept-detail"><b>Ejemplo visual:</b> ${c[3]}<br><br><b>Comprueba:</b> ${c[4]}<div class="choice-row"><button class="btn small concept-answer" data-i="${i}" data-a="Sí">Sí</button><button class="btn small concept-answer" data-i="${i}" data-a="No">No</button></div><span class="concept-feedback" id="concept-feedback-${i}"></span></div></article>`).join("");
+      $$(".concept-btn").forEach(b=>b.onclick=()=>{const card=b.closest(".concept");card.classList.toggle("open");b.textContent=card.classList.contains("open")?"Ocultar":"Ver explicación"});
+      $$(".concept-answer").forEach(b=>b.onclick=()=>{const c=concepts[+b.dataset.i],ok=b.dataset.a===c[5],f=$(`#concept-feedback-${b.dataset.i}`);f.textContent=ok?" ✓ Correcto.":" Revisa el ejemplo e inténtalo otra vez.";f.style.color=ok?"var(--green)":"var(--red)"});
+    }
+
+    const challenges=[
+      {title:"Desafío 1 · Grupo de 3",prompt:"El hotel está lleno y llegan 3 huéspedes. ¿Qué regla libera exactamente las habitaciones 1, 2 y 3?",choices:["n → n + 3","n → 3n","n → n + 1"],ok:0,hints:["Necesitas que el huésped 1 termine en la habitación 4.","Todos deben avanzar la misma cantidad: 3."],why:"n→n+3 mueve a los antiguos a 4, 5, 6, … y libera 1, 2 y 3.",scene:"finite",k:3},
+      {title:"Desafío 2 · Bus infinito",prompt:"¿Qué regla libera infinitas habitaciones sin colisiones?",choices:["n → n + 5","n → 2n","n → n − 1"],ok:1,hints:["Mover una cantidad finita solo abre un bloque finito.","Usa únicamente las habitaciones pares."],why:"n→2n lleva a los antiguos a pares y deja todos los impares libres.",scene:"bus"},
+      {title:"Desafío 3 · Dos llegadas",prompt:"¿Sirve n → n + 2 para recibir exactamente dos huéspedes?",choices:["Sí","No"],ok:0,hints:["Calcula los destinos de 1, 2 y 3.","¿Qué ocurre con las habitaciones 1 y 2?"],why:"Sí. Los antiguos ocupan 3, 4, 5, … y las habitaciones 1 y 2 quedan libres.",scene:"finite",k:2},
+      {title:"Desafío 4 · Múltiplos de 3",prompt:"Con n → 3n, ¿qué habitaciones quedan ocupadas por los huéspedes antiguos?",choices:["Los múltiplos de 3","Las impares","Todas excepto 3"],ok:0,hints:["Prueba n=1,2,3.","Obtienes 3, 6, 9, …"],why:"Los destinos son los múltiplos de 3. Las demás habitaciones quedan libres.",scene:"filled"},
+      {title:"Desafío 5 · Nuevos en pares",prompt:"Quieres reservar las pares para los nuevos. ¿Dónde debes mover a los antiguos?",choices:["A las impares: 2n−1","A las pares: 2n","Una habitación adelante"],ok:0,hints:["Dos grupos no pueden usar la misma familia de puertas.","1, 3, 5, … se genera con 2n−1."],why:"Mover antiguos a 2n−1 deja las habitaciones pares para los nuevos.",scene:"bus"},
+      {title:"Desafío 6 · Detecta el choque",prompt:"¿Cuál regla produce una colisión para huéspedes naturales?",choices:["n → 2n","n → n + 4","n → n − n + 1"],ok:2,hints:["Busca una regla que entregue siempre el mismo resultado.","n−n vale 0 para cualquier n."],why:"n−n+1 siempre vale 1: todos intentan ocupar la habitación 1.",scene:"filled"}
+    ];
+    let activeChallenge=0,hintLevel=0;
+    function renderChallenges(){
+      $("#challengeList").innerHTML=challenges.map((c,i)=>`<button class="challenge-btn ${i===activeChallenge?"active":""}" data-i="${i}">${state.solved.has(i)?"✓ ":""}${i+1}. ${c.title.split("·")[1]}</button>`).join("");
+      $$(".challenge-btn").forEach(b=>b.onclick=()=>{activeChallenge=+b.dataset.i;hintLevel=0;renderChallenges();loadChallengeScene()});
+      const c=challenges[activeChallenge];$("#challengeTitle").textContent=c.title;$("#challengePrompt").textContent=c.prompt;$("#challengeFeedback").textContent="";$("#hintText").textContent="";
+      $("#challengeChoices").innerHTML=c.choices.map((x,i)=>`<button class="btn" data-i="${i}">${x}</button>`).join("");
+      $$("#challengeChoices button").forEach(b=>b.onclick=()=>answerChallenge(+b.dataset.i));
+      const n=state.solved.size;$("#progressBar").style.width=`${n/6*100}%`;$("#progressText").textContent=`${n} de 6 resueltos`;
+      $("#badge1").classList.toggle("earned",n>=1);$("#badge3").classList.toggle("earned",n>=3);$("#badge6").classList.toggle("earned",n>=6);
+    }
+    function loadChallengeScene(){const c=challenges[activeChallenge];if(c.k)state.k=c.k;setScenario(c.scene)}
+    function answerChallenge(i){
+      const c=challenges[activeChallenge],f=$("#challengeFeedback");
+      if(i===c.ok){state.solved.add(activeChallenge);localStorage.setItem("hilbertSolved",JSON.stringify([...state.solved]));f.textContent=`¡Correcto! ${c.why}`;f.className="feedback good";renderChallenges();$("#challengeFeedback").textContent=`¡Correcto! ${c.why}`;$("#challengeFeedback").className="feedback good";toast("Desafío resuelto")}
+      else{f.textContent=`Todavía no. ${c.why}`;f.className="feedback bad"}
+    }
+    function randomChallenge(){activeChallenge=Math.floor(Math.random()*challenges.length);hintLevel=0;showModule("challenges");renderChallenges();loadChallengeScene()}
+
+    function renderMiniHotels(moved=false){
+      $("#finiteHotel").innerHTML=Array.from({length:8},(_,i)=>`<div class="mini-room ${moved&&i===0?"blocked":""}">${moved&&i===0?"🧍+?":i+1}</div>`).join("");
+      $("#infiniteHotel").innerHTML=Array.from({length:8},(_,i)=>`<div class="mini-room ${moved&&i===0?"free":""}">${moved?(i===0?"N":i):i+1}</div>`).join("")+`<div class="mini-room">…</div>`;
+    }
+    function showModule(id){
+      $$(".module").forEach(x=>x.classList.toggle("active",x.id===`module-${id}`));$$(".module-tab").forEach(x=>x.classList.toggle("active",x.dataset.module===id));
+      if(id==="tables"){renderTable();renderNumberLine()}if(id==="challenges")renderChallenges();
+    }
+
+    $$(".scenario-btn").forEach(b=>b.onclick=()=>setScenario(b.dataset.scenario));
+    $$(".module-tab").forEach(b=>b.onclick=()=>showModule(b.dataset.module));
+    $("#nextBtn").onclick=nextStep;$("#prevBtn").onclick=prevStep;$("#autoBtn").onclick=auto;$("#pauseBtn").onclick=pause;
+    $("#resetBtn").onclick=()=>setScenario(state.scenario);
+    $("#kInput").oninput=e=>{state.k=+e.target.value;$("#kValue").textContent=state.k;state.step=0;renderAll({prediction:true})};
+    $("#roomCount").oninput=e=>{state.roomCount=+e.target.value;$("#roomValue").textContent=state.roomCount;renderRooms()};
+    $("#windowStart").oninput=e=>{state.windowStart=+e.target.value;$("#windowValue").textContent=state.windowStart;renderRooms()};
+    $("#speed").onchange=e=>{state.speed=+e.target.value;document.documentElement.style.setProperty("--speed",`${state.speed/1000*.8}s`);if(state.timer)auto()};
+    $("#tableRows").onchange=e=>{state.tableRows=+e.target.value;renderTable()};
+    $$("th[data-sort]").forEach(h=>h.onclick=()=>{if(state.sort===h.dataset.sort)state.sortDir*=-1;else{state.sort=h.dataset.sort;state.sortDir=1}renderTable()});
+    $("#rulePreset").onchange=e=>{if(e.target.value!=="custom")$("#ruleInput").value=e.target.value};
+    $("#analyzeRuleBtn").onclick=evaluateRule;
+    $("#compareBtn").onclick=()=>{renderMiniHotels(true);$("#finiteResult").textContent="No funciona: al mover, el huésped 8 necesitaría la habitación 9, que no existe.";$("#infiniteResult").textContent="Funciona: n→n+1 libera la habitación 1 y todos conservan un destino.";toast("Compara el resultado en los dos hoteles")};
+    $("#themeToggle").onclick=()=>{const dark=document.documentElement.dataset.theme==="dark";document.documentElement.dataset.theme=dark?"light":"dark";$("#themeToggle").firstChild.textContent=dark?"🌙 ":"☀️ ";localStorage.setItem("hilbertTheme",dark?"light":"dark")};
+    $("#teacherToggle").onclick=()=>{state.teacher=!state.teacher;document.body.classList.toggle("teacher",state.teacher);toast(state.teacher?"Modo profesor activado":"Modo estudiante activado")};
+    $("#hideExplainBtn").onclick=()=>{document.body.classList.toggle("hide-explanations");$("#hideExplainBtn").textContent=document.body.classList.contains("hide-explanations")?"Revelar explicación":"Ocultar explicación"};
+    $("#formulaBtn").onclick=()=>{state.formulaVisible=!state.formulaVisible;$$(".formula-level").forEach(x=>x.style.display=state.formulaVisible?"block":"none")};
+    $("#focusBtn").onclick=()=>{const n=Math.max(1,+$("#focusGuest").value||1),rule=ruleForScenario();let dest=n;if(state.scenario==="single")dest=n+1;if(state.scenario==="finite")dest=n+state.k;if(state.scenario==="bus")dest=2*n;state.focusedRoom=dest;if(dest<state.windowStart||dest>=state.windowStart+state.roomCount){state.windowStart=clamp(dest-Math.floor(state.roomCount/2),1,81);$("#windowStart").value=state.windowStart;$("#windowValue").textContent=state.windowStart}renderRooms();toast(`Huésped ${n}: ${n} → ${dest} (${rule.expr})`)};
+    $("#fullscreenBtn").onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>toast("El navegador no permitió pantalla completa"));
+    $("#newChallengeBtn").onclick=randomChallenge;
+    $("#hintBtn").onclick=()=>{const c=challenges[activeChallenge];$("#hintText").textContent=c.hints[Math.min(hintLevel,c.hints.length-1)];hintLevel++};
+    $("#retryBtn").onclick=()=>{hintLevel=0;renderChallenges()};
+    $$(".math-toggles button").forEach(b=>b.onclick=()=>{const e=$(`.level-${b.dataset.level}`);e.style.display=e.style.display==="none"?"block":"none"});
+    document.addEventListener("keydown",e=>{if(["INPUT","SELECT"].includes(document.activeElement.tagName))return;if(e.key==="ArrowRight")nextStep();if(e.key==="ArrowLeft")prevStep();if(e.key===" ") {e.preventDefault();state.timer?pause():auto()}});
+
+    document.documentElement.dataset.theme=localStorage.getItem("hilbertTheme")||"light";
+    renderConcepts();renderMiniHotels();renderChallenges();renderPrediction();renderAll();
+  })();
+  </script>
+</body>
+</html>
