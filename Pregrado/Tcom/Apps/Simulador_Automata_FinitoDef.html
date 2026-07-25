@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1f33">
+  <title>Autómata en Marcha — Simulador visual de AFD</title>
+  <style>
+    :root{
+      --ink:#102a43;--muted:#627d98;--paper:#f5f1e8;--card:#fffdfa;
+      --line:#d9e2ec;--navy:#0b1f33;--navy2:#163a5f;--teal:#0e7c7b;
+      --teal2:#29a7a3;--orange:#f26b38;--amber:#f7b32b;--green:#178a5b;
+      --red:#c83e4d;--purple:#6c63b8;--shadow:0 14px 38px rgba(16,42,67,.12);
+      --radius:20px;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+      --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:
+      radial-gradient(circle at 8% -5%,rgba(242,107,56,.13),transparent 28rem),
+      radial-gradient(circle at 96% 2%,rgba(14,124,123,.13),transparent 31rem),
+      var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh}
+    body.dark{--ink:#e8f1f8;--muted:#9fb3c8;--paper:#071523;--card:#0c2135;
+      --line:#29445f;--navy:#06111d;--navy2:#173f65;--shadow:0 18px 42px rgba(0,0,0,.3)}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(247,179,43,.55);outline-offset:2px}
+    .topbar{background:linear-gradient(120deg,var(--navy),#103655 64%,#0d5360);color:white;
+      padding:16px 22px;position:relative;overflow:hidden}
+    .topbar:after{content:"";position:absolute;width:340px;height:340px;border:1px solid rgba(255,255,255,.12);
+      border-radius:50%;right:-110px;top:-220px;box-shadow:0 0 0 42px rgba(255,255,255,.035),0 0 0 88px rgba(255,255,255,.02)}
+    .nav{max-width:1580px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:1}
+    .brand{display:flex;align-items:center;gap:13px;min-width:0}
+    .brandmark{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,var(--orange),var(--amber));
+      display:grid;place-items:center;font-family:var(--mono);font-weight:900;color:#16283a;box-shadow:0 8px 25px rgba(242,107,56,.3)}
+    .brand h1{font-size:clamp(1.05rem,2vw,1.45rem);margin:0;letter-spacing:-.02em}
+    .brand p{font-size:.78rem;margin:3px 0 0;color:#c7d9e7}
+    .navtools{display:flex;gap:8px;align-items:center;z-index:2}
+    .iconbtn{width:42px;height:42px;border:1px solid rgba(255,255,255,.2);border-radius:12px;
+      color:white;background:rgba(255,255,255,.09);display:grid;place-items:center;font-size:1.1rem}
+    .iconbtn:hover{background:rgba(255,255,255,.18)}
+    main{max-width:1580px;margin:0 auto;padding:20px}
+    .intro{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:16px}
+    .eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;font-weight:850;color:var(--teal)}
+    .intro h2{font-size:clamp(1.35rem,2.4vw,2.15rem);margin:4px 0 5px;letter-spacing:-.035em}
+    .intro p{margin:0;color:var(--muted);max-width:800px;line-height:1.55}
+    .stepbadge{min-width:144px;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:12px 16px;
+      box-shadow:var(--shadow);text-align:center}
+    .stepbadge strong{font-family:var(--mono);font-size:1.45rem;display:block}
+    .stepbadge span{color:var(--muted);font-size:.75rem}
+    .labgrid{display:grid;grid-template-columns:288px minmax(500px,1fr) 365px;gap:16px;align-items:start}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .cardhead{display:flex;align-items:center;justify-content:space-between;padding:15px 17px 12px;border-bottom:1px solid var(--line)}
+    .cardhead h3{font-size:.94rem;margin:0;letter-spacing:-.01em}
+    .tiny{font-size:.72rem;color:var(--muted)}
+    .controlpanel,.rightpanel{position:sticky;top:12px}
+    .pad{padding:15px}
+    label{display:block;font-size:.73rem;font-weight:780;color:var(--muted);margin:0 0 6px}
+    select,input[type=text]{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);
+      border-radius:11px;padding:10px 11px}
+    .field{margin-bottom:13px}
+    .wordrow{display:flex;gap:7px}
+    .wordrow input{font-family:var(--mono);font-size:1.02rem;letter-spacing:.06em}
+    .btn{border:0;border-radius:11px;padding:10px 12px;font-weight:780;color:white;background:var(--navy2);
+      transition:transform .18s,filter .18s,box-shadow .18s;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+    .btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+    .btn:active{transform:translateY(1px)}
+    .btn.orange{background:var(--orange);box-shadow:0 8px 20px rgba(242,107,56,.24)}
+    .btn.teal{background:var(--teal)}
+    .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+    .btn.soft{background:rgba(14,124,123,.1);border:1px solid rgba(14,124,123,.25);color:var(--teal)}
+    .btn.danger{background:rgba(200,62,77,.11);color:var(--red);border:1px solid rgba(200,62,77,.23)}
+    .btn:disabled{opacity:.43;cursor:not-allowed;filter:none;transform:none}
+    .full{width:100%}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .chiprow{display:flex;gap:7px;flex-wrap:wrap}
+    .chip{font-family:var(--mono);font-weight:800;font-size:.78rem;padding:6px 9px;border-radius:999px;
+      color:var(--teal);background:rgba(14,124,123,.09);border:1px solid rgba(14,124,123,.22)}
+    .divider{height:1px;background:var(--line);margin:15px 0}
+    .rangehead{display:flex;justify-content:space-between;align-items:center}
+    input[type=range]{accent-color:var(--orange);width:100%}
+    .switchrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;font-size:.78rem;color:var(--muted)}
+    .switch{width:44px;height:24px;border-radius:20px;background:#b5c4d1;padding:3px;border:0;transition:.2s}
+    .switch span{display:block;width:18px;height:18px;border-radius:50%;background:white;transition:.2s;box-shadow:0 2px 7px #0003}
+    .switch.on{background:var(--teal)}
+    .switch.on span{transform:translateX(20px)}
+    .workspace{min-width:0}
+    .machine{overflow:visible}
+    .statusbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(90deg,rgba(14,124,123,.08),transparent)}
+    .statusdot{width:11px;height:11px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 6px rgba(247,179,43,.13)}
+    .statusbar.accept .statusdot{background:var(--green);box-shadow:0 0 0 6px rgba(23,138,91,.13)}
+    .statusbar.reject .statusdot{background:var(--red);box-shadow:0 0 0 6px rgba(200,62,77,.13)}
+    .statusbar.running .statusdot{background:var(--teal2);animation:pulse 1s infinite}
+    .statuscopy{flex:1}
+    .statuscopy strong{font-size:.86rem;display:block}
+    .statuscopy span{font-size:.74rem;color:var(--muted)}
+    .statepill{font-family:var(--mono);font-weight:900;padding:6px 10px;border-radius:9px;background:var(--navy);color:white}
+    .tapestage{padding:20px 12px 16px;overflow:hidden;background:
+      linear-gradient(90deg,transparent 49.75%,rgba(242,107,56,.16) 49.75%,rgba(242,107,56,.16) 50.25%,transparent 50.25%),
+      linear-gradient(180deg,rgba(14,124,123,.035),transparent)}
+    .tapeviewport{overflow:hidden;padding:54px 0 14px;position:relative;min-height:150px}
+    .head{position:absolute;left:50%;top:0;transform:translateX(-50%);width:76px;height:50px;z-index:5;
+      display:flex;flex-direction:column;align-items:center;justify-content:flex-start;color:var(--orange);font-weight:900}
+    .headbody{width:64px;height:33px;border-radius:12px 12px 6px 6px;background:linear-gradient(140deg,var(--orange),#ff9564);
+      color:#16283a;display:grid;place-items:center;font:900 .72rem var(--mono);box-shadow:0 8px 18px rgba(242,107,56,.28)}
+    .head:after{content:"";width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid var(--orange)}
+    .head.reading{animation:headTap .38s ease}
+    .tape{display:flex;gap:7px;width:max-content;position:relative;left:50%;transition:transform .55s cubic-bezier(.22,.75,.21,1)}
+    .cell{width:54px;height:57px;border:2px solid var(--line);background:var(--card);border-radius:10px;
+      display:grid;place-items:center;font:900 1.35rem var(--mono);position:relative;transition:.3s;box-shadow:0 5px 12px rgba(16,42,67,.06)}
+    .cell:after{content:attr(data-index);position:absolute;bottom:-20px;font:650 .62rem var(--mono);color:var(--muted)}
+    .cell.active{border-color:var(--orange);background:rgba(242,107,56,.1);transform:translateY(-3px);
+      box-shadow:0 10px 25px rgba(242,107,56,.18)}
+    .cell.consumed{color:var(--muted);background:rgba(98,125,152,.06)}
+    .cell.blank{color:#9fb3c8}
+    .controlstrip{padding:13px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .controlstrip .btn{min-width:92px}
+    .explain{margin:0 15px 15px;border:1px solid rgba(14,124,123,.22);background:rgba(14,124,123,.07);border-radius:14px;
+      padding:12px 14px;display:flex;gap:11px;align-items:flex-start}
+    .explain .ico{font-size:1.25rem}
+    .explain strong{font-size:.8rem;display:block;margin-bottom:3px}
+    .explain p{font-size:.78rem;margin:0;color:var(--muted);line-height:1.5}
+    .lowergrid{display:grid;grid-template-columns:minmax(360px,1.1fr) minmax(330px,.9fr);gap:16px;margin-top:16px}
+    .graphwrap{height:350px;position:relative;background:
+      linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+      background-size:24px 24px;background-color:rgba(255,255,255,.025)}
+    #graph{width:100%;height:100%;display:block}
+    #graph[data-mode="move"]{cursor:grab}#graph[data-mode="move"]:active{cursor:grabbing}
+    #graph[data-mode="add-state"]{cursor:crosshair}#graph[data-mode="transition"]{cursor:cell}
+    #graph[data-mode="initial"],#graph[data-mode="final"]{cursor:pointer}#graph[data-mode="delete"]{cursor:not-allowed}
+    .edge{fill:none;stroke:#8aa4ba;stroke-width:2.5;transition:.25s;pointer-events:none}
+    .edge-hit{fill:none;stroke:transparent;stroke-width:16;pointer-events:stroke;cursor:pointer}
+    .edge.active{stroke:var(--orange);stroke-width:4;stroke-dasharray:9 5;animation:dash .55s linear infinite;filter:drop-shadow(0 0 4px rgba(242,107,56,.45))}
+    .edgelabel{font:800 12px var(--mono);fill:var(--muted);paint-order:stroke;stroke:var(--card);stroke-width:5px;stroke-linejoin:round;pointer-events:none}
+    .node circle{fill:var(--card);stroke:var(--navy2);stroke-width:3;transition:.25s}
+    .node text{font:900 14px var(--mono);fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+    .node.current circle{fill:var(--orange);stroke:#b94418;filter:drop-shadow(0 5px 8px rgba(242,107,56,.35))}
+    .node.current text{fill:#14293b}
+    .node{cursor:pointer}.node.selected circle{stroke:var(--purple);stroke-width:5;stroke-dasharray:5 3}
+    .node.final circle.outer{fill:none;stroke:var(--green);stroke-width:2}
+    .node.start circle{stroke:var(--teal);stroke-width:4}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line);font-size:.69rem;color:var(--muted)}
+    .legend span{display:flex;gap:5px;align-items:center}
+    .swatch{width:10px;height:10px;border-radius:50%;background:var(--navy2)}
+    .swatch.current{background:var(--orange)}.swatch.final{background:white;border:3px double var(--green)}
+    .tablewrap{overflow:auto;max-height:350px}
+    table{width:100%;border-collapse:collapse;font-size:.75rem}
+    th{position:sticky;top:0;background:var(--navy);color:#fff;padding:9px;text-align:left;z-index:1}
+    td{padding:8px 9px;border-bottom:1px solid var(--line)}
+    tbody tr{transition:.25s}
+    tbody tr.active{background:rgba(242,107,56,.15);box-shadow:inset 4px 0 var(--orange)}
+    td code{font-family:var(--mono);font-weight:850}
+    .transitionSelect{min-width:72px;padding:6px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-family:var(--mono)}
+    .tablehint{padding:10px 13px;color:var(--muted);font-size:.69rem;line-height:1.45;border-top:1px solid var(--line)}
+    .metricgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px}
+    .metric{border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:rgba(255,255,255,.025)}
+    .metric span{font-size:.65rem;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+    .metric strong{font:900 1rem var(--mono)}
+    .progress{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:0 14px 14px}
+    .progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--amber),var(--orange));transition:.45s}
+    .tabs{display:flex;padding:0 14px;border-bottom:1px solid var(--line)}
+    .tab{border:0;border-bottom:3px solid transparent;background:transparent;color:var(--muted);padding:11px 9px;font-size:.72rem;font-weight:800}
+    .tab.active{border-color:var(--orange);color:var(--ink)}
+    .tabpane{display:none;padding:13px 14px;max-height:340px;overflow:auto}
+    .tabpane.active{display:block}
+    .timeline{display:flex;flex-direction:column;gap:8px}
+    .event{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start;font-size:.72rem}
+    .eventnum{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--navy);color:white;font:800 .66rem var(--mono)}
+    .event strong{font-family:var(--mono)}.event p{margin:2px 0;color:var(--muted);line-height:1.4}
+    .empty{color:var(--muted);font-size:.75rem;text-align:center;padding:20px 5px}
+    .concept{font-size:.76rem;line-height:1.55;color:var(--muted)}
+    .concept b{color:var(--ink)}
+    .formula{font:850 .76rem var(--mono);background:var(--paper);border:1px solid var(--line);padding:9px;border-radius:9px;color:var(--teal);margin:8px 0}
+    .challenge{border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:9px}
+    .challenge h4{font-size:.78rem;margin:0 0 5px}.challenge p{font-size:.71rem;color:var(--muted);margin:0 0 8px;line-height:1.4}
+    .resultbanner{margin:14px;border-radius:14px;padding:15px;display:none;text-align:center;font-weight:900}
+    .resultbanner.accept{display:block;background:rgba(23,138,91,.12);border:1px solid rgba(23,138,91,.3);color:var(--green)}
+    .resultbanner.reject{display:block;background:rgba(200,62,77,.11);border:1px solid rgba(200,62,77,.28);color:var(--red)}
+    .editorset{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .stateEditor{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+    .stateTag{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:10px;padding:6px 7px;background:var(--paper);font-size:.67rem}
+    .stateTag code{font-weight:900}.stateTag button{border:0;border-radius:7px;padding:4px 6px;font-size:.62rem;background:var(--card);color:var(--muted)}
+    .stateTag button.active{background:var(--teal);color:white}
+    .footer{max-width:1580px;margin:10px auto 0;padding:0 12px 14px;color:var(--muted);font-size:.66rem;display:flex;justify-content:space-between;gap:12px}
+    .toast{display:none;margin:0 0 8px;background:var(--navy);color:#fff;padding:7px 11px;border-radius:8px;
+      font-size:.72rem;border-left:4px solid var(--amber)}
+    .toast.show{display:block}
+    .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
+    .confetti i{position:absolute;top:-20px;width:9px;height:15px;animation:fall 1.7s ease-in forwards}
+    /* Diseño compacto, plano y sin paneles flotantes */
+    .topbar{padding:8px 16px}
+    .brand{gap:9px}.brandmark{width:38px;height:38px;border-radius:10px;box-shadow:none}
+    .brand h1{font-size:1.08rem}.brand p{font-size:.69rem;margin-top:1px}
+    .iconbtn{width:34px;height:34px;border-radius:8px}
+    main{padding:10px 12px}
+    .intro{margin-bottom:8px;gap:10px}.intro h2{font-size:1.3rem;margin:2px 0}.intro p{font-size:.76rem;line-height:1.35}
+    .eyebrow{font-size:.63rem}.stepbadge{min-width:112px;padding:6px 10px;border-radius:9px;box-shadow:none}
+    .stepbadge strong{font-size:1.08rem}.stepbadge span{font-size:.62rem}
+    .labgrid{grid-template-columns:210px minmax(500px,1fr) 285px;gap:8px}
+    .card{border-radius:10px;box-shadow:none}
+    .cardhead{padding:8px 10px 7px}.cardhead h3{font-size:.81rem}
+    .controlpanel,.rightpanel{position:static;top:auto}
+    .pad{padding:9px}.field{margin-bottom:8px}
+    label{font-size:.66rem;margin-bottom:3px}
+    select,input[type=text]{padding:7px 8px;border-radius:7px;font-size:.76rem}
+    .wordrow{gap:4px}.wordrow input{font-size:.85rem}
+    .btn{padding:7px 8px;border-radius:7px;font-size:.71rem;gap:4px}
+    .btn.orange{box-shadow:none}.divider{margin:8px 0}.switchrow{margin-top:7px;font-size:.69rem}
+    .switch{width:37px;height:20px;padding:2px}.switch span{width:16px;height:16px}.switch.on span{transform:translateX(17px)}
+    .statusbar{padding:7px 10px;gap:8px}.statuscopy strong{font-size:.76rem}.statuscopy span{font-size:.66rem}
+    .statusdot{width:8px;height:8px;box-shadow:0 0 0 4px rgba(247,179,43,.13)}
+    .statepill{padding:4px 7px;border-radius:6px;font-size:.76rem}
+    .tapestage{padding:8px 8px 6px}.tapeviewport{padding:42px 0 8px;min-height:108px}
+    .head{width:58px;height:41px}.headbody{width:52px;height:27px;border-radius:8px 8px 4px 4px;font-size:.59rem;box-shadow:none}
+    .head:after{border-left-width:6px;border-right-width:6px;border-top-width:8px}
+    .tape{gap:5px}.cell{width:45px;height:45px;border-radius:7px;font-size:1.05rem;box-shadow:none}
+    .cell:after{bottom:-15px;font-size:.55rem}.cell.active{box-shadow:none}
+    .controlstrip{padding:7px;gap:5px}.controlstrip .btn{min-width:72px}
+    .explain{margin:0 8px 8px;padding:7px 9px;border-radius:8px;gap:7px}
+    .explain .ico{font-size:1rem}.explain strong{font-size:.7rem}.explain p{font-size:.68rem;line-height:1.35}
+    .resultbanner{margin:8px;padding:8px;border-radius:8px;font-size:.75rem}
+    .lowergrid{gap:8px;margin-top:8px}.graphwrap{height:240px}.legend{padding:6px 9px;font-size:.62rem}
+    .tablewrap{max-height:240px}table{font-size:.68rem}th{padding:6px}td{padding:5px 6px}
+    .transitionSelect{padding:4px;min-width:62px;font-size:.67rem}.tablehint{padding:6px 8px;font-size:.61rem}
+    .metricgrid{padding:7px;gap:5px}.metric{padding:6px 7px;border-radius:7px}
+    .metric span{font-size:.56rem}.metric strong{font-size:.82rem}.progress{height:5px;margin:0 7px 7px}
+    .tabs{padding:0 6px}.tab{padding:7px 6px;font-size:.64rem}.tabpane{padding:8px;max-height:230px}
+    .timeline{gap:5px}.event{grid-template-columns:23px 1fr;gap:6px;font-size:.65rem}
+    .eventnum{width:23px;height:23px;border-radius:6px;font-size:.58rem}.empty{padding:12px 4px;font-size:.67rem}
+    .editor-inline{margin-top:8px;overflow:visible}
+    .builder-grid{display:grid;grid-template-columns:1.1fr 1fr .72fr auto;gap:7px;align-items:end;padding:9px 10px 7px}
+    .builder-actions{display:flex;gap:5px;align-items:center}
+    .editor-details{display:grid;grid-template-columns:190px minmax(280px,1fr) minmax(250px,.8fr);gap:8px;padding:0 10px 8px;align-items:start}
+    .editor-block{border:1px solid var(--line);border-radius:8px;padding:7px;background:var(--paper)}
+    .editor-block label{margin-bottom:5px}.initial-select{width:100%}
+    .final-options{display:flex;gap:5px;flex-wrap:wrap}
+    .final-option{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;font:700 .66rem var(--mono);background:var(--card)}
+    .final-option input{accent-color:var(--teal)}
+    .stateEditor{margin-top:0}.stateTag{padding:4px 6px;border-radius:6px}
+    .stateTag .role{color:var(--teal);font-size:.58rem}
+    .validation{display:flex;gap:7px;align-items:flex-start;font-size:.66rem;line-height:1.35}
+    .validation i{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-style:normal;background:rgba(23,138,91,.13);color:var(--green);font-weight:900;flex:0 0 auto}
+    .validation.error i{background:rgba(200,62,77,.12);color:var(--red)}
+    .editor-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+    .editor-note{padding:6px 10px;border-top:1px solid var(--line);font-size:.63rem;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+    .graph-toolbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:5px 7px;border-bottom:1px solid var(--line);background:var(--paper)}
+    .graph-tool{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:6px;padding:5px 7px;font-size:.62rem;font-weight:800}
+    .graph-tool.active{background:var(--navy);border-color:var(--navy);color:white}
+    .graph-symbol{display:flex;align-items:center;gap:4px;margin-left:auto;font-size:.61rem;color:var(--muted)}
+    .graph-symbol select{width:auto;min-width:54px;padding:4px 6px;font-family:var(--mono)}
+    .graph-hint{padding:5px 8px;border-top:1px solid var(--line);font-size:.61rem;color:var(--muted);min-height:25px}
+    .graph-hint strong{color:var(--teal)}
+    @keyframes pulse{50%{transform:scale(1.35);opacity:.6}}
+    @keyframes headTap{50%{transform:translateX(-50%) translateY(9px)}}
+    @keyframes dash{to{stroke-dashoffset:-14}}
+    @keyframes fall{to{transform:translate(var(--dx),105vh) rotate(720deg)}}
+    @media(max-width:1180px){
+      .labgrid{grid-template-columns:200px minmax(480px,1fr)}.rightpanel{grid-column:1/-1;position:static}
+      .rightpanel .rightcontent{display:grid;grid-template-columns:1fr 1fr}.rightpanel .tabs{grid-column:1/-1}
+      .editor-details{grid-template-columns:180px 1fr}.editor-details .editor-block:last-child{grid-column:1/-1}
+    }
+    @media(max-width:860px){
+      main{padding:12px}.intro{align-items:flex-start}.stepbadge{display:none}.labgrid{grid-template-columns:1fr}
+      .controlpanel,.rightpanel{position:static}.lowergrid{grid-template-columns:1fr}.controlpanel .pad{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .controlpanel .divider{grid-column:1/-1;margin:2px 0}.field{margin:0}.rightpanel .rightcontent{display:block}
+      .builder-grid{grid-template-columns:1fr 1fr}.builder-actions{grid-column:1/-1}.editor-details{grid-template-columns:1fr}
+      .editor-details .editor-block:last-child{grid-column:auto}
+    }
+    @media(max-width:560px){
+      .topbar{padding:12px}.brand p{display:none}.brandmark{width:42px;height:42px}.navtools .iconbtn:nth-child(2){display:none}
+      .controlpanel .pad{display:block}.field{margin-bottom:12px}.cell{width:46px;height:52px}.tape{gap:5px}
+      .controlstrip .btn{min-width:68px;padding:9px 8px;font-size:.72rem}.graphwrap{height:300px}.footer{flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="nav">
+      <div class="brand">
+        <div class="brandmark">δ</div>
+        <div><h1>Autómata en Marcha</h1><p>Laboratorio visual de autómatas finitos deterministas</p></div>
+      </div>
+      <div class="navtools">
+        <button class="iconbtn" id="helpBtn" title="Atajos y ayuda" aria-label="Mostrar ayuda">?</button>
+        <button class="iconbtn" id="soundBtn" title="Activar sonido" aria-label="Activar sonido">♪</button>
+        <button class="iconbtn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div>
+        <div class="eyebrow">Aprender observando cada transición</div>
+        <h2>Una cinta, una cabeza lectora y una decisión.</h2>
+        <p>Escribe una cadena, ejecuta el autómata y observa cómo la tabla de transición mueve el control entre estados. Cada símbolo se consume una sola vez: el autómata no escribe ni retrocede.</p>
+      </div>
+      <div class="stepbadge"><strong id="bigStep">0</strong><span>transiciones ejecutadas</span></div>
+    </section>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <div class="labgrid">
+      <aside class="card controlpanel">
+        <div class="cardhead"><h3>Panel de control</h3><span class="tiny">AFD</span></div>
+        <div class="pad">
+          <div class="field">
+            <label for="exampleSelect">Autómata de ejemplo</label>
+            <select id="exampleSelect">
+              <option value="even0">Número par de ceros</option>
+              <option value="multiple3">Binario múltiplo de 3</option>
+              <option value="endsAB">Termina en “ab”</option>
+              <option value="contains101">Contiene “101”</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="wordInput">Cadena de entrada</label>
+            <div class="wordrow"><input id="wordInput" type="text" value="101001" autocomplete="off" spellcheck="false" aria-describedby="alphabetHint"><button class="btn soft" id="randomBtn" title="Generar cadena">↻</button></div>
+            <div class="tiny" id="alphabetHint" style="margin-top:6px">Alfabeto permitido: <span id="alphabetChips"></span></div>
+          </div>
+          <div class="twocol">
+            <button class="btn teal full" id="loadBtn">Cargar cinta</button>
+            <button class="btn ghost full" id="clearBtn">Vaciar</button>
+          </div>
+          <div class="divider"></div>
+          <div class="field">
+            <div class="rangehead"><label for="speedRange">Velocidad automática</label><span class="tiny" id="speedLabel">Normal</span></div>
+            <input id="speedRange" type="range" min="1" max="5" value="3">
+          </div>
+          <div class="switchrow"><span>Explicación detallada</span><button class="switch on" id="detailSwitch" role="switch" aria-checked="true"><span></span></button></div>
+          <div class="switchrow"><span>Resaltar tabla y grafo</span><button class="switch on" id="highlightSwitch" role="switch" aria-checked="true"><span></span></button></div>
+          <div class="divider"></div>
+          <button class="btn soft full" id="jumpEditorBtn">✎ Crear o editar AFD</button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <article class="card machine">
+          <div class="statusbar" id="statusBar">
+            <div class="statusdot"></div>
+            <div class="statuscopy"><strong id="statusTitle">Listo para comenzar</strong><span id="statusText">La cabeza está situada sobre el primer símbolo.</span></div>
+            <div class="statepill" id="currentStatePill">q0</div>
+          </div>
+          <div class="tapestage">
+            <div class="tapeviewport">
+              <div class="head" id="head"><div class="headbody">CABEZA</div></div>
+              <div class="tape" id="tape"></div>
+            </div>
+          </div>
+          <div class="controlstrip">
+            <button class="btn ghost" id="backBtn" disabled>← Anterior</button>
+            <button class="btn orange" id="stepBtn">Siguiente →</button>
+            <button class="btn teal" id="autoBtn">▶ Automático</button>
+            <button class="btn ghost" id="resetBtn">↺ Reiniciar</button>
+          </div>
+          <div class="explain">
+            <div class="ico" id="explainIcon">👁</div>
+            <div><strong id="explainTitle">Observa la cabeza lectora</strong><p id="explainText">Lee el símbolo actual, consulta la fila correspondiente en la tabla δ y cambia de estado.</p></div>
+          </div>
+          <div class="resultbanner" id="resultBanner"></div>
+        </article>
+
+        <div class="lowergrid">
+          <article class="card">
+            <div class="cardhead"><h3>Diagrama de estados</h3><span class="tiny" id="graphCaption">δ: Q × Σ → Q</span></div>
+            <div class="graph-toolbar" aria-label="Herramientas de edición del grafo">
+              <button class="graph-tool active" data-graph-mode="move" title="Seleccionar y arrastrar estados">↕ Mover</button>
+              <button class="graph-tool" data-graph-mode="add-state" title="Hacer clic en el fondo para crear un estado">＋ Estado</button>
+              <button class="graph-tool" data-graph-mode="transition" title="Elegir origen y destino">→ Transición</button>
+              <button class="graph-tool" data-graph-mode="initial" title="Hacer clic en un estado para convertirlo en inicial">I Inicial</button>
+              <button class="graph-tool" data-graph-mode="final" title="Hacer clic en un estado para alternar su condición de final">◎ Final</button>
+              <button class="graph-tool" data-graph-mode="delete" title="Hacer clic en un estado o arista para borrarlo">⌫ Borrar</button>
+              <label class="graph-symbol" for="graphSymbolSelect">Símbolo <select id="graphSymbolSelect"></select></label>
+            </div>
+            <div class="graphwrap"><svg id="graph" role="img" aria-label="Diagrama del autómata"></svg></div>
+            <div class="graph-hint" id="graphEditHint"><strong>Mover:</strong> arrastra cualquier estado. También puedes hacer doble clic en el fondo para crear uno.</div>
+            <div class="legend"><span><i class="swatch current"></i> Estado actual</span><span><i class="swatch final"></i> Estado final</span><span><i class="swatch"></i> Estado normal</span></div>
+          </article>
+
+          <article class="card">
+            <div class="cardhead"><h3>Tabla de transiciones δ</h3><span class="tiny">editable</span></div>
+            <div class="tablewrap">
+              <table aria-label="Tabla de transiciones">
+                <thead><tr><th>Estado</th><th>Lee</th><th>Va a</th><th>Rol</th></tr></thead>
+                <tbody id="transitionBody"></tbody>
+              </table>
+            </div>
+            <div class="tablehint">La fila naranja es la regla que se está aplicando. Cambia un destino para experimentar; la máquina se reiniciará automáticamente.</div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="card rightpanel">
+        <div class="cardhead"><h3>Panel de observación</h3><span class="tiny" id="machineKind">determinista</span></div>
+        <div class="rightcontent">
+          <div>
+            <div class="metricgrid">
+              <div class="metric"><span>Estado</span><strong id="metricState">q0</strong></div>
+              <div class="metric"><span>Símbolo</span><strong id="metricSymbol">1</strong></div>
+              <div class="metric"><span>Posición</span><strong id="metricPos">1 / 6</strong></div>
+              <div class="metric"><span>Resultado</span><strong id="metricResult">—</strong></div>
+            </div>
+            <div class="progress" title="Progreso sobre la cadena"><span id="progressBar"></span></div>
+          </div>
+          <div class="tabs">
+            <button class="tab active" data-tab="history">Historial</button>
+            <button class="tab" data-tab="concept">Concepto</button>
+            <button class="tab" data-tab="challenges">Retos</button>
+          </div>
+          <div class="tabpane active" id="historyPane">
+            <div class="timeline" id="timeline"><div class="empty">Ejecuta una transición para construir el historial.</div></div>
+          </div>
+          <div class="tabpane" id="conceptPane">
+            <div class="concept">
+              <b>Un AFD es una 5-tupla</b>
+              <div class="formula">M = (Q, Σ, δ, q₀, F)</div>
+              <p><b>Q</b>: conjunto finito de estados.<br><b>Σ</b>: alfabeto de entrada.<br><b>δ</b>: función de transición.<br><b>q₀</b>: estado inicial.<br><b>F</b>: estados de aceptación.</p>
+              <p>Es <b>determinista</b> porque para cada pareja (estado, símbolo) existe exactamente un destino.</p>
+            </div>
+          </div>
+          <div class="tabpane" id="challengesPane">
+            <div class="challenge"><h4>Reto 1 · Predice antes de ejecutar</h4><p>¿La cadena actual será aceptada? Haz tu predicción y luego compruébala.</p><div class="twocol"><button class="btn soft predict" data-value="accept">Aceptada</button><button class="btn danger predict" data-value="reject">Rechazada</button></div></div>
+            <div class="challenge"><h4>Reto 2 · Encuentra un caso</h4><p id="challengeText">Escribe una cadena con número impar de ceros para forzar el rechazo.</p><button class="btn ghost full" id="checkChallengeBtn">Comprobar mi cadena</button></div>
+            <div class="challenge"><h4>Reto 3 · Modifica δ</h4><p>Cambia una transición y observa cómo se actualizan simultáneamente la tabla, el grafo y la ejecución.</p></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card editor-inline" id="editorPanel">
+      <div class="cardhead">
+        <h3>Constructor de nuevos autómatas</h3>
+        <span class="tiny">Define Q, Σ, q₀, F y después completa δ en la tabla superior</span>
+      </div>
+      <div class="builder-grid">
+        <div>
+          <label for="machineNameInput">Nombre del autómata</label>
+          <input id="machineNameInput" type="text" value="Número par de ceros">
+        </div>
+        <div>
+          <label for="statesInput">Estados separados por comas</label>
+          <input id="statesInput" type="text" value="q0,q1" spellcheck="false">
+        </div>
+        <div>
+          <label for="alphabetInput">Alfabeto</label>
+          <input id="alphabetInput" type="text" value="0,1" spellcheck="false">
+        </div>
+        <div class="builder-actions">
+          <button class="btn ghost" id="newMachineBtn">＋ Nuevo</button>
+          <button class="btn teal" id="applyStructureBtn">Aplicar</button>
+          <button class="btn soft" id="validateBtn">✓ Validar</button>
+        </div>
+      </div>
+      <div class="editor-details">
+        <div class="editor-block">
+          <label for="initialStateSelect">Estado inicial q₀</label>
+          <select id="initialStateSelect" class="initial-select"></select>
+          <div class="stateEditor" id="stateEditor" style="margin-top:7px"></div>
+        </div>
+        <div class="editor-block">
+          <label>Estados de aceptación F</label>
+          <div class="final-options" id="finalStatesEditor"></div>
+        </div>
+        <div class="editor-block">
+          <div class="validation" id="editorValidation"><i>✓</i><span>El AFD está completo y es determinista.</span></div>
+          <div class="editor-actions">
+            <button class="btn ghost" id="saveLocalBtn">Guardar</button>
+            <button class="btn ghost" id="loadLocalBtn">Recuperar</button>
+            <button class="btn ghost" id="exportBtn">Exportar JSON</button>
+            <button class="btn ghost" id="importBtn">Importar JSON</button>
+          </div>
+        </div>
+      </div>
+      <div class="editor-note">
+        <span>Las transiciones se editan directamente en la tabla δ; cada cambio actualiza el grafo y reinicia la ejecución.</span>
+        <span>Máximo recomendado: 8 estados y 5 símbolos.</span>
+      </div>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </section>
+  </main>
+
+  <div class="confetti" id="confetti"></div>
+  <footer class="footer"><span>Atajos: Espacio = siguiente · A = automático/pausa · R = reiniciar · ← = anterior</span><span>Funciona sin Internet · El constructor puede guardar un AFD en este navegador</span></footer>
+
+  <script>
+    (() => {
+      "use strict";
+      const $ = s => document.querySelector(s);
+      const $$ = s => [...document.querySelectorAll(s)];
+      const examples = {
+        even0:{
+          name:"Número par de ceros",states:["q0","q1"],alphabet:["0","1"],start:"q0",finals:["q0"],
+          transitions:{q0:{0:"q1",1:"q0"},q1:{0:"q0",1:"q1"}},word:"101001",
+          description:"q0 representa una cantidad par de ceros; q1, una cantidad impar.",
+          challenge:"Escribe una cadena con número impar de ceros para forzar el rechazo."
+        },
+        multiple3:{
+          name:"Binario múltiplo de 3",states:["r0","r1","r2"],alphabet:["0","1"],start:"r0",finals:["r0"],
+          transitions:{r0:{0:"r0",1:"r1"},r1:{0:"r2",1:"r0"},r2:{0:"r1",1:"r2"}},word:"110",
+          description:"Cada estado representa el residuo 0, 1 o 2 del número binario leído al dividir por 3.",
+          challenge:"Encuentra una cadena binaria que represente un múltiplo de 3."
+        },
+        endsAB:{
+          name:"Termina en ab",states:["s0","s1","s2"],alphabet:["a","b"],start:"s0",finals:["s2"],
+          transitions:{s0:{a:"s1",b:"s0"},s1:{a:"s1",b:"s2"},s2:{a:"s1",b:"s0"}},word:"aabab",
+          description:"s1 recuerda una a reciente; s2 confirma que los dos últimos símbolos son ab.",
+          challenge:"Construye la cadena aceptada más corta y compruébala."
+        },
+        contains101:{
+          name:"Contiene 101",states:["p0","p1","p2","p3"],alphabet:["0","1"],start:"p0",finals:["p3"],
+          transitions:{p0:{0:"p0",1:"p1"},p1:{0:"p2",1:"p1"},p2:{0:"p0",1:"p3"},p3:{0:"p3",1:"p3"}},word:"001011",
+          description:"Los estados guardan cuánto del patrón 101 ya ha sido reconocido.",
+          challenge:"Escribe la cadena aceptada más corta y explica los estados visitados."
+        }
+      };
+
+      let machine = structuredClone(examples.even0);
+      let runtime = {word:machine.word,state:machine.start,head:0,status:"ready",steps:0,history:[],snapshots:[],activeEdge:null};
+      let autoTimer=null, sound=false, detailed=true, highlights=true, prediction=null;
+      let graphPositions={},graphMode="move",selectedGraphState=null,graphDrag=null,suppressGraphClick=false;
+
+      const speedDelays=[1400,1000,700,430,230];
+      const speedNames=["Muy lenta","Lenta","Normal","Rápida","Muy rápida"];
+
+      function cloneRuntime(){
+        return {word:runtime.word,state:runtime.state,head:runtime.head,status:runtime.status,steps:runtime.steps,
+          history:structuredClone(runtime.history),activeEdge:runtime.activeEdge};
+      }
+      function restoreRuntime(s){
+        Object.assign(runtime,structuredClone(s));runtime.snapshots=runtime.snapshots||[];
+      }
+      function validWord(raw){
+        return [...raw].every(ch=>machine.alphabet.includes(ch));
+      }
+      function sanitizeWord(raw){
+        return [...raw].filter(ch=>machine.alphabet.includes(ch)).join("");
+      }
+      function toast(msg){
+        const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove("show"),2300);
+      }
+      function beep(freq=440,duration=.055){
+        if(!sound)return;
+        try{const C=window.AudioContext||window.webkitAudioContext,c=new C(),o=c.createOscillator(),g=c.createGain();
+          o.frequency.value=freq;o.type="sine";g.gain.setValueAtTime(.055,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);
+          o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);setTimeout(()=>c.close(),200)}
+        catch(e){}
+      }
+      function confetti(){
+        const c=$("#confetti");c.innerHTML="";
+        const colors=["#f26b38","#f7b32b","#0e7c7b","#6c63b8","#178a5b"];
+        for(let i=0;i<36;i++){const p=document.createElement("i");p.style.left=Math.random()*100+"vw";p.style.background=colors[i%colors.length];
+          p.style.setProperty("--dx",(Math.random()*220-110)+"px");p.style.animationDelay=(Math.random()*.45)+"s";p.style.transform=`rotate(${Math.random()*180}deg)`;c.appendChild(p)}
+        setTimeout(()=>c.innerHTML="",2400);
+      }
+      function resetGraphLayout(positions={}){
+        graphPositions={};Object.entries(positions||{}).forEach(([s,p])=>{
+          const x=Number(p?.x),y=Number(p?.y);if(Number.isFinite(x)&&Number.isFinite(y))graphPositions[s]={x:Math.max(38,Math.min(562,x)),y:Math.max(38,Math.min(312,y))};
+        });selectedGraphState=null;graphDrag=null;
+      }
+
+      function loadExample(key){
+        pauseAuto();machine=structuredClone(examples[key]);resetGraphLayout();$("#wordInput").value=machine.word;
+        $("#machineNameInput").value=machine.name;$("#statesInput").value=machine.states.join(",");$("#alphabetInput").value=machine.alphabet.join(",");
+        $("#challengeText").textContent=machine.challenge;prediction=null;resetRuntime(machine.word);renderAll();
+      }
+      function resetRuntime(word=$("#wordInput").value){
+        pauseAuto();runtime={word:sanitizeWord(word),state:machine.start,head:0,status:"ready",steps:0,history:[],snapshots:[],activeEdge:null};
+        $("#wordInput").value=runtime.word;
+      }
+      function tapeSymbols(){
+        const pads=4, chars=[...runtime.word];
+        return [...Array(pads).fill("□"),...chars,...Array(Math.max(5,pads)).fill("□")];
+      }
+      function renderTape(animate=false){
+        const tape=$("#tape"),symbols=tapeSymbols(),pad=4;
+        tape.innerHTML=symbols.map((ch,i)=>{
+          const logical=i-pad,active=logical===runtime.head,consumed=logical>=0&&logical<runtime.head;
+          return `<div class="cell ${active?"active":""} ${consumed?"consumed":""} ${ch==="□"?"blank":""}" data-index="${logical>=0?logical+1:""}">${ch}</div>`
+        }).join("");
+        const cellWidth=50;
+        tape.style.transform=`translateX(-${(runtime.head+pad)*cellWidth+22.5}px)`;
+        if(animate){$("#head").classList.remove("reading");void $("#head").offsetWidth;$("#head").classList.add("reading")}
+      }
+      function statusInfo(){
+        if(runtime.status==="accept")return ["Cadena aceptada","La entrada terminó en un estado final.","accept"];
+        if(runtime.status==="reject")return ["Cadena rechazada","La entrada terminó en un estado no final.","reject"];
+        if(runtime.status==="running")return ["Procesando la cadena",`Leyendo la posición ${Math.min(runtime.head+1,Math.max(runtime.word.length,1))}.`,"running"];
+        if(runtime.word.length===0)return ["Cadena vacía ε","Pulsa Siguiente para evaluar el estado inicial.",""];
+        return ["Listo para comenzar","La cabeza está situada sobre el primer símbolo.",""];
+      }
+      function renderStatus(){
+        const [title,text,klass]=statusInfo(),bar=$("#statusBar");
+        bar.className="statusbar "+klass;$("#statusTitle").textContent=title;$("#statusText").textContent=text;$("#currentStatePill").textContent=runtime.state;
+        $("#bigStep").textContent=runtime.steps;$("#metricState").textContent=runtime.state;
+        $("#metricSymbol").textContent=runtime.head<runtime.word.length?runtime.word[runtime.head]:"□";
+        $("#metricPos").textContent=runtime.word.length?`${Math.min(runtime.head+1,runtime.word.length)} / ${runtime.word.length}`:"ε";
+        $("#metricResult").textContent=runtime.status==="accept"?"ACEPTA":runtime.status==="reject"?"RECHAZA":"—";
+        $("#metricResult").style.color=runtime.status==="accept"?"var(--green)":runtime.status==="reject"?"var(--red)":"var(--ink)";
+        $("#progressBar").style.width=(runtime.word.length?Math.min(100,runtime.head/runtime.word.length*100):(runtime.status==="ready"?0:100))+"%";
+        $("#backBtn").disabled=!runtime.snapshots.length;$("#stepBtn").disabled=["accept","reject"].includes(runtime.status);
+        $("#autoBtn").disabled=["accept","reject"].includes(runtime.status);
+        const b=$("#resultBanner");b.className="resultbanner";
+        if(runtime.status==="accept"){b.className+=" accept";b.textContent=`✓ ACEPTADA · ${runtime.state} ∈ F`}
+        if(runtime.status==="reject"){b.className+=" reject";b.textContent=`✕ RECHAZADA · ${runtime.state} ∉ F`}
+      }
+      function renderExplanation(){
+        let title="Observa la cabeza lectora",text=machine.description,icon="👁";
+        const last=runtime.history[runtime.history.length-1];
+        if(last){title=`δ(${last.from}, ${last.symbol}) = ${last.to}`;icon="→";
+          text=detailed?`La cabeza leyó “${last.symbol}”. La tabla indicó pasar de ${last.from} a ${last.to}; luego la cabeza avanzó una celda a la derecha.`:`${last.from} —${last.symbol}→ ${last.to}.`}
+        if(runtime.status==="accept"){title="¡La cadena pertenece al lenguaje!";text=`Se consumieron todos los símbolos y ${runtime.state} es un estado de aceptación.`;icon="✓"}
+        if(runtime.status==="reject"){title="La cadena no pertenece al lenguaje";text=`Se consumieron todos los símbolos, pero ${runtime.state} no es un estado de aceptación.`;icon="✕"}
+        $("#explainTitle").textContent=title;$("#explainText").textContent=text;$("#explainIcon").textContent=icon;
+      }
+      function renderHistory(){
+        const tl=$("#timeline");
+        if(!runtime.history.length){tl.innerHTML='<div class="empty">Ejecuta una transición para construir el historial.</div>';return}
+        tl.innerHTML=runtime.history.map((h,i)=>`<div class="event"><div class="eventnum">${i+1}</div><div><strong>${h.from} —${h.symbol}→ ${h.to}</strong><p>Posición ${h.position+1}: se consumió “${h.symbol}”.</p></div></div>`).reverse().join("");
+      }
+      function renderTable(){
+        const body=$("#transitionBody");let html="";
+        machine.states.forEach(state=>machine.alphabet.forEach(symbol=>{
+          const active=highlights&&runtime.activeEdge&&runtime.activeEdge.from===state&&runtime.activeEdge.symbol===symbol;
+          const role=[state===machine.start?"Inicial":"",machine.finals.includes(state)?"Final":""].filter(Boolean).join(" + ")||"—";
+          const current=machine.transitions?.[state]?.[symbol];
+          html+=`<tr class="${active?"active":""}" data-state="${state}" data-symbol="${symbol}">
+            <td><code>${state}</code></td><td><code>${symbol}</code></td><td><select class="transitionSelect" data-state="${state}" data-symbol="${symbol}">
+            ${machine.states.includes(current)?"":'<option value="" selected>— sin definir —</option>'}${machine.states.map(s=>`<option ${s===current?"selected":""}>${s}</option>`).join("")}</select></td><td>${role}</td></tr>`;
+        }));body.innerHTML=html;
+        $$(".transitionSelect").forEach(sel=>sel.addEventListener("change",e=>{
+          const {state,symbol}=e.target.dataset;machine.transitions[state]??={};machine.transitions[state][symbol]=e.target.value;resetRuntime();renderAll();toast(`Transición δ(${state}, ${symbol}) actualizada`);
+        }));
+      }
+      function edgeGroups(){
+        const groups={};
+        machine.states.forEach(from=>machine.alphabet.forEach(symbol=>{
+          const to=machine.transitions?.[from]?.[symbol];if(!machine.states.includes(to))return;
+          const key=from+"→"+to;
+          (groups[key]??={from,to,symbols:[]}).symbols.push(symbol);
+        }));return Object.values(groups);
+      }
+      function ensureGraphPositions(){
+        const w=600,h=350,n=Math.max(1,machine.states.length),cx=w/2,cy=h/2+5,rx=Math.min(205,78+n*28),ry=Math.min(112,55+n*14);
+        Object.keys(graphPositions).forEach(s=>{if(!machine.states.includes(s))delete graphPositions[s]});
+        machine.states.forEach((s,i)=>{
+          if(graphPositions[s])return;
+          const a=-Math.PI/2+i*2*Math.PI/n;graphPositions[s]={x:cx+rx*Math.cos(a),y:cy+ry*Math.sin(a)};
+        });
+      }
+      function renderGraphTools(){
+        $("#graph").dataset.mode=graphMode;
+        $$(".graph-tool").forEach(b=>b.classList.toggle("active",b.dataset.graphMode===graphMode));
+        const symbol=$("#graphSymbolSelect"),current=symbol.value;
+        symbol.innerHTML=machine.alphabet.map(a=>`<option>${a}</option>`).join("");
+        if(machine.alphabet.includes(current))symbol.value=current;
+        const hints={
+          move:"<strong>Mover:</strong> arrastra cualquier estado. Haz doble clic en el fondo para crear uno.",
+          "add-state":"<strong>Nuevo estado:</strong> haz clic en un punto vacío del grafo.",
+          transition:selectedGraphState?`<strong>Transición:</strong> origen ${selectedGraphState}; ahora haz clic en el destino para el símbolo “${symbol.value}”.`:`<strong>Transición:</strong> elige primero el estado de origen y después el destino.`,
+          initial:"<strong>Estado inicial:</strong> haz clic sobre el nuevo q₀.",
+          final:"<strong>Estado final:</strong> haz clic para activar o desactivar la aceptación.",
+          delete:"<strong>Borrar:</strong> haz clic sobre un estado o una arista."
+        };
+        $("#graphEditHint").innerHTML=hints[graphMode];
+      }
+      function renderGraph(){
+        const svg=$("#graph"),w=600,h=350,n=machine.states.length;svg.setAttribute("viewBox",`0 0 ${w} ${h}`);ensureGraphPositions();
+        const pos=graphPositions;
+        let defs=`<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8aa4ba"/></marker>
+          <marker id="arrowActive" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f26b38"/></marker></defs>`;
+        let edges="";
+        edgeGroups().forEach((e,idx)=>{
+          const a=pos[e.from],b=pos[e.to],active=highlights&&runtime.activeEdge&&runtime.activeEdge.from===e.from&&runtime.activeEdge.to===e.to;
+          let path,lx,ly;
+          if(e.from===e.to){
+            path=`M ${a.x-20} ${a.y-24} C ${a.x-58} ${a.y-82}, ${a.x+58} ${a.y-82}, ${a.x+20} ${a.y-24}`;
+            lx=a.x;ly=a.y-72;
+          }else{
+            const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len,px=-uy,py=ux;
+            const start={x:a.x+ux*31,y:a.y+uy*31},end={x:b.x-ux*35,y:b.y-uy*35};
+            const curve=(idx%2?1:-1)*Math.min(28,80/Math.max(1,n-1));
+            const qx=(start.x+end.x)/2+px*curve,qy=(start.y+end.y)/2+py*curve;
+            path=`M ${start.x} ${start.y} Q ${qx} ${qy} ${end.x} ${end.y}`;lx=qx+px*8;ly=qy+py*8;
+          }
+          edges+=`<path class="edge-hit" data-from="${e.from}" data-to="${e.to}" d="${path}"></path>
+            <path class="edge ${active?"active":""}" d="${path}" marker-end="url(#${active?"arrowActive":"arrow"})"></path>
+            <text class="edgelabel" x="${lx}" y="${ly}" text-anchor="middle">${e.symbols.join(", ")}</text>`;
+        });
+        const sp=pos[machine.start];if(sp)edges+=`<path class="edge" d="M ${Math.max(8,sp.x-78)} ${sp.y} L ${sp.x-34} ${sp.y}" marker-end="url(#arrow)"></path>`;
+        let nodes=machine.states.map(s=>{
+          const p=pos[s],current=s===runtime.state,isFinal=machine.finals.includes(s),isStart=s===machine.start;
+          return `<g class="node ${current?"current":""} ${isFinal?"final":""} ${isStart?"start":""} ${selectedGraphState===s?"selected":""}" data-state="${s}" transform="translate(${p.x},${p.y})">
+            ${isFinal?'<circle class="outer" r="34"></circle>':""}<circle r="28"></circle><text>${s}</text></g>`;
+        }).join("");
+        svg.innerHTML=defs+edges+nodes;renderGraphTools();
+      }
+      function graphPoint(e){
+        const svg=$("#graph"),r=svg.getBoundingClientRect(),rw=r.width||600,rh=r.height||350;
+        return {x:(e.clientX-r.left)*600/rw,y:(e.clientY-r.top)*350/rh};
+      }
+      function nextStateName(){
+        let i=0,name;do{name="q"+i++}while(machine.states.includes(name));return name;
+      }
+      function addStateAt(point){
+        if(machine.states.length>=8){toast("El editor admite hasta 8 estados");return}
+        const state=nextStateName();machine.states.push(state);machine.transitions[state]={};
+        machine.alphabet.forEach(a=>machine.transitions[state][a]=state);
+        graphPositions[state]={x:Math.max(38,Math.min(562,point.x)),y:Math.max(38,Math.min(312,point.y))};
+        $("#statesInput").value=machine.states.join(",");selectedGraphState=state;resetRuntime();renderAll();toast(`Estado ${state} creado`);
+      }
+      function removeGraphState(state){
+        if(machine.states.length===1){toast("El AFD debe conservar al menos un estado");return}
+        machine.states=machine.states.filter(s=>s!==state);delete machine.transitions[state];delete graphPositions[state];
+        machine.states.forEach(s=>machine.alphabet.forEach(a=>{if(machine.transitions?.[s]?.[a]===state)delete machine.transitions[s][a]}));
+        machine.finals=machine.finals.filter(s=>s!==state);if(machine.start===state)machine.start=machine.states[0];
+        $("#statesInput").value=machine.states.join(",");selectedGraphState=null;resetRuntime();renderAll();toast(`Estado ${state} eliminado`);
+      }
+      function removeGraphEdge(from,to){
+        const removed=[];machine.alphabet.forEach(a=>{if(machine.transitions?.[from]?.[a]===to){delete machine.transitions[from][a];removed.push(a)}});
+        selectedGraphState=null;resetRuntime();renderAll();toast(removed.length?`Transición ${from} → ${to} eliminada`:"No había una transición editable");
+      }
+      function useGraphNode(state){
+        if(graphMode==="move"){selectedGraphState=state;renderGraph();return}
+        if(graphMode==="transition"){
+          if(!selectedGraphState){selectedGraphState=state;renderGraph();return}
+          const symbol=$("#graphSymbolSelect").value,from=selectedGraphState;
+          machine.transitions[from]??={};machine.transitions[from][symbol]=state;selectedGraphState=null;
+          resetRuntime();renderAll();toast(`δ(${from}, ${symbol}) = ${state}`);return;
+        }
+        if(graphMode==="initial"){machine.start=state;selectedGraphState=null;resetRuntime();renderAll();toast(`${state} es ahora el estado inicial`);return}
+        if(graphMode==="final"){
+          machine.finals=machine.finals.includes(state)?machine.finals.filter(s=>s!==state):[...machine.finals,state];
+          selectedGraphState=null;resetRuntime();renderAll();toast(`${state} ${machine.finals.includes(state)?"marcado como final":"ya no es final"}`);return;
+        }
+        if(graphMode==="delete")removeGraphState(state);
+      }
+      function setGraphMode(mode){
+        graphMode=mode;selectedGraphState=null;renderGraph();
+      }
+      function graphPointerDown(e){
+        const node=e.target.closest?.(".node");if(graphMode!=="move"||!node)return;
+        const state=node.dataset.state,p=graphPoint(e),at=graphPositions[state];
+        graphDrag={state,dx:p.x-at.x,dy:p.y-at.y,startX:p.x,startY:p.y,moved:false};e.preventDefault();
+      }
+      function graphPointerMove(e){
+        if(!graphDrag)return;const p=graphPoint(e);
+        if(Math.hypot(p.x-graphDrag.startX,p.y-graphDrag.startY)>3)graphDrag.moved=true;
+        graphPositions[graphDrag.state]={x:Math.max(38,Math.min(562,p.x-graphDrag.dx)),y:Math.max(38,Math.min(312,p.y-graphDrag.dy))};
+        renderGraph();
+      }
+      function graphPointerUp(){
+        if(!graphDrag)return;suppressGraphClick=graphDrag.moved;const moved=graphDrag.moved;graphDrag=null;
+        if(moved)toast("Posición del estado actualizada");setTimeout(()=>suppressGraphClick=false,0);
+      }
+      function graphClick(e){
+        if(suppressGraphClick)return;
+        const node=e.target.closest?.(".node"),edge=e.target.closest?.(".edge-hit");
+        if(node){useGraphNode(node.dataset.state);return}
+        if(edge&&graphMode==="delete"){removeGraphEdge(edge.dataset.from,edge.dataset.to);return}
+        if(graphMode==="add-state")addStateAt(graphPoint(e));
+      }
+      function graphDoubleClick(e){
+        if(e.target.closest?.(".node")||e.target.closest?.(".edge-hit"))return;
+        if(graphMode==="move")addStateAt(graphPoint(e));
+      }
+      function renderStateEditor(){
+        const initial=$("#initialStateSelect");
+        initial.innerHTML=machine.states.map(s=>`<option ${s===machine.start?"selected":""}>${s}</option>`).join("");
+        initial.onchange=()=>{machine.start=initial.value;resetRuntime();renderAll();toast(`Estado inicial: ${machine.start}`)};
+        $("#finalStatesEditor").innerHTML=machine.states.map(s=>`<label class="final-option">
+          <input type="checkbox" value="${s}" ${machine.finals.includes(s)?"checked":""}> ${s}</label>`).join("");
+        $$("#finalStatesEditor input").forEach(box=>box.addEventListener("change",()=>{
+          machine.finals=$$("#finalStatesEditor input:checked").map(x=>x.value);resetRuntime();renderAll();
+        }));
+        $("#stateEditor").innerHTML=machine.states.map(s=>{
+          const roles=[s===machine.start?"q₀":"",machine.finals.includes(s)?"F":""].filter(Boolean).join(" · ");
+          return `<div class="stateTag"><code>${s}</code>${roles?`<span class="role">${roles}</span>`:""}</div>`;
+        }).join("");
+      }
+      function renderAlphabet(){
+        $("#alphabetChips").innerHTML=machine.alphabet.map(x=>`<span class="chip">${x}</span>`).join(" ");
+      }
+      function renderAll(animateTape=false){
+        renderTape(animateTape);renderStatus();renderExplanation();renderHistory();renderTable();renderGraph();renderStateEditor();renderAlphabet();
+        $("#graphCaption").textContent=machine.name||"AFD personalizado";validateAutomaton(false);
+      }
+      function finalize(){
+        runtime.status=machine.finals.includes(runtime.state)?"accept":"reject";pauseAuto(false);
+        beep(runtime.status==="accept"?720:180,.12);
+        if(runtime.status==="accept"){confetti();if(prediction==="accept")toast("¡Predicción correcta!")}
+        else if(prediction==="reject")toast("¡Predicción correcta!");
+      }
+      function step(){
+        if(["accept","reject"].includes(runtime.status))return;
+        runtime.snapshots.push(cloneRuntime());
+        if(runtime.word.length===0){finalize();renderAll(true);return}
+        if(runtime.head>=runtime.word.length){finalize();renderAll();return}
+        const symbol=runtime.word[runtime.head],from=runtime.state,to=machine.transitions[from]?.[symbol];
+        if(!to){runtime.status="reject";renderAll(true);toast("No existe una transición definida");return}
+        runtime.status="running";runtime.activeEdge={from,to,symbol};runtime.state=to;
+        runtime.history.push({from,to,symbol,position:runtime.head});runtime.head++;runtime.steps++;beep(420+runtime.steps*25);
+        if(runtime.head>=runtime.word.length)finalize();
+        renderAll(true);
+      }
+      function back(){
+        if(!runtime.snapshots.length)return;pauseAuto();const old=runtime.snapshots.pop(),remaining=runtime.snapshots;restoreRuntime(old);runtime.snapshots=remaining;renderAll();beep(300);
+      }
+      function reset(){resetRuntime();renderAll();toast("Ejecución reiniciada")}
+      function startAuto(){
+        if(["accept","reject"].includes(runtime.status))resetRuntime();
+        if(autoTimer){pauseAuto();return}
+        $("#autoBtn").textContent="Ⅱ Pausar";$("#statusBar").classList.add("running");
+        const tick=()=>{step();if(!["accept","reject"].includes(runtime.status))autoTimer=setTimeout(tick,speedDelays[+$("#speedRange").value-1]);else pauseAuto(false)};
+        autoTimer=setTimeout(tick,180);
+      }
+      function pauseAuto(show=true){if(autoTimer){clearTimeout(autoTimer);autoTimer=null}$("#autoBtn").textContent="▶ Automático";if(show)renderStatus()}
+      function randomWord(){
+        const len=3+Math.floor(Math.random()*8);let w="";for(let i=0;i<len;i++)w+=machine.alphabet[Math.floor(Math.random()*machine.alphabet.length)];
+        $("#wordInput").value=w;resetRuntime(w);renderAll();toast("Nueva cadena generada");
+      }
+      function applyStructure(){
+        const states=$("#statesInput").value.split(",").map(s=>s.trim()).filter(Boolean).slice(0,8);
+        const alphabet=$("#alphabetInput").value.split(",").map(s=>s.trim()).filter(s=>s.length===1).slice(0,5);
+        if(!states.length||!alphabet.length){toast("Incluye al menos un estado y un símbolo");return}
+        if(new Set(states).size!==states.length||new Set(alphabet).size!==alphabet.length){toast("No repitas estados ni símbolos");return}
+        if(states.some(s=>!/^[A-Za-z][A-Za-z0-9_]*$/.test(s))){toast("Usa nombres como q0, A o estado_1");return}
+        if(alphabet.some(a=>/[<>"'&,\s]/.test(a))){toast("Usa símbolos simples de un carácter");return}
+        const trans={};states.forEach(s=>{trans[s]={};alphabet.forEach(a=>trans[s][a]=states[0])});
+        const name=$("#machineNameInput").value.trim()||"Autómata personalizado";resetGraphLayout();
+        machine={name,states,alphabet,start:states[0],finals:[states[states.length-1]],transitions:trans,word:"",description:"Autómata personalizado: edita cada destino en la tabla.",challenge:"Encuentra una cadena aceptada por tu autómata."};
+        $("#wordInput").value="";$("#challengeText").textContent=machine.challenge;resetRuntime("");renderAll();toast("Estructura personalizada creada");
+      }
+      function newMachine(){
+        $("#machineNameInput").value="Nuevo AFD";$("#statesInput").value="q0,q1";$("#alphabetInput").value="0,1";
+        applyStructure();$("#editorPanel").scrollIntoView({behavior:"smooth",block:"start"});
+      }
+      function validateAutomaton(showToast=true){
+        const errors=[];
+        if(!machine.states.includes(machine.start))errors.push("el estado inicial no pertenece a Q");
+        if(machine.finals.some(s=>!machine.states.includes(s)))errors.push("hay estados finales fuera de Q");
+        machine.states.forEach(s=>machine.alphabet.forEach(a=>{
+          const to=machine.transitions?.[s]?.[a];
+          if(!to)errors.push(`falta δ(${s}, ${a})`);
+          else if(!machine.states.includes(to))errors.push(`δ(${s}, ${a}) apunta fuera de Q`);
+        }));
+        const box=$("#editorValidation"),ok=!errors.length;
+        box.classList.toggle("error",!ok);
+        box.innerHTML=`<i>${ok?"✓":"!"}</i><span>${ok?`AFD válido: ${machine.states.length} estados, ${machine.alphabet.length} símbolos y ${machine.states.length*machine.alphabet.length} reglas.`:`Revisa: ${errors.slice(0,3).join("; ")}.`}</span>`;
+        if(showToast)toast(ok?"El autómata es completo y determinista":"El autómata tiene errores");
+        return ok;
+      }
+      function saveLocal(){
+        try{machine.word=$("#wordInput").value;machine.positions=structuredClone(graphPositions);localStorage.setItem("automataEnMarcha.custom",JSON.stringify(machine));toast("Autómata guardado en este navegador")}
+        catch(e){toast("No fue posible guardar en este navegador")}
+      }
+      function loadLocal(){
+        try{
+          const raw=localStorage.getItem("automataEnMarcha.custom");if(!raw){toast("Todavía no hay un autómata guardado");return}
+          const m=JSON.parse(raw);if(!Array.isArray(m.states)||!Array.isArray(m.alphabet)||!m.transitions)throw Error();
+          machine=m;resetGraphLayout(machine.positions);$("#machineNameInput").value=machine.name||"Autómata recuperado";$("#statesInput").value=machine.states.join(",");
+          $("#alphabetInput").value=machine.alphabet.join(",");$("#wordInput").value=machine.word||"";resetRuntime(machine.word||"");renderAll();toast("Autómata recuperado");
+        }catch(e){toast("El autómata guardado no es válido")}
+      }
+      function exportJSON(){
+        machine.word=$("#wordInput").value;machine.positions=structuredClone(graphPositions);
+        const blob=new Blob([JSON.stringify(machine,null,2)],{type:"application/json"}),a=document.createElement("a");
+        a.href=URL.createObjectURL(blob);a.download="automata_afd_configuracion.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);toast("Configuración exportada");
+      }
+      function importJSON(file){
+        const reader=new FileReader();reader.onload=()=>{
+          try{const m=JSON.parse(reader.result);
+            if(!Array.isArray(m.states)||!Array.isArray(m.alphabet)||!m.transitions||!m.start||!Array.isArray(m.finals)||
+              m.states.some(s=>!/^[A-Za-z][A-Za-z0-9_]*$/.test(s))||m.alphabet.some(a=>typeof a!=="string"||a.length!==1||/[<>"'&,\s]/.test(a)))throw Error();
+            machine=m;resetGraphLayout(machine.positions);machine.description||="Autómata importado.";machine.challenge||="Experimenta con cadenas distintas.";
+            $("#machineNameInput").value=machine.name||"Autómata importado";$("#statesInput").value=machine.states.join(",");$("#alphabetInput").value=machine.alphabet.join(",");
+            $("#wordInput").value=machine.word||"";resetRuntime(machine.word||"");renderAll();toast("Autómata importado correctamente");
+          }catch(e){toast("El archivo no contiene un autómata válido")}
+        };reader.readAsText(file);
+      }
+      function showHelp(){
+        toast("Usa Espacio para avanzar, A para automático, R para reiniciar y ← para retroceder.");
+      }
+
+      $("#exampleSelect").addEventListener("change",e=>loadExample(e.target.value));
+      $("#wordInput").addEventListener("input",e=>{
+        const clean=sanitizeWord(e.target.value);if(clean!==e.target.value){e.target.value=clean;toast("Se eliminaron símbolos fuera del alfabeto")}
+        resetRuntime(clean);renderAll();
+      });
+      $("#loadBtn").addEventListener("click",()=>{const w=$("#wordInput").value;if(!validWord(w)){toast("Cadena no válida");return}resetRuntime(w);renderAll();toast("Cinta cargada")});
+      $("#clearBtn").addEventListener("click",()=>{$("#wordInput").value="";resetRuntime("");renderAll()});
+      $("#randomBtn").addEventListener("click",randomWord);$("#stepBtn").addEventListener("click",step);$("#backBtn").addEventListener("click",back);
+      $("#autoBtn").addEventListener("click",startAuto);$("#resetBtn").addEventListener("click",reset);
+      $("#speedRange").addEventListener("input",e=>$("#speedLabel").textContent=speedNames[e.target.value-1]);
+      $("#detailSwitch").addEventListener("click",e=>{detailed=!detailed;e.currentTarget.classList.toggle("on",detailed);e.currentTarget.setAttribute("aria-checked",detailed);renderExplanation()});
+      $("#highlightSwitch").addEventListener("click",e=>{highlights=!highlights;e.currentTarget.classList.toggle("on",highlights);e.currentTarget.setAttribute("aria-checked",highlights);renderTable();renderGraph()});
+      $("#jumpEditorBtn").addEventListener("click",()=>$("#editorPanel").scrollIntoView({behavior:"smooth",block:"start"}));
+      $("#machineNameInput").addEventListener("change",e=>{machine.name=e.target.value.trim()||"Autómata personalizado";$("#graphCaption").textContent=machine.name});
+      $("#newMachineBtn").addEventListener("click",newMachine);
+      $("#applyStructureBtn").addEventListener("click",applyStructure);$("#exportBtn").addEventListener("click",exportJSON);
+      $("#validateBtn").addEventListener("click",()=>validateAutomaton(true));$("#saveLocalBtn").addEventListener("click",saveLocal);$("#loadLocalBtn").addEventListener("click",loadLocal);
+      $("#importBtn").addEventListener("click",()=>$("#importFile").click());$("#importFile").addEventListener("change",e=>e.target.files[0]&&importJSON(e.target.files[0]));
+      $("#themeBtn").addEventListener("click",()=>document.body.classList.toggle("dark"));
+      $("#soundBtn").addEventListener("click",e=>{sound=!sound;e.currentTarget.textContent=sound?"♫":"♪";toast(sound?"Sonido activado":"Sonido desactivado");beep(550)});
+      $("#helpBtn").addEventListener("click",showHelp);
+      $$(".graph-tool").forEach(btn=>btn.addEventListener("click",()=>setGraphMode(btn.dataset.graphMode)));
+      $("#graphSymbolSelect").addEventListener("change",renderGraphTools);
+      $("#graph").addEventListener("pointerdown",graphPointerDown);
+      $("#graph").addEventListener("pointermove",graphPointerMove);
+      $("#graph").addEventListener("pointerup",graphPointerUp);
+      $("#graph").addEventListener("pointerleave",graphPointerUp);
+      $("#graph").addEventListener("click",graphClick);
+      $("#graph").addEventListener("dblclick",graphDoubleClick);
+      $$(".tab").forEach(tab=>tab.addEventListener("click",()=>{
+        $$(".tab").forEach(x=>x.classList.remove("active"));$$(".tabpane").forEach(x=>x.classList.remove("active"));tab.classList.add("active");
+        $("#"+tab.dataset.tab+"Pane").classList.add("active");
+      }));
+      $$(".predict").forEach(b=>b.addEventListener("click",()=>{prediction=b.dataset.value;$$(".predict").forEach(x=>x.style.boxShadow="none");b.style.boxShadow="0 0 0 3px rgba(247,179,43,.45)";toast("Predicción guardada; ahora ejecuta la cadena")}));
+      $("#checkChallengeBtn").addEventListener("click",()=>{resetRuntime($("#wordInput").value);renderAll();startAuto()});
+      document.addEventListener("keydown",e=>{
+        if(["INPUT","SELECT","TEXTAREA"].includes(document.activeElement.tagName))return;
+        if(e.code==="Space"){e.preventDefault();step()}else if(e.key.toLowerCase()==="a")startAuto();
+        else if(e.key.toLowerCase()==="r")reset();else if(e.key==="ArrowLeft")back();
+      });
+      window.addEventListener("beforeunload",()=>pauseAuto(false));
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
