@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Libro Interactivo de Teoría de la Computación</title>
+<style>
+:root{
+  --bg:#edf2f7;--paper:#fff;--ink:#172033;--muted:#667085;--line:#dce3ed;
+  --nav:#0e2039;--nav2:#17385f;--blue:#2368e8;--blue2:#e8f0ff;--green:#109878;
+  --green2:#e2f7f0;--red:#db414b;--red2:#ffe8e9;--orange:#e79b16;--orange2:#fff3d7;
+  --purple:#7255d6;--purple2:#efeafe;--shadow:0 12px 32px #18365d14;--r:16px
+}
+body.dark{--bg:#0c1421;--paper:#142033;--ink:#eef4ff;--muted:#a3b2c7;--line:#2a3a51;--blue2:#19345f;--green2:#123a34;--red2:#43242a;--orange2:#3d321d;--purple2:#30284e;--shadow:0 12px 32px #0005}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:286px 1fr}
+.sidebar{height:100vh;position:sticky;top:0;background:linear-gradient(180deg,var(--nav),#09172a);color:#fff;padding:16px 13px;display:flex;flex-direction:column;overflow:auto;z-index:40}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 5px 15px}.logo{width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#4e8bf0,#19bd91);display:grid;place-items:center;font-weight:900}.brand b{font-size:14px;display:block}.brand small{color:#b7c8dd;font-size:10px}
+.progress{background:#ffffff0d;border:1px solid #ffffff17;border-radius:12px;padding:10px;margin-bottom:11px}.progress small{color:#a8bad1}.track{height:7px;background:#ffffff18;border-radius:9px;margin:6px 0;overflow:hidden}.track i{height:100%;display:block;background:linear-gradient(90deg,#4e8bf0,#20c99b);width:0;transition:.3s}
+.nav{display:flex;flex-direction:column;gap:3px}.nav button{border:0;background:transparent;color:#bdcbe0;border-radius:9px;display:grid;grid-template-columns:27px 1fr auto;gap:7px;align-items:center;padding:7px;text-align:left;font-size:11px;line-height:1.18}.nav button:hover,.nav button.active{background:#ffffff13;color:#fff}.nav button.active .n{background:#3e7eea}.nav .n{width:25px;height:25px;border-radius:8px;background:#ffffff0c;display:grid;place-items:center;font-weight:800}.nav .ok{color:#5ce0b5;opacity:0}.nav button.done .ok{opacity:1}.nav b{display:block}
+.source{font-size:9px;color:#7f96b5;line-height:1.45;margin-top:auto;padding:12px 6px 0}
+.main{min-width:0}.topbar{height:62px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(9px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 20px}.crumb{font-size:11px;color:var(--muted)}.crumb b{color:var(--ink)}.top-actions{display:flex;gap:7px}
+.btn{border:1px solid transparent;border-radius:9px;padding:7px 10px;font-weight:750;background:var(--paper);color:var(--ink)}.btn:hover{transform:translateY(-1px);box-shadow:0 5px 13px #18365d20}.btn.primary{background:var(--blue);color:#fff}.btn.ghost{border-color:var(--line)}.btn.good{background:var(--green);color:white}.btn.warn{background:var(--orange2);color:#8b5900}.btn.red{background:var(--red2);color:#9d2730}.btn.small{font-size:10px;padding:6px 8px}.mobile{display:none}
+.page{display:none;max-width:1330px;margin:auto;padding:27px 30px 45px;animation:in .2s ease}.page.active{display:block}@keyframes in{from{opacity:.2;transform:translateY(4px)}}
+.eyebrow{display:inline-block;background:var(--blue2);color:var(--blue);padding:5px 8px;border-radius:999px;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.eyebrow.ext{background:var(--purple2);color:var(--purple)}
+h1{font-size:clamp(32px,5vw,59px);line-height:1.01;letter-spacing:-.05em;margin:13px 0}h2{font-size:clamp(24px,3.4vw,37px);letter-spacing:-.035em;margin:9px 0}h3{font-size:15px;margin:0 0 8px}p{color:var(--muted);line-height:1.62;margin:7px 0}.lead{font-size:17px;max-width:850px}.tiny{font-size:10px}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.nowrap{white-space:nowrap}
+.hero{background:linear-gradient(135deg,var(--paper) 60%,var(--blue2));border:1px solid var(--line);border-radius:24px;padding:38px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:after{content:"Σ";position:absolute;right:25px;bottom:-95px;font-size:310px;line-height:1;color:color-mix(in srgb,var(--blue) 7%,transparent);font-weight:900}.hero>*{position:relative;z-index:2}.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:24px}.map{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:end}.chip{border:1px solid var(--line);background:color-mix(in srgb,var(--paper) 80%,transparent);border-radius:11px;padding:9px;font-size:10px;color:var(--muted)}.chip b{display:block;color:var(--ink);font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(290px,.75fr);gap:14px}.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);min-width:0}.card.flat{box-shadow:none}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}.section-head{margin-bottom:20px}.section-head p{max-width:900px}.kicker{font-size:11px;font-weight:850;color:var(--blue);margin-bottom:5px}
+.callout{border-left:4px solid var(--blue);background:var(--blue2);padding:11px 13px;border-radius:0 11px 11px 0;margin:12px 0;font-size:12px}.callout p{font-size:11px;margin:3px 0}.callout.good{border-color:var(--green);background:var(--green2)}.callout.warn{border-color:var(--orange);background:var(--orange2)}.callout.purple{border-color:var(--purple);background:var(--purple2)}
+.formula{background:#142a49;color:#f0f5ff;border-radius:11px;padding:12px;text-align:center;font-size:16px;font-family:ui-monospace,monospace;margin:10px 0}.formula em{color:#68ddb9;font-style:normal}
+.controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.control{background:color-mix(in srgb,var(--bg) 55%,var(--paper));border:1px solid var(--line);border-radius:11px;padding:9px;margin:7px 0}.control label{font-size:10px;font-weight:800;display:flex;justify-content:space-between;gap:8px}.control input,.control select,.control textarea{width:100%;margin-top:6px}.control input[type=text],.control input[type=number],.control select,.control textarea,.field{border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:8px}.control input[type=range]{accent-color:var(--blue)}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}.tab{font-size:10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:6px 8px}.tab.active{background:var(--nav2);color:white}
+.canvas{border:1px solid var(--line);border-radius:13px;background:color-mix(in srgb,var(--paper) 92%,var(--blue2));position:relative;overflow:hidden;min-height:330px}.canvas svg,.canvas canvas{width:100%;height:100%;display:block}.empty{height:100%;display:grid;place-items:center;color:var(--muted);font-size:12px;text-align:center}
+.stepbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:9px}.stepbar input[type=range]{flex:1;min-width:90px;accent-color:var(--blue)}.stepnote{background:var(--blue2);border-radius:10px;padding:10px;font-size:11px;color:var(--ink);min-height:52px;margin-top:8px}
+.table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:10px}.table th,.table td{padding:7px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center}.table th{background:color-mix(in srgb,var(--bg) 65%,var(--paper));color:var(--muted)}.table tr:last-child td{border-bottom:0}.table th:last-child,.table td:last-child{border-right:0}.hl{background:var(--orange2)!important;color:#8a5900!important;font-weight:850}
+.pill{display:inline-block;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:850;background:var(--blue2);color:var(--blue)}.pill.good{background:var(--green2);color:var(--green)}.pill.bad{background:var(--red2);color:var(--red)}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{border:1px solid var(--line);border-radius:10px;padding:8px;background:color-mix(in srgb,var(--paper) 90%,var(--bg))}.stat span{display:block;color:var(--muted);font-size:9px}.stat b{font-size:18px}.tokenrow{display:flex;gap:5px;flex-wrap:wrap;min-height:39px;align-items:center}.token{min-width:30px;padding:6px 8px;border-radius:8px;background:var(--blue2);color:var(--blue);font-family:ui-monospace,monospace;text-align:center;font-weight:800}.token.active{background:var(--orange);color:#fff}.token.done{background:var(--green2);color:var(--green)}
+.quiz{margin-top:13px}.question{font-weight:800;font-size:12px;margin-bottom:7px}.options{display:grid;gap:5px}.option{border:1px solid var(--line);border-radius:8px;padding:7px;text-align:left;background:var(--paper);color:var(--ink);font-size:11px}.option.correct{background:var(--green2);border-color:#70d0b6}.option.wrong{background:var(--red2);border-color:#ee9ba1}.feedback{display:none;border-radius:8px;padding:8px;margin-top:6px;font-size:10px}.feedback.show{display:block;background:var(--orange2)}
+.footer-nav{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px;margin-top:22px}.complete.done{background:var(--green2);color:var(--green)}
+.alphabet-set{min-height:54px;border:1px dashed var(--line);border-radius:10px;padding:8px;display:flex;gap:5px;flex-wrap:wrap}.setitem{background:var(--purple2);color:var(--purple);padding:5px 7px;border-radius:7px;font-family:ui-monospace,monospace;font-size:11px}
+.tape{display:flex;overflow:hidden;padding:31px 8px 9px;justify-content:center;min-height:100px}.cell{width:45px;height:45px;border:1px solid var(--line);display:grid;place-items:center;font-family:ui-monospace,monospace;font-weight:850;background:var(--paper);position:relative;flex:0 0 auto}.cell.head{background:var(--orange2);border-color:var(--orange)}.cell.head:before{content:"▼";position:absolute;top:-27px;color:var(--orange)}
+.stack{display:flex;flex-direction:column-reverse;align-items:stretch;width:100px;margin:auto;border:2px solid var(--line);border-top:0;min-height:190px;padding:4px}.stack i{font-style:normal;border:1px solid var(--line);padding:5px;text-align:center;font-family:ui-monospace,monospace;background:var(--purple2)}
+.tree{min-height:250px}.tree svg{width:100%;height:100%}.metricline{height:9px;border-radius:8px;background:var(--line);overflow:hidden;margin:6px 0}.metricline i{height:100%;display:block;background:linear-gradient(90deg,var(--blue),var(--green))}
+.complexity{height:330px}.pcp-tiles{display:flex;gap:8px;flex-wrap:wrap}.pcp{border:2px solid var(--purple);border-radius:10px;overflow:hidden;background:var(--paper);min-width:64px;text-align:center}.pcp div{padding:6px;font-family:ui-monospace,monospace}.pcp div+div{border-top:2px solid var(--purple)}
+@media(max-width:1030px){.app{grid-template-columns:1fr}.sidebar{position:fixed;left:-300px;width:286px;transition:.25s}.sidebar.open{left:0}.mobile{display:inline-flex}.page{padding:22px 17px}.layout,.hero-grid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.grid2,.grid3,.map{grid-template-columns:1fr}.page{padding:18px 10px}.hero{padding:23px}.topbar{padding:0 10px}.top-actions .wide{display:none}.canvas{min-height:290px}.statgrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="logo">Σ</div><div><b>Teoría de la Computación</b><small>Libro interactivo en español</small></div></div>
+  <div class="progress"><small>Progreso personal</small><div class="track"><i id="progressBar"></i></div><b id="progressText">0 de 15 módulos</b></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="source">Adaptación educativa basada en <i>An Introduction to Formal Languages and Automata</i>, 5.ª edición, Peter Linz. El contenido se presenta en español y se complementa con laboratorios interactivos.</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:8px"><button class="btn ghost mobile" id="menuBtn">☰</button><div class="crumb">Libro / <b id="crumb">Inicio</b></div></div>
+    <div class="top-actions"><button class="btn ghost" id="helpBtn">Ayuda</button><button class="btn ghost" id="themeBtn">Modo oscuro</button><button class="btn ghost wide" id="resetProgress">Reiniciar progreso</button></div>
+  </header>
+
+  <section class="page active" data-page="inicio">
+    <div class="hero"><div class="hero-grid">
+      <div><span class="eyebrow">Peter Linz · 5.ª edición</span><h1>Libro Interactivo de Teoría de la Computación</h1><p class="lead">De los lenguajes y autómatas finitos hasta la indecidibilidad y NP-completitud: aprende construyendo, ejecutando y comparando modelos.</p>
+        <div class="controls" style="margin-top:18px"><button class="btn primary" data-goto="c1">Comenzar →</button><button class="btn ghost" data-goto="c2">Abrir simulador AFD</button><button class="btn ghost" data-goto="glosario">Consultar glosario</button></div>
+      </div>
+      <div class="map">
+        <div class="chip"><b>Lenguajes regulares</b>AFD, AFN, expresiones y bombeo</div><div class="chip"><b>Lenguajes libres de contexto</b>Gramáticas, PDA y formas normales</div>
+        <div class="chip"><b>Computabilidad</b>Máquinas de Turing y límites</div><div class="chip"><b>Complejidad</b>P, NP y reducciones</div>
+      </div>
+    </div></div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="card flat"><div class="kicker">01 · Explora</div><h3>Primero la intuición</h3><p class="tiny">Cada capítulo comienza con una pregunta, una idea visual y un ejemplo concreto.</p></div>
+      <div class="card flat"><div class="kicker">02 · Experimenta</div><h3>Después el mecanismo</h3><p class="tiny">Modifica cadenas, estados, reglas, pilas y cintas. Las tablas responden a tus acciones.</p></div>
+      <div class="card flat"><div class="kicker">03 · Formaliza</div><h3>Finalmente la definición</h3><p class="tiny">Conecta la experiencia con la notación, los teoremas y las pruebas del libro.</p></div>
+    </div>
+    <div class="callout good"><b>Recorrido completo.</b><p>La navegación conserva la estructura real de los 14 capítulos del libro e incorpora el apéndice de transductores.</p></div>
+    <div class="footer-nav"><span></span><button class="btn primary" data-goto="c1">Siguiente: fundamentos →</button></div>
+  </section>
+
+  <section class="page" data-page="c1">
+    <div class="section-head"><span class="eyebrow">Capítulo 1 · Linz</span><h2>Lenguajes, gramáticas y autómatas</h2><p>Un lenguaje es un conjunto de cadenas. Una gramática las genera y un autómata decide cuáles reconoce. Estos tres conceptos sostienen el resto del libro.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><div><h3>Laboratorio de alfabetos y cadenas</h3><p class="tiny">Escribe símbolos separados por comas y observa las potencias del alfabeto.</p></div><span class="pill">Interactivo</span></div>
+        <div class="grid2">
+          <div class="control"><label>Alfabeto Σ</label><input id="alphabetInput" type="text" value="0,1"></div>
+          <div class="control"><label>Cadena w</label><input id="wordInput" type="text" value="0101"></div>
+        </div>
+        <div class="statgrid"><div class="stat"><span>|w|</span><b id="wordLen">4</b></div><div class="stat"><span>¿w ∈ Σ*?</span><b id="wordMember">Sí</b></div><div class="stat"><span>Reversa</span><b id="wordReverse">1010</b></div></div>
+        <div class="control"><label><span>Potencia máxima</span><b id="powerVal">3</b></label><input id="powerSlider" type="range" min="0" max="5" value="3"></div>
+        <div id="powers"></div>
+        <div class="callout"><b>Definición formal.</b><p>Σ* = ⋃<sub>i≥0</sub> Σ<sup>i</sup> e incluye λ, la cadena vacía. La longitud de λ es cero.</p></div>
+      </div>
+      <aside class="card">
+        <h3>Operaciones entre lenguajes</h3>
+        <div class="control"><label>L₁</label><input id="lang1" type="text" value="a,ab,b"></div>
+        <div class="control"><label>L₂</label><input id="lang2" type="text" value="b,ba"></div>
+        <div class="tabs" id="langOps"><button class="tab active" data-op="union">Unión</button><button class="tab" data-op="inter">Intersección</button><button class="tab" data-op="diff">Diferencia</button><button class="tab" data-op="concat">Concatenación</button></div>
+        <div class="alphabet-set" id="langResult"></div>
+        <div class="quiz" data-answer="b"><div class="question">¿Cuál de estos objetos es finito?</div><div class="options"><button class="option" data-v="a">Σ* cuando Σ={0,1}</button><button class="option" data-v="b">Σ³ cuando Σ={0,1}</button><button class="option" data-v="c">El conjunto de todas las cadenas</button></div><div class="feedback"></div></div>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="inicio">← Inicio</button><button class="btn good complete" data-complete="c1">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c2">
+    <div class="section-head"><span class="eyebrow">Capítulo 2 · Linz</span><h2>Autómatas finitos: construye y ejecuta</h2><p>Un AFD tiene un único movimiento para cada pareja estado-símbolo. Crea estados, arrástralos, modifica transiciones y procesa una cadena paso a paso.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Editor y simulador AFD</h3><div class="controls"><button class="btn small ghost" id="dfaAddState">+ Estado</button><button class="btn small ghost" id="dfaToggleFinal">Final/no final</button><button class="btn small red" id="dfaDelete">Eliminar</button></div></div>
+        <div class="canvas" id="dfaCanvas"><svg id="dfaSvg" viewBox="0 0 720 360" aria-label="Editor gráfico de autómata finito determinista"></svg></div>
+        <div class="stepbar"><button class="btn small ghost" id="dfaBack">← Anterior</button><button class="btn small primary" id="dfaNext">Siguiente →</button><button class="btn small ghost" id="dfaAuto">Automático</button><button class="btn small ghost" id="dfaReset">Reiniciar</button><input id="dfaSpeed" type="range" min="250" max="1600" value="800"></div>
+        <div class="tokenrow" id="dfaTokens"></div><div class="stepnote" id="dfaNote">Selecciona una cadena y comienza la ejecución.</div>
+      </div>
+      <aside class="card">
+        <div class="tabs"><button class="tab active" data-dfa-preset="ends01">Termina en 01</button><button class="tab" data-dfa-preset="even1">Número par de 1</button><button class="tab" data-dfa-preset="contains">Contiene 101</button></div>
+        <div class="control"><label>Cadena de entrada</label><input id="dfaWord" type="text" value="1101"></div>
+        <div class="grid2">
+          <div class="control"><label>Origen</label><select id="trFrom"></select></div><div class="control"><label>Símbolo</label><input id="trSymbol" type="text" maxlength="1" value="0"></div>
+        </div>
+        <div class="control"><label>Destino</label><select id="trTo"></select></div><button class="btn primary" id="dfaSetTransition">Guardar transición</button>
+        <div id="dfaTable" style="margin-top:10px"></div>
+        <div class="callout" id="dfaValidation"><b>AFD válido.</b><p>Cada estado tiene una transición para 0 y para 1.</p></div>
+        <div class="controls"><button class="btn small ghost" id="dfaExport">Exportar JSON</button><label class="btn small ghost">Importar JSON<input id="dfaImport" type="file" accept=".json" hidden></label></div>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c1">← Fundamentos</button><button class="btn good complete" data-complete="c2">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c3">
+    <div class="section-head"><span class="eyebrow">Capítulo 3 · Linz</span><h2>AFN, expresiones regulares y gramáticas regulares</h2><p>El no determinismo permite varios estados activos. La construcción por subconjuntos convierte ese comportamiento en un AFD equivalente.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><h3>AFN → AFD por subconjuntos</h3><span class="pill">Algoritmo paso a paso</span></div>
+        <div class="canvas" style="min-height:280px"><svg id="nfaSvg" viewBox="0 0 620 300"></svg></div>
+        <div class="stepbar"><button class="btn small ghost" id="nfaPrev">←</button><button class="btn small primary" id="nfaNext">Siguiente</button><button class="btn small ghost" id="nfaAuto">Automático</button><button class="btn small ghost" id="nfaReset">Reiniciar</button><input id="nfaStep" type="range" min="0" max="1" value="0"></div>
+        <div class="stepnote" id="nfaNote"></div><div id="subsetTable"></div>
+      </div>
+      <div class="card">
+        <span class="eyebrow ext">Expresión regular</span><h3 style="margin-top:9px">Probador y construcción de Thompson</h3>
+        <div class="control"><label>Expresión</label><input id="regexInput" type="text" value="(a|b)*abb"></div>
+        <div class="control"><label>Cadena</label><input id="regexWord" type="text" value="aabb"></div>
+        <div class="controls"><button class="btn primary" id="regexTest">Probar pertenencia</button><button class="btn ghost" id="thompsonBuild">Construir Thompson</button></div>
+        <div class="callout" id="regexResult"><b>Lista para probar.</b><p>Se admite | como unión, * como cerradura y paréntesis.</p></div>
+        <div class="stepbar"><button class="btn small ghost" id="thPrev">←</button><button class="btn small primary" id="thNext">Paso →</button><input id="thStep" type="range" min="0" max="0" value="0"></div>
+        <div class="stepnote" id="thNote">Construye la expresión para ver las operaciones elementales.</div>
+        <div class="callout purple"><b>Equivalencia central.</b><p>AFD, AFN, expresiones regulares y gramáticas lineales por la derecha describen exactamente los lenguajes regulares.</p></div>
+      </div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c2">← AFD</button><button class="btn good complete" data-complete="c3">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c4">
+    <div class="section-head"><span class="eyebrow">Capítulo 4 · Linz</span><h2>Propiedades regulares y lema de bombeo</h2><p>Los lenguajes regulares son cerrados bajo muchas operaciones. Para demostrar que un lenguaje no es regular, el lema de bombeo ofrece una prueba por contradicción.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Juego del lema de bombeo</h3><select id="pumpLang" class="field"><option value="anbn">L={aⁿbⁿ}</option><option value="pal">Palíndromos sobre {0,1}</option><option value="regular">L={cadenas con número par de 1}</option></select></div>
+        <div class="control"><label><span>Longitud de bombeo p</span><b id="pumpPVal">4</b></label><input id="pumpP" type="range" min="2" max="9" value="4"></div>
+        <div class="formula" id="pumpWord">w = aaaabbbb</div>
+        <div class="grid3"><div class="control"><label>|x|</label><input id="pumpX" type="number" min="0" value="0"></div><div class="control"><label>|y|</label><input id="pumpY" type="number" min="1" value="2"></div><div class="control"><label>i</label><input id="pumpI" type="number" min="0" max="5" value="0"></div></div>
+        <button class="btn primary" id="pumpCheck">Bombear y comprobar</button><div class="callout warn" id="pumpResult"><b>Tu turno.</b><p>Elige una división con |xy|≤p y |y|>0.</p></div>
+      </div>
+      <aside class="card">
+        <h3>Guion de la prueba</h3>
+        <ol style="font-size:11px;color:var(--muted);line-height:1.7;padding-left:18px"><li>Supón que L es regular.</li><li>Entonces existe una longitud p.</li><li>Escoge w∈L con |w|≥p.</li><li>Para toda división válida w=xyz…</li><li>encuentra i tal que xyⁱz∉L.</li><li>Contradicción: L no es regular.</li></ol>
+        <div class="callout"><b>Advertencia.</b><p>El lema sirve para demostrar no regularidad. Que una cadena pueda bombearse no prueba que el lenguaje sea regular.</p></div>
+        <h3>Cerraduras destacadas</h3><div class="alphabet-set"><span class="setitem">∪</span><span class="setitem">∩</span><span class="setitem">complemento</span><span class="setitem">concatenación</span><span class="setitem">reversa</span><span class="setitem">*</span></div>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c3">← Regulares</button><button class="btn good complete" data-complete="c4">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c5">
+    <div class="section-head"><span class="eyebrow">Capítulo 5 · Linz</span><h2>Gramáticas libres de contexto, derivaciones y ambigüedad</h2><p>Una GLC reemplaza una variable por el lado derecho de una producción. El orden de las sustituciones produce derivaciones por la izquierda o la derecha.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Derivador visual</h3><div class="tabs"><button class="tab active" data-grammar-preset="anbn">aⁿbⁿ</button><button class="tab" data-grammar-preset="balanced">Paréntesis</button><button class="tab" data-grammar-preset="expr">Expresiones</button></div></div>
+        <div class="control"><label>Producciones (una por línea)</label><textarea id="grammarInput" rows="4">S -> aSb | ε</textarea></div>
+        <div class="control"><label>Cadena objetivo</label><input id="grammarWord" type="text" value="aaabbb"></div>
+        <div class="controls"><button class="btn primary" id="deriveBtn">Generar derivación</button><button class="btn ghost" id="grammarValidate">Validar</button></div>
+        <div class="stepbar"><button class="btn small ghost" id="derPrev">←</button><button class="btn small primary" id="derNext">Siguiente</button><button class="btn small ghost" id="derAuto">Automático</button><input id="derStep" type="range" min="0" max="0" value="0"></div>
+        <div class="formula" id="derivation">S</div><div class="stepnote" id="derNote">La derivación comenzará en el símbolo inicial.</div>
+      </div>
+      <aside class="card">
+        <span class="eyebrow ext">Ambigüedad</span><h3 style="margin-top:8px">Dos árboles para id + id × id</h3>
+        <div class="canvas tree"><svg id="ambiguitySvg" viewBox="0 0 520 270"></svg></div>
+        <div class="tabs"><button class="tab active" data-tree="left">Interpretar + primero</button><button class="tab" data-tree="right">Interpretar × primero</button></div>
+        <div class="callout warn"><b>Una gramática es ambigua</b><p>si alguna cadena tiene dos árboles de derivación distintos. La precedencia y la asociatividad permiten diseñar una versión no ambigua.</p></div>
+      </aside>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <span class="eyebrow ext">Taller complementario solicitado</span><h3 style="margin-top:8px">FIRST, FOLLOW y tabla LL(1)</h3>
+      <div class="grid2"><div><div class="control"><label>Gramática LL(1), use ; entre producciones</label><input id="llGrammar" type="text" value="S->AB;A->aA|ε;B->bB|ε"></div><button class="btn primary" id="llCompute">Calcular</button><div class="stepnote" id="llNote">El taller usa variables de una sola letra para mantener la notación transparente.</div></div><div id="llOutput"></div></div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c4">← Bombeo regular</button><button class="btn good complete" data-complete="c5">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c6">
+    <div class="section-head"><span class="eyebrow">Capítulo 6 · Linz</span><h2>Simplificación, formas normales y pertenencia</h2><p>Transformar una gramática facilita sus algoritmos sin cambiar el lenguaje, salvo el tratamiento explícito de λ cuando corresponde.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><h3>Conversión guiada a FNC</h3><span class="pill">Chomsky</span></div>
+        <div class="stepbar"><button class="btn small ghost" id="cnfPrev">←</button><button class="btn small primary" id="cnfNext">Siguiente</button><button class="btn small ghost" id="cnfAuto">Automático</button><button class="btn small ghost" id="cnfReset">Reiniciar</button><input id="cnfStep" type="range" min="0" max="5" value="0"></div>
+        <div class="formula" id="cnfGrammar"></div><div class="stepnote" id="cnfNote"></div>
+        <div class="callout"><b>Forma Normal de Chomsky.</b><p>Cada producción tiene la forma A→BC o A→a; se permite S→λ bajo condiciones controladas.</p></div>
+      </div>
+      <div class="card">
+        <span class="eyebrow ext">Algoritmo de pertenencia</span><h3 style="margin-top:8px">Tabla CYK</h3>
+        <div class="control"><label>Cadena para la gramática de ejemplo</label><input id="cykWord" type="text" value="baaba"></div><button class="btn primary" id="cykRun">Construir tabla</button>
+        <div id="cykTable" style="margin-top:10px"></div><div class="callout good" id="cykResult"><b>Lista.</b><p>CYK trabaja con gramáticas en FNC y llena la tabla desde subcadenas cortas hasta la cadena completa.</p></div>
+      </div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c5">← GLC</button><button class="btn good complete" data-complete="c6">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c7">
+    <div class="section-head"><span class="eyebrow">Capítulo 7 · Linz</span><h2>Autómatas de pila</h2><p>La pila ofrece memoria no acotada con acceso LIFO. Observa cómo un AP reconoce aⁿbⁿ apilando A por cada a y desapilando por cada b.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Simulador AP para L={aⁿbⁿ}</h3><span class="pill">Aceptación por estado final</span></div>
+        <div class="canvas" style="min-height:250px"><svg id="pdaSvg" viewBox="0 0 650 260"></svg></div>
+        <div class="control"><label>Cadena</label><input id="pdaWord" type="text" value="aaabbb"></div>
+        <div class="stepbar"><button class="btn small ghost" id="pdaPrev">←</button><button class="btn small primary" id="pdaNext">Siguiente</button><button class="btn small ghost" id="pdaAuto">Automático</button><button class="btn small ghost" id="pdaReset">Reiniciar</button><input id="pdaStep" type="range" min="0" max="1" value="0"></div>
+        <div class="tokenrow" id="pdaTokens"></div><div class="stepnote" id="pdaNote"></div>
+      </div>
+      <aside class="card">
+        <h3>Pila</h3><div class="stack" id="pdaStack"></div>
+        <div class="statgrid" style="margin-top:10px"><div class="stat"><span>Estado</span><b id="pdaState">q₀</b></div><div class="stat"><span>Entrada restante</span><b id="pdaRest">6</b></div><div class="stat"><span>Altura</span><b id="pdaHeight">1</b></div></div>
+        <div class="callout purple"><b>Equivalencia.</b><p>Los AP no deterministas aceptan exactamente los lenguajes libres de contexto.</p></div>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c6">← FNC</button><button class="btn good complete" data-complete="c7">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c8">
+    <div class="section-head"><span class="eyebrow">Capítulo 8 · Linz</span><h2>Propiedades de los lenguajes libres de contexto</h2><p>El bombeo libre de contexto divide una cadena en cinco partes. También estudiamos cerraduras y propiedades decidibles.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Bombeo para GLC</h3><div class="formula">z = u v w x y</div>
+        <div class="control"><label><span>i</span><b id="cflIVal">0</b></label><input id="cflI" type="range" min="0" max="4" value="0"></div>
+        <div class="formula" id="cflPumped">u v⁰ w x⁰ y</div>
+        <div class="callout warn"><b>Condiciones.</b><p>|vwx|≤n, vx≠λ y uvⁱwxⁱy∈L para todo i≥0 si L fuera libre de contexto.</p></div>
+      </div>
+      <div class="card">
+        <h3>Mapa de cerraduras</h3><table class="table"><thead><tr><th>Operación</th><th>¿Cerrado?</th><th>Idea</th></tr></thead><tbody><tr><td>Unión</td><td class="hl">Sí</td><td>Combinar gramáticas</td></tr><tr><td>Concatenación</td><td class="hl">Sí</td><td>Nuevo inicio</td></tr><tr><td>Kleene *</td><td class="hl">Sí</td><td>Repetición</td></tr><tr><td>Intersección</td><td>No</td><td>Contraejemplo</td></tr><tr><td>Complemento</td><td>No</td><td>De Morgan</td></tr><tr><td>Intersección con regular</td><td class="hl">Sí</td><td>Producto con AFD</td></tr></tbody></table>
+        <div class="quiz" data-answer="c"><div class="question">¿Cuál propiedad sí es decidible para una GLC?</div><div class="options"><button class="option" data-v="a">Equivalencia entre dos GLC</button><button class="option" data-v="b">Ambigüedad de toda GLC</button><button class="option" data-v="c">Pertenencia de una cadena</button></div><div class="feedback"></div></div>
+      </div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c7">← PDA</button><button class="btn good complete" data-complete="c8">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c9">
+    <div class="section-head"><span class="eyebrow">Capítulo 9 · Linz</span><h2>Máquinas de Turing</h2><p>Una MT combina control finito con una cinta ilimitada. Ejecuta un incrementador binario y observa cada lectura, escritura y movimiento.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Simulador de máquina de Turing</h3><select id="tmPreset" class="field"><option value="increment">Incremento binario</option><option value="unary">Suma 1 unaria</option><option value="anbn">Reconocer aⁿbⁿ</option></select></div>
+        <div class="tape" id="tmTape"></div>
+        <div class="control"><label>Entrada</label><input id="tmInput" type="text" value="1011"></div>
+        <div class="stepbar"><button class="btn small ghost" id="tmPrev">←</button><button class="btn small primary" id="tmNext">Siguiente</button><button class="btn small ghost" id="tmAuto">Automático</button><button class="btn small ghost" id="tmReset">Reiniciar</button><input id="tmSpeed" type="range" min="200" max="1400" value="700"></div>
+        <div class="stepnote" id="tmNote"></div>
+      </div>
+      <aside class="card">
+        <div class="statgrid"><div class="stat"><span>Estado</span><b id="tmState">q₀</b></div><div class="stat"><span>Cabezal</span><b id="tmHead">0</b></div><div class="stat"><span>Pasos</span><b id="tmSteps">0</b></div></div>
+        <div id="tmTable" style="margin-top:10px"></div>
+        <div class="callout"><b>Transición.</b><p>δ(q,a)=(p,b,R) significa: en q leyendo a, pasa a p, escribe b y mueve el cabezal a la derecha.</p></div>
+        <div class="callout good" id="tmStatus"><b>Preparada.</b><p>La configuración instantánea reúne estado, cinta y posición del cabezal.</p></div>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c8">← Propiedades GLC</button><button class="btn good complete" data-complete="c9">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c10">
+    <div class="section-head"><span class="eyebrow">Capítulo 10 · Linz</span><h2>Variantes de máquinas de Turing</h2><p>Más cintas o más dimensiones pueden acelerar una solución, pero no aumentan lo que es computable. Explora cómo se simulan entre sí.</p></div>
+    <div class="grid3" id="tmVariants"></div>
+    <div class="card" style="margin-top:14px">
+      <h3>Simulación de dos cintas</h3><div class="grid2"><div><div class="tape" id="tapeA"></div><p class="tiny">Cinta 1: entrada y lectura</p></div><div><div class="tape" id="tapeB"></div><p class="tiny">Cinta 2: copia de trabajo</p></div></div>
+      <div class="stepbar"><button class="btn small ghost" id="multiReset">Reiniciar</button><button class="btn small primary" id="multiNext">Copiar siguiente símbolo</button><input id="multiStep" type="range" min="0" max="5" value="0"></div>
+      <div class="stepnote" id="multiNote">Una MT estándar puede codificar ambas cintas usando separadores y marcas.</div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c9">← MT estándar</button><button class="btn good complete" data-complete="c10">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c11">
+    <div class="section-head"><span class="eyebrow">Capítulo 11 · Linz</span><h2>Jerarquía de lenguajes y autómatas</h2><p>La jerarquía de Chomsky organiza familias de lenguajes por las restricciones de sus gramáticas y por la memoria de sus reconocedores.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="canvas" style="min-height:430px"><svg id="hierarchySvg" viewBox="0 0 720 430"></svg></div>
+      </div>
+      <aside class="card">
+        <h3>Selecciona un nivel</h3><div class="tabs" id="hierarchyTabs"></div><div class="callout purple" id="hierarchyInfo"></div>
+        <table class="table"><thead><tr><th>Tipo</th><th>Gramática</th><th>Autómata</th></tr></thead><tbody><tr><td>3</td><td>Regular</td><td>AFD/AFN</td></tr><tr><td>2</td><td>Libre de contexto</td><td>AP</td></tr><tr><td>1</td><td>Sensible al contexto</td><td>ABL</td></tr><tr><td>0</td><td>Sin restricción</td><td>MT</td></tr></tbody></table>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c10">← Variantes MT</button><button class="btn good complete" data-complete="c11">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c12">
+    <div class="section-head"><span class="eyebrow">Capítulo 12 · Linz</span><h2>Límites de la computación</h2><p>Hay problemas para los que ningún algoritmo puede decidir siempre la respuesta. Recorre la contradicción del problema de parada y experimenta con PCP.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><h3>Problema de parada</h3><span class="pill bad">Indecidible</span></div>
+        <div class="stepbar"><button class="btn small ghost" id="haltPrev">←</button><button class="btn small primary" id="haltNext">Siguiente</button><button class="btn small ghost" id="haltAuto">Automático</button><input id="haltStep" type="range" min="0" max="5" value="0"></div>
+        <div class="canvas" style="min-height:280px"><svg id="haltSvg" viewBox="0 0 650 280"></svg></div><div class="stepnote" id="haltNote"></div>
+      </div>
+      <div class="card">
+        <h3>Correspondencia de Post</h3><p class="tiny">Elige fichas para intentar igualar la cadena superior e inferior.</p><div class="pcp-tiles" id="pcpTiles"></div>
+        <div class="formula"><span id="pcpTop">superior: λ</span><br><span id="pcpBottom">inferior: λ</span></div>
+        <div class="controls"><button class="btn ghost" id="pcpUndo">Deshacer</button><button class="btn red" id="pcpReset">Reiniciar</button></div><div class="callout" id="pcpResult"><b>Construye una secuencia.</b><p>PCP pregunta si existe alguna selección que haga idénticas ambas concatenaciones.</p></div>
+      </div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c11">← Jerarquía</button><button class="btn good complete" data-complete="c12">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c13">
+    <div class="section-head"><span class="eyebrow">Capítulo 13 · Linz</span><h2>Otros modelos de computación</h2><p>Funciones recursivas, sistemas de Post y algoritmos de Markov ofrecen descripciones alternativas de los procesos computables.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Sistema de reescritura de Markov</h3><span class="pill">Paso a paso</span></div>
+        <div class="control"><label>Cadena inicial</label><input id="markovInput" type="text" value="111+11"></div>
+        <table class="table"><thead><tr><th>Prioridad</th><th>Regla</th><th>Lectura</th></tr></thead><tbody><tr><td>1</td><td>1+ → +1</td><td>Mover + a la izquierda</td></tr><tr><td>2</td><td>+ → 1</td><td>Terminar suma unaria</td></tr></tbody></table>
+        <div class="stepbar"><button class="btn small ghost" id="markovPrev">←</button><button class="btn small primary" id="markovNext">Siguiente</button><button class="btn small ghost" id="markovAuto">Automático</button><button class="btn small ghost" id="markovReset">Reiniciar</button></div>
+        <div class="formula" id="markovWord">111+11</div><div class="stepnote" id="markovNote">Se aplica siempre la primera regla aplicable.</div>
+      </div>
+      <aside class="card">
+        <h3>Funciones recursivas</h3><div class="tabs"><button class="tab active" data-rec="zero">Cero</button><button class="tab" data-rec="succ">Sucesor</button><button class="tab" data-rec="proj">Proyección</button><button class="tab" data-rec="ack">Ackermann</button></div><div class="formula" id="recFormula">z(n)=0</div><div class="callout purple" id="recInfo"><b>Función inicial.</b><p>Las funciones primitivas recursivas se construyen a partir de funciones base usando composición y recursión.</p></div>
+      </aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c12">← Indecidibilidad</button><button class="btn good complete" data-complete="c13">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="c14">
+    <div class="section-head"><span class="eyebrow">Capítulo 14 · Linz</span><h2>Complejidad computacional: P, NP y reducciones</h2><p>La computabilidad pregunta si existe un algoritmo; la complejidad pregunta cuántos recursos requiere. Compara crecimientos y construye una cadena de reducciones.</p></div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><h3>Comparador de crecimiento</h3><span class="pill">Tiempo</span></div><div class="canvas complexity"><canvas id="complexityCanvas"></canvas></div>
+        <div class="control"><label><span>Tamaño n</span><b id="nVal">20</b></label><input id="nSlider" type="range" min="2" max="50" value="20"></div><div class="statgrid" id="complexityStats"></div>
+      </div>
+      <div class="card">
+        <h3>Mapa P / NP</h3><div class="canvas" style="min-height:270px"><svg id="pnSvg" viewBox="0 0 600 270"></svg></div>
+        <div class="tabs"><button class="tab active" data-problem="sat">SAT</button><button class="tab" data-problem="clique">Clique</button><button class="tab" data-problem="vc">Vertex Cover</button><button class="tab" data-problem="ham">Ciclo hamiltoniano</button></div><div class="callout" id="problemInfo"></div>
+        <div class="callout warn"><b>Pregunta abierta.</b><p>Sabemos P⊆NP. No se conoce si P=NP. Un problema es NP-completo si está en NP y todo problema de NP se reduce a él en tiempo polinómico.</p></div>
+      </div>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c13">← Otros modelos</button><button class="btn good complete" data-complete="c14">Completar y continuar →</button></div>
+  </section>
+
+  <section class="page" data-page="apendice">
+    <div class="section-head"><span class="eyebrow">Apéndice A · Linz</span><h2>Transductores finitos: Mealy y Moore</h2><p>Un aceptador responde sí/no; un transductor produce una salida. Compara salidas asociadas a transiciones y a estados.</p></div>
+    <div class="layout">
+      <div class="card">
+        <div class="card-head"><h3>Máquina de Mealy: paridad acumulada</h3><span class="pill">entrada/salida</span></div><div class="canvas" style="min-height:260px"><svg id="mealySvg" viewBox="0 0 620 270"></svg></div>
+        <div class="control"><label>Cadena binaria</label><input id="mealyWord" type="text" value="10110"></div>
+        <div class="stepbar"><button class="btn small ghost" id="mealyPrev">←</button><button class="btn small primary" id="mealyNext">Siguiente</button><button class="btn small ghost" id="mealyReset">Reiniciar</button></div>
+        <div class="tokenrow" id="mealyTokens"></div>
+      </div>
+      <aside class="card"><div class="statgrid"><div class="stat"><span>Estado</span><b id="mealyState">Par</b></div><div class="stat"><span>Salida</span><b id="mealyOutput">λ</b></div><div class="stat"><span>Procesados</span><b id="mealyCount">0</b></div></div><div class="callout"><b>Mealy.</b><p>La salida se coloca en las transiciones: entrada/salida.</p></div><div class="callout purple"><b>Moore.</b><p>La salida depende del estado actual. Ambas representaciones pueden transformarse entre sí.</p></div></aside>
+    </div>
+    <div class="footer-nav"><button class="btn ghost" data-goto="c14">← Complejidad</button><button class="btn good complete" data-complete="apendice">Finalizar recorrido ✓</button></div>
+  </section>
+
+  <section class="page" data-page="glosario">
+    <div class="section-head"><span class="eyebrow ext">Referencia rápida</span><h2>Glosario</h2><p>Conceptos principales organizados para consulta durante los laboratorios.</p></div>
+    <div class="grid3" id="glossaryGrid"></div><div class="footer-nav"><button class="btn ghost" id="glossaryBack">← Volver</button><span></span></div>
+  </section>
+</main>
+</div>
+<script>
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pages=[
+ ["inicio","Inicio","Mapa del libro"],["c1","1. Fundamentos","Lenguajes y gramáticas"],["c2","2. Autómatas finitos","AFD y AFN"],["c3","3. Lenguajes regulares","ER y gramáticas regulares"],["c4","4. Propiedades regulares","Cerradura y bombeo"],
+ ["c5","5. Lenguajes LC","GLC, parsing y ambigüedad"],["c6","6. Simplificación","FNC, FNG y CYK"],["c7","7. Autómatas de pila","Memoria LIFO"],["c8","8. Propiedades LC","Bombeo y decisiones"],
+ ["c9","9. Máquinas de Turing","Cinta y computación"],["c10","10. Variantes de MT","Multicinta y universal"],["c11","11. Jerarquía","Chomsky y lenguajes"],["c12","12. Límites","Indecidibilidad y PCP"],
+ ["c13","13. Otros modelos","Recursión y reescritura"],["c14","14. Complejidad","P, NP y reducciones"],["apendice","Apéndice A","Transductores finitos"]
+];
+let current="inicio",previous="inicio",done=new Set(JSON.parse(localStorage.getItem("toc-progress")||"[]")),timers={};
+const save=()=>localStorage.setItem("toc-progress",JSON.stringify([...done])),stop=k=>{if(timers[k]){clearInterval(timers[k]);timers[k]=null}},pct=(a,b)=>b?Math.round(a/b*100):0;
+function nav(){
+ $("#nav").innerHTML=pages.map((p,i)=>`<button data-goto="${p[0]}" class="${p[0]===current?"active":""} ${done.has(p[0])?"done":""}"><span class="n">${i||"⌂"}</span><span><b>${p[1]}</b><small>${p[2]}</small></span><span class="ok">✓</span></button>`).join("");
+ bindGoto();const core=pages.slice(1).map(x=>x[0]),n=core.filter(x=>done.has(x)).length;$("#progressBar").style.width=n/core.length*100+"%";$("#progressText").textContent=`${n} de ${core.length} módulos`;
+ $$("[data-complete]").forEach(b=>{const yes=done.has(b.dataset.complete);b.classList.toggle("done",yes);if(yes)b.textContent=b.dataset.complete==="apendice"?"Recorrido completado ✓":"Completado ✓ · continuar →"});
+}
+function bindGoto(){$$("[data-goto]").forEach(b=>b.onclick=()=>go(b.dataset.goto))}
+function go(id){const p=document.querySelector(`[data-page="${id}"]`);if(!p)return;previous=current;current=id;$$(".page").forEach(x=>x.classList.toggle("active",x===p));$("#crumb").textContent=(pages.find(x=>x[0]===id)||["",id])[1];$("#sidebar").classList.remove("open");nav();window.scrollTo(0,0);if(id==="c14")setTimeout(drawComplexity,20)}
+$("#menuBtn").onclick=()=>$("#sidebar").classList.toggle("open");$("#themeBtn").onclick=()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");$("#themeBtn").textContent=d?"Modo claro":"Modo oscuro";localStorage.setItem("toc-theme",d?"dark":"light");drawDfa();drawComplexity()};
+if(localStorage.getItem("toc-theme")==="dark"){document.body.classList.add("dark");$("#themeBtn").textContent="Modo claro"}
+$("#resetProgress").onclick=()=>{if(confirm("¿Reiniciar todo el progreso guardado?")){done.clear();save();nav()}};
+$("#helpBtn").onclick=()=>alert("Elige un capítulo en el menú. En cada laboratorio modifica los datos y usa Anterior/Siguiente para observar el algoritmo. El progreso se guarda en este dispositivo.");
+$("#glossaryBack").onclick=()=>go(previous==="glosario"?"inicio":previous);$$("[data-complete]").forEach(b=>b.onclick=()=>{done.add(b.dataset.complete);save();const ids=pages.map(x=>x[0]),n=ids[ids.indexOf(b.dataset.complete)+1];nav();if(n)go(n)});
+$$(".quiz").forEach(q=>q.querySelectorAll(".option").forEach(b=>b.onclick=()=>{q.querySelectorAll(".option").forEach(x=>x.classList.remove("correct","wrong"));const ok=b.dataset.v===q.dataset.answer;b.classList.add(ok?"correct":"wrong");const f=q.querySelector(".feedback");f.className="feedback show";f.textContent=ok?"Correcto. Has identificado la propiedad esencial.":"Aún no. Vuelve a la definición y compara las opciones."}));
+
+// Capítulo 1
+let langOp="union";
+function alphabet(){
+ const A=$("#alphabetInput").value.split(",").map(x=>x.trim()).filter(Boolean),w=$("#wordInput").value,n=+$("#powerSlider").value;$("#wordLen").textContent=[...w].length;$("#wordMember").textContent=[...w].every(x=>A.includes(x))?"Sí":"No";$("#wordReverse").textContent=[...w].reverse().join("")||"λ";$("#powerVal").textContent=n;
+ let html="";for(let k=0;k<=n;k++){let words=[""];for(let i=0;i<k;i++)words=words.flatMap(z=>A.map(a=>z+a));html+=`<div class="control"><label>Σ<sup>${k}</sup> <span>${words.length} cadenas</span></label><div class="alphabet-set">${words.slice(0,64).map(x=>`<span class="setitem">${x||"λ"}</span>`).join("")}${words.length>64?`<span class="setitem">… +${words.length-64}</span>`:""}</div></div>`}$("#powers").innerHTML=html;langCalc()
+}
+function setOf(id){return [...new Set($("#"+id).value.split(",").map(x=>x.trim()).filter(Boolean))]}
+function langCalc(){const a=setOf("lang1"),b=setOf("lang2");let r=[];if(langOp==="union")r=[...new Set([...a,...b])];if(langOp==="inter")r=a.filter(x=>b.includes(x));if(langOp==="diff")r=a.filter(x=>!b.includes(x));if(langOp==="concat")r=[...new Set(a.flatMap(x=>b.map(y=>x+y)))];$("#langResult").innerHTML=r.length?r.map(x=>`<span class="setitem">${esc(x||"λ")}</span>`).join(""):'<span class="tiny">∅</span>'}
+["alphabetInput","wordInput","powerSlider"].forEach(id=>$("#"+id).oninput=alphabet);["lang1","lang2"].forEach(id=>$("#"+id).oninput=langCalc);$("#langOps").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{$("#langOps").querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");langOp=b.dataset.op;langCalc()});
+
+// AFD
+const dfaPresets={
+ ends01:{alphabet:["0","1"],states:[["q0",170,170,0],["q1",360,90,0],["q2",545,170,1]],tr:{q0:{0:"q1",1:"q0"},q1:{0:"q1",1:"q2"},q2:{0:"q1",1:"q0"}},word:"1101"},
+ even1:{alphabet:["0","1"],states:[["par",230,170,1],["impar",500,170,0]],tr:{par:{0:"par",1:"impar"},impar:{0:"impar",1:"par"}},word:"1011"},
+ contains:{alphabet:["0","1"],states:[["q0",110,170,0],["q1",280,90,0],["q2",450,170,0],["q3",600,90,1]],tr:{q0:{0:"q0",1:"q1"},q1:{0:"q2",1:"q1"},q2:{0:"q0",1:"q3"},q3:{0:"q3",1:"q3"}},word:"00101"}
+};
+let dfa,dfaSelected=null,dfaRun=[],dfaStep=0,dfaTimer=null,drag=null;
+function loadDfa(k){const p=dfaPresets[k];dfa={alphabet:[...p.alphabet],states:p.states.map(x=>({id:x[0],x:x[1],y:x[2],final:!!x[3]})),tr:JSON.parse(JSON.stringify(p.tr)),initial:p.states[0][0]};$("#dfaWord").value=p.word;dfaSelected=dfa.initial;resetDfa();updateDfaForm()}
+function edgePath(a,b,self){if(self)return `M ${a.x-18} ${a.y-25} C ${a.x-70} ${a.y-100},${a.x+70} ${a.y-100},${a.x+18} ${a.y-25}`;const dx=b.x-a.x,dy=b.y-a.y,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L;return `M ${a.x+ux*31} ${a.y+uy*31} L ${b.x-ux*35} ${b.y-uy*35}`}
+function drawDfa(){
+ const svg=$("#dfaSvg"),active=dfaRun[dfaStep]?.state;let defs=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#6d7c91"/></marker></defs>`;
+ let edges="";for(const [from,by] of Object.entries(dfa.tr)){const groups={};for(const [sym,to] of Object.entries(by))(groups[to]||(groups[to]=[])).push(sym);for(const [to,syms] of Object.entries(groups)){const a=dfa.states.find(s=>s.id===from),b=dfa.states.find(s=>s.id===to);if(!a||!b)continue;const self=from===to,path=edgePath(a,b,self),mx=self?a.x:a.x+(b.x-a.x)/2,my=self?a.y-75:a.y+(b.y-a.y)/2-8;edges+=`<path d="${path}" fill="none" stroke="#6d7c91" stroke-width="2" marker-end="url(#arr)"/><text x="${mx}" y="${my}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">${syms.join(",")}</text>`}}
+ let nodes="";for(const s of dfa.states){const sel=s.id===dfaSelected,act=s.id===active;nodes+=`${s.id===dfa.initial?`<path d="M ${s.x-70} ${s.y} L ${s.x-35} ${s.y}" stroke="#6d7c91" stroke-width="2" marker-end="url(#arr)"/>`:""}<g data-state="${s.id}" style="cursor:move"><circle cx="${s.x}" cy="${s.y}" r="31" fill="${act?"#e79b16":sel?"#e8f0ff":"var(--paper)"}" stroke="${sel?"#2368e8":"#6d7c91"}" stroke-width="${sel?4:2}"/>${s.final?`<circle cx="${s.x}" cy="${s.y}" r="25" fill="none" stroke="#109878" stroke-width="2"/>`:""}<text x="${s.x}" y="${s.y+4}" text-anchor="middle" font-weight="800" fill="var(--ink)">${esc(s.id)}</text></g>`}
+ svg.innerHTML=defs+edges+nodes;svg.querySelectorAll("[data-state]").forEach(g=>{g.onpointerdown=e=>{dfaSelected=g.dataset.state;const s=dfa.states.find(x=>x.id===dfaSelected);drag={s,ox:e.clientX,oy:e.clientY,x:s.x,y:s.y};svg.setPointerCapture?.(e.pointerId);drawDfa();updateDfaForm()}});svg.onpointermove=e=>{if(!drag)return;const r=svg.getBoundingClientRect(),sx=720/r.width,sy=360/r.height;drag.s.x=Math.max(40,Math.min(680,drag.x+(e.clientX-drag.ox)*sx));drag.s.y=Math.max(45,Math.min(315,drag.y+(e.clientY-drag.oy)*sy));drawDfa()};svg.onpointerup=()=>drag=null;dfaTable()
+}
+function updateDfaForm(){const opts=dfa.states.map(s=>`<option ${s.id===dfaSelected?"selected":""}>${s.id}</option>`).join("");$("#trFrom").innerHTML=opts;$("#trTo").innerHTML=opts}
+function dfaTable(){let h=`<table class="table"><thead><tr><th>Estado</th>${dfa.alphabet.map(a=>`<th>${a}</th>`).join("")}</tr></thead><tbody>`;for(const s of dfa.states)h+=`<tr><td>${s.final?"◎":"○"} ${s.id}</td>${dfa.alphabet.map(a=>`<td>${dfa.tr[s.id]?.[a]||"—"}</td>`).join("")}</tr>`;$("#dfaTable").innerHTML=h+"</tbody></table>";const valid=dfa.states.every(s=>dfa.alphabet.every(a=>dfa.tr[s.id]?.[a]));$("#dfaValidation").className="callout "+(valid?"good":"warn");$("#dfaValidation").innerHTML=`<b>${valid?"AFD válido.":"AFD incompleto."}</b><p>${valid?"Existe exactamente un destino por estado y símbolo.":"Faltan transiciones para alguna pareja estado-símbolo."}</p>`}
+function resetDfa(){stop("dfa");dfaStep=0;dfaRun=[{state:dfa.initial,msg:`Inicio en ${dfa.initial}`}];let st=dfa.initial;for(const ch of $("#dfaWord").value){const next=dfa.tr[st]?.[ch];dfaRun.push({state:next||null,ch,msg:next?`δ(${st}, ${ch}) = ${next}`:`No existe transición desde ${st} con ${ch}`});if(!next)break;st=next}drawDfaRun()}
+function drawDfaRun(){const w=$("#dfaWord").value;$("#dfaTokens").innerHTML=[...w].map((c,i)=>`<span class="token ${i<dfaStep?"done":i===dfaStep?"active":""}">${c}</span>`).join("");const r=dfaRun[dfaStep]||dfaRun.at(-1);let msg=r.msg;if(dfaStep===w.length&&r.state)msg+=dfa.states.find(s=>s.id===r.state)?.final?" · Cadena aceptada.":" · Cadena rechazada.";$("#dfaNote").textContent=msg;drawDfa()}
+$("#dfaNext").onclick=()=>{dfaStep=Math.min(dfaRun.length-1,dfaStep+1);drawDfaRun()};$("#dfaBack").onclick=()=>{dfaStep=Math.max(0,dfaStep-1);drawDfaRun()};$("#dfaReset").onclick=resetDfa;$("#dfaWord").oninput=resetDfa;$("#dfaAuto").onclick=()=>{if(timers.dfa){stop("dfa");$("#dfaAuto").textContent="Automático";return}$("#dfaAuto").textContent="Pausar";timers.dfa=setInterval(()=>{if(dfaStep>=dfaRun.length-1){stop("dfa");$("#dfaAuto").textContent="Automático"}else{$("#dfaNext").click()}},Math.max(200,1800-+$("#dfaSpeed").value))};
+$$("[data-dfa-preset]").forEach(b=>b.onclick=()=>{$$("[data-dfa-preset]").forEach(x=>x.classList.remove("active"));b.classList.add("active");loadDfa(b.dataset.dfaPreset)});
+$("#dfaAddState").onclick=()=>{let i=0;while(dfa.states.some(s=>s.id==="q"+i))i++;const id="q"+i;dfa.states.push({id,x:360+Math.random()*120-60,y:180+Math.random()*100-50,final:false});dfa.tr[id]={};dfaSelected=id;updateDfaForm();drawDfa()};
+$("#dfaToggleFinal").onclick=()=>{const s=dfa.states.find(x=>x.id===dfaSelected);if(s){s.final=!s.final;drawDfa()}};
+$("#dfaDelete").onclick=()=>{if(!dfaSelected||dfa.states.length<2)return;dfa.states=dfa.states.filter(s=>s.id!==dfaSelected);delete dfa.tr[dfaSelected];for(const by of Object.values(dfa.tr))for(const k of Object.keys(by))if(by[k]===dfaSelected)delete by[k];if(dfa.initial===dfaSelected)dfa.initial=dfa.states[0].id;dfaSelected=dfa.initial;updateDfaForm();resetDfa()};
+$("#dfaSetTransition").onclick=()=>{const f=$("#trFrom").value,t=$("#trTo").value,s=$("#trSymbol").value.trim();if(!s)return alert("Escribe un símbolo.");dfa.tr[f]??={};dfa.tr[f][s]=t;if(!dfa.alphabet.includes(s))dfa.alphabet.push(s);resetDfa()};
+$("#dfaExport").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(dfa,null,2)],{type:"application/json"}));a.download="automata-afd.json";a.click();URL.revokeObjectURL(a.href)};
+$("#dfaImport").onchange=async e=>{try{const o=JSON.parse(await e.target.files[0].text());if(!o.states||!o.tr)throw Error();dfa=o;dfaSelected=dfa.initial||dfa.states[0].id;updateDfaForm();resetDfa()}catch{alert("Archivo JSON de autómata no válido.")}};
+
+// AFN y Thompson
+const nfa={states:["q0","q1","q2"],alphabet:["a","b"],initial:"q0",final:["q2"],tr:{q0:{a:["q0","q1"],b:["q0"]},q1:{b:["q2"]},q2:{a:["q2"],b:["q2"]}}};
+let subsetSteps=[],subsetIndex=0,nfaTimer=null;
+function buildSubsets(){const queue=[["q0"]],seen=new Set(["q0"]),rows=[],steps=[{msg:"Comenzamos con el conjunto inicial {q0}.",rows:[]}];while(queue.length){const S=queue.shift(),row={set:S.join(","),moves:{}};for(const a of nfa.alphabet){const U=[...new Set(S.flatMap(q=>nfa.tr[q]?.[a]||[]))].sort();const key=U.join(",")||"∅";row.moves[a]=key;if(U.length&&!seen.has(key)){seen.add(key);queue.push(U);steps.push({msg:`Con ${a}, {${S}} alcanza {${key}}. Se crea un nuevo estado compuesto.`,rows:[...rows,{...row,moves:{...row.moves}}]})}}rows.push(row);steps.push({msg:`Se completa el estado {${row.set}}.`,rows:JSON.parse(JSON.stringify(rows))})}steps.push({msg:"No quedan subconjuntos nuevos. El AFD equivalente está completo.",rows});subsetSteps=steps;$("#nfaStep").max=steps.length-1;subsetIndex=0;drawSubset()}
+function drawNfa(){const pos={q0:[120,150],q1:[310,80],q2:[500,150]},svg=$("#nfaSvg");let e=`<defs><marker id="na" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6d7c91"/></marker></defs>`;for(const [f,by] of Object.entries(nfa.tr))for(const [a,ts] of Object.entries(by))for(const t of ts){const A=pos[f],B=pos[t];if(f===t)e+=`<path d="M${A[0]-15} ${A[1]-28}C${A[0]-65} ${A[1]-90},${A[0]+65} ${A[1]-90},${A[0]+15} ${A[1]-28}" fill="none" stroke="#6d7c91" marker-end="url(#na)"/><text x="${A[0]}" y="${A[1]-72}" text-anchor="middle" fill="var(--ink)">${a}</text>`;else e+=`<path d="M${A[0]+30} ${A[1]}L${B[0]-34} ${B[1]}" stroke="#6d7c91" fill="none" marker-end="url(#na)"/><text x="${(A[0]+B[0])/2}" y="${(A[1]+B[1])/2-8}" fill="var(--ink)">${a}</text>`}for(const q of nfa.states){const [x,y]=pos[q];e+=`<circle cx="${x}" cy="${y}" r="31" fill="var(--paper)" stroke="#2368e8" stroke-width="2"/>${nfa.final.includes(q)?`<circle cx="${x}" cy="${y}" r="25" fill="none" stroke="#109878" stroke-width="2"/>`:""}<text x="${x}" y="${y+4}" text-anchor="middle" fill="var(--ink)" font-weight="800">${q}</text>`}svg.innerHTML=e}
+function drawSubset(){const s=subsetSteps[subsetIndex];$("#nfaStep").value=subsetIndex;$("#nfaNote").textContent=s.msg;let h='<table class="table"><thead><tr><th>Estado AFD</th><th>a</th><th>b</th><th>¿Final?</th></tr></thead><tbody>';for(const r of s.rows)h+=`<tr><td>{${r.set}}</td><td>{${r.moves.a||"…"}}</td><td>{${r.moves.b||"…"}}</td><td>${r.set.split(",").some(x=>nfa.final.includes(x))?"Sí":"No"}</td></tr>`;$("#subsetTable").innerHTML=h+"</tbody></table>"}
+$("#nfaNext").onclick=()=>{subsetIndex=Math.min(subsetSteps.length-1,subsetIndex+1);drawSubset()};$("#nfaPrev").onclick=()=>{subsetIndex=Math.max(0,subsetIndex-1);drawSubset()};$("#nfaReset").onclick=()=>{stop("nfa");subsetIndex=0;drawSubset()};$("#nfaStep").oninput=e=>{subsetIndex=+e.target.value;drawSubset()};$("#nfaAuto").onclick=()=>{if(timers.nfa){stop("nfa");return}timers.nfa=setInterval(()=>subsetIndex<subsetSteps.length-1?$("#nfaNext").click():stop("nfa"),650)};
+let thSteps=[],thIndex=0;
+function buildThompson(){const r=$("#regexInput").value.trim();if(!/^[a-z0-9|()*+ε]+$/i.test(r)){thSteps=["La expresión contiene símbolos no admitidos en este laboratorio."];return}thSteps=["Crear fragmentos básicos para cada símbolo."];for(const ch of r){if(/[a-z0-9]/i.test(ch))thSteps.push(`Símbolo ${ch}: crear dos estados y una transición ${ch}.`);else if(ch==="*")thSteps.push("Cerradura *: agregar nuevo inicio y final con transiciones ε de repetición.");else if(ch==="|")thSteps.push("Unión |: crear una bifurcación ε hacia dos fragmentos.");else if(ch==="(")thSteps.push("Abrir subexpresión: iniciar un nuevo contexto.");else if(ch===")")thSteps.push("Cerrar subexpresión y combinar su fragmento.");}thSteps.push("Conectar los fragmentos restantes por concatenación. El AFN de Thompson queda completo.");thIndex=0;$("#thStep").max=thSteps.length-1;drawTh()}
+function drawTh(){if(!thSteps.length)return;$("#thStep").value=thIndex;$("#thNote").textContent=`Paso ${thIndex+1}/${thSteps.length}: ${thSteps[thIndex]}`}
+$("#regexTest").onclick=()=>{let r=$("#regexInput").value.replaceAll("ε","");try{const re=new RegExp(`^(?:${r})$`),ok=re.test($("#regexWord").value);$("#regexResult").className="callout "+(ok?"good":"warn");$("#regexResult").innerHTML=`<b>${ok?"Cadena aceptada.":"Cadena rechazada."}</b><p>La prueba utiliza toda la cadena, no una coincidencia parcial.</p>`}catch{$("#regexResult").className="callout warn";$("#regexResult").innerHTML="<b>Expresión inválida.</b><p>Revisa paréntesis y operadores.</p>"}};
+$("#thompsonBuild").onclick=()=>{buildThompson();drawTh()};$("#thNext").onclick=()=>{thIndex=Math.min(thSteps.length-1,thIndex+1);drawTh()};$("#thPrev").onclick=()=>{thIndex=Math.max(0,thIndex-1);drawTh()};$("#thStep").oninput=e=>{thIndex=+e.target.value;drawTh()};
+
+// Bombeo regular
+function pumpWord(){const p=+$("#pumpP").value,lang=$("#pumpLang").value;$("#pumpPVal").textContent=p;let w=lang==="anbn"?"a".repeat(p)+"b".repeat(p):lang==="pal"?"0".repeat(p)+"1"+"0".repeat(p):"1".repeat(p%2?p+1:p);$("#pumpWord").textContent=`w = ${w}`;return w}
+$("#pumpP").oninput=pumpWord;$("#pumpLang").onchange=pumpWord;$("#pumpCheck").onclick=()=>{const w=pumpWord(),x=+$("#pumpX").value,y=+$("#pumpY").value,i=+$("#pumpI").value,p=+$("#pumpP").value;if(y<1||x+y>p||x+y>w.length){$("#pumpResult").innerHTML="<b>División no válida.</b><p>Debe cumplirse |xy|≤p y |y|>0.</p>";return}const a=w.slice(0,x),b=w.slice(x,x+y),c=w.slice(x+y),z=a+b.repeat(i)+c,lang=$("#pumpLang").value,member=lang==="anbn"?/^a*b*$/.test(z)&&z.replace(/b/g,"").length===z.replace(/a/g,"").length:lang==="pal"?z===[...z].reverse().join(""):(z.match(/1/g)||[]).length%2===0;$("#pumpResult").className="callout "+(member?"good":"warn");$("#pumpResult").innerHTML=`<b>xyⁱz = ${esc(z||"λ")}</b><p>${member?"La cadena sigue dentro de L para este i; prueba otra división o valor.":"La cadena salió de L. Esta división puede contribuir a la contradicción."}</p>`};
+
+// Gramática y ambigüedad
+const grammarPresets={anbn:{g:"S -> aSb | ε",w:"aaabbb"},balanced:{g:"S -> (S)S | ε",w:"(())()"},expr:{g:"E -> E+E | E*E | id",w:"id+id*id"}};
+let derSteps=["S"],derIndex=0,derTimer=null;
+function parseGrammarText(t){const rules={};for(const line of t.split(/\n|;/)){if(!line.trim())continue;const [l,r]=line.split(/->|→/).map(x=>x?.trim());if(!l||r==null)throw Error("Producción inválida: "+line);rules[l]=(rules[l]||[]).concat(r.split("|").map(x=>x.trim().replace("ε","")))}return rules}
+function derive(){const g=$("#grammarInput").value,w=$("#grammarWord").value;if(g.includes("aSb")&&/^a*b*$/.test(w)){const a=(w.match(/^a*/)||[""])[0].length,b=(w.match(/b*$/)||[""])[0].length;if(a!==b){derSteps=["S"];$("#derNote").textContent="La cadena no tiene el mismo número de a y b.";return}derSteps=["S"];for(let i=1;i<=a;i++)derSteps.push("a".repeat(i)+"S"+"b".repeat(i));derSteps.push("a".repeat(a)+"b".repeat(a))}else if(g.includes("(S)S")){derSteps=["S","(S)S","((S)S)S","(())S","(())(S)S","(())()S","(())()"]}else derSteps=["E","E+E","id+E","id+E*E","id+id*E","id+id*id"];derIndex=0;$("#derStep").max=derSteps.length-1;drawDer()}
+function drawDer(){const s=derSteps[derIndex];$("#derStep").value=derIndex;$("#derivation").textContent=derSteps.slice(0,derIndex+1).join(" ⇒ ");$("#derNote").textContent=derIndex===derSteps.length-1?`Forma terminal obtenida: ${s}`:`Se expande la variable más a la izquierda en ${s}.`}
+$("#deriveBtn").onclick=derive;$("#grammarValidate").onclick=()=>{try{const r=parseGrammarText($("#grammarInput").value),vars=Object.keys(r);alert(`Gramática válida: ${vars.length} variables y ${Object.values(r).flat().length} producciones.`)}catch(e){alert(e.message)}};
+$$("[data-grammar-preset]").forEach(b=>b.onclick=()=>{const p=grammarPresets[b.dataset.grammarPreset];$("#grammarInput").value=p.g;$("#grammarWord").value=p.w;$$("[data-grammar-preset]").forEach(x=>x.classList.remove("active"));b.classList.add("active");derive()});
+$("#derNext").onclick=()=>{derIndex=Math.min(derSteps.length-1,derIndex+1);drawDer()};$("#derPrev").onclick=()=>{derIndex=Math.max(0,derIndex-1);drawDer()};$("#derStep").oninput=e=>{derIndex=+e.target.value;drawDer()};$("#derAuto").onclick=()=>{if(timers.der){stop("der");return}timers.der=setInterval(()=>derIndex<derSteps.length-1?$("#derNext").click():stop("der"),650)};
+function tree(which){const svg=$("#ambiguitySvg"),plusFirst=which==="left";svg.innerHTML=`<g stroke="#7b8799" fill="none">${plusFirst?'<path d="M260 45L130 105M260 45L260 105M260 45L390 105M390 105L340 170M390 105L390 170M390 105L450 170"/>':'<path d="M260 45L130 105M260 45L260 105M260 45L390 105M130 105L75 170M130 105L130 170M130 105L190 170"/>'}</g><g fill="var(--paper)" stroke="#7255d6">${[[260,45,"E"],[130,105,plusFirst?"id":"E"],[260,105,plusFirst?"+":"×"],[390,105,plusFirst?"E":"id"],[plusFirst?340:75,170,"id"],[plusFirst?390:130,170,plusFirst?"×":"+"],[plusFirst?450:190,170,"id"]].map(n=>`<circle cx="${n[0]}" cy="${n[1]}" r="22"/><text x="${n[0]}" y="${n[1]+4}" text-anchor="middle" fill="var(--ink)" stroke="none" font-weight="800">${n[2]}</text>`).join("")}</g>`}
+$$("[data-tree]").forEach(b=>b.onclick=()=>{$$("[data-tree]").forEach(x=>x.classList.remove("active"));b.classList.add("active");tree(b.dataset.tree)});
+// FIRST/FOLLOW simple
+$("#llCompute").onclick=()=>{try{const rules=parseGrammarText($("#llGrammar").value),V=Object.keys(rules),first=Object.fromEntries(V.map(v=>[v,new Set()]));let changed=true;while(changed){changed=false;for(const A of V)for(const rhs of rules[A]){if(rhs===""){if(!first[A].has("ε")){first[A].add("ε");changed=true}continue}let nullable=true;for(const X of rhs){if(!V.includes(X)){if(!first[A].has(X)){first[A].add(X);changed=true}nullable=false;break}for(const t of first[X])if(t!=="ε"&&!first[A].has(t)){first[A].add(t);changed=true}if(!first[X].has("ε")){nullable=false;break}}if(nullable&&!first[A].has("ε")){first[A].add("ε");changed=true}}}const follow=Object.fromEntries(V.map(v=>[v,new Set()]));follow[V[0]].add("$");changed=true;while(changed){changed=false;for(const A of V)for(const rhs of rules[A])for(let i=0;i<rhs.length;i++){const B=rhs[i];if(!V.includes(B))continue;const beta=rhs.slice(i+1);let nullable=true;for(const X of beta){if(!V.includes(X)){if(!follow[B].has(X)){follow[B].add(X);changed=true}nullable=false;break}for(const t of first[X])if(t!=="ε"&&!follow[B].has(t)){follow[B].add(t);changed=true}if(!first[X].has("ε")){nullable=false;break}}if(nullable)for(const t of follow[A])if(!follow[B].has(t)){follow[B].add(t);changed=true}}}let h='<table class="table"><thead><tr><th>Variable</th><th>FIRST</th><th>FOLLOW</th></tr></thead><tbody>';for(const A of V)h+=`<tr><td>${A}</td><td>{${[...first[A]].join(", ")}}</td><td>{${[...follow[A]].join(", ")}}</td></tr>`;$("#llOutput").innerHTML=h+"</tbody></table>";$("#llNote").textContent="Conjuntos calculados hasta punto fijo. Una tabla LL(1) requiere que las alternativas no compitan por la misma terminal."}catch(e){$("#llNote").textContent=e.message}};
+
+// CNF/CYK
+const cnfSteps=[
+ ["S → ASA | aB; A → B | S | ε; B → b | ε","Gramática original."],
+ ["S₀ → S; S → ASA | aB; A → B | S | ε; B → b | ε","Agregar un nuevo símbolo inicial para proteger el inicio."],
+ ["S₀ → S | AS | SA | S | aB | a; S → ASA | AS | SA | S | aB | a; A → B | S; B → b","Eliminar producciones ε y añadir las variantes necesarias."],
+ ["S₀ → ASA | AS | SA | aB | a | b; S → ASA | AS | SA | aB | a | b; A → ASA | AS | SA | aB | a | b; B → b","Eliminar producciones unitarias por sustitución."],
+ ["C → a; X → SA; S₀ → AX | AS | SA | CB | a | b; S → AX | AS | SA | CB | a | b; A → AX | AS | SA | CB | a | b; B → b","Separar terminales en producciones largas y binarizar."],
+ ["S₀ → AX | AS | SA | CB | a | b; S → AX | AS | SA | CB | a | b; A → AX | AS | SA | CB | a | b; X → SA; C → a; B → b","Gramática en Forma Normal de Chomsky."]
+];let cnfIndex=0;
+function drawCnf(){const s=cnfSteps[cnfIndex];$("#cnfStep").value=cnfIndex;$("#cnfGrammar").textContent=s[0];$("#cnfNote").textContent=`Paso ${cnfIndex+1}/${cnfSteps.length}: ${s[1]}`}
+$("#cnfNext").onclick=()=>{cnfIndex=Math.min(cnfSteps.length-1,cnfIndex+1);drawCnf()};$("#cnfPrev").onclick=()=>{cnfIndex=Math.max(0,cnfIndex-1);drawCnf()};$("#cnfReset").onclick=()=>{stop("cnf");cnfIndex=0;drawCnf()};$("#cnfStep").oninput=e=>{cnfIndex=+e.target.value;drawCnf()};$("#cnfAuto").onclick=()=>{if(timers.cnf){stop("cnf");return}timers.cnf=setInterval(()=>cnfIndex<cnfSteps.length-1?$("#cnfNext").click():stop("cnf"),750)};
+$("#cykRun").onclick=()=>{const w=$("#cykWord").value.trim(),n=w.length;if(!n)return;const term={a:["A","C"],b:["B"]},bin={AB:["C"],BC:["S"],BA:["A"],CC:["B"],CB:["S"],AA:["B"]},T=Array.from({length:n},()=>Array.from({length:n},()=>new Set()));for(let i=0;i<n;i++)for(const A of term[w[i]]||[])T[i][i].add(A);for(let len=2;len<=n;len++)for(let i=0;i<=n-len;i++){const j=i+len-1;for(let k=i;k<j;k++)for(const A of T[i][k])for(const B of T[k+1][j])for(const X of bin[A+B]||[])T[i][j].add(X)}let h='<table class="table"><tbody>';for(let i=0;i<n;i++){h+="<tr>";for(let j=0;j<n;j++)h+=`<td>${j<i?"":`{${[...T[i][j]].join(",")}}`}</td>`;h+="</tr>"}$("#cykTable").innerHTML=h+"</tbody></table>";const ok=T[0][n-1].has("S");$("#cykResult").className="callout "+(ok?"good":"warn");$("#cykResult").innerHTML=`<b>${ok?"Cadena generada.":"Cadena no generada."}</b><p>${ok?"S aparece en la celda superior.":"S no aparece en la celda que representa toda la cadena."}</p>`};
+
+// PDA
+let pdaRun=[],pdaIndex=0;
+function buildPda(){const w=$("#pdaWord").value,stack=["Z"],run=[{state:"q₀",stack:[...stack],pos:0,msg:"Inicio con marcador Z."}],valid=/^a*b*$/.test(w);let state="q₀";for(let i=0;i<w.length;i++){const ch=w[i];if(ch==="a"&&state==="q₀"){stack.push("A");run.push({state,stack:[...stack],pos:i+1,msg:"Lee a y apila A."})}else if(ch==="b"&&(state==="q₀"||state==="q₁")&&stack.at(-1)==="A"){state="q₁";stack.pop();run.push({state,stack:[...stack],pos:i+1,msg:"Lee b y desapila A."})}else{state="rechazo";run.push({state,stack:[...stack],pos:i+1,msg:"No existe una transición válida."});break}}if(state!=="rechazo"){state=valid&&stack.length===1&&w.length>0?"qf":"rechazo";run.push({state,stack:[...stack],pos:w.length,msg:state==="qf"?"La entrada terminó y solo queda Z: aceptar.":"La pila y la entrada no coinciden: rechazar."})}pdaRun=run;pdaIndex=0;$("#pdaStep").max=run.length-1;drawPda()}
+function drawPda(){const r=pdaRun[pdaIndex],w=$("#pdaWord").value;$("#pdaStep").value=pdaIndex;$("#pdaTokens").innerHTML=[...w].map((c,i)=>`<span class="token ${i<r.pos?"done":i===r.pos?"active":""}">${c}</span>`).join("");$("#pdaStack").innerHTML=r.stack.map(x=>`<i>${x}</i>`).join("");$("#pdaState").textContent=r.state;$("#pdaRest").textContent=w.length-r.pos;$("#pdaHeight").textContent=r.stack.length;$("#pdaNote").textContent=r.msg;const pos={q0:[120,130],q1:[350,130],qf:[560,130]},names={q0:"q₀",q1:"q₁",qf:"qf"};$("#pdaSvg").innerHTML=`<defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6d7c91"/></marker></defs><path d="M150 130L315 130M380 130L525 130" stroke="#6d7c91" marker-end="url(#pa)"/><path d="M95 105C40 35,200 35,145 105M325 105C270 35,430 35,375 105" fill="none" stroke="#6d7c91" marker-end="url(#pa)"/><text x="120" y="55" text-anchor="middle" fill="var(--ink)">a, Z/AZ · a, A/AA</text><text x="350" y="55" text-anchor="middle" fill="var(--ink)">b, A/ε</text><text x="230" y="118" text-anchor="middle" fill="var(--ink)">b, A/ε</text><text x="455" y="118" text-anchor="middle" fill="var(--ink)">ε, Z/Z</text>${Object.entries(pos).map(([k,p])=>`<circle cx="${p[0]}" cy="${p[1]}" r="31" fill="${r.state===names[k]||r.state===k?"#e79b16":"var(--paper)"}" stroke="#2368e8" stroke-width="2"/>${k==="qf"?`<circle cx="${p[0]}" cy="${p[1]}" r="25" fill="none" stroke="#109878"/>`:""}<text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" fill="var(--ink)" font-weight="800">${names[k]}</text>`).join("")}`}
+$("#pdaWord").oninput=buildPda;$("#pdaNext").onclick=()=>{pdaIndex=Math.min(pdaRun.length-1,pdaIndex+1);drawPda()};$("#pdaPrev").onclick=()=>{pdaIndex=Math.max(0,pdaIndex-1);drawPda()};$("#pdaReset").onclick=()=>{stop("pda");buildPda()};$("#pdaStep").oninput=e=>{pdaIndex=+e.target.value;drawPda()};$("#pdaAuto").onclick=()=>{if(timers.pda){stop("pda");return}timers.pda=setInterval(()=>pdaIndex<pdaRun.length-1?$("#pdaNext").click():stop("pda"),650)};
+$("#cflI").oninput=e=>{$("#cflIVal").textContent=e.target.value;$("#cflPumped").textContent=`u v${e.target.value} w x${e.target.value} y`};
+
+// TM
+const tmMachines={
+ increment:{blank:"□",start:"q0",accept:"qa",reject:"qr",tr:{q0:{"0":["q0","0","R"],"1":["q0","1","R"],"□":["carry","□","L"]},carry:{"0":["qa","1","S"],"1":["carry","0","L"],"□":["qa","1","S"]}},desc:"Recorre a la derecha; después propaga el acarreo."},
+ unary:{blank:"□",start:"q0",accept:"qa",reject:"qr",tr:{q0:{"1":["q0","1","R"],"□":["qa","1","S"]}},desc:"Busca el primer blanco y escribe un 1."},
+ anbn:{blank:"□",start:"q0",accept:"qa",reject:"qr",tr:{q0:{"X":["q0","X","R"],"a":["findB","X","R"],"Y":["check","Y","R"],"□":["qa","□","S"]},findB:{"a":["findB","a","R"],"Y":["findB","Y","R"],"b":["back","Y","L"]},back:{"a":["back","a","L"],"Y":["back","Y","L"],"X":["q0","X","R"]},check:{"Y":["check","Y","R"],"□":["qa","□","S"]}},desc:"Marca una a y una b por iteración."}
+};let tm,tmHistory=[],tmIndex=0;
+function initTm(){tm=tmMachines[$("#tmPreset").value];let input=$("#tmInput").value.split(""),offset=6,tape=Array(30).fill(tm.blank);input.forEach((x,i)=>tape[offset+i]=x);tmHistory=[{tape,state:tm.start,head:offset,msg:tm.desc}];tmIndex=0;drawTm()}
+function tmNextState(s){if(s.state===tm.accept||s.state===tm.reject)return null;const read=s.tape[s.head]??tm.blank,t=tm.tr[s.state]?.[read];if(!t)return{...s,state:tm.reject,msg:`No hay transición para (${s.state}, ${read}).`};const tape=[...s.tape];tape[s.head]=t[1];let head=s.head+(t[2]==="R"?1:t[2]==="L"?-1:0);if(head<0){tape.unshift(tm.blank);head=0}if(head>=tape.length)tape.push(tm.blank);return{tape,state:t[0],head,msg:`Lee ${read}; escribe ${t[1]}; mueve ${t[2]}; pasa a ${t[0]}.`}}
+function stepTm(){if(tmIndex<tmHistory.length-1){tmIndex++;drawTm();return}const n=tmNextState(tmHistory[tmIndex]);if(n){tmHistory.push(n);tmIndex++;drawTm()}}
+function drawTm(){const s=tmHistory[tmIndex],start=Math.max(0,s.head-6),cells=s.tape.slice(start,start+13);$("#tmTape").innerHTML=cells.map((x,i)=>`<div class="cell ${start+i===s.head?"head":""}">${x}</div>`).join("");$("#tmState").textContent=s.state;$("#tmHead").textContent=s.head;$("#tmSteps").textContent=tmIndex;$("#tmNote").textContent=s.msg;const halted=s.state===tm.accept||s.state===tm.reject;$("#tmStatus").className="callout "+(s.state===tm.accept?"good":s.state===tm.reject?"warn":"");$("#tmStatus").innerHTML=`<b>${s.state===tm.accept?"Aceptada":s.state===tm.reject?"Rechazada":halted?"Detenida":"En ejecución"}</b><p>${halted?"La máquina alcanzó un estado de parada.":"La cinta puede extenderse según sea necesario."}</p>`;let rows=[];for(const [q,by] of Object.entries(tm.tr))for(const [a,t] of Object.entries(by))rows.push([q,a,...t]);$("#tmTable").innerHTML=`<table class="table"><thead><tr><th>q</th><th>Lee</th><th>q'</th><th>Escribe</th><th>Mueve</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r[0]===s.state&&r[1]===s.tape[s.head]?"hl":""}">${r.map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</tbody></table>`}
+$("#tmNext").onclick=stepTm;$("#tmPrev").onclick=()=>{tmIndex=Math.max(0,tmIndex-1);drawTm()};$("#tmReset").onclick=()=>{stop("tm");initTm()};$("#tmPreset").onchange=()=>{const p=$("#tmPreset").value;$("#tmInput").value=p==="increment"?"1011":p==="unary"?"111":p==="anbn"?"aabb":"";initTm()};$("#tmInput").onchange=initTm;$("#tmAuto").onclick=()=>{if(timers.tm){stop("tm");return}timers.tm=setInterval(()=>{const s=tmHistory[tmIndex];if(s.state===tm.accept||s.state===tm.reject||tmIndex>150)stop("tm");else stepTm()},Math.max(180,1600-+$("#tmSpeed").value))};
+
+// Variants
+const variants=[["MT con opción S","Permite permanecer en la celda. No cambia la potencia computacional."],["Cinta semiinfinita","Un extremo fijo; puede simularse en una cinta bilateral."],["Multicinta","Varias cintas y cabezales; puede acelerar, no computar más."],["Multidimensional","La cinta es una cuadrícula; se codifica linealmente."],["No determinista","Explora ramas; equivalente en reconocibilidad."],["Universal","Recibe la codificación de otra MT y su entrada."],["Autómata linealmente acotado","Cinta limitada por el tamaño de entrada; lenguajes sensibles al contexto."]];
+$("#tmVariants").innerHTML=variants.map((v,i)=>`<div class="card flat"><span class="pill">${i+1}</span><h3 style="margin-top:8px">${v[0]}</h3><p class="tiny">${v[1]}</p></div>`).join("");
+let multi=0;function drawMulti(){const a="10101".split(""),b=a.map((x,i)=>i<multi?x:"□");$("#tapeA").innerHTML=a.map((x,i)=>`<div class="cell ${i===multi?"head":""}">${x}</div>`).join("");$("#tapeB").innerHTML=b.map((x,i)=>`<div class="cell ${i===multi?"head":""}">${x}</div>`).join("");$("#multiStep").value=multi;$("#multiNote").textContent=multi===a.length?"Copia completa. Una MT estándar puede simular este resultado con recorridos adicionales.":`Se copia la posición ${multi+1} en una sola operación multicinta.`}$("#multiNext").onclick=()=>{multi=Math.min(5,multi+1);drawMulti()};$("#multiReset").onclick=()=>{multi=0;drawMulti()};
+
+// Jerarquía
+const hier=[
+ ["Regular","Gramáticas lineales; memoria finita.","AFD/AFN","Ej.: cadenas que terminan en 01."],["Libre de contexto","Una variable a la izquierda.","Autómata de pila","Ej.: aⁿbⁿ."],["Sensible al contexto","Las reglas no reducen longitud.","Autómata linealmente acotado","Ej.: aⁿbⁿcⁿ."],["Recursivamente enumerable","Producciones sin restricción.","Máquina de Turing","Puede no detenerse cuando rechaza."]
+];
+function drawHierarchy(i=0){const colors=["#2368e8","#109878","#7255d6","#db414b"],svg=$("#hierarchySvg");svg.innerHTML=[3,2,1,0].map((n,k)=>{const pad=k*42,x=70+pad,y=35+pad,w=580-pad*2,h=350-pad*2,idx=3-k;return`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="35" fill="${colors[idx]}15" stroke="${colors[idx]}" stroke-width="${i===idx?5:2}"/><text x="${x+18}" y="${y+27}" fill="${colors[idx]}" font-weight="800">Tipo ${3-idx}: ${hier[idx][0]}</text>`}).join("");const h=hier[i];$("#hierarchyInfo").innerHTML=`<b>${h[0]}</b><p>${h[1]} Reconocedor: ${h[2]}. ${h[3]}</p>`;$("#hierarchyTabs").innerHTML=hier.map((x,j)=>`<button class="tab ${j===i?"active":""}" data-hi="${j}">${x[0]}</button>`).join("");$$("[data-hi]").forEach(b=>b.onclick=()=>drawHierarchy(+b.dataset.hi))}
+
+// Halting + PCP
+const haltSteps=[
+ ["Supón que existe H(M,w).","H siempre se detiene y responde si M se detendrá con w."],["Construye D(M).","D usa H(M,M), es decir, pregunta por M ejecutándose con su propia descripción."],["Invierte la respuesta.","Si H dice «se detiene», D entra en bucle; si dice «no», D se detiene."],["Ejecuta D(D).","Ahora D recibe su propia descripción."],["Aparece la contradicción.","D(D) se detiene si y solo si D(D) no se detiene."],["Conclusión.","El supuesto H no puede existir: el problema de parada es indecidible."]
+];let haltIndex=0;
+function drawHalt(){const s=haltSteps[haltIndex];$("#haltStep").value=haltIndex;$("#haltNote").textContent=`${s[0]} ${s[1]}`;const nodes=haltSteps.map((x,i)=>({x:70+i*105,y:i%2?185:85,label:i+1}));$("#haltSvg").innerHTML=`<defs><marker id="ha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6d7c91"/></marker></defs>${nodes.slice(0,-1).map((n,i)=>`<path d="M${n.x+30} ${n.y}L${nodes[i+1].x-30} ${nodes[i+1].y}" stroke="#6d7c91" marker-end="url(#ha)"/>`).join("")}${nodes.map((n,i)=>`<circle cx="${n.x}" cy="${n.y}" r="29" fill="${i===haltIndex?"#e79b16":"var(--paper)"}" stroke="${i<=haltIndex?"#2368e8":"#9aa7b8"}" stroke-width="3"/><text x="${n.x}" y="${n.y+4}" text-anchor="middle" fill="var(--ink)" font-weight="850">${n.label}</text>`).join("")}`}
+$("#haltNext").onclick=()=>{haltIndex=Math.min(haltSteps.length-1,haltIndex+1);drawHalt()};$("#haltPrev").onclick=()=>{haltIndex=Math.max(0,haltIndex-1);drawHalt()};$("#haltStep").oninput=e=>{haltIndex=+e.target.value;drawHalt()};$("#haltAuto").onclick=()=>{if(timers.halt){stop("halt");return}timers.halt=setInterval(()=>haltIndex<haltSteps.length-1?$("#haltNext").click():stop("halt"),750)};
+const tiles=[["a","ab"],["ba","a"],["b","ba"]];let pcpSeq=[];$("#pcpTiles").innerHTML=tiles.map((t,i)=>`<button class="pcp" data-pcp="${i}"><div>${t[0]}</div><div>${t[1]}</div></button>`).join("");function drawPcp(){const top=pcpSeq.map(i=>tiles[i][0]).join(""),bot=pcpSeq.map(i=>tiles[i][1]).join("");$("#pcpTop").textContent="superior: "+(top||"λ");$("#pcpBottom").textContent="inferior: "+(bot||"λ");const same=top&&top===bot;$("#pcpResult").className="callout "+(same?"good":top&&!bot.startsWith(top)&&!top.startsWith(bot)?"warn":"");$("#pcpResult").innerHTML=`<b>${same?"¡Correspondencia encontrada!":top&&!bot.startsWith(top)&&!top.startsWith(bot)?"Las cadenas ya difieren.":"Sigue construyendo."}</b><p>Secuencia: ${pcpSeq.map(i=>i+1).join(", ")||"vacía"}.</p>`}$$("[data-pcp]").forEach(b=>b.onclick=()=>{pcpSeq.push(+b.dataset.pcp);drawPcp()});$("#pcpUndo").onclick=()=>{pcpSeq.pop();drawPcp()};$("#pcpReset").onclick=()=>{pcpSeq=[];drawPcp()};
+
+// Markov y recursión
+let markovHistory=[],markovIndex=0;
+function buildMarkov(){let w=$("#markovInput").value,h=[{w,msg:"Inicio."}],guard=0;while(w.includes("+")&&guard++<50){if(w.includes("1+")){w=w.replace("1+","+1");h.push({w,msg:"Aplicar 1+ → +1."})}else{w=w.replace("+","1");h.push({w,msg:"Aplicar regla terminal + → 1."});break}}markovHistory=h;markovIndex=0;drawMarkov()}
+function drawMarkov(){const s=markovHistory[markovIndex];$("#markovWord").textContent=s.w;$("#markovNote").textContent=`Paso ${markovIndex}/${markovHistory.length-1}: ${s.msg}`}
+$("#markovNext").onclick=()=>{markovIndex=Math.min(markovHistory.length-1,markovIndex+1);drawMarkov()};$("#markovPrev").onclick=()=>{markovIndex=Math.max(0,markovIndex-1);drawMarkov()};$("#markovReset").onclick=()=>{stop("markov");buildMarkov()};$("#markovInput").onchange=buildMarkov;$("#markovAuto").onclick=()=>{if(timers.markov){stop("markov");return}timers.markov=setInterval(()=>markovIndex<markovHistory.length-1?$("#markovNext").click():stop("markov"),650)};
+const recs={zero:["z(n)=0","Función inicial","Ignora su argumento y devuelve cero."],succ:["s(n)=n+1","Sucesor","Es la base para construir suma y multiplicación."],proj:["pᵢⁿ(x₁,…,xₙ)=xᵢ","Proyección","Selecciona un argumento."],ack:["A(m,n)","Ackermann","Es computable, pero no primitiva recursiva; crece extraordinariamente rápido."]};$$("[data-rec]").forEach(b=>b.onclick=()=>{const r=recs[b.dataset.rec];$$("[data-rec]").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#recFormula").textContent=r[0];$("#recInfo").innerHTML=`<b>${r[1]}</b><p>${r[2]}</p>`});
+
+// Complejidad
+function drawComplexity(){const c=$("#complexityCanvas"),r=c.getBoundingClientRect(),d=devicePixelRatio||1,w=r.width,h=r.height;c.width=w*d;c.height=h*d;const x=c.getContext("2d");x.setTransform(d,0,0,d,0,0);const bg=getComputedStyle(document.body).getPropertyValue("--paper"),ink=getComputedStyle(document.body).getPropertyValue("--muted");x.fillStyle=bg;x.fillRect(0,0,w,h);const P={l:40,r:15,t:15,b:33},X=n=>P.l+(n-1)/49*(w-P.l-P.r),Y=v=>P.t+(1-Math.log10(v+1)/Math.log10(Math.pow(2,50)+1))*(h-P.t-P.b),fns=[["log n",n=>Math.log2(n),"#109878"],["n",n=>n,"#2368e8"],["n²",n=>n*n,"#7255d6"],["2ⁿ",n=>Math.pow(2,n),"#db414b"]];x.strokeStyle="#d5dde8";for(let i=0;i<=5;i++){const y=P.t+i*(h-P.t-P.b)/5;x.beginPath();x.moveTo(P.l,y);x.lineTo(w-P.r,y);x.stroke()}for(const [name,fn,col] of fns){x.strokeStyle=col;x.lineWidth=2.5;x.beginPath();for(let n=1;n<=50;n++){const xx=X(n),yy=Y(fn(n));n===1?x.moveTo(xx,yy):x.lineTo(xx,yy)}x.stroke();x.fillStyle=col;x.fillText(name,w-38,Y(fn(48))-3)}x.fillStyle=ink;x.fillText("n",w/2,h-7);const n=+$("#nSlider").value;$("#nVal").textContent=n;$("#complexityStats").innerHTML=fns.map(f=>`<div class="stat"><span>${f[0]}</span><b>${f[1](n)>999999?f[1](n).toExponential(1):Math.round(f[1](n))}</b></div>`).join("")}
+$("#nSlider").oninput=drawComplexity;const problems={sat:["SAT","¿Existe una asignación que haga verdadera la fórmula? Certificado: una asignación."],clique:["Clique","¿Existe un conjunto de k vértices todos conectados entre sí?"],vc:["Vertex Cover","¿Existe un conjunto de k vértices que cubra todas las aristas?"],ham:["Ciclo hamiltoniano","¿Existe un ciclo que visite cada vértice exactamente una vez?"]};function problem(k="sat"){const p=problems[k];$("#problemInfo").innerHTML=`<b>${p[0]}</b><p>${p[1]}</p>`;$("#pnSvg").innerHTML=`<ellipse cx="300" cy="135" rx="245" ry="105" fill="#7255d615" stroke="#7255d6" stroke-width="3"/><ellipse cx="230" cy="135" rx="115" ry="68" fill="#2368e81a" stroke="#2368e8" stroke-width="3"/><text x="475" y="55" fill="#7255d6" font-weight="850">NP</text><text x="150" y="95" fill="#2368e8" font-weight="850">P</text><circle cx="385" cy="135" r="43" fill="#e79b1620" stroke="#e79b16" stroke-width="3"/><text x="385" y="131" text-anchor="middle" fill="var(--ink)" font-weight="850">${p[0]}</text><text x="385" y="149" text-anchor="middle" fill="var(--muted)" font-size="11">NP-completo</text>`}$$("[data-problem]").forEach(b=>b.onclick=()=>{$$("[data-problem]").forEach(x=>x.classList.remove("active"));b.classList.add("active");problem(b.dataset.problem)});
+
+// Mealy
+let mealyIndex=0;function drawMealy(){const w=$("#mealyWord").value;let st="Par",out="",states=["Par"];for(let i=0;i<mealyIndex;i++){if(w[i]==="1")st=st==="Par"?"Impar":"Par";out+=st==="Par"?"0":"1";states.push(st)}$("#mealyTokens").innerHTML=[...w].map((c,i)=>`<span class="token ${i<mealyIndex?"done":i===mealyIndex?"active":""}">${c}</span>`).join("");$("#mealyState").textContent=st;$("#mealyOutput").textContent=out||"λ";$("#mealyCount").textContent=mealyIndex;$("#mealySvg").innerHTML=`<defs><marker id="ma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6d7c91"/></marker></defs><path d="M190 135L415 135M430 155L205 155" stroke="#6d7c91" marker-end="url(#ma)"/><path d="M130 105C60 25,250 25,180 105M440 105C370 25,560 25,490 105" fill="none" stroke="#6d7c91" marker-end="url(#ma)"/><text x="300" y="123" fill="var(--ink)">1/1</text><text x="300" y="177" fill="var(--ink)">1/0</text><text x="155" y="48" fill="var(--ink)">0/0</text><text x="465" y="48" fill="var(--ink)">0/1</text>${[["Par",155],["Impar",465]].map(n=>`<circle cx="${n[1]}" cy="135" r="42" fill="${n[0]===st?"#e79b16":"var(--paper)"}" stroke="#2368e8" stroke-width="3"/><text x="${n[1]}" y="140" text-anchor="middle" fill="var(--ink)" font-weight="850">${n[0]}</text>`).join("")}`}
+$("#mealyNext").onclick=()=>{mealyIndex=Math.min($("#mealyWord").value.length,mealyIndex+1);drawMealy()};$("#mealyPrev").onclick=()=>{mealyIndex=Math.max(0,mealyIndex-1);drawMealy()};$("#mealyReset").onclick=()=>{mealyIndex=0;drawMealy()};$("#mealyWord").oninput=()=>{mealyIndex=0;drawMealy()};
+
+// Glosario
+const glossary=[["Alfabeto","Conjunto finito no vacío de símbolos."],["Cadena","Secuencia finita de símbolos; λ es la cadena vacía."],["Lenguaje","Subconjunto de Σ*."],["Gramática","Sistema de variables, terminales, producciones e inicio."],["AFD","Autómata con una transición por estado y símbolo."],["AFN","Autómata que puede tener varias transiciones posibles."],["Lenguaje regular","Lenguaje aceptado por algún autómata finito."],["GLC","Gramática con una sola variable en el lado izquierdo."],["Ambigüedad","Existencia de dos árboles para la misma cadena."],["FNC","Producciones A→BC o A→a."],["AP","Autómata finito ampliado con una pila."],["Configuración","Descripción instantánea del estado de una máquina."],["MT","Modelo con control finito, cinta y cabezal."],["Decidible","Existe una MT que siempre se detiene y responde."],["Reconocible","Una MT acepta los miembros, pero puede no detenerse para no miembros."],["Reducción","Transformación que traslada soluciones entre problemas."],["P","Problemas decidibles en tiempo polinómico determinista."],["NP","Problemas con certificados verificables en tiempo polinómico."],["NP-completo","En NP y tan difícil como cualquier problema de NP."],["Transductor","Autómata que produce una salida."]];$("#glossaryGrid").innerHTML=glossary.map(g=>`<div class="card flat"><h3>${g[0]}</h3><p class="tiny">${g[1]}</p></div>`).join("");
+
+// Inicialización
+alphabet();loadDfa("ends01");drawNfa();buildSubsets();buildThompson();drawTh();pumpWord();derive();tree("left");drawCnf();buildPda();initTm();drawMulti();drawHierarchy();drawHalt();drawPcp();buildMarkov();problem();drawMealy();nav();bindGoto();
+const req=new URLSearchParams(location.search).get("page");if(req)go(req);
+})();
+</script>
+</body>
+</html>
