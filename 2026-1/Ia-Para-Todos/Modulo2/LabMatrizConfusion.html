@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laboratorio de Métricas — Matriz 2×2</title>
+  <style>
+    :root{
+      --ink:#18202f;--muted:#667085;--line:#d9e0ea;--paper:#fff;
+      --bg:#edf2f7;--navy:#12203a;--blue:#2563eb;--blue2:#dbeafe;
+      --red:#e5484d;--red2:#fee2e2;--green:#119c76;--amber:#f59e0b;
+      --shadow:0 12px 34px rgba(27,42,72,.10);--radius:16px
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    button,input{font:inherit}
+    .app{min-height:100vh;display:flex;flex-direction:column}
+    header{min-height:64px;background:var(--navy);color:white;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(145deg,#4f8cff,#13b98d);display:grid;place-items:center;font-weight:900;box-shadow:inset 0 0 0 1px #ffffff44}
+    h1{font-size:clamp(17px,2vw,23px);margin:0;letter-spacing:-.02em}.subtitle{font-size:12px;color:#b9c6db;margin-top:2px}
+    .header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    button{border:1px solid transparent;border-radius:9px;padding:7px 11px;background:#fff;color:var(--ink);font-weight:700;cursor:pointer;transition:.16s}
+    button:hover{transform:translateY(-1px);box-shadow:0 4px 12px #0002}button:focus-visible,input:focus-visible{outline:3px solid #60a5fa88;outline-offset:2px}
+    button.secondary{background:#ffffff12;border-color:#ffffff35;color:white}button.danger{background:#ef444422;border-color:#ef444466;color:#fecaca}
+    main{padding:14px;flex:1;min-height:0}
+    .grid{height:calc(100vh - 92px);min-height:710px;display:grid;grid-template:1fr 1fr / 1.12fr .88fr;gap:14px;max-width:1600px;margin:auto}
+    .card{background:var(--paper);border:1px solid #dfe5ee;border-radius:var(--radius);box-shadow:var(--shadow);min-width:0;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+    .card-head{padding:10px 14px 8px;border-bottom:1px solid #edf0f5;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .card-title{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:850}.num{width:24px;height:24px;border-radius:8px;background:#e8eef8;color:#28476f;display:grid;place-items:center;font-size:12px}
+    .hint{font-size:11px;color:var(--muted);white-space:nowrap}.card-body{padding:10px 12px;min-height:0;flex:1}
+    .plot-shell{display:grid;grid-template-rows:minmax(220px,1fr) auto;gap:7px;height:100%}
+    .canvas-wrap{min-height:0;position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#f9fbfd}
+    canvas{display:block;width:100%;height:100%}.tooltip{position:absolute;z-index:4;pointer-events:none;display:none;background:#172033;color:white;border-radius:8px;padding:6px 8px;font-size:11px;box-shadow:0 7px 20px #0004;line-height:1.35}
+    .toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.tool{padding:6px 9px;background:#f4f6f9;border-color:#dce2ea;font-size:12px}.tool.active{background:#172b4d;color:white;border-color:#172b4d}
+    .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.dot.red{background:var(--red)}.dot.blue{background:var(--blue)}
+    .threshold{display:grid;grid-template-columns:auto minmax(130px,1fr) auto;gap:10px;align-items:center;background:#f5f7fb;border-radius:10px;padding:7px 10px;font-size:12px}
+    input[type=range]{width:100%;accent-color:var(--blue)}.pill{background:#172b4d;color:white;border-radius:8px;padding:4px 8px;font-weight:800;font-variant-numeric:tabular-nums}
+    .conf-layout{height:100%;display:grid;grid-template-columns:minmax(230px,.95fr) 1.2fr;gap:12px;align-items:center}
+    .matrix-wrap{text-align:center}.matrix-axis{font-size:11px;color:var(--muted);margin:2px 0 5px}.matrix{display:grid;grid-template-columns:50px 1fr 1fr;grid-template-rows:35px 1fr 1fr;gap:5px;aspect-ratio:1.45;max-height:250px;margin:auto}
+    .mh{font-size:11px;font-weight:750;color:var(--muted);display:grid;place-items:center}.cell{border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid}
+    .cell strong{font-size:clamp(23px,3.2vw,42px);line-height:1;font-variant-numeric:tabular-nums}.cell span{font-size:10px;margin-top:4px;font-weight:700}
+    .goodb{background:var(--blue2);border-color:#93c5fd;color:#174ea6}.goodr{background:var(--red2);border-color:#fca5a5;color:#b4232a}.bad{background:#fff7df;border-color:#f4cd68;color:#8b5c00}
+    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px}.metric{border:1px solid var(--line);border-radius:11px;padding:8px 9px;background:#fbfcfe;min-width:0}
+    .metric-top{display:flex;justify-content:space-between;gap:5px;font-size:10px;color:var(--muted);font-weight:750}.metric strong{display:block;font-size:20px;margin:2px 0;font-variant-numeric:tabular-nums}.bar{height:4px;background:#e8edf4;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#12aa81)}
+    .metric.wide{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;align-items:center}.metric.wide strong{margin:0;font-size:17px}.formula{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.3}
+    .curve-shell{height:100%;display:grid;grid-template-rows:minmax(210px,1fr) auto;gap:8px}.pr-shell{grid-template-rows:minmax(145px,1fr) auto}.curve-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#f5f7fb;border-radius:10px;padding:7px 10px}
+    .curve-summary strong{font-size:20px}.curve-summary span{font-size:11px;color:var(--muted)}.legend{display:flex;gap:12px;align-items:center;font-size:10px;color:var(--muted);flex-wrap:wrap}.linekey{width:17px;height:3px;display:inline-block;margin-right:4px;vertical-align:middle;border-radius:3px}
+    .threshold-note{font-size:11px;color:#43516a;max-width:320px;text-align:right}
+    .class-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.class-box{border:1px solid var(--line);border-radius:11px;padding:6px 10px}.class-box h3{margin:0 0 4px;font-size:12px}.stat-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;border-top:1px solid #edf0f4}.stat-row:first-of-type{border:0}.stat-row b{font-variant-numeric:tabular-nums}
+    .empty{color:var(--muted);font-size:12px;display:grid;place-items:center;height:100%;text-align:center;padding:20px}
+    footer{display:none}
+    @media(max-width:1050px){.grid{grid-template-columns:1fr;grid-template-rows:repeat(4,520px);height:auto}.conf-layout{grid-template-columns:1fr 1fr}.hint{display:none}}
+    @media(max-width:620px){header{align-items:flex-start;padding:10px 12px}.subtitle{display:none}.header-actions button{font-size:11px;padding:6px 8px}.grid{grid-template-rows:510px 610px 470px 520px}.conf-layout{grid-template-columns:1fr}.matrix{max-height:220px}.card-body{padding:8px}.threshold{grid-template-columns:auto 1fr}.threshold .pill{grid-column:1/-1;text-align:center}.class-stats{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">M</div>
+      <div><h1>Laboratorio de Métricas</h1><div class="subtitle">Clasificación binaria · Todas las vistas se actualizan al instante</div></div>
+    </div>
+    <div class="header-actions">
+      <button class="secondary" id="newData">↻ Nuevos datos</button>
+      <button class="secondary" id="reset">Restablecer</button>
+      <button class="danger" id="clear">Borrar todo</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid">
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">1</span>Datos y umbral de decisión</div>
+          <span class="hint">Clic: añadir · Arrastrar: mover · Clic derecho: borrar</span>
+        </div>
+        <div class="card-body plot-shell">
+          <div class="canvas-wrap" id="scatterWrap">
+            <canvas id="scatter" aria-label="Gráfica editable de puntos rojos y azules"></canvas>
+            <div class="tooltip" id="tooltip"></div>
+          </div>
+          <div>
+            <div class="toolbar">
+              <button class="tool active" data-mode="red"><span class="dot red"></span>Añadir rojo</button>
+              <button class="tool" data-mode="blue"><span class="dot blue"></span>Añadir azul</button>
+              <button class="tool" data-mode="erase">⌫ Borrar punto</button>
+              <span style="flex:1"></span>
+              <span class="hint" id="sampleCount">0 observaciones</span>
+            </div>
+            <div class="threshold">
+              <b>Umbral</b>
+              <input id="threshold" type="range" min="5" max="95" value="50" step="1" aria-label="Umbral de clasificación">
+              <span class="pill" id="thresholdValue">0.50</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">2</span>Matriz de confusión y métricas</div>
+          <span class="hint">Positivo = rojo</span>
+        </div>
+        <div class="card-body conf-layout">
+          <div class="matrix-wrap">
+            <div class="matrix-axis">Clase predicha →</div>
+            <div class="matrix">
+              <div></div><div class="mh">Azul (−)</div><div class="mh">Rojo (+)</div>
+              <div class="mh">Real azul</div>
+              <div class="cell goodb"><strong id="tn">0</strong><span>VN · verdadero negativo</span></div>
+              <div class="cell bad"><strong id="fp">0</strong><span>FP · falso positivo</span></div>
+              <div class="mh">Real rojo</div>
+              <div class="cell bad"><strong id="fn">0</strong><span>FN · falso negativo</span></div>
+              <div class="cell goodr"><strong id="tp">0</strong><span>VP · verdadero positivo</span></div>
+            </div>
+            <div class="matrix-axis">↑ Clase real</div>
+          </div>
+          <div>
+            <div class="metrics" id="metrics"></div>
+            <div class="formula">Accuracy = (VP + VN) / total · Precisión = VP / (VP + FP) · Recall = VP / (VP + FN) · F1 combina precisión y recall.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">3</span>Curva ROC</div>
+          <div class="legend"><span><i class="linekey" style="background:#2563eb"></i>ROC</span><span><i class="linekey" style="background:#94a3b8"></i>Azar</span><span><i class="linekey" style="background:#f59e0b"></i>Umbral actual</span></div>
+        </div>
+        <div class="card-body curve-shell">
+          <div class="canvas-wrap"><canvas id="roc" aria-label="Curva ROC"></canvas></div>
+          <div class="curve-summary">
+            <div><span>Área bajo la curva</span><br><strong id="auc">—</strong></div>
+            <div class="threshold-note" id="rocNote">La curva muestra el intercambio entre sensibilidad y falsos positivos para todos los umbrales.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div class="card-title"><span class="num">4</span>Precision–Recall y lectura por clase</div>
+          <div class="legend"><span><i class="linekey" style="background:#119c76"></i>PR</span><span><i class="linekey" style="background:#f59e0b"></i>Umbral actual</span></div>
+        </div>
+        <div class="card-body curve-shell pr-shell">
+          <div class="canvas-wrap"><canvas id="pr" aria-label="Curva Precision Recall"></canvas></div>
+          <div>
+            <div class="curve-summary" style="margin-bottom:8px">
+              <div><span>Precisión promedio (AP)</span><br><strong id="ap">—</strong></div>
+              <div class="threshold-note">Útil cuando una clase es mucho menos frecuente que la otra.</div>
+            </div>
+            <div class="class-stats" id="classStats"></div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>
+
+<script>
+(()=>{
+  "use strict";
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const scatter=$("#scatter"), roc=$("#roc"), pr=$("#pr"), tooltip=$("#tooltip");
+  let points=[], mode="red", drag=-1, hover=-1, threshold=.5, model={w0:0,w1:0,w2:0}, curves={roc:[],pr:[],auc:NaN,ap:NaN};
+  const pad={l:42,r:14,t:14,b:32};
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const safe=(a,b)=>b? a/b:0;
+  const sigmoid=z=>1/(1+Math.exp(-clamp(z,-30,30)));
+  const metricText=v=>Number.isFinite(v)?(v*100).toFixed(1)+"%":"—";
+
+  function seededData(seed=Math.random()*1e6){
+    let s=seed|0; const rnd=()=>((s=Math.imul(1664525,s)+1013904223|0)>>>0)/4294967296;
+    points=[];
+    for(let c=0;c<2;c++) for(let i=0;i<20;i++){
+      const a=rnd()*Math.PI*2, r=Math.sqrt(rnd())*.25;
+      const cx=c?.64:.36, cy=c?.59:.41;
+      points.push({x:clamp(cx+Math.cos(a)*r, .04,.96),y:clamp(cy+Math.sin(a)*r,.04,.96),label:c});
+    }
+    update(true);
+  }
+  function fit(){
+    if(!points.length){model={w0:0,w1:0,w2:0};return}
+    let w=[0,0,0], lr=.12;
+    for(let k=0;k<700;k++){
+      let g=[0,0,0];
+      for(const p of points){
+        const x=(p.x-.5)*4,y=(p.y-.5)*4, e=sigmoid(w[0]+w[1]*x+w[2]*y)-p.label;
+        g[0]+=e;g[1]+=e*x;g[2]+=e*y;
+      }
+      const n=points.length; w[0]-=lr*g[0]/n;w[1]-=lr*g[1]/n;w[2]-=lr*g[2]/n;
+    }
+    model={w0:w[0],w1:w[1],w2:w[2]};
+  }
+  function score(p){return sigmoid(model.w0+model.w1*(p.x-.5)*4+model.w2*(p.y-.5)*4)}
+  function confusion(t=threshold){
+    let tp=0,tn=0,fp=0,fn=0;
+    for(const p of points){const pred=score(p)>=t;if(p.label&&pred)tp++;else if(!p.label&&!pred)tn++;else if(!p.label&&pred)fp++;else fn++}
+    return{tp,tn,fp,fn};
+  }
+  function computeCurves(){
+    const pos=points.filter(p=>p.label).length, neg=points.length-pos;
+    if(!pos||!neg){curves={roc:[],pr:[],auc:NaN,ap:NaN};return}
+    const sorted=[...points].map(p=>({...p,s:score(p)})).sort((a,b)=>b.s-a.s);
+    const rocPts=[{x:0,y:0,t:1.001}], prPts=[{x:0,y:1,t:1.001}];
+    let tp=0,fp=0,prev=Infinity;
+    for(let i=0;i<sorted.length;i++){
+      const p=sorted[i]; if(p.s!==prev&&i){rocPts.push({x:fp/neg,y:tp/pos,t:prev});prPts.push({x:tp/pos,y:safe(tp,tp+fp),t:prev})}
+      p.label?tp++:fp++;prev=p.s;
+    }
+    rocPts.push({x:1,y:1,t:0});prPts.push({x:1,y:safe(tp,tp+fp),t:0});
+    let auc=0;for(let i=1;i<rocPts.length;i++)auc+=(rocPts[i].x-rocPts[i-1].x)*(rocPts[i].y+rocPts[i-1].y)/2;
+    let ap=0;for(let i=1;i<prPts.length;i++)ap+=(prPts[i].x-prPts[i-1].x)*prPts[i].y;
+    curves={roc:rocPts,pr:prPts,auc,ap};
+  }
+  function sizeCanvas(c){
+    const r=c.getBoundingClientRect(),d=window.devicePixelRatio||1,w=Math.max(10,Math.round(r.width)),h=Math.max(10,Math.round(r.height));
+    if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d)}
+    const ctx=c.getContext("2d");ctx.setTransform(d,0,0,d,0,0);return{ctx,w,h};
+  }
+  function plotXY(p,w,h){return{x:pad.l+p.x*(w-pad.l-pad.r),y:pad.t+(1-p.y)*(h-pad.t-pad.b)}}
+  function drawAxes(ctx,w,h,xlabel,ylabel){
+    ctx.clearRect(0,0,w,h);ctx.fillStyle="#fbfcfe";ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle="#e5eaf1";ctx.lineWidth=1;ctx.fillStyle="#738096";ctx.font="10px system-ui";
+    for(let i=0;i<=5;i++){const x=pad.l+i*(w-pad.l-pad.r)/5,y=pad.t+i*(h-pad.t-pad.b)/5;
+      ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,h-pad.b);ctx.stroke();ctx.fillText((i/5).toFixed(1),x-7,h-14);
+      ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText((1-i/5).toFixed(1),8,y+3)}
+    ctx.strokeStyle="#8c99ab";ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,h-pad.b);ctx.lineTo(w-pad.r,h-pad.b);ctx.stroke();
+    ctx.fillStyle="#536176";ctx.font="600 10px system-ui";ctx.fillText(xlabel,w/2-22,h-3);
+    ctx.save();ctx.translate(11,h/2+20);ctx.rotate(-Math.PI/2);ctx.fillText(ylabel,0,0);ctx.restore();
+  }
+  function drawScatter(){
+    const {ctx,w,h}=sizeCanvas(scatter);drawAxes(ctx,w,h,"Atributo X","Atributo Y");
+    const iw=w-pad.l-pad.r, ih=h-pad.t-pad.b, cols=38,rows=24;
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+      const q={x:(i+.5)/cols,y:1-(j+.5)/rows},s=score(q),pred=s>=threshold;
+      ctx.fillStyle=pred?"rgba(229,72,77,.075)":"rgba(37,99,235,.07)";
+      ctx.fillRect(pad.l+i*iw/cols,pad.t+j*ih/rows,iw/cols+1,ih/rows+1);
+    }
+    if(Math.abs(model.w2)>.001){
+      const logit=Math.log(threshold/(1-threshold)), yAt=x=>.5+(logit-model.w0-model.w1*(x-.5)*4)/(model.w2*4);
+      const y0=yAt(0),y1=yAt(1),a=plotXY({x:0,y:y0},w,h),b=plotXY({x:1,y:y1},w,h);
+      ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,iw,ih);ctx.clip();ctx.strokeStyle="#152a48";ctx.lineWidth=2.3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.restore();
+    }else if(Math.abs(model.w1)>.001){
+      const logit=Math.log(threshold/(1-threshold)),x=.5+(logit-model.w0)/(model.w1*4),a=plotXY({x,y:0},w,h),b=plotXY({x,y:1},w,h);
+      ctx.strokeStyle="#152a48";ctx.lineWidth=2.3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.setLineDash([]);
+    }
+    points.forEach((p,i)=>{
+      const q=plotXY(p,w,h), pred=score(p)>=threshold, wrong=Number(pred)!==p.label;
+      ctx.beginPath();ctx.arc(q.x,q.y,i===hover?7:5.7,0,Math.PI*2);ctx.fillStyle=p.label?"#e5484d":"#2563eb";ctx.fill();
+      ctx.lineWidth=wrong?3:1.5;ctx.strokeStyle=wrong?"#f59e0b":"white";ctx.stroke();
+    });
+    ctx.setLineDash([]);ctx.fillStyle="#536176";ctx.font="600 10px system-ui";ctx.fillText("Fondo = predicción · borde naranja = error",pad.l+4,pad.t+12);
+  }
+  function drawCurve(canvas,data,color,current,type){
+    const {ctx,w,h}=sizeCanvas(canvas);drawAxes(ctx,w,h,type==="roc"?"Tasa de falsos positivos":"Recall",type==="roc"?"Sensibilidad":"Precisión");
+    if(type==="roc"){ctx.strokeStyle="#94a3b8";ctx.setLineDash([6,5]);ctx.beginPath();let a=plotXY({x:0,y:0},w,h),b=plotXY({x:1,y:1},w,h);ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.setLineDash([])}
+    if(!data.length){ctx.fillStyle="#667085";ctx.font="12px system-ui";ctx.textAlign="center";ctx.fillText("Se necesitan puntos de ambas clases",w/2,h/2);ctx.textAlign="start";return}
+    ctx.strokeStyle=color;ctx.lineWidth=3;ctx.lineJoin="round";ctx.beginPath();
+    data.forEach((p,i)=>{const q=plotXY(p,w,h);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y)});ctx.stroke();
+    const q=plotXY(current,w,h);ctx.fillStyle="#f59e0b";ctx.strokeStyle="white";ctx.lineWidth=2;ctx.beginPath();ctx.arc(q.x,q.y,6,0,Math.PI*2);ctx.fill();ctx.stroke();
+  }
+  function render(){
+    const c=confusion(), n=points.length, acc=safe(c.tp+c.tn,n),precision=safe(c.tp,c.tp+c.fp),recall=safe(c.tp,c.tp+c.fn),f1=safe(2*precision*recall,precision+recall),spec=safe(c.tn,c.tn+c.fp),bal=(recall+spec)/2;
+    ["tp","tn","fp","fn"].forEach(k=>$("#"+k).textContent=c[k]);
+    const defs=[["Accuracy",acc,"Aciertos totales"],["Precisión",precision,"De los rojos predichos"],["Recall",recall,"Rojos detectados"],["F1",f1,"Equilibrio P–R"],["Especificidad",spec,"Azules detectados"],["Balanced accuracy",bal,"Promedio por clase"]];
+    $("#metrics").innerHTML=defs.map(([name,v,desc])=>`<div class="metric"><div class="metric-top"><span>${name}</span><span>${desc}</span></div><strong>${metricText(v)}</strong><div class="bar"><i style="width:${v*100}%"></i></div></div>`).join("");
+    $("#sampleCount").textContent=`${n} observaciones`;
+    $("#auc").textContent=Number.isFinite(curves.auc)?curves.auc.toFixed(3):"—";$("#ap").textContent=Number.isFinite(curves.ap)?curves.ap.toFixed(3):"—";
+    const rocNow={x:safe(c.fp,c.fp+c.tn),y:safe(c.tp,c.tp+c.fn)},prNow={x:recall,y:precision};
+    drawScatter();drawCurve(roc,curves.roc,"#2563eb",rocNow,"roc");drawCurve(pr,curves.pr,"#119c76",prNow,"pr");
+    $("#rocNote").innerHTML=`Con umbral <b>${threshold.toFixed(2)}</b>: sensibilidad <b>${metricText(recall)}</b> y falsos positivos <b>${metricText(rocNow.x)}</b>.`;
+    $("#classStats").innerHTML=`
+      <div class="class-box"><h3><span class="dot red"></span>Clase roja (+)</h3><div class="stat-row"><span>Ejemplos reales</span><b>${c.tp+c.fn}</b></div><div class="stat-row"><span>Bien detectados</span><b>${c.tp}</b></div><div class="stat-row"><span>Recall</span><b>${metricText(recall)}</b></div></div>
+      <div class="class-box"><h3><span class="dot blue"></span>Clase azul (−)</h3><div class="stat-row"><span>Ejemplos reales</span><b>${c.tn+c.fp}</b></div><div class="stat-row"><span>Bien detectados</span><b>${c.tn}</b></div><div class="stat-row"><span>Especificidad</span><b>${metricText(spec)}</b></div></div>`;
+  }
+  function update(refit=false){if(refit)fit();computeCurves();render()}
+  function eventPoint(e){
+    const r=scatter.getBoundingClientRect(),w=r.width,h=r.height;
+    return{x:clamp((e.clientX-r.left-pad.l)/(w-pad.l-pad.r),0,1),y:clamp(1-(e.clientY-r.top-pad.t)/(h-pad.t-pad.b),0,1)}
+  }
+  function nearest(e,max=13){
+    const r=scatter.getBoundingClientRect(),p=eventPoint(e);let best=-1,bd=1e9;
+    points.forEach((q,i)=>{const dx=(q.x-p.x)*(r.width-pad.l-pad.r),dy=(q.y-p.y)*(r.height-pad.t-pad.b),d=Math.hypot(dx,dy);if(d<bd){bd=d;best=i}});
+    return bd<=max?best:-1;
+  }
+  scatter.addEventListener("pointerdown",e=>{
+    if(e.button!==0)return;const i=nearest(e);
+    if(mode==="erase"){if(i>=0){points.splice(i,1);update(true)}return}
+    if(i>=0){drag=i;scatter.setPointerCapture(e.pointerId)}
+    else{const p=eventPoint(e);points.push({...p,label:mode==="red"?1:0});drag=points.length-1;scatter.setPointerCapture(e.pointerId);update(true)}
+  });
+  scatter.addEventListener("pointermove",e=>{
+    if(drag>=0){Object.assign(points[drag],eventPoint(e));update(true);return}
+    hover=nearest(e);if(hover>=0){const p=points[hover],r=scatter.getBoundingClientRect(),q=plotXY(p,r.width,r.height);tooltip.style.display="block";tooltip.style.left=(q.x+10)+"px";tooltip.style.top=(q.y-8)+"px";tooltip.innerHTML=`<b>${p.label?"Rojo (+)":"Azul (−)"}</b><br>X ${p.x.toFixed(2)} · Y ${p.y.toFixed(2)}<br>P(rojo) ${(score(p)*100).toFixed(1)}%`}else tooltip.style.display="none";drawScatter()
+  });
+  scatter.addEventListener("pointerup",()=>drag=-1);scatter.addEventListener("pointerleave",()=>{if(drag<0){hover=-1;tooltip.style.display="none";drawScatter()}});
+  scatter.addEventListener("contextmenu",e=>{e.preventDefault();const i=nearest(e);if(i>=0){points.splice(i,1);update(true)}});
+  $$(".tool").forEach(b=>b.onclick=()=>{$$(".tool").forEach(x=>x.classList.remove("active"));b.classList.add("active");mode=b.dataset.mode});
+  $("#threshold").addEventListener("input",e=>{threshold=+e.target.value/100;$("#thresholdValue").textContent=threshold.toFixed(2);update(false)});
+  $("#newData").onclick=()=>seededData();$("#reset").onclick=()=>{threshold=.5;$("#threshold").value=50;$("#thresholdValue").textContent=".50";seededData(87421)};
+  $("#clear").onclick=()=>{points=[];update(true)};
+  new ResizeObserver(()=>render()).observe(document.querySelector(".grid"));
+  seededData(87421);
+})();
+</script>
+</body>
+</html>
