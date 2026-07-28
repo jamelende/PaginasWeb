@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Laboratorio interactivo para comprender underfitting, overfitting, complejidad del modelo, sesgo, varianza y error de validación.">
+  <title>Overfitting &amp; Model Complexity Lab</title>
+  <style>
+    :root{
+      --ink:#16213a;--muted:#65748b;--paper:#f3f6fb;--card:#fff;--line:#dce4ef;
+      --blue:#2f6bdf;--orange:#ec7a2c;--purple:#7655d6;--teal:#0c9488;
+      --green:#159a63;--red:#df4967;--amber:#e7a128;--navy:#122b52;
+      --shadow:0 14px 36px rgba(32,49,82,.09);--radius:18px
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;color:var(--ink);background:
+      radial-gradient(circle at 4% 0,rgba(118,85,214,.10),transparent 25rem),
+      radial-gradient(circle at 100% 8%,rgba(236,122,44,.08),transparent 25rem),
+      var(--paper);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.4
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid rgba(47,107,223,.25);outline-offset:2px}
+    .topbar{
+      position:sticky;top:0;z-index:35;display:flex;align-items:center;justify-content:space-between;
+      gap:14px;min-height:52px;padding:5px clamp(12px,3vw,42px);border-bottom:1px solid rgba(220,228,239,.88);
+      background:rgba(255,255,255,.9);backdrop-filter:blur(16px)
+    }
+    .brand{display:flex;align-items:center;gap:9px;font-weight:900;letter-spacing:-.02em}
+    .brand-mark{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;color:#fff;background:linear-gradient(135deg,var(--purple),var(--orange))}
+    .nav-actions{display:flex;gap:7px;align-items:center}
+    .button{
+      display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:7px 12px;
+      border:1px solid var(--line);border-radius:10px;color:#3d526e;background:#fff;font-weight:820;transition:.18s ease
+    }
+    .button:hover{transform:translateY(-1px);border-color:#b7c5d8;box-shadow:0 6px 16px rgba(34,52,85,.09)}
+    .button.primary{color:#fff;border-color:var(--purple);background:var(--purple)}
+    .button.orange{color:#fff;border-color:var(--orange);background:var(--orange)}
+    .button.danger{color:#b32d4c;border-color:#ffc5d1;background:#fff2f5}
+    .button.small{min-height:30px;padding:5px 9px;border-radius:8px;font-size:.72rem}
+    .button.icon{width:36px;padding:0;font-size:1.2rem}
+    .shell{width:min(1540px,calc(100% - 20px));margin:auto;padding:12px 0 55px}
+    .hero{
+      display:grid;grid-template-columns:minmax(430px,.9fr) minmax(340px,1.1fr);align-items:center;gap:18px;
+      min-height:72px;padding:10px 22px;margin-bottom:9px;border-radius:16px;color:#fff;
+      background:linear-gradient(120deg,#142b53,#473d8f 60%,#c15b2b);box-shadow:var(--shadow)
+    }
+    .hero h1{margin:0;font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;letter-spacing:-.04em;white-space:nowrap}
+    .hero p{margin:0;color:#e8e9ff;font-size:.8rem}
+    .scenario-bar{
+      position:sticky;top:52px;z-index:24;display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,2fr) auto;
+      align-items:center;gap:12px;min-height:62px;padding:8px 11px;margin-bottom:9px;border:1px solid var(--line);
+      border-radius:15px;background:rgba(255,255,255,.94);box-shadow:0 6px 20px rgba(30,47,79,.06);backdrop-filter:blur(12px)
+    }
+    select{width:100%;min-height:40px;padding:8px 35px 8px 11px;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:#fff;font-weight:780}
+    .scenario-info{display:flex;align-items:center;gap:10px;min-width:0}
+    .scenario-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:11px;color:#fff;background:linear-gradient(135deg,var(--purple),var(--orange));font-weight:900}
+    .scenario-info strong{display:block;font-size:.86rem}
+    .scenario-info span{display:block;overflow:hidden;color:var(--muted);font-size:.71rem;white-space:nowrap;text-overflow:ellipsis}
+    .bar-actions{display:flex;gap:6px}
+    .cockpit{display:grid;grid-template-columns:minmax(510px,1.45fr) minmax(390px,.92fr) minmax(245px,.58fr);gap:9px;align-items:stretch}
+    .card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:0 7px 24px rgba(32,49,82,.06)}
+    .cockpit>.card{height:510px;min-width:0}
+    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:13px 15px 0}
+    .card-head h2,.card-head h3{margin:0;font-size:.95rem;letter-spacing:-.02em}
+    .card-head p{margin:2px 0 0;color:var(--muted);font-size:.7rem}
+    .badge{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;padding:4px 7px;border-radius:999px;color:#5b45ab;background:#f0ecff;font-size:.63rem;font-weight:900}
+    .badge.orange{color:#a94e16;background:#fff0e6}
+    .legend{display:flex;flex-wrap:wrap;gap:9px;padding:9px 15px 0;color:var(--muted);font-size:.67rem;font-weight:760}
+    .legend span{display:inline-flex;align-items:center;gap:5px}
+    .dot{width:9px;height:9px;border-radius:50%}
+    .dot.train{background:var(--blue)}.dot.validation{background:#fff;border:2px solid var(--orange)}
+    .line-key{width:17px;height:0;border-top:3px solid var(--purple);border-radius:9px}.line-key.truth{border-top:2px dashed #8795a9}
+    #fitPlot,#complexityPlot{display:block;width:100%;height:auto}
+    #fitPlot{min-height:265px;max-height:275px;touch-action:none}
+    #complexityPlot{min-height:320px;max-height:335px}
+    .degree-control{
+      display:grid;grid-template-columns:145px minmax(0,1fr);grid-template-areas:"degree-title degree-range" "degree-buttons degree-buttons";
+      gap:5px 12px;padding:8px 15px 7px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#f8f7ff
+    }
+    .degree-title{grid-area:degree-title;display:flex;align-items:center;justify-content:space-between;gap:7px}
+    .degree-title strong{font-size:.72rem}
+    .degree-value{min-width:42px;padding:4px 6px;border-radius:8px;color:#fff;background:var(--purple);text-align:center;font-size:.9rem;font-weight:950}
+    .degree-range{grid-area:degree-range;align-self:center}
+    input[type=range]{width:100%;accent-color:var(--purple)}
+    .range-labels{display:flex;justify-content:space-between;color:#78869a;font-size:.55rem;font-weight:750}
+    .degree-buttons{grid-area:degree-buttons;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+    .degree-buttons button{min-height:24px;padding:3px 4px;border:1px solid var(--line);border-radius:7px;color:#586b84;background:#fff;font-size:.6rem;font-weight:820}
+    .degree-buttons button:hover{color:var(--purple);border-color:var(--purple)}
+    .plot-hint{display:flex;justify-content:space-between;gap:10px;margin:7px 15px;padding:6px 9px;border-radius:9px;color:#5d6e84;background:#f4f7fb;font-size:.64rem}
+    .point-panel{
+      display:none;position:absolute;left:12px;right:12px;bottom:84px;z-index:5;align-items:center;justify-content:space-between;
+      gap:9px;padding:8px 10px;border:1px solid #c8d8f1;border-radius:10px;background:rgba(244,248,255,.96);box-shadow:0 7px 18px rgba(30,47,79,.12)
+    }
+    .point-panel.show{display:flex}.point-panel p{margin:0;font-size:.68rem}.point-panel strong{display:block}.point-actions{display:flex;gap:5px}
+    .complexity-wrap{padding:2px 8px 0}
+    .chart-note{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:0 14px 11px;padding:8px 10px;border-radius:10px;color:#53647a;background:#f5f7fb;font-size:.66rem}
+    .diagnostic-card{padding-bottom:12px}
+    .diagnosis{
+      margin:12px 13px 8px;padding:13px;border:1px solid #d9d2fa;border-radius:13px;background:linear-gradient(145deg,#f6f3ff,#eef4ff)
+    }
+    .diagnosis-label{display:block;color:#6b58ad;font-size:.59rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .diagnosis h3{margin:4px 0 5px;font-size:1.03rem}
+    .diagnosis p{margin:0;color:#5f6680;font-size:.7rem}
+    .complexity-scale{position:relative;height:10px;margin:15px 13px 5px;border-radius:99px;background:linear-gradient(90deg,#6aa7ff,#50bd8d 48%,#f0a34a 68%,#df4967)}
+    .scale-marker{position:absolute;top:-5px;width:20px;height:20px;border:4px solid #fff;border-radius:50%;background:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.25);transform:translateX(-10px);transition:left .2s ease}
+    .scale-labels{display:flex;justify-content:space-between;margin:0 13px;color:#75849a;font-size:.57rem;font-weight:780}
+    .bv-block{margin:15px 13px}
+    .bv-row{margin:11px 0}
+    .bv-top{display:flex;justify-content:space-between;gap:8px;color:#55667c;font-size:.66rem;font-weight:820}
+    .bv-bar{height:8px;margin-top:5px;border-radius:99px;background:#e8edf4;overflow:hidden}
+    .bv-bar span{display:block;height:100%;width:0;border-radius:inherit;transition:width .25s ease}
+    #biasBar{background:var(--blue)}#varianceBar{background:var(--red)}#noiseBar{background:var(--amber)}
+    .formula{margin:14px 13px 0;padding:10px;border:1px dashed #c5cfdd;border-radius:10px;color:#53647b;background:#fafbfd;font-size:.65rem;text-align:center}
+    .formula b{color:var(--purple)}
+    .action-tip{margin:10px 13px 0;padding:10px;border-radius:10px;color:#704a17;background:#fff6e8;border:1px solid #ffdfaa;font-size:.66rem}
+    .metrics-ribbon{margin-top:9px}
+    .metrics-ribbon .card-head{padding-top:10px}.metrics-ribbon .card-head p{display:none}
+    .metrics-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:8px 14px 12px}
+    .metric{min-height:81px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe}
+    .metric h4{margin:0;color:#617087;font-size:.64rem}
+    .metric-value{margin:5px 0 4px;font-size:1.18rem;line-height:1;font-weight:950;font-variant-numeric:tabular-nums}
+    .metric small{display:block;color:#7c899c;font-size:.54rem}
+    .metric-bar{height:5px;margin-top:6px;border-radius:99px;background:#e8edf4;overflow:hidden}
+    .metric-bar span{display:block;height:100%;border-radius:inherit;background:var(--purple);transition:width .2s ease}
+    .drawer-backdrop{position:fixed;inset:0;z-index:54;background:rgba(12,24,45,.4);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.22s ease}
+    .drawer-backdrop.open{opacity:1;visibility:visible}
+    .drawer{position:fixed;top:0;bottom:0;z-index:60;width:min(450px,calc(100vw - 22px));overflow:auto;background:var(--paper);box-shadow:0 0 45px rgba(12,25,47,.25);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+    .drawer.left{left:0;transform:translateX(-105%)}.drawer.right{right:0;transform:translateX(105%)}.drawer.open{transform:translateX(0)}
+    .drawer-head{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.93);backdrop-filter:blur(14px)}
+    .drawer-head h2{margin:0;font-size:1rem}.drawer-head p{margin:2px 0 0;color:var(--muted);font-size:.67rem}
+    .drawer-body{display:grid;gap:9px;padding:9px}.drawer-section{padding:16px;border:1px solid var(--line);border-radius:15px;background:#fff}
+    .drawer-section h3{margin:0 0 4px;font-size:.9rem}.drawer-section>p{margin:0 0 13px;color:var(--muted);font-size:.71rem}
+    .control-row{margin:14px 0}.control-row label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.71rem;font-weight:820}.control-row output{color:var(--purple);font-weight:950}
+    .check-row{display:flex;align-items:center;gap:9px;margin:10px 0;color:#4e6078;font-size:.72rem;font-weight:750}.check-row input{width:17px;height:17px;accent-color:var(--purple)}
+    .drawer-buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:12px}
+    .concept{display:grid;grid-template-columns:32px 1fr;gap:10px;padding:11px;margin-top:8px;border-radius:11px;background:#f5f7fb}
+    .concept-num{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;color:#fff;background:var(--purple);font-size:.74rem;font-weight:900}
+    .concept:nth-of-type(3) .concept-num{background:var(--teal)}.concept:nth-of-type(4) .concept-num{background:var(--orange)}
+    .concept h4{margin:0 0 3px;font-size:.76rem}.concept p{margin:0;color:var(--muted);font-size:.67rem}
+    .table-scroll{overflow-x:auto;margin-top:8px}
+    table{width:100%;border-collapse:collapse;font-size:.68rem}th,td{padding:8px 6px;border-bottom:1px solid #edf1f6;text-align:right;font-variant-numeric:tabular-nums}th{color:#64748b;background:#f4f6fa;font-size:.58rem;text-transform:uppercase}th:first-child,td:first-child{text-align:left}tr.current td{color:#5c42b3;background:#f3f0ff;font-weight:850}
+    .quiz{padding:15px;border-radius:14px;color:#fff;background:#182947}.quiz h3{margin:0 0 4px;font-size:.9rem}.quiz p{margin:0 0 10px;color:#ccd8ea;font-size:.7rem}.quiz-options{display:grid;gap:6px}.quiz-options button{color:#e6eefb;background:#263b60;border-color:#40577c}.quiz-options button.good{color:#dcffec;background:#126548;border-color:#2dad7d}.quiz-options button.bad{color:#ffe2e8;background:#7a2940;border-color:#b84b69}
+    .toast{position:fixed;right:18px;bottom:18px;z-index:80;max-width:350px;padding:11px 14px;border-radius:11px;color:#fff;background:#172943;box-shadow:0 14px 35px rgba(0,0,0,.22);font-size:.75rem;font-weight:760;transform:translateY(100px);opacity:0;transition:.22s ease;pointer-events:none}.toast.show{transform:translateY(0);opacity:1}
+    body.drawer-open{overflow:hidden}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    footer{padding:24px 0 0;color:#77859a;text-align:center;font-size:.66rem}
+    @media(max-width:1230px){
+      .cockpit{grid-template-columns:minmax(480px,1.35fr) minmax(365px,.95fr) minmax(230px,.62fr)}
+      .cockpit>.card{height:495px}#fitPlot{min-height:250px;max-height:260px}#complexityPlot{min-height:300px;max-height:315px}
+    }
+    @media(max-width:1030px){
+      .hero{grid-template-columns:minmax(370px,.9fr) 1.1fr}.hero h1{font-size:1.32rem}
+      .cockpit{grid-template-columns:minmax(0,1.25fr) minmax(350px,.75fr);grid-template-areas:"fit complexity" "diagnosis diagnosis"}
+      .fit-card{grid-area:fit}.complexity-card{grid-area:complexity}.diagnostic-card{grid-area:diagnosis;height:auto!important;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:8px}
+      .diagnostic-card .card-head{grid-column:1/-1}.diagnosis{margin:8px}.diagnostic-card>div:nth-last-child(-n+4){margin:8px}
+      .metrics-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:760px){
+      .shell{width:min(100% - 10px,1540px)}.nav-actions .nav-text{display:none}
+      .hero{grid-template-columns:1fr;min-height:54px;padding:8px 13px}.hero h1{font-size:1.15rem;white-space:normal}.hero p{display:none}
+      .scenario-bar{position:relative;top:auto;grid-template-columns:1fr}.scenario-info{display:none}.bar-actions{justify-content:flex-start}
+      .cockpit{grid-template-columns:1fr;grid-template-areas:"fit" "complexity" "diagnosis"}.cockpit>.card{height:auto;min-height:465px}
+      .diagnostic-card{display:block;min-height:0!important}.degree-control{grid-template-columns:1fr;grid-template-areas:"degree-title" "degree-range" "degree-buttons"}
+      .metrics-grid{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">∿</span><span>Model Complexity Lab</span></div>
+    <nav class="nav-actions" aria-label="Controles principales">
+      <button class="button small" id="openControls" aria-controls="controlDrawer" aria-expanded="false">☰ <span class="nav-text">Controles</span></button>
+      <button class="button primary small" id="openLearn" aria-controls="learnDrawer" aria-expanded="false">◇ <span class="nav-text">Aprender</span></button>
+    </nav>
+  </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer left" id="controlDrawer" aria-hidden="true" aria-labelledby="controlDrawerTitle">
+    <div class="drawer-head"><div><h2 id="controlDrawerTitle">Diseña el experimento</h2><p>Datos, ruido, regularización y visualización</p></div><button class="button icon" data-close aria-label="Cerrar">×</button></div>
+    <div class="drawer-body">
+      <section class="drawer-section">
+        <h3>Datos de entrenamiento</h3>
+        <p>Cambia las condiciones y observa cuándo el modelo memoriza el ruido.</p>
+        <div class="control-row"><label for="trainSize">Casos de entrenamiento <output id="trainSizeValue">24</output></label><input id="trainSize" type="range" min="8" max="60" step="1" value="24"></div>
+        <div class="control-row"><label for="validationSize">Casos de validación <output id="validationSizeValue">22</output></label><input id="validationSize" type="range" min="8" max="60" step="1" value="22"></div>
+        <div class="control-row"><label for="noise">Nivel de ruido <output id="noiseValue">0.10</output></label><input id="noise" type="range" min="0" max=".28" step=".01" value=".10"></div>
+        <div class="control-row"><label for="regularization">Regularización L2 <output id="regularizationValue">0.000</output></label><input id="regularization" type="range" min="0" max=".08" step=".001" value="0"></div>
+        <label class="check-row"><input id="showTruth" type="checkbox" checked>Mostrar la función real desconocida</label>
+        <label class="check-row"><input id="showResiduals" type="checkbox">Mostrar errores residuales de entrenamiento</label>
+        <label class="check-row"><input id="addPointMode" type="checkbox">Agregar puntos al hacer clic en la gráfica</label>
+        <div class="drawer-buttons">
+          <button class="button small" id="newSampleDrawer">↻ Nueva muestra</button>
+          <button class="button small" id="addOutlier">+ Añadir outlier</button>
+          <button class="button small" id="exportData">↓ Exportar JSON</button>
+          <label class="button small">↑ Importar JSON<input class="sr-only" id="importData" type="file" accept=".json,application/json"></label>
+        </div>
+      </section>
+      <section class="drawer-section" id="selectedSection">
+        <h3>Punto seleccionado</h3>
+        <p id="selectedPointText">Selecciona un punto azul para editarlo.</p>
+        <div class="drawer-buttons">
+          <button class="button small" id="movePoint">Mover al otro lado</button>
+          <button class="button danger small" id="deletePoint">Eliminar punto</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <aside class="drawer right" id="learnDrawer" aria-hidden="true" aria-labelledby="learnDrawerTitle">
+    <div class="drawer-head"><div><h2 id="learnDrawerTitle">Comprender el fenómeno</h2><p>Lectura guiada, comparación y reto</p></div><button class="button icon" data-close aria-label="Cerrar">×</button></div>
+    <div class="drawer-body">
+      <section class="drawer-section">
+        <h3>Ruta de descubrimiento</h3>
+        <p>Prueba estos grados en orden y observa las dos gráficas simultáneamente.</p>
+        <div class="concept"><span class="concept-num">1</span><div><h4>Grado 1 · Underfitting</h4><p>La curva es demasiado rígida. Tanto entrenamiento como validación presentan error alto.</p></div></div>
+        <div class="concept"><span class="concept-num">2</span><div><h4>Grado intermedio · Buen ajuste</h4><p>Captura la señal sin perseguir cada fluctuación producida por el ruido.</p></div></div>
+        <div class="concept"><span class="concept-num">3</span><div><h4>Grado alto · Overfitting</h4><p>El error de entrenamiento cae, pero el de validación puede aumentar: aparece la brecha.</p></div></div>
+      </section>
+      <section class="drawer-section">
+        <h3>Comparación de modelos</h3>
+        <p>El modelo recomendado minimiza el error de validación en esta muestra.</p>
+        <div class="table-scroll">
+          <table><thead><tr><th>Modelo</th><th>Grado</th><th>Train RMSE</th><th>Val. RMSE</th><th>Brecha</th></tr></thead><tbody id="comparisonBody"></tbody></table>
+        </div>
+      </section>
+      <section class="drawer-section">
+        <h3>Ideas esenciales</h3>
+        <div class="concept"><span class="concept-num">A</span><div><h4>Complejidad no significa calidad</h4><p>Un modelo más flexible siempre puede ajustar mejor el entrenamiento, pero no necesariamente generaliza.</p></div></div>
+        <div class="concept"><span class="concept-num">B</span><div><h4>La validación simula datos nuevos</h4><p>Permite elegir complejidad sin premiar la memorización del conjunto de entrenamiento.</p></div></div>
+        <div class="concept"><span class="concept-num">C</span><div><h4>Regularizar controla la flexibilidad</h4><p>Penalizar coeficientes grandes suaviza modelos complejos y puede reducir varianza.</p></div></div>
+      </section>
+      <section class="quiz">
+        <h3>Reto rápido</h3><p>Train RMSE = 0.03 y Validation RMSE = 0.24. ¿Cuál es el diagnóstico más probable?</p>
+        <div class="quiz-options">
+          <button class="button small" data-answer="underfit">Underfitting</button>
+          <button class="button small" data-answer="good">Ajuste adecuado</button>
+          <button class="button small" data-answer="overfit">Overfitting</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="mainTitle">
+      <h1 id="mainTitle">De underfitting a overfitting: encuentra el punto justo.</h1>
+      <p>Aumenta la complejidad y observa la tensión entre memorizar el entrenamiento y generalizar a datos nuevos.</p>
+    </section>
+
+    <section class="scenario-bar" aria-label="Ejemplo activo">
+      <select id="scenarioSelect" aria-label="Seleccionar ejemplo">
+        <option value="classic">Curva U clásica</option>
+        <option value="small">Muestra pequeña y ruidosa</option>
+        <option value="linear">Relación casi lineal</option>
+        <option value="complex">Patrón real complejo</option>
+        <option value="highnoise">Muchos datos con ruido alto</option>
+      </select>
+      <div class="scenario-info"><span class="scenario-icon" id="scenarioIcon">U</span><div><strong id="scenarioTitle">Curva U clásica</strong><span id="scenarioText">Con complejidad baja hay sesgo; con complejidad alta aparece varianza.</span></div></div>
+      <div class="bar-actions"><button class="button small" id="newSample">↻ Nueva muestra</button><button class="button small" id="resetScenario">Restablecer</button></div>
+    </section>
+
+    <section class="cockpit" aria-label="Laboratorio simultáneo">
+      <article class="card fit-card" aria-labelledby="fitTitle">
+        <div class="card-head"><div><h2 id="fitTitle">1. Datos y curva aprendida</h2><p>Azul entrena el modelo; naranja evalúa su capacidad de generalizar.</p></div><span class="badge" id="equationBadge">Grado 3</span></div>
+        <div class="legend"><span><i class="dot train"></i>Entrenamiento</span><span><i class="dot validation"></i>Validación</span><span><i class="line-key"></i>Modelo</span><span><i class="line-key truth"></i>Función real</span></div>
+        <svg id="fitPlot" viewBox="0 0 820 345" role="img" aria-label="Datos de entrenamiento y validación con curva de regresión"></svg>
+        <div class="degree-control">
+          <div class="degree-title"><strong>Complejidad · grado</strong><output class="degree-value" id="degreeValue" for="degreeSlider">3</output></div>
+          <div class="degree-range"><input id="degreeSlider" type="range" min="1" max="15" step="1" value="3" aria-label="Grado del polinomio"><div class="range-labels"><span>Simple</span><span>Flexible</span></div></div>
+          <div class="degree-buttons"><button data-degree="1">1 · Underfit</button><button data-degree="5">5 · Intermedio</button><button id="bestDegreeBtn">Óptimo</button><button id="animateDegree">▶ Recorrer</button></div>
+        </div>
+        <div class="plot-hint"><span id="plotHint">Haz clic en un punto azul para seleccionarlo.</span><span>Modelo: regresión polinómica</span></div>
+        <div class="point-panel" id="pointPanel"><p><strong id="pointName">Punto</strong><span id="pointInfo"></span></p><div class="point-actions"><button class="button small" id="pointMoveInline">Mover</button><button class="button danger small" id="pointDeleteInline">Eliminar</button></div></div>
+      </article>
+
+      <article class="card complexity-card" aria-labelledby="complexityTitle">
+        <div class="card-head"><div><h2 id="complexityTitle">2. Gráfica de complejidad</h2><p>Busca el mínimo de validación, no el mínimo de entrenamiento.</p></div><span class="badge orange" id="bestDegreeLabel">Óptimo: 5</span></div>
+        <div class="complexity-wrap"><svg id="complexityPlot" viewBox="0 0 600 410" role="img" aria-label="Error de entrenamiento y validación según la complejidad"></svg></div>
+        <div class="chart-note"><span id="curveExplanation">El error de entrenamiento disminuye al aumentar la flexibilidad.</span><b id="gapLabel">Brecha 0.00</b></div>
+      </article>
+
+      <article class="card diagnostic-card" aria-labelledby="diagnosticTitle">
+        <div class="card-head"><div><h2 id="diagnosticTitle">3. Diagnóstico</h2><p>Sesgo, varianza y ruido.</p></div></div>
+        <div class="diagnosis" id="diagnosisBox"><span class="diagnosis-label">Estado actual</span><h3 id="diagnosisTitle">Ajuste adecuado</h3><p id="diagnosisText">El modelo captura la señal sin abrir una brecha grande.</p></div>
+        <div class="complexity-scale"><span class="scale-marker" id="complexityMarker"></span></div>
+        <div class="scale-labels"><span>Underfit</span><span>Buen ajuste</span><span>Overfit</span></div>
+        <div class="bv-block">
+          <div class="bv-row"><div class="bv-top"><span>Sesgo</span><output id="biasValue">0%</output></div><div class="bv-bar"><span id="biasBar"></span></div></div>
+          <div class="bv-row"><div class="bv-top"><span>Varianza</span><output id="varianceValue">0%</output></div><div class="bv-bar"><span id="varianceBar"></span></div></div>
+          <div class="bv-row"><div class="bv-top"><span>Ruido irreducible</span><output id="noiseRiskValue">0%</output></div><div class="bv-bar"><span id="noiseBar"></span></div></div>
+        </div>
+        <div class="formula">Error esperado ≈ <b>sesgo²</b> + <b>varianza</b> + ruido</div>
+        <div class="action-tip" id="actionTip">Prueba un grado intermedio y compara el error de validación.</div>
+      </article>
+    </section>
+
+    <section class="card metrics-ribbon" aria-labelledby="metricsTitle">
+      <div class="card-head"><div><h2 id="metricsTitle">Lectura instantánea</h2><p>Indicadores del modelo actual.</p></div></div>
+      <div class="metrics-grid">
+        <div class="metric"><h4>Complejidad</h4><div class="metric-value" id="metricDegree">3</div><small>grado polinómico</small><div class="metric-bar"><span id="degreeBar"></span></div></div>
+        <div class="metric"><h4>Train RMSE</h4><div class="metric-value" id="trainRmse">—</div><small>ajuste a datos conocidos</small><div class="metric-bar"><span id="trainBar"></span></div></div>
+        <div class="metric"><h4>Validation RMSE</h4><div class="metric-value" id="validationRmse">—</div><small>generalización</small><div class="metric-bar"><span id="validationBar"></span></div></div>
+        <div class="metric"><h4>Brecha</h4><div class="metric-value" id="generalizationGap">—</div><small>validación − entrenamiento</small><div class="metric-bar"><span id="gapBar"></span></div></div>
+        <div class="metric"><h4>R² validación</h4><div class="metric-value" id="validationR2">—</div><small>variación explicada</small><div class="metric-bar"><span id="r2Bar"></span></div></div>
+        <div class="metric"><h4>Grado recomendado</h4><div class="metric-value" id="recommendedDegree">—</div><small>mínimo de validación</small><div class="metric-bar"><span id="recommendedBar"></span></div></div>
+      </div>
+    </section>
+    <footer>Laboratorio educativo autónomo · El “mejor” grado cambia con la muestra, el ruido y la regularización.</footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    "use strict";
+    const NS="http://www.w3.org/2000/svg";
+    const $=id=>document.getElementById(id);
+    const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+    const fmt=v=>Number.isFinite(v)?v.toFixed(3):"—";
+    const colors={ink:"#16213a",muted:"#718096",line:"#dce4ef",blue:"#2f6bdf",orange:"#ec7a2c",purple:"#7655d6",teal:"#0c9488",green:"#159a63",red:"#df4967",amber:"#e7a128"};
+    const svgEl=(name,attrs={})=>{const e=document.createElementNS(NS,name);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,String(v)));return e};
+
+    const scenarios={
+      classic:{icon:"U",title:"Curva U clásica",text:"Con complejidad baja hay sesgo; con complejidad alta aparece varianza.",train:24,val:22,noise:.10,degree:3,lambda:0,truth:"wave"},
+      small:{icon:"12",title:"Muestra pequeña y ruidosa",text:"Pocos ejemplos facilitan que un modelo flexible memorice accidentes de la muestra.",train:12,val:28,noise:.17,degree:3,lambda:0,truth:"wave"},
+      linear:{icon:"／",title:"Relación casi lineal",text:"Cuando el patrón real es simple, agregar grados suele aportar varianza innecesaria.",train:25,val:24,noise:.07,degree:2,lambda:0,truth:"linear"},
+      complex:{icon:"∿",title:"Patrón real complejo",text:"Un modelo demasiado simple no puede representar las oscilaciones reales.",train:38,val:30,noise:.065,degree:3,lambda:.001,truth:"complex"},
+      highnoise:{icon:"≈",title:"Muchos datos con ruido alto",text:"Más observaciones ayudan, pero ninguna complejidad puede eliminar el ruido irreducible.",train:55,val:45,noise:.21,degree:4,lambda:.002,truth:"wave"}
+    };
+
+    const state={scenario:"classic",truth:"wave",degree:3,trainSize:24,valSize:22,noise:.10,lambda:0,seed:341,train:[],validation:[],selected:null,showTruth:true,showResiduals:false,addMode:false,playing:false,nextId:500};
+
+    function rng(seed){
+      let s=seed>>>0;
+      return ()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296};
+    }
+    function gaussian(random){
+      const u=Math.max(1e-9,random()),v=Math.max(1e-9,random());
+      return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+    }
+    function trueY(x,type=state.truth){
+      if(type==="linear")return .5+.31*x;
+      if(type==="complex")return .5+.17*Math.sin(2.6*Math.PI*x)+.11*Math.cos(1.15*Math.PI*x)+.08*x;
+      return .5+.25*Math.sin(1.65*Math.PI*x)+.12*x;
+    }
+    function generateData(){
+      const r=rng(state.seed);
+      const make=(n,type,offset)=>Array.from({length:n},(_,i)=>{
+        const x=-.96+1.92*((i+r()*.8)/(Math.max(1,n-.2)));
+        const y=clamp(trueY(x)+gaussian(r)*state.noise,.02,.98);
+        return{id:`${type}-${state.seed}-${i+offset}`,name:`${type==="train"?"Train":"Validación"} ${i+1}`,x:clamp(x,-1,1),y,type};
+      }).sort((a,b)=>a.x-b.x);
+      state.train=make(state.trainSize,"train",0);
+      state.validation=make(state.valSize,"validation",100);
+      state.selected=null;
+      updateSelected();
+    }
+
+    function solve(A,b){
+      const n=b.length,M=A.map((row,i)=>[...row,b[i]]);
+      for(let k=0;k<n;k++){
+        let pivot=k;
+        for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[pivot][k]))pivot=i;
+        [M[k],M[pivot]]=[M[pivot],M[k]];
+        if(Math.abs(M[k][k])<1e-12)M[k][k]=1e-12;
+        for(let i=k+1;i<n;i++){
+          const f=M[i][k]/M[k][k];
+          for(let j=k;j<=n;j++)M[i][j]-=f*M[k][j];
+        }
+      }
+      const x=Array(n).fill(0);
+      for(let i=n-1;i>=0;i--){
+        let sum=M[i][n];
+        for(let j=i+1;j<n;j++)sum-=M[i][j]*x[j];
+        x[i]=sum/M[i][i];
+      }
+      return x.map(v=>Number.isFinite(v)?v:0);
+    }
+    function fitPolynomial(points,degree){
+      const p=degree+1,A=Array.from({length:p},()=>Array(p).fill(0)),b=Array(p).fill(0);
+      points.forEach(({x,y})=>{
+        const powers=Array(2*degree+1).fill(1);
+        for(let i=1;i<powers.length;i++)powers[i]=powers[i-1]*x;
+        for(let i=0;i<p;i++){b[i]+=y*powers[i];for(let j=0;j<p;j++)A[i][j]+=powers[i+j]}
+      });
+      const stabilizer=1e-8;
+      for(let i=0;i<p;i++)A[i][i]+=i===0?stabilizer:stabilizer+state.lambda;
+      return solve(A,b);
+    }
+    function predict(coeff,x){let y=0,p=1;for(const c of coeff){y+=c*p;p*=x}return y}
+    function stats(points,coeff){
+      if(!points.length)return{mse:NaN,rmse:NaN,r2:NaN};
+      const mean=points.reduce((s,p)=>s+p.y,0)/points.length;
+      let se=0,total=0;
+      points.forEach(p=>{se+=(p.y-predict(coeff,p.x))**2;total+=(p.y-mean)**2});
+      const mse=se/points.length;
+      return{mse,rmse:Math.sqrt(mse),r2:total?1-se/total:0};
+    }
+    function model(degree=state.degree){
+      const coeff=fitPolynomial(state.train,degree);
+      return{degree,coeff,train:stats(state.train,coeff),validation:stats(state.validation,coeff)};
+    }
+    function complexitySeries(){
+      return Array.from({length:15},(_,i)=>model(i+1));
+    }
+    function bestModel(series){
+      return series.reduce((best,m)=>!best||m.validation.mse<best.validation.mse?m:best,null);
+    }
+    function truthError(coeff){
+      let e=0,n=160;
+      for(let i=0;i<n;i++){const x=-1+2*i/(n-1);e+=(trueY(x)-predict(coeff,x))**2}
+      return e/n;
+    }
+
+    function diagnose(current,best){
+      const gap=current.validation.rmse-current.train.rmse;
+      const farBelow=current.degree<=Math.max(1,best.degree-2);
+      const farAbove=current.degree>=best.degree+3;
+      const valPenalty=current.validation.rmse>best.validation.rmse*1.13+.008;
+      if(farBelow&&valPenalty)return{key:"underfit",title:"Underfitting",text:"El modelo es demasiado rígido para capturar la señal presente en los datos.",tip:"Aumenta gradualmente el grado hasta que disminuya el error de validación."};
+      if((farAbove&&valPenalty&&gap>.015)||(gap>.10&&current.degree>best.degree))return{key:"overfit",title:"Overfitting",text:"El entrenamiento mejora, pero la generalización empeora: el modelo persigue ruido.",tip:"Reduce el grado, agrega datos o aumenta ligeramente la regularización."};
+      return{key:"good",title:"Ajuste adecuado",text:"La complejidad captura la señal sin producir una brecha excesiva de generalización.",tip:"Este es un buen equilibrio para esta muestra; compruébalo con validación cruzada."};
+    }
+
+    function updateAll(){
+      const series=complexitySeries(),current=series[state.degree-1],best=bestModel(series),d=diagnose(current,best);
+      drawFit(current);
+      drawComplexity(series,current,best);
+      updateDiagnosis(current,best,d);
+      updateMetrics(current,best);
+      updateControls(best);
+      updateComparison(series,best);
+    }
+
+    function addSvg(svg,name,attrs={}){const e=svgEl(name,attrs);svg.appendChild(e);return e}
+    function drawFit(current){
+      const svg=$("fitPlot");svg.innerHTML="";
+      const W=820,H=345,L=58,R=24,T=18,B=46,iw=W-L-R,ih=H-T-B;
+      const x=v=>L+(v+1)/2*iw,y=v=>T+(1-v)*ih;
+      const defs=addSvg(svg,"defs"),clip=svgEl("clipPath",{id:"fitClip"});clip.appendChild(svgEl("rect",{x:L,y:T,width:iw,height:ih,rx:13}));defs.appendChild(clip);
+      addSvg(svg,"rect",{x:L,y:T,width:iw,height:ih,rx:13,fill:"#fafbfd",stroke:colors.line});
+      [-1,-.5,0,.5,1].forEach(v=>{addSvg(svg,"line",{x1:x(v),y1:T,x2:x(v),y2:T+ih,stroke:"#e6ebf2","stroke-dasharray":v===0?"0":"4 6"});const t=addSvg(svg,"text",{x:x(v),y:H-20,"text-anchor":"middle",fill:colors.muted,"font-size":10,"font-weight":700});t.textContent=v.toFixed(1)});
+      [0,.25,.5,.75,1].forEach(v=>{addSvg(svg,"line",{x1:L,y1:y(v),x2:L+iw,y2:y(v),stroke:"#e6ebf2","stroke-dasharray":"4 6"});const t=addSvg(svg,"text",{x:L-10,y:y(v)+3,"text-anchor":"end",fill:colors.muted,"font-size":10,"font-weight":700});t.textContent=v.toFixed(2)});
+      const g=addSvg(svg,"g",{"clip-path":"url(#fitClip)"});
+      if(state.showTruth){
+        const d=Array.from({length:180},(_,i)=>{const xv=-1+2*i/179;return`${i?"L":"M"} ${x(xv)} ${y(trueY(xv))}`}).join(" ");
+        const p=svgEl("path",{d,fill:"none",stroke:"#8795a9","stroke-width":2.5,"stroke-dasharray":"8 6"});g.appendChild(p);
+      }
+      const modelPath=Array.from({length:220},(_,i)=>{const xv=-1+2*i/219;const py=clamp(predict(current.coeff,xv),-.3,1.3);return`${i?"L":"M"} ${x(xv)} ${y(py)}`}).join(" ");
+      g.appendChild(svgEl("path",{d:modelPath,fill:"none",stroke:colors.purple,"stroke-width":4.5,"stroke-linecap":"round","stroke-linejoin":"round"}));
+      if(state.showResiduals)state.train.forEach(p=>g.appendChild(svgEl("line",{x1:x(p.x),y1:y(p.y),x2:x(p.x),y2:y(clamp(predict(current.coeff,p.x),-.3,1.3)),stroke:colors.red,"stroke-width":1.5,"stroke-opacity":.55})));
+      state.validation.forEach(p=>{const c=svgEl("circle",{cx:x(p.x),cy:y(p.y),r:6.5,fill:"#fff",stroke:colors.orange,"stroke-width":2.7});const title=svgEl("title");title.textContent=`${p.name}: (${p.x.toFixed(2)}, ${p.y.toFixed(2)})`;c.appendChild(title);g.appendChild(c)});
+      state.train.forEach(p=>{
+        const group=svgEl("g",{tabindex:"0",role:"button","data-id":p.id,"aria-label":`${p.name}, x ${p.x.toFixed(2)}, y ${p.y.toFixed(2)}`});
+        if(p.id===state.selected)group.appendChild(svgEl("circle",{cx:x(p.x),cy:y(p.y),r:12,fill:"none",stroke:colors.ink,"stroke-width":2.5}));
+        group.appendChild(svgEl("circle",{cx:x(p.x),cy:y(p.y),r:6.3,fill:colors.blue,stroke:"#fff","stroke-width":2}));
+        group.addEventListener("click",e=>{e.stopPropagation();selectPoint(p.id)});
+        group.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectPoint(p.id)}});
+        g.appendChild(group);
+      });
+      const xlab=addSvg(svg,"text",{x:L+iw/2,y:H-3,"text-anchor":"middle",fill:colors.ink,"font-size":11,"font-weight":850});xlab.textContent="Variable de entrada x";
+      const ylab=addSvg(svg,"text",{x:14,y:T+ih/2,transform:`rotate(-90 14 ${T+ih/2})`,"text-anchor":"middle",fill:colors.ink,"font-size":11,"font-weight":850});ylab.textContent="Respuesta y";
+      svg.onclick=e=>{
+        if(!state.addMode)return;
+        const rect=svg.getBoundingClientRect(),px=(e.clientX-rect.left)*W/rect.width,py=(e.clientY-rect.top)*H/rect.height;
+        if(px<L||px>W-R||py<T||py>T+ih)return;
+        state.train.push({id:`custom-${state.nextId++}`,name:`Train nuevo ${state.nextId-500}`,x:clamp((px-L)/iw*2-1,-1,1),y:clamp(1-(py-T)/ih),type:"train"});
+        state.trainSize=state.train.length;$("trainSize").value=Math.min(60,state.trainSize);updateAll();toast("Punto de entrenamiento agregado.");
+      };
+    }
+
+    function drawComplexity(series,current,best){
+      const svg=$("complexityPlot");svg.innerHTML="";
+      const W=600,H=410,L=58,R=25,T=24,B=55,iw=W-L-R,ih=H-T-B;
+      const all=series.flatMap(m=>[m.train.rmse,m.validation.rmse]).filter(Number.isFinite).sort((a,b)=>a-b);
+      const cap=Math.max(.08,Math.min(.75,(all[Math.floor(all.length*.9)]||.3)*1.25));
+      const x=d=>L+(d-1)/14*iw,y=v=>T+(1-clamp(v/cap))*ih;
+      addSvg(svg,"rect",{x:L,y:T,width:iw,height:ih,rx:13,fill:"#fafbfd",stroke:colors.line});
+      [1,4,7,10,13,15].forEach(d=>{addSvg(svg,"line",{x1:x(d),y1:T,x2:x(d),y2:T+ih,stroke:"#e6ebf2","stroke-dasharray":"4 6"});const t=addSvg(svg,"text",{x:x(d),y:H-26,"text-anchor":"middle",fill:colors.muted,"font-size":10,"font-weight":700});t.textContent=d});
+      [0,.25,.5,.75,1].forEach(q=>{const v=cap*q;addSvg(svg,"line",{x1:L,y1:y(v),x2:L+iw,y2:y(v),stroke:"#e6ebf2","stroke-dasharray":"4 6"});const t=addSvg(svg,"text",{x:L-9,y:y(v)+3,"text-anchor":"end",fill:colors.muted,"font-size":9,"font-weight":700});t.textContent=v.toFixed(2)});
+      const regionX=x(Math.max(1,best.degree-1.2)),regionW=x(Math.min(15,best.degree+1.2))-regionX;
+      addSvg(svg,"rect",{x:regionX,y:T,width:regionW,height:ih,fill:"#dff7ec","fill-opacity":.62});
+      const pathFor=key=>series.map((m,i)=>`${i?"L":"M"} ${x(m.degree)} ${y(m[key].rmse)}`).join(" ");
+      addSvg(svg,"path",{d:pathFor("train"),fill:"none",stroke:colors.blue,"stroke-width":4,"stroke-linecap":"round","stroke-linejoin":"round"});
+      addSvg(svg,"path",{d:pathFor("validation"),fill:"none",stroke:colors.orange,"stroke-width":4,"stroke-linecap":"round","stroke-linejoin":"round"});
+      series.forEach(m=>{
+        addSvg(svg,"circle",{cx:x(m.degree),cy:y(m.train.rmse),r:m.degree===state.degree?7:3.5,fill:colors.blue,stroke:"#fff","stroke-width":2});
+        addSvg(svg,"circle",{cx:x(m.degree),cy:y(m.validation.rmse),r:m.degree===state.degree?7:3.5,fill:colors.orange,stroke:"#fff","stroke-width":2});
+      });
+      addSvg(svg,"line",{x1:x(state.degree),y1:T,x2:x(state.degree),y2:T+ih,stroke:colors.ink,"stroke-width":2,"stroke-dasharray":"6 5"});
+      const label=addSvg(svg,"text",{x:x(state.degree),y:T+13,"text-anchor":"middle",fill:colors.ink,"font-size":10,"font-weight":900});label.textContent=`grado ${state.degree}`;
+      const lx=addSvg(svg,"text",{x:L+iw/2,y:H-3,"text-anchor":"middle",fill:colors.ink,"font-size":11,"font-weight":850});lx.textContent="Complejidad del modelo · grado";
+      const ly=addSvg(svg,"text",{x:14,y:T+ih/2,transform:`rotate(-90 14 ${T+ih/2})`,"text-anchor":"middle",fill:colors.ink,"font-size":11,"font-weight":850});ly.textContent="Error RMSE";
+      addSvg(svg,"line",{x1:L+15,y1:T+16,x2:L+40,y2:T+16,stroke:colors.blue,"stroke-width":4});let t=addSvg(svg,"text",{x:L+47,y:T+20,fill:colors.blue,"font-size":9,"font-weight":850});t.textContent="Entrenamiento";
+      addSvg(svg,"line",{x1:L+135,y1:T+16,x2:L+160,y2:T+16,stroke:colors.orange,"stroke-width":4});t=addSvg(svg,"text",{x:L+167,y:T+20,fill:colors.orange,"font-size":9,"font-weight":850});t.textContent="Validación";
+      $("bestDegreeLabel").textContent=`Óptimo: ${best.degree}`;
+      $("gapLabel").textContent=`Brecha ${(current.validation.rmse-current.train.rmse).toFixed(3)}`;
+      $("curveExplanation").textContent=state.degree<best.degree?"Todavía domina el sesgo: ambas curvas pueden mejorar.":state.degree>best.degree+2?"El error de validación se separa del entrenamiento: vigila la brecha.":"Estás cerca del mínimo de validación.";
+    }
+
+    function updateDiagnosis(current,best,d){
+      $("diagnosisTitle").textContent=d.title;$("diagnosisText").textContent=d.text;$("actionTip").textContent=d.tip;
+      $("diagnosisBox").style.borderColor=d.key==="underfit"?"#b9d4ff":d.key==="overfit"?"#ffc2cf":"#b9ead4";
+      $("diagnosisBox").style.background=d.key==="underfit"?"#eef5ff":d.key==="overfit"?"#fff1f4":"#ecfaf3";
+      $("complexityMarker").style.left=`${(state.degree-1)/14*100}%`;
+      const bias=clamp(Math.sqrt(truthError(current.coeff))/.28);
+      const gap=Math.max(0,current.validation.rmse-current.train.rmse);
+      const variance=clamp(gap/.22+(state.degree/15)*.18*(state.train.length<25?1.5:1));
+      const noiseRisk=clamp(state.noise/.28);
+      [["bias",bias],["variance",variance],["noiseRisk",noiseRisk]].forEach(([k,v])=>{$(`${k}Value`).textContent=`${Math.round(v*100)}%`;$(`${k==="noiseRisk"?"noise":k}Bar`).style.width=`${v*100}%`});
+    }
+
+    function updateMetrics(current,best){
+      const gap=current.validation.rmse-current.train.rmse;
+      $("metricDegree").textContent=state.degree;$("trainRmse").textContent=fmt(current.train.rmse);$("validationRmse").textContent=fmt(current.validation.rmse);
+      $("generalizationGap").textContent=(gap>=0?"+":"")+gap.toFixed(3);$("validationR2").textContent=Number.isFinite(current.validation.r2)?current.validation.r2.toFixed(3):"—";$("recommendedDegree").textContent=best.degree;
+      $("degreeBar").style.width=`${state.degree/15*100}%`;$("trainBar").style.width=`${clamp(current.train.rmse/.4)*100}%`;$("validationBar").style.width=`${clamp(current.validation.rmse/.4)*100}%`;
+      $("gapBar").style.width=`${clamp(Math.abs(gap)/.25)*100}%`;$("r2Bar").style.width=`${clamp(current.validation.r2)*100}%`;$("recommendedBar").style.width=`${best.degree/15*100}%`;
+    }
+
+    function updateControls(best){
+      $("degreeSlider").value=state.degree;$("degreeValue").textContent=state.degree;$("equationBadge").textContent=`Grado ${state.degree}`;
+      $("trainSize").value=Math.min(60,state.trainSize);$("validationSize").value=state.valSize;$("noise").value=state.noise;$("regularization").value=state.lambda;
+      $("trainSizeValue").textContent=state.train.length;$("validationSizeValue").textContent=state.validation.length;$("noiseValue").textContent=state.noise.toFixed(2);$("regularizationValue").textContent=state.lambda.toFixed(3);
+      $("showTruth").checked=state.showTruth;$("showResiduals").checked=state.showResiduals;$("addPointMode").checked=state.addMode;
+      $("bestDegreeBtn").textContent=`Óptimo · ${best.degree}`;$("bestDegreeBtn").dataset.degree=best.degree;
+      $("plotHint").textContent=state.addMode?"Haz clic en la gráfica para agregar un punto de entrenamiento.":"Haz clic en un punto azul para seleccionarlo.";
+    }
+
+    function updateComparison(series,best){
+      const degrees=[1,best.degree,state.degree,15],unique=[...new Set(degrees)];
+      $("comparisonBody").innerHTML=unique.map(d=>{const m=series[d-1],gap=m.validation.rmse-m.train.rmse,label=d===best.degree?"Recomendado":d===state.degree?"Actual":d===1?"Simple":"Muy complejo";return`<tr class="${d===state.degree?"current":""}"><td>${label}</td><td>${d}</td><td>${fmt(m.train.rmse)}</td><td>${fmt(m.validation.rmse)}</td><td>${gap>=0?"+":""}${gap.toFixed(3)}</td></tr>`}).join("");
+    }
+
+    function setDegree(v){state.degree=clamp(Math.round(Number(v)),1,15);updateAll()}
+    function loadScenario(key){
+      const s=scenarios[key];state.scenario=key;state.truth=s.truth;state.trainSize=s.train;state.valSize=s.val;state.noise=s.noise;state.degree=s.degree;state.lambda=s.lambda;state.showTruth=true;state.showResiduals=false;state.addMode=false;state.playing=false;
+      $("scenarioSelect").value=key;$("scenarioIcon").textContent=s.icon;$("scenarioTitle").textContent=s.title;$("scenarioText").textContent=s.text;$("animateDegree").textContent="▶ Recorrer";
+      generateData();updateAll();
+    }
+    function resample(){state.seed++;generateData();updateAll();toast("Nueva muestra generada con las mismas condiciones.")}
+    function selectPoint(id){state.selected=id;updateSelected();updateAll()}
+    function updateSelected(){
+      const p=state.train.find(x=>x.id===state.selected),show=!!p;$("pointPanel").classList.toggle("show",show);
+      if(show){$("pointName").textContent=p.name;$("pointInfo").textContent=`x=${p.x.toFixed(2)} · y=${p.y.toFixed(2)}`;$("selectedPointText").textContent=`${p.name}: x=${p.x.toFixed(2)}, y=${p.y.toFixed(2)}`}
+      else $("selectedPointText").textContent="Selecciona un punto azul para editarlo.";
+    }
+    function moveSelected(){
+      const p=state.train.find(x=>x.id===state.selected);if(!p){toast("Primero selecciona un punto azul.");return}
+      p.y=clamp(1-p.y);updateSelected();updateAll();toast("Punto desplazado para observar su influencia.");
+    }
+    function deleteSelected(){
+      if(!state.selected){toast("Primero selecciona un punto azul.");return}
+      if(state.train.length<=6){toast("Conserva al menos seis puntos de entrenamiento.");return}
+      state.train=state.train.filter(p=>p.id!==state.selected);state.trainSize=state.train.length;state.selected=null;updateSelected();updateAll();toast("Punto eliminado.");
+    }
+    function addOutlier(){
+      const x=.72,y=trueY(x)>.5?.08:.92;state.train.push({id:`outlier-${state.nextId++}`,name:"Outlier",x,y,type:"train"});state.trainSize=state.train.length;state.selected=state.train.at(-1).id;updateSelected();updateAll();toast("Outlier añadido al entrenamiento.");
+    }
+    function animateDegrees(){
+      state.playing=!state.playing;$("animateDegree").textContent=state.playing?"■ Detener":"▶ Recorrer";if(!state.playing)return;
+      let direction=state.degree>=15?-1:1;
+      const tick=()=>{if(!state.playing)return;let d=state.degree+direction;if(d>=15){d=15;direction=-1}if(d<=1){d=1;direction=1}setDegree(d);setTimeout(tick,520)};tick();
+    }
+    function openDrawer(id){closeDrawers(false);const d=$(id);d.classList.add("open");d.setAttribute("aria-hidden","false");$("drawerBackdrop").classList.add("open");document.body.classList.add("drawer-open");$(id==="controlDrawer"?"openControls":"openLearn").setAttribute("aria-expanded","true");setTimeout(()=>d.querySelector("[data-close]").focus(),220)}
+    function closeDrawers(focus=true){const open=document.querySelector(".drawer.open");document.querySelectorAll(".drawer").forEach(d=>{d.classList.remove("open");d.setAttribute("aria-hidden","true")});$("drawerBackdrop").classList.remove("open");document.body.classList.remove("drawer-open");$("openControls").setAttribute("aria-expanded","false");$("openLearn").setAttribute("aria-expanded","false");if(focus&&open)$(open.id==="controlDrawer"?"openControls":"openLearn").focus()}
+    function toast(message){const t=$("toast");t.textContent=message;t.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove("show"),2600)}
+    function exportJson(){
+      const payload={title:"Model Complexity Lab dataset",scenario:state.scenario,truth:state.truth,degree:state.degree,noise:state.noise,lambda:state.lambda,train:state.train.map(({name,x,y})=>({name,x,y})),validation:state.validation.map(({name,x,y})=>({name,x,y}))};
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="datos_overfitting.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),200);toast("Datos exportados.");
+    }
+    async function importJson(file){
+      try{
+        const j=JSON.parse(await file.text());
+        if(!Array.isArray(j.train)||!Array.isArray(j.validation)||j.train.length<4||j.validation.length<4)throw Error("Se requieren train y validation con al menos 4 puntos.");
+        const clean=(arr,type)=>arr.map((p,i)=>{const x=Number(p.x),y=Number(p.y);if(!Number.isFinite(x)||!Number.isFinite(y)||x< -1||x>1||y<0||y>1)throw Error(`Punto ${i+1} inválido`);return{id:`import-${type}-${i}`,name:String(p.name||`${type} ${i+1}`),x,y,type}});
+        state.train=clean(j.train,"train");state.validation=clean(j.validation,"validation");state.trainSize=state.train.length;state.valSize=state.validation.length;state.degree=clamp(Number(j.degree)||3,1,15);state.noise=clamp(Number(j.noise)||.1,0,.28);state.lambda=clamp(Number(j.lambda)||0,0,.08);state.truth=["wave","linear","complex"].includes(j.truth)?j.truth:"wave";state.selected=null;updateSelected();updateAll();toast("Conjunto importado correctamente.");
+      }catch(e){toast(`No se pudo importar: ${e.message}`)}
+      finally{$("importData").value=""}
+    }
+
+    $("scenarioSelect").addEventListener("change",e=>loadScenario(e.target.value));
+    $("newSample").addEventListener("click",resample);$("newSampleDrawer").addEventListener("click",resample);$("resetScenario").addEventListener("click",()=>loadScenario(state.scenario));
+    $("degreeSlider").addEventListener("input",e=>setDegree(e.target.value));document.querySelectorAll("[data-degree]").forEach(b=>b.addEventListener("click",()=>setDegree(b.dataset.degree)));$("bestDegreeBtn").addEventListener("click",e=>setDegree(e.currentTarget.dataset.degree));$("animateDegree").addEventListener("click",animateDegrees);
+    $("trainSize").addEventListener("input",e=>{state.trainSize=Number(e.target.value);generateData();updateAll()});$("validationSize").addEventListener("input",e=>{state.valSize=Number(e.target.value);generateData();updateAll()});
+    $("noise").addEventListener("input",e=>{state.noise=Number(e.target.value);generateData();updateAll()});$("regularization").addEventListener("input",e=>{state.lambda=Number(e.target.value);updateAll()});
+    $("showTruth").addEventListener("change",e=>{state.showTruth=e.target.checked;updateAll()});$("showResiduals").addEventListener("change",e=>{state.showResiduals=e.target.checked;updateAll()});$("addPointMode").addEventListener("change",e=>{state.addMode=e.target.checked;updateAll()});
+    $("addOutlier").addEventListener("click",addOutlier);$("movePoint").addEventListener("click",moveSelected);$("pointMoveInline").addEventListener("click",moveSelected);$("deletePoint").addEventListener("click",deleteSelected);$("pointDeleteInline").addEventListener("click",deleteSelected);
+    $("exportData").addEventListener("click",exportJson);$("importData").addEventListener("change",e=>e.target.files[0]&&importJson(e.target.files[0]));
+    $("openControls").addEventListener("click",()=>openDrawer("controlDrawer"));$("openLearn").addEventListener("click",()=>openDrawer("learnDrawer"));$("drawerBackdrop").addEventListener("click",()=>closeDrawers());document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeDrawers()));document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawers()});
+    document.querySelectorAll("[data-answer]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-answer]").forEach(x=>x.classList.remove("good","bad"));const ok=b.dataset.answer==="overfit";b.classList.add(ok?"good":"bad");toast(ok?"Correcto: una brecha grande con error train muy bajo sugiere overfitting.":"Observa la brecha: el modelo funciona mucho mejor en entrenamiento que en validación.")}));
+    loadScenario("classic");
+  })();
+  </script>
+</body>
+</html>
