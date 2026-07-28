@@ -1,0 +1,1672 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Laboratorio interactivo para aprender matriz de confusión, métricas, curva ROC, AUC y selección de umbrales.">
+  <title>Laboratorio Visual ROC &amp; AUC</title>
+  <style>
+    :root{
+      --ink:#17223b;
+      --muted:#60708b;
+      --paper:#f4f7fb;
+      --card:#ffffff;
+      --line:#dce5f1;
+      --blue:#2d6cdf;
+      --blue-2:#69a1ff;
+      --red:#ed476f;
+      --red-2:#ff8da7;
+      --teal:#0d9488;
+      --green:#159a63;
+      --amber:#ed8b2c;
+      --purple:#7857d8;
+      --shadow:0 18px 45px rgba(35,55,90,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% -4%,rgba(45,108,223,.11),transparent 28rem),
+        radial-gradient(circle at 100% 8%,rgba(13,148,136,.09),transparent 26rem),
+        var(--paper);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.45;
+    }
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible{
+      outline:3px solid rgba(45,108,223,.25);
+      outline-offset:2px;
+    }
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:30;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      min-height:66px;
+      padding:10px clamp(18px,4vw,54px);
+      border-bottom:1px solid rgba(220,229,241,.86);
+      background:rgba(255,255,255,.88);
+      backdrop-filter:blur(18px);
+    }
+    .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.02em}
+    .brand-mark{
+      display:grid;
+      place-items:center;
+      width:38px;
+      height:38px;
+      border-radius:13px;
+      color:#fff;
+      background:linear-gradient(135deg,var(--blue),var(--teal));
+      box-shadow:0 8px 20px rgba(45,108,223,.22);
+    }
+    .top-actions{display:flex;align-items:center;gap:8px}
+    .top-actions a{
+      color:var(--muted);
+      font-size:.88rem;
+      font-weight:700;
+      text-decoration:none;
+      padding:8px 10px;
+      border-radius:10px;
+    }
+    .top-actions a:hover{color:var(--ink);background:#f2f6fb}
+    .shell{width:min(1480px,calc(100% - 30px));margin:0 auto;padding:34px 0 70px}
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr);
+      gap:24px;
+      align-items:stretch;
+      margin-bottom:22px;
+    }
+    .hero-copy{
+      position:relative;
+      overflow:hidden;
+      min-height:244px;
+      padding:clamp(28px,4vw,52px);
+      border-radius:30px;
+      color:#fff;
+      background:
+        linear-gradient(125deg,rgba(11,35,78,.98),rgba(27,82,150,.96) 58%,rgba(13,148,136,.92));
+      box-shadow:var(--shadow);
+    }
+    .hero-copy::after{
+      content:"";
+      position:absolute;
+      width:290px;
+      height:290px;
+      right:-85px;
+      bottom:-150px;
+      border:42px solid rgba(255,255,255,.09);
+      border-radius:50%;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin:0 0 12px;
+      color:#bee1ff;
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    h1{max-width:760px;margin:0;font-size:clamp(2.15rem,4vw,4.2rem);line-height:.99;letter-spacing:-.055em}
+    .hero-copy>p{max-width:760px;margin:18px 0 0;color:#dbeafe;font-size:clamp(1rem,1.5vw,1.16rem)}
+    .hero-lesson{
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:18px;
+      padding:26px;
+      border:1px solid rgba(255,255,255,.78);
+      border-radius:30px;
+      background:rgba(255,255,255,.82);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+    }
+    .hero-lesson h2{margin:0;font-size:1.12rem}
+    .hero-lesson p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+    .lesson-flow{display:grid;gap:8px}
+    .lesson-step{
+      display:grid;
+      grid-template-columns:30px 1fr;
+      gap:10px;
+      align-items:center;
+      padding:9px 10px;
+      border-radius:12px;
+      color:#64748b;
+      font-size:.86rem;
+      font-weight:750;
+      background:#f6f8fc;
+      border:1px solid transparent;
+    }
+    .lesson-step span{
+      display:grid;
+      place-items:center;
+      width:27px;
+      height:27px;
+      border-radius:9px;
+      background:#e8eef8;
+      color:#45607e;
+    }
+    .lesson-step.active{color:#194e9e;border-color:#b8cff7;background:#eef5ff}
+    .lesson-step.active span{color:#fff;background:var(--blue)}
+    .lesson-controls{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:40px;
+      padding:9px 14px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      color:#38506f;
+      background:#fff;
+      font-weight:800;
+      transition:.18s ease;
+    }
+    .button:hover{transform:translateY(-1px);border-color:#b8c8dc;box-shadow:0 7px 18px rgba(35,55,90,.09)}
+    .button.primary{color:#fff;border-color:var(--blue);background:var(--blue)}
+    .button.teal{color:#fff;border-color:var(--teal);background:var(--teal)}
+    .button.danger{color:#b52646;background:#fff1f4;border-color:#ffc1ce}
+    .button.small{min-height:34px;padding:6px 10px;border-radius:10px;font-size:.8rem}
+    .button.icon{width:40px;padding:0}
+    .scenario-strip{
+      display:grid;
+      grid-template-columns:minmax(220px,1fr) minmax(0,2.5fr) auto;
+      gap:16px;
+      align-items:center;
+      padding:18px;
+      margin-bottom:18px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:var(--card);
+      box-shadow:0 8px 26px rgba(35,55,90,.06);
+    }
+    .control-label{display:block;margin-bottom:7px;color:#566881;font-size:.76rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase}
+    select{
+      width:100%;
+      min-height:44px;
+      padding:9px 38px 9px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      color:var(--ink);
+      background:#fff;
+      font-weight:750;
+    }
+    .scenario-summary{display:flex;gap:12px;align-items:center}
+    .scenario-icon{
+      display:grid;place-items:center;flex:0 0 auto;width:44px;height:44px;
+      border-radius:14px;color:#fff;background:linear-gradient(135deg,var(--purple),var(--blue));
+      font-size:1.15rem;
+    }
+    .scenario-summary strong{display:block;font-size:.96rem}
+    .scenario-summary span{display:block;color:var(--muted);font-size:.83rem}
+    .file-actions{display:flex;gap:7px;justify-content:flex-end}
+    .lab-grid{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(350px,.78fr);gap:18px;align-items:start}
+    .card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:var(--card);
+      box-shadow:0 8px 28px rgba(35,55,90,.065);
+    }
+    .card-pad{padding:22px}
+    .card-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      padding:20px 22px 0;
+    }
+    .card-head h2,.card-head h3{margin:0;font-size:1.05rem;letter-spacing:-.02em}
+    .card-head p{margin:5px 0 0;color:var(--muted);font-size:.83rem}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+      padding:6px 9px;border-radius:999px;background:#eff5ff;color:#2a62b7;
+      font-size:.72rem;font-weight:850;
+    }
+    .badge.red{color:#b82e4e;background:#fff0f3}
+    .badge.green{color:#0d7c50;background:#eafaf3}
+    .scatter-card{min-height:570px}
+    .plot-toolbar{
+      display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+      gap:10px;padding:15px 22px 3px;
+    }
+    .legend{display:flex;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.78rem;font-weight:750}
+    .legend-item{display:inline-flex;align-items:center;gap:6px}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.pos{background:var(--red)} .dot.neg{background:var(--blue)}
+    .dot.muted{background:#cbd5e1;border:1px solid #9aa9bc}
+    .edit-tools{display:flex;flex-wrap:wrap;gap:7px}
+    #scatterWrap{padding:0 14px 3px}
+    #scatterSvg{display:block;width:100%;height:auto;min-height:360px;touch-action:none}
+    .plot-hint{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      margin:0 22px 19px;padding:11px 13px;border-radius:12px;
+      color:#51657e;background:#f6f8fc;font-size:.79rem;
+    }
+    .selected-panel{
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin:0 22px 20px;
+      padding:12px 14px;
+      border:1px solid #c8d9f3;
+      border-radius:13px;
+      background:#f2f7ff;
+    }
+    .selected-panel.show{display:flex}
+    .selected-panel p{margin:0;font-size:.82rem}
+    .selected-panel strong{display:block;color:#1e4f96}
+    .selected-actions{display:flex;flex-wrap:wrap;gap:6px}
+    .right-stack{display:grid;gap:18px}
+    .threshold-card{padding:22px}
+    .threshold-top{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .threshold-top h2{margin:0;font-size:1.06rem}
+    .threshold-value{
+      min-width:78px;padding:7px 10px;border-radius:12px;color:#fff;background:var(--ink);
+      text-align:center;font-size:1.17rem;font-weight:900;font-variant-numeric:tabular-nums;
+    }
+    input[type="range"]{width:100%;accent-color:var(--blue)}
+    .range-row{margin:20px 0 8px}
+    .range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;font-weight:750}
+    .decision-rule{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      margin:18px 0;padding:12px;border:1px dashed #b8c9dd;border-radius:13px;
+      background:#f8faff;font-size:.88rem;
+    }
+    .decision-rule code{padding:4px 7px;border-radius:7px;color:#174d9b;background:#e5efff;font-weight:850}
+    .threshold-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .threshold-buttons button{
+      padding:8px 4px;border:1px solid var(--line);border-radius:9px;color:#50647c;background:#fff;font-size:.76rem;font-weight:800;
+    }
+    .threshold-buttons button:hover{border-color:var(--blue);color:var(--blue)}
+    .insight{
+      display:grid;grid-template-columns:36px 1fr;gap:11px;align-items:flex-start;
+      padding:14px;border-radius:14px;background:#fff8eb;border:1px solid #ffe0a6;
+    }
+    .insight-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;color:#9a5c11;background:#ffedc7}
+    .insight h3{margin:0 0 3px;font-size:.88rem}
+    .insight p{margin:0;color:#73552d;font-size:.79rem}
+    .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+    .mini-stat{padding:11px;border-radius:12px;background:#f5f8fc;text-align:center}
+    .mini-stat b{display:block;font-size:1.05rem;font-variant-numeric:tabular-nums}
+    .mini-stat span{display:block;color:var(--muted);font-size:.68rem;font-weight:800;text-transform:uppercase}
+    .wide-row{display:grid;grid-template-columns:minmax(360px,.8fr) minmax(0,1.2fr);gap:18px;margin-top:18px}
+    .matrix-wrap{padding:18px 22px 22px}
+    .matrix-axis-top{text-align:center;margin:0 0 8px 74px;color:var(--muted);font-size:.73rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em}
+    .matrix-layout{display:grid;grid-template-columns:58px 1fr;gap:10px;align-items:center}
+    .matrix-y{
+      writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;color:var(--muted);
+      font-size:.73rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em;
+    }
+    .matrix-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+    .matrix-cell{
+      position:relative;min-height:122px;padding:15px;border:2px solid transparent;border-radius:16px;color:var(--ink);text-align:left;
+      transition:.18s ease;
+    }
+    .matrix-cell:hover,.matrix-cell.active{transform:translateY(-2px);border-color:currentColor;box-shadow:0 9px 20px rgba(35,55,90,.11)}
+    .matrix-cell.correct{color:#0f7e52;background:linear-gradient(145deg,#effbf6,#dff7ec)}
+    .matrix-cell.error{color:#aa5a12;background:linear-gradient(145deg,#fff8ed,#ffecd4)}
+    .matrix-cell .cell-code{display:block;font-size:.72rem;font-weight:900;letter-spacing:.05em}
+    .matrix-cell .cell-count{display:block;margin:7px 0 2px;font-size:2rem;line-height:1;font-weight:950}
+    .matrix-cell .cell-name{display:block;font-size:.78rem;font-weight:800}
+    .matrix-corners{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:8px 0 0 68px;color:var(--muted);font-size:.7rem;font-weight:800;text-align:center}
+    .matrix-note{margin:15px 0 0 68px;color:var(--muted);font-size:.77rem}
+    .metrics-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:18px 22px 22px}
+    .metric{
+      min-height:132px;padding:14px;border:1px solid var(--line);border-radius:15px;background:#fbfcfe;
+      transition:.18s ease;
+    }
+    .metric:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(35,55,90,.075)}
+    .metric-top{display:flex;align-items:center;justify-content:space-between;gap:7px}
+    .metric h4{margin:0;font-size:.79rem}
+    .metric-value{margin:8px 0 5px;font-size:1.55rem;line-height:1;font-weight:950;font-variant-numeric:tabular-nums}
+    .metric-formula{color:#718198;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.66rem}
+    .metric-bar{height:6px;margin-top:11px;border-radius:99px;background:#e7edf5;overflow:hidden}
+    .metric-bar span{display:block;height:100%;border-radius:inherit;background:var(--blue);transition:width .25s ease}
+    .metric[data-color="red"] .metric-bar span{background:var(--red)}
+    .metric[data-color="green"] .metric-bar span{background:var(--green)}
+    .metric[data-color="purple"] .metric-bar span{background:var(--purple)}
+    .chart-row{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(340px,.82fr);gap:18px;margin-top:18px}
+    .roc-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:8px;align-items:center;padding:8px 18px 20px}
+    #rocSvg{display:block;width:100%;height:auto;min-height:370px}
+    .auc-readout{padding:18px;border-radius:18px;background:linear-gradient(145deg,#edfdf9,#e8f3ff);border:1px solid #c7ece4}
+    .auc-readout .auc-label{color:#39716c;font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .auc-number{margin:3px 0;font-size:3.2rem;line-height:1;font-weight:950;color:#0e776f;font-variant-numeric:tabular-nums}
+    .auc-readout h3{margin:12px 0 5px;font-size:.94rem}
+    .auc-readout p{margin:0;color:#55716f;font-size:.78rem}
+    .auc-scale{display:flex;height:8px;margin:16px 0 5px;border-radius:99px;overflow:hidden;background:linear-gradient(90deg,#e56b6f,#f1b24a,#4bb897,#17836f)}
+    .auc-marker{position:relative;width:12px;height:12px;margin-top:-15px;border:3px solid #fff;border-radius:50%;background:#0e776f;box-shadow:0 2px 7px rgba(0,0,0,.25);transform:translateX(-6px);transition:margin-left .25s ease}
+    .auc-range-label{display:flex;justify-content:space-between;color:#718198;font-size:.64rem}
+    .cost-card{padding:22px}
+    .cost-card h2{margin:0;font-size:1.05rem}
+    .cost-card>p{margin:5px 0 18px;color:var(--muted);font-size:.82rem}
+    .cost-control{margin:15px 0}
+    .cost-control label{display:flex;justify-content:space-between;gap:12px;font-size:.78rem;font-weight:800}
+    .cost-control output{color:var(--blue);font-weight:950}
+    .recommendation{
+      display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
+      margin-top:18px;padding:15px;border-radius:15px;color:#fff;background:linear-gradient(135deg,#163f75,#0d9488);
+    }
+    .recommendation span{display:block;color:#caeff1;font-size:.72rem;font-weight:750}
+    .recommendation strong{display:block;font-size:.93rem}
+    .best-threshold{font-size:1.7rem;font-weight:950;font-variant-numeric:tabular-nums}
+    .apply-best{width:100%;margin-top:10px}
+    .compare-card{margin-top:18px}
+    .table-scroll{overflow-x:auto;padding:10px 22px 22px}
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:.79rem}
+    th{padding:10px;color:#60708b;background:#f3f6fa;font-size:.69rem;text-align:right;text-transform:uppercase;letter-spacing:.04em}
+    th:first-child{text-align:left;border-radius:10px 0 0 10px}
+    th:last-child{border-radius:0 10px 10px 0}
+    td{padding:11px 10px;border-bottom:1px solid #edf1f6;text-align:right;font-variant-numeric:tabular-nums}
+    td:first-child{text-align:left;font-weight:850}
+    tr.current td{color:#1d5bb8;background:#f1f6ff;font-weight:850}
+    .learning-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+    .concept-card{padding:21px}
+    .concept-number{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;color:#fff;background:var(--blue);font-weight:900}
+    .concept-card:nth-child(2) .concept-number{background:var(--teal)}
+    .concept-card:nth-child(3) .concept-number{background:var(--purple)}
+    .concept-card h3{margin:14px 0 7px;font-size:1rem}
+    .concept-card p{margin:0;color:var(--muted);font-size:.82rem}
+    .concept-card .example{
+      margin-top:13px;padding:11px;border-radius:12px;color:#435975;background:#f5f8fc;font-size:.76rem;
+    }
+    .quiz{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;
+      margin-top:18px;padding:25px;border-radius:var(--radius);color:#fff;background:#192844;box-shadow:var(--shadow);
+    }
+    .quiz h2{margin:0 0 5px;font-size:1.1rem}
+    .quiz p{margin:0;color:#c8d5e9;font-size:.86rem}
+    .quiz-options{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+    .quiz-options button{min-width:120px;color:#e9f2ff;background:#263a5f;border-color:#3c5379}
+    .quiz-options button.good{color:#d9ffec;background:#116646;border-color:#26a876}
+    .quiz-options button.bad{color:#ffe3e9;background:#7c2840;border-color:#bd4c6d}
+    .toast{
+      position:fixed;right:20px;bottom:20px;z-index:70;max-width:360px;padding:13px 16px;border-radius:13px;
+      color:#fff;background:#182843;box-shadow:0 16px 40px rgba(0,0,0,.22);font-size:.82rem;font-weight:750;
+      transform:translateY(120px);opacity:0;transition:.25s ease;pointer-events:none;
+    }
+    .toast.show{transform:translateY(0);opacity:1}
+    footer{padding:30px 0 0;color:#738198;text-align:center;font-size:.76rem}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media (max-width:1120px){
+      .lab-grid,.wide-row,.chart-row{grid-template-columns:1fr}
+      .right-stack{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .roc-layout{grid-template-columns:minmax(0,1fr) 280px}
+    }
+    @media (max-width:820px){
+      .shell{width:min(100% - 20px,1480px);padding-top:20px}
+      .hero{grid-template-columns:1fr}
+      .hero-copy{min-height:220px}
+      .top-actions a{display:none}
+      .scenario-strip{grid-template-columns:1fr}
+      .file-actions{justify-content:flex-start}
+      .right-stack{grid-template-columns:1fr}
+      .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .roc-layout{grid-template-columns:1fr}
+      .auc-readout{margin:0 4px}
+      .learning-row{grid-template-columns:1fr}
+      .quiz{grid-template-columns:1fr}
+      .quiz-options{justify-content:flex-start}
+    }
+    @media (max-width:560px){
+      .shell{width:min(100% - 12px,1480px)}
+      .topbar{padding:8px 12px}
+      .brand{font-size:.9rem}
+      .hero-copy,.hero-lesson{border-radius:22px}
+      .hero-copy{padding:26px 22px}
+      h1{font-size:2.25rem}
+      .card{border-radius:17px}
+      .card-head{padding:17px 16px 0}
+      .plot-toolbar{padding:13px 16px 3px}
+      .plot-hint,.selected-panel{margin-left:16px;margin-right:16px}
+      .threshold-card,.cost-card,.concept-card{padding:17px}
+      .matrix-wrap,.metrics-grid,.table-scroll{padding-left:16px;padding-right:16px}
+      .matrix-layout{grid-template-columns:32px 1fr}
+      .matrix-cell{min-height:105px;padding:11px}
+      .matrix-cell .cell-count{font-size:1.6rem}
+      .matrix-corners,.matrix-note{margin-left:42px}
+      .metrics-grid{grid-template-columns:1fr 1fr;gap:7px}
+      .metric{min-height:125px;padding:11px}
+      .threshold-buttons{grid-template-columns:repeat(2,1fr)}
+      .quiz{padding:19px}
+      .quiz-options{display:grid;grid-template-columns:1fr}
+      .quiz-options button{width:100%}
+    }
+
+    /* Compact teaching cockpit */
+    .topbar{min-height:52px;padding-top:5px;padding-bottom:5px}
+    .topbar .brand-mark{width:32px;height:32px;border-radius:10px}
+    .top-actions .drawer-trigger{display:inline-flex}
+    .shell{width:min(1540px,calc(100% - 20px));padding-top:14px}
+    .hero{grid-template-columns:1fr;margin-bottom:10px}
+    .hero-copy{
+      min-height:72px;
+      display:grid;
+      grid-template-columns:minmax(420px,.9fr) minmax(360px,1.1fr);
+      align-items:center;
+      gap:20px;
+      padding:10px 22px;
+      border-radius:16px;
+    }
+    .hero-copy .eyebrow{display:none}
+    .hero-copy h1{
+      font-size:clamp(1.35rem,2vw,2rem);
+      line-height:1.04;
+      letter-spacing:-.035em;
+      white-space:nowrap;
+    }
+    .hero-copy>p{
+      margin:0;
+      font-size:.8rem;
+      line-height:1.3;
+    }
+    .hero-lesson{display:none}
+    .scenario-strip{
+      position:sticky;
+      top:52px;
+      z-index:22;
+      grid-template-columns:minmax(210px,.7fr) minmax(0,2fr) auto;
+      min-height:66px;
+      margin-bottom:10px;
+      padding:9px 12px;
+      border-radius:16px;
+    }
+    .scenario-strip .control-label{display:none}
+    .scenario-summary span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .scenario-icon{width:38px;height:38px;border-radius:11px}
+    .compact-cockpit{
+      display:grid;
+      grid-template-columns:minmax(500px,1.42fr) minmax(255px,.65fr) minmax(365px,.93fr);
+      gap:10px;
+      align-items:stretch;
+    }
+    .compact-cockpit>.card{
+      min-width:0;
+      height:500px;
+      border-radius:17px;
+    }
+    .compact-cockpit .card-head{padding:13px 15px 0}
+    .compact-cockpit .card-head h2{font-size:.95rem}
+    .compact-cockpit .card-head p{margin-top:2px;font-size:.72rem}
+    .compact-cockpit .badge{padding:4px 7px;font-size:.64rem}
+    .compact-cockpit .scatter-card{min-height:0}
+    .compact-cockpit .plot-toolbar{padding:9px 15px 0}
+    .compact-cockpit .legend{gap:8px;font-size:.69rem}
+    .compact-cockpit .edit-tools .button{min-height:29px;padding:4px 7px;font-size:.7rem}
+    .compact-cockpit #scatterWrap{padding:0 8px}
+    .compact-cockpit #scatterSvg{min-height:245px;max-height:255px}
+    .compact-cockpit .scatter-card>.threshold-card{
+      display:grid;
+      grid-template-columns:150px minmax(0,1fr);
+      grid-template-areas:
+        "threshold-title threshold-range"
+        "threshold-buttons threshold-buttons";
+      gap:5px 12px;
+      margin:0;
+      padding:8px 15px 7px;
+      border:0;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      border-radius:0;
+      background:#f8faff;
+      box-shadow:none;
+    }
+    .compact-cockpit .scatter-card>.threshold-card .threshold-top{
+      grid-area:threshold-title;
+      gap:7px;
+    }
+    .compact-cockpit .scatter-card>.threshold-card .threshold-top h2{
+      font-size:.72rem;
+      line-height:1.1;
+    }
+    .compact-cockpit .scatter-card>.threshold-card .threshold-value{
+      min-width:50px;
+      padding:4px 6px;
+      border-radius:8px;
+      font-size:.9rem;
+    }
+    .compact-cockpit .scatter-card>.threshold-card .range-row{
+      grid-area:threshold-range;
+      align-self:center;
+      margin:0;
+    }
+    .compact-cockpit .scatter-card>.threshold-card .range-labels{font-size:.56rem}
+    .compact-cockpit .scatter-card>.threshold-card .decision-rule{display:none}
+    .compact-cockpit .scatter-card>.threshold-card .threshold-buttons{
+      grid-area:threshold-buttons;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:5px;
+    }
+    .compact-cockpit .scatter-card>.threshold-card .threshold-buttons button{
+      min-height:24px;
+      padding:3px 4px;
+      border-radius:7px;
+      font-size:.61rem;
+    }
+    .compact-cockpit .plot-hint{
+      min-height:38px;
+      margin:0 15px 10px;
+      padding:7px 9px;
+      font-size:.69rem;
+    }
+    .compact-cockpit .selected-panel{
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:88px;
+      z-index:5;
+      margin:0;
+      padding:8px 10px;
+      background:rgba(242,247,255,.96);
+      box-shadow:0 8px 20px rgba(35,55,90,.12);
+    }
+    .compact-cockpit .selected-panel p{font-size:.72rem}
+    .compact-cockpit .matrix-wrap{padding:9px 12px 12px}
+    .compact-cockpit .matrix-axis-top{margin:0 0 5px 40px;font-size:.61rem}
+    .compact-cockpit .matrix-layout{grid-template-columns:28px 1fr;gap:5px}
+    .compact-cockpit .matrix-y{font-size:.6rem}
+    .compact-cockpit .matrix-grid{gap:6px}
+    .compact-cockpit .matrix-cell{
+      min-height:128px;
+      padding:10px;
+      border-radius:12px;
+    }
+    .compact-cockpit .matrix-cell .cell-code{font-size:.63rem}
+    .compact-cockpit .matrix-cell .cell-count{margin:5px 0 1px;font-size:1.7rem}
+    .compact-cockpit .matrix-cell .cell-name{font-size:.66rem}
+    .compact-cockpit .matrix-corners{gap:6px;margin:5px 0 0 33px;font-size:.59rem}
+    .compact-cockpit .matrix-note{margin:9px 0 0 33px;font-size:.67rem}
+    .compact-cockpit .roc-layout{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:0;
+      padding:0 9px 10px;
+    }
+    .compact-cockpit #rocSvg{min-height:0;height:335px}
+    .compact-cockpit .auc-readout{
+      display:grid;
+      grid-template-columns:auto auto 1fr;
+      align-items:center;
+      gap:6px 10px;
+      margin:0 5px;
+      padding:9px 11px;
+      border-radius:12px;
+    }
+    .compact-cockpit .auc-label{grid-column:1}
+    .compact-cockpit .auc-number{grid-column:1;margin:0;font-size:1.7rem}
+    .compact-cockpit .auc-readout h3{grid-column:2 / 4;grid-row:1 / 3;margin:0;font-size:.76rem}
+    .compact-cockpit .auc-readout p,
+    .compact-cockpit .auc-scale,
+    .compact-cockpit .auc-marker,
+    .compact-cockpit .auc-range-label{display:none}
+    .metrics-ribbon{
+      margin-top:10px;
+      border-radius:17px;
+    }
+    .metrics-ribbon .card-head{padding:12px 15px 0}
+    .metrics-ribbon .card-head p{display:none}
+    .metrics-ribbon .metrics-grid{
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:7px;
+      padding:9px 15px 13px;
+    }
+    .metrics-ribbon .metric{
+      min-height:86px;
+      padding:9px 10px;
+      border-radius:11px;
+    }
+    .metrics-ribbon .metric h4{font-size:.68rem}
+    .metrics-ribbon .metric-value{display:inline-block;margin:7px 7px 3px 0;font-size:1.25rem}
+    .metrics-ribbon .metric-formula{display:inline;font-size:.55rem}
+    .metrics-ribbon .metric-bar{margin-top:6px}
+    .lab-grid:empty,.wide-row:empty,.chart-row:empty,.right-stack:empty{display:none}
+    .compare-card,.learning-row,.quiz{margin-top:0}
+
+    .drawer-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:54;
+      background:rgba(10,24,47,.38);
+      backdrop-filter:blur(3px);
+      opacity:0;
+      visibility:hidden;
+      transition:.22s ease;
+    }
+    .drawer-backdrop.open{opacity:1;visibility:visible}
+    .slide-drawer{
+      position:fixed;
+      top:0;
+      bottom:0;
+      z-index:60;
+      width:min(440px,calc(100vw - 24px));
+      overflow:auto;
+      background:#f4f7fb;
+      box-shadow:0 0 45px rgba(13,28,52,.24);
+      transition:transform .28s cubic-bezier(.2,.8,.2,1);
+    }
+    .slide-drawer.left{left:0;transform:translateX(-105%)}
+    .slide-drawer.right{right:0;transform:translateX(105%)}
+    .slide-drawer.open{transform:translateX(0)}
+    .drawer-header{
+      position:sticky;
+      top:0;
+      z-index:3;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      min-height:64px;
+      padding:12px 16px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(14px);
+    }
+    .drawer-header h2{margin:0;font-size:1.02rem}
+    .drawer-header p{margin:2px 0 0;color:var(--muted);font-size:.7rem}
+    .drawer-body{display:grid;gap:10px;padding:10px}
+    .drawer-body>.card,.drawer-body>.learning-row,.drawer-body>.quiz{width:100%}
+    .drawer-body .hero-lesson{
+      display:flex;
+      min-height:0;
+      padding:17px;
+      border-radius:17px;
+      box-shadow:none;
+      background:#fff;
+    }
+    .drawer-body .threshold-card,.drawer-body .cost-card{padding:17px}
+    .drawer-body .right-stack{display:grid;grid-template-columns:1fr;gap:10px}
+    .drawer-body .compare-card{order:2}
+    .drawer-body .learning-row{grid-template-columns:1fr;gap:10px;order:3}
+    .drawer-body .quiz{grid-template-columns:1fr;order:4;border-radius:17px}
+    .drawer-body .quiz-options{justify-content:flex-start}
+    body.drawer-open{overflow:hidden}
+
+    @media (max-width:1240px){
+      .compact-cockpit{
+        grid-template-columns:minmax(480px,1.3fr) minmax(245px,.66fr) minmax(320px,.86fr);
+      }
+      .compact-cockpit>.card{height:480px}
+      .compact-cockpit #rocSvg{height:315px}
+      .compact-cockpit .matrix-cell{min-height:118px}
+    }
+    @media (max-width:1040px){
+      .hero-copy{
+        min-height:66px;
+        grid-template-columns:minmax(390px,.95fr) minmax(0,1.05fr);
+        padding:9px 18px;
+        gap:14px;
+      }
+      .hero-copy h1{font-size:1.35rem}
+      .hero-copy>p{font-size:.72rem}
+      .compact-cockpit{
+        grid-template-columns:minmax(0,1.28fr) minmax(260px,.72fr);
+        grid-template-areas:"scatter matrix" "roc roc";
+      }
+      .compact-cockpit>.card{height:470px}
+      .compact-cockpit .scatter-card{grid-area:scatter}
+      .compact-cockpit>.card:nth-child(2){grid-area:matrix}
+      .compact-cockpit>.card:nth-child(3){grid-area:roc;height:520px}
+      .compact-cockpit>.card:nth-child(3) .roc-layout{grid-template-columns:minmax(0,1fr) 210px;align-items:center}
+      .compact-cockpit>.card:nth-child(3) .auc-readout{display:block}
+      .compact-cockpit>.card:nth-child(3) .auc-readout h3{margin-top:8px}
+      .compact-cockpit>.card:nth-child(3) .auc-readout p,
+      .compact-cockpit>.card:nth-child(3) .auc-scale,
+      .compact-cockpit>.card:nth-child(3) .auc-marker,
+      .compact-cockpit>.card:nth-child(3) .auc-range-label{display:block}
+      .metrics-ribbon .metrics-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+    @media (max-width:760px){
+      .shell{width:min(100% - 10px,1540px)}
+      .hero-copy{
+        min-height:54px;
+        grid-template-columns:1fr;
+        padding:8px 13px;
+        border-radius:13px;
+      }
+      .hero-copy h1{font-size:1.17rem;white-space:normal}
+      .hero-copy>p{display:none}
+      .scenario-strip{
+        position:relative;
+        top:auto;
+        grid-template-columns:1fr;
+        padding:10px;
+      }
+      .scenario-summary{display:none}
+      .compact-cockpit{
+        grid-template-columns:1fr;
+        grid-template-areas:"scatter" "matrix" "roc";
+      }
+      .compact-cockpit>.card,
+      .compact-cockpit>.card:nth-child(3){height:auto;min-height:450px}
+      .compact-cockpit>.card:nth-child(3) .roc-layout{grid-template-columns:1fr}
+      .compact-cockpit>.card:nth-child(3) .auc-readout{display:grid}
+      .compact-cockpit>.card:nth-child(3) .auc-readout p,
+      .compact-cockpit>.card:nth-child(3) .auc-scale,
+      .compact-cockpit>.card:nth-child(3) .auc-marker,
+      .compact-cockpit>.card:nth-child(3) .auc-range-label{display:none}
+      .metrics-ribbon .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .top-actions>a{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">↗</span>
+      <span>ROC &amp; Confusion Lab</span>
+    </div>
+    <nav class="top-actions" aria-label="Navegación">
+      <a href="#datos">Datos</a>
+      <a href="#matriz">Matriz</a>
+      <a href="#roc">ROC y AUC</a>
+      <button class="button small drawer-trigger" id="openControls" aria-controls="controlDrawer" aria-expanded="false">☰ Controles</button>
+      <button class="button primary small drawer-trigger" id="openLearn" aria-controls="learnDrawer" aria-expanded="false">◇ Explorar</button>
+    </nav>
+  </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="slide-drawer left" id="controlDrawer" aria-hidden="true" aria-labelledby="controlDrawerTitle">
+    <div class="drawer-header">
+      <div>
+        <h2 id="controlDrawerTitle">Controles del laboratorio</h2>
+        <p>Interpretación dinámica y costos de error</p>
+      </div>
+      <button class="button icon" data-close-drawer aria-label="Cerrar controles">×</button>
+    </div>
+    <div class="drawer-body" id="controlDrawerBody"></div>
+  </aside>
+  <aside class="slide-drawer right" id="learnDrawer" aria-hidden="true" aria-labelledby="learnDrawerTitle">
+    <div class="drawer-header">
+      <div>
+        <h2 id="learnDrawerTitle">Explorar y aprender</h2>
+        <p>Guía, comparación de umbrales y conceptos</p>
+      </div>
+      <button class="button icon" data-close-drawer aria-label="Cerrar contenido">×</button>
+    </div>
+    <div class="drawer-body" id="learnDrawerBody"></div>
+  </aside>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="mainTitle">
+      <div class="hero-copy">
+        <p class="eyebrow">Laboratorio interactivo · Clasificación binaria</p>
+        <h1 id="mainTitle">Mueve el umbral. Observa las consecuencias.</h1>
+        <p>Descubre cómo una misma puntuación se convierte en decisiones, errores, métricas y una curva ROC. Todo cambia en tiempo real.</p>
+      </div>
+      <aside class="hero-lesson" aria-label="Ruta de aprendizaje">
+        <div>
+          <h2>Ruta de 4 minutos</h2>
+          <p id="tourInstruction">Empieza viendo cómo cada punto representa un caso real.</p>
+        </div>
+        <div class="lesson-flow">
+          <div class="lesson-step active" data-tour-step="0"><span>1</span>Comprende los datos</div>
+          <div class="lesson-step" data-tour-step="1"><span>2</span>Mueve el umbral</div>
+          <div class="lesson-step" data-tour-step="2"><span>3</span>Lee la matriz</div>
+          <div class="lesson-step" data-tour-step="3"><span>4</span>Interpreta ROC y AUC</div>
+        </div>
+        <div class="lesson-controls">
+          <button class="button small" id="tourBack" aria-label="Paso anterior">← Anterior</button>
+          <button class="button primary small" id="tourNext">Siguiente →</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="scenario-strip" aria-label="Selector de ejemplo">
+      <label>
+        <span class="control-label">Ejemplo con historia</span>
+        <select id="scenarioSelect">
+          <option value="medical">Detección de enfermedad</option>
+          <option value="fraud">Fraude bancario desbalanceado</option>
+          <option value="balanced">Clasificador equilibrado</option>
+          <option value="overlap">Clases difíciles de separar</option>
+          <option value="perfect">Modelo casi perfecto</option>
+          <option value="random">Modelo sin poder predictivo</option>
+        </select>
+      </label>
+      <div class="scenario-summary">
+        <div class="scenario-icon" id="scenarioIcon" aria-hidden="true">✚</div>
+        <div>
+          <strong id="scenarioTitle">Prueba de detección temprana</strong>
+          <span id="scenarioText">La clase positiva representa pacientes con enfermedad. Perder un caso puede ser costoso.</span>
+        </div>
+      </div>
+      <div class="file-actions">
+        <button class="button small" id="exportBtn" title="Descargar datos actuales como JSON">↓ JSON</button>
+        <label class="button small" title="Importar un conjunto JSON">
+          ↑ Importar
+          <input class="sr-only" id="importInput" type="file" accept=".json,application/json">
+        </label>
+        <button class="button small" id="resetBtn">↻ Reiniciar</button>
+      </div>
+    </section>
+
+    <section class="lab-grid" id="datos">
+      <article class="card scatter-card" aria-labelledby="scatterTitle">
+        <div class="card-head">
+          <div>
+            <h2 id="scatterTitle">1. Puntuaciones del modelo</h2>
+            <p>Cada caso tiene una clase real y una puntuación entre 0 y 1.</p>
+          </div>
+          <span class="badge" id="caseCount">18 casos</span>
+        </div>
+        <div class="plot-toolbar">
+          <div class="legend" aria-label="Leyenda">
+            <span class="legend-item"><span class="dot pos"></span>Real positivo</span>
+            <span class="legend-item"><span class="dot neg"></span>Real negativo</span>
+            <span class="legend-item"><span class="dot muted"></span>Atenuado por filtro</span>
+          </div>
+          <div class="edit-tools">
+            <button class="button small" id="addPositive">+ Positivo</button>
+            <button class="button small" id="addNegative">+ Negativo</button>
+            <button class="button small" id="clearFilter">Mostrar todos</button>
+          </div>
+        </div>
+        <div id="scatterWrap">
+          <svg id="scatterSvg" viewBox="0 0 820 390" role="img" aria-label="Gráfica interactiva de puntuaciones y umbral"></svg>
+        </div>
+        <div class="plot-hint">
+          <span id="plotHint">Arrastra la línea del umbral o haz clic en el eje.</span>
+          <span><b>Predicción positiva</b> →</span>
+        </div>
+        <div class="selected-panel" id="selectedPanel">
+          <p><strong id="selectedName">Caso seleccionado</strong><span id="selectedInfo"></span></p>
+          <div class="selected-actions">
+            <button class="button small" id="flipLabel">Cambiar clase</button>
+            <button class="button danger small" id="deletePoint">Eliminar</button>
+          </div>
+        </div>
+      </article>
+
+      <div class="right-stack">
+        <article class="card threshold-card" aria-labelledby="thresholdTitle">
+          <div class="threshold-top">
+            <h2 id="thresholdTitle">2. Umbral de decisión</h2>
+            <output class="threshold-value" id="thresholdValue" for="thresholdSlider">0.50</output>
+          </div>
+          <div class="range-row">
+            <input id="thresholdSlider" type="range" min="0" max="1" step="0.01" value="0.50" aria-label="Umbral de clasificación">
+            <div class="range-labels"><span>0.00: casi todos +</span><span>1.00: casi nadie +</span></div>
+          </div>
+          <div class="decision-rule">
+            Si <b>score</b> <span aria-hidden="true">≥</span><span class="sr-only">es mayor o igual que</span>
+            <code id="ruleThreshold">0.50</code> → predice <b>positivo</b>
+          </div>
+          <div class="threshold-buttons">
+            <button data-threshold=".20">Muy sensible · .20</button>
+            <button data-threshold=".50">Equilibrado · .50</button>
+            <button data-threshold=".80">Muy específico · .80</button>
+            <button id="playThreshold">▶ Recorrer</button>
+          </div>
+        </article>
+
+        <article class="card card-pad">
+          <div class="insight">
+            <div class="insight-icon" aria-hidden="true">💡</div>
+            <div>
+              <h3>¿Qué acaba de ocurrir?</h3>
+              <p id="dynamicInsight">Con este umbral, el modelo encuentra la mayoría de positivos y mantiene pocos falsos positivos.</p>
+            </div>
+          </div>
+          <div class="mini-stats">
+            <div class="mini-stat"><b id="predPositive">0</b><span>Predice +</span></div>
+            <div class="mini-stat"><b id="errorsCount">0</b><span>Errores</span></div>
+            <div class="mini-stat"><b id="prevalence">0%</b><span>Prevalencia</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wide-row" id="matriz">
+      <article class="card" aria-labelledby="matrixTitle">
+        <div class="card-head">
+          <div>
+            <h2 id="matrixTitle">3. Matriz de confusión</h2>
+            <p>Haz clic en una celda para localizar esos casos en la gráfica.</p>
+          </div>
+          <span class="badge green">Conteos</span>
+        </div>
+        <div class="matrix-wrap">
+          <div class="matrix-axis-top">Predicción del modelo</div>
+          <div class="matrix-layout">
+            <div class="matrix-y">Realidad</div>
+            <div class="matrix-grid">
+              <button class="matrix-cell correct" data-cell="tp">
+                <span class="cell-code">TP · VP</span><span class="cell-count" id="tpCount">0</span><span class="cell-name">Verdadero positivo</span>
+              </button>
+              <button class="matrix-cell error" data-cell="fn">
+                <span class="cell-code">FN</span><span class="cell-count" id="fnCount">0</span><span class="cell-name">Falso negativo</span>
+              </button>
+              <button class="matrix-cell error" data-cell="fp">
+                <span class="cell-code">FP</span><span class="cell-count" id="fpCount">0</span><span class="cell-name">Falso positivo</span>
+              </button>
+              <button class="matrix-cell correct" data-cell="tn">
+                <span class="cell-code">TN · VN</span><span class="cell-count" id="tnCount">0</span><span class="cell-name">Verdadero negativo</span>
+              </button>
+            </div>
+          </div>
+          <div class="matrix-corners"><span>Predicho +</span><span>Predicho −</span></div>
+          <p class="matrix-note" id="matrixNote">La diagonal verde contiene los aciertos; la diagonal naranja contiene los errores.</p>
+        </div>
+      </article>
+
+      <article class="card" aria-labelledby="metricsTitle">
+        <div class="card-head">
+          <div>
+            <h2 id="metricsTitle">4. Las métricas cuentan historias distintas</h2>
+            <p>No existe una métrica universalmente mejor: depende del error que importa.</p>
+          </div>
+          <span class="badge">0–100%</span>
+        </div>
+        <div class="metrics-grid">
+          <div class="metric" data-metric="accuracy" data-color="green">
+            <div class="metric-top"><h4>Exactitud</h4><span title="Proporción total de aciertos">ⓘ</span></div>
+            <div class="metric-value" id="accuracyValue">—</div>
+            <div class="metric-formula">(TP + TN) / todos</div>
+            <div class="metric-bar"><span></span></div>
+          </div>
+          <div class="metric" data-metric="precision" data-color="purple">
+            <div class="metric-top"><h4>Precisión · PPV</h4><span title="De los predichos positivos, cuántos eran positivos">ⓘ</span></div>
+            <div class="metric-value" id="precisionValue">—</div>
+            <div class="metric-formula">TP / (TP + FP)</div>
+            <div class="metric-bar"><span></span></div>
+          </div>
+          <div class="metric" data-metric="recall" data-color="red">
+            <div class="metric-top"><h4>Sensibilidad · Recall</h4><span title="De los positivos reales, cuántos detectamos">ⓘ</span></div>
+            <div class="metric-value" id="recallValue">—</div>
+            <div class="metric-formula">TP / (TP + FN)</div>
+            <div class="metric-bar"><span></span></div>
+          </div>
+          <div class="metric" data-metric="specificity">
+            <div class="metric-top"><h4>Especificidad</h4><span title="De los negativos reales, cuántos descartamos">ⓘ</span></div>
+            <div class="metric-value" id="specificityValue">—</div>
+            <div class="metric-formula">TN / (TN + FP)</div>
+            <div class="metric-bar"><span></span></div>
+          </div>
+          <div class="metric" data-metric="f1" data-color="purple">
+            <div class="metric-top"><h4>F1</h4><span title="Media armónica de precisión y sensibilidad">ⓘ</span></div>
+            <div class="metric-value" id="f1Value">—</div>
+            <div class="metric-formula">2 · (Prec · Rec) / (Prec + Rec)</div>
+            <div class="metric-bar"><span></span></div>
+          </div>
+          <div class="metric" data-metric="npv" data-color="green">
+            <div class="metric-top"><h4>Valor pred. negativo</h4><span title="De los predichos negativos, cuántos eran negativos">ⓘ</span></div>
+            <div class="metric-value" id="npvValue">—</div>
+            <div class="metric-formula">TN / (TN + FN)</div>
+            <div class="metric-bar"><span></span></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="chart-row" id="roc">
+      <article class="card" aria-labelledby="rocTitle">
+        <div class="card-head">
+          <div>
+            <h2 id="rocTitle">5. Curva ROC: todos los umbrales a la vez</h2>
+            <p>Eje X = tasa de falsos positivos (1 − especificidad). Eje Y = sensibilidad.</p>
+          </div>
+          <span class="badge red" id="rocPointLabel">Umbral 0.50</span>
+        </div>
+        <div class="roc-layout">
+          <svg id="rocSvg" viewBox="0 0 560 430" role="img" aria-label="Curva ROC con área AUC sombreada"></svg>
+          <aside class="auc-readout">
+            <span class="auc-label">Área bajo la curva</span>
+            <div class="auc-number" id="aucValue">—</div>
+            <h3 id="aucInterpretation">Calculando…</h3>
+            <p id="aucExplanation">AUC resume la capacidad de ordenar positivos por encima de negativos, sin elegir todavía un umbral.</p>
+            <div class="auc-scale"></div>
+            <div class="auc-marker" id="aucMarker"></div>
+            <div class="auc-range-label"><span>0.50 azar</span><span>1.00 perfecto</span></div>
+          </aside>
+        </div>
+      </article>
+
+      <article class="card cost-card" aria-labelledby="costTitle">
+        <h2 id="costTitle">6. El mejor umbral depende del costo</h2>
+        <p>Asigna una penalización a cada tipo de error. El laboratorio busca el umbral de menor costo total.</p>
+        <div class="cost-control">
+          <label for="fnCost">Costo de un falso negativo <output id="fnCostValue">5×</output></label>
+          <input id="fnCost" type="range" min="1" max="20" step="1" value="5">
+        </div>
+        <div class="cost-control">
+          <label for="fpCost">Costo de un falso positivo <output id="fpCostValue">1×</output></label>
+          <input id="fpCost" type="range" min="1" max="20" step="1" value="1">
+        </div>
+        <div class="recommendation">
+          <div><span>Menor costo en este conjunto</span><strong id="costSummary">0 FN × 5 + 0 FP × 1</strong></div>
+          <div class="best-threshold" id="bestThreshold">.50</div>
+        </div>
+        <button class="button teal apply-best" id="applyBest">Aplicar umbral recomendado</button>
+      </article>
+    </section>
+
+    <section class="card compare-card" aria-labelledby="compareTitle">
+      <div class="card-head">
+        <div>
+          <h2 id="compareTitle">7. Compara decisiones, no solo números</h2>
+          <p>El mismo modelo puede parecer muy distinto al cambiar el umbral.</p>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Umbral</th><th>TP</th><th>FP</th><th>FN</th><th>TN</th><th>Sensibilidad</th><th>Especificidad</th><th>Precisión</th><th>F1</th></tr></thead>
+          <tbody id="comparisonBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="learning-row" aria-label="Conceptos esenciales">
+      <article class="card concept-card">
+        <div class="concept-number">1</div>
+        <h3>La matriz necesita un umbral</h3>
+        <p>Convierte scores continuos en sí/no. Por eso sus números cambian cuando mueves la línea.</p>
+        <div class="example"><b>Ejemplo:</b> bajar el umbral suele recuperar positivos, pero también genera más falsas alarmas.</div>
+      </article>
+      <article class="card concept-card">
+        <div class="concept-number">2</div>
+        <h3>ROC compara intercambios</h3>
+        <p>Cada punto de la curva es una matriz de confusión diferente producida por otro umbral.</p>
+        <div class="example"><b>Ideal:</b> acercarse a la esquina superior izquierda: alta sensibilidad y baja tasa de falsos positivos.</div>
+      </article>
+      <article class="card concept-card">
+        <div class="concept-number">3</div>
+        <h3>AUC evalúa ordenamiento</h3>
+        <p>No dice cuál umbral usar ni si las probabilidades están bien calibradas.</p>
+        <div class="example"><b>Lectura:</b> AUC 0.85 ≈ 85% de probabilidad de puntuar un positivo aleatorio por encima de un negativo.</div>
+      </article>
+    </section>
+
+    <section class="quiz" aria-labelledby="quizTitle">
+      <div>
+        <h2 id="quizTitle">Reto rápido: una prueba de tamizaje no debe perder enfermos.</h2>
+        <p>¿Qué conviene priorizar, aunque aumenten algunas falsas alarmas?</p>
+      </div>
+      <div class="quiz-options">
+        <button class="button" data-answer="specificity">Especificidad</button>
+        <button class="button" data-answer="recall">Sensibilidad</button>
+        <button class="button" data-answer="accuracy">Exactitud</button>
+      </div>
+    </section>
+
+    <footer>
+      Laboratorio educativo autónomo · Los resultados cambian al instante al editar datos, umbral o costos.
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const NS = "http://www.w3.org/2000/svg";
+    const colors = { pos:"#ed476f", neg:"#2d6cdf", teal:"#0d9488", ink:"#17223b", muted:"#708198", line:"#dce5f1", green:"#159a63", amber:"#ed8b2c" };
+    const $ = (id) => document.getElementById(id);
+    const clamp = (n, min=0, max=1) => Math.max(min, Math.min(max, n));
+    const pct = (v) => Number.isFinite(v) ? `${(v*100).toFixed(1)}%` : "—";
+    const ratio = (a,b) => b ? a/b : NaN;
+    const svgEl = (name, attrs={}) => {
+      const el = document.createElementNS(NS,name);
+      Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,String(v)));
+      return el;
+    };
+
+    const scenarioMeta = {
+      medical:{icon:"✚",title:"Prueba de detección temprana",text:"La clase positiva representa pacientes con enfermedad. Perder un caso puede ser costoso.",threshold:.50,fn:8,fp:2},
+      fraud:{icon:"¤",title:"Detección de fraude bancario",text:"Solo pocos movimientos son fraudulentos. La exactitud puede ocultar un mal detector.",threshold:.70,fn:7,fp:2},
+      balanced:{icon:"⚖",title:"Clasificador equilibrado",text:"Hay cantidades similares de positivos y negativos, con una separación razonable.",threshold:.50,fn:3,fp:2},
+      overlap:{icon:"≈",title:"Clases difíciles de separar",text:"Los scores se superponen. Ningún umbral elimina simultáneamente ambos errores.",threshold:.50,fn:4,fp:3},
+      perfect:{icon:"★",title:"Modelo casi perfecto",text:"Los positivos reciben scores altos y los negativos bajos. Observa el AUC.",threshold:.50,fn:3,fp:2},
+      random:{icon:"?",title:"Modelo sin poder predictivo",text:"Las dos clases están mezcladas: la curva ROC se aproxima a la diagonal del azar.",threshold:.50,fn:4,fp:4}
+    };
+
+    const make = (scores, labels, prefix) => scores.map((score,i)=>({
+      id:`${prefix}-${i+1}`,
+      name:`${prefix} ${String(i+1).padStart(2,"0")}`,
+      score,
+      label:labels[i],
+      jitter:((i*37)%11-5)/100
+    }));
+
+    const datasets = {
+      medical: make(
+        [.96,.91,.84,.79,.73,.67,.58,.52,.47,.41,.88,.77,.64,.55,.44,.32,.25,.12],
+        [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],"Paciente"
+      ),
+      fraud: make(
+        [.97,.87,.76,.62,.54,.91,.83,.73,.65,.58,.51,.47,.43,.39,.35,.31,.28,.24,.20,.17,.14,.11,.08,.05,.02],
+        [1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"Transacción"
+      ),
+      balanced: make(
+        [.94,.88,.81,.74,.67,.61,.56,.49,.38,.29,.84,.76,.69,.59,.52,.45,.34,.27,.18,.09],
+        [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],"Caso"
+      ),
+      overlap: make(
+        [.89,.81,.75,.69,.64,.60,.56,.52,.48,.43,.39,.31,.86,.79,.72,.66,.61,.55,.50,.46,.40,.34,.25,.17],
+        [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0],"Caso"
+      ),
+      perfect: make(
+        [.97,.92,.88,.82,.77,.71,.66,.61,.56,.52,.48,.43,.37,.31,.24,.15],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],"Caso"
+      ),
+      random: make(
+        [.94,.83,.76,.65,.57,.48,.37,.28,.19,.08,.91,.85,.72,.63,.55,.46,.39,.26,.16,.06],
+        [1,0,1,0,1,0,1,0,1,0,0,1,0,1,0,1,0,1,0,1],"Caso"
+      )
+    };
+
+    const state = {
+      scenario:"medical",
+      data: structuredClone(datasets.medical),
+      threshold:.50,
+      fnCost:8,
+      fpCost:2,
+      filter:null,
+      selected:null,
+      addMode:null,
+      dragging:false,
+      playing:false,
+      tour:0,
+      nextId:100
+    };
+
+    function classify(data=state.data,t=state.threshold){
+      const rows=data.map(p=>{
+        const pred=p.score>=t?1:0;
+        const cell=p.label===1?(pred===1?"tp":"fn"):(pred===1?"fp":"tn");
+        return {...p,pred,cell};
+      });
+      const counts={tp:0,fp:0,fn:0,tn:0};
+      rows.forEach(r=>counts[r.cell]++);
+      const {tp,fp,fn,tn}=counts;
+      const precision=ratio(tp,tp+fp);
+      const recall=ratio(tp,tp+fn);
+      const specificity=ratio(tn,tn+fp);
+      const accuracy=ratio(tp+tn,tp+tn+fp+fn);
+      const f1=(Number.isFinite(precision)&&Number.isFinite(recall)&&precision+recall)?2*precision*recall/(precision+recall):NaN;
+      const npv=ratio(tn,tn+fn);
+      return {rows,...counts,precision,recall,specificity,accuracy,f1,npv,fpr:ratio(fp,fp+tn)};
+    }
+
+    function rocData(data=state.data){
+      const unique=[...new Set(data.map(d=>d.score))].sort((a,b)=>b-a);
+      const thresholds=[1.001,...unique.map(x=>Math.max(0,Math.min(1,x))),-.001];
+      const points=thresholds.map(t=>{
+        const c=classify(data,t);
+        return {threshold:t,x:Number.isFinite(c.fpr)?c.fpr:0,y:Number.isFinite(c.recall)?c.recall:0};
+      });
+      let auc=0;
+      for(let i=1;i<points.length;i++){
+        const dx=points[i].x-points[i-1].x;
+        auc+=dx*(points[i].y+points[i-1].y)/2;
+      }
+      return {points,auc:clamp(auc)};
+    }
+
+    function bestThreshold(){
+      const candidates=[0,1,...new Set(state.data.map(d=>d.score)),...state.data.map(d=>clamp(d.score+.001))];
+      let best=null;
+      candidates.forEach(t=>{
+        const c=classify(state.data,t);
+        const cost=c.fn*state.fnCost+c.fp*state.fpCost;
+        const distance=Math.abs(t-.5);
+        if(!best||cost<best.cost||(cost===best.cost&&distance<best.distance)) best={t:clamp(t),cost,distance,...c};
+      });
+      return best;
+    }
+
+    function updateAll(){
+      const c=classify();
+      updateThreshold(c);
+      drawScatter(c);
+      updateMatrix(c);
+      updateMetrics(c);
+      drawRoc(c);
+      updateCosts();
+      updateComparison();
+      $("caseCount").textContent=`${state.data.length} casos`;
+      $("predPositive").textContent=c.tp+c.fp;
+      $("errorsCount").textContent=c.fp+c.fn;
+      $("prevalence").textContent=pct(ratio(c.tp+c.fn,state.data.length));
+    }
+
+    function updateThreshold(c){
+      const value=state.threshold.toFixed(2);
+      $("thresholdSlider").value=state.threshold;
+      $("thresholdValue").textContent=value;
+      $("ruleThreshold").textContent=value;
+      $("rocPointLabel").textContent=`Umbral ${value}`;
+      let text;
+      if(c.fn===0&&c.fp===0) text="Separación perfecta con este umbral: no hay errores en estos datos.";
+      else if(c.fn===0) text=`Detectas todos los positivos, a cambio de ${c.fp} falsa${c.fp===1?"":"s"} alarma${c.fp===1?"":"s"}.`;
+      else if(c.fp===0) text=`No generas falsas alarmas, pero dejas escapar ${c.fn} positivo${c.fn===1?"":"s"} real${c.fn===1?"":"es"}.`;
+      else if(c.recall>=.85) text=`Alta sensibilidad: detectas ${c.tp} de ${c.tp+c.fn} positivos, con ${c.fp} falsa${c.fp===1?"":"s"} alarma${c.fp===1?"":"s"}.`;
+      else if(c.specificity>=.9) text=`Alta especificidad: descartas correctamente ${c.tn} de ${c.tn+c.fp} negativos, pero pierdes ${c.fn} positivos.`;
+      else text=`Compromiso intermedio: ${c.tp+c.tn} aciertos y ${c.fp+c.fn} errores. Decide qué error importa más.`;
+      $("dynamicInsight").textContent=text;
+    }
+
+    function drawScatter(c){
+      const svg=$("scatterSvg");
+      svg.innerHTML="";
+      const W=820,H=390,L=72,R=28,T=30,B=58,innerW=W-L-R,innerH=H-T-B;
+      const x=s=>L+s*innerW;
+      const yBase=label=>label?T+innerH*.28:T+innerH*.73;
+      const add=(name,attrs,parent=svg)=>{const el=svgEl(name,attrs);parent.appendChild(el);return el};
+
+      add("rect",{x:L,y:T,width:innerW,height:innerH,rx:18,fill:"#f9fbfe",stroke:colors.line});
+      add("rect",{x:x(state.threshold),y:T,width:Math.max(0,x(1)-x(state.threshold)),height:innerH,fill:"#edf5ff","fill-opacity":.82});
+      [0,.2,.4,.6,.8,1].forEach(v=>{
+        add("line",{x1:x(v),y1:T,x2:x(v),y2:T+innerH,stroke:"#e6edf5","stroke-dasharray":v===0||v===1?"0":"4 6"});
+        const label=add("text",{x:x(v),y:H-23,"text-anchor":"middle",fill:colors.muted,"font-size":12,"font-weight":700});
+        label.textContent=v.toFixed(1);
+      });
+      [1,0].forEach(label=>{
+        const yy=yBase(label);
+        add("line",{x1:L,y1:yy,x2:W-R,y2:yy,stroke:"#cbd8e7","stroke-dasharray":"3 5"});
+        const t=add("text",{x:L-14,y:yy+4,"text-anchor":"end",fill:label?colors.pos:colors.neg,"font-size":12,"font-weight":850});
+        t.textContent=label?"Real +":"Real −";
+      });
+      const axis=add("text",{x:L+innerW/2,y:H-4,"text-anchor":"middle",fill:colors.ink,"font-size":13,"font-weight":850});
+      axis.textContent="Puntuación asignada por el modelo";
+
+      c.rows.forEach((p,i)=>{
+        const yy=yBase(p.label)+p.jitter*innerH+(i%2?5:-5);
+        const active=!state.filter||p.cell===state.filter;
+        const selected=p.id===state.selected;
+        const g=add("g",{"data-id":p.id,tabindex:"0",role:"button","aria-label":`${p.name}, score ${p.score.toFixed(2)}, ${p.label?"positivo":"negativo"}, ${p.cell.toUpperCase()}`});
+        if(selected) add("circle",{cx:x(p.score),cy:yy,r:15,fill:"none",stroke:"#17223b","stroke-width":3},g);
+        add("circle",{cx:x(p.score),cy:yy,r:selected?10:8,fill:p.label?colors.pos:colors.neg,stroke:"#fff","stroke-width":3,opacity:active?1:.16},g);
+        if(active&&p.pred!==p.label){
+          add("circle",{cx:x(p.score),cy:yy,r:12,fill:"none",stroke:colors.amber,"stroke-width":2,"stroke-dasharray":"3 2"},g);
+        }
+        const title=add("title",{},g);
+        title.textContent=`${p.name} · score ${p.score.toFixed(2)} · ${p.label?"Real +":"Real −"} · ${p.cell.toUpperCase()}`;
+        g.addEventListener("click",ev=>{ev.stopPropagation();selectPoint(p.id);});
+        g.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();selectPoint(p.id);}});
+      });
+
+      const tx=x(state.threshold);
+      add("line",{x1:tx,y1:T-4,x2:tx,y2:T+innerH+5,stroke:colors.ink,"stroke-width":3,"stroke-dasharray":"8 5"});
+      const handle=add("g",{id:"thresholdHandle",role:"slider",tabindex:"0","aria-label":`Umbral ${state.threshold.toFixed(2)}`});
+      add("rect",{x:tx-38,y:T-22,width:76,height:29,rx:10,fill:colors.ink},handle);
+      const ht=add("text",{x:tx,y:T-3,"text-anchor":"middle",fill:"#fff","font-size":12,"font-weight":900},handle);
+      ht.textContent=`t = ${state.threshold.toFixed(2)}`;
+      handle.addEventListener("pointerdown",ev=>{state.dragging=true;handle.setPointerCapture(ev.pointerId);});
+      handle.addEventListener("keydown",ev=>{
+        if(ev.key==="ArrowLeft"||ev.key==="ArrowRight"){
+          ev.preventDefault();
+          setThreshold(state.threshold+(ev.key==="ArrowRight"?.01:-.01));
+        }
+      });
+
+      const svgToThreshold=(ev)=>{
+        const rect=svg.getBoundingClientRect();
+        const px=(ev.clientX-rect.left)*(W/rect.width);
+        return clamp((px-L)/innerW);
+      };
+      svg.onpointermove=ev=>{if(state.dragging)setThreshold(svgToThreshold(ev),false)};
+      svg.onpointerup=()=>{state.dragging=false};
+      svg.onpointercancel=()=>{state.dragging=false};
+      svg.onclick=ev=>{
+        const t=svgToThreshold(ev);
+        if(state.addMode){
+          addPoint(t,state.addMode);
+        }else if(t>=0&&t<=1){
+          setThreshold(t);
+        }
+      };
+    }
+
+    function selectPoint(id){
+      state.selected=id;
+      const p=state.data.find(d=>d.id===id);
+      if(!p)return;
+      $("selectedPanel").classList.add("show");
+      $("selectedName").textContent=p.name;
+      $("selectedInfo").textContent=`Score ${p.score.toFixed(2)} · clase real ${p.label?"positiva":"negativa"}`;
+      updateAll();
+    }
+
+    function addPoint(score,label){
+      const id=`custom-${state.nextId++}`;
+      state.data.push({id,name:`Caso nuevo ${state.nextId-100}`,score:clamp(score),label,jitter:((state.nextId*31)%11-5)/100});
+      state.addMode=null;
+      state.selected=id;
+      updateAddButtons();
+      selectPoint(id);
+      toast("Caso agregado. Puedes cambiar su clase o eliminarlo.");
+    }
+
+    function updateAddButtons(){
+      $("addPositive").classList.toggle("primary",state.addMode===1);
+      $("addNegative").classList.toggle("primary",state.addMode===0);
+      $("plotHint").textContent=state.addMode!==null
+        ?`Haz clic en la gráfica para agregar un caso real ${state.addMode?"positivo":"negativo"}.`
+        :"Arrastra la línea del umbral o haz clic en el eje.";
+    }
+
+    function updateMatrix(c){
+      ["tp","fn","fp","tn"].forEach(k=>{
+        $(`${k}Count`).textContent=c[k];
+        document.querySelector(`[data-cell="${k}"]`).classList.toggle("active",state.filter===k);
+      });
+      const notes={
+        tp:"Verdaderos positivos: casos positivos detectados correctamente.",
+        fn:"Falsos negativos: positivos reales que el modelo dejó escapar.",
+        fp:"Falsos positivos: negativas reales que activaron una falsa alarma.",
+        tn:"Verdaderos negativos: casos negativos descartados correctamente."
+      };
+      $("matrixNote").textContent=state.filter?`${notes[state.filter]} Haz clic otra vez para quitar el filtro.`:"La diagonal verde contiene los aciertos; la diagonal naranja contiene los errores.";
+    }
+
+    function updateMetrics(c){
+      const values={accuracy:c.accuracy,precision:c.precision,recall:c.recall,specificity:c.specificity,f1:c.f1,npv:c.npv};
+      Object.entries(values).forEach(([k,v])=>{
+        $(`${k}Value`).textContent=pct(v);
+        const bar=document.querySelector(`[data-metric="${k}"] .metric-bar span`);
+        bar.style.width=`${Number.isFinite(v)?v*100:0}%`;
+      });
+    }
+
+    function drawRoc(current){
+      const svg=$("rocSvg");
+      svg.innerHTML="";
+      const W=560,H=430,L=65,R=25,T=24,B=63,innerW=W-L-R,innerH=H-T-B;
+      const x=v=>L+v*innerW, y=v=>T+(1-v)*innerH;
+      const add=(name,attrs,parent=svg)=>{const el=svgEl(name,attrs);parent.appendChild(el);return el};
+      const roc=rocData();
+      add("rect",{x:L,y:T,width:innerW,height:innerH,rx:16,fill:"#f9fbfd",stroke:colors.line});
+      [0,.25,.5,.75,1].forEach(v=>{
+        add("line",{x1:x(v),y1:T,x2:x(v),y2:T+innerH,stroke:"#e5ecf4","stroke-dasharray":"4 6"});
+        add("line",{x1:L,y1:y(v),x2:L+innerW,y2:y(v),stroke:"#e5ecf4","stroke-dasharray":"4 6"});
+        const tx=add("text",{x:x(v),y:H-33,"text-anchor":"middle",fill:colors.muted,"font-size":11,"font-weight":700});tx.textContent=v.toFixed(2);
+        const ty=add("text",{x:L-12,y:y(v)+4,"text-anchor":"end",fill:colors.muted,"font-size":11,"font-weight":700});ty.textContent=v.toFixed(2);
+      });
+      add("line",{x1:x(0),y1:y(0),x2:x(1),y2:y(1),stroke:"#9baabc","stroke-width":2,"stroke-dasharray":"7 7"});
+      const areaPoints=[`${x(0)},${y(0)}`,...roc.points.map(p=>`${x(p.x)},${y(p.y)}`),`${x(1)},${y(0)}`].join(" ");
+      add("polygon",{points:areaPoints,fill:"#5dd6c8","fill-opacity":.24});
+      const path=roc.points.map((p,i)=>`${i?"L":"M"} ${x(p.x)} ${y(p.y)}`).join(" ");
+      add("path",{d:path,fill:"none",stroke:colors.teal,"stroke-width":5,"stroke-linecap":"round","stroke-linejoin":"round"});
+      roc.points.forEach(p=>add("circle",{cx:x(p.x),cy:y(p.y),r:3.2,fill:"#fff",stroke:colors.teal,"stroke-width":2}));
+      const cx=Number.isFinite(current.fpr)?current.fpr:0,cy=Number.isFinite(current.recall)?current.recall:0;
+      add("circle",{cx:x(cx),cy:y(cy),r:11,fill:colors.pos,stroke:"#fff","stroke-width":4});
+      add("circle",{cx:x(cx),cy:y(cy),r:16,fill:"none",stroke:colors.pos,"stroke-opacity":.28,"stroke-width":5});
+      const lbl=add("text",{x:Math.min(W-88,x(cx)+16),y:Math.max(20,y(cy)-15),fill:colors.pos,"font-size":11,"font-weight":900});
+      lbl.textContent=`t=${state.threshold.toFixed(2)}`;
+      const xlab=add("text",{x:L+innerW/2,y:H-4,"text-anchor":"middle",fill:colors.ink,"font-size":13,"font-weight":850});xlab.textContent="Tasa de falsos positivos · 1 − especificidad";
+      const ylab=add("text",{x:15,y:T+innerH/2,transform:`rotate(-90 15 ${T+innerH/2})`,"text-anchor":"middle",fill:colors.ink,"font-size":13,"font-weight":850});ylab.textContent="Sensibilidad · TPR";
+      const ideal=add("text",{x:x(.03),y:y(.97)-8,fill:colors.green,"font-size":10,"font-weight":850});ideal.textContent="Esquina ideal";
+
+      $("aucValue").textContent=roc.auc.toFixed(3);
+      let interpretation;
+      if(roc.auc>=.95) interpretation="Separación excelente";
+      else if(roc.auc>=.85) interpretation="Muy buen poder de discriminación";
+      else if(roc.auc>=.70) interpretation="Discriminación útil";
+      else if(roc.auc>=.60) interpretation="Poder predictivo débil";
+      else interpretation="Cerca del azar";
+      $("aucInterpretation").textContent=interpretation;
+      $("aucExplanation").textContent=`En estos datos, hay ${(roc.auc*100).toFixed(1)}% de probabilidad de que un positivo aleatorio reciba mayor score que un negativo aleatorio.`;
+      $("aucMarker").style.marginLeft=`${clamp((roc.auc-.5)/.5)*100}%`;
+    }
+
+    function updateCosts(){
+      const best=bestThreshold();
+      $("fnCostValue").textContent=`${state.fnCost}×`;
+      $("fpCostValue").textContent=`${state.fpCost}×`;
+      $("fnCost").value=state.fnCost;
+      $("fpCost").value=state.fpCost;
+      $("bestThreshold").textContent=best.t.toFixed(2);
+      $("costSummary").textContent=`${best.fn} FN × ${state.fnCost} + ${best.fp} FP × ${state.fpCost} = ${best.cost}`;
+      $("applyBest").dataset.threshold=best.t;
+    }
+
+    function updateComparison(){
+      const best=bestThreshold().t;
+      const thresholds=[.2,.5,.8,best,state.threshold];
+      const unique=[...new Set(thresholds.map(t=>Number(t.toFixed(3))))];
+      $("comparisonBody").innerHTML=unique.map(t=>{
+        const c=classify(state.data,t);
+        const label=Math.abs(t-best)<.001?`${t.toFixed(2)} · menor costo`:t.toFixed(2);
+        return `<tr class="${Math.abs(t-state.threshold)<.006?"current":""}">
+          <td>${label}</td><td>${c.tp}</td><td>${c.fp}</td><td>${c.fn}</td><td>${c.tn}</td>
+          <td>${pct(c.recall)}</td><td>${pct(c.specificity)}</td><td>${pct(c.precision)}</td><td>${pct(c.f1)}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    function setThreshold(value,refresh=true){
+      state.threshold=clamp(Number(value));
+      if(refresh)updateAll();
+      else{
+        $("thresholdSlider").value=state.threshold;
+        updateAll();
+      }
+    }
+
+    function loadScenario(key){
+      state.scenario=key;
+      state.data=structuredClone(datasets[key]);
+      const meta=scenarioMeta[key];
+      state.threshold=meta.threshold;
+      state.fnCost=meta.fn;
+      state.fpCost=meta.fp;
+      state.filter=null;
+      state.selected=null;
+      state.addMode=null;
+      state.playing=false;
+      $("scenarioSelect").value=key;
+      $("scenarioIcon").textContent=meta.icon;
+      $("scenarioTitle").textContent=meta.title;
+      $("scenarioText").textContent=meta.text;
+      $("selectedPanel").classList.remove("show");
+      $("playThreshold").textContent="▶ Recorrer";
+      updateAddButtons();
+      updateAll();
+    }
+
+    function playThreshold(){
+      state.playing=!state.playing;
+      $("playThreshold").textContent=state.playing?"■ Detener":"▶ Recorrer";
+      if(!state.playing)return;
+      let direction=state.threshold>=.99?-1:1;
+      const tick=()=>{
+        if(!state.playing)return;
+        let next=state.threshold+direction*.01;
+        if(next>=1){next=1;direction=-1}
+        if(next<=0){next=0;direction=1}
+        setThreshold(next);
+        setTimeout(tick,65);
+      };
+      tick();
+    }
+
+    function updateTour(step){
+      state.tour=(step+4)%4;
+      document.querySelectorAll(".lesson-step").forEach(el=>el.classList.toggle("active",Number(el.dataset.tourStep)===state.tour));
+      const instructions=[
+        "Rojo = clase positiva real; azul = negativa. El score aún no es una decisión.",
+        "Arrastra el umbral. A su derecha, el modelo predice positivo.",
+        "Los aciertos están en verde; FN y FP son errores diferentes.",
+        "Cada umbral crea un punto ROC; el AUC resume toda la curva."
+      ];
+      $("tourInstruction").textContent=instructions[state.tour];
+      const targets=["datos","datos","matriz","roc"];
+      document.getElementById(targets[state.tour]).scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
+    function toast(message){
+      const el=$("toast");
+      el.textContent=message;
+      el.classList.add("show");
+      clearTimeout(toast.timer);
+      toast.timer=setTimeout(()=>el.classList.remove("show"),2800);
+    }
+
+    function setupCompactInterface(){
+      const scenario=document.querySelector(".scenario-strip");
+      const lab=document.querySelector(".lab-grid");
+      const wide=document.querySelector(".wide-row");
+      const charts=document.querySelector(".chart-row");
+      const scatter=document.querySelector(".scatter-card");
+      const rightStack=document.querySelector(".right-stack");
+      const threshold=document.querySelector(".threshold-card");
+      const matrix=wide.children[0];
+      const metrics=wide.children[1];
+      const roc=charts.children[0];
+      const cost=charts.children[1];
+      const compare=document.querySelector(".compare-card");
+      const learning=document.querySelector(".learning-row");
+      const quiz=document.querySelector(".quiz");
+      const lesson=document.querySelector(".hero-lesson");
+
+      const cockpit=document.createElement("section");
+      cockpit.className="compact-cockpit";
+      cockpit.setAttribute("aria-label","Panel simultáneo de datos, matriz de confusión y curva ROC");
+      scenario.insertAdjacentElement("afterend",cockpit);
+
+      scatter.id="datos";
+      matrix.id="matriz";
+      roc.id="roc";
+      cockpit.append(scatter,matrix,roc);
+      $("scatterWrap").insertAdjacentElement("afterend",threshold);
+
+      metrics.classList.add("metrics-ribbon");
+      cockpit.insertAdjacentElement("afterend",metrics);
+
+      $("controlDrawerBody").append(rightStack,cost);
+      $("learnDrawerBody").append(lesson,compare,learning,quiz);
+      lab.remove();
+      wide.remove();
+      charts.remove();
+    }
+
+    function openDrawer(id){
+      closeDrawers(false);
+      const drawer=$(id);
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden","false");
+      $("drawerBackdrop").classList.add("open");
+      document.body.classList.add("drawer-open");
+      const trigger=id==="controlDrawer"?$("openControls"):$("openLearn");
+      trigger.setAttribute("aria-expanded","true");
+      setTimeout(()=>drawer.querySelector("[data-close-drawer]").focus(),220);
+    }
+
+    function closeDrawers(restoreFocus=true){
+      const open=document.querySelector(".slide-drawer.open");
+      document.querySelectorAll(".slide-drawer").forEach(drawer=>{
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden","true");
+      });
+      $("drawerBackdrop").classList.remove("open");
+      document.body.classList.remove("drawer-open");
+      $("openControls").setAttribute("aria-expanded","false");
+      $("openLearn").setAttribute("aria-expanded","false");
+      if(restoreFocus&&open){
+        const trigger=open.id==="controlDrawer"?$("openControls"):$("openLearn");
+        trigger.focus();
+      }
+    }
+
+    function exportJson(){
+      const payload={
+        title:"ROC & Confusion Lab dataset",
+        threshold:state.threshold,
+        fnCost:state.fnCost,
+        fpCost:state.fpCost,
+        data:state.data.map(({name,score,label})=>({name,score,label}))
+      };
+      const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;a.download="datos_roc_auc.json";a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),200);
+      toast("Datos exportados en formato JSON.");
+    }
+
+    async function importJson(file){
+      try{
+        const json=JSON.parse(await file.text());
+        if(!Array.isArray(json.data)||!json.data.length)throw new Error("Falta data");
+        const clean=json.data.map((p,i)=>{
+          const score=Number(p.score),label=Number(p.label);
+          if(!Number.isFinite(score)||score<0||score>1||![0,1].includes(label))throw new Error(`Caso ${i+1} inválido`);
+          return {id:`import-${i+1}`,name:String(p.name||`Caso ${i+1}`),score,label,jitter:((i*29)%11-5)/100};
+        });
+        state.data=clean;
+        state.threshold=clamp(Number.isFinite(Number(json.threshold))?Number(json.threshold):.5);
+        state.fnCost=clamp(Number(json.fnCost)||5,1,20);
+        state.fpCost=clamp(Number(json.fpCost)||1,1,20);
+        state.filter=null;state.selected=null;state.addMode=null;
+        $("selectedPanel").classList.remove("show");
+        $("scenarioTitle").textContent="Conjunto importado";
+        $("scenarioText").textContent="Datos personalizados: explora el umbral, las métricas y la curva ROC.";
+        $("scenarioIcon").textContent="↑";
+        updateAddButtons();updateAll();toast("Conjunto importado correctamente.");
+      }catch(err){
+        toast(`No se pudo importar: ${err.message}`);
+      }finally{
+        $("importInput").value="";
+      }
+    }
+
+    setupCompactInterface();
+    $("scenarioSelect").addEventListener("change",e=>loadScenario(e.target.value));
+    $("thresholdSlider").addEventListener("input",e=>setThreshold(e.target.value));
+    document.querySelectorAll("[data-threshold]").forEach(btn=>btn.addEventListener("click",()=>setThreshold(btn.dataset.threshold)));
+    $("playThreshold").addEventListener("click",playThreshold);
+    $("fnCost").addEventListener("input",e=>{state.fnCost=Number(e.target.value);updateCosts();updateComparison()});
+    $("fpCost").addEventListener("input",e=>{state.fpCost=Number(e.target.value);updateCosts();updateComparison()});
+    $("applyBest").addEventListener("click",e=>{setThreshold(e.currentTarget.dataset.threshold);toast("Umbral de menor costo aplicado.")});
+    document.querySelectorAll(".matrix-cell").forEach(btn=>btn.addEventListener("click",()=>{
+      state.filter=state.filter===btn.dataset.cell?null:btn.dataset.cell;
+      updateAll();
+    }));
+    $("clearFilter").addEventListener("click",()=>{state.filter=null;updateAll()});
+    $("addPositive").addEventListener("click",()=>{state.addMode=state.addMode===1?null:1;updateAddButtons()});
+    $("addNegative").addEventListener("click",()=>{state.addMode=state.addMode===0?null:0;updateAddButtons()});
+    $("flipLabel").addEventListener("click",()=>{
+      const p=state.data.find(d=>d.id===state.selected);
+      if(p){p.label=p.label?0:1;selectPoint(p.id);toast("Clase real actualizada.")}
+    });
+    $("deletePoint").addEventListener("click",()=>{
+      if(state.data.length<=2){toast("Conserva al menos dos casos.");return}
+      state.data=state.data.filter(d=>d.id!==state.selected);
+      state.selected=null;$("selectedPanel").classList.remove("show");updateAll();toast("Caso eliminado.");
+    });
+    $("exportBtn").addEventListener("click",exportJson);
+    $("importInput").addEventListener("change",e=>e.target.files[0]&&importJson(e.target.files[0]));
+    $("resetBtn").addEventListener("click",()=>loadScenario(state.scenario));
+    $("tourNext").addEventListener("click",()=>updateTour(state.tour+1));
+    $("tourBack").addEventListener("click",()=>updateTour(state.tour-1));
+    $("openControls").addEventListener("click",()=>openDrawer("controlDrawer"));
+    $("openLearn").addEventListener("click",()=>openDrawer("learnDrawer"));
+    $("drawerBackdrop").addEventListener("click",()=>closeDrawers());
+    document.querySelectorAll("[data-close-drawer]").forEach(btn=>btn.addEventListener("click",()=>closeDrawers()));
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawers()});
+    document.querySelectorAll(".lesson-step").forEach(el=>el.addEventListener("click",()=>updateTour(Number(el.dataset.tourStep))));
+    document.querySelectorAll("[data-answer]").forEach(btn=>btn.addEventListener("click",()=>{
+      document.querySelectorAll("[data-answer]").forEach(b=>b.classList.remove("good","bad"));
+      const correct=btn.dataset.answer==="recall";
+      btn.classList.add(correct?"good":"bad");
+      toast(correct?"¡Correcto! La sensibilidad minimiza falsos negativos.":"Revisa: el objetivo es detectar la mayor proporción de positivos reales.");
+    }));
+
+    loadScenario("medical");
+  })();
+  </script>
+</body>
+</html>
