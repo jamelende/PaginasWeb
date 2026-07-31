@@ -1,0 +1,1806 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Laboratorio: Data Science y Network Science</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --red: light-dark(rgb(186 38 35), rgb(250 66 62));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The bundled tooltip runtime owns [data-tooltip]. AppBlock's CSS-only
+   pseudo-tooltip can widen dense grids even while hidden. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--interactive-label-primary-default, var(--primary-foreground));
+  background: var(--interactive-bg-primary-default, var(--foreground));
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(
+    in srgb,
+    var(--interactive-label-primary-default, var(--primary-foreground)) 50%,
+    transparent
+  );
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<div id="dsn-lab">
+  <style>
+    #dsn-lab { color: var(--foreground); }
+    #dsn-lab * { box-sizing: border-box; }
+    #dsn-lab .lab-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .55fr); gap: 1rem; align-items: end; margin-bottom: 1rem; }
+    #dsn-lab .lab-kicker { color: var(--muted-foreground); margin: 0 0 .3rem; }
+    #dsn-lab .lab-question { margin: 0; }
+    #dsn-lab .lab-case { display: grid; gap: .35rem; }
+    #dsn-lab .lab-tabs { display: flex; flex-wrap: wrap; gap: .4rem; padding-block: .6rem; border-block: 1px solid var(--border); margin-bottom: 1rem; }
+    #dsn-lab .lab-panel[hidden] { display: none; }
+    #dsn-lab .lab-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(280px, .82fr); gap: 1rem; align-items: start; }
+    #dsn-lab .lab-grid.equal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #dsn-lab .lab-stack { display: grid; gap: .8rem; }
+    #dsn-lab .lab-section-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem; align-items: end; margin-bottom: .55rem; }
+    #dsn-lab .lab-section-head h2, #dsn-lab .lab-section-head h3 { margin: 0; }
+    #dsn-lab .lab-section-head p { margin: 0; color: var(--muted-foreground); }
+    #dsn-lab .lab-controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; margin-bottom: .8rem; }
+    #dsn-lab .lab-controls > label { min-width: 160px; flex: 1 1 180px; }
+    #dsn-lab .lab-inline-check { display: flex; align-items: center; gap: .45rem; min-height: 2.2rem; }
+    #dsn-lab .graph-wrap { position: relative; min-height: 360px; }
+    #dsn-lab .network-svg { width: 100%; height: auto; min-height: 340px; display: block; overflow: visible; }
+    #dsn-lab .network-svg .edge { stroke: var(--border); stroke-width: 1.4; }
+    #dsn-lab .network-svg .edge.is-cross { stroke: var(--viz-series-4); stroke-width: 2.2; }
+    #dsn-lab .network-svg .edge.is-path { stroke: var(--destructive); stroke-width: 2.6; }
+    #dsn-lab .network-svg .node { cursor: pointer; transition: transform .2s ease, opacity .2s ease; }
+    #dsn-lab .network-svg .node:hover { transform: scale(1.08); }
+    #dsn-lab .network-svg .node-base { stroke: var(--background); stroke-width: 2; }
+    #dsn-lab .network-svg .node-selected { fill: none; stroke: var(--foreground); stroke-width: 3; }
+    #dsn-lab .network-svg .node-protected { fill: none; stroke: var(--green); stroke-width: 3; stroke-dasharray: 4 3; }
+    #dsn-lab .network-svg .node-label { fill: var(--foreground); pointer-events: none; font-weight: 500; text-anchor: middle; dominant-baseline: central; }
+    #dsn-lab .network-svg .cluster-label { fill: var(--muted-foreground); text-anchor: middle; }
+    #dsn-lab .legend { display: flex; flex-wrap: wrap; gap: .7rem; color: var(--muted-foreground); margin-top: .35rem; }
+    #dsn-lab .legend span { display: inline-flex; align-items: center; gap: .35rem; }
+    #dsn-lab .swatch { width: .8rem; height: .8rem; display: inline-block; background: var(--muted); border: 1px solid var(--border); border-radius: 50%; }
+    #dsn-lab .swatch.s1 { background: var(--viz-series-1); }
+    #dsn-lab .swatch.s2 { background: var(--viz-series-2); }
+    #dsn-lab .swatch.s3 { background: var(--viz-series-3); }
+    #dsn-lab .swatch.alert { background: var(--destructive); }
+    #dsn-lab .table-row-btn { width: 100%; text-align: left; }
+    #dsn-lab .table tr.is-selected { background: var(--accent); color: var(--accent-foreground); }
+    #dsn-lab .mini-bars { display: grid; gap: .65rem; }
+    #dsn-lab .bar-row { display: grid; grid-template-columns: minmax(110px, .7fr) minmax(120px, 1.5fr) auto; gap: .55rem; align-items: center; }
+    #dsn-lab .bar-track { background: var(--muted); height: .75rem; overflow: hidden; border-radius: 999px; }
+    #dsn-lab .bar-fill { height: 100%; width: 0; background: var(--viz-series-1); transition: width .35s ease; }
+    #dsn-lab .bar-fill.net { background: var(--viz-series-2); }
+    #dsn-lab .bar-fill.warn { background: var(--destructive); }
+    #dsn-lab .bar-fill.good { background: var(--green); }
+    #dsn-lab .matrix { width: 100%; border-collapse: collapse; }
+    #dsn-lab .matrix th, #dsn-lab .matrix td { text-align: center; padding: .55rem; border-bottom: 1px solid var(--border); }
+    #dsn-lab .matrix .correct { background: color-mix(in srgb, var(--green) 16%, transparent); }
+    #dsn-lab .matrix .error { background: color-mix(in srgb, var(--destructive) 14%, transparent); }
+    #dsn-lab .matrix-caption { display: flex; justify-content: space-between; gap: .6rem; align-items: baseline; }
+    #dsn-lab .matrix-caption h3 { margin: 0; }
+    #dsn-lab .score-strip { display: grid; grid-template-columns: repeat(24, minmax(5px, 1fr)); gap: 2px; min-height: 46px; align-items: end; margin-top: .7rem; }
+    #dsn-lab .score-mark { background: var(--viz-series-1); min-height: 4px; border-radius: 2px 2px 0 0; }
+    #dsn-lab .score-mark.net { background: var(--viz-series-2); }
+    #dsn-lab .flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; align-items: stretch; }
+    #dsn-lab .flow-step { padding: .75rem; border-top: 3px solid var(--border); background: color-mix(in srgb, var(--muted) 55%, transparent); }
+    #dsn-lab .flow-step.is-active { border-color: var(--viz-series-1); background: color-mix(in srgb, var(--viz-series-1) 12%, transparent); }
+    #dsn-lab .challenge-list { display: grid; gap: .75rem; }
+    #dsn-lab .challenge { border-left: 3px solid var(--border); padding-left: .8rem; }
+    #dsn-lab .challenge h3 { margin: 0 0 .3rem; }
+    #dsn-lab .quiz-options { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .45rem; }
+    #dsn-lab .quiz-feedback { margin: .45rem 0 0; min-height: 1.4rem; color: var(--muted-foreground); }
+    #dsn-lab .concept-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-bottom: 1rem; }
+    #dsn-lab .concept-grid .card h3 { margin-top: 0; }
+    #dsn-lab .concept-grid .card p { margin-bottom: 0; }
+    #dsn-lab .status-line { color: var(--muted-foreground); margin: .4rem 0 0; }
+    #dsn-lab .teacher-note { padding: .8rem; border-left: 3px solid var(--viz-series-3); background: color-mix(in srgb, var(--viz-series-3) 10%, transparent); }
+    @media (max-width: 820px) {
+      #dsn-lab .lab-head, #dsn-lab .lab-grid, #dsn-lab .lab-grid.equal { grid-template-columns: 1fr; }
+      #dsn-lab .concept-grid { grid-template-columns: 1fr; }
+      #dsn-lab .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      #dsn-lab .flow { grid-template-columns: 1fr; }
+      #dsn-lab .bar-row { grid-template-columns: 1fr auto; }
+      #dsn-lab .bar-track { grid-column: 1 / -1; }
+      #dsn-lab .graph-wrap { min-height: 300px; }
+      #dsn-lab .network-svg { min-height: 280px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #dsn-lab .network-svg .node, #dsn-lab .bar-fill { transition: none; }
+    }
+  </style>
+
+  <header class="lab-head">
+    <div>
+      <p class="lab-kicker">LABORATORIO INTERACTIVO · ENTIDADES + RELACIONES</p>
+      <h2 class="lab-question">¿Qué cambia cuando las filas están conectadas?</h2>
+    </div>
+    <label class="form-label lab-case">Caso de estudio
+      <select id="dsn-scenario" class="form-select" aria-label="Seleccionar caso de estudio">
+        <option value="fraud">Fraude coordinado</option>
+        <option value="churn">Deserción de clientes</option>
+        <option value="supply">Riesgo en proveedores</option>
+      </select>
+    </label>
+  </header>
+
+  <nav class="lab-tabs" aria-label="Módulos del laboratorio">
+    <button class="btn btn-primary" type="button" data-tab="explore" aria-pressed="true">1. Filas y relaciones</button>
+    <button class="btn" type="button" data-tab="predict" aria-pressed="false">2. Predicción</button>
+    <button class="btn" type="button" data-tab="validate" aria-pressed="false">3. Validación</button>
+    <button class="btn" type="button" data-tab="intervene" aria-pressed="false">4. Intervención</button>
+    <button class="btn" type="button" data-tab="classroom" aria-pressed="false">5. Modo clase</button>
+  </nav>
+
+  <section class="lab-panel" data-panel="explore">
+    <div class="concept-grid">
+      <article class="card">
+        <h3>Data science tabular</h3>
+        <p>Modela cada entidad mediante sus atributos: actividad, antigüedad y monto.</p>
+      </article>
+      <article class="card">
+        <h3>Ciencia de redes</h3>
+        <p>Conserva conexiones, vecindarios, comunidades, puentes y dependencias.</p>
+      </article>
+      <article class="card">
+        <h3>Modelo complementario</h3>
+        <p>Combina atributos individuales con posición estructural y un protocolo de validación honesto.</p>
+      </article>
+    </div>
+    <div class="lab-grid">
+      <div>
+        <div class="lab-section-head">
+          <div>
+            <h2 id="explore-title">La misma tabla, contextos distintos</h2>
+            <p>Seleccione una fila y cambie la perspectiva.</p>
+          </div>
+          <label class="form-label">Perspectiva
+            <select id="dsn-perspective" class="form-select">
+              <option value="rows">Solo atributos</option>
+              <option value="network">Estructura de red</option>
+              <option value="outcome">Resultado real</option>
+            </select>
+          </label>
+        </div>
+        <div class="graph-wrap">
+          <svg id="dsn-explore-graph" class="network-svg" viewBox="0 0 720 390" role="img" aria-labelledby="dsn-explore-svg-title dsn-explore-svg-desc">
+            <title id="dsn-explore-svg-title">Red del caso seleccionado</title>
+            <desc id="dsn-explore-svg-desc">Red sintética con veinticuatro entidades organizadas en tres comunidades.</desc>
+          </svg>
+        </div>
+        <div class="legend" aria-label="Leyenda de la red">
+          <span><i class="swatch s1"></i>Comunidad A</span>
+          <span><i class="swatch s2"></i>Comunidad B</span>
+          <span><i class="swatch s3"></i>Comunidad C</span>
+          <span><i class="swatch alert"></i>Resultado positivo</span>
+        </div>
+      </div>
+      <div class="lab-stack">
+        <div class="table-responsive">
+          <table class="table table-sm" aria-label="Muestra de la tabla de entidades">
+            <thead><tr><th>Entidad</th><th class="text-end">Actividad</th><th class="text-end">Antigüedad</th><th class="text-end">Monto</th></tr></thead>
+            <tbody id="dsn-entity-rows"></tbody>
+          </table>
+        </div>
+        <article class="card" aria-live="polite">
+          <p class="text-muted">Entidad seleccionada</p>
+          <div id="dsn-selected-detail"></div>
+        </article>
+        <p id="dsn-twin-note" class="teacher-note"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-panel" data-panel="predict" hidden>
+    <div class="lab-section-head">
+      <div>
+        <h2>Comparación controlada de modelos</h2>
+        <p>Mismo objetivo y algoritmo; solo cambia la información disponible.</p>
+      </div>
+    </div>
+    <div class="lab-controls">
+      <label class="form-label">Umbral de decisión: <output id="dsn-threshold-value">0,50</output>
+        <input id="dsn-threshold" class="form-range" type="range" min="20" max="80" value="50" step="1">
+      </label>
+      <label class="form-label">Peso de la estructura: <output id="dsn-weight-value">80%</output>
+        <input id="dsn-net-weight" class="form-range" type="range" min="0" max="120" value="80" step="5">
+      </label>
+    </div>
+    <div class="lab-grid equal">
+      <article>
+        <div class="matrix-caption"><h3>Solo atributos</h3><span class="viz-badge" id="dsn-tab-auc">AUC 0,00</span></div>
+        <div id="dsn-tab-matrix"></div>
+        <div id="dsn-tab-strip" class="score-strip" aria-label="Distribución de puntajes del modelo tabular"></div>
+      </article>
+      <article>
+        <div class="matrix-caption"><h3>Atributos + red</h3><span class="viz-badge" id="dsn-net-auc">AUC 0,00</span></div>
+        <div id="dsn-net-matrix"></div>
+        <div id="dsn-net-strip" class="score-strip" aria-label="Distribución de puntajes del modelo enriquecido"></div>
+      </article>
+    </div>
+    <div class="mini-bars" style="margin-top:1rem" aria-label="Comparación de AUC">
+      <div class="bar-row"><span>AUC atributos</span><div class="bar-track"><div id="dsn-tab-auc-bar" class="bar-fill"></div></div><strong id="dsn-tab-auc-label">0,00</strong></div>
+      <div class="bar-row"><span>AUC atributos + red</span><div class="bar-track"><div id="dsn-net-auc-bar" class="bar-fill net"></div></div><strong id="dsn-net-auc-label">0,00</strong></div>
+    </div>
+    <p id="dsn-predict-insight" class="teacher-note" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-panel" data-panel="validate" hidden>
+    <div class="lab-section-head">
+      <div>
+        <h2>Una red también puede filtrar información</h2>
+        <p>El protocolo de evaluación debe parecerse al despliegue real.</p>
+      </div>
+    </div>
+    <div class="lab-controls">
+      <label class="form-label">Forma de separar entrenamiento y prueba
+        <select id="dsn-split" class="form-select">
+          <option value="random">Aleatoria por filas</option>
+          <option value="community">Por comunidad</option>
+          <option value="temporal">Temporal</option>
+        </select>
+      </label>
+      <label class="form-check lab-inline-check">
+        <input id="dsn-leaky" class="form-check-input" type="checkbox" checked>
+        <span class="form-check-label">Usar resultado contemporáneo de vecinos</span>
+      </label>
+    </div>
+    <div class="lab-grid">
+      <div>
+        <div class="graph-wrap">
+          <svg id="dsn-validation-graph" class="network-svg" viewBox="0 0 720 390" role="img" aria-label="Red coloreada por partición de entrenamiento y prueba"></svg>
+        </div>
+        <div class="legend">
+          <span><i class="swatch s1"></i>Entrenamiento</span>
+          <span><i class="swatch s3"></i>Prueba</span>
+          <span><i class="swatch alert"></i>Enlace que cruza el split</span>
+        </div>
+      </div>
+      <div class="lab-stack">
+        <div class="viz-grid">
+          <article class="card viz-stat"><span class="text-muted">AUC observado</span><strong class="viz-stat-value" id="dsn-observed-auc">0,00</strong><span id="dsn-observed-context"></span></article>
+          <article class="card viz-stat"><span class="text-muted">Estimación honesta</span><strong class="viz-stat-value" id="dsn-honest-auc">0,00</strong><span>Sin información futura</span></article>
+          <article class="card viz-stat"><span class="text-muted">Enlaces cruzados</span><strong class="viz-stat-value" id="dsn-cross-edges">0</strong><span>Posibles canales de dependencia</span></article>
+        </div>
+        <div class="mini-bars" aria-label="Optimismo de la validación">
+          <div class="bar-row"><span>Reportado</span><div class="bar-track"><div id="dsn-observed-bar" class="bar-fill warn"></div></div><strong id="dsn-observed-label">0,00</strong></div>
+          <div class="bar-row"><span>Despliegue</span><div class="bar-track"><div id="dsn-honest-bar" class="bar-fill good"></div></div><strong id="dsn-honest-label">0,00</strong></div>
+        </div>
+        <p id="dsn-validation-insight" class="teacher-note" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-panel" data-panel="intervene" hidden>
+    <div class="lab-section-head">
+      <div>
+        <h2>De predecir riesgo a decidir dónde actuar</h2>
+        <p>Compare estrategias con el mismo presupuesto.</p>
+      </div>
+    </div>
+    <div class="lab-controls">
+      <label class="form-label">Estrategia
+        <select id="dsn-strategy" class="form-select">
+          <option value="hubs">Proteger hubs</option>
+          <option value="bridges">Proteger puentes</option>
+          <option value="random">Selección aleatoria</option>
+        </select>
+      </label>
+      <label class="form-label">Presupuesto: <output id="dsn-budget-value">3 entidades</output>
+        <input id="dsn-budget" class="form-range" type="range" min="1" max="6" value="3" step="1">
+      </label>
+      <button id="dsn-run-cascade" class="btn btn-primary" type="button">Simular otra cascada</button>
+    </div>
+    <div class="lab-grid">
+      <div>
+        <div class="graph-wrap">
+          <svg id="dsn-intervention-graph" class="network-svg" viewBox="0 0 720 390" role="img" aria-label="Red con entidades protegidas y cascada simulada"></svg>
+        </div>
+        <div class="legend">
+          <span><i class="swatch alert"></i>Afectada</span>
+          <span><i class="swatch s2"></i>Protegida</span>
+          <span><i class="swatch"></i>No afectada</span>
+        </div>
+      </div>
+      <div class="lab-stack">
+        <div class="mini-bars" aria-label="Comparación del tamaño de la cascada">
+          <div class="bar-row"><span>Sin intervención</span><div class="bar-track"><div id="dsn-before-bar" class="bar-fill warn"></div></div><strong id="dsn-before-count">0</strong></div>
+          <div class="bar-row"><span>Con estrategia</span><div class="bar-track"><div id="dsn-after-bar" class="bar-fill good"></div></div><strong id="dsn-after-count">0</strong></div>
+        </div>
+        <article class="card" aria-live="polite">
+          <p class="text-muted">Entidades protegidas</p>
+          <strong id="dsn-protected-list"></strong>
+          <p id="dsn-intervention-insight" class="status-line"></p>
+        </article>
+        <p class="teacher-note">La mejor predicción individual no siempre identifica el mejor punto de intervención. La topología permite reducir propagación, no solo ordenar riesgos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-panel" data-panel="classroom" hidden>
+    <div class="lab-section-head">
+      <div>
+        <h2>Secuencia para una clase de 60–90 minutos</h2>
+        <p>Predicción, estructura, validación e intervención en una sola historia.</p>
+      </div>
+    </div>
+    <div class="flow" aria-label="Secuencia pedagógica">
+      <div class="flow-step is-active"><strong>1 · Hipótesis</strong><p>¿Dos filas iguales merecen la misma predicción?</p></div>
+      <div class="flow-step"><strong>2 · Evidencia</strong><p>Compare AUC y errores manteniendo el algoritmo.</p></div>
+      <div class="flow-step"><strong>3 · Auditoría</strong><p>Busque dependencia y fuga entre train y test.</p></div>
+      <div class="flow-step"><strong>4 · Decisión</strong><p>Intervenga hubs, puentes o nodos al azar.</p></div>
+    </div>
+    <div class="lab-grid equal" style="margin-top:1rem">
+      <div class="challenge-list">
+        <article class="challenge">
+          <h3>Reto 1 · Interpretación</h3>
+          <p>Una métrica de red mejora el AUC. ¿Eso demuestra contagio causal?</p>
+          <div class="quiz-options" data-quiz="q1">
+            <button class="btn" type="button" data-answer="no">No necesariamente</button>
+            <button class="btn" type="button" data-answer="yes">Sí, siempre</button>
+          </div>
+          <p class="quiz-feedback" id="q1-feedback" aria-live="polite"></p>
+        </article>
+        <article class="challenge">
+          <h3>Reto 2 · Validación</h3>
+          <p>¿Qué split es más prudente si el despliegue predice el próximo mes?</p>
+          <div class="quiz-options" data-quiz="q2">
+            <button class="btn" type="button" data-answer="random">Aleatorio</button>
+            <button class="btn" type="button" data-answer="time">Temporal</button>
+            <button class="btn" type="button" data-answer="best">El que dé mayor AUC</button>
+          </div>
+          <p class="quiz-feedback" id="q2-feedback" aria-live="polite"></p>
+        </article>
+      </div>
+      <div class="challenge-list">
+        <article class="challenge">
+          <h3>Reto 3 · Complementariedad</h3>
+          <p>¿Qué combinación conserva mejor la historia de los datos?</p>
+          <div class="quiz-options" data-quiz="q3">
+            <button class="btn" type="button" data-answer="table">Solo atributos</button>
+            <button class="btn" type="button" data-answer="graph">Solo grafo</button>
+            <button class="btn" type="button" data-answer="both">Atributos + red</button>
+          </div>
+          <p class="quiz-feedback" id="q3-feedback" aria-live="polite"></p>
+        </article>
+        <article class="challenge">
+          <h3>Producto del estudiante</h3>
+          <p>Una captura, una comparación controlada, una advertencia de validación y una decisión de intervención justificadas.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <p id="dsn-live-summary" class="sr-only" aria-live="polite"></p>
+
+  <script>
+    (function () {
+      "use strict";
+      const root = document.getElementById("dsn-lab");
+      if (!root) return;
+
+      const scenarios = {
+        fraud: {
+          label: "Fraude coordinado",
+          entity: "cuenta",
+          relation: "transferencias",
+          positive: "fraude",
+          story: "Las cuentas E03 y E18 parecen iguales en la tabla, pero E03 participa en un anillo denso y E18 está en la periferia.",
+          risk: [2, 3, 4, 5, 9, 10, 11, 16]
+        },
+        churn: {
+          label: "Deserción de clientes",
+          entity: "cliente",
+          relation: "contactos frecuentes",
+          positive: "deserción",
+          story: "Dos clientes con el mismo consumo enfrentan exposiciones distintas: uno está rodeado de vecinos que ya desertaron.",
+          risk: [3, 8, 9, 10, 11, 12, 17, 18, 19]
+        },
+        supply: {
+          label: "Riesgo en proveedores",
+          entity: "empresa",
+          relation: "dependencias de suministro",
+          positive: "interrupción",
+          story: "Dos empresas con ventas idénticas no tienen la misma resiliencia si una depende de un hub sin reemplazo.",
+          risk: [1, 2, 6, 7, 8, 15, 16, 17, 23]
+        }
+      };
+
+      const state = {
+        scenario: "fraud",
+        tab: "explore",
+        perspective: "rows",
+        selected: 2,
+        threshold: 0.5,
+        netWeight: 0.8,
+        split: "random",
+        leaky: true,
+        strategy: "hubs",
+        budget: 3,
+        cascadeRun: 0
+      };
+
+      const fmt = (value, digits) => Number(value).toLocaleString("es-CO", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+      const clamp = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
+      const sigmoid = value => 1 / (1 + Math.exp(-value));
+      const logit = value => Math.log(clamp(value, 0.001, 0.999) / (1 - clamp(value, 0.001, 0.999)));
+      const svgNS = "http://www.w3.org/2000/svg";
+      const svgEl = (name, attrs) => {
+        const el = document.createElementNS(svgNS, name);
+        Object.entries(attrs || {}).forEach(([key, value]) => el.setAttribute(key, String(value)));
+        return el;
+      };
+      const css = name => `var(${name})`;
+
+      function buildGraph() {
+        const scenarioIndex = ["fraud", "churn", "supply"].indexOf(state.scenario);
+        const config = scenarios[state.scenario];
+        const centers = [[150, 205], [365, 115], [565, 245]];
+        const nodes = Array.from({ length: 24 }, (_, i) => {
+          const cluster = Math.floor(i / 8);
+          const local = i % 8;
+          const angle = -Math.PI / 2 + local * Math.PI / 4;
+          const radius = local % 2 === 0 ? 82 : 64;
+          let activity = 42 + ((i * 13 + scenarioIndex * 9) % 46);
+          let tenure = 2 + ((i * 7 + scenarioIndex) % 10);
+          let amount = 28 + ((i * 17 + scenarioIndex * 5) % 58);
+          if (i === 2 || i === 17) { activity = 71; tenure = 5; amount = 64; }
+          return {
+            id: i,
+            label: `E${String(i + 1).padStart(2, "0")}`,
+            cluster,
+            x: centers[cluster][0] + Math.cos(angle) * radius,
+            y: centers[cluster][1] + Math.sin(angle) * radius,
+            activity,
+            tenure,
+            amount,
+            outcome: config.risk.includes(i) ? 1 : 0
+          };
+        });
+
+        const edgeSet = new Set();
+        const addEdge = (a, b) => {
+          const lo = Math.min(a, b);
+          const hi = Math.max(a, b);
+          edgeSet.add(`${lo}-${hi}`);
+        };
+        for (let c = 0; c < 3; c += 1) {
+          for (let j = 0; j < 8; j += 1) {
+            addEdge(c * 8 + j, c * 8 + ((j + 1) % 8));
+            if (j % 2 === 0) addEdge(c * 8 + j, c * 8 + ((j + 2) % 8));
+          }
+        }
+        [[2, 8], [5, 16], [11, 17], [14, 20], [1, 22], [7, 9]].forEach(pair => addEdge(pair[0], pair[1]));
+        if (state.scenario === "fraud") [[2, 4], [2, 5], [3, 5], [3, 9], [4, 10], [9, 11]].forEach(pair => addEdge(pair[0], pair[1]));
+        if (state.scenario === "churn") [[8, 10], [9, 11], [10, 12], [11, 13], [12, 17], [17, 19]].forEach(pair => addEdge(pair[0], pair[1]));
+        if (state.scenario === "supply") [[1, 8], [6, 8], [7, 8], [8, 15], [8, 16], [15, 23]].forEach(pair => addEdge(pair[0], pair[1]));
+        const edges = Array.from(edgeSet, key => key.split("-").map(Number));
+        const neighbors = nodes.map(() => []);
+        edges.forEach(([a, b]) => { neighbors[a].push(b); neighbors[b].push(a); });
+        nodes.forEach(node => {
+          node.degree = neighbors[node.id].length;
+          node.exposure = node.degree ? neighbors[node.id].reduce((sum, id) => sum + nodes[id].outcome, 0) / node.degree : 0;
+          node.bridge = neighbors[node.id].filter(id => nodes[id].cluster !== node.cluster).length;
+          const individual = -0.35 + 0.42 * ((node.activity - 64) / 15) - 0.28 * ((node.tenure - 6) / 4) + 0.17 * Math.sin(node.id * 1.7 + scenarioIndex);
+          node.tabScore = sigmoid(individual);
+          const structural = 2.8 * node.exposure + 0.24 * (node.degree - 3) + 0.55 * node.bridge - 0.8;
+          node.netScore = sigmoid(logit(node.tabScore) + state.netWeight * structural);
+        });
+        return { nodes, edges, neighbors };
+      }
+
+      function auc(labels, scores) {
+        const positives = labels.reduce((sum, value) => sum + value, 0);
+        const negatives = labels.length - positives;
+        if (!positives || !negatives) return 0.5;
+        let wins = 0;
+        for (let i = 0; i < labels.length; i += 1) {
+          if (!labels[i]) continue;
+          for (let j = 0; j < labels.length; j += 1) {
+            if (labels[j]) continue;
+            if (scores[i] > scores[j]) wins += 1;
+            else if (scores[i] === scores[j]) wins += 0.5;
+          }
+        }
+        return wins / (positives * negatives);
+      }
+
+      function confusion(nodes, scoreKey) {
+        const result = { tp: 0, fp: 0, tn: 0, fn: 0 };
+        nodes.forEach(node => {
+          const predicted = node[scoreKey] >= state.threshold ? 1 : 0;
+          if (node.outcome && predicted) result.tp += 1;
+          else if (!node.outcome && predicted) result.fp += 1;
+          else if (!node.outcome && !predicted) result.tn += 1;
+          else result.fn += 1;
+        });
+        return result;
+      }
+
+      function nodeFill(node, mode, splitInfo, impacted, protectedIds) {
+        if (mode === "validation") return splitInfo[node.id] === "train" ? css("--viz-series-1") : css("--viz-series-3");
+        if (mode === "intervention") {
+          if (protectedIds && protectedIds.includes(node.id)) return css("--viz-series-2");
+          if (impacted && impacted.includes(node.id)) return css("--destructive");
+          return css("--muted");
+        }
+        if (state.perspective === "outcome" && node.outcome) return css("--destructive");
+        if (state.perspective === "rows") return css("--muted");
+        return [css("--viz-series-1"), css("--viz-series-2"), css("--viz-series-3")][node.cluster];
+      }
+
+      function renderGraph(svg, graph, options) {
+        const mode = options.mode || "explore";
+        const splitInfo = options.splitInfo || {};
+        const impacted = options.impacted || [];
+        const protectedIds = options.protectedIds || [];
+        svg.querySelectorAll("g[data-layer]").forEach(layer => layer.remove());
+        const edgeLayer = svgEl("g", { "data-layer": "edges" });
+        graph.edges.forEach(([a, b]) => {
+          const attrs = { x1: graph.nodes[a].x, y1: graph.nodes[a].y, x2: graph.nodes[b].x, y2: graph.nodes[b].y, class: "edge" };
+          if (mode === "validation" && splitInfo[a] !== splitInfo[b]) attrs.class += " is-cross";
+          if (mode === "intervention" && impacted.includes(a) && impacted.includes(b)) attrs.class += " is-path";
+          const line = svgEl("line", attrs);
+          if (mode === "explore" && state.perspective === "rows") line.setAttribute("opacity", "0.08");
+          edgeLayer.appendChild(line);
+        });
+        svg.appendChild(edgeLayer);
+
+        const labelLayer = svgEl("g", { "data-layer": "cluster-labels" });
+        [[150, 360, "Comunidad A"], [365, 300, "Comunidad B"], [565, 375, "Comunidad C"]].forEach(([x, y, text]) => {
+          const label = svgEl("text", { x, y, class: "cluster-label" });
+          label.textContent = text;
+          labelLayer.appendChild(label);
+        });
+        svg.appendChild(labelLayer);
+
+        const nodeLayer = svgEl("g", { "data-layer": "nodes" });
+        graph.nodes.forEach(node => {
+          const group = svgEl("g", { class: "node", transform: `translate(${node.x},${node.y})`, role: "button", "aria-label": `${node.label}, grado ${node.degree}, exposición ${fmt(node.exposure, 2)}` });
+          const radius = mode === "explore" && state.perspective === "network" ? 11 + node.degree * 1.25 : 15;
+          const base = svgEl("circle", { r: radius, class: "node-base", fill: nodeFill(node, mode, splitInfo, impacted, protectedIds) });
+          group.appendChild(base);
+          if (node.outcome && mode === "explore" && state.perspective !== "outcome") {
+            group.appendChild(svgEl("circle", { r: 4, fill: css("--destructive") }));
+          }
+          if (mode === "explore" && node.id === state.selected) group.appendChild(svgEl("circle", { r: radius + 5, class: "node-selected" }));
+          if (mode === "intervention" && protectedIds.includes(node.id)) group.appendChild(svgEl("circle", { r: radius + 6, class: "node-protected" }));
+          const text = svgEl("text", { y: radius + 14, class: "node-label" });
+          text.textContent = node.label;
+          group.appendChild(text);
+          group.addEventListener("click", () => {
+            state.selected = node.id;
+            renderExplore();
+          });
+          nodeLayer.appendChild(group);
+        });
+        svg.appendChild(nodeLayer);
+      }
+
+      function renderExplore() {
+        const graph = buildGraph();
+        renderGraph(root.querySelector("#dsn-explore-graph"), graph, { mode: "explore" });
+        const tbody = root.querySelector("#dsn-entity-rows");
+        tbody.innerHTML = "";
+        [2, 17, 3, 8, 10, 16, 20, 23].forEach(id => {
+          const node = graph.nodes[id];
+          const tr = document.createElement("tr");
+          if (id === state.selected) tr.className = "is-selected";
+          tr.innerHTML = `<td><button type="button" class="btn btn-ghost table-row-btn" data-node="${id}">${node.label}</button></td><td class="text-end">${node.activity}</td><td class="text-end">${node.tenure}</td><td class="text-end">${node.amount}</td>`;
+          tr.querySelector("button").addEventListener("click", () => { state.selected = id; renderExplore(); });
+          tbody.appendChild(tr);
+        });
+        const selected = graph.nodes[state.selected];
+        root.querySelector("#dsn-selected-detail").innerHTML = `<strong>${selected.label}</strong><p>Grado: ${selected.degree} · Exposición vecinal: ${fmt(selected.exposure, 2)} · Puentes: ${selected.bridge}</p><p>Riesgo tabular: ${fmt(selected.tabScore, 2)} · Riesgo con red: ${fmt(selected.netScore, 2)}</p>`;
+        const twinA = graph.nodes[2];
+        const twinB = graph.nodes[17];
+        root.querySelector("#dsn-twin-note").textContent = `${scenarios[state.scenario].story} En la red sus grados son ${twinA.degree} y ${twinB.degree}; sus exposiciones son ${fmt(twinA.exposure, 2)} y ${fmt(twinB.exposure, 2)}.`;
+        root.querySelector("#dsn-live-summary").textContent = `Seleccionada ${selected.label}. Riesgo tabular ${fmt(selected.tabScore, 2)} y riesgo con red ${fmt(selected.netScore, 2)}.`;
+      }
+
+      function matrixMarkup(values, label) {
+        return `<table class="matrix" aria-label="Matriz de confusión de ${label}"><thead><tr><th></th><th>Predice −</th><th>Predice +</th></tr></thead><tbody><tr><th>Real −</th><td class="correct">VN ${values.tn}</td><td class="error">FP ${values.fp}</td></tr><tr><th>Real +</th><td class="error">FN ${values.fn}</td><td class="correct">VP ${values.tp}</td></tr></tbody></table>`;
+      }
+
+      function renderScoreStrip(container, nodes, key, className) {
+        container.innerHTML = "";
+        nodes.slice().sort((a, b) => a[key] - b[key]).forEach(node => {
+          const mark = document.createElement("span");
+          mark.className = `score-mark ${className || ""}`;
+          mark.style.height = `${8 + node[key] * 38}px`;
+          mark.setAttribute("aria-label", `${node.label}: ${fmt(node[key], 2)}`);
+          container.appendChild(mark);
+        });
+      }
+
+      function renderPrediction() {
+        const graph = buildGraph();
+        const labels = graph.nodes.map(node => node.outcome);
+        const tabAuc = auc(labels, graph.nodes.map(node => node.tabScore));
+        const netAuc = auc(labels, graph.nodes.map(node => node.netScore));
+        root.querySelector("#dsn-tab-matrix").innerHTML = matrixMarkup(confusion(graph.nodes, "tabScore"), "atributos");
+        root.querySelector("#dsn-net-matrix").innerHTML = matrixMarkup(confusion(graph.nodes, "netScore"), "atributos más red");
+        renderScoreStrip(root.querySelector("#dsn-tab-strip"), graph.nodes, "tabScore", "");
+        renderScoreStrip(root.querySelector("#dsn-net-strip"), graph.nodes, "netScore", "net");
+        ["#dsn-tab-auc", "#dsn-tab-auc-label"].forEach(selector => { root.querySelector(selector).textContent = `${selector.includes("auc-label") ? "" : "AUC "}${fmt(tabAuc, 2)}`; });
+        ["#dsn-net-auc", "#dsn-net-auc-label"].forEach(selector => { root.querySelector(selector).textContent = `${selector.includes("auc-label") ? "" : "AUC "}${fmt(netAuc, 2)}`; });
+        root.querySelector("#dsn-tab-auc-bar").style.width = `${tabAuc * 100}%`;
+        root.querySelector("#dsn-net-auc-bar").style.width = `${netAuc * 100}%`;
+        root.querySelector("#dsn-threshold-value").textContent = fmt(state.threshold, 2);
+        root.querySelector("#dsn-weight-value").textContent = `${Math.round(state.netWeight * 100)}%`;
+        const delta = netAuc - tabAuc;
+        root.querySelector("#dsn-predict-insight").textContent = delta > 0.03 ? `La estructura añade ${fmt(delta, 2)} puntos de AUC. Revise qué nodos cambian de decisión: la mejora proviene de exposición, grado y puentes, no de cambiar el algoritmo.` : "Con poco peso relacional ambos modelos se parecen. Aumente el peso de la estructura y observe cuándo la red aporta información nueva.";
+      }
+
+      function splitAssignment(nodes) {
+        const assignment = {};
+        nodes.forEach(node => {
+          if (state.split === "random") assignment[node.id] = ((node.id * 7 + 3) % 5 < 3) ? "train" : "test";
+          else if (state.split === "community") assignment[node.id] = node.cluster < 2 ? "train" : "test";
+          else assignment[node.id] = node.id < 16 ? "train" : "test";
+        });
+        return assignment;
+      }
+
+      function renderValidation() {
+        const graph = buildGraph();
+        const assignment = splitAssignment(graph.nodes);
+        const crossing = graph.edges.filter(([a, b]) => assignment[a] !== assignment[b]).length;
+        const labels = graph.nodes.map(node => node.outcome);
+        const base = auc(labels, graph.nodes.map(node => node.netScore));
+        const splitPenalty = state.split === "random" ? 0.02 : state.split === "community" ? 0.08 : 0.1;
+        const honest = clamp(base - splitPenalty, 0.5, 0.94);
+        const leakBonus = state.leaky ? (state.split === "random" ? 0.16 : state.split === "community" ? 0.07 : 0.04) : 0;
+        const observed = clamp(honest + leakBonus, 0.5, 0.99);
+        renderGraph(root.querySelector("#dsn-validation-graph"), graph, { mode: "validation", splitInfo: assignment });
+        root.querySelector("#dsn-observed-auc").textContent = fmt(observed, 2);
+        root.querySelector("#dsn-honest-auc").textContent = fmt(honest, 2);
+        root.querySelector("#dsn-cross-edges").textContent = crossing;
+        root.querySelector("#dsn-observed-context").textContent = state.leaky ? "Incluye señal contemporánea" : "Solo información disponible";
+        root.querySelector("#dsn-observed-bar").style.width = `${observed * 100}%`;
+        root.querySelector("#dsn-honest-bar").style.width = `${honest * 100}%`;
+        root.querySelector("#dsn-observed-label").textContent = fmt(observed, 2);
+        root.querySelector("#dsn-honest-label").textContent = fmt(honest, 2);
+        const gap = observed - honest;
+        root.querySelector("#dsn-validation-insight").textContent = state.leaky ? `La evaluación está inflada en ${fmt(gap, 2)} puntos: resultados de vecinos o entidades conectadas cruzan la frontera entre train y test. Una métrica alta puede contar una historia imposible en producción.` : `Sin la variable filtrada, la brecha cae. Aun así, el split ${state.split === "random" ? "aleatorio" : state.split === "community" ? "por comunidad" : "temporal"} debe justificarse según el uso futuro del modelo.`;
+      }
+
+      function protectedNodes(graph) {
+        const ranked = graph.nodes.slice();
+        if (state.strategy === "hubs") ranked.sort((a, b) => b.degree - a.degree || a.id - b.id);
+        else if (state.strategy === "bridges") ranked.sort((a, b) => b.bridge - a.bridge || b.degree - a.degree || a.id - b.id);
+        else ranked.sort((a, b) => ((a.id * 11 + state.cascadeRun * 7) % 29) - ((b.id * 11 + state.cascadeRun * 7) % 29));
+        return ranked.slice(0, state.budget).map(node => node.id);
+      }
+
+      function cascade(graph, protectedIds, runOffset) {
+        const candidates = graph.nodes.filter(node => !protectedIds.includes(node.id)).sort((a, b) => b.outcome - a.outcome || b.degree - a.degree);
+        const seed = candidates[(state.cascadeRun + runOffset) % Math.min(5, candidates.length)].id;
+        const impacted = [seed];
+        const queue = [seed];
+        const seen = new Set([seed]);
+        while (queue.length) {
+          const current = queue.shift();
+          graph.neighbors[current].forEach(next => {
+            if (seen.has(next) || protectedIds.includes(next)) return;
+            const edgeSignal = ((current + 3) * (next + 5) + state.cascadeRun * 13 + runOffset * 7) % 100;
+            const probability = 35 + (graph.nodes[next].outcome ? 25 : 0) + Math.min(20, graph.nodes[current].degree * 3);
+            if (edgeSignal < probability) {
+              seen.add(next);
+              impacted.push(next);
+              queue.push(next);
+            }
+          });
+        }
+        return impacted;
+      }
+
+      function renderIntervention() {
+        const graph = buildGraph();
+        const protectedIds = protectedNodes(graph);
+        const before = cascade(graph, [], 0);
+        const after = cascade(graph, protectedIds, 0);
+        renderGraph(root.querySelector("#dsn-intervention-graph"), graph, { mode: "intervention", impacted: after, protectedIds });
+        root.querySelector("#dsn-before-count").textContent = `${before.length}/24`;
+        root.querySelector("#dsn-after-count").textContent = `${after.length}/24`;
+        root.querySelector("#dsn-before-bar").style.width = `${before.length / 24 * 100}%`;
+        root.querySelector("#dsn-after-bar").style.width = `${after.length / 24 * 100}%`;
+        root.querySelector("#dsn-budget-value").textContent = `${state.budget} ${state.budget === 1 ? "entidad" : "entidades"}`;
+        root.querySelector("#dsn-protected-list").textContent = protectedIds.map(id => graph.nodes[id].label).join(", ");
+        const avoided = Math.max(0, before.length - after.length);
+        const strategyLabel = state.strategy === "hubs" ? "hubs" : state.strategy === "bridges" ? "puentes" : "nodos al azar";
+        root.querySelector("#dsn-intervention-insight").textContent = `Proteger ${strategyLabel} evita ${avoided} afectaciones en esta ejecución. Cambie presupuesto y estrategia: la ventaja depende de la estructura y del mecanismo de propagación.`;
+      }
+
+      function showTab(tab) {
+        state.tab = tab;
+        root.querySelectorAll("[data-tab]").forEach(button => {
+          const active = button.dataset.tab === tab;
+          button.setAttribute("aria-pressed", String(active));
+          button.classList.toggle("btn-primary", active);
+        });
+        root.querySelectorAll("[data-panel]").forEach(panel => { panel.hidden = panel.dataset.panel !== tab; });
+        if (tab === "explore") renderExplore();
+        if (tab === "predict") renderPrediction();
+        if (tab === "validate") renderValidation();
+        if (tab === "intervene") renderIntervention();
+      }
+
+      root.querySelectorAll("[data-tab]").forEach(button => button.addEventListener("click", () => showTab(button.dataset.tab)));
+      root.querySelector("#dsn-scenario").addEventListener("change", event => {
+        state.scenario = event.target.value;
+        state.selected = 2;
+        renderExplore();
+        renderPrediction();
+        renderValidation();
+        renderIntervention();
+      });
+      root.querySelector("#dsn-perspective").addEventListener("change", event => { state.perspective = event.target.value; renderExplore(); });
+      root.querySelector("#dsn-threshold").addEventListener("input", event => { state.threshold = Number(event.target.value) / 100; renderPrediction(); });
+      root.querySelector("#dsn-net-weight").addEventListener("input", event => { state.netWeight = Number(event.target.value) / 100; renderExplore(); renderPrediction(); renderValidation(); });
+      root.querySelector("#dsn-split").addEventListener("change", event => { state.split = event.target.value; renderValidation(); });
+      root.querySelector("#dsn-leaky").addEventListener("change", event => { state.leaky = event.target.checked; renderValidation(); });
+      root.querySelector("#dsn-strategy").addEventListener("change", event => { state.strategy = event.target.value; renderIntervention(); });
+      root.querySelector("#dsn-budget").addEventListener("input", event => { state.budget = Number(event.target.value); renderIntervention(); });
+      root.querySelector("#dsn-run-cascade").addEventListener("click", () => { state.cascadeRun += 1; renderIntervention(); });
+
+      const quizKey = { q1: "no", q2: "time", q3: "both" };
+      const quizMessages = {
+        q1: { ok: "Correcto. Homofilia, selección o contexto compartido también pueden explicar el patrón.", no: "La correlación relacional no identifica por sí sola el mecanismo causal." },
+        q2: { ok: "Correcto. Entrenar en el pasado y probar en el futuro reproduce mejor el despliegue.", no: "El split debe imitar la disponibilidad real de información, no maximizar la métrica." },
+        q3: { ok: "Correcto. Los atributos describen capacidad individual y la red agrega contexto estructural.", no: "La idea central es complementar: ninguna representación cuenta toda la historia por sí sola." }
+      };
+      root.querySelectorAll("[data-quiz]").forEach(group => {
+        group.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+          const q = group.dataset.quiz;
+          const correct = button.dataset.answer === quizKey[q];
+          group.querySelectorAll("button").forEach(peer => peer.setAttribute("aria-pressed", String(peer === button)));
+          root.querySelector(`#${q}-feedback`).textContent = correct ? quizMessages[q].ok : quizMessages[q].no;
+        }));
+      });
+
+      renderExplore();
+      renderPrediction();
+      renderValidation();
+      renderIntervention();
+      showTab("explore");
+    }());
+  </script>
+</div>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>
