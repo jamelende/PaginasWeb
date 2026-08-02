@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>PaginaWebTCOM2026-2_Javeriana.knit</title>
+
+<script src="PaginaWebTCOM2026-2_Javeriana_files/header-attrs-2.29/header-attrs.js"></script>
+<script src="PaginaWebTCOM2026-2_Javeriana_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="PaginaWebTCOM2026-2_Javeriana_files/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="PaginaWebTCOM2026-2_Javeriana_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="PaginaWebTCOM2026-2_Javeriana_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="PaginaWebTCOM2026-2_Javeriana_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="PaginaWebTCOM2026-2_Javeriana_files/navigation-1.1/tabsets.js"></script>
+<link href="PaginaWebTCOM2026-2_Javeriana_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="PaginaWebTCOM2026-2_Javeriana_files/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --uv-red: #F4B223;
+  --uv-blue: #003B71;
+  --uv-navy: #00264D;
+  --uv-ink: #24364B;
+  --uv-muted: #63758A;
+  --uv-bg: #f6f8fb;
+  --uv-card: rgba(255,255,255,0.94);
+  --uv-line: #e6edf5;
+  --uv-soft-blue: #eaf4ff;
+  --uv-soft-red: #FFF8E5;
+  --shadow-sm: 0 8px 24px rgba(0,38,77,.08);
+  --shadow-md: 0 18px 55px rgba(0,38,77,.14);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--uv-ink);
+  background:
+    radial-gradient(circle at top left, rgba(244,178,35,.12), transparent 34rem),
+    radial-gradient(circle at top right, rgba(0,59,113,.12), transparent 34rem),
+    linear-gradient(180deg, #ffffff 0%, var(--uv-bg) 40%, #ffffff 100%);
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 18px 26px 80px;
+}
+
+h1, h2, h3, h4 { color: var(--uv-navy); font-weight: 800; letter-spacing: -0.02em; }
+h2 {
+  margin-top: 34px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--uv-line);
+  position: relative;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 92px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--uv-red), var(--uv-blue));
+}
+
+p { font-size: 1.04rem; }
+
+.hero-section {
+  margin: 18px 0 34px;
+  padding: 34px;
+  border-radius: 32px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(0,38,77,.95), rgba(0,59,113,.93)),
+    url('https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: relative;
+}
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 15%, rgba(255,255,255,.18), transparent 22rem);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; max-width: 980px; }
+.hero-logo {
+  width: 120px;
+  max-width: 32%;
+  background: #fff;
+  padding: 12px;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.16);
+  margin-bottom: 22px;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid rgba(255,255,255,.34);
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: .78rem;
+  letter-spacing: .08em;
+}
+.hero-section h1 {
+  color: #fff;
+  margin: 18px 0 10px;
+  font-size: clamp(2.15rem, 4vw, 4.8rem);
+  line-height: 1.03;
+}
+.hero-subtitle {
+  max-width: 800px;
+  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
+  color: rgba(255,255,255,.88);
+  margin-bottom: 22px;
+}
+.hero-badges, .hero-actions, .quick-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.badge-soft {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  color: #fff;
+  font-weight: 700;
+}
+.hero-actions { margin-top: 24px; }
+.hero-actions a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: #fff;
+  color: var(--uv-blue);
+  box-shadow: 0 8px 22px rgba(0,0,0,.12);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.hero-actions a:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+
+.quick-facts {
+  margin: -8px 0 30px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.fact-card {
+  border: 1px solid var(--uv-line);
+  background: var(--uv-card);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.fact-label { color: var(--uv-muted); font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.fact-value { color: var(--uv-navy); font-size: 1.1rem; font-weight: 800; margin-top: 4px; }
+
+.intro-card, .profile-card, .resource-card {
+  border: 1px solid var(--uv-line);
+  background: var(--uv-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 26px;
+  margin: 22px 0;
+}
+.intro-card {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.intro-card img {
+  width: 100%;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba(0,38,77,.12);
+}
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.resource-tile {
+  text-decoration: none !important;
+  border: 1px solid var(--uv-line);
+  border-radius: 18px;
+  padding: 16px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  color: var(--uv-navy) !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.resource-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); border-color: #b8d8f4; }
+.resource-tile strong { display: block; font-size: 1.02rem; margin-bottom: 4px; }
+.resource-tile span { color: var(--uv-muted); font-size: .92rem; }
+
+.profile-card {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 26px;
+  align-items: center;
+}
+.profile-card img {
+  width: 210px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 8px solid #fff;
+  box-shadow: 0 14px 36px rgba(0,38,77,.16);
+}
+.profile-card h3 { margin: 0 0 6px; font-size: 1.65rem; }
+.profile-card p { color: var(--uv-muted); margin-bottom: 16px; }
+.profile-card a, .main-container > p a {
+  color: var(--uv-blue);
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 28px;
+  padding: 12px !important;
+  background: rgba(255,255,255,.74);
+  border: 1px solid var(--uv-line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.nav-pills > li { margin: 0 !important; }
+.nav-pills > li > a {
+  border-radius: 999px !important;
+  color: var(--uv-blue) !important;
+  font-weight: 800;
+  padding: 10px 14px !important;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li > a:hover {
+  background: linear-gradient(135deg, var(--uv-red), var(--uv-blue)) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+.tab-content {
+  background: rgba(255,255,255,.76);
+  border: 1px solid var(--uv-line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 22px 0 34px;
+  border-radius: 22px;
+  border: 1px solid var(--uv-line);
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 0 !important;
+  background: #fff;
+  overflow: hidden;
+  font-size: .95rem;
+}
+th, td {
+  border: 0 !important;
+  border-bottom: 1px solid var(--uv-line) !important;
+  vertical-align: top !important;
+  padding: 16px !important;
+}
+th {
+  background: linear-gradient(135deg, var(--uv-navy), var(--uv-blue)) !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  min-width: 150px;
+}
+tr:nth-child(even) td { background: #fbfdff; }
+tr:hover td { background: #f2f8ff; }
+td a {
+  display: inline-block;
+  margin: 3px 4px 6px 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d9e8f6;
+  background: #f7fbff;
+  color: var(--uv-blue) !important;
+  font-weight: 700;
+  text-decoration: none !important;
+  line-height: 1.25;
+}
+td a:hover { background: var(--uv-soft-blue); border-color: #b8d8f4; }
+
+center img, p img {
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(0,38,77,.12);
+}
+
+blockquote {
+  border-left: 5px solid var(--uv-red);
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.floating-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, var(--uv-red), var(--uv-blue));
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .main-container { padding: 12px 14px 70px; }
+  .hero-section { padding: 24px; border-radius: 24px; }
+  .quick-facts, .resource-grid, .intro-card, .profile-card { grid-template-columns: 1fr; }
+  .profile-card img { width: 170px; height: 170px; }
+  .tab-content { padding: 14px; }
+  th, td { padding: 12px !important; }
+}
+</style>
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@600;700;800&display=swap');
+
+/* Ajustes de legibilidad: fuente clara, cómoda y de tamaño moderado para lectura en pantalla */
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Atkinson Hyperlegible', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.70;
+}
+
+.main-container {
+  max-width: 1180px;
+}
+
+p, li, td, th, blockquote,
+.intro-card p,
+.profile-card p,
+.resource-card p,
+.tab-content,
+.hero-subtitle {
+  font-size: 1.02rem;
+}
+
+h1, h2, h3, h4,
+.hero-section h1,
+.fact-label,
+.fact-value,
+.badge-soft,
+.hero-actions a,
+.resource-tile strong,
+.nav-pills > li > a {
+  font-family: 'Inter', 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+h2 {
+  font-size: 1.72rem;
+  line-height: 1.22;
+  margin-top: 42px;
+}
+
+h3 {
+  font-size: 1.34rem;
+  line-height: 1.28;
+}
+
+.profile-card h3 {
+  font-size: 1.72rem;
+}
+
+.hero-section h1 {
+  font-size: clamp(2.35rem, 4vw, 4.85rem);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.10rem, 1.75vw, 1.42rem);
+  line-height: 1.58;
+}
+
+.badge-soft,
+.hero-actions a,
+.fact-value {
+  font-size: 1.03rem;
+}
+
+.resource-tile strong {
+  font-size: 1.03rem;
+}
+
+.resource-tile span,
+.fact-label,
+.eyebrow {
+  font-size: .92rem;
+}
+
+.nav-pills {
+  gap: 10px;
+  padding: 14px !important;
+}
+
+.nav-pills > li > a {
+  font-size: .96rem;
+  padding: 11px 15px !important;
+}
+
+.tab-content {
+  padding: 24px;
+}
+
+table {
+  font-size: .98rem;
+}
+
+th, td {
+  padding: 15px !important;
+}
+
+td a {
+  font-size: .96rem;
+  padding: 7px 10px;
+}
+
+.floating-top {
+  font-size: 1rem;
+  padding: 12px 15px;
+}
+
+@media (min-width: 1200px) {
+  html { font-size: 17px; }
+}
+
+@media (max-width: 900px) {
+  html { font-size: 15.5px; }
+  body { line-height: 1.66; }
+  p, li, td, th, blockquote, .tab-content { font-size: 1rem; }
+  .tab-content { padding: 16px; }
+  .nav-pills > li > a { font-size: .95rem; padding: 10px 13px !important; }
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function ensureMainContainer() {
+    if (document.querySelector('.main-container')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'main-container';
+    var nodes = Array.from(document.body.childNodes).filter(function (node) {
+      if (node.nodeType === 1 && ['SCRIPT', 'STYLE', 'LINK'].indexOf(node.tagName) !== -1) return false;
+      if (node.nodeType === 1 && node.classList.contains('floating-top')) return false;
+      if (node.nodeType === 3 && !node.textContent.trim()) return false;
+      return true;
+    });
+    document.body.insertBefore(wrapper, document.body.firstChild);
+    nodes.forEach(function (node) { wrapper.appendChild(node); });
+  }
+
+  function buildTabsetIfNeeded() {
+    if (document.querySelector('.tab-content .tab-pane') || document.querySelector('.nav.nav-pills')) return;
+    var tabset = document.querySelector('h1.tabset, h1.tabset-pills');
+    if (!tabset) return;
+    var sections = [];
+    var node = tabset.nextElementSibling;
+    while (node && node.tagName !== 'H1') {
+      if (node.tagName === 'H2') {
+        var heading = node;
+        var title = heading.textContent.trim() || 'Sección';
+        var items = [];
+        node = heading.nextElementSibling;
+        while (node && node.tagName !== 'H2' && node.tagName !== 'H1') {
+          var next = node.nextElementSibling;
+          items.push(node);
+          node = next;
+        }
+        sections.push({ heading: heading, title: title, items: items });
+      } else {
+        node = node.nextElementSibling;
+      }
+    }
+    if (!sections.length) return;
+    var nav = document.createElement('ul');
+    nav.className = 'nav nav-pills custom-tabset';
+    var content = document.createElement('div');
+    content.className = 'tab-content custom-tab-content';
+    tabset.insertAdjacentElement('afterend', content);
+    tabset.insertAdjacentElement('afterend', nav);
+    sections.forEach(function (section, index) {
+      var id = 'curso-tab-' + index;
+      var li = document.createElement('li');
+      if (index === 0) li.className = 'active';
+      var a = document.createElement('a');
+      a.href = '#' + id;
+      a.textContent = section.title;
+      a.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.querySelectorAll('.custom-tabset li').forEach(function (x) { x.classList.remove('active'); });
+        document.querySelectorAll('.custom-tab-content .tab-pane').forEach(function (x) { x.classList.remove('active'); x.style.display = 'none'; });
+        li.classList.add('active');
+        panel.classList.add('active');
+        panel.style.display = 'block';
+        window.scrollTo({ top: nav.getBoundingClientRect().top + window.pageYOffset - 18, behavior: 'smooth' });
+      });
+      li.appendChild(a);
+      nav.appendChild(li);
+      var panel = document.createElement('div');
+      panel.id = id;
+      panel.className = 'tab-pane' + (index === 0 ? ' active' : '');
+      panel.style.display = index === 0 ? 'block' : 'none';
+      panel.appendChild(section.heading);
+      section.items.forEach(function (item) { panel.appendChild(item); });
+      content.appendChild(panel);
+    });
+    tabset.style.display = 'none';
+  }
+
+  ensureMainContainer();
+  buildTabsetIfNeeded();
+
+  document.querySelectorAll('table').forEach(function (table) {
+    if (!table.parentElement.classList.contains('table-wrap')) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
+  document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+  });
+  var topButton = document.createElement('button');
+  topButton.className = 'floating-top';
+  topButton.textContent = '↑';
+  topButton.title = 'Volver arriba';
+  topButton.onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  document.body.appendChild(topButton);
+});
+</script>
+<style type="text/css">
+
+/* Tablas de módulos más compactas */
+.tab-content .table-wrap,
+.course-tabs-panels .table-wrap {
+  margin: 12px 0 20px;
+  border-radius: 14px;
+}
+
+.tab-content table,
+.course-tabs-panels table {
+  font-size: .84rem;
+  line-height: 1.32;
+}
+
+.tab-content th,
+.tab-content td,
+.course-tabs-panels th,
+.course-tabs-panels td {
+  padding: 8px 10px !important;
+}
+
+.tab-content td p,
+.course-tabs-panels td p {
+  margin: 0 0 6px;
+  font-size: .86rem;
+  line-height: 1.32;
+}
+
+.tab-content td a,
+.course-tabs-panels td a {
+  padding: 3px 7px;
+  margin: 2px 3px 4px 0;
+  font-size: .82rem;
+  line-height: 1.2;
+}
+
+.tab-content th,
+.course-tabs-panels th {
+  min-width: 120px;
+}
+
+.tab-content br,
+.course-tabs-panels br {
+  line-height: 1.15;
+}
+
+</style>
+<style type="text/css">
+.hero-section {
+  background:
+    linear-gradient(135deg, rgba(0,38,77,.95), rgba(0,59,113,.93)),
+    url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+}
+.course-objectives { margin: 16px 0 0; padding-left: 1.25rem; }
+.course-objectives li { margin-bottom: 10px; }
+.institution-note { color: var(--uv-muted); font-weight: 700; }
+</style>
+<section class="hero-section">
+  <div class="hero-content">
+    <img class="hero-logo" src="https://www.dropbox.com/scl/fi/80cyc74xbca9es561ugey/LogoJaveriana.PNG?rlkey=grenf8p5d8jj4k2pgh0itxzpi&dl=1" alt="Logo Pontificia Universidad Javeriana">
+    <div class="eyebrow">Curso de pregrado · 2026-2</div>
+    <h1>Teoría de la Computación</h1>
+    <p class="hero-subtitle">Autómatas, lenguajes formales, computabilidad y complejidad para comprender los límites y fundamentos del cómputo.</p>
+    <div class="hero-badges">
+      <span class="badge-soft">🏛️ Pontificia Universidad Javeriana</span>
+      <span class="badge-soft">💻 Departamento de Ingeniería de Sistemas</span>
+      <span class="badge-soft">📚 Semestre 2026-2</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://www.dropbox.com/scl/fi/xbznuaql0392bxkyerhkl/Introducing-The-Theory-of-Computation-Goddard-Wayne-2008-Jones-and-Bartlett-Publishers-Inc_-9780763741259-f2f60ae66cf6c5c3389af0c354659e9f-Anna-s-Archive.pdf?rlkey=jl3cxds0m0sijcetydiggb4xz&dl=1">📘 Texto del curso: Goddard</a>
+      <a href="https://www.dropbox.com/scl/fi/2y7yi1pkvmda09q9t38v0/CodigoQRGrupoWappLunes.jpeg?rlkey=ab6bp8h9i2if6c6gttf0his0e&dl=1">📘Codigo QR Lunes</a>
+      <a href="https://www.dropbox.com/scl/fi/sihxsnmrz3z70d49afgrs/CodigoQRGrupoWappMartes.jpeg?rlkey=aeckp1pqr05fqvoomvjang8w4&dl=1">📘Codigo QR Martes</a>
+      <a href="https://www.dropbox.com/scl/fi/msshkpm8p53z7q9q0j6fm/Coleccion_Linz_Completa_Capitulos_01_al_14.pdf?rlkey=jzeagl6opuceqoya517qnq3vp&dl=0">📘Comic Book</a>
+      <a href="https://jamelende.github.io/PaginasWeb/Pregrado/Tcom/Apps/LibroIntLinz.html">📘Libro Interactivo</a>
+            <a href="https://jamelende.github.io/PaginasWeb/Pregrado/Tcom/Apps/HotelInfinito.html">📘El Hotel Infinito</a>
+
+    </div>
+  </div>
+</section>
+<div id="pestañas" class="section level1 tabset tabset-pills">
+<h1 class="tabset tabset-pills">Pestañas</h1>
+<div id="información-general" class="section level2">
+<h2>Información General</h2>
+<div class="intro-card">
+  <img src="https://www.dropbox.com/scl/fi/y4wcud74lys8ukbgmbavq/finiteStateMachine.gif?rlkey=w81wgcdkl8a4awnduk9srwazf&dl=1" alt="Imagen representativa del curso Teoría de la Computación">
+  <div>
+    <h3>Propósito del curso</h3>
+    <p>El curso de pregrado en Teoría de la Computación es una exploración profunda y rigurosa de los fundamentos matemáticos que sustentan la ciencia de la computación. Diseñado para proporcionar a los estudiantes una comprensión sólida de los conceptos teóricos subyacentes a la resolución de problemas computacionales, este curso abarca áreas clave como la teoría de autómatas, la complejidad computacional y la teoría de lenguajes formales. Los estudiantes se sumergirán en la investigación de modelos abstractos de cómputo, como máquinas de Turing, y explorarán cómo estas abstracciones pueden utilizarse para analizar la solubilidad de problemas algorítmicos. A lo largo del curso, se fomenta el pensamiento analítico y la capacidad para abordar problemas complejos desde una perspectiva teórica, preparando a los estudiantes para aplicar estos conocimientos en el diseño y análisis de algoritmos en diversos contextos informáticos.</p>
+    <p>Además, el curso abordará temas avanzados como la teoría de la complejidad computacional, donde se explorarán clases de problemas y se analizará la dificultad intrínseca de los mismos. Los estudiantes aprenderán a clasificar problemas según su complejidad y a comprender la diferencia entre problemas resolubles de manera eficiente y aquellos que son inherentemente difíciles. Con un enfoque en la formalización de conceptos y la aplicación de la lógica matemática en la teoría de la computación, este curso proporcionará a los estudiantes las herramientas necesarias para abordar desafíos computacionales desde una perspectiva fundamentada en principios sólidos y conceptualmente ricos.</p>
+    <h3>Objetivos</h3>
+    <ul class="course-objectives">
+      <li>Comprender los Fundamentos Matemáticos: Proporcionar a los estudiantes una base sólida en conceptos matemáticos fundamentales, como la lógica, la teoría de conjuntos y el álgebra booleana, que son esenciales para el análisis teórico en ciencia de la computación.</li>
+      <li>Explorar Modelos de Cómputo Abstractos: Introducir y analizar modelos abstractos de cómputo, como máquinas de Turing y autómatas finitos, para comprender cómo representan y resuelven problemas algorítmicos.</li>
+      <li>Estudiar la Teoría de Lenguajes Formales: Profundizar en la teoría de lenguajes formales y gramáticas, permitiendo a los estudiantes comprender la estructura y la sintaxis de los lenguajes de programación y la base de compiladores.</li>
+    </ul>
+  </div>
+</div>
+</div>
+<div id="profesor" class="section level2">
+<h2>Profesor</h2>
+<div class="profile-card">
+  <img src="https://github.com/jamelende/PaginasWeb/raw/main/FotoAlf.png" alt="Alfonso Meléndez">
+  <div>
+    <h3>M.Sc. Alfonso Meléndez</h3>
+    <p>Profesor Titular · Escuela Colombiana de Ingeniería</p>
+    <a href="https://jamelende.github.io/PaginasWeb/HojadeVida/HojaDeVida2026.html">Ver hoja de vida</a>
+  </div>
+</div>
+</div>
+<div id="periodo-1" class="section level2">
+<h2>Periodo 1</h2>
+<!-- <br> </br> -->
+<!-- <center>![](https://www.dropbox.com/scl/fi/y4wcud74lys8ukbgmbavq/finiteStateMachine.gif?rlkey=w81wgcdkl8a4awnduk9srwazf&dl=1){width=20%}</center> -->
+<!-- <br></br> -->
+<br></br>
+<center>
+<a
+href="https://www.dropbox.com/scl/fi/xbznuaql0392bxkyerhkl/Introducing-The-Theory-of-Computation-Goddard-Wayne-2008-Jones-and-Bartlett-Publishers-Inc_-9780763741259-f2f60ae66cf6c5c3389af0c354659e9f-Anna-s-Archive.pdf?rlkey=jl3cxds0m0sijcetydiggb4xz&amp;dl=1">Texto
+del curso: Wayne Goddard, Introducing the Theory of Computation</a><br>
+</center>
+<center>
+<a
+href="https://www.dropbox.com/scl/fi/vneh8mkcikdn8qc1l705m/ComicBooksTeoComp14Capitulos.zip?rlkey=psfqfthr113ijbx391v41l2og&amp;dl=0">Comic
+Book Por Capítulos archivo Zip</a><br>
+</center>
+<p><br></br> <br></br></p>
+<td>
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+<strong>Semana 1</strong>
+</th>
+<td>
+<p><strong>Introducción</strong> <br></p>
+</td>
+<td>
+<!-- **Actividad Inicial del Curso**<br> -->
+<!-- [Acertijos Algorítmicos](https://www.dropbox.com/scl/fi/400a006fhzr4ajvjzppj8/AcertijosANAL2026.zip?rlkey=7lmvyd320vp07v6g03oeqmese&dl=1)<br> -->
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/oty3jhkiui6rhoktdn9xe/La-Jerarquia-de-Chomsky-en-la-Teoria-de-la-Computacion.pptx?rlkey=368y7qg3wzfbb4oox17n2al5b&amp;dl=1">La
+Jerarquía de Chomsky</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/l8xktlpymq4ztqz2mkmvu/Goddard1.pdf?rlkey=h1gjr2l5f2czhb59cdofkmpr2&amp;dl=1">Capítulo
+1 Libro Goddard</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=58N2N7zJGrQ&amp;t=3s">Neso
+academy Int to Theory of Computation</a><br></p>
+<!-- **Sitios Internet**<br> -->
+<!-- [Awesome Theoretical Computer Science](https://github.com/mostafatouny/awesome-theoretical-computer-science/?tab=readme-ov-file)<br> -->
+</td>
+</tr>
+<th>
+<strong>Semana 2</strong>
+</th>
+<td>
+<p><strong>Máquinas de estado Finito</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/l1vdjwd3w3zz9kgllnn7u/SlidesTeoriabasicaLenguajesEspa-ol.pdf?rlkey=vc6mrnr7b7yvkknhpxs1lffcf&amp;dl=1">Teoría
+Básica Lenguajes y Cadenas</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/slghv9bvgp39drowkecbw/Finite-Automata.pptx?rlkey=rpef3ddklx34w7modu5rtn7pi&amp;dl=1">Finite
+Automata</a><br> <a
+href="https://www.dropbox.com/scl/fi/fn1id7updph8aowk9geqg/Automatas-Finitos.pptx?rlkey=qn6cp1eetrb2392qdcisxlspp&amp;dl=1">Autómatas
+Finitos</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/e8dr0ehld44qcrde648jp/1.pdf?rlkey=nb2886t51zz5zc01xvmbpsdmx&amp;dl=1">Finite
+Automata Goddard</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/qyhszchfpk5dnoqbu8jad/Goddard2.pdf?rlkey=uq80jj50m18cdq4n08z489gnf&amp;dl=1">Capítulo
+2 Libro Goddard</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=TpIBUeyOuv8&amp;t=120s">Neso
+Academy Finite State Machines 1</a><br> <a
+href="https://www.youtube.com/watch?v=Qa6csfkK7_I">Neso Academy Finite
+State Machines 2</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 3</strong>
+</th>
+<td>
+<p><strong>Máquinas de estado Finito</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/pyzx0n7n2a48tka3gqgud/Regular-Expressions.pptx?rlkey=51yl4jzvcz9lz4o9pcwwqcubn&amp;dl=1">Expresiones
+Regulares</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/2vonh42gu23pahh58wmpc/2.pdf?rlkey=h3b2xhtiu952txuqxgqiksd57&amp;dl=1">Goddard
+Regular Expressions</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/fiw6qgdygnyehbx9zbjyy/Goddard3.pdf?rlkey=u7qlh7uqclx3s02vmphe5uzwl&amp;dl=1">Capítulo
+3 Libro Goddard</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=40i4PKpM0cI&amp;t=14s">Autómata de
+Estado Finito Ejemplo 1</a><br> <a
+href="https://www.youtube.com/watch?v=2KindKcLjos">Autómata de Estado
+Finito Ejemplo 2</a><br> <a
+href="https://www.youtube.com/watch?v=_2cKtLkdwnc">Autómata de Estado
+Finito Ejemplo 3</a><br> <a
+href="https://www.youtube.com/watch?v=Fpmr1nHqYrw">Autómata de Estado
+Finito Ejemplo 4</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 4</strong>
+</th>
+<td>
+<p><strong>Máquinas no Deterministas</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/vae0ockvcnp9e6vnp8kid/Nondeterminism-in-Finite-Automata.pptx?rlkey=jd9buk55n1aptulvtkunodn7x&amp;dl=1">No
+Determinismo</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/8u5qdtkiz7j2vkz7vtr4k/3a.pdf?rlkey=k17m20yo5mb30zb541q4vd5ky&amp;dl=1">Goddard
+No Determinism</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/fiw6qgdygnyehbx9zbjyy/Goddard3.pdf?rlkey=u7qlh7uqclx3s02vmphe5uzwl&amp;dl=1">Capítulo
+3 Libro Goddard</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=WrzaPNj9OZ4">Lenguajes
+Regulares</a><br> <a
+href="https://www.youtube.com/watch?v=6aRJQNYYz4s">Operaciones en
+Lenguajes Regulares</a><br></p>
+<p><strong>Autómatas no-Determinísticos</strong><br> <a
+href="https://www.youtube.com/watch?v=ehy0jGIYRtE">¿Qué es un Autómata
+no Determinístico?</a><br> <a
+href="https://www.youtube.com/watch?v=4bjqVsoy6bA">Ejemplo 1</a><br> <a
+href="https://www.youtube.com/watch?v=Bcen1W_uFEU">Ejemplo 2</a><br> <a
+href="https://www.youtube.com/watch?v=NGF-b3QVeJU">Ejemplo 3</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 5</strong>
+</th>
+<td>
+<p><strong>Algoritmos de Máquinas de Estado Finito</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/8u5qdtkiz7j2vkz7vtr4k/3a.pdf?rlkey=k17m20yo5mb30zb541q4vd5ky&amp;dl=1">Goddard
+Algorithms</a><br> <a
+href="https://www.dropbox.com/scl/fi/dk1an7cq0hjdwin2ldcoc/4a.pdf?rlkey=ufg6f0ksvj4vzgrmsgr2n8uum&amp;dl=1">Goddard
+Closure Properties</a><br> <a
+href="https://www.dropbox.com/scl/fi/6cuh76fksvfdsdmfv1rna/4b.pdf?rlkey=nqtpzrsx591mypve97pwo9psn&amp;dl=1">Goddard
+Non Regular Languages</a><br> <a
+href="https://www.dropbox.com/scl/fi/anagh8d9hbd5hcbyz1rfc/5.pdf?rlkey=psbj17ryh5wo4ejvya1wsp3fi&amp;dl=1">Goddard
+Applications</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/gfk5pyvqoiwkgvmnsgcm2/ClosureUnderRegularOperations.pptx?rlkey=vd11qx1ntlhprhtcce0knbx84&amp;dl=1">Sipser:
+Closure under Regular Operations</a><br> <a
+href="https://www.dropbox.com/scl/fi/qkkuk13ono34ygrifl5c2/PropClausuraEjemplosJflap.zip?rlkey=wnu2xan8jy8xdp310r3y7spfi&amp;dl=1">Ejemplos
+en Jflap Clausura</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/fiw6qgdygnyehbx9zbjyy/Goddard3.pdf?rlkey=u7qlh7uqclx3s02vmphe5uzwl&amp;dl=1">Capítulo
+3 Libro Goddard</a><br></p>
+<p><strong>!!! Nuevo!!! Exposiciones 2024-1</strong><br> <a
+href="https://www.dropbox.com/scl/fi/sv3z5rr4mg9bxscdgrg2a/ExposicionesAplicacionesAEF-20241.zip?rlkey=0i9ak76f67ht1o1odgy8fnglz&amp;dl=1">Aplicaciones
+AEF Presentaciones 2024-1</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><strong>Algoritmo 1</strong><br> <a
+href="https://www.youtube.com/watch?v=--CSVsFIDng&amp;t=3s">Conversión
+de NFA a DFA (Algoritmo)</a><br> <a
+href="https://www.youtube.com/watch?v=pnyXgIXpKnc">Ejemplo 1</a><br> <a
+href="https://www.youtube.com/watch?v=i-fk9o46oVY">Ejemplo 2</a><br> <a
+href="https://www.youtube.com/watch?v=dY1bCC6syLI">Ejemplo 3</a><br> <a
+href="https://www.youtube.com/watch?v=Y92dtMnarAU">Ejemplo 4</a><br></p>
+<p><strong>Algoritmo 2</strong><br> <a
+href="https://www.youtube.com/watch?v=hOzc4BUIXRk&amp;t=3s">Minimización
+de un DFA (Algoritmo)</a><br> <a
+href="https://www.youtube.com/watch?v=0XaGAkY09Wc">Ejemplo 1</a><br> <a
+href="https://www.youtube.com/watch?v=ex9sPLq5CRg">Ejemplo 2</a><br></p>
+<p><strong>Algoritmo 3 Nfa a Expresión Regular</strong><br></p>
+<p><strong>Algoritmo 3.1 Teorema de Arden</strong><br> <a
+href="https://www.youtube.com/watch?v=Idl_0mPzZjE">Teorema de
+Arden</a><br> <a
+href="https://www.youtube.com/watch?v=FOhEmW_nMRs&amp;t=7s">Diseñando
+Expresiones Regulares</a><br> <a
+href="https://www.youtube.com/watch?v=OKFrju0HB7k&amp;t=512s">NFA a
+Expresión Regular Ejemplo</a><br> <a
+href="https://www.youtube.com/watch?v=SmT1DXLl3f4&amp;t=5s">DFA a
+Expresión Regular Ejemplo</a><br></p>
+<p><strong>Algoritmo 3.2 Método RIP</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=UKYvP8aS7fM">Easy Theory,
+Ejemplo 1</a><br></p>
+<p><strong>Algoritmo 4 Expresión Regular a NFA</strong><br> <a
+href="https://www.youtube.com/watch?v=RsSQPwUIR8U">Expresión regular a
+NFA Ejemplo 1</a><br> <a
+href="https://www.youtube.com/watch?v=zSHS_7omxRY">Expresión regular a
+NFA Ejemplo 2</a><br></p>
+<p><strong>Simuladores</strong><br> <a
+href="https://clever-automata-explorer.lovable.app/">Myhill Nerode
+Minimizer</a><br> <a
+href="https://www.dropbox.com/scl/fi/n1erglych7eyr6vkv0bld/rip.html?rlkey=mpgjshrxrxueyc4i55unxx3lp&amp;dl=1">Simulador
+RIP</a><br> <a href="https://automata-charm.lovable.app/">Simulador RIP
+Lovable</a><br> <a
+href="https://nfa-builder-buddy.lovable.app/">Simulador RegtEx to NFA
+Lovable</a><br></p>
+</td>
+</tr>
+</tr>
+</table>
+<p><br></br> <br></br> <br></br> <br></br></p>
+</div>
+<div id="periodo-2" class="section level2">
+<h2>Periodo 2</h2>
+<!-- <br> </br> -->
+<!-- <center>![](https://www.dropbox.com/scl/fi/8ybnkxgqfuyzeqzonl0mk/PushDownMachine.gif?rlkey=peoe1p3221i46bcvnxoat7nb9&dl=1){width=40%}</center> -->
+<!-- <br></br> -->
+<br></br>
+<td>
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+<strong>Semana 1</strong>
+</th>
+<td>
+<p><strong>Examen Primer Periodo</strong> <br> <strong>Sustentación
+Examen Primer Periodo</strong> <br> <br></p>
+</td>
+<td>
+<p><strong>Examen Primer Periodo</strong> <br> <strong>Sustentación
+Examen Primer Periodo</strong> <br></p>
+</td>
+<td>
+<p><strong>Examen Primer Periodo</strong> <br> <strong>Sustentación
+Examen Primer Periodo</strong> <br></p>
+</td>
+<td>
+<p><strong>Examen Primer Periodo</strong> <br> <strong>Sustentación
+Examen Primer Periodo</strong> <br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 2</strong>
+</th>
+<td>
+<p><strong>Lenguajes Libres de Contexto</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/26up74x8l9qyg40d0zxxt/6a.pdf?rlkey=znj5ao8eei0ws098zt636222e&amp;dl=1">Goddard
+Context free Grammars</a><br> <a
+href="https://www.dropbox.com/scl/fi/ssmw2z6eruy5sflhzz4ly/6b.pdf?rlkey=7zdgdh7pqtdai1oqjknk0nd6m&amp;dl=1">Goddard
+Derivation trees and regular languages</a><br></p>
+</td>
+<td>
+<p><strong>Ejemplos GLC</strong><br> <a
+href="https://www.dropbox.com/scl/fi/1ydvk4o5ho2zssarqvw18/GramLibContextoEjemplos.zip?rlkey=trfl1kl0x2y6h61u328o3r4ko&amp;dl=1">Ejemplos-latex</a><br>
+<a
+href="https://www.dropbox.com/scl/fi/u7mzypqnsl91de5k7jimu/EjemplosGramaticas-Jflap.zip?rlkey=0jiymj23kfjsg6m1guw3bkbwy&amp;dl=1">Ejemplos-JFLAP</a><br></p>
+<p><strong>Lecturas</strong><br></p>
+<!-- [Lectura Closure Properties Sipser](https://www.dropbox.com/scl/fi/rjylyyusi6lvks2tp6orf/SipserClosuresLectura.pdf?rlkey=nr0zte0pu9mtlu5ysaa6f5aor&dl=1)<br> -->
+<!-- [Lectura Pumping Lemma](https://www.dropbox.com/scl/fi/iam2h3ka8j1suefi8m82p/PumpingLemmaLectura.pdf?rlkey=573xknodxwrjy4ek66utrzt7g&dl=1)<br> -->
+<p><a
+href="https://www.dropbox.com/scl/fi/5cwn93ofxprdhhvhy344b/GoddardGLC.pdf?rlkey=1dgwr2u81l8nmmarwrj1pm78l&amp;dl=1">Goddard
+Gram Libres de Contexto</a><br></p>
+</td>
+<td>
+<!-- **Videos:**<br> -->
+<p><strong>Lema de Bombeo</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=v4ZjggNXW3Q&amp;t=610s">Easy
+Theory 48 min</a><br> <a
+href="https://www.youtube.com/watch?v=dikEDuepOtI">Neso Academy 8
+min</a><br> <a
+href="https://www.youtube.com/watch?v=Ty9tpikilAo&amp;t=156s">Ejemplo 1
+14 min</a><br> <a
+href="https://www.youtube.com/watch?v=kZzH8E-s-9o">Ejemplo 2 8
+min</a><br></p>
+<p><strong>Interactivos</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/tiaytcc3i8uxfosm62jd1/laboratorio_interactivo_diseno_gramaticas.html?rlkey=b969a8h56wg2ec4z4v1ngr0yy&amp;dl=1">Lab
+Interactivo Diseño de gramáticas</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 3</strong>
+</th>
+<td>
+<p><strong>Forma Normal de Chomsky</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/ald7aqbav2tz3rmmgniss/GoddardChomskyNormalForm.pdf?rlkey=q1207zbz1oia0cxof74qdapqp&amp;dl=1">Goddard
+Chomsky Normal Form</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/rjylyyusi6lvks2tp6orf/SipserClosuresLectura.pdf?rlkey=nr0zte0pu9mtlu5ysaa6f5aor&amp;dl=1">Lectura
+Closure Properties Sipser</a><br> <a
+href="https://www.dropbox.com/scl/fi/iam2h3ka8j1suefi8m82p/PumpingLemmaLectura.pdf?rlkey=573xknodxwrjy4ek66utrzt7g&amp;dl=1">Lectura
+Pumping Lemma</a><br> <a
+href="https://www.dropbox.com/scl/fi/5cwn93ofxprdhhvhy344b/GoddardGLC.pdf?rlkey=1dgwr2u81l8nmmarwrj1pm78l&amp;dl=1">Goddard
+Gram Libres de Contexto</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+<p><a
+href="https://www.youtube.com/watch?v=Mh-UQVmAxnw&amp;t=238s">Chomsky
+Normal Form Conversion Neso Academy</a><br> <a
+href="https://www.youtube.com/watch?v=-SZkkMWHBvQ&amp;t=614s">Chomsky
+Normal Form Made Easy</a><br></p>
+<p><strong>InterActivos</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/vu5phpjr7ccpvjg32dakh/html_interactivo_puente_cfg_chomsky.html?rlkey=mbjo6jzf7zsufo0d2huis3bin&amp;dl=1">Lovable
+Forma Normal de Chomsky</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 4</strong>
+</th>
+<td>
+<p><strong>Gramáticas LL1</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<!-- [Goddard Pushdown Automata](https://www.dropbox.com/scl/fi/0j30q9cfvu9zjtl24xxsm/7.pdf?rlkey=6y4k8nn5nm5qdwodh505blkoy&dl=1)<br> -->
+<p><a
+href="https://www.dropbox.com/scl/fi/67pegj7lrfihq93eocre1/NoteBookLMPredictiveParsing.zip?rlkey=7aly2rq6re6pmfe8ywiic3gat&amp;dl=1">Slides
+NotebookLM</a><br></p>
+</td>
+<td>
+<p><strong>Ejemplos</strong><br></p>
+<!-- [Goddard Aut de Pila](https://www.dropbox.com/scl/fi/ed08vp8d1ui8mvivw7yud/GoddardAutPila.pdf?rlkey=v3lgixx6emnaokufysmps8ycv&dl=1)<br> -->
+<p><a
+href="https://www.dropbox.com/scl/fi/qao504gey40fxq6khgq9j/1.-GramaticasparaComenzar.zip?rlkey=ie8i2yq34ptcc5jmva7ehfklu&amp;dl=1">Gramáticas
+para Comenzar</a><br> <a
+href="https://www.dropbox.com/scl/fi/nwu7f8fds7dgzz5etz7zc/2.-EjemplosLL1AManoJflap.zip?rlkey=cr51m597ri1p0i6y01xs8tixj&amp;dl=1">EjemplosLL1AManoJflap</a><br>
+<a
+href="https://www.dropbox.com/scl/fi/gbryzjzvkaz9lecafups4/3.-EjemplosJflap.zip?rlkey=ko0ndq9d6tg481fl2gixfgtd4&amp;dl=1">Ejemplos
+Jflap</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 5</strong>
+</th>
+<td>
+<p><strong>Parsing Determinístico</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/vdclo8yoxjqeh84l3nag3/Hilbert_s_Infinite_Hotel.pptx?rlkey=tlc8wzp7n3vd8z2k5hb4i3n53&amp;dl=1">Hotel
+Infinito Núimeros Primos TED</a><br> <a
+href="https://www.dropbox.com/scl/fi/080w9pqibd5xgza6yzfho/Beyond_Hilbert_s_Hotel.pptx?rlkey=2o099zs1450rai87l8m7goorl&amp;dl=1">Hotel
+Infinito Veritasium</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/2b41uy2hekufa6vgdnbja/El-Hotel-Infinito-de-Hilbert-Un-Viaje-al-Infinito-en-la-Teoria-de-la-Computacion.pptx?rlkey=oy44t1m8oppacpn9snfyqr3tk&amp;dl=1">El
+Hotel Infinito</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/uub6j1rwies277rzmwk17/GoddardParsingDet.pdf?rlkey=rs8ciuzuz5xi44n65nhh0oe9f&amp;dl=1">Goddard
+Parsing</a><br></p>
+</td>
+<td>
+<p><strong>Simuladores</strong><br> <a
+href="https://happy-sight-show.lovable.app/">Lovable : Simulador parsing
+ll(1)</a><br> <strong>Videos:</strong><br></p>
+<p><a href="https://www.youtube.com/watch?v=OxGsU8oIWjY">Infinite Hotel
+,Veritasium 6 min</a><br> <a
+href="https://www.youtube.com/watch?v=Uj3_KqkI9Zo">Infinite Hotel,TED 6
+min</a><br></p>
+</td>
+</tr>
+</table>
+<p><br></br> <br></br> <br></br> <br></br></p>
+</div>
+<div id="periodo-3" class="section level2">
+<h2>Periodo 3</h2>
+<!-- <br> </br> -->
+<!-- <center>![](https://www.dropbox.com/scl/fi/rc2ahfn5p16wcjlrc9zup/TuringMachine.gif?rlkey=vqw75rvh8k5uwwct924t0abfx&dl=1){width=30%}</center> -->
+<!-- <br></br> -->
+<p><br></br></p>
+<td>
+</td>
+<table border="1">
+<tr>
+<th>
+</th>
+<th>
+Descripción
+</th>
+<th>
+Diapositivas
+</th>
+<th>
+Lecturas y Talleres
+</th>
+<th>
+Material Adicional
+</th>
+</tr>
+<tr>
+<th>
+<strong>Semana 1</strong>
+</th>
+<td>
+<p><strong>Examen Segundo Periodo</strong> <br></p>
+</td>
+<td>
+<p><strong>Examen Segundo Periodo</strong> <br> <strong>Sustentación
+Examen Segundo Periodo</strong> <br></p>
+</td>
+<td>
+<p><strong>Examen Segundo Periodo</strong> <br> <strong>Sustentación
+Examen Segundo Periodo</strong> <br></p>
+</td>
+<td>
+<p><strong>Examen Segundo Periodo</strong> <br> <strong>Sustentación
+Examen Segundo Periodo</strong> <br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 2</strong>
+</th>
+<td>
+<p><strong>Máquinas de Turing</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/v7gtjx11d9204g7fv6rlh/11Turing.pdf?rlkey=bptr8jkpi9t1jm0pvqjq3w55m&amp;dl=1">Goddard
+Turing machines</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/kjg4x221f2738qjbjj93x/GoddasrdTuringmachines.pdf?rlkey=zjxi90tmt99gmshw5rjgkt03y&amp;dl=1">Goddard
+Maq de Turing</a><br></p>
+<p><strong>Interactivos</strong><br></p>
+<p><a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/Barbero.html">1.
+Paradoja del barbero</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/HotelInfinito.html">2.
+Hotel Infinito</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/BarberoInfinitoParada.html">3.
+Hotel, Barbero, Problema de la Parada</a><br></p>
+<p><strong>Máquinas</strong><br></p>
+<p><a href="https://turing-playground-studio.lovable.app">Lovable Turing
+Machine</a><br></p>
+<p><strong>MáquinasChatGpt 5.5</strong><br></p>
+<p><a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/MaquinaDeTuring.html">Máquina
+de Turing</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/AutPila.html">Autómata
+de Pila</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/AutEstadoFinito.html">Autómata
+de Estado Finito</a><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+</td>
+</tr>
+</tr>
+<th>
+<strong>Semana 3</strong>
+</th>
+<td>
+<p><strong>Problemas Decidibles</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/88vjwyqjhhjjen418aanj/13b.pdf?rlkey=tg9u0lr6emyita5m9dkcf3gvj&amp;dl=1">Goddard
+Decidable Problems</a><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/jts4pnj4liwbeumxvwc96/GoddardDecidibles.pdf?rlkey=iodxpcy9iposfjpoa0chzi332&amp;dl=1">Goddard
+Decidability</a><br></p>
+<strong>Interactivos</strong><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/ProblemaDeLaParada.html">1.
+Problema de la Parada</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/CastorLaborioso.html">2.
+Problema del Castor Laborioso</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/CorrespondenciaPost.html">3.
+Problema de Correspondencia de Post</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/Ambiguedad.html">4.
+Problema de Ambiguedad de Gramáticas</a><br> <a
+href="https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/Teselacion.html">5.
+Problema de Teselación en Cuadrícula</a><br>
+</td>
+<td>
+<p><strong>Videos:</strong><br> <a
+href="https://www.youtube.com/watch?v=PvLaPKPzq2I">Introduction to
+Turing Machines Part 1</a><br> <a
+href="https://www.youtube.com/watch?v=GPSk9tRsK2I">Introduction to
+Turing Machines Part 2</a><br> <a
+href="https://www.youtube.com/watch?v=D9eF_B8URnw">Turing Machine
+01*0</a><br> <a
+href="https://www.youtube.com/watch?v=cR4Re0YfoOo&amp;t=12s">Turing
+Machine 0<sup>n</sup>1<sup>n</sup></a><br> <a
+href="https://www.youtube.com/watch?v=sG0obNcgNJM&amp;t=1070s">Turing
+Machine for Even Palindromes</a><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 4</strong>
+</th>
+<td>
+<p><strong>Paradigmas de Programación</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 5</strong>
+</th>
+<p><br><br><br><br></p>
+<td>
+<p><strong>Paradigmas de Programación</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+</td>
+</tr>
+<th>
+<strong>Semana 6</strong>
+</th>
+<td>
+<p><strong>Paradigmas de Programación</strong> <br></p>
+</td>
+<td>
+<p><strong>Slides</strong><br></p>
+</td>
+<td>
+<p><strong>Lecturas</strong><br></p>
+</td>
+<td>
+<p><strong>Videos:</strong><br></p>
+</td>
+</tr>
+</tr>
+</table>
+<p><br></br> <br></br> <br></br> <br></br></p>
+</div>
+<div id="libros" class="section level2">
+<h2>Libros</h2>
+<center>
+<img src="https://github.com/jamelende/PaginasWeb/raw/main/Libros.jpg"
+style="width:20.0%" />
+</center>
+<p><a
+href="https://www.dropbox.com/scl/fi/5fqe1tlm3q6zu3tdjcxq8/Mathematical-Foundations-of-Computer-Science-Ashwin-Lall-1-2024-Chapman-and-Hall_CRC-9781032467894-f86e19810768c455977091812330e69f-Anna-s-Archive.pdf?rlkey=4nfawdq8uxw70b0w23teq0w05&amp;dl=1">1.
+Ashwin Lall, Mathematical Foundations of Computer Science
+2025</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/nlnogvenczp89nm8vph3e/Cristopher-Moore-Stephan-Mertens-The-Nature-of-Computation-Oxford-University-Press-2011.pdf?rlkey=1rfcqqvv0n6tsy8hrn6en2qy0&amp;dl=1">2.
+Chris Moore, The Nature of Computation 2011</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/6gxk3ogdh4ph1bcbl2omx/An-Introduction-to-Formal-Languages-and-Automata-Linz-Peter-Linz-Peter-2011-Jones-Bartlett-Learning-91ac6b532628568e8f5b867233530dce-Anna-s-Archive.pdf?rlkey=qvdkh0537590mxv3hcoo4ttmo&amp;dl=1">3.Peter
+Linz, An Introduction to Formal Languages and Automata 2011</a><br></p>
+<p><a
+href="https://www.dropbox.com/scl/fi/w350fbdb252rk79qp79i4/Principles-of-compiler-design-Alfred-V_-Aho-Jeffrey-Ullman-The-dragon-series-1-1977-Addison-Wesley-9780201000221-cdc3edcd6d542d8c7c0fd1c0aa71751a-Anna-s-Archive-1.pdf?rlkey=gobckxwe4wrp6gs6zoy0t1el9&amp;dl=1">4.
+Aho, Ullman Principles of Compiler Design 1977</a><br></p>
+</div>
+<div id="artículos" class="section level2">
+<h2>Artículos</h2>
+<center>
+<img
+src="https://github.com/jamelende/PaginasWeb/raw/main/Articulos.jpg"
+style="width:20.0%" />
+</center>
+</div>
+<div id="cursos-en-línea" class="section level2">
+<h2>Cursos en Línea</h2>
+<center>
+<img
+src="https://www.dropbox.com/scl/fi/tqtp4bz9i35awg8wgjlca/Clusters.gif?rlkey=mpoj07q3obr5b4z2b52xckvxd&amp;dl=1"
+style="width:25.0%" />
+</center>
+</div>
+<div id="videos" class="section level2">
+<h2>Videos</h2>
+<center>
+<img
+src="https://www.dropbox.com/scl/fi/ma38u1l9na3o87ypo41py/5.-Videos-ChatGpt.png?rlkey=6ddj6k3492aczfpgnm4es57j6&amp;dl=1"
+style="width:20.0%" />
+</center>
+</div>
+<div id="chatbots" class="section level2">
+<h2>ChatBots</h2>
+<center>
+<img
+src="https://www.dropbox.com/scl/fi/6y0ol4ziczafz06w09y21/ia.gif?rlkey=fed842j2xz8wvhc6srl41ix2r&amp;dl=1"
+style="width:20.0%" />
+</center>
+<p><br></br><br></br><br></br> <br></br><br></br><br></br></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
