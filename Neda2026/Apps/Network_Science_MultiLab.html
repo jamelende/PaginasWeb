@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Network Science Multilab Compact</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --red: light-dark(rgb(186 38 35), rgb(250 66 62));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The bundled tooltip runtime owns [data-tooltip]. AppBlock's CSS-only
+   pseudo-tooltip can widen dense grids even while hidden. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--interactive-label-primary-default, var(--primary-foreground));
+  background: var(--interactive-bg-primary-default, var(--foreground));
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(
+    in srgb,
+    var(--interactive-label-primary-default, var(--primary-foreground)) 50%,
+    transparent
+  );
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<div id="network-multilab">
+  <style>
+    #network-multilab{--nl-bg:var(--background);--nl-fg:var(--foreground);--nl-card:var(--card);--nl-card-fg:var(--card-foreground);--nl-muted:var(--muted);--nl-muted-fg:var(--muted-foreground);--nl-border:var(--border);--nl-primary:var(--primary);--nl-primary-fg:var(--primary-foreground);--nl-accent:var(--accent);--nl-accent-fg:var(--accent-foreground);color:var(--nl-fg);background:var(--nl-bg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding:8px;max-width:1600px;margin:auto}
+    #network-multilab *{box-sizing:border-box}
+    #network-multilab button,#network-multilab select,#network-multilab input{font:inherit;color:inherit}
+    #network-multilab button{cursor:pointer}
+    #network-multilab .nl-top{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--nl-border);padding:4px 0 8px}
+    #network-multilab .nl-brand{display:flex;align-items:center;gap:9px;min-width:220px}
+    #network-multilab .nl-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--nl-primary);color:var(--nl-primary-fg);font-weight:500}
+    #network-multilab h1{font-size:16px;line-height:1.1;margin:0;font-weight:500}
+    #network-multilab .nl-sub{font-size:11px;color:var(--nl-muted-fg);margin-top:2px}
+    #network-multilab .nl-network-select{margin-left:auto;display:flex;align-items:center;gap:7px}
+    #network-multilab .nl-network-select label{font-size:11px;color:var(--nl-muted-fg)}
+    #network-multilab select{height:34px;min-width:190px;border:1px solid var(--nl-border);background:var(--nl-card);border-radius:8px;padding:0 28px 0 9px}
+    #network-multilab .nl-btn{height:34px;border:1px solid var(--nl-border);background:var(--nl-card);border-radius:8px;padding:0 10px;font-size:11px}
+    #network-multilab .nl-btn[aria-pressed="true"],#network-multilab .nl-btn.active{background:var(--nl-primary);color:var(--nl-primary-fg);border-color:var(--nl-primary)}
+    #network-multilab .nl-catalog{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-height:0;opacity:0;overflow:hidden;transform:translateY(-6px);padding:0;transition:max-height .3s ease,opacity .22s,transform .28s,padding .28s}
+    #network-multilab .nl-catalog.open{max-height:230px;opacity:1;transform:none;padding:6px 0}
+    #network-multilab .nl-net-card{text-align:left;border:1px solid var(--nl-border);background:var(--nl-card);border-radius:9px;padding:8px;min-height:68px}
+    #network-multilab .nl-net-card.active{border-color:var(--nl-primary);background:var(--nl-accent);color:var(--nl-accent-fg)}
+    #network-multilab .nl-net-card b{display:block;font-size:11px;font-weight:500;margin-bottom:3px}
+    #network-multilab .nl-net-card span{display:block;font-size:10px;color:var(--nl-muted-fg);line-height:1.35}
+    #network-multilab .nl-context{display:grid;grid-template-columns:minmax(0,1.65fr) repeat(3,minmax(105px,.3fr));gap:5px;padding:5px 0}
+    #network-multilab .nl-intro,#network-multilab .nl-stat{border:1px solid var(--nl-border);background:var(--nl-card);border-radius:9px;padding:6px 9px;min-width:0}
+    #network-multilab .nl-kicker{font-size:10px;color:var(--nl-muted-fg);text-transform:uppercase;letter-spacing:.08em}
+    #network-multilab .nl-intro h2{font-size:16px;margin:1px 0 2px;font-weight:500}
+    #network-multilab .nl-intro p{font-size:11px;color:var(--nl-muted-fg);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #network-multilab .nl-stat small{display:block;color:var(--nl-muted-fg);font-size:10px}
+    #network-multilab .nl-stat strong{display:block;font-size:17px;font-weight:500;margin-top:1px}
+    #network-multilab .nl-stat.net strong,#network-multilab .nl-delta.good{color:var(--green)}
+    #network-multilab .nl-delta.bad{color:var(--destructive)}
+    #network-multilab .nl-toolbar{display:flex;align-items:end;gap:10px;flex-wrap:wrap;border-top:1px solid transparent;border-bottom:1px solid transparent;padding:0;max-height:0;opacity:0;overflow:hidden;transform:translateY(-7px);transition:max-height .32s ease,opacity .22s,transform .3s,padding .3s,border-color .3s}
+    #network-multilab .nl-toolbar.open{max-height:120px;opacity:1;transform:none;border-color:var(--nl-border);padding:6px 0}
+    #network-multilab .nl-control{min-width:150px;flex:1}
+    #network-multilab .nl-control-head{display:flex;justify-content:space-between;font-size:10px;color:var(--nl-muted-fg);margin-bottom:4px}
+    #network-multilab input[type="range"]{width:100%;accent-color:var(--nl-primary)}
+    #network-multilab .nl-seg{display:flex;gap:3px;padding:2px;border:1px solid var(--nl-border);border-radius:8px;background:var(--nl-card)}
+    #network-multilab .nl-seg button{border:0;background:transparent;border-radius:6px;padding:6px 8px;font-size:10px}
+    #network-multilab .nl-seg button.active{background:var(--nl-primary);color:var(--nl-primary-fg)}
+    #network-multilab .nl-tabs{display:flex;align-items:center;gap:4px;padding:4px 0}
+    #network-multilab .nl-tabs button{border:1px solid transparent;background:transparent;border-radius:8px;padding:6px 10px;font-size:11px;color:var(--nl-muted-fg)}
+    #network-multilab .nl-tabs button.active{background:var(--nl-card);border-color:var(--nl-border);color:var(--nl-fg)}
+    #network-multilab .nl-layout{margin-left:auto}
+    #network-multilab .nl-view{display:none}
+    #network-multilab .nl-view.active{display:block}
+    #network-multilab .nl-dual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:7px}
+    #network-multilab .nl-dual.table-only{grid-template-columns:1fr}
+    #network-multilab .nl-dual.table-only .nl-graph-panel{display:none}
+    #network-multilab .nl-dual.graph-only{grid-template-columns:1fr}
+    #network-multilab .nl-dual.graph-only .nl-table-panel{display:none}
+    #network-multilab .nl-panel{border:1px solid var(--nl-border);background:var(--nl-card);border-radius:10px;overflow:hidden;min-width:0}
+    #network-multilab .nl-panel-head{height:42px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 9px;border-bottom:1px solid var(--nl-border)}
+    #network-multilab .nl-panel-head b{font-size:11px;font-weight:500}
+    #network-multilab .nl-panel-head span{display:block;font-size:9px;color:var(--nl-muted-fg);margin-top:1px}
+    #network-multilab .nl-panel-tools{display:flex;gap:3px}
+    #network-multilab .nl-panel-tools button{border:1px solid var(--nl-border);background:var(--nl-bg);border-radius:6px;padding:4px 6px;font-size:9px}
+    #network-multilab .nl-panel-tools button.active{background:var(--nl-primary);color:var(--nl-primary-fg)}
+    #network-multilab .nl-table-wrap{height:535px;overflow:auto}
+    #network-multilab table{border-collapse:collapse;width:100%;min-width:650px;font-size:9px}
+    #network-multilab th{position:sticky;top:0;background:var(--nl-card);color:var(--nl-muted-fg);text-align:left;font-weight:500;padding:7px;border-bottom:1px solid var(--nl-border);z-index:1}
+    #network-multilab td{padding:6px 7px;border-bottom:1px solid var(--nl-border);white-space:nowrap}
+    #network-multilab tbody tr{cursor:pointer}
+    #network-multilab tbody tr:hover,#network-multilab tbody tr.selected{background:var(--nl-accent);color:var(--nl-accent-fg)}
+    #network-multilab .nl-chip{display:inline-flex;align-items:center;gap:4px}
+    #network-multilab .nl-chip i{width:7px;height:7px;border-radius:50%;background:var(--chip)}
+    #network-multilab .nl-muted{color:var(--nl-muted-fg)}
+    #network-multilab .nl-correct{color:var(--green)}
+    #network-multilab .nl-wrong{color:var(--destructive)}
+    #network-multilab .nl-graph-field{height:535px;position:relative;background:var(--nl-graph-bg,color-mix(in srgb,var(--nl-fg) 84%,var(--nl-bg)));overflow:hidden;transition:background .2s}
+    #network-multilab .nl-network-svg{width:100%;height:100%;display:block}
+    #network-multilab .nl-network-svg .edge{stroke:var(--nl-edge-color,color-mix(in srgb,var(--nl-bg) 52%,var(--nl-fg)));stroke-width:1;opacity:.58}
+    #network-multilab .nl-network-svg .edge.focus{stroke:var(--viz-series-4);stroke-width:2.4;opacity:1}
+    #network-multilab .nl-network-svg .node{stroke:var(--nl-node-outline,color-mix(in srgb,var(--nl-bg) 80%,transparent));stroke-width:1;cursor:pointer}
+    #network-multilab .nl-network-svg .node.seed{stroke:var(--nl-overlay-fg,var(--nl-bg));stroke-width:2.2}
+    #network-multilab .nl-network-svg .node.selected{stroke:var(--viz-series-4);stroke-width:4}
+    #network-multilab .nl-graph-badges{position:absolute;left:7px;top:7px;display:flex;gap:4px;flex-wrap:wrap}
+    #network-multilab .nl-graph-badges span{background:var(--nl-overlay-bg,color-mix(in srgb,var(--nl-fg) 82%,transparent));color:var(--nl-overlay-fg,var(--nl-bg));border:1px solid color-mix(in srgb,var(--nl-bg) 28%,transparent);border-radius:6px;padding:4px 6px;font-size:9px}
+    #network-multilab .nl-legend{position:absolute;right:7px;bottom:7px;display:grid;grid-template-columns:repeat(2,auto);gap:3px 8px;background:var(--nl-overlay-bg,color-mix(in srgb,var(--nl-fg) 84%,transparent));color:var(--nl-overlay-fg,var(--nl-bg));border-radius:7px;padding:6px;font-size:8px;max-width:250px}
+    #network-multilab .nl-legend span{display:flex;align-items:center;gap:4px}
+    #network-multilab .nl-legend i{width:6px;height:6px;border-radius:50%;background:var(--chip)}
+    #network-multilab .nl-selected-toggle{width:100%;height:27px;margin-top:4px;border:1px solid var(--nl-border);background:var(--nl-card);border-radius:7px;font-size:9px;color:var(--nl-muted-fg)}
+    #network-multilab .nl-selected{display:grid;grid-template-columns:1.1fr repeat(3,.65fr) 1.25fr;gap:1px;background:var(--nl-border);border:1px solid transparent;border-radius:9px;overflow:hidden;margin-top:0;max-height:0;opacity:0;transform:translateY(-6px);transition:max-height .28s ease,opacity .2s,transform .25s,margin .25s,border-color .25s}
+    #network-multilab .nl-selected.open{max-height:100px;opacity:1;transform:none;margin-top:4px;border-color:var(--nl-border)}
+    #network-multilab .nl-selected>div{background:var(--nl-card);padding:7px 9px;min-width:0}
+    #network-multilab .nl-selected small{display:block;font-size:8px;color:var(--nl-muted-fg);margin-bottom:2px}
+    #network-multilab .nl-selected b{font-size:10px;font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #network-multilab .nl-selected p{font-size:9px;line-height:1.35;color:var(--nl-muted-fg);margin:0}
+    #network-multilab .nl-color-picker{display:flex;align-items:center;gap:4px;border:1px solid var(--nl-border);border-radius:6px;padding:2px 5px;font-size:9px;color:var(--nl-muted-fg);white-space:nowrap}
+    #network-multilab .nl-color-picker input{width:24px;height:20px;padding:0;border:0;background:transparent;cursor:pointer}
+    #network-multilab .nl-eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    #network-multilab .nl-eval-card{border:1px solid var(--nl-border);background:var(--nl-card);border-radius:10px;padding:9px;min-width:0}
+    #network-multilab .nl-eval-head{display:flex;align-items:start;justify-content:space-between;gap:8px;margin-bottom:7px}
+    #network-multilab .nl-eval-head h3{font-size:13px;font-weight:500;margin:0}
+    #network-multilab .nl-badges{display:flex;gap:4px}
+    #network-multilab .nl-badges span{border:1px solid var(--nl-border);border-radius:6px;padding:4px 6px;font-size:9px}
+    #network-multilab .nl-eval-body{display:grid;grid-template-columns:minmax(250px,.9fr) minmax(270px,1.1fr);gap:7px}
+    #network-multilab .nl-metric{border-top:1px solid var(--nl-border);padding-top:6px;min-width:0}
+    #network-multilab .nl-metric-title{display:flex;justify-content:space-between;font-size:9px;margin-bottom:4px}
+    #network-multilab .nl-metric-title span{color:var(--nl-muted-fg)}
+    #network-multilab .nl-cmatrix-wrap{overflow:auto}
+    #network-multilab .nl-cmatrix{min-width:245px;table-layout:fixed;border-collapse:separate;border-spacing:2px}
+    #network-multilab .nl-cmatrix th,#network-multilab .nl-cmatrix td{position:static;text-align:center;padding:3px 1px;border:0;border-radius:3px;height:20px;font-size:7px}
+    #network-multilab .nl-cmatrix th{background:transparent;color:var(--nl-muted-fg)}
+    #network-multilab .nl-cmatrix td{background:color-mix(in srgb,var(--cm-color) calc(var(--level)*78%),var(--nl-card));font-weight:500}
+    #network-multilab .nl-cmatrix td.diag{outline:1px solid var(--green)}
+    #network-multilab .nl-roc{width:100%;height:230px;display:block}
+    #network-multilab .nl-eval-note{font-size:9px;color:var(--nl-muted-fg);margin:6px 0 0;line-height:1.4}
+    #network-multilab .nl-guide{display:grid;grid-template-columns:1.15fr .85fr;gap:7px}
+    #network-multilab .nl-guide section{border:1px solid var(--nl-border);background:var(--nl-card);border-radius:10px;padding:10px}
+    #network-multilab .nl-guide h3{font-size:12px;font-weight:500;margin:0 0 6px}
+    #network-multilab .nl-guide p,#network-multilab .nl-guide li{font-size:10px;line-height:1.5;color:var(--nl-muted-fg)}
+    #network-multilab .nl-guide ul{padding-left:17px;margin:5px 0}
+    #network-multilab .nl-map{display:grid;grid-template-columns:120px 1fr;gap:1px;background:var(--nl-border);border:1px solid var(--nl-border);border-radius:7px;overflow:hidden}
+    #network-multilab .nl-map div{background:var(--nl-card);padding:7px;font-size:9px}
+    #network-multilab .nl-map div:nth-child(odd){color:var(--nl-muted-fg)}
+    #network-multilab .nl-source{font-size:9px;color:var(--nl-muted-fg);padding:7px 2px 0;text-align:center}
+    #network-multilab .nl-source a{color:inherit}
+    @media(max-width:1100px){#network-multilab .nl-catalog{grid-template-columns:repeat(2,1fr)}#network-multilab .nl-catalog.open{max-height:390px}#network-multilab .nl-context{grid-template-columns:1fr repeat(3,.4fr)}#network-multilab .nl-dual,#network-multilab .nl-guide{grid-template-columns:1fr}#network-multilab .nl-table-wrap,#network-multilab .nl-graph-field{height:455px}#network-multilab .nl-eval-grid{grid-template-columns:1fr}}
+    @media(max-width:720px){#network-multilab{padding:4px}#network-multilab .nl-top{flex-wrap:wrap}#network-multilab .nl-network-select{width:100%;margin:0}#network-multilab .nl-network-select select{flex:1;min-width:0}#network-multilab .nl-catalog{grid-template-columns:1fr 1fr}#network-multilab .nl-catalog.open{max-height:520px}#network-multilab .nl-context{grid-template-columns:1fr 1fr}#network-multilab .nl-intro{grid-column:1/-1}#network-multilab .nl-context .nl-stat:last-child{grid-column:1/-1}#network-multilab .nl-layout{width:100%;margin:0}#network-multilab .nl-tabs{flex-wrap:wrap}#network-multilab .nl-dual{grid-template-columns:1fr}#network-multilab .nl-selected{grid-template-columns:1fr 1fr}#network-multilab .nl-selected.open{max-height:260px}#network-multilab .nl-selected>div:first-child,#network-multilab .nl-selected>div:last-child{grid-column:1/-1}#network-multilab .nl-eval-body{grid-template-columns:1fr}#network-multilab .nl-roc{height:210px}#network-multilab .nl-toolbar.open{max-height:260px}}
+  </style>
+
+  <header class="nl-top">
+    <div class="nl-brand"><div class="nl-mark">N</div><div><h1>Network Science Multilab</h1><div class="nl-sub">Ocho redes · una pregunta: ¿qué aportan las relaciones?</div></div></div>
+    <div class="nl-network-select"><label for="nl-network">Red</label><select id="nl-network" aria-label="Seleccionar red"></select><button class="nl-btn" id="nl-catalog-btn" aria-expanded="false">Catálogo</button><button class="nl-btn" id="nl-controls-btn" aria-expanded="false">Controles</button></div>
+  </header>
+  <div class="nl-catalog" id="nl-catalog" aria-label="Catálogo de redes"></div>
+
+  <section class="nl-context">
+    <div class="nl-intro"><div class="nl-kicker" id="nl-kind">Red de citaciones</div><h2 id="nl-title">Cora</h2><p id="nl-summary"></p></div>
+    <div class="nl-stat"><small>Solo tabla</small><strong id="nl-tab-acc">—</strong></div>
+    <div class="nl-stat net"><small>Tabla + red</small><strong id="nl-net-acc">—</strong></div>
+    <div class="nl-stat"><small>Diferencia</small><strong class="nl-delta" id="nl-delta">—</strong></div>
+  </section>
+
+  <section class="nl-toolbar" id="nl-controls-drawer" aria-label="Controles del experimento">
+    <div class="nl-control"><div class="nl-control-head"><span>Nodos etiquetados</span><output id="nl-label-out">20%</output></div><input id="nl-label-range" type="range" min="8" max="55" value="20"></div>
+    <div class="nl-control"><div class="nl-control-head"><span>Peso de las relaciones</span><output id="nl-alpha-out">75%</output></div><input id="nl-alpha-range" type="range" min="0" max="95" step="5" value="75"></div>
+    <div><div class="nl-control-head"><span>Calidad del contexto relacional</span></div><div class="nl-seg" id="nl-scenario"><button data-s="clear">Claro</button><button class="active" data-s="ambiguous">Ambiguo</button><button data-s="noisy">Ruidoso</button></div></div>
+    <button class="nl-btn" id="nl-resample">Cambiar ejemplos conocidos</button>
+  </section>
+
+  <nav class="nl-tabs" aria-label="Vistas del laboratorio">
+    <button class="active" data-view="lab">Tabla + red</button><button data-view="eval">Evaluación</button><button data-view="guide">Cómo interpretar</button>
+    <div class="nl-seg nl-layout" id="nl-layout"><button data-layout="table">Tabla</button><button class="active" data-layout="both">Ambas</button><button data-layout="graph">Red</button></div>
+  </nav>
+
+  <section class="nl-view active" id="nl-lab-view">
+    <div class="nl-dual" id="nl-dual">
+      <article class="nl-panel nl-table-panel"><div class="nl-panel-head"><div><b id="nl-table-title">Datos como tabla</b><span>Las filas se consideran independientes</span></div><div class="nl-panel-tools" id="nl-row-filter"><button class="active" data-filter="all">Todos</button><button data-filter="errors">Errores</button></div></div><div class="nl-table-wrap"><table><thead><tr><th>Entidad</th><th>Atributos dominantes</th><th>Grado</th><th>Clase real</th><th>Solo tabla</th><th>+ Red</th></tr></thead><tbody id="nl-rows"></tbody></table></div></article>
+      <article class="nl-panel nl-graph-panel"><div class="nl-panel-head"><div><b id="nl-graph-title">Datos como red</b><span id="nl-edge-caption">Los enlaces aportan contexto</span></div><div class="nl-panel-tools"><label class="nl-color-picker" for="nl-graph-bg">Fondo <input id="nl-graph-bg" type="color" value="#24384c" aria-label="Color de fondo de la red"></label><div id="nl-color-mode"><button class="active" data-color="network">+ Red</button><button data-color="tabular">Tabla</button><button data-color="errors">Errores</button></div></div></div><div class="nl-graph-field"><svg class="nl-network-svg" id="nl-graph" viewBox="0 0 760 430" role="img" aria-label="Red interactiva de nodos y relaciones"></svg><div class="nl-graph-badges"><span id="nl-sample-nodes"></span><span id="nl-sample-edges"></span><span id="nl-homophily"></span></div><div class="nl-legend" id="nl-legend"></div></div></article>
+    </div>
+    <button class="nl-selected-toggle" id="nl-selected-toggle" aria-expanded="false">Detalles del nodo seleccionado ▾</button><div class="nl-selected" id="nl-selected-drawer" aria-live="polite"><div><small>Nodo seleccionado</small><b id="nl-selected-title">—</b></div><div><small>Clase real</small><b id="nl-selected-real">—</b></div><div><small>Solo tabla</small><b id="nl-selected-tab">—</b></div><div><small>Tabla + red</small><b id="nl-selected-net">—</b></div><div><small>Lectura relacional</small><p id="nl-selected-why">—</p></div></div>
+  </section>
+
+  <section class="nl-view" id="nl-eval-view">
+    <div class="nl-eval-grid">
+      <article class="nl-eval-card"><div class="nl-eval-head"><div><div class="nl-kicker">Data Science</div><h3>Predicción solo con tabla</h3></div><div class="nl-badges"><span>Exactitud <b id="nl-tab-eval-acc">—</b></span><span>AUC <b id="nl-tab-auc">—</b></span></div></div><div class="nl-eval-body"><div class="nl-metric"><div class="nl-metric-title"><b>Matriz de confusión</b><span>Diagonal = aciertos</span></div><div class="nl-cmatrix-wrap" id="nl-tab-matrix"></div></div><div class="nl-metric"><div class="nl-metric-title"><b>ROC micro-promedio</b><span>Uno contra el resto</span></div><svg class="nl-roc" id="nl-tab-roc" role="img" aria-label="Curva ROC del modelo tabular"></svg></div></div><p class="nl-eval-note" id="nl-tab-note"></p></article>
+      <article class="nl-eval-card"><div class="nl-eval-head"><div><div class="nl-kicker">Network Science + ML</div><h3>Predicción con tabla + red</h3></div><div class="nl-badges"><span>Exactitud <b id="nl-net-eval-acc">—</b></span><span>AUC <b id="nl-net-auc">—</b></span></div></div><div class="nl-eval-body"><div class="nl-metric"><div class="nl-metric-title"><b>Matriz de confusión</b><span>Fuera = errores</span></div><div class="nl-cmatrix-wrap" id="nl-net-matrix"></div></div><div class="nl-metric"><div class="nl-metric-title"><b>ROC micro-promedio</b><span>Área = AUC</span></div><svg class="nl-roc" id="nl-net-roc" role="img" aria-label="Curva ROC del modelo con red"></svg></div></div><p class="nl-eval-note" id="nl-net-note"></p></article>
+    </div>
+  </section>
+
+  <section class="nl-view" id="nl-guide-view"><div class="nl-guide"><section><h3 id="nl-guide-title">Cómo leer Cora</h3><p id="nl-guide-benefit"></p><ul id="nl-guide-list"></ul></section><section><h3>De tabla a red</h3><div class="nl-map"><div>Nodo</div><div id="nl-map-node"></div><div>Fila tabular</div><div id="nl-map-features"></div><div>Enlace</div><div id="nl-map-edge"></div><div>Objetivo</div><div id="nl-map-target"></div><div>Pregunta</div><div id="nl-map-question"></div></div></section></div></section>
+  <div class="nl-source">Visualización pedagógica con muestras sintéticas reproducibles inspiradas en <a href="https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.datasets.Planetoid.html">Planetoid</a>, <a href="https://snap.stanford.edu/data/email-Eu-core.html">SNAP</a> y la <a href="https://websites.umich.edu/~mejn/netdata/">colección de Mark Newman</a>. Las cifras del catálogo describen los conjuntos originales.</div>
+
+  <script>
+  (()=>{
+    'use strict';
+    const root=document.getElementById('network-multilab');
+    const $=s=>root.querySelector(s),$$=s=>[...root.querySelectorAll(s)];
+    const PALETTE=['var(--viz-series-1)','var(--viz-series-2)','var(--viz-series-3)','var(--viz-series-4)','var(--viz-series-5)','var(--viz-series-6)'];
+    const DATASETS=[
+      {id:'cora',name:'Cora',kind:'Citaciones científicas',fullN:2708,fullE:5429,sampleN:140,sampleE:340,target:'Tema del artículo',node:'Artículo científico',edge:'Citación entre artículos',features:'Palabras presentes en el documento',question:'¿Cuál es el tema de un paper sin etiqueta?',hom:.88,noise:1.12,classes:[['Case Based','Case','case reasoning memory instance'],['Genetic Algorithms','Genetic','genetic evolution search fitness'],['Neural Networks','Neural','neural learning layer weight'],['Probabilistic Methods','Prob.','bayesian probability inference belief'],['Reinforcement Learning','RL','agent reward policy action'],['Rule Learning','Rules','rule logic induction symbolic'],['Theory','Theory','complexity theorem bound proof']],benefit:'Los artículos que se citan suelen compartir área. La red corrige papers con vocabulario interdisciplinario.'},
+      {id:'citeseer',name:'CiteSeer',kind:'Citaciones científicas',fullN:3327,fullE:4732,sampleN:120,sampleE:290,target:'Área de investigación',node:'Publicación indexada',edge:'Enlace de citación',features:'Términos del resumen y palabras clave',question:'¿A qué área pertenece una publicación?',hom:.84,noise:1.08,classes:[['Agents','Agents','agent autonomous planning multiagent'],['Artificial Intelligence','AI','intelligence knowledge reasoning search'],['Databases','DB','database query transaction relation'],['Information Retrieval','IR','retrieval document ranking index'],['Machine Learning','ML','learning model training feature'],['Human Computer Interaction','HCI','interface user interaction design']],benefit:'Las citas revelan comunidades disciplinares aun cuando dos áreas emplean vocabulario similar.'},
+      {id:'pubmed',name:'PubMed Diabetes',kind:'Citaciones biomédicas',fullN:19717,fullE:44338,sampleN:120,sampleE:310,target:'Categoría biomédica',node:'Artículo biomédico',edge:'Citación bibliográfica',features:'Términos TF-IDF del resumen',question:'¿Qué categoría de diabetes estudia el artículo?',hom:.91,noise:1.18,classes:[['Diabetes tipo 1','Tipo 1','insulin autoimmune beta juvenile'],['Diabetes tipo 2','Tipo 2','resistance obesity glucose adult'],['Experimental','Experim.','model pathway assay molecular']],benefit:'Las comunidades de citación separan líneas clínicas y experimentales que comparten términos como glucosa e insulina.'},
+      {id:'karate',name:'Karate Club',kind:'Red social',fullN:34,fullE:78,sampleN:34,sampleE:78,target:'Facción después de la división',node:'Miembro del club',edge:'Interacción o amistad',features:'Antigüedad, asistencia y actividad',question:'¿A cuál facción se unirá un miembro?',hom:.92,noise:1.85,classes:[['Grupo del instructor','Instructor','senior training technique class'],['Grupo del administrador','Admin.','committee event management social']],benefit:'Los atributos individuales no capturan lealtades. Las amistades muestran hacia qué facción se inclina cada miembro.'},
+      {id:'dolphins',name:'Dolphins',kind:'Red de asociaciones animales',fullN:62,fullE:159,sampleN:62,sampleE:159,target:'Comunidad social',node:'Delfín',edge:'Asociación frecuente',features:'Sexo, edad aproximada y comportamiento',question:'¿A qué comunidad social pertenece un delfín?',hom:.86,noise:1.2,classes:[['Comunidad A','Com. A','adult coastal foraging active'],['Comunidad B','Com. B','juvenile deep social resting']],benefit:'Dos delfines con rasgos parecidos pueden pertenecer a grupos distintos; sus asociaciones frecuentes revelan la comunidad.'},
+      {id:'polbooks',name:'Political Books',kind:'Red de copurchases',fullN:105,fullE:441,sampleN:90,sampleE:230,target:'Orientación política',node:'Libro sobre política',edge:'Compra conjunta frecuente',features:'Palabras del título, autor y descripción',question:'¿Cuál es la orientación de un libro?',hom:.87,noise:1.15,classes:[['Liberal','Liberal','rights equality progressive policy'],['Neutral','Neutral','history analysis government institutions'],['Conservative','Conserv.','market freedom tradition security']],benefit:'Las descripciones pueden ser neutrales, pero los patrones de compra conjunta revelan públicos ideológicos.'},
+      {id:'football',name:'College Football',kind:'Red de partidos',fullN:115,fullE:613,sampleN:96,sampleE:360,target:'Conferencia deportiva',node:'Equipo universitario',edge:'Partido jugado en la temporada',features:'Región, rendimiento y perfil del equipo',question:'¿A qué conferencia pertenece un equipo?',hom:.94,noise:1.22,classes:[['Atlantic Coast','ACC','atlantic coastal east college'],['Big East','Big East','northeast urban east league'],['Big Ten','Big Ten','midwest large public team'],['Big 12','Big 12','central plains south team'],['Conference USA','C-USA','southern metro conference team'],['Independent','Indep.','independent national schedule team'],['Mid-American','MAC','midamerican regional college team'],['Mountain West','MWC','mountain western altitude team'],['Pacific 10','Pac-10','pacific west coast team'],['Southeastern','SEC','southeast southern athletic team'],['Sun Belt','Sun Belt','sunbelt regional football team'],['Western Athletic','WAC','western athletic conference team']],benefit:'Los calendarios están fuertemente organizados por conferencia. La estructura de partidos es una señal casi directa de pertenencia.'},
+      {id:'email',name:'Email-Eu-core',kind:'Red de comunicación',fullN:1005,fullE:25571,sampleN:128,sampleE:430,target:'Departamento',node:'Empleado anonimizado',edge:'Intercambio de correo',features:'Rol, frecuencia y vocabulario agregado',question:'¿A qué departamento pertenece una persona?',hom:.76,noise:1.18,classes:[['Research','Research','paper project experiment research'],['Administration','Admin.','meeting policy office schedule'],['Information Technology','IT','server access system support'],['Finance','Finance','budget invoice payment report'],['Human Resources','HR','staff hiring leave training'],['Legal','Legal','contract compliance regulation review'],['Operations','Ops','process logistics facility service'],['Academic','Academic','course student teaching program']],benefit:'El contenido puede ser genérico o privado; los patrones de comunicación entre colegas aportan contexto organizacional.'}
+    ];
+    let topics=[],state={dataset:'cora',scenario:'ambiguous',labelPct:20,alpha:.75,seed:14,nodes:[],edges:[],adj:[],labeled:new Set(),tabProb:[],tabPred:[],netProb:[],netPred:[],selected:0,colorMode:'network',filter:'all',scores:null};
+    function cfg(){return DATASETS.find(d=>d.id===state.dataset)}
+    function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+    function gaussian(r){let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+    function argmax(a){let m=-Infinity,k=0;for(let i=0;i<a.length;i++)if(a[i]>m){m=a[i];k=i}return k}
+    function normalize(a){let s=a.reduce((x,y)=>x+y,0)||1;return a.map(x=>x/s)}
+    function mix(a,b,t){return a.map((x,i)=>x*(1-t)+b[i]*t)}
+    function pct(v){return Math.round(v*100)+'%'}
+    function num(v){return new Intl.NumberFormat('es-CO').format(v)}
+    function setupTopics(){topics=cfg().classes.map((c,i)=>({name:c[0],short:c[1],words:c[2].split(' '),color:PALETTE[i%PALETTE.length]}))}
+    function scenarioValues(){let d=cfg();if(state.scenario==='clear')return {noise:d.noise*.55,hom:Math.min(.96,d.hom+.05)};if(state.scenario==='noisy')return {noise:d.noise*.72,hom:.29};return {noise:d.noise,hom:d.hom}}
+    function makeData(){
+      setupTopics();const d=cfg(),sv=scenarioValues(),K=topics.length,D=12,r=rng(7001+state.seed*29+DATASETS.indexOf(d)*997),nodes=[],protos=topics.map((_,k)=>Array.from({length:D},(_,j)=>((j+k*2)%Math.max(5,K)<2?1.8:.15)+r()*.28));
+      for(let i=0;i<d.sampleN;i++){let k=i%K,bridge=i<K*2,other=(k+1+i%3)%K,features=protos[k].map((v,j)=>v+gaussian(r)*sv.noise+(bridge?protos[other][j]*.28:0)),words=[...topics[k].words];if(bridge)words[3]=topics[other].words[i%topics[other].words.length];nodes.push({id:i,label:k,title:`${entityName(d,i)} ${String(i+1).padStart(3,'0')}`,words:words.slice(0,3).join(' · '),features,degree:0,x:0,y:0})}
+      const edges=[],seen=new Set(),add=(a,b)=>{if(a===b)return false;let key=a<b?a+'-'+b:b+'-'+a;if(seen.has(key))return false;seen.add(key);edges.push({a,b});nodes[a].degree++;nodes[b].degree++;return true};
+      const byClass=Array.from({length:K},(_,k)=>nodes.filter(n=>n.label===k).map(n=>n.id));
+      nodes.forEach(n=>{let group=byClass[n.label],pos=group.indexOf(n.id),same=group[(pos+1)%group.length],cross=byClass[(n.label+1+n.id%Math.max(1,K-1))%K][n.id%byClass[(n.label+1+n.id%Math.max(1,K-1))%K].length];add(n.id,r()<sv.hom?same:cross)});
+      let guard=0;while(edges.length<d.sampleE&&guard++<d.sampleE*30){let a=Math.floor(r()*nodes.length),same=r()<sv.hom,b;if(same){let g=byClass[nodes[a].label];b=g[Math.floor(r()*g.length)]}else{b=Math.floor(r()*nodes.length);if(nodes[b].label===nodes[a].label)b=(b+Math.ceil(nodes.length/K))%nodes.length}add(a,b)}
+      const adj=Array.from({length:nodes.length},()=>[]);edges.forEach(e=>{adj[e.a].push(e.b);adj[e.b].push(e.a)});layout(nodes,K,r);state.nodes=nodes;state.edges=edges;state.adj=adj;state.selected=Math.min(state.selected,nodes.length-1);chooseLabels();updateDatasetCopy();
+    }
+    function entityName(d,i){if(d.id==='cora'||d.id==='citeseer'||d.id==='pubmed')return ['Model','Method','Study','Analysis'][i%4];if(d.id==='karate')return 'Miembro';if(d.id==='dolphins')return 'Delfín';if(d.id==='polbooks')return 'Libro';if(d.id==='football')return 'Equipo';return 'Persona'}
+    function layout(nodes,K,r){const cx=380,cy=215,rx=245,ry=150;nodes.forEach((n,i)=>{let a=K===2?(n.label*Math.PI):(n.label/K*Math.PI*2-Math.PI/2),members=nodes.filter(x=>x.label===n.label),pos=members.findIndex(x=>x.id===n.id),ring=28+Math.sqrt(members.length)*8,local=pos/members.length*Math.PI*2;n.x=cx+Math.cos(a)*rx*.68+Math.cos(local)*ring+gaussian(r)*8;n.y=cy+Math.sin(a)*ry*.72+Math.sin(local)*ring+gaussian(r)*7})}
+    function chooseLabels(){const r=rng(311+state.seed),target=Math.max(topics.length,Math.round(state.nodes.length*state.labelPct/100)),chosen=new Set();topics.forEach((_,k)=>{let ids=state.nodes.filter(n=>n.label===k);chosen.add(ids[Math.floor(r()*ids.length)].id)});let order=state.nodes.map(n=>n.id).sort(()=>r()-.5);for(let id of order){if(chosen.size>=target)break;chosen.add(id)}state.labeled=chosen;runModels()}
+    function runModels(){
+      const K=topics.length,D=state.nodes[0].features.length,centroids=Array.from({length:K},()=>Array(D).fill(0)),counts=Array(K).fill(0);state.labeled.forEach(id=>{let n=state.nodes[id];counts[n.label]++;n.features.forEach((v,j)=>centroids[n.label][j]+=v)});centroids.forEach((c,k)=>c.forEach((_,j)=>c[j]/=counts[k]||1));
+      state.tabProb=state.nodes.map(n=>normalize(centroids.map(c=>Math.exp(-Math.sqrt(c.reduce((s,v,j)=>s+(v-n.features[j])**2,0))*.72))));state.tabPred=state.tabProb.map(argmax);
+      let probs=state.nodes.map((n,i)=>state.labeled.has(i)?topics.map((_,k)=>k===n.label?1:0):mix(Array(K).fill(1/K),state.tabProb[i],.72));for(let i=0;i<42;i++)probs=propStep(probs);state.netProb=probs;state.netPred=probs.map(argmax);score();renderAll();
+    }
+    function propStep(probs){const K=topics.length;return state.nodes.map((n,i)=>{if(state.labeled.has(i))return topics.map((_,k)=>k===n.label?1:0);let votes=Array(K).fill(0);state.adj[i].forEach(id=>votes.forEach((_,k)=>votes[k]+=probs[id][k]));votes=state.adj[i].length?normalize(votes):Array(K).fill(1/K);return normalize(mix(mix(Array(K).fill(1/K),state.tabProb[i],.82),votes,state.alpha))})}
+    function score(){let hidden=state.nodes.filter(n=>!state.labeled.has(n.id)),ta=0,na=0;hidden.forEach(n=>{ta+=state.tabPred[n.id]===n.label;na+=state.netPred[n.id]===n.label});let hom=state.edges.filter(e=>state.nodes[e.a].label===state.nodes[e.b].label).length/state.edges.length;state.scores={tab:ta/hidden.length,net:na/hidden.length,hom,hidden:hidden.length}}
+    function chip(k){return `<span class="nl-chip" style="--chip:${topics[k].color}"><i></i>${topics[k].short}</span>`}
+    function updateDatasetCopy(){let d=cfg();$('#nl-title').textContent=d.name;$('#nl-kind').textContent=d.kind;$('#nl-summary').textContent=`${num(d.fullN)} nodos · ${num(d.fullE)} enlaces · objetivo: ${d.target}`;$('#nl-table-title').textContent=`${d.node}s como filas`;$('#nl-graph-title').textContent=`${d.node}s conectados`;$('#nl-edge-caption').textContent=d.edge;$('#nl-guide-title').textContent=`Cómo leer ${d.name}`;$('#nl-guide-benefit').textContent=d.benefit;$('#nl-guide-list').innerHTML=`<li><b>Solo tabla:</b> usa ${d.features.toLowerCase()}.</li><li><b>Tabla + red:</b> agrega la señal de ${d.edge.toLowerCase()}.</li><li><b>Advertencia:</b> si las relaciones no reflejan la clase, la red puede perjudicar.</li>`;$('#nl-map-node').textContent=d.node;$('#nl-map-features').textContent=d.features;$('#nl-map-edge').textContent=d.edge;$('#nl-map-target').textContent=d.target;$('#nl-map-question').textContent=d.question}
+    function renderAll(){renderScores();renderTable();renderGraph();renderSelected();renderEvaluation();renderCatalog()}
+    function renderScores(){let t=Math.round(state.scores.tab*100),n=Math.round(state.scores.net*100),delta=n-t;$('#nl-tab-acc').textContent=t+'%';$('#nl-net-acc').textContent=n+'%';$('#nl-delta').textContent=(delta>0?'+':'')+delta+' pp';$('#nl-delta').className='nl-delta '+(delta>=0?'good':'bad')}
+    function renderTable(){let rows=state.nodes.filter(n=>state.filter==='all'||state.tabPred[n.id]!==n.label||state.netPred[n.id]!==n.label);$('#nl-rows').innerHTML=rows.map(n=>{let known=state.labeled.has(n.id),tp=state.tabPred[n.id],np=state.netPred[n.id];return `<tr data-id="${n.id}" class="${n.id===state.selected?'selected':''}"><td>${known?'●':'○'} ${n.title}</td><td>${n.words}</td><td>${n.degree}</td><td>${known?chip(n.label):'<span class="nl-muted">oculta</span>'}</td><td class="${tp===n.label?'nl-correct':'nl-wrong'}">${chip(tp)} ${tp===n.label?'✓':'×'}</td><td class="${np===n.label?'nl-correct':'nl-wrong'}">${chip(np)} ${np===n.label?'✓':'×'}</td></tr>`}).join('');$$('#nl-rows tr').forEach(tr=>tr.onclick=()=>selectNode(+tr.dataset.id))}
+    function renderGraph(){let edges=state.edges.map((e,i)=>`<line class="edge ${e.a===state.selected||e.b===state.selected?'focus':''}" x1="${state.nodes[e.a].x.toFixed(1)}" y1="${state.nodes[e.a].y.toFixed(1)}" x2="${state.nodes[e.b].x.toFixed(1)}" y2="${state.nodes[e.b].y.toFixed(1)}"/>`).join('');let nodes=state.nodes.map(n=>{let pred=state.colorMode==='tabular'?state.tabPred[n.id]:state.netPred[n.id],wrong=state.netPred[n.id]!==n.label,fill=state.colorMode==='errors'?(wrong?'var(--destructive)':'var(--green)'):topics[pred].color,opacity=state.colorMode==='errors'&&!wrong?.25:1;return `<circle class="node ${state.labeled.has(n.id)?'seed':''} ${n.id===state.selected?'selected':''}" data-id="${n.id}" cx="${n.x.toFixed(1)}" cy="${n.y.toFixed(1)}" r="${n.id===state.selected?7:state.labeled.has(n.id)?5:4}" fill="${fill}" opacity="${opacity}"><title>${n.title} · ${topics[pred].name}</title></circle>`}).join('');$('#nl-graph').innerHTML=`<g>${edges}</g><g>${nodes}</g>`;$$('#nl-graph .node').forEach(c=>c.onclick=()=>selectNode(+c.dataset.id));$('#nl-sample-nodes').textContent=state.nodes.length+' nodos visibles';$('#nl-sample-edges').textContent=state.edges.length+' enlaces';$('#nl-homophily').textContent=pct(state.scores.hom)+' homofilia';$('#nl-legend').innerHTML=topics.map(t=>`<span style="--chip:${t.color}"><i></i>${t.short}</span>`).join('')}
+    function selectNode(id){state.selected=id;renderTable();renderGraph();renderSelected();let row=$(`#nl-rows tr[data-id="${id}"]`);if(row)row.scrollIntoView({block:'nearest'})}
+    function renderSelected(){let n=state.nodes[state.selected],tp=state.tabPred[n.id],np=state.netPred[n.id],votes=Array(topics.length).fill(0);state.adj[n.id].forEach(id=>votes[state.netPred[id]]++);let support=votes[n.label]||0,total=state.adj[n.id].length;$('#nl-selected-title').textContent=n.title;$('#nl-selected-real').textContent=topics[n.label].name;$('#nl-selected-tab').textContent=topics[tp].name;$('#nl-selected-net').textContent=topics[np].name;let txt=tp!==n.label&&np===n.label?`La red corrige el error: ${support}/${total} vecinos apoyan la clase real.`:tp===n.label&&np!==n.label?`La red introduce ruido: solo ${support}/${total} vecinos apoyan la clase real.`:tp===np?`Ambos modelos coinciden; ${support}/${total} vecinos refuerzan la clase real.`:`La red cambia la hipótesis, pero no resuelve este caso.`;$('#nl-selected-why').textContent=txt}
+    function confusion(pred){let K=topics.length,m=Array.from({length:K},()=>Array(K).fill(0));state.nodes.forEach(n=>{if(!state.labeled.has(n.id))m[n.label][pred[n.id]]++});return m}
+    function renderMatrix(target,m,color){let max=Math.max(1,...m.flat()),abbr=topics.map(t=>t.short.replace(/[^A-Za-z0-9]/g,'').slice(0,3));let html='<table class="nl-cmatrix" style="--cm-color:'+color+'"><thead><tr><th>R↓</th>'+abbr.map((a,i)=>`<th title="Predicha: ${topics[i].name}">${a}</th>`).join('')+'</tr></thead><tbody>';m.forEach((row,r)=>{html+=`<tr><th title="Real: ${topics[r].name}">${abbr[r]}</th>`+row.map((v,c)=>`<td class="${r===c?'diag':''}" style="--level:${(v/max).toFixed(2)}" title="Real ${topics[r].name}; predicha ${topics[c].name}: ${v}">${v}</td>`).join('')+'</tr>'});$(target).innerHTML=html+'</tbody></table>'}
+    function roc(probs){let pairs=[];state.nodes.forEach(n=>{if(!state.labeled.has(n.id))topics.forEach((_,k)=>pairs.push({s:probs[n.id][k],y:n.label===k}))});pairs.sort((a,b)=>b.s-a.s);let P=pairs.filter(x=>x.y).length,N=pairs.length-P,pts=[[0,0]],tp=0,fp=0,i=0,auc=0,px=0,py=0;while(i<pairs.length){let s=pairs[i].s,dt=0,df=0;while(i<pairs.length&&Math.abs(pairs[i].s-s)<1e-12){pairs[i].y?dt++:df++;i++}tp+=dt;fp+=df;let x=fp/N,y=tp/P;auc+=(x-px)*(y+py)/2;pts.push([x,y]);px=x;py=y}return {pts,auc}}
+    function drawRoc(target,r,color){let W=340,H=230,L=36,T=10,R=10,B=30,pw=W-L-R,ph=H-T-B,grid='';for(let i=0;i<=4;i++){let v=i/4,x=L+v*pw,y=T+(1-v)*ph;grid+=`<line x1="${x}" y1="${T}" x2="${x}" y2="${T+ph}" stroke="var(--nl-border)"/><line x1="${L}" y1="${y}" x2="${L+pw}" y2="${y}" stroke="var(--nl-border)"/><text x="${x}" y="${H-13}" text-anchor="middle" fill="var(--nl-muted-fg)" font-size="8">${v.toFixed(2)}</text><text x="${L-5}" y="${y+3}" text-anchor="end" fill="var(--nl-muted-fg)" font-size="8">${v.toFixed(2)}</text>`}let points=r.pts.map(p=>(L+p[0]*pw).toFixed(1)+','+(T+(1-p[1])*ph).toFixed(1)).join(' '),area=`${L},${T+ph} ${points} ${L+pw},${T+ph}`;$(target).setAttribute('viewBox',`0 0 ${W} ${H}`);$(target).innerHTML=`${grid}<line x1="${L}" y1="${T+ph}" x2="${L+pw}" y2="${T}" stroke="var(--nl-muted-fg)" stroke-dasharray="4 4"/><polygon points="${area}" fill="color-mix(in srgb,${color} 14%,transparent)"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="2.4"/><text x="${L+pw/2}" y="${H-1}" text-anchor="middle" fill="var(--nl-muted-fg)" font-size="8">Tasa de falsos positivos</text><text x="10" y="${T+ph/2}" text-anchor="middle" fill="var(--nl-muted-fg)" font-size="8" transform="rotate(-90 10 ${T+ph/2})">Tasa de verdaderos positivos</text>`}
+    function renderEvaluation(){let tm=confusion(state.tabPred),nm=confusion(state.netPred),tr=roc(state.tabProb),nr=roc(state.netProb),hidden=state.scores.hidden,tc=tm.reduce((s,r,i)=>s+r[i],0),nc=nm.reduce((s,r,i)=>s+r[i],0);renderMatrix('#nl-tab-matrix',tm,'var(--viz-series-1)');renderMatrix('#nl-net-matrix',nm,'var(--viz-series-4)');drawRoc('#nl-tab-roc',tr,'var(--viz-series-1)');drawRoc('#nl-net-roc',nr,'var(--viz-series-4)');$('#nl-tab-eval-acc').textContent=pct(state.scores.tab);$('#nl-net-eval-acc').textContent=pct(state.scores.net);$('#nl-tab-auc').textContent=tr.auc.toFixed(3);$('#nl-net-auc').textContent=nr.auc.toFixed(3);$('#nl-tab-note').textContent=`${tc}/${hidden} nodos correctos usando únicamente atributos tabulares.`;let diff=nc-tc;$('#nl-net-note').textContent=diff>0?`Las relaciones corrigen ${diff} predicciones adicionales.`:diff<0?`La estructura ruidosa añade ${Math.abs(diff)} errores: no toda red ayuda.`:'Los dos modelos logran el mismo número de aciertos.'}
+    function renderCatalog(){$('#nl-catalog').innerHTML=DATASETS.map(d=>`<button class="nl-net-card ${d.id===state.dataset?'active':''}" data-net="${d.id}"><b>${d.name}</b><span>${d.kind}</span><span>${num(d.fullN)} nodos · ${num(d.fullE)} enlaces</span></button>`).join('');$$('.nl-net-card').forEach(b=>b.onclick=()=>selectDataset(b.dataset.net))}
+    function selectDataset(id){state.dataset=id;state.seed=14;state.selected=0;$('#nl-network').value=id;makeData()}
+    function applyGraphColor(hex){
+      let h=hex.replace('#',''),r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16),lum=(.2126*r+.7152*g+.0722*b)/255,dark=lum<.52;
+      root.style.setProperty('--nl-graph-bg',hex);root.style.setProperty('--nl-edge-color',dark?'rgba(238,245,252,.58)':'rgba(20,31,43,.42)');root.style.setProperty('--nl-overlay-bg',dark?'rgba(10,20,30,.86)':'rgba(250,252,254,.9)');root.style.setProperty('--nl-overlay-fg',dark?'#f8fafc':'#17212b');root.style.setProperty('--nl-node-outline',dark?'rgba(248,250,252,.72)':'rgba(23,33,43,.5)');
+      try{localStorage.setItem('network-multilab-graph-bg',hex)}catch(e){}
+    }
+    function init(){
+      $('#nl-network').innerHTML=DATASETS.map(d=>`<option value="${d.id}">${d.name} · ${d.kind}</option>`).join('');$('#nl-network').onchange=e=>selectDataset(e.target.value);$('#nl-catalog-btn').onclick=e=>{let open=$('#nl-catalog').classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',open);if(open){$('#nl-controls-drawer').classList.remove('open');$('#nl-controls-btn').setAttribute('aria-expanded','false')}};$('#nl-controls-btn').onclick=e=>{let open=$('#nl-controls-drawer').classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',open);if(open){$('#nl-catalog').classList.remove('open');$('#nl-catalog-btn').setAttribute('aria-expanded','false')}};
+      $('#nl-label-range').oninput=e=>{$('#nl-label-out').textContent=e.target.value+'%';state.labelPct=+e.target.value;chooseLabels()};$('#nl-alpha-range').oninput=e=>{$('#nl-alpha-out').textContent=e.target.value+'%';state.alpha=+e.target.value/100;runModels()};$('#nl-scenario').onclick=e=>{let b=e.target.closest('button');if(!b)return;$$('#nl-scenario button').forEach(x=>x.classList.toggle('active',x===b));state.scenario=b.dataset.s;makeData()};$('#nl-resample').onclick=()=>{state.seed++;chooseLabels()};
+      $('#nl-color-mode').onclick=e=>{let b=e.target.closest('button');if(!b)return;$$('#nl-color-mode button').forEach(x=>x.classList.toggle('active',x===b));state.colorMode=b.dataset.color;renderGraph()};$('#nl-row-filter').onclick=e=>{let b=e.target.closest('button');if(!b)return;$$('#nl-row-filter button').forEach(x=>x.classList.toggle('active',x===b));state.filter=b.dataset.filter;renderTable()};
+      $('#nl-selected-toggle').onclick=e=>{let open=$('#nl-selected-drawer').classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',open);e.currentTarget.textContent=open?'Ocultar detalles del nodo ▴':'Detalles del nodo seleccionado ▾'};let saved='';try{saved=localStorage.getItem('network-multilab-graph-bg')||''}catch(e){}let initial=saved||$('#nl-graph-bg').value;$('#nl-graph-bg').value=initial;applyGraphColor(initial);$('#nl-graph-bg').oninput=e=>applyGraphColor(e.target.value);
+      $$('.nl-tabs>button[data-view]').forEach(b=>b.onclick=()=>{$$('.nl-tabs>button[data-view]').forEach(x=>x.classList.toggle('active',x===b));$$('.nl-view').forEach(v=>v.classList.remove('active'));$(`#nl-${b.dataset.view}-view`).classList.add('active');$('#nl-layout').style.display=b.dataset.view==='lab'?'flex':'none'});$('#nl-layout').onclick=e=>{let b=e.target.closest('button');if(!b)return;$$('#nl-layout button').forEach(x=>x.classList.toggle('active',x===b));$('#nl-dual').classList.remove('table-only','graph-only');if(b.dataset.layout!=='both')$('#nl-dual').classList.add(b.dataset.layout+'-only')};
+      makeData();
+    }
+    init();
+  })();
+  </script>
+</div>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>
