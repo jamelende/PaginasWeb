@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNN Lab — Explora las Redes Neuronales Convolucionales</title>
+<style>
+:root{
+  --bg:#f5f7fb;--panel:#ffffff;--panel2:#eef2f7;--text:#162033;--muted:#62708a;
+  --accent:#5b67f1;--accent2:#2bb6a8;--danger:#e04f5f;--warn:#d78d17;--ok:#248a64;
+  --border:#dfe5ee;--shadow:0 12px 30px rgba(27,39,69,.10);--radius:18px;
+  --sidebar:280px;--topbar:68px;
+}
+[data-theme="dark"]{
+  --bg:#0d1320;--panel:#151e2e;--panel2:#1c2739;--text:#edf3ff;--muted:#9aacbf;
+  --accent:#8791ff;--accent2:#45d4c4;--danger:#ff7180;--warn:#f6b647;--ok:#52d3a0;
+  --border:#2a3850;--shadow:0 12px 30px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.skip{position:absolute;left:-9999px;top:auto}.skip:focus{left:12px;top:12px;z-index:9999;background:var(--panel);padding:10px 14px;border-radius:10px}
+.app{min-height:100vh}
+.sidebar{
+  position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:var(--panel);
+  border-right:1px solid var(--border);z-index:50;display:flex;flex-direction:column;
+}
+.brand{padding:18px 18px 12px;border-bottom:1px solid var(--border)}
+.brand h1{margin:0;font-size:22px;display:flex;gap:10px;align-items:center}
+.brand small{color:var(--muted)}
+.nav{padding:10px;overflow:auto;flex:1}
+.nav button{
+  width:100%;display:flex;align-items:center;gap:10px;text-align:left;border:0;background:transparent;color:var(--text);
+  padding:9px 11px;border-radius:11px;margin:2px 0;
+}
+.nav button:hover,.nav button.active{background:var(--panel2);color:var(--accent)}
+.nav .num{min-width:24px;height:24px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;font-size:12px}
+.sidebar-foot{padding:12px;border-top:1px solid var(--border);display:grid;gap:8px}
+.main{margin-left:var(--sidebar)}
+.topbar{
+  position:sticky;top:0;height:var(--topbar);z-index:40;background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 22px
+}
+.menu-toggle{display:none}
+.progress-wrap{flex:1;min-width:160px}
+.progress-label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:5px}
+.progress{height:9px;background:var(--panel2);border-radius:99px;overflow:hidden}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.3s}
+.top-actions{display:flex;gap:8px;align-items:center}
+main{padding:28px;max-width:1480px;margin:auto}
+.section{display:none;animation:fade .25s ease}
+.section.active{display:block}
+@keyframes fade{from{opacity:.25;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{
+  min-height:72vh;border:1px solid var(--border);border-radius:28px;padding:44px;
+  background:radial-gradient(circle at 15% 15%, color-mix(in srgb,var(--accent) 22%,transparent),transparent 34%),
+             radial-gradient(circle at 90% 15%, color-mix(in srgb,var(--accent2) 18%,transparent),transparent 28%),var(--panel);
+  box-shadow:var(--shadow);display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center
+}
+.kicker{letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:800;font-size:13px}
+.hero h2{font-size:clamp(42px,7vw,82px);line-height:.95;margin:10px 0 16px}
+.hero p{font-size:20px;color:var(--muted);max-width:700px}
+.flow{display:grid;gap:8px}
+.flow .node{padding:14px 18px;border-radius:14px;background:var(--panel2);border:1px solid var(--border);font-weight:800;text-align:center}
+.flow .arrow{text-align:center;color:var(--accent);font-size:24px}
+.btn{border:1px solid var(--border);background:var(--panel);color:var(--text);padding:10px 14px;border-radius:12px;font-weight:700}
+.btn:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(0,0,0,.09)}
+.btn.primary{background:var(--accent);color:white;border-color:transparent}
+.btn.ok{background:var(--ok);color:white;border-color:transparent}
+.btn.warn{background:var(--warn);color:white;border-color:transparent}
+.btn.danger{background:var(--danger);color:white;border-color:transparent}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:0 8px 20px rgba(20,35,60,.05)}
+.card h3,.card h4{margin-top:0}
+.card p{color:var(--muted)}
+.section-head{margin-bottom:22px}
+.section-head h2{font-size:clamp(28px,4vw,46px);margin:4px 0 8px}
+.section-head p{color:var(--muted);max-width:900px}
+.pedagogy{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0 22px}
+.pedagogy span{background:var(--panel2);padding:10px;border-radius:11px;text-align:center;font-size:13px;font-weight:800}
+.metric{background:var(--panel2);border-radius:14px;padding:14px}
+.metric b{font-size:26px;display:block;margin-top:4px}
+.control{display:grid;gap:6px;margin:10px 0}
+.control label{font-size:13px;color:var(--muted);font-weight:700}
+input[type="range"]{width:100%;accent-color:var(--accent)}
+input[type="number"],select,.text-input{
+  width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)
+}
+canvas{max-width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:14px}
+.matrix{display:grid;gap:3px;justify-content:center}
+.cell{
+  width:42px;height:42px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--border);
+  border-radius:7px;font-size:12px;transition:.15s
+}
+.cell.hot{background:color-mix(in srgb,var(--accent) 28%,var(--panel2));border-color:var(--accent)}
+.cell.out{background:color-mix(in srgb,var(--accent2) 25%,var(--panel2))}
+.matrix input{width:48px;height:40px;border:1px solid var(--border);border-radius:7px;text-align:center;background:var(--bg);color:var(--text)}
+.labbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.note{border-left:4px solid var(--accent);background:var(--panel2);padding:12px 14px;border-radius:10px;color:var(--muted)}
+.good{border-left-color:var(--ok)}
+.warnnote{border-left-color:var(--warn)}
+.timeline{display:flex;gap:14px;overflow:auto;padding:10px 4px 18px;scroll-snap-type:x mandatory}
+.timeline .tcard{min-width:260px;scroll-snap-align:start;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px;cursor:pointer}
+.timeline .tcard:hover{border-color:var(--accent)}
+.year{font-weight:900;color:var(--accent);font-size:20px}
+.arch{display:flex;gap:8px;align-items:center;overflow:auto;padding:12px 0}
+.block{min-width:88px;border:1px solid var(--border);border-radius:12px;padding:12px 9px;text-align:center;background:var(--panel2)}
+.block.conv{border-color:var(--accent)}.block.pool{border-color:var(--accent2)}.block.dense{border-color:var(--warn)}
+.arrow-inline{color:var(--muted);font-size:22px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:8px 11px;border-radius:999px;background:var(--panel2);border:1px solid var(--border)}
+.quiz-option,.challenge-option{display:block;width:100%;text-align:left;margin:7px 0;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text)}
+.quiz-option:hover,.challenge-option:hover{border-color:var(--accent)}
+.feedback{margin-top:10px;padding:12px;border-radius:10px;background:var(--panel2);min-height:44px}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.glossary-item{padding:14px;border:1px solid var(--border);background:var(--panel);border-radius:12px;cursor:pointer}
+.glossary-item:hover{border-color:var(--accent)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.48);display:none;place-items:center;z-index:100;padding:22px}
+.modal.open{display:grid}
+.modal-box{max-width:760px;width:100%;max-height:85vh;overflow:auto;background:var(--panel);border-radius:20px;padding:22px;border:1px solid var(--border)}
+.teacher-strip{display:none;position:fixed;bottom:16px;right:18px;z-index:60;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:10px;box-shadow:var(--shadow);gap:8px}
+.teacher-on .teacher-strip{display:flex}
+.teacher-on .answer-sensitive{filter:blur(7px);user-select:none}
+.teacher-on .answer-sensitive:hover{filter:none}
+.spark{height:140px}
+.hierarchy-stage{min-height:300px;display:grid;place-items:center;background:var(--panel2);border-radius:18px;border:1px solid var(--border);padding:16px}
+.hierarchy-visual{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:center}
+.feature-box{width:120px;min-height:110px;border:1px solid var(--border);border-radius:14px;padding:10px;text-align:center;background:var(--panel)}
+.feature-box strong{display:block;margin-top:8px}
+.rf-grid{display:grid;grid-template-columns:repeat(14,20px);gap:2px;justify-content:center}
+.rf-pixel{width:20px;height:20px;background:var(--panel);border:1px solid var(--border)}
+.rf-pixel.on{background:var(--accent)}
+.kernels-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.featuremaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.app-card .io{font-weight:800;color:var(--accent)}
+.concept-map{display:flex;flex-direction:column;gap:10px;align-items:center}
+.concept-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.concept-node{padding:10px 14px;border:1px solid var(--border);border-radius:999px;background:var(--panel);cursor:pointer}
+.concept-node:hover{border-color:var(--accent);color:var(--accent)}
+.journey{display:flex;gap:8px;align-items:center;overflow:auto;padding:12px 0}
+.journey .stage{min-width:130px;background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;transition:.25s}
+.journey .stage.active{transform:scale(1.06);border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent)}
+.codeish{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--panel2);padding:2px 6px;border-radius:6px}
+hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+details{border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--panel)}
+summary{cursor:pointer;font-weight:800}
+.small{font-size:13px;color:var(--muted)}
+.hidden{display:none!important}
+.fullscreen-lab{position:fixed!important;inset:12px!important;z-index:90!important;overflow:auto!important;background:var(--bg)!important;padding:24px!important;border-radius:20px!important}
+@media(max-width:980px){
+  .sidebar{transform:translateX(-101%);transition:.25s}.sidebar.open{transform:none}
+  .main{margin-left:0}.menu-toggle{display:inline-flex}.hero{grid-template-columns:1fr}.g4,.g3{grid-template-columns:repeat(2,1fr)}
+  .pedagogy{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:650px){
+  main{padding:16px}.topbar{padding:0 12px}.g2,.g3,.g4{grid-template-columns:1fr}.hero{padding:24px;min-height:auto}
+  .pedagogy{grid-template-columns:1fr 1fr}.top-actions .label-hide{display:none}.cell{width:34px;height:34px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Saltar al contenido</a>
+<div class="app" id="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <h1>🧠 CNN Lab</h1>
+    <small>Explora cómo una red aprende a ver</small>
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <div class="sidebar-foot">
+    <button class="btn" id="themeBtn" aria-label="Cambiar tema">🌙 Oscuro</button>
+    <button class="btn" id="resetProgress">↺ Reiniciar progreso</button>
+  </div>
+</aside>
+
+<div class="main">
+<header class="topbar">
+  <button class="btn menu-toggle" id="menuBtn" aria-label="Abrir menú">☰</button>
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progreso CNN</span><b id="progressText">0%</b></div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </div>
+  <div class="top-actions">
+    <button class="btn" id="teacherBtn">🎓 <span class="label-hide">Modo docente</span></button>
+  </div>
+</header>
+
+<main id="content">
+<section class="section active" id="inicio">
+  <div class="hero">
+    <div>
+      <div class="kicker">Laboratorio interactivo de visión</div>
+      <h2>CNN Lab</h2>
+      <p>Descubre cómo una red neuronal aprende a ver.</p>
+      <div class="labbar"><button class="btn primary" data-go="porque">Comenzar exploración →</button></div>
+      <div class="grid g3" style="margin-top:26px">
+        <div class="card"><h3>🔍 Explora</h3><p>Manipula imágenes, filtros y parámetros.</p></div>
+        <div class="card"><h3>💡 Comprende</h3><p>Observa qué ocurre dentro de una CNN.</p></div>
+        <div class="card"><h3>🧪 Experimenta</h3><p>Construye una CNN paso a paso.</p></div>
+      </div>
+    </div>
+    <div class="flow" id="heroFlow">
+      <div class="node">IMAGEN</div><div class="arrow">↓</div>
+      <div class="node">PÍXELES</div><div class="arrow">↓</div>
+      <div class="node">BORDES</div><div class="arrow">↓</div>
+      <div class="node">TEXTURAS</div><div class="arrow">↓</div>
+      <div class="node">FORMAS</div><div class="arrow">↓</div>
+      <div class="node">OBJETOS → CLASIFICACIÓN</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="porque">
+  <div class="section-head"><div class="kicker">1 · IDEA</div><h2>¿Por qué CNN?</h2><p>Una MLP conecta cada entrada con muchas neuronas. Una CNN explota localidad espacial y reutiliza los mismos pesos.</p></div>
+  <div class="pedagogy"><span>IDEA</span><span>MIRA</span><span>EXPERIMENTA</span><span>DESCUBRE</span><span>RETO</span></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>MLP vs CNN — parámetros</h3>
+      <div class="control"><label>Tamaño de imagen: <b id="imgSizeVal">28</b> × <b id="imgSizeVal2">28</b></label><input id="imgSize" type="range" min="8" max="64" value="28"></div>
+      <div class="control"><label>Neuronas en primera capa MLP: <b id="neuronsVal">128</b></label><input id="neurons" type="range" min="16" max="512" step="16" value="128"></div>
+      <div class="control"><label>Kernel CNN: <b id="kernelSizeVal">3</b>×<b id="kernelSizeVal2">3</b></label><input id="kernelSizeCmp" type="range" min="1" max="7" step="2" value="3"></div>
+      <div class="control"><label>Filtros CNN: <b id="filtersCmpVal">16</b></label><input id="filtersCmp" type="range" min="1" max="64" value="16"></div>
+      <div class="grid g2">
+        <div class="metric"><span>Parámetros MLP</span><b id="mlpParams"></b></div>
+        <div class="metric"><span>Parámetros Conv</span><b id="cnnParams"></b></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>MIRA: conectividad</h3><canvas id="compareCanvas" width="600" height="330" aria-label="Comparación visual de conectividad"></canvas>
+      <div class="pills"><span class="pill">📍 Local connectivity</span><span class="pill">♻️ Weight sharing</span></div>
+      <div class="note good"><b>¿Qué descubriste?</b> Las CNN explotan la estructura espacial de las imágenes.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pixeles">
+  <div class="section-head"><div class="kicker">Píxeles → números</div><h2>De píxeles a características</h2><p>Una imagen puede verse como una cuadrícula de intensidades o canales. Pasa el cursor sobre cada píxel para inspeccionarlo.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="labbar">
+        <select id="pixelMode" aria-label="Modo de color"><option value="gray">Escala de grises</option><option value="bw">Blanco y negro</option><option value="rgb">RGB</option></select>
+        <button class="btn" id="togglePixelView">Imagen ↔ Matriz</button>
+      </div>
+      <canvas id="pixelCanvas" width="420" height="420" aria-label="Imagen pixelada"></canvas>
+      <div id="pixelMatrix" class="hidden"></div>
+    </div>
+    <div class="card"><h3>Inspector de píxel</h3><div id="pixelInfo" class="metric">Mueve el cursor sobre la imagen.</div><hr><p>En escala de grises, cada posición contiene una intensidad. En RGB, cada píxel contiene tres valores: rojo, verde y azul.</p></div>
+  </div>
+</section>
+
+<section class="section" id="convolucion">
+  <div class="section-head"><div class="kicker">Laboratorio central</div><h2>Convolución paso a paso</h2><p>Observa el kernel deslizarse, multiplicar, sumar y escribir cada valor del feature map.</p></div>
+  <div class="grid g3">
+    <div class="card"><h3>Entrada 5×5</h3><div id="convInputMatrix"></div></div>
+    <div class="card"><h3>Kernel 3×3</h3><div id="convKernelMatrix"></div><div class="metric" style="margin-top:10px">Suma actual <b id="convSum">—</b></div></div>
+    <div class="card"><h3>Feature map</h3><div id="convOutputMatrix"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="labbar"><button class="btn primary" id="convRun">▶ Ejecutar</button><button class="btn" id="convPause">⏸ Pausar</button><button class="btn" id="convStep">⏭ Paso</button><button class="btn" id="convReset">↺ Reiniciar</button></div>
+    <div class="control"><label>Velocidad de animación</label><input id="convSpeed" type="range" min="120" max="1400" value="550"></div>
+    <div id="convExplain" class="note">Pulsa “Paso” para ver la primera operación.</div>
+  </div>
+</section>
+
+<section class="section" id="kernels">
+  <div class="section-head"><div class="kicker">Juega con filtros</div><h2>Laboratorio de kernels</h2><p>Los kernels clásicos ayudan a intuir la convolución. En una CNN real, los filtros útiles se aprenden durante el entrenamiento.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="control"><label>Imagen sintética</label><select id="shapeSelect"><option value="square">Cuadrado</option><option value="circle">Círculo</option><option value="vertical">Líneas verticales</option><option value="horizontal">Líneas horizontales</option><option value="diagonal">Diagonal</option><option value="face">Rostro esquemático</option><option value="object">Objeto simple</option><option value="draw">Dibuja tu propia imagen</option></select></div>
+      <canvas id="drawCanvas" width="280" height="280" aria-label="Lienzo para imagen sintética"></canvas>
+      <div class="labbar"><button class="btn" id="clearDrawing">Limpiar dibujo</button></div>
+    </div>
+    <div class="card">
+      <div class="control"><label>Kernel clásico</label><select id="kernelPreset"></select></div>
+      <div id="kernelEditor" class="matrix" style="grid-template-columns:repeat(3,48px)"></div>
+      <div class="grid g2" style="margin-top:12px">
+        <div><h4>Original</h4><canvas id="kernelOriginal" width="240" height="240"></canvas></div>
+        <div><h4>Resultado</h4><canvas id="kernelResult" width="240" height="240"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="stride">
+  <div class="section-head"><div class="kicker">Geometría de la convolución</div><h2>Stride y Padding</h2><p>Stride controla cuánto se desplaza el filtro. Padding agrega un borde para controlar el tamaño espacial de salida.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="control"><label>Entrada N: <b id="spNVal">7</b></label><input id="spN" type="range" min="5" max="15" value="7"></div>
+      <div class="control"><label>Kernel F: <b id="spFVal">3</b></label><input id="spF" type="range" min="1" max="7" step="2" value="3"></div>
+      <div class="control"><label>Stride S: <b id="spSVal">1</b></label><input id="spS" type="range" min="1" max="3" value="1"></div>
+      <div class="labbar"><button class="btn" data-padding="0">Valid / No Padding</button><button class="btn primary" data-padding="same">Same / Padding</button></div>
+      <div class="metric">Padding P <b id="spPVal">1</b></div>
+    </div>
+    <div class="card">
+      <h3>Salida</h3><div class="metric"><span>Tamaño de salida</span><b id="spOut">7 × 7</b></div>
+      <p class="codeish">Output = floor((N − F + 2P) / S) + 1</p>
+      <canvas id="strideCanvas" width="520" height="360"></canvas>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="featuremaps">
+  <div class="section-head"><div class="kicker">Una capa, muchos detectores</div><h2>Feature Maps</h2><p>Una capa convolucional aprende múltiples filtros y produce múltiples mapas de características.</p></div>
+  <div class="card">
+    <div class="control"><label>Número de filtros: <b id="fmCountVal">4</b></label><input id="fmCount" type="range" min="1" max="12" value="4"></div>
+    <div class="featuremaps" id="featureMapsGrid"></div>
+    <div class="note good">Una capa convolucional no aprende un único filtro. Aprende muchos filtros diferentes.</div>
+  </div>
+</section>
+
+<section class="section" id="relu">
+  <div class="section-head"><div class="kicker">No linealidad</div><h2>ReLU</h2><p><span class="codeish">ReLU(x)=max(0,x)</span>. Los negativos se apagan; los positivos pasan.</p></div>
+  <div class="grid g2">
+    <div class="card"><canvas id="reluCanvas" width="560" height="330"></canvas><div class="control"><label>x = <b id="reluXVal">-2</b></label><input id="reluX" type="range" min="-5" max="5" step=".1" value="-2"></div><div class="metric">Salida ReLU <b id="reluOut">0</b></div></div>
+    <div class="card"><h3>Matriz antes / después</h3><div class="labbar"><button class="btn" id="reluToggle">Antes de ReLU / Después de ReLU</button></div><div id="reluMatrix"></div><div class="note">ReLU introduce una transformación no lineal, permitiendo que la red represente relaciones más complejas que una pila de operaciones lineales.</div></div>
+  </div>
+</section>
+
+<section class="section" id="pooling">
+  <div class="section-head"><div class="kicker">Reducir sin perder lo esencial</div><h2>Pooling</h2><p>Resume pequeñas regiones. Max Pooling conserva la activación dominante; Average Pooling conserva el promedio.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="control"><label>Tipo</label><select id="poolType"><option value="max">Max Pooling</option><option value="avg">Average Pooling</option></select></div>
+      <div class="control"><label>Ventana: <b id="poolWinVal">2</b>×<b id="poolWinVal2">2</b></label><input id="poolWin" type="range" min="2" max="3" value="2"></div>
+      <div class="control"><label>Stride: <b id="poolStrideVal">2</b></label><input id="poolStride" type="range" min="1" max="3" value="2"></div>
+      <h4>Entrada 6×6</h4><div id="poolInput"></div>
+    </div>
+    <div class="card"><h3>Resultado</h3><div id="poolOutput"></div><div id="poolExplain" class="note" style="margin-top:12px"></div></div>
+  </div>
+</section>
+
+<section class="section" id="arquitectura">
+  <div class="section-head"><div class="kicker">Constructor visual</div><h2>Arquitectura CNN</h2><p>Modifica los hiperparámetros y observa cómo cambian dimensiones y parámetros.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="control"><label>Tamaño de entrada</label><select id="archInput"><option>28</option><option>32</option><option>64</option></select></div>
+      <div class="control"><label>Filtros Conv1: <b id="archF1Val">8</b></label><input id="archF1" type="range" min="2" max="32" step="2" value="8"></div>
+      <div class="control"><label>Filtros Conv2: <b id="archF2Val">16</b></label><input id="archF2" type="range" min="4" max="64" step="4" value="16"></div>
+      <div class="control"><label>Kernel</label><select id="archK"><option value="3">3×3</option><option value="5">5×5</option></select></div>
+      <div class="labbar"><label class="pill"><input id="archSame" type="checkbox" checked> Padding SAME</label><label class="pill"><input id="archPool1" type="checkbox" checked> Pool 1</label><label class="pill"><input id="archPool2" type="checkbox" checked> Pool 2</label></div>
+    </div>
+    <div class="card"><h3>Red construida</h3><div class="arch" id="archBlocks"></div><div id="archDetails"></div></div>
+  </div>
+</section>
+
+<section class="section" id="jerarquia">
+  <div class="section-head"><div class="kicker">Representaciones</div><h2>Aprendizaje jerárquico</h2><p>Las capas tempranas suelen responder a patrones locales simples; capas más profundas pueden combinar señales en representaciones de mayor nivel. Esta visualización es pedagógica, no una lectura literal de toda CNN.</p></div>
+  <div class="card">
+    <div class="control"><label>Profundidad de la red: <b id="depthVal">3</b></label><input id="depth" type="range" min="1" max="6" value="3"></div>
+    <div class="hierarchy-stage"><div class="hierarchy-visual" id="hierarchyVisual"></div></div>
+  </div>
+</section>
+
+<section class="section" id="receptive">
+  <div class="section-head"><div class="kicker">¿Qué región puede influir?</div><h2>Receptive Field</h2><p>Una neurona profunda puede depender de una región cada vez mayor de la imagen original.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="control"><label>Capas: <b id="rfLayersVal">3</b></label><input id="rfLayers" type="range" min="1" max="6" value="3"></div>
+      <div class="control"><label>Kernel: <b id="rfKVal">3</b></label><input id="rfK" type="range" min="1" max="7" step="2" value="3"></div>
+      <div class="control"><label>Stride: <b id="rfSVal">1</b></label><input id="rfS" type="range" min="1" max="2" value="1"></div>
+      <div class="metric">Receptive field aproximado <b id="rfValue"></b></div>
+    </div>
+    <div class="card"><div class="rf-grid" id="rfGrid"></div></div>
+  </div>
+</section>
+
+<section class="section" id="entrenamiento">
+  <div class="section-head"><div class="kicker">Los filtros se aprenden</div><h2>¿Cómo aprende un filtro?</h2><p>Simulación educativa matemáticamente coherente de una optimización: predicción → error → actualización → nueva predicción.</p></div>
+  <div class="grid g2">
+    <div class="card"><div class="flow"><div class="node">Filtro inicial</div><div class="arrow">↓</div><div class="node">Predicción → Error</div><div class="arrow">↓</div><div class="node">Backpropagation</div><div class="arrow">↓</div><div class="node">Actualización</div></div><div class="labbar"><button class="btn primary" id="trainBtn">Entrenar 20 épocas</button><button class="btn" id="trainReset">Reiniciar</button></div></div>
+    <div class="card"><canvas id="trainingChart" class="spark" width="620" height="300"></canvas><h4>Kernel que evoluciona</h4><div id="trainingKernel"></div><div id="trainStatus" class="note">Aún no entrenado.</div></div>
+  </div>
+</section>
+
+<section class="section" id="cnnmlp">
+  <div class="section-head"><div class="kicker">Comparación</div><h2>CNN vs MLP</h2><p>Dos familias de redes con inductive biases diferentes.</p></div>
+  <div class="grid g2">
+    <div class="card"><h3>MLP</h3><p>Conectividad global · sin weight sharing · muchos parámetros para entradas visuales grandes · la geometría 2D debe codificarse implícitamente.</p><canvas id="mlpCanvas" width="520" height="270"></canvas></div>
+    <div class="card"><h3>CNN</h3><p>Conectividad local · weight sharing · preserva estructura espacial · extracción jerárquica de características.</p><canvas id="cnnCanvas" width="520" height="270"></canvas></div>
+  </div>
+  <div class="card" style="margin-top:16px"><div id="compareTable"></div></div>
+</section>
+
+<section class="section" id="famosas">
+  <div class="section-head"><div class="kicker">Museo de arquitecturas</div><h2>Arquitecturas famosas</h2><p>De LeNet-5 a ConvNeXt, cada etapa cambió qué tan profundas, eficientes o entrenables podían ser las redes de visión.</p></div>
+  <div class="grid g3" id="famousGrid"></div>
+</section>
+
+<section class="section" id="personajes">
+  <div class="section-head"><div class="kicker">Timeline 1</div><h2>Personajes que hicieron posible las CNN</h2><p>Selecciona una persona para ver la idea que debemos recordar.</p></div>
+  <div class="timeline" id="peopleTimeline"></div><div class="card" id="personDetail">Selecciona una tarjeta.</div>
+</section>
+
+<section class="section" id="hitos">
+  <div class="section-head"><div class="kicker">Timeline 2</div><h2>La evolución de las Redes Convolucionales</h2><p>Filtra la historia por tipo de aporte.</p></div>
+  <div class="pills" id="milestoneFilters"></div><div class="timeline" id="milestoneTimeline"></div><div class="card" id="milestoneDetail">Selecciona un hito.</div>
+</section>
+
+<section class="section" id="visualizador">
+  <div class="section-head"><div class="kicker">Bloques arquitectónicos</div><h2>Visualizador de arquitecturas</h2><p>Compara patrones estructurales de distintas CNN.</p></div>
+  <div class="card"><div class="control"><label>Arquitectura</label><select id="visualArch"><option>LeNet</option><option>AlexNet</option><option>VGG</option><option>GoogLeNet</option><option>ResNet</option><option>EfficientNet</option></select></div><div class="arch" id="visualArchBlocks"></div><div class="note" id="visualArchNote"></div></div>
+</section>
+
+<section class="section" id="labcompleto">
+  <div class="section-head"><div class="kicker">Microworld</div><h2>Laboratorio CNN completo</h2><p>Controla una mini tubería: imagen → convolución → feature map → ReLU → pooling → representación.</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="control"><label>Imagen</label><select id="fullShape"><option value="square">Cuadrado</option><option value="circle">Círculo</option><option value="diagonal">Diagonal</option><option value="face">Rostro</option></select></div>
+      <div class="control"><label>Kernel</label><select id="fullKernel"><option value="sobelx">Sobel X</option><option value="sobely">Sobel Y</option><option value="blur">Blur</option><option value="sharpen">Sharpen</option></select></div>
+      <div class="control"><label>Stride: <b id="fullStrideVal">1</b></label><input id="fullStride" type="range" min="1" max="3" value="1"></div>
+      <div class="control"><label>Padding</label><select id="fullPadding"><option value="same">Same</option><option value="valid">Valid</option></select></div>
+      <label class="pill"><input type="checkbox" id="fullRelu" checked> ReLU ON</label>
+      <div class="control"><label>Pooling</label><select id="fullPool"><option value="none">Ninguno</option><option value="max">Max Pool</option><option value="avg">Average Pool</option></select></div>
+    </div>
+    <div class="card"><div class="featuremaps" id="fullPipeline"></div></div>
+  </div>
+</section>
+
+<section class="section" id="retos">
+  <div class="section-head"><div class="kicker">Aprender haciendo</div><h2>Retos interactivos</h2><p>Ocho mini-retos con retroalimentación inmediata.</p></div>
+  <div class="grid g2"><div class="card"><div class="metric">Retos completados <b id="challengeScore">0 / 8</b></div><div id="challengeList"></div></div><div class="card"><h3 id="challengeTitle"></h3><div id="challengeBody"></div><div class="feedback" id="challengeFeedback"></div></div></div>
+</section>
+
+<section class="section" id="quiz">
+  <div class="section-head"><div class="kicker">Evaluación formativa</div><h2>Quiz CNN</h2><p>15 preguntas con explicación, puntuación y nivel final.</p></div>
+  <div class="grid g2"><div class="card"><div class="metric">Progreso <b id="quizProgress">1 / 15</b></div><div class="metric" style="margin-top:10px">Puntuación <b id="quizScore">0</b></div><button class="btn" id="quizRestart" style="margin-top:10px">Reiniciar quiz</button></div><div class="card"><h3 id="quizQuestion"></h3><div id="quizOptions"></div><div class="feedback answer-sensitive" id="quizFeedback"></div><button class="btn primary hidden" id="quizNext" style="margin-top:10px">Siguiente</button></div></div>
+</section>
+
+<section class="section" id="glosario">
+  <div class="section-head"><div class="kicker">Conceptos esenciales</div><h2>Glosario interactivo</h2><p>Haz clic en un término para ver una explicación breve y un esquema conceptual.</p></div>
+  <div class="glossary-grid" id="glossaryGrid"></div>
+</section>
+
+<section class="section" id="que-pasa">
+  <div class="section-head"><div class="kicker">Explorador causal</div><h2>¿Qué pasa si...?</h2><p>Cambia una decisión de diseño y compara el efecto.</p></div>
+  <div class="grid g2"><div class="card"><div class="control"><label>Cambio</label><select id="whatIfSelect"><option value="kernel">Aumento el kernel</option><option value="stride">Aumento el stride</option><option value="padding">Elimino padding</option><option value="filters">Agrego más filtros</option><option value="pool">Agrego pooling</option><option value="relu">Elimino ReLU</option><option value="depth">Hago la red más profunda</option></select></div></div><div class="card"><div class="grid g2"><div class="metric"><span>ANTES</span><b id="whatBefore"></b></div><div class="metric"><span>DESPUÉS</span><b id="whatAfter"></b></div></div><div class="note" id="whatExplain" style="margin-top:12px"></div></div></div>
+</section>
+
+<section class="section" id="aplicaciones">
+  <div class="section-head"><div class="kicker">CNN en el mundo</div><h2>Aplicaciones de las CNN</h2><p>Entrada → tarea → salida.</p></div>
+  <div class="grid g3" id="applicationsGrid"></div>
+</section>
+
+<section class="section" id="viaje">
+  <div class="section-head"><div class="kicker">Síntesis final</div><h2>El gran viaje de una imagen</h2><p>Recorre el camino desde una fotografía hasta una predicción.</p></div>
+  <div class="card"><div class="journey" id="journey"></div><div class="labbar"><button class="btn primary" id="journeyRun">▶ Ver viaje</button><button class="btn" id="journeyReset">↺ Reiniciar</button></div><div class="metric">Tensor actual <b id="journeyTensor">224×224×3</b></div></div>
+  <div class="card" style="margin-top:16px"><h3>Mapa conceptual final</h3><div class="concept-map" id="conceptMap"></div></div>
+</section>
+</main>
+</div>
+
+<div class="teacher-strip">
+  <button class="btn" id="teacherQuestion">❓ Pregunta para la clase</button>
+  <button class="btn" id="teacherFullscreen">⛶ Maximizar sección</button>
+  <button class="btn" id="teacherResetSim">↺ Reiniciar simulación</button>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Detalle">
+  <div class="modal-box"><div class="labbar" style="justify-content:flex-end"><button class="btn" id="modalClose">✕ Cerrar</button></div><div id="modalContent"></div></div>
+</div>
+
+<script>
+'use strict';
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=n=>Math.round(n).toLocaleString('es-CO');
+const deepCopy=m=>m.map(r=>r.slice());
+const state={visited:new Set(),teacher:false,theme:'light',paddingMode:'same',convStep:0,convTimer:null,convPaused:false,quizIndex:0,quizScore:0,quizLocked:false,challenges:new Set(),trainEpoch:0,journeyTimer:null};
+
+const sections=[
+['inicio','Inicio'],['porque','¿Por qué CNN?'],['pixeles','De píxeles a características'],['convolucion','Convolución'],
+['kernels','Laboratorio de kernels'],['stride','Stride y Padding'],['featuremaps','Feature Maps'],['relu','ReLU'],['pooling','Pooling'],
+['arquitectura','Arquitectura CNN'],['jerarquia','Aprendizaje jerárquico'],['receptive','Receptive Field'],['entrenamiento','Entrenamiento'],
+['cnnmlp','CNN vs MLP'],['famosas','Arquitecturas famosas'],['personajes','Timeline de personajes'],['hitos','Timeline de hitos'],
+['visualizador','Visualizador'],['labcompleto','Laboratorio CNN completo'],['retos','Retos'],['quiz','Quiz'],['glosario','Glosario'],
+['que-pasa','¿Qué pasa si...?'],['aplicaciones','Aplicaciones'],['viaje','Gran viaje + mapa']
+];
+
+function initNav(){
+  $('#nav').innerHTML=sections.map((s,i)=>`<button data-go="${s[0]}" class="${i===0?'active':''}"><span class="num">${i+1}</span>${s[1]}</button>`).join('');
+  $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+}
+function go(id){
+  $$('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+  $('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+  state.visited.add(id);saveProgress();updateProgress();
+  $('#sidebar').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'});
+  const initMap={porque:updateCompare,pixeles:drawPixels,convolucion:renderConvLab,kernels:updateKernelLab,stride:updateStride,
+    featuremaps:updateFeatureMaps,relu:updateRelu,pooling:updatePooling,arquitectura:updateArchitecture,jerarquia:updateHierarchy,
+    receptive:updateRF,entrenamiento:renderTraining,cnnmlp:renderCNNMLP,famosas:renderFamous,personajes:renderPeople,hitos:renderMilestones,
+    visualizador:updateVisualArch,labcompleto:updateFullLab,retos:renderChallenges,quiz:renderQuiz,glosario:renderGlossary,
+    'que-pasa':updateWhatIf,aplicaciones:renderApplications,viaje:renderJourney};
+  initMap[id]?.();
+}
+function saveProgress(){
+  localStorage.setItem('cnnLabProgress',JSON.stringify({visited:[...state.visited],challenges:[...state.challenges],quizScore:state.quizScore,quizIndex:state.quizIndex}));
+}
+function loadProgress(){
+  try{const p=JSON.parse(localStorage.getItem('cnnLabProgress')||'{}');state.visited=new Set(p.visited||['inicio']);state.challenges=new Set(p.challenges||[]);state.quizScore=p.quizScore||0;state.quizIndex=p.quizIndex||0}catch(e){}
+}
+function updateProgress(){
+  const visitedScore=state.visited.size/sections.length*75, challengeScore=state.challenges.size/8*15, quizScore=state.quizScore/15*10;
+  const pct=Math.round(clamp(visitedScore+challengeScore+quizScore,0,100));
+  $('#progressText').textContent=pct+'%';$('#progressBar').style.width=pct+'%';
+}
+
+function matrixHTML(m,hot=[],out=[]){
+  const cols=m[0].length;return `<div class="matrix" style="grid-template-columns:repeat(${cols},42px)">`+
+  m.flatMap((r,y)=>r.map((v,x)=>`<div class="cell ${hot.some(p=>p[0]===y&&p[1]===x)?'hot':''} ${out.some(p=>p[0]===y&&p[1]===x)?'out':''}">${Number.isFinite(v)?(Math.round(v*10)/10):'·'}</div>`)).join('')+'</div>';
+}
+function conv2d(input,kernel,{stride=1,padding=0,relu=false}={}){
+  const H=input.length,W=input[0].length,K=kernel.length;
+  const padded=Array.from({length:H+2*padding},(_,y)=>Array.from({length:W+2*padding},(_,x)=>{
+    const iy=y-padding,ix=x-padding;return iy>=0&&iy<H&&ix>=0&&ix<W?input[iy][ix]:0;
+  }));
+  const outH=Math.floor((padded.length-K)/stride)+1,outW=Math.floor((padded[0].length-K)/stride)+1;
+  const out=Array.from({length:Math.max(0,outH)},()=>Array(Math.max(0,outW)).fill(0));
+  for(let oy=0;oy<outH;oy++)for(let ox=0;ox<outW;ox++){
+    let s=0;for(let ky=0;ky<K;ky++)for(let kx=0;kx<K;kx++)s+=padded[oy*stride+ky][ox*stride+kx]*kernel[ky][kx];
+    out[oy][ox]=relu?Math.max(0,s):s;
+  }
+  return out;
+}
+function pool2d(input,size=2,stride=2,type='max'){
+  if(!input.length||!input[0].length)return [];
+  const outH=Math.floor((input.length-size)/stride)+1,outW=Math.floor((input[0].length-size)/stride)+1;
+  if(outH<1||outW<1)return [];
+  return Array.from({length:outH},(_,oy)=>Array.from({length:outW},(_,ox)=>{
+    const a=[];for(let y=0;y<size;y++)for(let x=0;x<size;x++)a.push(input[oy*stride+y][ox*stride+x]);
+    return type==='max'?Math.max(...a):a.reduce((s,v)=>s+v,0)/a.length;
+  }));
+}
+const kernels={
+  identity:[[0,0,0],[0,1,0],[0,0,0]],
+  blur:[[1/9,1/9,1/9],[1/9,1/9,1/9],[1/9,1/9,1/9]],
+  sharpen:[[0,-1,0],[-1,5,-1],[0,-1,0]],
+  vertical:[[-1,0,1],[-1,0,1],[-1,0,1]],
+  horizontal:[[-1,-1,-1],[0,0,0],[1,1,1]],
+  sobelx:[[-1,0,1],[-2,0,2],[-1,0,1]],
+  sobely:[[-1,-2,-1],[0,0,0],[1,2,1]],
+  emboss:[[-2,-1,0],[-1,1,1],[0,1,2]]
+};
+
+function syntheticMatrix(type,n=28){
+  const m=Array.from({length:n},()=>Array(n).fill(0));
+  const cx=(n-1)/2,cy=(n-1)/2;
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+    let v=0;
+    if(type==='square')v=(x>n*.25&&x<n*.75&&y>n*.25&&y<n*.75)?1:0;
+    if(type==='circle')v=Math.hypot(x-cx,y-cy)<n*.28?1:0;
+    if(type==='vertical')v=(Math.floor(x/3)%2===0)?1:0;
+    if(type==='horizontal')v=(Math.floor(y/3)%2===0)?1:0;
+    if(type==='diagonal')v=Math.abs(x-y)<2?1:0;
+    if(type==='face'){const face=Math.hypot(x-cx,y-cy)<n*.35;const eye=(Math.hypot(x-n*.38,y-n*.42)<1.5||Math.hypot(x-n*.62,y-n*.42)<1.5);const mouth=Math.abs(y-n*.64)<1&&x>n*.38&&x<n*.62;v=(face?0.35:0)+(eye?0.65:0)+(mouth?0.65:0);}
+    if(type==='object'){v=(y>n*.25&&y<n*.7&&x>n*.32&&x<n*.68)?0.8:0;if(Math.hypot(x-n*.4,y-n*.75)<n*.08||Math.hypot(x-n*.6,y-n*.75)<n*.08)v=1;}
+    m[y][x]=clamp(v,0,1);
+  }
+  return m;
+}
+function drawMatrixCanvas(canvas,m,{normalize=true,pixelated=true}={}){
+  const c=canvas.getContext('2d'),w=canvas.width,h=canvas.height;c.clearRect(0,0,w,h);
+  if(!m.length||!m[0].length)return;
+  const flat=m.flat(),mn=Math.min(...flat),mx=Math.max(...flat),den=(mx-mn)||1;
+  const cw=w/m[0].length,ch=h/m.length;
+  for(let y=0;y<m.length;y++)for(let x=0;x<m[0].length;x++){
+    let v=m[y][x];if(normalize)v=(v-mn)/den;v=clamp(v,0,1);const g=Math.round(v*255);
+    c.fillStyle=`rgb(${g},${g},${g})`;c.fillRect(x*cw,y*ch,Math.ceil(cw),Math.ceil(ch));
+  }
+  if(pixelated&&m.length<=30){c.strokeStyle='rgba(127,127,127,.25)';c.lineWidth=.5;for(let x=0;x<=m[0].length;x++){c.beginPath();c.moveTo(x*cw,0);c.lineTo(x*cw,h);c.stroke()}for(let y=0;y<=m.length;y++){c.beginPath();c.moveTo(0,y*ch);c.lineTo(w,y*ch);c.stroke()}}
+}
+
+/* --- MLP vs CNN --- */
+function updateCompare(){
+  const n=+$('#imgSize').value,neur=+$('#neurons').value,k=+$('#kernelSizeCmp').value,f=+$('#filtersCmp').value;
+  $('#imgSizeVal').textContent=$('#imgSizeVal2').textContent=n;$('#neuronsVal').textContent=neur;$('#kernelSizeVal').textContent=$('#kernelSizeVal2').textContent=k;$('#filtersCmpVal').textContent=f;
+  const mlp=n*n*neur+neur,cnn=k*k*f+f;$('#mlpParams').textContent=fmt(mlp);$('#cnnParams').textContent=fmt(cnn);
+  const c=$('#compareCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle=getCSS('--muted');ctx.font='16px system-ui';ctx.fillText('MLP: muchas conexiones globales',24,28);ctx.fillText('CNN: un filtro local reutilizado',320,28);
+  const pts=[];for(let y=0;y<5;y++)for(let x=0;x<5;x++)pts.push([35+x*35,65+y*35]);
+  ctx.strokeStyle=getCSS('--border');ctx.fillStyle=getCSS('--text');pts.forEach(([x,y])=>{ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill()});
+  const nx=255,ny=145;ctx.fillStyle=getCSS('--accent');ctx.beginPath();ctx.arc(nx,ny,10,0,7);ctx.fill();ctx.globalAlpha=.35;ctx.strokeStyle=getCSS('--accent');pts.forEach(([x,y])=>{ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(nx,ny);ctx.stroke()});ctx.globalAlpha=1;
+  for(let y=0;y<5;y++)for(let x=0;x<5;x++){ctx.fillStyle=(x>=1&&x<=3&&y>=1&&y<=3)?getCSS('--accent'):getCSS('--border');ctx.fillRect(330+x*35,65+y*35,24,24)}
+  ctx.strokeStyle=getCSS('--accent2');ctx.lineWidth=3;ctx.strokeRect(365,100,94,94);ctx.fillStyle=getCSS('--muted');ctx.fillText('mismos 3×3 pesos',335,275);
+}
+
+/* pixels */
+let pixelData=syntheticMatrix('face',14),pixelMatrixVisible=false;
+function drawPixels(){
+  const mode=$('#pixelMode').value,c=$('#pixelCanvas'),ctx=c.getContext('2d'),n=pixelData.length,sz=c.width/n;ctx.clearRect(0,0,c.width,c.height);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){let v=pixelData[y][x];if(mode==='bw')v=v>.5?1:0;
+    if(mode==='rgb'){const r=Math.round(v*255),g=Math.round((1-v)*100),b=Math.round((.3+.7*v)*180);ctx.fillStyle=`rgb(${r},${g},${b})`}
+    else{const g=Math.round(v*255);ctx.fillStyle=`rgb(${g},${g},${g})`}ctx.fillRect(x*sz,y*sz,Math.ceil(sz),Math.ceil(sz));ctx.strokeStyle='rgba(127,127,127,.25)';ctx.strokeRect(x*sz,y*sz,sz,sz)}
+  $('#pixelCanvas').classList.toggle('hidden',pixelMatrixVisible);$('#pixelMatrix').classList.toggle('hidden',!pixelMatrixVisible);
+  if(pixelMatrixVisible)$('#pixelMatrix').innerHTML=matrixHTML(pixelData.map(r=>r.map(v=>Math.round(v*255))));
+}
+function pixelHover(e){
+  const r=e.currentTarget.getBoundingClientRect(),n=pixelData.length,x=clamp(Math.floor((e.clientX-r.left)/r.width*n),0,n-1),y=clamp(Math.floor((e.clientY-r.top)/r.height*n),0,n-1),v=pixelData[y][x],mode=$('#pixelMode').value;
+  $('#pixelInfo').innerHTML=`<span>Coordenada</span><b>(${x}, ${y})</b><span>Intensidad</span><b>${Math.round(v*255)}</b>${mode==='rgb'?`<span>RGB</span><b>${Math.round(v*255)}, ${Math.round((1-v)*100)}, ${Math.round((.3+.7*v)*180)}</b>`:''}`;
+}
+
+/* convolution */
+const convInput=[[0,0,1,1,1],[0,0,1,1,1],[0,0,1,1,1],[0,0,1,1,1],[0,0,1,1,1]],convKernel=kernels.sobelx;
+function convPositions(){const a=[];for(let y=0;y<3;y++)for(let x=0;x<3;x++)a.push([y,x]);return a}
+function renderConvLab(){
+  const positions=convPositions(),pos=positions[state.convStep]||null,hot=[];if(pos)for(let y=0;y<3;y++)for(let x=0;x<3;x++)hot.push([pos[0]+y,pos[1]+x]);
+  $('#convInputMatrix').innerHTML=matrixHTML(convInput,hot);$('#convKernelMatrix').innerHTML=matrixHTML(convKernel);
+  const out=conv2d(convInput,convKernel),shown=out.map(r=>r.map(()=>NaN));for(let i=0;i<state.convStep;i++){const [y,x]=positions[i];shown[y][x]=out[y][x]}
+  if(state.convStep>=positions.length)for(let y=0;y<out.length;y++)for(let x=0;x<out[0].length;x++)shown[y][x]=out[y][x];
+  $('#convOutputMatrix').innerHTML=matrixHTML(shown,[],pos?[[pos[0],pos[1]]]:[]);
+  if(pos){let terms=[],sum=0;for(let ky=0;ky<3;ky++)for(let kx=0;kx<3;kx++){const a=convInput[pos[0]+ky][pos[1]+kx],b=convKernel[ky][kx];sum+=a*b;terms.push(`${a}×${b}`)}$('#convSum').textContent=sum;$('#convExplain').textContent=`Posición (${pos[1]},${pos[0]}): ${terms.join(' + ')} = ${sum}. Ese valor se escribe en el feature map.`}
+  else{$('#convSum').textContent='—';$('#convExplain').textContent=state.convStep>=positions.length?'Convolución terminada: cada celda del feature map proviene de una región local de la entrada.':'Pulsa “Paso” para comenzar.'}
+}
+function convNext(){if(state.convStep<convPositions().length)state.convStep++;renderConvLab();if(state.convStep>=convPositions().length)stopConv()}
+function runConv(){stopConv();state.convPaused=false;state.convTimer=setInterval(convNext,+$('#convSpeed').value)}
+function stopConv(){clearInterval(state.convTimer);state.convTimer=null}
+
+/* kernel lab */
+let drawData=syntheticMatrix('square',28),drawing=false;
+function updateKernelEditor(){
+  const preset=$('#kernelPreset').value,k=kernels[preset]||kernels.sobelx;$('#kernelEditor').innerHTML=k.flat().map((v,i)=>`<input type="number" step=".111" value="${+v.toFixed(3)}" data-ki="${i}" aria-label="Valor del kernel ${i+1}">`).join('');
+  $$('#kernelEditor input').forEach(i=>i.addEventListener('input',updateKernelResult));
+}
+function currentKernel(){const vals=$$('#kernelEditor input').map(i=>+i.value||0);return [vals.slice(0,3),vals.slice(3,6),vals.slice(6,9)]}
+function updateKernelLab(){
+  const type=$('#shapeSelect').value;if(type!=='draw')drawData=syntheticMatrix(type,28);drawMatrixCanvas($('#drawCanvas'),drawData,{normalize:false});drawMatrixCanvas($('#kernelOriginal'),drawData,{normalize:false});updateKernelEditor();updateKernelResult()
+}
+function updateKernelResult(){drawMatrixCanvas($('#kernelOriginal'),drawData,{normalize:false});const out=conv2d(drawData,currentKernel(),{padding:1});drawMatrixCanvas($('#kernelResult'),out,{normalize:true})}
+function drawOnCanvas(e){
+  if(!drawing)return;const c=$('#drawCanvas'),r=c.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*28),y=Math.floor((e.clientY-r.top)/r.height*28);
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(y+dy>=0&&y+dy<28&&x+dx>=0&&x+dx<28)drawData[y+dy][x+dx]=1;
+  drawMatrixCanvas(c,drawData,{normalize:false});updateKernelResult()
+}
+
+/* stride padding */
+function updateStride(){
+  const N=+$('#spN').value,F=+$('#spF').value,S=+$('#spS').value;let P=state.paddingMode==='same'?Math.floor(F/2):0;
+  const out=Math.max(0,Math.floor((N-F+2*P)/S)+1);$('#spNVal').textContent=N;$('#spFVal').textContent=F;$('#spSVal').textContent=S;$('#spPVal').textContent=P;$('#spOut').textContent=`${out} × ${out}`;
+  const c=$('#strideCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);const size=260,ox=40,oy=45,cell=size/(N+2*P),total=N+2*P;
+  for(let y=0;y<total;y++)for(let x=0;x<total;x++){const pad=x<P||y<P||x>=N+P||y>=N+P;ctx.fillStyle=pad?getCSS('--panel2'):getCSS('--panel');ctx.strokeStyle=getCSS('--border');ctx.fillRect(ox+x*cell,oy+y*cell,cell,cell);ctx.strokeRect(ox+x*cell,oy+y*cell,cell,cell)}
+  ctx.strokeStyle=getCSS('--accent');ctx.lineWidth=4;ctx.strokeRect(ox,oy,F*cell,F*cell);ctx.fillStyle=getCSS('--text');ctx.font='15px system-ui';ctx.fillText(`Primer paso del filtro · stride ${S}`,340,90);ctx.fillText(`Padding sombreado · P=${P}`,340,120);ctx.fillText(`Salida ${out}×${out}`,340,150);
+}
+
+/* feature maps */
+function updateFeatureMaps(){
+  const count=+$('#fmCount').value;$('#fmCountVal').textContent=count;const base=syntheticMatrix('face',20),names=['Borde X','Borde Y','Blur','Sharpen','Emboss','Identidad'];
+  const ks=[kernels.sobelx,kernels.sobely,kernels.blur,kernels.sharpen,kernels.emboss,kernels.identity,kernels.vertical,kernels.horizontal];
+  $('#featureMapsGrid').innerHTML=Array.from({length:count},(_,i)=>`<div class="card"><b>Filtro ${i+1} · ${names[i%names.length]||'patrón'}</b><canvas id="fm${i}" width="180" height="180"></canvas></div>`).join('');
+  for(let i=0;i<count;i++){const k=ks[i%ks.length].map(r=>r.map((v,j)=>v*(1+(i%3)*.12)));drawMatrixCanvas($('#fm'+i),conv2d(base,k,{padding:1}),{normalize:true})}
+}
+
+/* relu */
+const reluBase=[[-3,-1,0,2],[4,-2,1,5],[-5,3,-1,2],[1,-4,4,-2]];let reluAfter=false;
+function updateRelu(){
+  const x=+$('#reluX').value,y=Math.max(0,x);$('#reluXVal').textContent=x.toFixed(1);$('#reluOut').textContent=y.toFixed(1);
+  const c=$('#reluCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);const ox=W/2,oy=H/2,sx=45,sy=45;ctx.strokeStyle=getCSS('--border');ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+  ctx.strokeStyle=getCSS('--accent');ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(ox-5*sx,oy);ctx.lineTo(ox,oy);ctx.lineTo(ox+5*sx,oy-5*sy);ctx.stroke();ctx.fillStyle=getCSS('--danger');ctx.beginPath();ctx.arc(ox+x*sx,oy-y*sy,7,0,7);ctx.fill();
+  const m=reluAfter?reluBase.map(r=>r.map(v=>Math.max(0,v))):reluBase;$('#reluMatrix').innerHTML=matrixHTML(m)
+}
+
+/* pooling */
+const poolBase=[[1,8,2,4,3,7],[3,5,6,1,2,9],[4,7,2,8,1,3],[6,2,9,5,4,2],[1,3,7,2,8,6],[5,4,2,1,3,9]];
+function updatePooling(){
+  const type=$('#poolType').value,win=+$('#poolWin').value,str=+$('#poolStride').value;$('#poolWinVal').textContent=$('#poolWinVal2').textContent=win;$('#poolStrideVal').textContent=str;
+  $('#poolInput').innerHTML=matrixHTML(poolBase);const o=pool2d(poolBase,win,str,type);$('#poolOutput').innerHTML=o.length?matrixHTML(o):'<p>La ventana ya no cabe con estos parámetros.</p>';
+  $('#poolExplain').textContent=type==='max'?'Max Pooling elige el mayor valor de cada región.':'Average Pooling calcula el promedio de cada región.'
+}
+
+/* architecture */
+function updateArchitecture(){
+  const N=+$('#archInput').value,f1=+$('#archF1').value,f2=+$('#archF2').value,k=+$('#archK').value,same=$('#archSame').checked,p1=$('#archPool1').checked,p2=$('#archPool2').checked;
+  $('#archF1Val').textContent=f1;$('#archF2Val').textContent=f2;let d=N,channels=1,total=0;const layers=[];
+  layers.push({n:'INPUT',d:`${d}×${d}×${channels}`,c:''});
+  d=same?d:d-k+1;let p=k*k*channels*f1+f1;total+=p;channels=f1;layers.push({n:'CONV',d:`${d}×${d}×${channels}`,c:'conv',p});
+  layers.push({n:'RELU',d:`${d}×${d}×${channels}`,c:''});
+  if(p1){d=Math.floor(d/2);layers.push({n:'POOL',d:`${d}×${d}×${channels}`,c:'pool'})}
+  d=same?d:d-k+1;p=k*k*channels*f2+f2;total+=p;channels=f2;layers.push({n:'CONV',d:`${d}×${d}×${channels}`,c:'conv',p});layers.push({n:'RELU',d:`${d}×${d}×${channels}`,c:''});
+  if(p2){d=Math.floor(d/2);layers.push({n:'POOL',d:`${d}×${d}×${channels}`,c:'pool'})}
+  const flat=d*d*channels;layers.push({n:'FLATTEN',d:`${flat}`,c:''});const dense=flat*10+10;total+=dense;layers.push({n:'DENSE',d:'10',c:'dense',p:dense});layers.push({n:'SOFTMAX',d:'10 clases',c:''});
+  $('#archBlocks').innerHTML=layers.map((l,i)=>`${i?'<span class="arrow-inline">→</span>':''}<div class="block ${l.c}"><b>${l.n}</b><small>${l.d}</small></div>`).join('');
+  $('#archDetails').innerHTML=`<div class="metric"><span>Parámetros aproximados entrenables</span><b>${fmt(total)}</b></div>`;
+}
+
+/* hierarchy */
+const hierarchyNames=['Píxeles','Bordes','Texturas','Patrones','Partes','Objeto'];
+const hierarchyIcons=['▦','╱╲','▒','◫','◖◗','🐶'];
+function updateHierarchy(){
+  const d=+$('#depth').value;$('#depthVal').textContent=d;$('#hierarchyVisual').innerHTML=hierarchyNames.slice(0,d).map((n,i)=>`${i?'<span class="arrow-inline">→</span>':''}<div class="feature-box" style="transform:scale(${1+i*.035})"><div style="font-size:42px">${hierarchyIcons[i]}</div><strong>Capa ${i+1}</strong><span>${n}</span></div>`).join('')
+}
+
+/* receptive field */
+function receptiveField(layers,k,s){let r=1,jump=1;for(let i=0;i<layers;i++){r+=(k-1)*jump;jump*=s}return r}
+function updateRF(){
+  const L=+$('#rfLayers').value,k=+$('#rfK').value,s=+$('#rfS').value,r=receptiveField(L,k,s);$('#rfLayersVal').textContent=L;$('#rfKVal').textContent=k;$('#rfSVal').textContent=s;$('#rfValue').textContent=`${r} × ${r}`;
+  const n=14,span=Math.min(n,r),start=Math.floor((n-span)/2);$('#rfGrid').innerHTML=Array.from({length:n*n},(_,i)=>{const y=Math.floor(i/n),x=i%n,on=x>=start&&x<start+span&&y>=start&&y<start+span;return `<div class="rf-pixel ${on?'on':''}"></div>`}).join('')
+}
+
+/* training simulation */
+let trainLoss=[],trainAcc=[],trainKernel=[[-.4,.2,.1],[.3,-.1,.5],[-.2,.1,.3]];
+function renderTraining(){drawTrainingChart();$('#trainingKernel').innerHTML=matrixHTML(trainKernel.map(r=>r.map(v=>+v.toFixed(2))))}
+function resetTraining(){state.trainEpoch=0;trainLoss=[];trainAcc=[];trainKernel=[[-.4,.2,.1],[.3,-.1,.5],[-.2,.1,.3]];$('#trainStatus').textContent='Aún no entrenado.';renderTraining()}
+function trainSimulation(){
+  resetTraining();const target=kernels.sobelx.map(r=>r.map(v=>v/2));let e=0;
+  const timer=setInterval(()=>{e++;state.trainEpoch=e;const lr=.12;for(let y=0;y<3;y++)for(let x=0;x<3;x++)trainKernel[y][x]+=lr*(target[y][x]-trainKernel[y][x]);
+    const loss=1.6*Math.exp(-e/6)+.06,acc=.5+.47*(1-Math.exp(-e/5));trainLoss.push(loss);trainAcc.push(acc);$('#trainStatus').textContent=`Época ${e}/20 · loss ${loss.toFixed(3)} · accuracy ${(acc*100).toFixed(1)}%`;renderTraining();if(e>=20)clearInterval(timer)},100)
+}
+function drawTrainingChart(){
+  const c=$('#trainingChart'),ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);ctx.strokeStyle=getCSS('--border');ctx.beginPath();ctx.moveTo(45,15);ctx.lineTo(45,H-35);ctx.lineTo(W-15,H-35);ctx.stroke();ctx.fillStyle=getCSS('--muted');ctx.font='13px system-ui';ctx.fillText('Loss',8,25);ctx.fillText('Accuracy',W-80,25);
+  function line(a,max,color,flip=false){if(a.length<2)return;ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();a.forEach((v,i)=>{const x=45+i*(W-70)/19,y=H-35-(v/max)*(H-60);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}
+  line(trainLoss,1.7,getCSS('--danger'));line(trainAcc,1,getCSS('--accent2'));
+}
+
+/* comparison */
+function drawNetwork(canvas,local=false){
+  const c=canvas,ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);const left=Array.from({length:12},(_,i)=>[70+(i%4)*35,55+Math.floor(i/4)*60]),right=Array.from({length:5},(_,i)=>[390,40+i*48]);
+  ctx.globalAlpha=.28;ctx.strokeStyle=getCSS('--accent');left.forEach((p,pi)=>right.forEach((q,qi)=>{if(!local||Math.abs((pi%4)-qi)<2){ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke()}}));ctx.globalAlpha=1;ctx.fillStyle=getCSS('--text');left.forEach(p=>{ctx.beginPath();ctx.arc(...p,5,0,7);ctx.fill()});ctx.fillStyle=getCSS('--accent');right.forEach(p=>{ctx.beginPath();ctx.arc(...p,7,0,7);ctx.fill()})
+}
+function renderCNNMLP(){
+  drawNetwork($('#mlpCanvas'),false);drawNetwork($('#cnnCanvas'),true);
+  const rows=[['Conectividad','Global','Local'],['Weight sharing','No','Sí'],['Estructura espacial','Poco explícita','Preservada'],['Parámetros en imágenes','Muchos','Menos por reutilización'],['Especialización','General','Sesgo inductivo visual'],['Características','Distribuidas','Jerárquicas/locales']];
+  $('#compareTable').innerHTML=`<table style="width:100%;border-collapse:collapse"><tr><th>Propiedad</th><th>MLP</th><th>CNN</th></tr>${rows.map(r=>`<tr>${r.map(x=>`<td style="padding:10px;border-top:1px solid var(--border)">${x}</td>`).join('')}</tr>`).join('')}</table>`
+}
+
+/* famous architectures */
+const famous=[
+['LeNet-5','Yann LeCun y colaboradores','CNN temprana para reconocimiento de documentos y dígitos. Capas convolucionales + subsampling + capas densas.'],
+['AlexNet','Alex Krizhevsky, Ilya Sutskever y Geoffrey Hinton','ImageNet 2012, uso decisivo de GPU, ReLU, dropout e impulso al deep learning moderno en visión.'],
+['VGG','Karen Simonyan y Andrew Zisserman','Profundidad lograda con bloques repetidos de filtros 3×3.'],
+['GoogLeNet / Inception','Christian Szegedy y colaboradores','Ramas paralelas con diferentes escalas dentro de módulos Inception.'],
+['ResNet','Kaiming He y colaboradores','Conexiones residuales: una ruta identidad facilita optimizar redes muy profundas.'],
+['DenseNet','Gao Huang y colaboradores','Conexiones densas entre capas para reutilizar características.'],
+['EfficientNet','Mingxing Tan y Quoc V. Le','Escalamiento compuesto de profundidad, ancho y resolución.'],
+['ConvNeXt','Zhuang Liu y colaboradores','Relectura moderna de CNN inspirada por prácticas de diseño contemporáneas.'],
+['Vision Transformer','Alexey Dosovitskiy y colaboradores','Otro paradigma: procesa patches con Transformer en lugar de depender de convolución como operación central.']
+];
+function renderFamous(){$('#famousGrid').innerHTML=famous.map((a,i)=>`<div class="card"><div class="kicker">${i+1}</div><h3>${a[0]}</h3><b>${a[1]}</b><p>${a[2]}</p>${a[0]==='ResNet'?'<div class="note">x → capas → F(x), mientras x viaja por una conexión de atajo → F(x)+x</div>':''}</div>`).join('')}
+
+/* people */
+const people=[
+['David Hubel','1950s–1960s','Estudios sobre corteza visual y células sensibles a características.','Influencia conceptual desde neurociencia; no creó CNN.','La visión biológica procesa información mediante unidades con respuestas selectivas.'],
+['Torsten Wiesel','1950s–1960s','Procesamiento visual jerárquico junto con Hubel.','Ayudó a caracterizar organización de la corteza visual.','La jerarquía visual inspiró intuiciones posteriores.'],
+['Kunihiko Fukushima','1980','Neocognitron.','Antecedente computacional importante de arquitecturas convolucionales jerárquicas.','Capas locales y cierta tolerancia a desplazamientos.'],
+['Yann LeCun','1980s–1990s','Aprendizaje con convoluciones y LeNet.','Consolidó CNN entrenadas con backpropagation para reconocimiento visual.','Los filtros pueden aprenderse con datos.'],
+['Yoshua Bengio','2000s–2010s','Contribuciones fundamentales al deep learning.','Impulsó representaciones profundas y entrenamiento de redes.','Aprender representaciones es central.'],
+['Geoffrey Hinton','2000s–2010s','Figura clave del renacimiento del deep learning.','Contribuyó a reactivar redes profundas y entrenar generaciones de investigadores.','Profundidad + datos + cómputo pueden cambiar el rendimiento.'],
+['Alex Krizhevsky','2012','AlexNet.','Demostró un salto notable en ImageNet con CNN profundas y GPU.','Escala y cómputo importan.'],
+['Ilya Sutskever','2012','Coautor de AlexNet.','Participó en el trabajo que marcó 2012.','Entrenamiento a gran escala.'],
+['Karen Simonyan','2014','VGG.','Mostró la potencia de apilar muchos filtros 3×3.','Profundidad con bloques simples.'],
+['Andrew Zisserman','2014','VGG y visión por computador.','Coautor de una arquitectura muy influyente.','Diseño repetible y profundo.'],
+['Christian Szegedy','2014','GoogLeNet / Inception.','Introdujo módulos multirrama eficientes.','Procesar múltiples escalas en paralelo.'],
+['Kaiming He','2015','ResNet.','Las conexiones residuales hicieron más entrenables redes muy profundas.','Aprender residuos: F(x)+x.']
+];
+function renderPeople(){
+  if($('#peopleTimeline').children.length)return;
+  $('#peopleTimeline').innerHTML=people.map((p,i)=>`<div class="tcard" data-person="${i}"><div class="year">${p[1]}</div><h3>${p[0]}</h3><p>${p[2]}</p></div>`).join('');
+  $$('[data-person]').forEach(c=>c.onclick=()=>{const p=people[+c.dataset.person];$('#personDetail').innerHTML=`<div class="kicker">${p[1]}</div><h3>${p[0]}</h3><p><b>Contribución:</b> ${p[2]}</p><p><b>Por qué fue importante:</b> ${p[3]}</p><div class="note good"><b>¿Qué idea debemos recordar?</b> ${p[4]}</div>`})
+}
+
+/* milestones */
+const milestones=[
+['1959–1962','Ideas','Hubel y Wiesel estudian procesamiento visual cortical','Influencia conceptual sobre jerarquía y selectividad visual.','Neurociencia'],
+['1980','Ideas','Fukushima propone el Neocognitron','Antecedente computacional importante de CNN.','Neocognitron'],
+['Finales 1980s','Arquitecturas','LeCun aplica backpropagation a reconocimiento visual','Aprender filtros en redes con estructura local.','CNN tempranas'],
+['1989','Arquitecturas','Trabajos tempranos de LeCun y colaboradores','Reconocimiento de dígitos con redes convolucionales.','CNN'],
+['1998','Arquitecturas','LeNet-5','Modelo clásico para documentos y dígitos.','LeNet-5'],
+['2009','Datasets','ImageNet escala datos visuales','Facilita evaluación y entrenamiento a gran escala.','ImageNet'],
+['2012','Hardware','AlexNet gana notoriedad en ImageNet','GPU + CNN profunda + ReLU; momento decisivo del deep learning moderno en visión.','AlexNet'],
+['2014','Arquitecturas','VGG y GoogLeNet','Profundidad sistemática y módulos Inception.','VGG / Inception'],
+['2015','Arquitecturas','ResNet','Conexiones residuales para redes muy profundas.','ResNet'],
+['2016–2019','Arquitecturas','DenseNet, MobileNet, EfficientNet','Mejor reutilización de características y eficiencia.','CNN eficientes'],
+['2020','Arquitecturas','Vision Transformer','Transformers muestran gran potencial en visión.','ViT'],
+['2020s','Ideas','ConvNeXt, híbridos y foundation models','Convergencia de ideas CNN/Transformer y modelos multimodales.','Visión moderna']
+];
+let milestoneFilter='Todos';
+function renderMilestones(){
+  $('#milestoneFilters').innerHTML=['Todos','Personas','Arquitecturas','Datasets','Hardware','Ideas'].map(f=>`<button class="btn ${milestoneFilter===f?'primary':''}" data-mf="${f}">${f}</button>`).join('');
+  $$('[data-mf]').forEach(b=>b.onclick=()=>{milestoneFilter=b.dataset.mf;renderMilestones()});
+  const data=milestones.filter(m=>milestoneFilter==='Todos'||m[1]===milestoneFilter);
+  $('#milestoneTimeline').innerHTML=data.map((m,i)=>`<div class="tcard" data-mi="${milestones.indexOf(m)}"><div class="year">${m[0]}</div><span class="pill">${m[1]}</span><h3>${m[2]}</h3></div>`).join('');
+  $$('[data-mi]').forEach(c=>c.onclick=()=>{const m=milestones[+c.dataset.mi];$('#milestoneDetail').innerHTML=`<div class="year">${m[0]}</div><h3>${m[2]}</h3><p><b>Innovación / evento:</b> ${m[2]}</p><p><b>Problema o efecto:</b> ${m[3]}</p><p><b>Arquitectura relacionada:</b> ${m[4]}</p>`})
+}
+
+/* visualizer */
+const archDefs={
+LeNet:['INPUT','CONV 5×5','POOL','CONV 5×5','POOL','FC','OUTPUT'],
+AlexNet:['INPUT','CONV 11×11','POOL','CONV 5×5','POOL','CONV×3','POOL','FC×3','OUTPUT'],
+VGG:['INPUT','[CONV 3×3]×2','POOL','[CONV 3×3]×2','POOL','[CONV 3×3]×3','POOL','FC','OUTPUT'],
+GoogLeNet:['INPUT','CONV','POOL','INCEPTION','INCEPTION','POOL','INCEPTION×5','OUTPUT'],
+ResNet:['INPUT','CONV','POOL','RES BLOCK×3','RES BLOCK×4','RES BLOCK×6','RES BLOCK×3','OUTPUT'],
+EfficientNet:['INPUT','STEM','MBConv blocks','SE','MBConv blocks','HEAD','OUTPUT']
+};
+function updateVisualArch(){const name=$('#visualArch').value,a=archDefs[name];$('#visualArchBlocks').innerHTML=a.map((x,i)=>`${i?'<span class="arrow-inline">→</span>':''}<div class="block ${x.includes('CONV')?'conv':x.includes('POOL')?'pool':x.includes('FC')?'dense':''}" style="min-height:${70+(i%3)*12}px"><b>${x}</b></div>`).join('');$('#visualArchNote').textContent=name==='ResNet'?'Los bloques residuales suman una ruta identidad a la transformación: y = F(x) + x.':`Esquema pedagógico simplificado de ${name}; no representa cada capa exacta.`}
+
+/* full lab */
+function smallCanvasCard(title,id){return `<div class="card"><b>${title}</b><canvas id="${id}" width="190" height="190"></canvas></div>`}
+function updateFullLab(){
+  const base=syntheticMatrix($('#fullShape').value,20),k=kernels[$('#fullKernel').value],stride=+$('#fullStride').value,pad=$('#fullPadding').value==='same'?1:0,relu=$('#fullRelu').checked,pool=$('#fullPool').value;$('#fullStrideVal').textContent=stride;
+  const conv=conv2d(base,k,{stride,padding:pad}),activated=relu?conv.map(r=>r.map(v=>Math.max(0,v))):conv,pooled=pool==='none'?activated:pool2d(activated,2,2,pool);
+  $('#fullPipeline').innerHTML=smallCanvasCard('Imagen original','fp0')+smallCanvasCard('Convolución','fp1')+smallCanvasCard(relu?'ReLU':'Sin ReLU','fp2')+smallCanvasCard(pool==='none'?'Representación':'Pooling','fp3');
+  drawMatrixCanvas($('#fp0'),base,{normalize:false});drawMatrixCanvas($('#fp1'),conv,{normalize:true});drawMatrixCanvas($('#fp2'),activated,{normalize:true});drawMatrixCanvas($('#fp3'),pooled,{normalize:true})
+}
+
+/* challenges */
+const challenges=[
+['Reto 1 · Bordes verticales','¿Qué kernel detecta mejor cambios izquierda↔derecha?',['Sobel X','Blur','Identidad'],0,'Sobel X responde a gradientes horizontales de intensidad y resalta bordes verticales.'],
+['Reto 2 · Dimensión','Entrada 28, kernel 3, padding 0, stride 1. ¿Salida?',['26×26','28×28','14×14'],0,'(28−3+0)/1 + 1 = 26.'],
+['Reto 3 · Reducir','¿Qué secuencia reduce 32×32 aproximadamente a 8×8?',['Pool 2×2 dos veces','Stride 1 sin pooling','Padding SAME dos veces'],0,'32→16→8 con dos poolings 2×2 stride 2.'],
+['Reto 4 · Max Pool','Región [1,8;3,5]. ¿Max Pool?',['8','4.25','5'],0,'Max Pooling selecciona el mayor valor: 8.'],
+['Reto 5 · Feature map','¿Qué filtro tiende a resaltar líneas verticales?',['Detector de borde vertical','Blur','Average Pool'],0,'Los filtros de gradiente horizontal resaltan transiciones que corresponden a bordes verticales.'],
+['Reto 6 · Reducción excesiva','Una CNN reduce 32→16→8→4→2 muy pronto. ¿Qué cambio ayuda?',['Eliminar un pooling temprano','Aumentar stride','Agregar otro pooling'],0,'Eliminar/retrasar pooling conserva resolución espacial.'],
+['Reto 7 · Residual','¿Cuál expresa una conexión residual?',['y = F(x) + x','y = max(0,x)','y = Wx+b'],0,'La suma de la transformación con la ruta identidad define el patrón residual básico.'],
+['Reto 8 · Orden histórico','Orden correcto:',['LeNet → AlexNet → VGG → ResNet','AlexNet → LeNet → ResNet → VGG','VGG → AlexNet → LeNet → ResNet'],0,'LeNet (1990s) → AlexNet (2012) → VGG (2014) → ResNet (2015).']
+];
+let selectedChallenge=0;
+function renderChallenges(){
+  $('#challengeScore').textContent=`${state.challenges.size} / 8`;
+  $('#challengeList').innerHTML=challenges.map((c,i)=>`<button class="challenge-option ${state.challenges.has(i)?'answer-sensitive':''}" data-ch="${i}">${state.challenges.has(i)?'✅':'○'} ${c[0]}</button>`).join('');
+  $$('[data-ch]').forEach(b=>b.onclick=()=>{selectedChallenge=+b.dataset.ch;renderChallengeDetail()});renderChallengeDetail()
+}
+function renderChallengeDetail(){
+  const c=challenges[selectedChallenge];$('#challengeTitle').textContent=c[0];$('#challengeBody').innerHTML=`<p>${c[1]}</p>${c[2].map((o,i)=>`<button class="challenge-option" data-ca="${i}">${o}</button>`).join('')}`;$('#challengeFeedback').textContent='Selecciona una respuesta.';
+  $$('[data-ca]').forEach(b=>b.onclick=()=>{const ok=+b.dataset.ca===c[3];$('#challengeFeedback').innerHTML=(ok?'✅ Correcto. ':'❌ Intenta de nuevo. ')+c[4];if(ok){state.challenges.add(selectedChallenge);saveProgress();updateProgress();renderChallenges()}})
+}
+
+/* quiz */
+const quiz=[
+['¿Qué propiedad permite reutilizar el mismo kernel en muchas posiciones?',['Weight sharing','Dropout','Flatten','Softmax'],0,'Weight sharing aplica los mismos pesos del filtro en distintas regiones.'],
+['Con N=32, F=3, P=1, S=1, ¿salida?',['30','32','34','16'],1,'floor((32−3+2)/1)+1 = 32.'],
+['¿Qué hace ReLU con x=-4?',['-4','0','4','1'],1,'ReLU(x)=max(0,x).'],
+['¿Qué devuelve Max Pool para [1,8;3,5]?',['1','4.25','8','5'],2,'Selecciona el máximo: 8.'],
+['¿Qué suele aumentar al apilar capas convolucionales?',['Receptive field','Tamaño de imagen necesariamente','Número de clases','Learning rate'],0,'Cada capa integra información de una región mayor de la entrada.'],
+['¿Cuál fue un hito decisivo en visión profunda en 2012?',['LeNet','AlexNet','ResNet','VGG'],1,'AlexNet obtuvo un resultado revolucionario en ImageNet 2012.'],
+['VGG se asocia especialmente con:',['Filtros 3×3 repetidos','Solo kernels 11×11','Sin convoluciones','Transformers'],0,'VGG popularizó bloques profundos con filtros pequeños 3×3.'],
+['La fórmula residual básica es:',['F(x)+x','max(0,x)','softmax(x)','x/2'],0,'Una shortcut suma x a F(x).'],
+['Un feature map es:',['La salida espacial de aplicar un filtro','Una clase final','El dataset','El optimizador'],0,'Cada filtro produce un mapa de activaciones.'],
+['¿Padding SAME con stride 1 busca principalmente?',['Mantener tamaño espacial','Duplicar canales','Eliminar ReLU','Reducir a la mitad'],0,'Con padding apropiado, la salida conserva dimensión espacial.'],
+['¿Stride 2 suele hacer qué?',['Más posiciones','Menos posiciones de salida','Más clases','Mismo output siempre'],1,'El filtro avanza en saltos mayores, reduciendo resolución.'],
+['¿Qué afirmación es correcta?',['Sobel y filtros CNN aprendidos son exactamente iguales','Sobel es útil como intuición, pero CNN aprende filtros','CNN nunca aprende bordes','CNN solo usa Sobel'],1,'Los filtros manuales ilustran convolución; una CNN aprende parámetros desde datos.'],
+['¿Flatten hace qué?',['Convierte mapas a un vector','Agrega padding','Aplica softmax','Detecta bordes'],0,'Flatten reorganiza activaciones en un vector para capas densas clásicas.'],
+['¿Cuál es otro paradigma moderno de visión además de CNN?',['Vision Transformer','k-means','Naive Bayes únicamente','PCA únicamente'],0,'Vision Transformers procesan patches con mecanismos de Transformer.'],
+['¿Qué describe mejor el aprendizaje jerárquico?',['Capas combinan patrones simples en representaciones más complejas','Cada capa memoriza una clase','Pooling aprende labels','Softmax detecta bordes'],0,'Las capas sucesivas pueden combinar señales locales en representaciones más abstractas.']
+];
+function renderQuiz(){
+  state.quizIndex=clamp(state.quizIndex,0,quiz.length-1);$('#quizScore').textContent=state.quizScore;$('#quizProgress').textContent=`${state.quizIndex+1} / ${quiz.length}`;state.quizLocked=false;$('#quizNext').classList.add('hidden');$('#quizFeedback').textContent='Selecciona una respuesta.';
+  const q=quiz[state.quizIndex];$('#quizQuestion').textContent=q[0];$('#quizOptions').innerHTML=q[1].map((o,i)=>`<button class="quiz-option" data-qo="${i}">${o}</button>`).join('');
+  $$('[data-qo]').forEach(b=>b.onclick=()=>answerQuiz(+b.dataset.qo))
+}
+function answerQuiz(i){
+  if(state.quizLocked)return;state.quizLocked=true;const q=quiz[state.quizIndex],ok=i===q[2];if(ok)state.quizScore++;$('#quizScore').textContent=state.quizScore;$('#quizFeedback').innerHTML=`${ok?'✅ Correcto.':'❌ Incorrecto.'} ${q[3]}`;$('#quizNext').classList.remove('hidden');saveProgress();updateProgress()
+}
+function nextQuiz(){
+  if(state.quizIndex<quiz.length-1){state.quizIndex++;renderQuiz()}else{const pct=Math.round(state.quizScore/quiz.length*100),level=pct<=40?'Explorador':pct<=60?'Aprendiz':pct<=80?'Ingeniero CNN':'Maestro CNN';$('#quizQuestion').textContent=`Nivel CNN alcanzado: ${level}`;$('#quizOptions').innerHTML=`<div class="metric"><span>Resultado final</span><b>${pct}%</b></div>`;$('#quizFeedback').textContent='Puedes reiniciar el quiz para intentar mejorar la puntuación.';$('#quizNext').classList.add('hidden');saveProgress();updateProgress()}
+}
+
+/* glossary */
+const glossary={
+'CNN':['Red neuronal convolucional','Arquitectura que usa operaciones locales y pesos compartidos para procesar datos con estructura espacial.','imagen → conv → activaciones → clasificación'],
+'Convolution':['Convolución','Combina una vecindad de la entrada con un kernel y produce un valor de salida.','región ⊙ kernel → suma'],
+'Kernel':['Kernel / filtro','Pequeña matriz de pesos que se aplica localmente. En CNN esos pesos se aprenden.','3×3 pesos'],
+'Feature map':['Feature map','Mapa espacial producido por un filtro a través de la entrada.','filtro → mapa de activaciones'],
+'Stride':['Stride','Número de posiciones que avanza el kernel en cada desplazamiento.','S=1,2,3'],
+'Padding':['Padding','Valores agregados alrededor de la entrada para controlar geometría de salida.','0 | imagen | 0'],
+'Pooling':['Pooling','Resume regiones locales mediante máximo, promedio u otra operación.','2×2 → 1 valor'],
+'ReLU':['ReLU','Activación max(0,x).','negativo→0; positivo→x'],
+'Channel':['Channel','Eje de características; RGB tiene 3 canales y una capa conv puede producir muchos canales.','H×W×C'],
+'Depth':['Depth','Puede referirse al número de capas o al número de canales, según contexto.','capas / canales'],
+'Receptive field':['Receptive field','Región de la entrada que puede influir en una activación.','capa profunda → región mayor'],
+'Flatten':['Flatten','Reorganiza un tensor en un vector.','H×W×C → vector'],
+'Dense layer':['Dense layer','Capa totalmente conectada.','todas las entradas → neuronas'],
+'Softmax':['Softmax','Convierte logits en una distribución normalizada sobre clases.','logits → probabilidades'],
+'Backpropagation':['Backpropagation','Calcula gradientes de la pérdida respecto a parámetros para actualizarlos.','error → gradientes'],
+'Epoch':['Epoch','Una pasada completa por el conjunto de entrenamiento.','datos × 1 vuelta'],
+'Loss':['Loss','Función que cuantifica el error que se intenta minimizar.','predicción vs objetivo'],
+'Data augmentation':['Data augmentation','Transformaciones de datos para aumentar diversidad de entrenamiento.','imagen → variantes'],
+'Batch normalization':['Batch normalization','Normalización de activaciones usada para estabilizar entrenamiento en muchos diseños.','activación → normalización'],
+'Residual connection':['Residual connection','Ruta de atajo que suma la entrada a una transformación.','F(x)+x']
+};
+function renderGlossary(){if($('#glossaryGrid').children.length)return;$('#glossaryGrid').innerHTML=Object.keys(glossary).map(k=>`<div class="glossary-item" data-g="${k}"><b>${k}</b></div>`).join('');$$('[data-g]').forEach(x=>x.onclick=()=>{const g=glossary[x.dataset.g];openModal(`<div class="kicker">Glosario CNN</div><h2>${g[0]}</h2><p>${g[1]}</p><div class="metric"><span>Esquema</span><b style="font-size:20px">${g[2]}</b></div>`)})}
+
+/* what if */
+const whatIf={
+kernel:['Kernel 3×3','Kernel 7×7','Cada activación integra una región local mayor y el número de pesos por filtro aumenta.'],
+stride:['Stride 1','Stride 2','Hay menos posiciones de salida y disminuye la resolución espacial.'],
+padding:['SAME: conserva tamaño','VALID: reduce tamaño','Sin padding el filtro solo se ubica donde cabe completamente.'],
+filters:['8 feature maps','32 feature maps','Aumenta la cantidad de patrones/canales que la capa puede representar y también sus parámetros.'],
+pool:['32×32','16×16','Pooling reduce resolución espacial y resume vecindades.'],
+relu:['ReLU activa','ReLU eliminada','Sin no linealidades, apilar operaciones lineales pierde gran parte de la capacidad expresiva de la red.'],
+depth:['3 capas','20 capas','Una red más profunda puede aprender composiciones más complejas, pero también exige diseño y optimización cuidadosos.']
+};
+function updateWhatIf(){const w=whatIf[$('#whatIfSelect').value];$('#whatBefore').textContent=w[0];$('#whatAfter').textContent=w[1];$('#whatExplain').textContent=w[2]}
+
+/* applications */
+const applications=[
+['Clasificación de imágenes','foto','categoría','🐱 gato'],['Reconocimiento facial','rostro','identificación/verificación','identidad o coincidencia'],
+['Diagnóstico por imágenes médicas','radiografía / TC / RM','clasificación o detección asistida','hallazgo / probabilidad'],
+['Conducción autónoma','cámaras','percepción','vehículos, peatones, carriles'],['Inspección industrial','imagen de pieza','detección de defectos','OK / defecto'],
+['Análisis satelital','imagen multiespectral','clasificación/segmentación','uso de suelo'],['Agricultura','imagen de cultivo','detección','enfermedad / estrés'],
+['OCR','documento','reconocimiento visual','texto'],['Segmentación','imagen','clasificación por píxel','máscara'],['Detección de objetos','imagen','localización + clase','cajas + etiquetas']
+];
+function renderApplications(){if($('#applicationsGrid').children.length)return;$('#applicationsGrid').innerHTML=applications.map(a=>`<div class="card app-card"><h3>${a[0]}</h3><p class="io">${a[1]} → ${a[2]} → ${a[3]}</p></div>`).join('')}
+
+/* journey */
+const journeyStages=[['FOTOGRAFÍA','224×224×3'],['PÍXELES','224×224×3'],['CONV 1 · BORDES','224×224×32'],['CONV 2 · TEXTURAS','112×112×64'],['CONV 3 · FORMAS','56×56×128'],['CAPAS PROFUNDAS','14×14×256'],['REPRESENTACIÓN','1×1×512'],['CLASIFICADOR','10 logits'],['🐶 PERRO — 94%','10 probabilidades']];
+function renderJourney(){
+  $('#journey').innerHTML=journeyStages.map((s,i)=>`<div class="stage" data-js="${i}"><b>${s[0]}</b><small>${s[1]}</small></div>`).join('');
+  $('#conceptMap').innerHTML=`<div class="concept-node" data-go="inicio"><b>CNN</b></div><div class="concept-row"><div class="concept-node" data-go="convolucion">Convolution</div><div class="concept-node" data-go="relu">Activation / ReLU</div><div class="concept-node" data-go="pooling">Pooling</div><div class="concept-node" data-go="jerarquia">Feature hierarchy</div><div class="concept-node" data-go="entrenamiento">Training</div><div class="concept-node" data-go="famosas">Architectures</div><div class="concept-node" data-go="aplicaciones">Applications</div></div><div class="concept-row"><div class="concept-node" data-go="kernels">Kernel</div><div class="concept-node" data-go="featuremaps">Feature Map</div><div class="concept-node" data-go="stride">Stride + Padding</div><div class="concept-node" data-go="receptive">Receptive Field</div></div>`;
+  $$('#conceptMap [data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go))
+}
+function runJourney(){clearInterval(state.journeyTimer);let i=0;const step=()=>{$$('[data-js]').forEach((e,j)=>e.classList.toggle('active',j===i));$('#journeyTensor').textContent=journeyStages[i][1];i=(i+1)%journeyStages.length};step();state.journeyTimer=setInterval(step,700)}
+function resetJourney(){clearInterval(state.journeyTimer);$$('[data-js]').forEach(x=>x.classList.remove('active'));$('#journeyTensor').textContent=journeyStages[0][1]}
+
+/* teacher mode */
+const teacherQs=['¿Qué ocurriría si aumentamos el stride de 1 a 2?','¿Por qué weight sharing reduce parámetros?','¿Qué diferencia conceptual hay entre Sobel y un filtro aprendido?','¿Por qué el receptive field crece con la profundidad?','¿Qué se pierde y qué se gana con pooling?','¿Por qué ResNet suma x a F(x)?','¿Cuándo preferirías padding SAME?','¿Qué representa realmente un feature map?'];
+function toggleTeacher(){state.teacher=!state.teacher;document.body.classList.toggle('teacher-on',state.teacher);$('#teacherBtn').classList.toggle('primary',state.teacher)}
+function openModal(html){$('#modalContent').innerHTML=html;$('#modal').classList.add('open')}
+function closeModal(){$('#modal').classList.remove('open')}
+function fullscreenCurrent(){const s=$('.section.active');s.classList.toggle('fullscreen-lab')}
+function resetCurrent(){
+  const id=$('.section.active').id;
+  if(id==='convolucion'){state.convStep=0;stopConv();renderConvLab()}else if(id==='entrenamiento')resetTraining();else if(id==='viaje')resetJourney();else if(id==='kernels')updateKernelLab();else if(id==='quiz'){state.quizIndex=0;state.quizScore=0;renderQuiz()}else location.hash='';
+}
+
+/* utilities */
+function getCSS(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()}
+function populatePresets(){$('#kernelPreset').innerHTML=Object.keys(kernels).map(k=>`<option value="${k}">${({identity:'Identidad',blur:'Blur',sharpen:'Sharpen',vertical:'Edge vertical',horizontal:'Edge horizontal',sobelx:'Sobel X',sobely:'Sobel Y',emboss:'Emboss'})[k]}</option>`).join('');$('#kernelPreset').value='sobelx'}
+
+/* events */
+function wire(){
+  $('#menuBtn').onclick=()=>$('#sidebar').classList.toggle('open');
+  $('#themeBtn').onclick=()=>{state.theme=state.theme==='dark'?'light':'dark';applyTheme()};
+  $('#resetProgress').onclick=()=>{if(confirm('¿Reiniciar módulos visitados, retos y quiz?')){localStorage.removeItem('cnnLabProgress');state.visited=new Set(['inicio']);state.challenges.clear();state.quizIndex=0;state.quizScore=0;updateProgress();go('inicio')}};
+  $('#teacherBtn').onclick=toggleTeacher;$('#teacherQuestion').onclick=()=>openModal(`<div class="kicker">Pregunta para la clase</div><h2>${teacherQs[Math.floor(Math.random()*teacherQs.length)]}</h2>`);$('#teacherFullscreen').onclick=fullscreenCurrent;$('#teacherResetSim').onclick=resetCurrent;
+  $('#modalClose').onclick=closeModal;$('#modal').onclick=e=>{if(e.target.id==='modal')closeModal()};
+  ['imgSize','neurons','kernelSizeCmp','filtersCmp'].forEach(id=>$('#'+id).oninput=updateCompare);
+  $('#pixelMode').onchange=drawPixels;$('#togglePixelView').onclick=()=>{pixelMatrixVisible=!pixelMatrixVisible;drawPixels()};$('#pixelCanvas').onmousemove=pixelHover;
+  $('#convRun').onclick=runConv;$('#convPause').onclick=()=>stopConv();$('#convStep').onclick=()=>{stopConv();convNext()};$('#convReset').onclick=()=>{stopConv();state.convStep=0;renderConvLab()};$('#convSpeed').oninput=()=>{if(state.convTimer)runConv()};
+  $('#shapeSelect').onchange=updateKernelLab;$('#kernelPreset').onchange=()=>{updateKernelEditor();updateKernelResult()};$('#clearDrawing').onclick=()=>{drawData=Array.from({length:28},()=>Array(28).fill(0));$('#shapeSelect').value='draw';updateKernelLab()};
+  $('#drawCanvas').onpointerdown=e=>{drawing=true;$('#shapeSelect').value='draw';drawOnCanvas(e)};$('#drawCanvas').onpointermove=drawOnCanvas;window.addEventListener('pointerup',()=>drawing=false);
+  ['spN','spF','spS'].forEach(id=>$('#'+id).oninput=updateStride);$$('[data-padding]').forEach(b=>b.onclick=()=>{state.paddingMode=b.dataset.padding;b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('primary'));b.classList.add('primary');updateStride()});
+  $('#fmCount').oninput=updateFeatureMaps;$('#reluX').oninput=updateRelu;$('#reluToggle').onclick=()=>{reluAfter=!reluAfter;updateRelu()};
+  ['poolType','poolWin','poolStride'].forEach(id=>$('#'+id).oninput=updatePooling);
+  ['archInput','archF1','archF2','archK','archSame','archPool1','archPool2'].forEach(id=>$('#'+id).oninput=updateArchitecture);
+  $('#depth').oninput=updateHierarchy;['rfLayers','rfK','rfS'].forEach(id=>$('#'+id).oninput=updateRF);
+  $('#trainBtn').onclick=trainSimulation;$('#trainReset').onclick=resetTraining;$('#visualArch').onchange=updateVisualArch;
+  ['fullShape','fullKernel','fullStride','fullPadding','fullRelu','fullPool'].forEach(id=>$('#'+id).oninput=updateFullLab);
+  $('#quizNext').onclick=nextQuiz;$('#quizRestart').onclick=()=>{state.quizIndex=0;state.quizScore=0;saveProgress();renderQuiz();updateProgress()};
+  $('#whatIfSelect').onchange=updateWhatIf;$('#journeyRun').onclick=runJourney;$('#journeyReset').onclick=resetJourney;
+  window.addEventListener('resize',()=>{$('.section.active')?.id==='porque'&&updateCompare()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+}
+function applyTheme(){document.documentElement.dataset.theme=state.theme;localStorage.setItem('cnnLabTheme',state.theme);$('#themeBtn').textContent=state.theme==='dark'?'☀️ Claro':'🌙 Oscuro';const id=$('.section.active')?.id;({porque:updateCompare,pixeles:drawPixels,stride:updateStride,relu:updateRelu,entrenamiento:renderTraining,cnnmlp:renderCNNMLP}[id])?.()}
+function init(){
+  state.theme=localStorage.getItem('cnnLabTheme')||'light';loadProgress();initNav();populatePresets();wire();applyTheme();updateProgress();
+  state.visited.add('inicio');saveProgress();renderJourney();drawPixels();updateCompare();renderConvLab();updateKernelLab();updateStride();updateFeatureMaps();updateRelu();updatePooling();updateArchitecture();updateHierarchy();updateRF();renderTraining();renderCNNMLP();renderFamous();renderPeople();renderMilestones();updateVisualArch();updateFullLab();renderChallenges();renderQuiz();renderGlossary();updateWhatIf();renderApplications();
+}
+init();
+</script>
+</body>
+</html>
