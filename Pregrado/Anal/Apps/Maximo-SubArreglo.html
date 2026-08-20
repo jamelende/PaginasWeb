@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Laboratorio de Máximo Subarreglo</title>
+  <style>
+    :root{
+      --bg:#07111f;--panel:#0d1b2d;--panel2:#10233a;--line:#203955;--text:#edf6ff;--muted:#91a9bf;
+      --cyan:#21d4d8;--blue:#5b8cff;--violet:#a879ff;--green:#42db91;--amber:#ffbd5a;--red:#ff6d7a;
+      --shadow:0 18px 45px rgba(0,0,0,.28);--radius:18px
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 12% -10%,#11335a 0,transparent 32%),var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1500px;margin:auto;padding:18px}
+    header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
+    .eyebrow{color:var(--cyan);font-weight:800;text-transform:uppercase;letter-spacing:.14em;font-size:11px}
+    h1{font-size:clamp(24px,3vw,42px);line-height:1.02;margin:5px 0 7px;letter-spacing:-.035em}
+    .subtitle{color:var(--muted);margin:0;max-width:720px}
+    .badge{white-space:nowrap;border:1px solid var(--line);background:#0a1728cc;border-radius:999px;padding:8px 12px;color:#b9cee1}
+    .panel{background:linear-gradient(145deg,rgba(16,35,58,.96),rgba(10,24,41,.96));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .setup{padding:13px;display:grid;grid-template-columns:minmax(280px,1fr) auto auto;gap:10px;align-items:end;margin-bottom:12px}
+    label{display:block;color:#b9cee1;font-size:12px;font-weight:750;margin:0 0 6px}
+    input[type=text]{width:100%;height:40px;border-radius:10px;border:1px solid #294866;background:#071523;color:var(--text);padding:0 12px;outline:none}
+    input[type=text]:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #21d4d821}
+    .btn{height:40px;border:1px solid #2b4765;border-radius:10px;padding:0 14px;background:#132b47;color:#eaf5ff;font-weight:750;transition:.16s}
+    .btn:hover{transform:translateY(-1px);border-color:#4b7198;background:#183653}
+    .btn.primary{background:linear-gradient(120deg,#1ec6ca,#4d82ff);border:0;color:#04121e}
+    .btn.ghost{background:#0a1829}
+    .btn.icon{width:40px;padding:0;font-size:18px}
+    .examples{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+    .chip{border:1px solid var(--line);background:#0b1a2b;color:#bcd0e2;border-radius:999px;padding:6px 10px;font-size:12px}
+    .chip:hover{border-color:var(--cyan);color:white}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(315px,.75fr);gap:12px}
+    .visual{padding:15px;min-height:600px;display:flex;flex-direction:column}
+    .side{display:flex;flex-direction:column;gap:12px;min-width:0}
+    .panel-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+    .panel-title h2,.panel-title h3{font-size:15px;margin:0;letter-spacing:-.01em}
+    .method-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#071523;padding:5px;border:1px solid var(--line);border-radius:13px;margin-bottom:14px}
+    .tab{border:0;background:transparent;color:var(--muted);padding:9px 8px;border-radius:9px;font-size:12px;font-weight:800;line-height:1.2}
+    .tab.active{color:white;background:#173250;box-shadow:inset 0 0 0 1px #315778}
+    .tab span{display:block;font-size:10px;margin-top:2px;color:var(--cyan)}
+    .array-stage{position:relative;flex:1;min-height:310px;display:flex;align-items:flex-end;justify-content:center;gap:clamp(4px,1vw,12px);padding:45px 18px 46px;border:1px solid #1d3854;border-radius:16px;background:linear-gradient(180deg,#09192a,#07131f);overflow:hidden}
+    .zero-line{position:absolute;left:18px;right:18px;top:50%;height:1px;background:#34506b;z-index:0}.zero-line::after{content:'0';position:absolute;right:2px;top:-18px;color:#67839d;font-size:10px}
+    .bar-wrap{height:100%;flex:1;max-width:74px;position:relative;z-index:1}
+    .bar{position:absolute;left:8%;right:8%;border-radius:7px 7px 3px 3px;background:#37536e;min-height:3px;transition:.25s ease;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset}
+    .bar.pos{bottom:50%}.bar.neg{top:50%;border-radius:3px 3px 7px 7px;background:#334a60}
+    .bar.in-range{background:linear-gradient(180deg,var(--blue),#466fd8)}.bar.neg.in-range{background:linear-gradient(180deg,#8060d7,var(--violet))}
+    .bar.current{background:linear-gradient(180deg,var(--amber),#ff8f45)!important;box-shadow:0 0 18px #ffbd5a55}
+    .bar.best{outline:2px solid var(--green);outline-offset:2px}
+    .bar-value{position:absolute;left:0;right:0;text-align:center;font-weight:800;font-size:12px;transition:.25s}
+    .bar-wrap.positive .bar-value{bottom:calc(50% + var(--h) + 5px)}.bar-wrap.negative .bar-value{top:calc(50% + var(--h) + 5px)}
+    .bar-index{position:absolute;bottom:-28px;left:0;right:0;text-align:center;color:#6f8aa2;font-size:10px}
+    .range-label{position:absolute;top:12px;left:16px;font-size:12px;color:#9fb7cb;display:flex;gap:8px;flex-wrap:wrap}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;color:#8ea5ba;font-size:11px;margin-top:9px}.dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}.d1{background:var(--blue)}.d2{background:var(--amber)}.d3{background:var(--green)}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+    .metric{background:#091827;border:1px solid #1c3650;border-radius:12px;padding:10px;min-width:0}.metric small{display:block;color:#7e99b0;font-size:10px;text-transform:uppercase;letter-spacing:.08em}.metric strong{display:block;font-size:18px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.metric strong.good{color:var(--green)}
+    .controls{display:flex;align-items:center;gap:7px;margin-top:12px;flex-wrap:wrap}.controls .spacer{flex:1}.speed{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.speed input{accent-color:var(--cyan);width:95px}
+    .explain{padding:14px}.explain .step-tag{color:var(--cyan);font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.12em}.explain p{margin:7px 0 0;color:#c7d8e6;min-height:61px}.formula{margin-top:9px;background:#071522;border-left:3px solid var(--cyan);padding:8px 10px;border-radius:5px;color:#d8eaff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;overflow:auto}
+    .code-panel{padding:14px;flex:1}.code{margin:0;background:#071522;border:1px solid #1c3650;border-radius:12px;padding:8px 0;overflow:auto;font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:#91abc1}.code-line{display:block;padding:1px 10px;border-left:3px solid transparent;white-space:pre}.code-line.active{background:#18324b;color:white;border-left-color:var(--amber)}
+    .bottom{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
+    .compare,.lesson{padding:14px}
+    table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;color:#7f9ab1;font-size:10px;text-transform:uppercase;letter-spacing:.08em;padding:7px;border-bottom:1px solid var(--line)}td{padding:9px 7px;border-bottom:1px solid #172f47}tr:last-child td{border:0}.pill{display:inline-block;padding:3px 7px;border-radius:99px;font-weight:850}.q{background:#5b8cff22;color:#8aabff}.dc{background:#a879ff22;color:#c29eff}.k{background:#42db9122;color:#62eaa4}
+    .cost-bars{display:grid;gap:8px;margin-top:11px}.cost-row{display:grid;grid-template-columns:92px 1fr 42px;gap:8px;align-items:center;color:#9cb2c5;font-size:11px}.track{height:8px;background:#071522;border-radius:10px;overflow:hidden}.fill{height:100%;border-radius:10px;transition:.4s}.fill.q{background:var(--blue)}.fill.dc{background:var(--violet)}.fill.k{background:var(--green)}
+    .lesson ul{margin:8px 0 0;padding-left:18px;color:#b8ccdc}.lesson li{margin:6px 0}.lesson b{color:white}
+    .toast{position:fixed;right:18px;bottom:18px;background:#16324d;border:1px solid #315b7f;border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);transform:translateY(80px);opacity:0;transition:.25s;z-index:10}.toast.show{transform:none;opacity:1}
+    @media(max-width:980px){.workspace{grid-template-columns:1fr}.visual{min-height:560px}.side{display:grid;grid-template-columns:1fr 1fr}.bottom{grid-template-columns:1fr}}
+    @media(max-width:650px){.app{padding:10px}header{display:block}.badge{display:none}.setup{grid-template-columns:1fr 1fr}.setup>div:first-child{grid-column:1/-1}.side{display:block}.side>*{margin-bottom:10px}.metrics{grid-template-columns:1fr 1fr}.array-stage{gap:2px;padding-left:8px;padding-right:8px}.bar-value{font-size:10px}.bottom{grid-template-columns:1fr}.method-tabs{position:sticky;top:4px;z-index:5}.cost-row{grid-template-columns:74px 1fr 36px}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <div><div class="eyebrow">Laboratorio visual · Análisis de algoritmos</div><h1>Máximo subarreglo</h1><p class="subtitle">Descubre el segmento contiguo con mayor suma y observa por qué tres estrategias correctas pueden tener costos radicalmente distintos.</p></div>
+    <div class="badge">Problema clásico · CLRS</div>
+  </header>
+
+  <section class="panel setup" aria-label="Configuración del arreglo">
+    <div><label for="arrayInput">Arreglo (enteros separados por coma)</label><input id="arrayInput" type="text" value="-4, 3, -2, 6, -7, 5, 4, -3" spellcheck="false" /></div>
+    <button class="btn ghost" id="randomBtn">↻ Aleatorio</button><button class="btn primary" id="applyBtn">Aplicar arreglo</button>
+  </section>
+  <div class="examples" aria-label="Ejemplos">
+    <button class="chip" data-arr="-4,3,-2,6,-7,5,4,-3">Ganancias y pérdidas</button>
+    <button class="chip" data-arr="-8,-3,-6,-2,-5,-4">Todos negativos</button>
+    <button class="chip" data-arr="5,-1,4,-9,6,2,-3,7,-8">Dos rachas</button>
+    <button class="chip" data-arr="2,-5,8,-1,3,-7,4,6,-2,-3">Caso de 10 datos</button>
+  </div>
+
+  <div class="workspace">
+    <section class="panel visual">
+      <nav class="method-tabs" aria-label="Método activo">
+        <button class="tab active" data-method="quadratic">Fuerza bruta<span>O(n²)</span></button>
+        <button class="tab" data-method="divide">Divide y vencerás<span>O(n log n)</span></button>
+        <button class="tab" data-method="kadane">Kadane<span>O(n)</span></button>
+      </nav>
+      <div class="panel-title"><h2 id="methodTitle">Fuerza bruta incremental</h2><span id="stepCount">Paso 0 / 0</span></div>
+      <div class="array-stage" id="stage" role="img" aria-label="Visualización del arreglo">
+        <div class="zero-line"></div><div class="range-label" id="rangeLabel"></div>
+      </div>
+      <div class="legend"><span><i class="dot d1"></i>segmento examinado</span><span><i class="dot d2"></i>elemento actual</span><span><i class="dot d3"></i>mejor solución</span></div>
+      <div class="metrics">
+        <div class="metric"><small>Suma actual</small><strong id="currentSum">—</strong></div>
+        <div class="metric"><small>Mejor suma</small><strong class="good" id="bestSum">—</strong></div>
+        <div class="metric"><small>Mejor intervalo</small><strong id="bestRange">—</strong></div>
+        <div class="metric"><small>Operaciones</small><strong id="ops">0</strong></div>
+      </div>
+      <div class="controls">
+        <button class="btn icon ghost" id="resetBtn" aria-label="Reiniciar">↺</button><button class="btn icon ghost" id="prevBtn" aria-label="Paso anterior">‹</button>
+        <button class="btn primary" id="playBtn">▶ Reproducir</button><button class="btn icon ghost" id="nextBtn" aria-label="Paso siguiente">›</button>
+        <div class="spacer"></div><div class="speed"><span>Lento</span><input id="speed" type="range" min="1" max="5" value="3" aria-label="Velocidad" /><span>Rápido</span></div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="panel explain"><div class="step-tag" id="stepTag">Listo para comenzar</div><p id="explanation">Pulsa “Reproducir” o avanza paso a paso para observar cada decisión del algoritmo.</p><div class="formula" id="formula">objetivo: max Σ A[k], con i ≤ k ≤ j</div></section>
+      <section class="panel code-panel"><div class="panel-title"><h3>Pseudocódigo</h3><span id="complexity">Tiempo O(n²)</span></div><pre class="code" id="code"></pre></section>
+    </aside>
+  </div>
+
+  <div class="bottom">
+    <section class="panel compare"><div class="panel-title"><h3>Comparación con este mismo arreglo</h3><span>Resultado idéntico, trabajo diferente</span></div>
+      <table><thead><tr><th>Método</th><th>Complejidad</th><th>Mejor suma</th><th>Intervalo</th><th>Operaciones visualizadas</th></tr></thead><tbody id="compareBody"></tbody></table>
+      <div class="cost-bars" id="costBars"></div>
+    </section>
+    <section class="panel lesson"><div class="panel-title"><h3>Idea clave</h3><span>¿Qué cambia?</span></div><ul>
+      <li><b>Fuerza bruta:</b> examina todos los inicios y finales posibles.</li>
+      <li><b>Divide y vencerás:</b> combina la mejor solución izquierda, derecha y cruzada.</li>
+      <li><b>Kadane:</b> conserva solo la mejor racha que puede terminar en la posición actual.</li>
+    </ul></section>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const titles={quadratic:'Fuerza bruta incremental',divide:'Divide y vencerás',kadane:'Algoritmo de Kadane'};
+  const complexities={quadratic:'Tiempo O(n²)',divide:'Tiempo O(n log n)',kadane:'Tiempo O(n)'};
+  const pseudocode={
+    quadratic:['mejor ← −∞','para i ← 0 hasta n−1:','  suma ← 0','  para j ← i hasta n−1:','    suma ← suma + A[j]','    si suma > mejor:','      mejor ← suma; intervalo ← [i,j]','retornar mejor, intervalo'],
+    divide:['maxSub(A, izq, der):','  si izq = der: retornar A[izq]','  medio ← ⌊(izq + der) / 2⌋','  L ← maxSub(A, izq, medio)','  R ← maxSub(A, medio+1, der)','  C ← mejor suma que cruza medio','  retornar máximo(L, R, C)'],
+    kadane:['mejor ← A[0]; actual ← A[0]','inicio ← 0','para i ← 1 hasta n−1:','  si A[i] > actual + A[i]:','    actual ← A[i]; inicio ← i','  si no: actual ← actual + A[i]','  si actual > mejor:','    mejor ← actual; intervalo ← [inicio,i]','retornar mejor, intervalo']
+  };
+  let arr=[-4,3,-2,6,-7,5,4,-3], method='quadratic', allSteps={}, index=0, timer=null;
+
+  function bestOf(candidates){return candidates.reduce((a,b)=>b.sum>a.sum||(b.sum===a.sum&&(b.l<a.l||(b.l===a.l&&b.r<a.r)))?b:a)}
+  function quadraticSteps(a){
+    const s=[{tag:'Inicialización',text:'Aún no se ha evaluado ningún subarreglo. La mejor suma comienza en −∞.',formula:'mejor = −∞',line:0,range:null,current:null,best:null,ops:0}];
+    let best={sum:-Infinity,l:0,r:0},ops=0;
+    for(let i=0;i<a.length;i++){
+      let sum=0;s.push({tag:`Nuevo inicio i = ${i}`,text:`Fijamos el inicio en el índice ${i} y reiniciamos la suma. Ahora extenderemos el final j hacia la derecha.`,formula:'suma = 0',line:2,range:[i,i],current:i,best:{...best},sum:0,ops});
+      for(let j=i;j<a.length;j++){
+        sum+=a[j];ops++;
+        let improved=sum>best.sum;if(improved)best={sum,l:i,r:j};
+        s.push({tag:`Probar [${i}, ${j}]`,text:`${sum-a[j]} + (${a[j]}) = ${sum}. ${improved?'Esta suma supera el récord: guardamos el intervalo.':'No supera la mejor suma conocida.'}`,formula:`suma[${i}..${j}] = ${sum}${improved?'  →  nueva mejor':''}`,line:improved?6:4,range:[i,j],current:j,best:{...best},sum,ops});
+      }
+    }
+    s.push({tag:'Resultado',text:`Después de examinar todos los pares (i, j), la mejor suma es ${best.sum}.`,formula:`A[${best.l}..${best.r}] = ${a.slice(best.l,best.r+1).join(' + ')} = ${best.sum}`,line:7,range:[best.l,best.r],current:null,best:{...best},sum:best.sum,ops});return s;
+  }
+
+  function kadaneSteps(a){
+    let best={sum:a[0],l:0,r:0},current=a[0],start=0,ops=1;
+    const s=[{tag:'Caso base i = 0',text:`La única racha que termina en 0 contiene ${a[0]}. Por ahora también es la mejor global.`,formula:`actual = mejor = ${a[0]}`,line:0,range:[0,0],current:0,best:{...best},sum:current,ops}];
+    for(let i=1;i<a.length;i++){
+      const extend=current+a[i],restart=a[i],doRestart=restart>extend;ops++;
+      if(doRestart){current=restart;start=i}else current=extend;
+      s.push({tag:`Decisión local i = ${i}`,text:`Comparamos reiniciar en ${a[i]} con extender la racha anterior (${extend}). Elegimos ${doRestart?'reiniciar':'extender'}.`,formula:`actual = max(${restart}, ${extend}) = ${current}`,line:doRestart?4:5,range:[start,i],current:i,best:{...best},sum:current,ops});
+      ops++;const improved=current>best.sum;if(improved)best={sum:current,l:start,r:i};
+      s.push({tag:`Récord global i = ${i}`,text:`Comparamos la mejor racha que termina aquí (${current}) con el récord (${improved?'era '+(best.sum===current?'menor':''):' '+best.sum}). ${improved?'Actualizamos la solución global.':'Conservamos la solución global.'}`,formula:`mejor = max(mejor, actual) = ${best.sum}`,line:improved?7:6,range:[start,i],current:i,best:{...best},sum:current,ops});
+    }
+    s.push({tag:'Resultado',text:`Una sola pasada fue suficiente: el mejor intervalo es [${best.l}, ${best.r}].`,formula:`${a.slice(best.l,best.r+1).join(' + ')} = ${best.sum}`,line:8,range:[best.l,best.r],current:null,best:{...best},sum:best.sum,ops});return s;
+  }
+
+  function crossing(a,l,m,r,steps,bestKnown,depth,state){
+    let sum=0,leftSum=-Infinity,bestL=m;
+    for(let i=m;i>=l;i--){sum+=a[i];state.ops++;if(sum>=leftSum){leftSum=sum;bestL=i}
+      steps.push({tag:`Cruce · lado izquierdo`,text:`Desde el centro acumulamos hacia la izquierda hasta ${i}. La mejor cola izquierda suma ${leftSum}.`,formula:`cola izquierda = ${leftSum}`,line:5,range:[i,m],current:i,best:{...bestKnown},sum,ops:state.ops,depth});}
+    sum=0;let rightSum=-Infinity,bestR=m+1;
+    for(let j=m+1;j<=r;j++){sum+=a[j];state.ops++;if(sum>rightSum){rightSum=sum;bestR=j}
+      steps.push({tag:`Cruce · lado derecho`,text:`Desde el centro acumulamos hacia la derecha hasta ${j}. La mejor cabeza derecha suma ${rightSum}.`,formula:`cabeza derecha = ${rightSum}`,line:5,range:[m+1,j],current:j,best:{...bestKnown},sum,ops:state.ops,depth});}
+    return {sum:leftSum+rightSum,l:bestL,r:bestR};
+  }
+  function divideSteps(a){
+    const steps=[],state={ops:0};let global={sum:-Infinity,l:0,r:0};
+    function solve(l,r,depth){
+      state.ops++;steps.push({tag:`Llamada nivel ${depth}`,text:`Buscamos la mejor solución dentro de [${l}, ${r}].`,formula:`maxSub(A, ${l}, ${r})`,line:0,range:[l,r],current:null,best:{...global},sum:null,ops:state.ops,depth});
+      if(l===r){const one={sum:a[l],l,r};if(one.sum>global.sum)global={...one};steps.push({tag:'Caso base',text:`El segmento tiene un solo elemento, así que su máximo es ${a[l]}.`,formula:`maxSub(A, ${l}, ${l}) = ${a[l]}`,line:1,range:[l,r],current:l,best:{...global},sum:a[l],ops:state.ops,depth});return one}
+      const m=Math.floor((l+r)/2);steps.push({tag:'Dividir',text:`Partimos [${l}, ${r}] por el centro m = ${m}: izquierda [${l}, ${m}] y derecha [${m+1}, ${r}].`,formula:`m = ⌊(${l}+${r})/2⌋ = ${m}`,line:2,range:[l,r],current:m,best:{...global},sum:null,ops:state.ops,depth});
+      const L=solve(l,m,depth+1),R=solve(m+1,r,depth+1),C=crossing(a,l,m,r,steps,global,depth,state);state.ops++;
+      const win=bestOf([L,R,C]);if(win.sum>global.sum)global={...win};
+      steps.push({tag:'Combinar',text:`Comparamos izquierda (${L.sum}), derecha (${R.sum}) y cruce (${C.sum}). Gana ${win.sum}.`,formula:`max(${L.sum}, ${R.sum}, ${C.sum}) = ${win.sum}`,line:6,range:[win.l,win.r],current:null,best:{...global},sum:win.sum,ops:state.ops,depth});return win;
+    }
+    const result=solve(0,a.length-1,0);steps.push({tag:'Resultado',text:`La combinación final devuelve la mejor solución del arreglo completo.`,formula:`A[${result.l}..${result.r}] = ${result.sum}`,line:6,range:[result.l,result.r],current:null,best:{...result},sum:result.sum,ops:state.ops});return steps;
+  }
+
+  function makeSteps(){allSteps={quadratic:quadraticSteps(arr),divide:divideSteps(arr),kadane:kadaneSteps(arr)};index=0;stop();renderAll()}
+  function renderBars(step){
+    const stage=$('#stage'), old=stage.querySelectorAll('.bar-wrap');old.forEach(x=>x.remove());
+    const max=Math.max(1,...arr.map(Math.abs));
+    arr.forEach((v,i)=>{const wrap=document.createElement('div');wrap.className=`bar-wrap ${v>=0?'positive':'negative'}`;const h=Math.max(3,Math.abs(v)/max*42);wrap.style.setProperty('--h',h+'%');
+      const bar=document.createElement('div');bar.className=`bar ${v>=0?'pos':'neg'}`;bar.style.height=h+'%';
+      if(step?.range&&i>=step.range[0]&&i<=step.range[1])bar.classList.add('in-range');if(step?.current===i)bar.classList.add('current');if(step?.best&&i>=step.best.l&&i<=step.best.r)bar.classList.add('best');
+      const val=document.createElement('div');val.className='bar-value';val.textContent=v;const ix=document.createElement('div');ix.className='bar-index';ix.textContent=i;wrap.append(bar,val,ix);stage.append(wrap)});
+  }
+  function renderCode(line){$('#code').innerHTML=pseudocode[method].map((x,i)=>`<span class="code-line ${i===line?'active':''}">${String(i+1).padStart(2,' ')}  ${escapeHtml(x)}</span>`).join('')}
+  function escapeHtml(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+  function render(){
+    const steps=allSteps[method],step=steps[index];renderBars(step);renderCode(step.line);
+    $('#methodTitle').textContent=titles[method];$('#complexity').textContent=complexities[method];$('#stepCount').textContent=`Paso ${index} / ${steps.length-1}`;
+    $('#stepTag').textContent=step.tag;$('#explanation').textContent=step.text;$('#formula').textContent=step.formula;
+    $('#currentSum').textContent=step.sum??'—';$('#bestSum').textContent=step.best&&Number.isFinite(step.best.sum)?step.best.sum:'—';$('#bestRange').textContent=step.best&&Number.isFinite(step.best.sum)?`[${step.best.l}, ${step.best.r}]`:'—';$('#ops').textContent=step.ops;
+    $('#rangeLabel').innerHTML=step.range?`<span>Examinando <b>[${step.range[0]}, ${step.range[1]}]</b></span>${step.depth!==undefined?`<span>Profundidad <b>${step.depth}</b></span>`:''}`:'';
+    $('#prevBtn').disabled=index===0;$('#nextBtn').disabled=index===steps.length-1;
+  }
+  function finalStep(m){return allSteps[m][allSteps[m].length-1]}
+  function renderComparison(){
+    const meta=[['quadratic','Fuerza bruta','O(n²)','q'],['divide','Divide y vencerás','O(n log n)','dc'],['kadane','Kadane','O(n)','k']];
+    $('#compareBody').innerHTML=meta.map(([id,name,c,cl])=>{const x=finalStep(id);return `<tr><td><span class="pill ${cl}">${name}</span></td><td>${c}</td><td><b>${x.best.sum}</b></td><td>[${x.best.l}, ${x.best.r}]</td><td>${x.ops}</td></tr>`}).join('');
+    const max=Math.max(...meta.map(x=>finalStep(x[0]).ops));$('#costBars').innerHTML=meta.map(([id,name,,cl])=>{const n=finalStep(id).ops;return `<div class="cost-row"><span>${name}</span><div class="track"><div class="fill ${cl}" style="width:${Math.max(4,n/max*100)}%"></div></div><b>${n}</b></div>`}).join('')
+  }
+  function renderAll(){render();renderComparison()}
+  function stepNext(){if(index<allSteps[method].length-1){index++;render()}else stop()}
+  function play(){if(timer){stop();return}$('#playBtn').textContent='❚❚ Pausar';const delays=[1200,900,650,400,220];timer=setInterval(stepNext,delays[+$('#speed').value-1])}
+  function stop(){if(timer)clearInterval(timer);timer=null;$('#playBtn').textContent='▶ Reproducir'}
+  function setMethod(m){method=m;index=0;stop();$$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.method===m));render()}
+  function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+  function parseInput(){const raw=$('#arrayInput').value.trim().split(/[;,\s]+/).filter(Boolean).map(Number);if(!raw.length||raw.some(x=>!Number.isFinite(x))){toast('Escribe únicamente números enteros separados por coma.');return null}if(raw.length>16){toast('Usa máximo 16 valores para conservar una visualización clara.');return null}return raw.map(Math.trunc)}
+  $('#applyBtn').onclick=()=>{const x=parseInput();if(x){arr=x;$('#arrayInput').value=arr.join(', ');makeSteps();toast('Arreglo actualizado')}};
+  $('#randomBtn').onclick=()=>{const n=8+Math.floor(Math.random()*4);arr=Array.from({length:n},()=>Math.floor(Math.random()*19)-9);if(arr.every(x=>x===0))arr[0]=5;$('#arrayInput').value=arr.join(', ');makeSteps()};
+  $$('.chip').forEach(c=>c.onclick=()=>{$('#arrayInput').value=c.dataset.arr;$('#applyBtn').click()});$$('.tab').forEach(t=>t.onclick=()=>setMethod(t.dataset.method));
+  $('#nextBtn').onclick=stepNext;$('#prevBtn').onclick=()=>{if(index>0){index--;render()}};$('#resetBtn').onclick=()=>{index=0;stop();render()};$('#playBtn').onclick=play;$('#speed').oninput=()=>{if(timer){stop();play()}};
+  document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')stepNext();if(e.key==='ArrowLeft'&&index>0){index--;render()}if(e.key===' '){e.preventDefault();play()}});
+  makeSteps();
+</script>
+</body>
+</html>
