@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laboratorio visual e interactivo para NFA a DFA, minimización de DFA y método RIP.">
+  <title>Automata Visual Lab</title>
+  <style>
+    :root{
+      --bg:#f3f6fb;--surface:#fff;--surface-2:#f7f9fd;--ink:#172033;--muted:#667085;
+      --line:#dde3ee;--blue:#2563eb;--blue-soft:#e9f0ff;--green:#16a36a;--green-soft:#e8f8f1;
+      --amber:#e59a12;--amber-soft:#fff5d9;--purple:#7c3aed;--purple-soft:#f2eafe;
+      --red:#e5484d;--red-soft:#ffeded;--cyan:#0891b2;--shadow:0 16px 44px rgba(35,48,84,.11);
+      --radius:18px;
+    }
+    body.dark{
+      --bg:#0d1424;--surface:#141d30;--surface-2:#101829;--ink:#eff4ff;--muted:#9eabc1;
+      --line:#2b3851;--blue:#70a1ff;--blue-soft:#172b52;--green:#4bd39b;--green-soft:#133a30;
+      --amber:#ffc75f;--amber-soft:#453718;--purple:#bd93ff;--purple-soft:#342452;
+      --red:#ff7277;--red-soft:#482328;--cyan:#48d5ef;--shadow:0 18px 50px rgba(0,0,0,.34);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;transition:.25s;background-image:radial-gradient(circle at 12% 5%,rgba(37,99,235,.08),transparent 25%),radial-gradient(circle at 90% 0,rgba(124,58,237,.07),transparent 23%)}
+    button,select,input,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100%;display:flex;flex-direction:column}
+    header{padding:10px 16px 6px}
+    .brand-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:13px}
+    .brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 8px 20px rgba(79,70,229,.25);font-weight:900;font-size:13px}
+    h1{font-size:18px;margin:0;letter-spacing:-.02em}
+    .subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+    .head-actions{display:flex;align-items:center;gap:8px}
+    .icon-btn,.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:11px;padding:9px 12px;box-shadow:0 3px 10px rgba(25,35,60,.04);transition:.18s}
+    .icon-btn:hover,.btn:hover{border-color:var(--blue);transform:translateY(-1px)}
+    .icon-btn{width:40px;height:40px;padding:0;display:grid;place-items:center}
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:white}
+    .btn.soft{background:var(--blue-soft);color:var(--blue);border-color:transparent}
+    .btn.danger{color:var(--red);background:var(--red-soft);border-color:transparent}
+    .btn.small{padding:7px 9px;font-size:12px}
+    .algorithm-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+    .algo-tab{display:flex;align-items:center;gap:8px;padding:8px 11px;text-align:left;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 90%,transparent);color:var(--ink);border-radius:11px;transition:.2s;min-width:0}
+    .algo-tab:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(37,99,235,.1)}
+    .algo-tab.active{border-color:var(--accent,var(--blue));box-shadow:inset 0 0 0 1px var(--accent,var(--blue)),0 8px 20px rgba(35,55,100,.08)}
+    .algo-icon{min-width:39px;height:29px;border-radius:8px;background:var(--tab-soft,var(--blue-soft));color:var(--accent,var(--blue));display:grid;place-items:center;font-size:10px;font-weight:850}
+    .algo-tab strong{font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.algo-tab span:last-child{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+    .workspace{flex:1;position:relative;padding:5px 14px 8px;min-height:0}
+    .panel,.canvas-card{background:color-mix(in srgb,var(--surface) 96%,transparent);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .panel{padding:14px;overflow:auto}
+    .left-panel,.right-panel{position:fixed;z-index:52;top:111px;bottom:72px;width:min(330px,calc(100vw - 28px));transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s;opacity:0;pointer-events:none}
+    .left-panel{left:14px;transform:translateX(calc(-100% - 24px))}
+    .right-panel{right:14px;width:min(360px,calc(100vw - 28px));transform:translateX(calc(100% + 24px))}
+    .workspace.left-open .left-panel,.workspace.right-open .right-panel{transform:translateX(0);opacity:1;pointer-events:auto}
+    .drawer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;position:sticky;top:-14px;background:var(--surface);z-index:3;padding:12px 0 7px}
+    .drawer-head .panel-title{margin:0}
+    .drawer-close{width:29px;height:29px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink)}
+    .drawer-backdrop{position:fixed;inset:111px 0 70px;background:rgba(8,15,30,.2);backdrop-filter:blur(1px);z-index:45;opacity:0;pointer-events:none;transition:.2s}
+    .workspace.left-open .drawer-backdrop,.workspace.right-open .drawer-backdrop{opacity:1;pointer-events:auto}
+    .panel-title{font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:4px 0 10px}
+    .field{margin-bottom:13px}
+    .field label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}
+    select,input,textarea{width:100%;border:1px solid var(--line);color:var(--ink);background:var(--surface-2);border-radius:10px;padding:9px;outline:none}
+    select:focus,input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+    .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .tool-btn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:9px 6px;font-size:11px;transition:.16s}
+    .tool-btn:hover,.tool-btn.active{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+    .divider{height:1px;background:var(--line);margin:14px 0}
+    .status-box{display:flex;gap:8px;align-items:flex-start;padding:10px;border-radius:11px;background:var(--green-soft);color:var(--green);font-size:11px;line-height:1.4}
+    .status-box.warn{background:var(--amber-soft);color:var(--amber)}
+    .legend{display:grid;gap:6px;font-size:11px;color:var(--muted)}
+    .legend-item{display:flex;align-items:center;gap:7px}
+    .legend-dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+    .canvas-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;height:calc(100vh - 196px);min-height:560px}
+    .canvas-head{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;border-bottom:1px solid var(--line);gap:10px}
+    .canvas-head-left{display:flex;align-items:center;gap:8px;min-width:0}
+    .drawer-launch{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:9px;padding:7px 9px;font-size:10px;font-weight:800;white-space:nowrap}
+    .drawer-launch:hover,.drawer-launch.active{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+    .compact-badge{font-size:9px;background:var(--blue);color:#fff;border-radius:999px;padding:2px 5px}
+    .canvas-title strong{font-size:14px}.canvas-title div{font-size:11px;color:var(--muted);margin-top:2px}
+    .canvas-actions{display:flex;gap:5px}
+    .canvas-actions button{width:32px;height:30px;padding:0;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink)}
+    .canvas-wrap{position:relative;flex:1;min-height:450px;overflow:hidden}
+    .stage-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;height:100%;min-height:0;transition:grid-template-columns .25s ease}
+    .graph-stage{position:relative;min-width:0;overflow:hidden;background-color:var(--surface-2);background-image:radial-gradient(var(--line) 1px,transparent 1px);background-size:20px 20px}
+    .live-panel{min-width:0;border-left:1px solid var(--line);background:var(--surface);padding:10px;overflow:auto;transition:.25s}
+    .live-panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+    .live-panel-head small{display:block;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:850;margin-bottom:2px}
+    .live-panel-head strong{font-size:12px}
+    .live-toggle{width:29px;height:29px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);flex:none}
+    .stage-grid.table-collapsed{grid-template-columns:minmax(0,1fr) 42px}
+    .stage-grid.table-collapsed .live-panel{padding:7px 6px;overflow:hidden}
+    .stage-grid.table-collapsed .live-panel-head>div,.stage-grid.table-collapsed .focus-flow,.stage-grid.table-collapsed #dynamicTable{display:none}
+    .stage-grid.table-collapsed .live-toggle{transform:rotate(180deg)}
+    .focus-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:4px;padding:7px;margin-bottom:8px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
+    .guide-chip{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;font-size:8px;color:var(--muted)}
+    .guide-chip b{color:var(--ink);max-width:150px;overflow:hidden;text-overflow:ellipsis}
+    .guide-dot{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent)}
+    .guide-arrow{color:var(--muted);font-weight:900}
+    .zoom-indicator{position:absolute;left:10px;bottom:9px;z-index:5;padding:4px 7px;border-radius:8px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:1px solid var(--line);font-size:9px;color:var(--muted);pointer-events:none;backdrop-filter:blur(7px)}
+    .zoom-hint{position:absolute;right:10px;bottom:9px;z-index:5;font-size:9px;color:var(--muted);background:color-mix(in srgb,var(--surface) 88%,transparent);padding:4px 7px;border-radius:8px;pointer-events:none}
+    #graph{width:100%;height:100%;display:block;touch-action:none}
+    .view-label{font-size:12px;font-weight:850;letter-spacing:.06em;fill:var(--muted)}
+    .split-line{stroke:var(--line);stroke-width:1;stroke-dasharray:6 8}
+    .state-node{cursor:grab;transition:.22s;filter:drop-shadow(0 4px 5px rgba(20,30,60,.12))}
+    .state-node:active{cursor:grabbing}
+    .state-circle{fill:var(--surface);stroke:#7c8aa5;stroke-width:2.5;transition:.22s}
+    .state-node:hover .state-circle{stroke:var(--blue);stroke-width:3.5}
+    .state-node.selected .state-circle{stroke:var(--blue);stroke-width:4;filter:drop-shadow(0 0 7px rgba(37,99,235,.45))}
+    .state-node.processing .state-circle{fill:var(--amber-soft);stroke:var(--amber);stroke-width:4}
+    .state-node.created .state-circle{fill:var(--purple-soft);stroke:var(--purple);stroke-width:4;animation:pop .5s ease}
+    .state-node.processed .state-circle{fill:var(--green-soft);stroke:var(--green)}
+    .state-node.eliminated .state-circle{fill:var(--red-soft);stroke:var(--red);opacity:.38}
+    .state-node.will-use .state-circle{stroke:var(--cyan);stroke-width:3.5;stroke-dasharray:5 4;animation:ringDash 1.2s linear infinite}
+    .state-label{font-size:12px;font-weight:800;fill:var(--ink);pointer-events:none;text-anchor:middle;dominant-baseline:middle}
+    .state-sub{font-size:9px;fill:var(--muted);pointer-events:none;text-anchor:middle}
+    .edge{fill:none;stroke:#7d8ba5;stroke-width:2;transition:.2s}
+    .edge.active{stroke:var(--blue);stroke-width:4;filter:drop-shadow(0 0 4px rgba(37,99,235,.4));stroke-dasharray:7 5;animation:dash .7s linear infinite}
+    .edge.created{stroke:var(--purple);stroke-width:3.5}
+    .edge.eliminated{stroke:var(--red);opacity:.25}
+    .edge-label{font-size:11px;font-weight:750;fill:var(--ink);paint-order:stroke;stroke:var(--surface-2);stroke-width:5;stroke-linejoin:round;text-anchor:middle}
+    .initial-arrow{stroke:var(--green);stroke-width:2.5;fill:none}
+    .node-attention-ring{fill:none;stroke-width:2.5;stroke-dasharray:6 5;transform-box:fill-box;transform-origin:center;animation:attentionPulse 1.35s ease-in-out infinite}
+    .node-attention-ring.active-ring{stroke:var(--amber)}
+    .node-attention-ring.next-ring{stroke:var(--cyan)}
+    .node-attention-ring.result-ring{stroke:var(--purple)}
+    .state-callout-arrow{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:5 4;animation:dash .75s linear infinite}
+    .state-callout-arrow.active-arrow{stroke:var(--amber)}
+    .state-callout-arrow.next-arrow{stroke:var(--cyan)}
+    .state-callout-arrow.result-arrow{stroke:var(--purple)}
+    .callout-text{font-size:8px;font-weight:900;letter-spacing:.08em;text-anchor:middle;paint-order:stroke;stroke:var(--surface-2);stroke-width:5}
+    .callout-text.active-text{fill:var(--amber)}.callout-text.next-text{fill:var(--cyan)}.callout-text.result-text{fill:var(--purple)}
+    .group-hull{fill:transparent;stroke-width:2;stroke-dasharray:7 5;opacity:.8}
+    .split-path{fill:none;stroke-width:2.6;stroke-dasharray:6 4;animation:dash .8s linear infinite}
+    .split-a{stroke:#2563eb}.split-b{stroke:#7c3aed}
+    .split-label{font-size:8px;font-weight:900;letter-spacing:.08em;paint-order:stroke;stroke:var(--surface-2);stroke-width:5;text-anchor:middle}
+    .partition-membership{font-size:8px;font-weight:900;paint-order:stroke;stroke:var(--surface-2);stroke-width:4;text-anchor:middle}
+    @keyframes dash{to{stroke-dashoffset:-12}}@keyframes ringDash{to{stroke-dashoffset:-18}}@keyframes attentionPulse{0%,100%{transform:scale(.96);opacity:.55}50%{transform:scale(1.08);opacity:1}}@keyframes pop{0%{transform:scale(.5);opacity:.2}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+    .canvas-foot{border-top:1px solid var(--line);padding:6px 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .metric{padding:5px 8px;background:var(--surface-2);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+    .metric .n{font-size:13px;font-weight:900}.metric .l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+    .progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .badge{font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;color:var(--blue);background:var(--blue-soft)}
+    .progress-track{height:7px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:14px}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));width:0;transition:.3s;border-radius:999px}
+    .explain-card{padding:12px;border:1px solid var(--line);background:var(--surface-2);border-radius:13px;margin-bottom:9px}
+    .explain-card h3{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+    .explain-card p{font-size:12px;line-height:1.5;margin:0}
+    .explain-card.result{border-left:4px solid var(--purple)}
+    .idea{padding:12px;border-radius:13px;background:var(--amber-soft);color:color-mix(in srgb,var(--amber) 80%,var(--ink));font-size:11px;line-height:1.45;margin:10px 0}
+    .formula{padding:12px;border-radius:12px;background:#10172a;color:#f6f8ff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;text-align:center;overflow:auto}
+    .table-wrap{overflow:auto;max-height:170px;margin-top:10px;border:1px solid var(--line);border-radius:11px}
+    .live-panel .table-wrap{max-height:none;margin-top:0;border-radius:9px}
+    table{width:100%;border-collapse:collapse;font-size:10px}
+    th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+    th{position:sticky;top:0;background:var(--surface-2);color:var(--muted);font-weight:800}
+    tr.active-row td{background:var(--amber-soft);color:var(--ink)}
+    td.active-cell{background:var(--blue-soft)!important;color:var(--blue)!important;font-weight:900;box-shadow:inset 0 0 0 2px var(--blue)}
+    .partition-history{display:grid;gap:8px}
+    .partition-step{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--surface-2);transition:.2s}
+    .partition-step.current{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}
+    .partition-step-head{display:flex;justify-content:space-between;align-items:center;font-size:9px;color:var(--muted);margin-bottom:6px}
+    .partition-groups{display:flex;flex-wrap:wrap;gap:5px}
+    .partition-group{display:inline-flex;align-items:center;gap:4px;padding:5px 7px;border-radius:8px;background:color-mix(in srgb,var(--pc) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--pc) 55%,var(--line));font-size:10px;font-weight:800}
+    .partition-group i{width:7px;height:7px;border-radius:50%;background:var(--pc)}
+    .refine-arrow{text-align:center;color:var(--purple);font-size:15px;line-height:1}
+    .split-explanation{margin-top:8px;padding:8px;border-radius:9px;background:var(--purple-soft);font-size:10px;line-height:1.45}
+    .split-flow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;margin-top:6px}
+    .split-flow>span{text-align:center;font-weight:900;color:var(--purple)}
+    .split-branches{display:grid;gap:4px}
+    .split-branch{padding:4px 6px;border-left:3px solid var(--pc);background:var(--surface);border-radius:5px;font-size:9px}
+    .regex-list{display:grid;gap:5px}
+    .regex-edge{display:flex;justify-content:space-between;gap:8px;padding:6px;border-bottom:1px solid var(--line);font-size:10px}
+    .regex-edge code{color:var(--purple);font-weight:800;overflow-wrap:anywhere;text-align:right}
+    .step-narrative{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+    .step-narrative-title{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:10px;font-weight:900;color:var(--blue)}
+    .step-narrative p{font-size:10px;line-height:1.55;margin:0 0 7px;color:var(--ink)}
+    .narrative-why{padding-left:8px;border-left:3px solid var(--amber)}
+    .narrative-result{padding:7px 8px;border-radius:8px;background:var(--green-soft);color:var(--green);font-size:10px;line-height:1.45;font-weight:750}
+    .signature-caption{font-size:9px;color:var(--muted);margin:9px 0 5px}
+    details{border:1px solid var(--line);border-radius:11px;margin-top:10px;overflow:hidden}
+    summary{padding:10px;font-size:11px;font-weight:750;cursor:pointer;background:var(--surface-2)}
+    pre{white-space:pre-wrap;margin:0;padding:10px;font-size:10px;line-height:1.5;color:var(--muted)}
+    pre .active-code{display:block;color:var(--blue);font-weight:800;background:var(--blue-soft);margin:0 -5px;padding:1px 5px;border-radius:5px}
+    .bottom-bar{margin:0 14px 9px;padding:7px 10px;border:1px solid var(--line);border-radius:13px;background:var(--surface);box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+    .play-controls{display:flex;gap:6px}.play-controls button{min-width:38px}
+    .timeline{display:flex;align-items:center;gap:4px;min-width:0;overflow:auto;padding:5px 2px}
+    .step-dot{flex:0 0 auto;width:19px;height:19px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font-size:8px;padding:0}
+    .step-dot.done{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+    .step-dot.current{border-color:var(--blue);background:var(--blue);color:white;transform:scale(1.12)}
+    .step-link{height:2px;min-width:8px;flex:1;background:var(--line)}
+    .speed{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:10px}
+    .speed input{width:92px;padding:0}
+    .switch-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin:9px 0}
+    .switch{position:relative;width:40px;height:23px;flex:none}
+    .switch input{opacity:0;position:absolute}
+    .switch span{position:absolute;inset:0;background:var(--line);border-radius:99px;transition:.2s}
+    .switch span:after{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;border-radius:50%;background:white;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:.2s}
+    .switch input:checked+span{background:var(--blue)}.switch input:checked+span:after{transform:translateX(17px)}
+    .toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(20px);background:#111827;color:white;padding:10px 16px;border-radius:11px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .modal{position:fixed;inset:0;background:rgba(8,15,30,.58);display:none;align-items:center;justify-content:center;padding:18px;z-index:90;backdrop-filter:blur(4px)}
+    .modal.open{display:flex}
+    .modal-card{width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:20px}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .modal-head h2{font-size:17px;margin:0}
+    .format-tabs{display:flex;gap:6px;margin-bottom:10px}
+    .format-tabs button.active{background:var(--blue-soft);color:var(--blue);border-color:var(--blue)}
+    textarea{min-height:280px;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;resize:vertical}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+    .quiz{padding:12px;background:var(--purple-soft);border-radius:13px;margin-top:10px}
+    .quiz strong{font-size:11px;color:var(--purple)}.quiz p{font-size:11px;margin:7px 0}
+    .quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+    .quiz-options button{font-size:10px;padding:7px;border:1px solid color-mix(in srgb,var(--purple) 35%,var(--line));background:var(--surface);color:var(--ink);border-radius:8px}
+    @media(max-width:900px){.stage-grid{grid-template-columns:minmax(0,1fr) 270px}.focus-flow{grid-template-columns:1fr}.guide-arrow{display:none}.guide-chip{flex-direction:row;align-items:center}}
+    @media(max-width:660px){header{padding:8px 9px 4px}.subtitle{display:none}.head-actions .btn{display:none}.algorithm-tabs{display:flex;overflow-x:auto;gap:5px}.algo-tab{min-width:174px;padding:7px 8px}.workspace{padding:4px 8px 6px}.canvas-card{height:auto;min-height:720px}.stage-grid{grid-template-columns:1fr;grid-template-rows:470px auto}.stage-grid.table-collapsed{grid-template-columns:1fr;grid-template-rows:470px 42px}.live-panel{border-left:0;border-top:1px solid var(--line);max-height:290px}.left-panel,.right-panel{top:94px;bottom:64px;left:8px;right:auto;width:calc(100vw - 16px)}.right-panel{right:8px;left:auto}.drawer-backdrop{inset:94px 0 62px}.canvas-title div{display:none}.canvas-title strong{font-size:11px}.drawer-launch{padding:6px 7px}.canvas-actions button:not(#rightDrawerBtn){display:none}.bottom-bar{margin:0 8px 6px;grid-template-columns:1fr 1fr}.timeline{grid-column:1/-1;grid-row:2}.speed{justify-content:flex-end}.speed span{display:none}.canvas-foot{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand-row">
+      <div class="brand">
+        <div class="brand-mark">AV</div>
+        <div><h1>Automata Visual Lab</h1><div class="subtitle">Explora paso a paso cómo se transforman los autómatas</div></div>
+      </div>
+      <div class="head-actions">
+        <button class="btn small soft" id="theoryBtn">📖 Teoría</button>
+        <button class="btn small" id="challengeBtn">🎯 Nuevo reto</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema">☾</button>
+      </div>
+    </div>
+    <nav class="algorithm-tabs" aria-label="Algoritmos">
+      <button class="algo-tab active" data-algo="nfa" style="--accent:#2563eb;--tab-soft:var(--blue-soft)">
+        <span class="algo-icon">NFA→DFA</span><span><strong>Construcción por subconjuntos</strong><span>Haz visible cada conjunto alcanzable</span></span>
+      </button>
+      <button class="algo-tab" data-algo="min" style="--accent:#16a36a;--tab-soft:var(--green-soft)">
+        <span class="algo-icon">DFA→MIN</span><span><strong>Minimización de DFA</strong><span>Detecta y fusiona estados equivalentes</span></span>
+      </button>
+      <button class="algo-tab" data-algo="rip" style="--accent:#7c3aed;--tab-soft:var(--purple-soft)">
+        <span class="algo-icon">FA→RegEx</span><span><strong>Método RIP</strong><span>Convierte caminos en expresiones regulares</span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="workspace" id="workspace">
+    <div class="drawer-backdrop" id="drawerBackdrop"></div>
+    <aside class="panel left-panel">
+      <div class="drawer-head"><div class="panel-title">Editor y ejemplos</div><button class="drawer-close" data-drawer-close aria-label="Cerrar editor">×</button></div>
+      <div class="panel-title">Biblioteca de ejemplos</div>
+      <div class="field"><label for="exampleSelect">Ejemplo activo</label><select id="exampleSelect"></select></div>
+      <div class="tool-grid">
+        <button class="tool-btn" id="newBtn">＋ Nuevo</button><button class="tool-btn" id="runBtn">▶ Preparar</button>
+      </div>
+      <div class="divider"></div>
+      <div class="panel-title">Editor gráfico</div>
+      <div class="tool-grid">
+        <button class="tool-btn" data-tool="add">＋ Estado</button>
+        <button class="tool-btn" data-tool="edge">↗ Transición</button>
+        <button class="tool-btn" data-tool="initial">⇥ Inicial</button>
+        <button class="tool-btn" data-tool="final">◎ Aceptación</button>
+        <button class="tool-btn danger" data-tool="delete">⌫ Eliminar</button>
+        <button class="tool-btn" id="layoutBtn">✦ Organizar</button>
+      </div>
+      <p id="toolHelp" style="font-size:10px;color:var(--muted);line-height:1.4;margin:10px 2px">Selecciona un estado para editarlo o arrástralo para moverlo.</p>
+      <div class="divider"></div>
+      <div class="panel-title">Datos</div>
+      <div class="tool-grid">
+        <button class="tool-btn" id="importBtn">⇩ Importar</button>
+        <button class="tool-btn" id="exportBtn">⇧ Exportar</button>
+        <button class="tool-btn" id="saveBtn">▣ Guardar local</button>
+        <button class="tool-btn" id="exploreBtn">🔬 Explorar</button>
+      </div>
+      <div class="switch-row"><span>🎓 Modo didáctico</span><label class="switch"><input id="didacticToggle" type="checkbox" checked><span></span></label></div>
+      <div class="switch-row"><span>Preguntas interactivas</span><label class="switch"><input id="quizToggle" type="checkbox" checked><span></span></label></div>
+      <div id="validation" class="status-box"><span>✓</span><span>Autómata válido para comenzar.</span></div>
+      <div class="divider"></div>
+      <details>
+        <summary>Leyenda visual</summary>
+        <div class="legend" style="padding:10px">
+          <div class="legend-item"><i class="legend-dot" style="--c:var(--blue)"></i>Seleccionado / recorriendo</div>
+          <div class="legend-item"><i class="legend-dot" style="--c:var(--amber)"></i>Bajo análisis</div>
+          <div class="legend-item"><i class="legend-dot" style="--c:var(--purple)"></i>Estado o arco creado</div>
+          <div class="legend-item"><i class="legend-dot" style="--c:var(--green)"></i>Procesado correctamente</div>
+          <div class="legend-item"><i class="legend-dot" style="--c:var(--red)"></i>Eliminado</div>
+        </div>
+      </details>
+    </aside>
+
+    <section class="canvas-card">
+      <div class="canvas-head">
+        <div class="canvas-head-left">
+          <button class="drawer-launch" id="leftDrawerBtn">☰ Editor</button>
+          <div class="canvas-title"><strong id="canvasTitle">NFA original y DFA en construcción</strong><div id="canvasHint">Arrastra estados, recorre transiciones y observa de dónde nace cada conjunto.</div></div>
+        </div>
+        <div class="canvas-actions">
+          <button class="drawer-launch" id="rightDrawerBtn" style="width:auto;padding:0 9px">✨ Paso <span class="compact-badge" id="compactStepBadge">1/1</span></button>
+          <button id="zoomIn" title="Acercar">＋</button><button id="zoomOut" title="Alejar">−</button><button id="fitBtn" title="Ajustar">⌂</button>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="stage-grid" id="stageGrid">
+          <div class="graph-stage" id="graphStage">
+            <svg id="graph" viewBox="0 0 1000 560" role="img" aria-label="Visualización interactiva del autómata"></svg>
+            <div class="zoom-indicator" id="zoomIndicator">Zoom 100 %</div>
+            <div class="zoom-hint">Rueda: zoom · arrastra cualquier estado</div>
+          </div>
+          <aside class="live-panel" id="livePanel" aria-label="Tabla y seguimiento sincronizado">
+            <div class="live-panel-head">
+              <div><small id="liveEyebrow">Sincronización en vivo</small><strong id="livePanelTitle">Tabla de subconjuntos</strong></div>
+              <button class="live-toggle" id="livePanelToggle" aria-label="Contraer panel">›</button>
+            </div>
+            <div class="focus-flow" aria-live="polite">
+              <div class="guide-chip"><i class="guide-dot" style="--c:var(--amber)"></i><span>ACTIVO</span><b id="guideCurrent">—</b></div>
+              <span class="guide-arrow">→</span>
+              <div class="guide-chip"><i class="guide-dot" style="--c:var(--blue)"></i><span>SÍMBOLO</span><b id="guideSymbol">—</b></div>
+              <span class="guide-arrow">→</span>
+              <div class="guide-chip"><i class="guide-dot" style="--c:var(--purple)"></i><span>RESULTADO</span><b id="guideResult">—</b></div>
+            </div>
+            <div id="dynamicTable"></div>
+          </aside>
+        </div>
+      </div>
+      <div class="canvas-foot" id="metrics"></div>
+    </section>
+
+    <aside class="panel right-panel">
+      <div class="drawer-head"><div class="panel-title">Explicación del algoritmo</div><button class="drawer-close" data-drawer-close aria-label="Cerrar explicación">×</button></div>
+      <div class="progress-head"><div><div class="panel-title" style="margin:0 0 3px">¿Qué está pasando?</div><strong id="stepName" style="font-size:13px">Listo para iniciar</strong></div><span class="badge" id="stepBadge">Paso 0/0</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="explain-card"><h3>Acción</h3><p id="actionText">Selecciona un ejemplo y pulsa Preparar.</p></div>
+      <div class="explain-card"><h3>Razón</h3><p id="reasonText">El motor generará una historia completa que podrás recorrer hacia delante o atrás.</p></div>
+      <div class="explain-card result"><h3>Resultado</h3><p id="resultText">Cada transformación quedará conectada visualmente con su origen.</p></div>
+      <div class="formula" id="formulaBox">ver → manipular → ejecutar → entender</div>
+      <div class="idea" id="ideaBox">💡 <strong>Idea clave:</strong> un estado del DFA puede representar varios estados posibles del NFA.</div>
+      <div id="quizBox"></div>
+      <details><summary>&lt;/&gt; Pseudocódigo sincronizado</summary><pre id="pseudo"></pre></details>
+      <button class="btn soft" id="explainBtn" style="width:100%;margin-top:10px">💡 Explícame este paso</button>
+    </aside>
+  </main>
+
+  <footer class="bottom-bar">
+    <div class="play-controls">
+      <button class="btn small" id="firstBtn" title="Inicio">⏮</button><button class="btn small" id="prevBtn" title="Anterior">◀</button>
+      <button class="btn small primary" id="playBtn" title="Reproducir">▶</button><button class="btn small" id="nextBtn" title="Siguiente">▶|</button>
+      <button class="btn small" id="resetBtn" title="Reiniciar">↻</button>
+    </div>
+    <div class="timeline" id="timeline" aria-label="Historial de pasos"></div>
+    <div class="speed"><span>Lento</span><input id="speedRange" type="range" min="350" max="1800" value="1000" step="50"><span>Rápido</span></div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="dataModal">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="modalTitle">Importar autómata</h2><button class="icon-btn" data-close="dataModal">×</button></div>
+    <div class="format-tabs"><button class="btn small active" data-format="json">JSON</button><button class="btn small" data-format="manual">Formato sencillo</button></div>
+    <textarea id="dataArea" spellcheck="false"></textarea>
+    <div class="modal-actions"><button class="btn" data-close="dataModal">Cancelar</button><button class="btn soft" id="copyDataBtn">Copiar</button><button class="btn primary" id="applyDataBtn">Aplicar</button></div>
+  </div>
+</div>
+<div class="modal" id="infoModal">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="infoTitle">Teoría mínima</h2><button class="icon-btn" data-close="infoModal">×</button></div>
+    <div id="infoContent"></div>
+    <div class="modal-actions"><button class="btn primary" data-close="infoModal">Entendido</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var $=function(s){return document.querySelector(s)};
+  var $$=function(s){return Array.from(document.querySelectorAll(s))};
+  var clone=function(x){return JSON.parse(JSON.stringify(x))};
+  var keySet=function(arr){return arr.slice().sort().join(',') || '∅'};
+  var uid=0;
+  function tr(from,symbol,to){return {id:'t'+(++uid),from:from,symbol:symbol,to:to}}
+  function st(id,x,y,initial,final){return {id:id,x:x,y:y,initial:!!initial,final:!!final}}
+  function A(states,alphabet,transitions){return {states:states,alphabet:alphabet,transitions:transitions}}
+
+  var examples={
+    nfa:[
+      {name:'1. NFA simple',data:A([st('q0',85,190,1),st('q1',240,105),st('q2',385,190,0,1)],['a','b'],[tr('q0','a','q0'),tr('q0','a','q1'),tr('q1','b','q2'),tr('q2','b','q2')])},
+      {name:'2. Dos caminos con el mismo símbolo',data:A([st('q0',80,190,1),st('q1',245,95),st('q2',245,285),st('q3',410,190,0,1)],['a','b'],[tr('q0','a','q1'),tr('q0','a','q2'),tr('q1','b','q3'),tr('q2','b','q3'),tr('q3','a','q3')])},
+      {name:'3. NFA con ε',data:A([st('q0',70,190,1),st('q1',210,95),st('q2',210,285),st('q3',400,190,0,1)],['a','b'],[tr('q0','ε','q1'),tr('q0','ε','q2'),tr('q1','a','q1'),tr('q1','b','q3'),tr('q2','b','q2'),tr('q2','a','q3')])},
+      {name:'4. Varias aceptaciones',data:A([st('q0',70,190,1),st('q1',210,100,0,1),st('q2',210,280),st('q3',405,190,0,1)],['0','1'],[tr('q0','0','q1'),tr('q0','1','q2'),tr('q1','0','q1'),tr('q1','1','q3'),tr('q2','0','q3'),tr('q2','1','q2')])},
+      {name:'5. NFA mediano',data:A([st('q0',55,190,1),st('q1',170,80),st('q2',170,300),st('q3',320,80),st('q4',320,300,0,1),st('q5',430,190,0,1)],['a','b'],[tr('q0','a','q0'),tr('q0','a','q1'),tr('q0','b','q2'),tr('q1','b','q3'),tr('q2','a','q4'),tr('q3','a','q5'),tr('q4','b','q5'),tr('q5','a','q5')])}
+    ],
+    min:[
+      {name:'1. DFA pequeño',data:A([st('q0',60,190,1),st('q1',190,90),st('q2',190,290),st('q3',390,190,0,1)],['a','b'],[tr('q0','a','q1'),tr('q0','b','q2'),tr('q1','a','q3'),tr('q1','b','q2'),tr('q2','a','q1'),tr('q2','b','q3'),tr('q3','a','q3'),tr('q3','b','q3')])},
+      {name:'2. Dos estados equivalentes',data:A([st('q0',55,190,1),st('q1',180,85),st('q2',180,295),st('q3',380,85,0,1),st('q4',380,295,0,1)],['0','1'],[tr('q0','0','q1'),tr('q0','1','q2'),tr('q1','0','q3'),tr('q1','1','q4'),tr('q2','0','q3'),tr('q2','1','q4'),tr('q3','0','q3'),tr('q3','1','q3'),tr('q4','0','q4'),tr('q4','1','q4')])},
+      {name:'3. Varios grupos equivalentes',data:A([st('A',55,190,1),st('B',170,75),st('C',170,305),st('D',310,75,0,1),st('E',310,305,0,1),st('F',430,190)],['0','1'],[tr('A','0','B'),tr('A','1','C'),tr('B','0','D'),tr('B','1','E'),tr('C','0','D'),tr('C','1','E'),tr('D','0','D'),tr('D','1','F'),tr('E','0','E'),tr('E','1','F'),tr('F','0','F'),tr('F','1','F')])},
+      {name:'4. Con estado inalcanzable',data:A([st('q0',55,190,1),st('q1',200,90),st('q2',370,190,0,1),st('q3',200,290),st('qx',420,330)],['a','b'],[tr('q0','a','q1'),tr('q0','b','q3'),tr('q1','a','q2'),tr('q1','b','q3'),tr('q2','a','q2'),tr('q2','b','q2'),tr('q3','a','q1'),tr('q3','b','q2'),tr('qx','a','qx'),tr('qx','b','qx')])},
+      {name:'5. Ya es mínimo',data:A([st('q0',60,190,1),st('q1',205,80),st('q2',205,300,0,1),st('q3',410,190)],['0','1'],[tr('q0','0','q1'),tr('q0','1','q2'),tr('q1','0','q3'),tr('q1','1','q2'),tr('q2','0','q2'),tr('q2','1','q2'),tr('q3','0','q1'),tr('q3','1','q2')])}
+    ],
+    rip:[
+      {name:'1. Autómata de 2 estados',data:A([st('q0',110,190,1),st('q1',370,190,0,1)],['a','b'],[tr('q0','a','q1'),tr('q1','b','q1')])},
+      {name:'2. Con loop',data:A([st('q0',90,190,1),st('q1',260,190),st('q2',425,190,0,1)],['a','b'],[tr('q0','a','q1'),tr('q1','b','q1'),tr('q1','a','q2')])},
+      {name:'3. Tres estados',data:A([st('q0',65,190,1),st('q1',235,90),st('q2',420,190,0,1)],['a','b'],[tr('q0','a','q1'),tr('q0','b','q2'),tr('q1','a','q1'),tr('q1','b','q2')])},
+      {name:'4. Múltiples transiciones',data:A([st('q0',70,190,1),st('q1',245,190),st('q2',420,190,0,1)],['a','b','c'],[tr('q0','a','q1'),tr('q0','b','q1'),tr('q1','b','q1'),tr('q1','c','q2'),tr('q0','c','q2')])},
+      {name:'5. Ejemplo complejo',data:A([st('q0',55,190,1),st('q1',175,75),st('q2',175,305),st('q3',330,75),st('q4',425,210,0,1)],['a','b'],[tr('q0','a','q1'),tr('q0','b','q2'),tr('q1','a','q1'),tr('q1','b','q3'),tr('q2','b','q2'),tr('q2','a','q3'),tr('q3','a','q4'),tr('q3','b','q2'),tr('q4','a','q4')])}
+    ]
+  };
+
+  var state={algo:'nfa',automaton:null,steps:[],step:0,selected:null,tool:null,edgeStart:null,playing:false,timer:null,zoom:1,zoomOrigin:'50% 50%',nodePositions:{},didactic:true,quiz:true,format:'json',modalMode:'import'};
+  function initialState(){return state.automaton.states.find(function(s){return s.initial})}
+  function finals(){return state.automaton.states.filter(function(s){return s.final}).map(function(s){return s.id})}
+  function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(function(){t.classList.remove('show')},2200)}
+  function loadExample(index){
+    state.automaton=clone(examples[state.algo][Number(index)||0].data);state.selected=null;state.tool=null;state.edgeStart=null;state.step=0;state.steps=[];state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';
+    autoLayout(false);validate();prepareAlgorithm();render();
+  }
+  function populateExamples(){
+    var sel=$('#exampleSelect');sel.innerHTML=examples[state.algo].map(function(e,i){return '<option value="'+i+'">'+e.name+'</option>'}).join('');
+  }
+  function validate(){
+    var errors=[],a=state.automaton,init=a.states.filter(function(s){return s.initial});
+    if(init.length!==1)errors.push(init.length?'Debe existir un solo estado inicial':'Falta el estado inicial');
+    if(!a.states.some(function(s){return s.final}))errors.push('No existen estados de aceptación');
+    a.transitions.forEach(function(t){if(t.symbol!=='ε'&&a.alphabet.indexOf(t.symbol)<0)errors.push('Símbolo '+t.symbol+' fuera del alfabeto')});
+    if(state.algo==='min'){
+      var seen={};a.transitions.forEach(function(t){var k=t.from+'|'+t.symbol;seen[k]=(seen[k]||0)+1});
+      if(Object.keys(seen).some(function(k){return seen[k]>1})||a.transitions.some(function(t){return t.symbol==='ε'}))errors.push('La minimización requiere un DFA determinista');
+    }
+    var box=$('#validation');box.className='status-box'+(errors.length?' warn':'');box.innerHTML=errors.length?'<span>⚠</span><span>'+errors[0]+'</span>':'<span>✓</span><span>Autómata válido para comenzar.</span>';
+    return !errors.length;
+  }
+  function eclosure(ids,a){
+    var out=new Set(ids),stack=ids.slice();
+    while(stack.length){var q=stack.pop();a.transitions.filter(function(t){return t.from===q&&t.symbol==='ε'}).forEach(function(t){if(!out.has(t.to)){out.add(t.to);stack.push(t.to)}})}
+    return Array.from(out).sort();
+  }
+  function move(ids,sym,a){
+    var out=new Set();a.transitions.forEach(function(t){if(ids.indexOf(t.from)>=0&&t.symbol===sym)out.add(t.to)});return Array.from(out).sort();
+  }
+  function layoutGraph(g,w,h){
+    var n=g.states.length;if(!n)return g;
+    g.states.forEach(function(s,i){var ang=-Math.PI/2+2*Math.PI*i/n;s.x=w/2+Math.cos(ang)*Math.min(w*.36,155);s.y=h/2+Math.sin(ang)*Math.min(h*.33,140)});
+    return g;
+  }
+  function buildNfaSteps(a){
+    var init=initialState();if(!init)return [];
+    var start=eclosure([init.id],a),queue=[start],known={},rows=[],dfaStates=[],dfaTrans=[],steps=[];
+    known[keySet(start)]=true;dfaStates.push({id:keySet(start),initial:true,final:start.some(function(q){return finals().indexOf(q)>=0})});
+    steps.push({name:'Cierre inicial',action:'Calculamos ε-closure('+init.id+').',reason:'El DFA debe comenzar representando todos los estados accesibles sin consumir símbolos.',result:'Estado inicial DFA: {'+keySet(start)+'}',formula:'ε-closure('+init.id+') = {'+keySet(start)+'}',current:start,created:keySet(start),dfaStates:clone(dfaStates),dfaTrans:[],rows:[]});
+    while(queue.length){
+      var T=queue.shift(),row={state:keySet(T)};
+      a.alphabet.forEach(function(sym){
+        var raw=move(T,sym,a),U=eclosure(raw,a),uk=keySet(U),tk=keySet(T);
+        row[sym]=uk;
+        var traced=a.transitions.filter(function(t){return T.indexOf(t.from)>=0&&t.symbol===sym}).map(function(t){return t.id});
+        var fresh=!known[uk];if(fresh){known[uk]=true;queue.push(U);dfaStates.push({id:uk,initial:false,final:U.some(function(q){return finals().indexOf(q)>=0})})}
+        dfaTrans.push({id:'d'+dfaTrans.length,from:tk,to:uk,symbol:sym});
+        steps.push({name:'Procesar '+tk+' con '+sym,action:'Seguimos todas las transiciones '+sym+' desde {'+tk+'}.',reason:'move() reúne los destinos y ε-closure añade todo alcance gratuito.',result:'move({'+tk+'}, '+sym+') ⇒ {'+uk+'}'+(fresh?' — nuevo estado DFA.':' — estado ya conocido.'),formula:'ε-closure(move({'+tk+'}, '+sym+')) = {'+uk+'}',current:T,symbol:sym,target:U,traceEdges:traced,created:fresh?uk:null,dfaStates:clone(dfaStates),dfaTrans:clone(dfaTrans),rows:clone(rows.concat([row]))});
+      });
+      rows.push(row);
+    }
+    steps.push({name:'DFA completado',action:'Marcamos los subconjuntos que contienen estados finales.',reason:'Si una posibilidad del NFA acepta, el conjunto completo debe aceptar.',result:'Se construyeron '+dfaStates.length+' estados DFA alcanzables.',formula:'T es final ⇔ T ∩ F ≠ ∅',dfaStates:clone(dfaStates),dfaTrans:clone(dfaTrans),rows:clone(rows),complete:true});
+    return steps;
+  }
+  function reachable(a){
+    var init=a.states.find(function(s){return s.initial});if(!init)return [];
+    var seen=new Set([init.id]),q=[init.id];
+    while(q.length){var x=q.shift();a.transitions.filter(function(t){return t.from===x}).forEach(function(t){if(!seen.has(t.to)){seen.add(t.to);q.push(t.to)}})}
+    return Array.from(seen);
+  }
+  function dest(a,q,sym){var t=a.transitions.find(function(x){return x.from===q&&x.symbol===sym});return t?t.to:'∅'}
+  function buildMinSteps(a){
+    var reach=reachable(a),unreach=a.states.map(function(s){return s.id}).filter(function(x){return reach.indexOf(x)<0});
+    var steps=[{name:'1. Detectar estados inalcanzables',action:'Partimos del estado inicial y seguimos todas las transiciones posibles.',reason:'Los estados que nunca pueden visitarse no influyen en las cadenas que acepta el DFA.',result:unreach.length?'Los estados '+unreach.join(', ')+' son inalcanzables y se retiran antes de minimizar.':'Todos los estados son alcanzables y participan en la minimización.',formula:'Alcanzables(q₀) = {'+reach.join(', ')+'}',unreachable:unreach,partitions:[],verbal:'Primero limpiamos el autómata. Imaginamos que colocamos una ficha en el estado inicial y recorremos todas las flechas. Solo conservamos los estados a los que la ficha puede llegar.'}];
+    var F=reach.filter(function(q){return a.states.find(function(s){return s.id===q}).final}),N=reach.filter(function(q){return F.indexOf(q)<0});
+    var parts=[];if(F.length)parts.push(F);if(N.length)parts.push(N);
+    steps.push({name:'2. Identificar estados de aceptación',action:'Localizamos todos los estados dibujados con doble círculo.',reason:'Un estado final acepta la cadena vacía; uno no final no la acepta. Por eso nunca pueden ser equivalentes.',result:'El primer grupo provisional contiene F = {'+F.join(', ')+'}.',formula:'F = {'+F.join(', ')+'}',partitions:F.length?[clone(F)]:[],current:clone(F),unreachable:unreach,verbal:'Todavía no comparamos transiciones. Solo usamos una diferencia inmediata: los estados finales aceptan sin leer símbolos, mientras que los demás no.',partitionMilestone:false});
+    steps.push({name:'3. Identificar estados no finales',action:'Reunimos los estados alcanzables que no son de aceptación.',reason:'Estos estados forman el complemento Q − F dentro del conjunto alcanzable.',result:'El segundo grupo provisional es Q − F = {'+N.join(', ')+'}.',formula:'Q − F = {'+N.join(', ')+'}',partitions:clone(parts),current:clone(N),unreachable:unreach,verbal:'Ahora colocamos todos los estados no finales en un segundo grupo. En este punto solo sabemos que un final no puede mezclarse con un no final.',partitionMilestone:false});
+    steps.push({name:'4. Construir la partición inicial P₀',action:'Formamos oficialmente dos bloques: finales y no finales.',reason:'Esta es la separación más gruesa que respeta la aceptación de la cadena vacía.',result:'P₀ = '+parts.map(function(p){return '{'+p.join(', ')+'}'}).join(' | '),formula:'P₀ = { F, Q − F }',partitions:clone(parts),unreachable:unreach,partitionMilestone:true,verbal:'La partición P₀ es nuestro punto de partida. Los estados que están dentro del mismo bloque todavía podrían ser equivalentes, pero debemos comprobar cómo se comportan con cada símbolo.'});
+    var changed=true,iter=0;
+    while(changed&&iter<20){
+      iter++;
+      var idx={};parts.forEach(function(p,i){p.forEach(function(q){idx[q]=i})});
+      steps.push({name:'Ronda '+iter+': preparar la comparación',action:'Numeramos los bloques actuales y vamos a calcular la firma de cada estado.',reason:'La firma indica a qué bloque llega un estado con cada símbolo del alfabeto.',result:'Trabajaremos sobre '+parts.map(function(p,i){return 'G'+(i+1)+'={'+p.join(', ')+'}'}).join(' · ')+'.',formula:'firma(q) = [grupo(δ(q,'+a.alphabet.join(')), grupo(δ(q,')+'))]',partitions:clone(parts),unreachable:unreach,verbal:'En esta ronda no dividimos nada todavía. Primero observaremos, estado por estado, hacia qué grupo conduce cada símbolo.',partitionMilestone:false});
+      var next=[],roundChanged=false;
+      for(var gi=0;gi<parts.length;gi++){
+        var group=parts[gi],buckets={},signatures={};
+        steps.push({name:'Ronda '+iter+': examinar G'+(gi+1),action:'Tomamos el grupo {'+group.join(', ')+'} y estudiaremos sus estados uno por uno.',reason:'Una división solo es necesaria si dos estados del mismo grupo presentan firmas diferentes.',result:group.length===1?'El grupo tiene un solo estado; comprobaremos que permanece estable.':'Calcularemos '+group.length+' firmas antes de decidir si el grupo se divide.',formula:'G'+(gi+1)+' = {'+group.join(', ')+'}',partitions:clone(parts),current:clone(group),unreachable:unreach,verbal:'Nos concentramos únicamente en este bloque. Los demás grupos no cambian mientras terminamos esta comparación.',partitionMilestone:false});
+        group.forEach(function(q){
+          var detail=a.alphabet.map(function(sym){var d=dest(a,q,sym),g=idx[d]===undefined?'∅':'G'+(idx[d]+1);return {symbol:sym,destination:d,group:g}});
+          var sig=detail.map(function(x){return x.group}).join('|');signatures[q]=detail;(buckets[sig]||(buckets[sig]=[])).push(q);
+          var traced=a.transitions.filter(function(t){return t.from===q&&a.alphabet.indexOf(t.symbol)>=0}).map(function(t){return t.id});
+          var targets=detail.map(function(x){return x.destination}).filter(function(x){return x!=='∅'});
+          steps.push({name:'Calcular la firma de '+q,action:'Seguimos desde '+q+' una transición por cada símbolo y anotamos el grupo de destino.',reason:'Estados con la misma firma se comportan igual respecto a la partición actual.',result:'firma('+q+') = ['+detail.map(function(x){return x.symbol+'→'+x.group}).join(', ')+'].',formula:'firma('+q+') = ('+detail.map(function(x){return x.group}).join(', ')+')',partitions:clone(parts),current:[q],target:targets,traceEdges:traced,signature:{state:q,detail:detail},unreachable:unreach,verbal:'Para '+q+', no nos importa solamente el nombre del estado al que llega cada flecha. Lo importante es saber en qué grupo se encuentra ese destino.',partitionMilestone:false});
+        });
+        var values=Object.keys(buckets).map(function(k){return buckets[k]});
+        if(values.length>1){
+          roundChanged=true;
+          var q1=values[0][0],q2=values[1][0],witnessSymbol='',d1='',d2='';
+          for(var z=0;z<a.alphabet.length;z++){var sy=a.alphabet[z],x1=dest(a,q1,sy),x2=dest(a,q2,sy);if(idx[x1]!==idx[x2]){witnessSymbol=sy;d1=x1;d2=x2;break}}
+          var preview=next.concat(values).concat(parts.slice(gi+1)),tracedEdges=a.transitions.filter(function(t){return (t.from===q1||t.from===q2)&&t.symbol===witnessSymbol}).map(function(t){return t.id});
+          steps.push({name:'Dividir G'+(gi+1)+' en la ronda '+iter,action:'Comparamos las firmas completas y separamos los estados que no coinciden.',reason:q1+' y '+q2+' no pueden seguir juntos porque con '+witnessSymbol+' llegan a bloques diferentes.',result:'{'+group.join(', ')+'} se divide en '+values.map(function(v){return '{'+v.join(', ')+'}'}).join(' y ')+'.',formula:'δ('+q1+','+witnessSymbol+')='+d1+'  ≠  δ('+q2+','+witnessSymbol+')='+d2,partitions:clone(preview),previous:clone(parts),unreachable:unreach,comparing:[q1,q2],target:[d1,d2],symbol:witnessSymbol,traceEdges:tracedEdges,partitionMilestone:true,verbal:'Las flechas resaltadas muestran la diferencia decisiva. Al leer '+witnessSymbol+', '+q1+' y '+q2+' terminan en grupos distintos; por eso una cadena futura puede distinguirlos.'});
+        }else{
+          steps.push({name:'Confirmar estabilidad de G'+(gi+1),action:'Comprobamos que todas las firmas del grupo son iguales.',reason:'Si cada símbolo conduce a los mismos bloques, la partición actual todavía no distingue estos estados.',result:'El grupo {'+group.join(', ')+'} permanece unido en esta ronda.',formula:'Todas las firmas de G'+(gi+1)+' coinciden',partitions:clone(parts),current:clone(group),unreachable:unreach,verbal:group.length===1?'Un bloque de un solo estado no puede dividirse más. Lo conservamos tal como está.':'Aunque los estados tengan nombres distintos, su comportamiento frente a los bloques actuales es el mismo; por ahora permanecen juntos.',partitionMilestone:false});
+        }
+        values.forEach(function(v){next.push(v)});
+      }
+      steps.push({name:'Consolidar P'+iter,action:'Reunimos el resultado de todas las comparaciones realizadas durante la ronda.',reason:'La nueva partición debe incorporar simultáneamente cada división encontrada.',result:'P'+iter+' = '+next.map(function(p){return '{'+p.join(', ')+'}'}).join(' | ')+'.',formula:'P'+iter+' = '+next.map(function(p){return '{'+p.join(', ')+'}'}).join(' · '),partitions:clone(next),previous:clone(parts),unreachable:unreach,partitionMilestone:true,verbal:roundChanged?'La ronda produjo una partición más fina. Ahora repetiremos el análisis usando estos nuevos grupos como destinos.':'La partición no cambió después de revisar todos los estados.'});
+      changed=roundChanged;parts=next;
+      if(!changed){
+        steps.push({name:'Confirmar el punto fijo',action:'Comparamos la partición obtenida con la partición de entrada de la ronda.',reason:'Si no aparece ninguna división nueva, repetir el procedimiento produciría exactamente los mismos grupos.',result:'La partición es estable: estos son los bloques de equivalencia definitivos.',formula:'P'+iter+' = P'+(iter-1)+'  ⇒  punto fijo',partitions:clone(parts),unreachable:unreach,partitionMilestone:false,verbal:'Hemos terminado el refinamiento. Los estados que todavía comparten bloque no pueden distinguirse mediante ninguna continuación y pueden fusionarse.'});
+      }
+    }
+    var qStates=parts.map(function(p,i){return {id:p.join('·'),initial:p.some(function(q){return a.states.find(function(s){return s.id===q}).initial}),final:p.some(function(q){return F.indexOf(q)>=0}),members:p}});
+    var qTrans=[];parts.forEach(function(p){a.alphabet.forEach(function(sym){var d=dest(a,p[0],sym),to=parts.find(function(g){return g.indexOf(d)>=0});if(to)qTrans.push({id:'m'+qTrans.length,from:p.join('·'),to:to.join('·'),symbol:sym})})});
+    steps.push({name:'DFA mínimo',action:'Fusionamos cada bloque estable en un único estado.',reason:'Los estados del mismo bloque son indistinguibles para toda continuación posible.',result:'DFA original: '+a.states.length+' estados → mínimo: '+qStates.length+'.',formula:'Q/≡ = '+parts.map(function(p){return '['+p.join(',')+']'}).join(' '),partitions:clone(parts),unreachable:unreach,quotient:{states:qStates,transitions:qTrans,alphabet:a.alphabet},complete:true});
+    return steps;
+  }
+  function union(a,b){if(!a||a==='∅')return b||'∅';if(!b||b==='∅')return a;if(a===b)return a;return '('+a+'+'+b+')'}
+  function concat(){
+    var xs=Array.from(arguments).filter(function(x){return x&&x!=='ε'});
+    if(xs.some(function(x){return x==='∅'}))return '∅';return xs.length?xs.join(''):'ε';
+  }
+  function star(x){if(!x||x==='∅'||x==='ε')return 'ε';if(x.length===1)return x+'*';return '('+x+')*'}
+  function buildRipSteps(a){
+    var S='S',F='F';while(a.states.some(function(s){return s.id===S}))S+='0';while(a.states.some(function(s){return s.id===F}))F+='0';
+    var nodes=[S].concat(a.states.map(function(s){return s.id})).concat([F]),R={};
+    function setR(i,j,v){var k=i+'→'+j;R[k]=union(R[k]||'∅',v)}
+    a.transitions.forEach(function(t){setR(t.from,t.to,t.symbol)});
+    var init=a.states.find(function(s){return s.initial});if(init)setR(S,init.id,'ε');
+    a.states.filter(function(s){return s.final}).forEach(function(s){setR(s.id,F,'ε')});
+    var steps=[{name:'Normalización',action:'Creamos un nuevo inicio '+S+' y un único final '+F+'.',reason:'RIP necesita que inicio y final no sean eliminados y no tengan conexiones indebidas.',result:S+' apunta con ε al inicio anterior; cada final anterior apunta con ε a '+F+'.',formula:S+' —ε→ '+(init?init.id:'?')+'    finales —ε→ '+F,nodes:nodes.slice(),regex:clone(R),normalized:true}];
+    var order=a.states.map(function(s){return s.id});
+    order.forEach(function(k){
+      var previewNodes=nodes.slice(),previewRegex=clone(R),others=nodes.filter(function(x){return x!==k}),updates=[],rk=R[k+'→'+k]||'∅';
+      others.forEach(function(i){
+        var rik=R[i+'→'+k]||'∅';if(rik==='∅')return;
+        others.forEach(function(j){
+          var rkj=R[k+'→'+j]||'∅';if(rkj==='∅')return;
+          var old=R[i+'→'+j]||'∅',via=concat(rik,star(rk),rkj),neu=union(old,via);
+          R[i+'→'+j]=neu;updates.push({i:i,j:j,old:old,rin:rik,loop:rk,rout:rkj,value:neu});
+        });
+      });
+      Object.keys(R).forEach(function(x){if(x.indexOf(k+'→')===0||x.endsWith('→'+k))delete R[x]});
+      nodes=others;
+      var u=updates[0];
+      steps.push({name:'Eliminar '+k,action:'Reemplazamos todos los caminos que atraviesan '+k+'.',reason:'Entrada · (bucle)* · salida conserva exactamente los recorridos que usaban el estado.',result:updates.length?'Se actualizaron '+updates.length+' conexiones y '+k+' puede desaparecer.':'No había caminos completos a través de '+k+'.',formula:u?(u.old+' + '+u.rin+'('+u.loop+')*'+u.rout+' = '+u.value):'Sin conexiones nuevas',nodes:nodes.slice(),regex:clone(R),previewNodes:previewNodes,previewRegex:previewRegex,activeState:k,current:[k],eliminated:k,updates:updates,target:u?[u.j]:[]});
+    });
+    var finalRegex=R[S+'→'+F]||'∅';
+    steps.push({name:'Expresión regular obtenida',action:'Solo quedan el nuevo inicio y el nuevo final.',reason:'La etiqueta entre ellos resume todos los caminos aceptados por el autómata original.',result:'RegEx: '+finalRegex,formula:finalRegex,nodes:[S,F],regex:clone(R),complete:true});
+    return steps;
+  }
+  function prepareAlgorithm(){
+    stop();if(!validate()){state.steps=[];state.step=0;renderSidebar();return}
+    state.steps=state.algo==='nfa'?buildNfaSteps(state.automaton):state.algo==='min'?buildMinSteps(state.automaton):buildRipSteps(state.automaton);
+    state.step=0;render();
+  }
+  function autoLayout(doRender){
+    if(!state.automaton)return;state.nodePositions={};layoutGraph(state.automaton,480,400);if(doRender!==false){prepareAlgorithm();render()}
+  }
+  function graphFromDfa(step){
+    var g={states:(step.dfaStates||[]).map(function(s){return {id:s.id,initial:s.initial,final:s.final,x:0,y:0}}),transitions:clone(step.dfaTrans||[]),alphabet:state.automaton.alphabet};
+    return layoutGraph(g,440,360);
+  }
+  function graphFromQuotient(q){var g=clone(q);return layoutGraph(g,440,360)}
+  function graphFromRegex(step){
+    var originals={};state.automaton.states.forEach(function(s){originals[s.id]=s});
+    var nodeList=step.previewNodes||step.nodes||[],regexMap=step.previewRegex||step.regex||{};
+    var states=nodeList.map(function(id,i){var base=originals[id];return {id:id,initial:id==='S'||id.indexOf('S')===0,final:id==='F'||id.indexOf('F')===0,x:base?base.x:60+i*380,y:base?base.y:190}});
+    var transitions=[];Object.keys(regexMap).forEach(function(k){var p=k.split('→'),v=regexMap[k];if(v&&v!=='∅')transitions.push({id:'r'+transitions.length,from:p[0],to:p[1],symbol:v})});
+    var g={states:states,transitions:transitions,alphabet:[]};layoutGraph(g,820,400);return g;
+  }
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function marker(id,color){
+    return '<marker id="'+id+'" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="'+color+'"/></marker>';
+  }
+  function edgePath(s,t,index,reverse){
+    if(s.id===t.id)return {d:'M '+(s.x-18)+' '+(s.y-28)+' C '+(s.x-55)+' '+(s.y-82)+', '+(s.x+55)+' '+(s.y-82)+', '+(s.x+18)+' '+(s.y-28),lx:s.x,ly:s.y-68};
+    var dx=t.x-s.x,dy=t.y-s.y,len=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/len,uy=dy/len;
+    var x1=s.x+ux*32,y1=s.y+uy*32,x2=t.x-ux*38,y2=t.y-uy*38;
+    var curve=reverse?(index%2?26:-26):0,mx=(x1+x2)/2-uy*curve,my=(y1+y2)/2+ux*curve;
+    return {d:curve?'M '+x1+' '+y1+' Q '+mx+' '+my+' '+x2+' '+y2:'M '+x1+' '+y1+' L '+x2+' '+y2,lx:mx-uy*8,ly:my+ux*8};
+  }
+  function renderGraph(g,opt){
+    opt=opt||{};var ox=opt.ox||0,oy=opt.oy||0,scale=opt.scale||1,step=opt.step||{},interactive=opt.interactive!==false,space=opt.space||'source';
+    var nodes={};g.states.forEach(function(s){var saved=state.nodePositions[space+'|'+s.id];if(saved){s.x=saved.x;s.y=saved.y}nodes[s.id]=s});
+    var currentIds=(step.current&&step.current.length)?step.current:(step.comparing||[]);
+    var targetIds=step.target||[],nextIds=step.nextUse||[];
+    var s='<g transform="translate('+ox+' '+oy+') scale('+scale+')">';
+    if(opt.label)s+='<text class="view-label" x="12" y="18">'+esc(opt.label)+'</text>';
+    if(step.partitions&&step.partitions.length){
+      var colors=['#2563eb','#7c3aed','#16a36a','#e59a12','#0891b2'];
+      step.partitions.forEach(function(p,i){var pts=p.map(function(q){return nodes[q]}).filter(Boolean);if(!pts.length)return;var minx=Math.min.apply(null,pts.map(function(x){return x.x}))-42,maxx=Math.max.apply(null,pts.map(function(x){return x.x}))+42,miny=Math.min.apply(null,pts.map(function(x){return x.y}))-42,maxy=Math.max.apply(null,pts.map(function(x){return x.y}))+42;s+='<rect class="group-hull" x="'+minx+'" y="'+miny+'" width="'+(maxx-minx)+'" height="'+(maxy-miny)+'" rx="28" stroke="'+colors[i%colors.length]+'"/><text x="'+(minx+8)+'" y="'+(miny+15)+'" font-size="10" fill="'+colors[i%colors.length]+'">G'+(i+1)+'</text>'});
+    }
+    if(step.comparing&&step.comparing.length===2){
+      var ca=nodes[step.comparing[0]],cb=nodes[step.comparing[1]],ga=step.partitions.findIndex(function(p){return p.indexOf(step.comparing[0])>=0}),gb=step.partitions.findIndex(function(p){return p.indexOf(step.comparing[1])>=0});
+      if(ca&&cb&&ga!==gb&&ga>=0&&gb>=0){
+        var sx=(ca.x+cb.x)/2,sy=Math.max(34,Math.min(ca.y,cb.y)-96);
+        s+='<text class="split-label" x="'+sx+'" y="'+sy+'" fill="#7c3aed">SEPARAR</text>';
+        s+='<path class="split-path split-a" d="M '+(sx-5)+' '+(sy+8)+' Q '+ca.x+' '+(sy+23)+' '+ca.x+' '+(ca.y-39)+'" marker-end="url(#splitA)"/>';
+        s+='<path class="split-path split-b" d="M '+(sx+5)+' '+(sy+8)+' Q '+cb.x+' '+(sy+23)+' '+cb.x+' '+(cb.y-39)+'" marker-end="url(#splitB)"/>';
+        s+='<text class="partition-membership" x="'+ca.x+'" y="'+(ca.y+53)+'" fill="#2563eb">QUEDA EN G'+(ga+1)+'</text>';
+        s+='<text class="partition-membership" x="'+cb.x+'" y="'+(cb.y+53)+'" fill="#7c3aed">QUEDA EN G'+(gb+1)+'</text>';
+      }
+    }
+    g.transitions.forEach(function(e,i){
+      var a=nodes[e.from],b=nodes[e.to];if(!a||!b)return;
+      var reverse=g.transitions.some(function(x){return x.from===e.to&&x.to===e.from&&e.from!==e.to}),p=edgePath(a,b,i,reverse);
+      var active=(step.traceEdges||[]).indexOf(e.id)>=0||(step.activeState&&(e.from===step.activeState||e.to===step.activeState)),created=step.createdEdge===e.id;
+      s+='<path class="edge'+(active?' active':'')+(created?' created':'')+'" d="'+p.d+'" marker-end="url(#arrow)"/>';
+      s+='<text class="edge-label" x="'+p.lx+'" y="'+(p.ly-5)+'">'+esc(e.symbol)+'</text>';
+    });
+    g.states.forEach(function(n){
+      var cl='state-node',isCurrent=currentIds.indexOf(n.id)>=0,isTarget=targetIds.indexOf(n.id)>=0,isNext=nextIds.indexOf(n.id)>=0&&!isCurrent&&!isTarget;
+      if(state.selected===space+'|'+n.id&&interactive)cl+=' selected';if(isCurrent)cl+=' processing';if(isTarget)cl+=' processed';if(isNext)cl+=' will-use';if(step.created===n.id)cl+=' created';if((step.unreachable||[]).indexOf(n.id)>=0)cl+=' eliminated';if(step.eliminated===n.id)cl+=' eliminated';
+      if(n.initial)s+='<path class="initial-arrow" d="M '+(n.x-62)+' '+n.y+' L '+(n.x-36)+' '+n.y+'" marker-end="url(#arrowGreen)"/>';
+      s+='<g class="'+cl+'" data-node="'+esc(n.id)+'" data-space="'+esc(space)+'" data-ox="'+ox+'" data-oy="'+oy+'" data-scale="'+scale+'" transform="translate('+n.x+' '+n.y+')">';
+      s+='<circle class="state-circle" r="31"/>';if(n.final)s+='<circle class="state-circle" r="25" fill="none"/>';
+      var label=n.id.length>12?n.id.slice(0,12)+'…':n.id;
+      s+='<text class="state-label" y="'+(n.members?-3:1)+'">'+esc(label)+'</text>';
+      if(n.members)s+='<text class="state-sub" y="14">'+esc(n.members.join(', '))+'</text>';
+      s+='<title>'+esc(n.id)+(n.final?' · aceptación':'')+(n.initial?' · inicial':'')+'</title></g>';
+      if(isCurrent){
+        s+='<circle class="node-attention-ring active-ring" cx="'+n.x+'" cy="'+n.y+'" r="41"/>';
+        s+='<path class="state-callout-arrow active-arrow" d="M '+n.x+' '+(n.y-76)+' L '+n.x+' '+(n.y-39)+'" marker-end="url(#arrowAmber)"/>';
+        s+='<text class="callout-text active-text" x="'+n.x+'" y="'+(n.y-83)+'">SE USA AHORA</text>';
+      }
+      if(isNext){
+        s+='<circle class="node-attention-ring next-ring" cx="'+n.x+'" cy="'+n.y+'" r="41"/>';
+        s+='<path class="state-callout-arrow next-arrow" d="M '+n.x+' '+(n.y+76)+' L '+n.x+' '+(n.y+39)+'" marker-end="url(#arrowCyan)"/>';
+        s+='<text class="callout-text next-text" x="'+n.x+'" y="'+(n.y+89)+'">SE USARÁ</text>';
+      }
+      if(isTarget&&!isCurrent){
+        s+='<circle class="node-attention-ring result-ring" cx="'+n.x+'" cy="'+n.y+'" r="41"/>';
+        s+='<path class="state-callout-arrow result-arrow" d="M '+(n.x+80)+' '+n.y+' L '+(n.x+39)+' '+n.y+'" marker-end="url(#arrowPurple)"/>';
+        s+='<text class="callout-text result-text" x="'+(n.x+79)+'" y="'+(n.y-9)+'">RESULTADO</text>';
+      }
+    });
+    return s+'</g>';
+  }
+  function render(){
+    if(!state.automaton)return;var svg=$('#graph'),step=state.steps[state.step]||{},next=state.steps[state.step+1]||{};
+    var nextUse=(next.current&&next.current.length)?next.current:(next.comparing&&next.comparing.length)?next.comparing:(next.activeState?[next.activeState]:[]);
+    var visualStep=Object.assign({},step,{nextUse:nextUse});
+    var html='<defs>'+marker('arrow','#7d8ba5')+marker('arrowGreen','#16a36a')+marker('arrowAmber','#e59a12')+marker('arrowCyan','#0891b2')+marker('arrowPurple','#7c3aed')+marker('splitA','#2563eb')+marker('splitB','#7c3aed')+'</defs>';
+    if(state.algo==='nfa'){
+      html+='<line class="split-line" x1="500" y1="35" x2="500" y2="530"/>';
+      html+=renderGraph(state.automaton,{ox:10,oy:55,scale:.94,label:'NFA ORIGINAL',step:visualStep,interactive:true,space:'source'});
+      html+=renderGraph(graphFromDfa(step),{ox:520,oy:55,scale:.95,label:'DFA EN CONSTRUCCIÓN',step:{created:step.created},interactive:true,space:'nfa-dfa'});
+    }else if(state.algo==='min'){
+      var q=step.quotient;
+      if(q){html+='<line class="split-line" x1="500" y1="35" x2="500" y2="530"/>';html+=renderGraph(state.automaton,{ox:10,oy:55,scale:.94,label:'DFA ORIGINAL',step:visualStep,interactive:true,space:'source'});html+=renderGraph(graphFromQuotient(q),{ox:520,oy:55,scale:.95,label:'DFA MÍNIMO',step:{},interactive:true,space:'min-dfa'})}
+      else html+=renderGraph(state.automaton,{ox:230,oy:50,scale:1.05,label:'REFINAMIENTO DE PARTICIONES',step:visualStep,interactive:true,space:'source'});
+    }else{
+      html+=renderGraph(graphFromRegex(step),{ox:80,oy:55,scale:1,label:'ELIMINACIÓN DE ESTADOS',step:visualStep,interactive:true,space:'rip-view'});
+    }
+    svg.innerHTML=html;applyZoom();
+    bindGraphEvents();renderSidebar();renderMetrics(step);renderTimeline();
+  }
+  function bindGraphEvents(){
+    $$('#graph .state-node').forEach(function(el){
+      el.addEventListener('pointerdown',function(ev){
+        var id=el.getAttribute('data-node'),space=el.getAttribute('data-space')||'source',isSource=space==='source';
+        if(state.tool&&!isSource){toast('Las herramientas editan el autómata original; este estado transformado sí puede moverse.');state.tool=null;$$('[data-tool]').forEach(function(x){x.classList.remove('active')})}
+        if(isSource&&state.tool==='edge'){if(!state.edgeStart){state.edgeStart=id;toast('Origen: '+id+'. Ahora selecciona el destino.')}else{var sym=prompt('Símbolo de la transición (a, b, ε o a,b):','a');if(sym){sym.split(',').map(function(x){return x.trim()}).filter(Boolean).forEach(function(x){state.automaton.transitions.push(tr(state.edgeStart,x,id));if(x!=='ε'&&state.automaton.alphabet.indexOf(x)<0)state.automaton.alphabet.push(x)});state.edgeStart=null;prepareAlgorithm()}return}}
+        if(isSource&&state.tool==='initial'){state.automaton.states.forEach(function(s){s.initial=s.id===id});state.tool=null;prepareAlgorithm();return}
+        if(isSource&&state.tool==='final'){var n=state.automaton.states.find(function(s){return s.id===id});n.final=!n.final;state.tool=null;prepareAlgorithm();return}
+        if(isSource&&state.tool==='delete'){state.automaton.states=state.automaton.states.filter(function(s){return s.id!==id});state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.from!==id&&t.to!==id});state.tool=null;prepareAlgorithm();return}
+        state.selected=space+'|'+id;var node=isSource?state.automaton.states.find(function(s){return s.id===id}):null;
+        var svg=$('#graph'),drag=true,ox=Number(el.getAttribute('data-ox')||0),oy=Number(el.getAttribute('data-oy')||0),sc=Number(el.getAttribute('data-scale')||1);
+        function moveEv(e){
+          if(!drag)return;
+          var point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;var loc=point.matrixTransform(svg.getScreenCTM().inverse());
+          var maxX=space==='rip-view'?820:space==='source'?480:440,x=Math.max(32,Math.min(maxX-32,(loc.x-ox)/sc)),y=Math.max(38,Math.min(390,(loc.y-oy)/sc));
+          if(node){node.x=x;node.y=y}else state.nodePositions[space+'|'+id]={x:x,y:y};
+          render();
+        }
+        function up(){drag=false;window.removeEventListener('pointermove',moveEv);window.removeEventListener('pointerup',up)}
+        window.addEventListener('pointermove',moveEv);window.addEventListener('pointerup',up);render();
+      });
+    });
+    $('#graph').onclick=function(ev){
+      if(state.tool==='add'&&ev.target===this){var rect=this.getBoundingClientRect(),x=(ev.clientX-rect.left)/rect.width*1000,y=(ev.clientY-rect.top)/rect.height*560,id='q0',i=0;while(state.automaton.states.some(function(s){return s.id===id}))id='q'+(++i);state.automaton.states.push(st(id,Math.min(450,Math.max(40,x-10)),Math.min(410,Math.max(45,y-55))));state.tool=null;prepareAlgorithm();toast('Estado '+id+' creado')}
+    };
+  }
+  function applyZoom(){
+    var svg=$('#graph');if(!svg)return;svg.style.transform='scale('+state.zoom+')';svg.style.transformOrigin=state.zoomOrigin;$('#zoomIndicator').textContent='Zoom '+Math.round(state.zoom*100)+' %';
+  }
+  function renderSidebar(){
+    var step=state.steps[state.step]||{},total=state.steps.length;
+    $('#stepName').textContent=step.name||'Listo para iniciar';$('#stepBadge').textContent='Paso '+(total?state.step+1:0)+'/'+total;
+    $('#compactStepBadge').textContent=(total?state.step+1:0)+'/'+total;
+    $('#progressFill').style.width=total?((state.step+1)/total*100)+'%':'0%';
+    $('#actionText').textContent=step.action||'Selecciona un ejemplo y pulsa Preparar.';
+    $('#reasonText').textContent=state.didactic?(step.reason||'El motor mostrará la razón de cada transformación.'):'Activa el modo didáctico para ver el razonamiento completo.';
+    $('#resultText').textContent=step.result||'Aquí aparecerá el resultado del paso.';
+    $('#formulaBox').textContent=step.formula||'ver → manipular → ejecutar → entender';
+    var ideas={nfa:'Un estado del DFA representa un conjunto de posibles estados del NFA.',min:'Dos estados se fusionan cuando ningún string futuro permite distinguirlos.',rip:'Eliminar un estado sustituye los caminos que lo atraviesan por una expresión equivalente.'};
+    $('#ideaBox').innerHTML='💡 <strong>Idea clave:</strong> '+ideas[state.algo];
+    var active=(step.current&&step.current.length)?'{'+keySet(step.current)+'}':(step.comparing&&step.comparing.length)?step.comparing.join(' ↔ '):(step.activeState||step.eliminated||'—');
+    var result=(step.target&&step.target.length)?'{'+keySet(step.target)+'}':(step.created?'crear '+step.created:(step.complete?'completado':'—'));
+    var guideSymbol=step.symbol||((step.updates&&step.updates.length)?'Rik(Rkk)*Rkj':'—');
+    if(step.signature){guideSymbol=state.automaton.alphabet.join(', ');result=step.formula}
+    if(state.algo==='min'&&step.comparing&&step.comparing.length===2&&step.partitions){
+      var g1=step.partitions.findIndex(function(p){return p.indexOf(step.comparing[0])>=0}),g2=step.partitions.findIndex(function(p){return p.indexOf(step.comparing[1])>=0});
+      if(g1>=0&&g2>=0)result='G'+(g1+1)+(g1===g2?' = ':' ≠ ')+'G'+(g2+1);
+    }
+    $('#guideCurrent').textContent=active;$('#guideSymbol').textContent=guideSymbol;$('#guideResult').textContent=result;
+    renderTable(step);renderPseudo();renderQuiz(step);
+  }
+  function closeDrawers(){
+    var w=$('#workspace');w.classList.remove('left-open');w.classList.remove('right-open');$('#leftDrawerBtn').classList.remove('active');$('#rightDrawerBtn').classList.remove('active');
+  }
+  function toggleDrawer(side){
+    var w=$('#workspace'),cls=side+'-open',willOpen=!w.classList.contains(cls);closeDrawers();if(willOpen){w.classList.add(cls);$('#'+side+'DrawerBtn').classList.add('active')}
+  }
+  function narrativeHtml(step){
+    var plain=step.verbal||step.action||'Observa cómo se actualizan el autómata y la información del panel.';
+    var why=step.reason||'Este paso conserva el lenguaje reconocido por el autómata.';
+    var outcome=step.result||'El resultado aparecerá al avanzar.';
+    return '<div class="step-narrative"><div class="step-narrative-title">💬 En palabras: ¿qué está pasando?</div><p>'+esc(plain)+'</p><p class="narrative-why"><strong>¿Por qué hacemos esto?</strong> '+esc(why)+'</p><div class="narrative-result"><strong>Al terminar este paso:</strong> '+esc(outcome)+'</div></div>';
+  }
+  function renderTable(step){
+    var box=$('#dynamicTable'),palette=['#2563eb','#7c3aed','#16a36a','#e59a12','#0891b2'],narrative=narrativeHtml(step);
+    if(state.algo==='nfa'&&step.rows){
+      $('#livePanelTitle').textContent='Tabla de subconjuntos';$('#liveEyebrow').textContent='Autómata + tabla sincronizados';
+      var h='<div class="table-wrap"><table><thead><tr><th>Estado DFA</th>'+state.automaton.alphabet.map(function(x){return '<th>'+esc(x)+'</th>'}).join('')+'</tr></thead><tbody>';
+      h+=step.rows.map(function(r,i){var active=i===step.rows.length-1;return '<tr class="'+(active?'active-row':'')+'"><td>{'+esc(r.state)+'}</td>'+state.automaton.alphabet.map(function(x){return '<td class="'+(active&&x===step.symbol?'active-cell':'')+'">{'+esc(r[x]||'…')+'}</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>';
+      h+='<div class="split-explanation">La celda azul corresponde exactamente a las flechas resaltadas en el autómata.</div>';box.innerHTML=h+narrative;
+    }else if(state.algo==='min'&&step.partitions){
+      $('#livePanelTitle').textContent='Refinamiento de particiones';$('#liveEyebrow').textContent='P₀ → P₁ → punto fijo';
+      var history=state.steps.slice(0,state.step+1).filter(function(s){return s.partitions&&s.partitions.length&&s.partitionMilestone&&!s.quotient});
+      if(!history.length&&step.partitions&&step.partitions.length)history=[step];
+      var html='<div class="partition-history">';
+      history.forEach(function(h,i){
+        html+=(i?'<div class="refine-arrow">↓</div>':'')+'<div class="partition-step '+(i===history.length-1?'current':'')+'"><div class="partition-step-head"><strong>'+esc(h.name)+'</strong><span>'+h.partitions.length+' grupo'+(h.partitions.length===1?'':'s')+'</span></div><div class="partition-groups">'+h.partitions.map(function(p,j){return '<span class="partition-group" style="--pc:'+palette[j%palette.length]+'"><i></i>{'+esc(p.join(', '))+'}</span>'}).join('')+'</div></div>';
+      });
+      if(step.previous&&step.partitions){
+        var splits=[];step.previous.forEach(function(old){
+          var branches=step.partitions.map(function(p){return p.filter(function(q){return old.indexOf(q)>=0})}).filter(function(p){return p.length});
+          if(branches.length>1)splits.push({old:old,branches:branches});
+        });
+        if(splits.length){
+          html+='<div class="split-explanation"><strong>Separación visible</strong>'+splits.map(function(sp){return '<div class="split-flow"><span class="partition-group" style="--pc:var(--amber)">{'+esc(sp.old.join(', '))+'}</span><span>↗<br>↘</span><div class="split-branches">'+sp.branches.map(function(b,j){return '<div class="split-branch" style="--pc:'+palette[j%palette.length]+'">G'+(step.partitions.findIndex(function(p){return p===b||p.join('|')===b.join('|')})+1)+': {'+esc(b.join(', '))+'}</div>'}).join('')+'</div></div>'}).join('')+'</div>';
+        }
+      }
+      var signature='';
+      if(step.signature){
+        signature='<div class="signature-caption">Firma que estamos calculando para <strong>'+esc(step.signature.state)+'</strong></div><div class="table-wrap"><table><thead><tr><th>Símbolo</th><th>Destino</th><th>Grupo actual</th></tr></thead><tbody>'+step.signature.detail.map(function(d){return '<tr class="active-row"><td>'+esc(d.symbol)+'</td><td>'+esc(d.destination)+'</td><td class="active-cell">'+esc(d.group)+'</td></tr>'}).join('')+'</tbody></table></div>';
+      }
+      box.innerHTML=html+'</div>'+signature+narrative;
+    }else if(state.algo==='rip'&&step.updates&&step.updates.length){
+      $('#livePanelTitle').textContent='Actualización de expresiones';$('#liveEyebrow').textContent='Cada fila corresponde a un camino';
+      var u=step.updates;box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Entrada</th><th>Bucle*</th><th>Salida</th><th>Nueva etiqueta</th></tr></thead><tbody>'+u.map(function(x,i){return '<tr class="'+(i===0?'active-row':'')+'"><td>'+esc(x.rin)+'</td><td>'+esc(x.loop)+'</td><td>'+esc(x.rout)+'</td><td class="'+(i===0?'active-cell':'')+'">'+esc(x.value)+'</td></tr>'}).join('')+'</tbody></table></div>'+narrative;
+    }else if(state.algo==='rip'){
+      $('#livePanelTitle').textContent='Expresiones de transición';$('#liveEyebrow').textContent='Etiquetas actuales del autómata';
+      var map=step.previewRegex||step.regex||{},keys=Object.keys(map).filter(function(k){return map[k]&&map[k]!=='∅'});
+      box.innerHTML='<div class="regex-list">'+(keys.length?keys.map(function(k){return '<div class="regex-edge"><span>'+esc(k)+'</span><code>'+esc(map[k])+'</code></div>'}).join(''):'<div class="split-explanation">Avanza un paso para ver las expresiones.</div>')+'</div>'+narrative;
+    }else if(state.algo==='min'){
+      $('#livePanelTitle').textContent='Refinamiento de particiones';$('#liveEyebrow').textContent='P₀ → P₁ → punto fijo';box.innerHTML='<div class="split-explanation">Avanza hasta la partición inicial para comenzar el refinamiento.</div>'+narrative;
+    }else{
+      $('#livePanelTitle').textContent='Tabla de subconjuntos';$('#liveEyebrow').textContent='Autómata + tabla sincronizados';box.innerHTML='<div class="split-explanation">Avanza un paso para completar la tabla.</div>'+narrative;
+    }
+  }
+  function renderPseudo(){
+    var lines=state.algo==='nfa'?['DStates = { ε-closure(q0) }','mientras exista T sin procesar:','  para cada símbolo a:','    U = ε-closure(move(T,a))','    si U es nuevo: agregar U','    agregar T --a--> U']:state.algo==='min'?['eliminar estados inalcanzables','P = {F, Q − F}','repetir:','  agrupar por firma de destinos','hasta que P no cambie','construir el autómata cociente']:['normalizar con nuevos S y F','mientras haya estados internos k:','  para cada entrada i y salida j:','    Rij = Rij + Rik(Rkk)*Rkj','  eliminar k','devolver R(S,F)'];
+    var active=Math.min(lines.length-1,Math.floor((state.step/Math.max(1,state.steps.length-1))*lines.length));
+    $('#pseudo').innerHTML=lines.map(function(l,i){return i===active?'<span class="active-code">'+esc(l)+'</span>':esc(l)}).join('\n');
+  }
+  function renderQuiz(step){
+    var box=$('#quizBox');if(!state.quiz||!state.didactic||state.step===0||state.step%3!==1){box.innerHTML='';return}
+    var q,opts,correct;
+    if(state.algo==='nfa'){q='¿Qué representa {'+(step.target?keySet(step.target):'…')+'}?';opts=['Un estado del NFA','Un conjunto de posibilidades','Una expresión regular','Un error'];correct=1}
+    else if(state.algo==='min'){q='¿Cuándo pueden permanecer dos estados en el mismo grupo?';opts=['Si tienen el mismo nombre','Si son alcanzables','Si sus firmas coinciden','Siempre'];correct=2}
+    else{q='¿Qué expresa (Rkk)*?';opts=['Eliminar k','Repetir el bucle cero o más veces','La entrada a k','La salida de k'];correct=1}
+    box.innerHTML='<div class="quiz"><strong>Predice antes de continuar</strong><p>'+q+'</p><div class="quiz-options">'+opts.map(function(o,i){return '<button data-answer="'+i+'" data-correct="'+correct+'">'+o+'</button>'}).join('')+'</div></div>';
+    $$('#quizBox [data-answer]').forEach(function(b){b.onclick=function(){var ok=Number(b.dataset.answer)===Number(b.dataset.correct);toast(ok?'✓ Correcto: conectaste la idea.':'Todavía no. Observa el paso y vuelve a intentarlo.');b.style.borderColor=ok?'var(--green)':'var(--red)';b.style.color=ok?'var(--green)':'var(--red)'}});
+  }
+  function renderMetrics(step){
+    var data;
+    if(state.algo==='nfa')data=[['Estados NFA',state.automaton.states.length],['Estados DFA',(step.dfaStates||[]).length],['Subconjuntos',(step.dfaStates||[]).length],['Transiciones',(step.dfaTrans||[]).length]];
+    else if(state.algo==='min')data=[['Estados originales',state.automaton.states.length],['Inalcanzables',(step.unreachable||[]).length],['Grupos',(step.partitions||[]).length],['Estados mínimos',step.quotient?step.quotient.states.length:'—']];
+    else data=[['Estados iniciales',state.automaton.states.length],['Eliminados',Math.max(0,state.step-1)],['Restantes',(step.nodes||[]).length],['Longitud RegEx',step.complete?(step.formula||'').length:'—']];
+    $('#metrics').innerHTML=data.map(function(x){return '<div class="metric"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>'}).join('');
+  }
+  function renderTimeline(){
+    var t=$('#timeline'),html='';state.steps.forEach(function(s,i){if(i)html+='<i class="step-link"></i>';html+='<button class="step-dot '+(i<state.step?'done':i===state.step?'current':'')+'" data-step="'+i+'" title="'+esc(s.name)+'">'+(i+1)+'</button>'});t.innerHTML=html;
+    $$('.step-dot').forEach(function(b){b.onclick=function(){state.step=Number(b.dataset.step);stop();render()}});
+  }
+  function stepTo(n){if(!state.steps.length)return;state.step=Math.max(0,Math.min(state.steps.length-1,n));render();if(state.step===state.steps.length-1){stop();toast('🎉 ¡Proceso completado!')}}
+  function play(){if(state.playing){stop();return}state.playing=true;$('#playBtn').textContent='⏸';var tick=function(){if(state.step>=state.steps.length-1){stop();return}stepTo(state.step+1);var delay=2150-Number($('#speedRange').value);if(state.algo==='min')delay*=state.didactic?1.65:1.3;state.timer=setTimeout(tick,delay)};tick()}
+  function stop(){state.playing=false;clearTimeout(state.timer);if($('#playBtn'))$('#playBtn').textContent='▶'}
+  function setAlgo(algo){
+    state.algo=algo;$$('.algo-tab').forEach(function(b){b.classList.toggle('active',b.dataset.algo===algo)});
+    var meta={nfa:['NFA original y DFA en construcción','Arrastra estados, recorre transiciones y observa de dónde nace cada conjunto.'],min:['Refinamiento visual de particiones','Compara destinos, separa grupos y fusiona estados equivalentes.'],rip:['Autómata a expresión regular','Cada eliminación convierte caminos en una etiqueta regular equivalente.']};
+    $('#canvasTitle').textContent=meta[algo][0];$('#canvasHint').textContent=meta[algo][1];populateExamples();loadExample(0);
+  }
+  function newAutomaton(){
+    state.automaton=A([],['a','b'],[]);state.steps=[];state.step=0;state.selected=null;state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';render();validate();toast('Lienzo vacío: usa + Estado y haz clic en el lienzo.')
+  }
+  function dataText(format){
+    if(format==='json')return JSON.stringify({states:state.automaton.states.map(function(s){return s.id}),alphabet:state.automaton.alphabet,initial:(initialState()||{}).id||'',final:finals(),transitions:state.automaton.transitions.map(function(t){return [t.from,t.symbol,t.to]})},null,2);
+    return 'Estados:\n'+state.automaton.states.map(function(s){return s.id}).join(',')+'\n\nAlfabeto:\n'+state.automaton.alphabet.join(',')+'\n\nInicial:\n'+((initialState()||{}).id||'')+'\n\nFinales:\n'+finals().join(',')+'\n\nTransiciones:\n'+state.automaton.transitions.map(function(t){return t.from+','+t.symbol+','+t.to}).join('\n');
+  }
+  function parseData(txt,format){
+    var d;if(format==='json'){d=JSON.parse(txt)}else{
+      function section(name,next){var re=new RegExp(name+'\\s*:\\s*([\\s\\S]*?)'+(next?'(?='+next+'\\s*:)':'$'),'i'),m=txt.match(re);return m?m[1].trim():''}
+      d={states:section('Estados','Alfabeto').split(',').map(function(x){return x.trim()}).filter(Boolean),alphabet:section('Alfabeto','Inicial').split(',').map(function(x){return x.trim()}).filter(Boolean),initial:section('Inicial','Finales').trim(),final:section('Finales','Transiciones').split(',').map(function(x){return x.trim()}).filter(Boolean),transitions:section('Transiciones').split(/\n/).map(function(x){return x.split(',').map(function(y){return y.trim()})}).filter(function(x){return x.length===3})}
+    }
+    var states=(d.states||[]).map(function(id){return st(typeof id==='string'?id:id.id,0,0,(typeof id==='object'?id.initial:false)||id===d.initial,(typeof id==='object'?id.final:false)||(d.final||[]).indexOf(typeof id==='string'?id:id.id)>=0)});
+    var transitions=(d.transitions||[]).map(function(x){return Array.isArray(x)?tr(x[0],x[1],x[2]):tr(x.from,x.symbol,x.to)});
+    return layoutGraph(A(states,d.alphabet||[],transitions),480,400);
+  }
+  function openData(mode){
+    state.modalMode=mode;$('#modalTitle').textContent=mode==='import'?'Importar autómata':'Exportar autómata';$('#applyDataBtn').style.display=mode==='import'?'':'none';$('#dataArea').value=mode==='export'?dataText(state.format):'';$('#dataArea').readOnly=mode==='export';$('#dataModal').classList.add('open')
+  }
+  function theory(){
+    var c={nfa:['Construcción por subconjuntos','<p><strong>Idea:</strong> cada estado DFA reúne todas las posiciones posibles del NFA.</p><p><strong>Entrada:</strong> NFA, posiblemente con ε. <strong>Salida:</strong> DFA equivalente.</p><p><strong>Invariante:</strong> tras leer la misma cadena, el conjunto DFA coincide con los estados posibles del NFA.</p><p><strong>Error frecuente:</strong> olvidar aplicar ε-closure al comienzo y después de cada move.</p>'],min:['Minimización de DFA','<p><strong>Idea:</strong> fusionar estados que aceptan exactamente las mismas continuaciones.</p><p><strong>Entrada:</strong> DFA. <strong>Salida:</strong> DFA mínimo equivalente.</p><p><strong>Invariante:</strong> cada partición contiene estados aún indistinguibles.</p><p><strong>Error frecuente:</strong> comparar nombres o transiciones directas, en vez de grupos destino.</p>'],rip:['Método RIP','<p><strong>Idea:</strong> reemplazar caminos por expresiones regulares al eliminar estados internos.</p><p><strong>Entrada:</strong> autómata finito. <strong>Salida:</strong> expresión regular equivalente.</p><p><strong>Invariante:</strong> las etiquetas conservan todos los caminos entre estados restantes.</p><p><strong>Error frecuente:</strong> olvidar el camino directo Rij o el cierre del loop (Rkk)*.</p>']}[state.algo];
+    $('#infoTitle').textContent=c[0];$('#infoContent').innerHTML='<div class="idea">Teoría mínima: solo lo necesario para interpretar la animación.</div>'+c[1];$('#infoModal').classList.add('open')
+  }
+  function explain(){
+    var s=state.steps[state.step]||{};$('#infoTitle').textContent='Explicación ampliada · '+(s.name||'paso');
+    var extra=state.algo==='nfa'?'Imagina que el NFA mantiene varias fichas a la vez. El estado DFA es la caja que contiene todas esas fichas.':state.algo==='min'?'Piensa en dos habitaciones: son equivalentes si, ante cada botón, siempre conducen a habitaciones que siguen siendo equivalentes.':'Al borrar una estación intermedia, escribimos en el nuevo arco todas las maneras de entrar, repetir su ciclo y salir.';
+    $('#infoContent').innerHTML='<div class="formula">'+esc(s.formula||'—')+'</div><p style="line-height:1.65">'+esc(s.action||'')+' '+esc(s.reason||'')+'</p><div class="idea">🧠 <strong>Otra forma de verlo:</strong> '+extra+'</div>';$('#infoModal').classList.add('open')
+  }
+  function challenge(){
+    var i=Math.floor(Math.random()*examples[state.algo].length);$('#exampleSelect').value=i;loadExample(i);state.step=0;toast('Reto cargado. Predice el siguiente paso antes de avanzar.')
+  }
+  $$('.algo-tab').forEach(function(b){b.onclick=function(){setAlgo(b.dataset.algo)}});
+  $$('[data-tool]').forEach(function(b){b.onclick=function(){state.tool=b.dataset.tool;state.edgeStart=null;$$('[data-tool]').forEach(function(x){x.classList.toggle('active',x===b)});var help={add:'Haz clic en el lienzo para crear un estado.',edge:'Selecciona primero el origen y después el destino.',initial:'Selecciona el estado inicial.',final:'Selecciona un estado para alternar aceptación.',delete:'Selecciona el estado que deseas eliminar.'};$('#toolHelp').textContent=help[state.tool]}});
+  $('#exampleSelect').onchange=function(){loadExample(this.value)};$('#runBtn').onclick=prepareAlgorithm;$('#newBtn').onclick=newAutomaton;$('#layoutBtn').onclick=function(){autoLayout(true)};$('#exploreBtn').onclick=function(){prepareAlgorithm();toast('Algoritmo recalculado con tus cambios.')};
+  $('#firstBtn').onclick=function(){stepTo(0)};$('#prevBtn').onclick=function(){stepTo(state.step-1)};$('#nextBtn').onclick=function(){stepTo(state.step+1)};$('#resetBtn').onclick=function(){stepTo(0)};$('#playBtn').onclick=play;
+  $('#zoomIn').onclick=function(){state.zoom=Math.min(1.8,state.zoom+.1);state.zoomOrigin='50% 50%';applyZoom()};$('#zoomOut').onclick=function(){state.zoom=Math.max(.55,state.zoom-.1);state.zoomOrigin='50% 50%';applyZoom()};$('#fitBtn').onclick=function(){state.zoom=1;state.zoomOrigin='50% 50%';applyZoom()};
+  $('#graphStage').addEventListener('wheel',function(e){e.preventDefault();var rect=this.getBoundingClientRect(),px=Math.max(0,Math.min(100,(e.clientX-rect.left)/rect.width*100)),py=Math.max(0,Math.min(100,(e.clientY-rect.top)/rect.height*100));state.zoomOrigin=px+'% '+py+'%';state.zoom=Math.max(.55,Math.min(1.8,state.zoom+(e.deltaY<0 ? .09 : -.09)));applyZoom()},{passive:false});
+  $('#graphStage').ondblclick=function(){state.zoom=1;state.zoomOrigin='50% 50%';applyZoom()};
+  $('#livePanelToggle').onclick=function(){$('#stageGrid').classList.toggle('table-collapsed');this.setAttribute('aria-label',$('#stageGrid').classList.contains('table-collapsed')?'Expandir panel':'Contraer panel')};
+  $('#themeBtn').onclick=function(){document.body.classList.toggle('dark');this.textContent=document.body.classList.contains('dark')?'☀':'☾';localStorage.setItem('avl-theme',document.body.classList.contains('dark')?'dark':'light')};
+  $('#leftDrawerBtn').onclick=function(){toggleDrawer('left')};$('#rightDrawerBtn').onclick=function(){toggleDrawer('right')};$('#drawerBackdrop').onclick=closeDrawers;
+  $$('[data-drawer-close]').forEach(function(b){b.onclick=closeDrawers});
+  $('#didacticToggle').onchange=function(){state.didactic=this.checked;renderSidebar()};$('#quizToggle').onchange=function(){state.quiz=this.checked;renderSidebar()};
+  $('#importBtn').onclick=function(){openData('import')};$('#exportBtn').onclick=function(){openData('export')};
+  $('#saveBtn').onclick=function(){localStorage.setItem('avl-automaton',JSON.stringify(state.automaton));toast('Ejemplo guardado en este navegador.')};
+  $('#copyDataBtn').onclick=function(){navigator.clipboard.writeText($('#dataArea').value).then(function(){toast('Copiado al portapapeles.')})};
+  $('#applyDataBtn').onclick=function(){try{state.automaton=parseData($('#dataArea').value,state.format);state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';$('#dataModal').classList.remove('open');prepareAlgorithm();toast('Autómata importado correctamente.')}catch(e){toast('No fue posible leer el formato: '+e.message)}};
+  $$('[data-format]').forEach(function(b){b.onclick=function(){state.format=b.dataset.format;$$('[data-format]').forEach(function(x){x.classList.toggle('active',x===b)});if(state.modalMode==='export')$('#dataArea').value=dataText(state.format)}});
+  $$('[data-close]').forEach(function(b){b.onclick=function(){$('#'+b.dataset.close).classList.remove('open')}});
+  $('#theoryBtn').onclick=theory;$('#explainBtn').onclick=explain;$('#challengeBtn').onclick=challenge;
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawers();if(e.key==='ArrowRight')stepTo(state.step+1);if(e.key==='ArrowLeft')stepTo(state.step-1);if(e.key==='+'||e.key==='='){state.zoom=Math.min(1.8,state.zoom+.1);applyZoom()}if(e.key==='-'){state.zoom=Math.max(.55,state.zoom-.1);applyZoom()}if(e.key===' '&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='INPUT'){e.preventDefault();play()}});
+  if(localStorage.getItem('avl-theme')==='dark'){document.body.classList.add('dark');$('#themeBtn').textContent='☀'}
+  populateExamples();loadExample(0);
+})();
+</script>
+</body>
+</html>
