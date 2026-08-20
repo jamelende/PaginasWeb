@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Laboratorio visual, compacto e interactivo del Teorema Maestro." />
+  <title>Laboratorio del Teorema Maestro</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#081019; --panel:#101a26; --panel2:#142131; --line:#25364a;
+      --text:#e8f0f7; --muted:#8ea1b4; --cyan:#2dd4bf; --cyan2:#0e7490;
+      --amber:#f6c344; --amber2:#b87912; --rose:#fb7185; --green:#4ade80;
+      --shadow:0 12px 32px #0005; --radius:12px;
+    }
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg:#eef3f7; --panel:#ffffff; --panel2:#f7fafc; --line:#d7e0e8;
+      --text:#14202c; --muted:#5d7081; --cyan:#0f9f94; --cyan2:#0e7490;
+      --amber:#d8950b; --amber2:#a96600; --rose:#e54861; --green:#219653;
+      --shadow:0 10px 26px #2342; 
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    button,input{font:inherit}
+    button{color:inherit}
+    .app{min-height:100vh;background:radial-gradient(circle at 76% 0%,color-mix(in srgb,var(--cyan) 9%,transparent),transparent 31%),var(--bg)}
+    .topbar{height:58px;padding:7px 16px;display:grid;grid-template-columns:minmax(250px,1fr) auto minmax(250px,1fr);align-items:center;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}.logo{width:35px;height:35px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg,var(--cyan2),var(--cyan));color:#032b2a;font-weight:900;box-shadow:0 0 22px color-mix(in srgb,var(--cyan) 35%,transparent)}
+    .brand h1{font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin:0;white-space:nowrap}.brand p{font-size:11px;color:var(--muted);margin:2px 0 0}
+    .hero-formula{display:flex;align-items:center;gap:10px;font-family:Georgia,serif;font-size:18px;white-space:nowrap}.hero-formula strong{font-weight:500;color:var(--amber)}
+    .head-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px}.case-pill,.result-pill{border:1px solid color-mix(in srgb,var(--amber) 52%,var(--line));background:color-mix(in srgb,var(--amber) 10%,var(--panel));border-radius:8px;padding:6px 9px;font-size:11px;font-weight:800;color:var(--amber);white-space:nowrap}
+    .icon-btn{border:1px solid var(--line);background:var(--panel2);width:32px;height:32px;border-radius:8px;cursor:pointer;display:grid;place-items:center}.icon-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+    .tabs{height:42px;padding:5px 16px;display:flex;gap:4px;border-bottom:1px solid var(--line);position:sticky;top:58px;z-index:19;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);overflow-x:auto}
+    .tab{border:0;background:transparent;color:var(--muted);padding:7px 13px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap}.tab:hover{color:var(--text);background:var(--panel2)}.tab[aria-selected="true"]{background:var(--panel2);color:var(--cyan);box-shadow:inset 0 -2px var(--cyan)}
+    main{padding:10px 14px 18px}.view{display:none}.view.active{display:block}
+    .explore-grid{display:grid;grid-template-columns:236px minmax(480px,1fr) 294px;gap:10px;align-items:start;max-width:1680px;margin:auto}
+    .stack{display:grid;gap:10px}.panel{background:linear-gradient(160deg,color-mix(in srgb,var(--panel) 96%,var(--cyan) 4%),var(--panel));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-pad{padding:11px}.panel-title{margin:0;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase}.panel-title strong{font-size:11px;color:var(--text)}
+    .controls{position:sticky;top:110px;max-height:calc(100vh - 122px);overflow:auto}.control{padding:10px 0;border-bottom:1px solid var(--line)}.control:last-child{border-bottom:0}.control-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.control-head label{font-weight:900;color:var(--amber)}.number{width:64px;padding:5px 7px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--text);text-align:right}.range{width:100%;height:4px;accent-color:var(--amber);cursor:pointer}.helper{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35}.helper strong{color:var(--cyan)}
+    .switch-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:11px;color:var(--muted)}.switch{position:relative;width:34px;height:18px}.switch input{opacity:0;width:0;height:0}.switch span{position:absolute;inset:0;border-radius:99px;background:var(--line);cursor:pointer}.switch span:after{content:"";position:absolute;width:12px;height:12px;left:3px;top:3px;border-radius:50%;background:var(--muted);transition:.2s}.switch input:checked+span{background:color-mix(in srgb,var(--cyan) 32%,var(--line))}.switch input:checked+span:after{transform:translateX(16px);background:var(--cyan)}
+    .preset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.preset,.example{border:1px solid var(--line);background:var(--panel2);border-radius:7px;cursor:pointer}.preset{padding:6px 3px;font-size:11px}.preset.active,.preset:hover{border-color:var(--amber);color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,var(--panel2))}.examples{display:grid;gap:5px;margin-top:8px}.example{display:flex;justify-content:space-between;gap:6px;padding:7px 8px;text-align:left;font-size:10px}.example span:last-child{color:var(--muted)}.example:hover{border-color:var(--cyan)}
+    .tree-head{padding:9px 11px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}.tree-actions{display:flex;gap:5px}.tree-actions button{width:29px;height:29px}.tree-wrap{height:345px;position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--cyan) 3%,transparent),transparent)}#treeSvg{display:block;width:100%;height:100%;touch-action:none}.tree-hint{position:absolute;right:9px;bottom:7px;font-size:9px;color:var(--muted);background:color-mix(in srgb,var(--bg) 80%,transparent);padding:4px 6px;border-radius:5px}.metrics{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}.metric{padding:8px;border-right:1px solid var(--line);min-width:0}.metric:last-child{border:0}.metric label{display:block;color:var(--muted);font-size:8px;letter-spacing:.09em;text-transform:uppercase}.metric b{display:block;margin-top:3px;font-family:Georgia,serif;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chart{height:176px;padding:10px}.chart svg{width:100%;height:128px;display:block}.legend{display:flex;gap:12px;font-size:9px;color:var(--muted)}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}.bar-list{display:grid;gap:4px;margin-top:8px;max-height:135px;overflow:auto}.bar-row{display:grid;grid-template-columns:38px 1fr 52px;align-items:center;gap:5px;font-size:9px;color:var(--muted)}.bar-track{height:8px;background:var(--bg);border-radius:99px;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan2),var(--amber))}
+    .analysis{position:sticky;top:110px;max-height:calc(100vh - 122px);overflow:auto}.balance{display:grid;grid-template-columns:1fr 38px 1fr;align-items:center;margin-top:10px;text-align:center}.balance-card{padding:11px 5px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)}.balance-card.cyan{border-color:color-mix(in srgb,var(--cyan) 45%,var(--line))}.balance-card.amber{border-color:color-mix(in srgb,var(--amber) 45%,var(--line))}.balance-card small{display:block;color:var(--muted);font-size:9px}.balance-card b{font-family:Georgia,serif;font-size:22px}.vs{font-weight:900;color:var(--muted);font-size:10px}.scale{height:4px;background:linear-gradient(90deg,var(--cyan),var(--line) 48%,var(--line) 52%,var(--amber));margin:13px 12px 4px;position:relative}.scale:after{content:"";position:absolute;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--text);left:calc(var(--balance-pos, 50%) - 5px);top:5px;transition:.25s}
+    .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}.case-card{border:1px solid var(--line);border-radius:8px;padding:7px 5px;background:var(--panel2);font-size:9px;min-height:76px}.case-card strong{display:block;margin-bottom:4px;color:var(--muted)}.case-card.active{border-color:var(--amber);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--amber) 35%,transparent);background:color-mix(in srgb,var(--amber) 7%,var(--panel2))}.case-card.active strong{color:var(--amber)}
+    .big-result{margin-top:10px;padding:13px;text-align:center;border:1px solid color-mix(in srgb,var(--amber) 45%,var(--line));border-radius:10px;background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--amber) 10%,transparent),transparent 70%)}.big-result small{display:block;color:var(--muted);letter-spacing:.13em;font-size:8px}.big-result b{display:block;color:var(--amber);font:24px Georgia,serif;margin:7px 0}.big-result p{font-size:10px;color:var(--muted);margin:4px 0 0;line-height:1.4}
+    details{border-top:1px solid var(--line);margin-top:10px;padding-top:9px}summary{cursor:pointer;font-size:10px;font-weight:800;color:var(--cyan)}.steps{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}.steps li{display:grid;grid-template-columns:20px 1fr;gap:7px;font-size:10px;line-height:1.35}.steps i{width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--cyan) 16%,var(--panel2));color:var(--cyan);display:grid;place-items:center;font-style:normal;font-weight:900}
+    .wide-view{max-width:1120px;margin:0 auto}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:2px 0 10px}.section-head h2{margin:0;font-size:18px}.section-head p{margin:3px 0 0;color:var(--muted);font-size:11px}.action{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:8px 11px;cursor:pointer;font-size:11px;font-weight:800}.action:hover,.action.primary{border-color:var(--cyan);color:var(--cyan)}
+    .experiment-buttons{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.experiment-buttons button.active{border-color:var(--amber);color:var(--amber)}.compare-panels{display:grid;grid-template-columns:1fr 38px 1fr;gap:9px;align-items:stretch}.compare-panel{padding:18px}.arrow{display:grid;place-items:center;color:var(--amber);font-size:22px;font-weight:900}.equation{font:25px Georgia,serif;color:var(--text);margin:12px 0}.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.fact{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:10px;color:var(--muted)}.fact b{display:block;color:var(--text);font-size:13px;margin-top:2px}.insight{margin-top:10px;border-left:3px solid var(--cyan);background:color-mix(in srgb,var(--cyan) 6%,var(--panel));padding:10px 12px;color:var(--muted);font-size:11px;line-height:1.45}
+    .quiz-wrap{max-width:700px;margin:32px auto}.quiz-card{padding:24px;text-align:center}.quiz-card .equation{font-size:30px}.answer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.answer{padding:15px 7px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);cursor:pointer}.answer:hover{border-color:var(--cyan)}.answer.correct{border-color:var(--green);background:color-mix(in srgb,var(--green) 10%,var(--panel2))}.answer.wrong{border-color:var(--rose);background:color-mix(in srgb,var(--rose) 9%,var(--panel2))}.feedback{min-height:44px;margin-top:14px;font-size:12px;color:var(--muted);line-height:1.45}.score{font-size:11px;color:var(--muted)}
+    .exercise-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.exercise{padding:18px}.checklist{padding-left:19px;color:var(--muted);font-size:11px;line-height:1.75}.solution{display:none;margin-top:12px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;font-size:11px;line-height:1.55}.solution.show{display:block}.solution b{color:var(--amber)}
+    .algo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.algo{padding:15px;position:relative}.algo h3{margin:0 0 5px;font-size:14px}.algo p{color:var(--muted);font-size:10px;min-height:32px}.algo .equation{font-size:17px;margin:10px 0}.load-btn{position:absolute;right:10px;top:10px}
+    .delta{margin-top:10px;padding:13px;text-align:center;color:var(--muted);font-size:12px}.delta strong{color:var(--amber)}
+    .reference-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}.reference-card{padding:16px}.reference-card h3{margin:0 0 8px;font-size:13px}.theorem-cases{display:grid;gap:7px}.theorem-case{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:11px}.theorem-case b{color:var(--amber)}.no-list{display:grid;gap:7px}.no-item{padding:9px;border-left:3px solid var(--rose);background:color-mix(in srgb,var(--rose) 5%,var(--panel2));font-size:10px;line-height:1.4}.kbd{border:1px solid var(--line);background:var(--panel2);border-radius:4px;padding:1px 5px;color:var(--muted);font-size:9px}
+    .toast{position:fixed;right:14px;bottom:14px;z-index:60;background:var(--panel);border:1px solid var(--cyan);box-shadow:var(--shadow);border-radius:9px;padding:9px 12px;font-size:11px;transform:translateY(80px);opacity:0;transition:.25s}.toast.show{transform:none;opacity:1}
+
+    /* Navegación y paneles laterales deslizantes */
+    .topbar{height:52px;grid-template-columns:minmax(230px,1fr) auto minmax(300px,1fr);padding:6px 12px}
+    .menu-trigger{margin-right:2px}.head-tools{display:flex;gap:5px}.tool-btn{width:auto;min-width:34px;padding:0 9px;display:flex;gap:6px;font-size:10px;font-weight:800}.tool-btn span{color:var(--muted)}
+    .drawer{position:fixed!important;top:52px;bottom:0;z-index:50;margin:0!important;border-radius:0!important;max-height:none!important;overflow:auto;transition:transform .28s cubic-bezier(.2,.75,.2,1),box-shadow .28s;box-shadow:0 0 0 transparent}
+    .drawer.left{left:0;transform:translateX(-105%)}.drawer.right{right:0;transform:translateX(105%)}.drawer.open{transform:translateX(0);box-shadow:0 20px 55px #000a}
+    .menu-drawer{width:258px;background:var(--panel);border:0;border-right:1px solid var(--line);padding:12px}
+    .controls.drawer{width:282px;background:var(--panel);border-right:1px solid var(--line)}
+    .analysis.drawer{width:330px;background:var(--bg);border-left:1px solid var(--line);padding:10px;display:grid;align-content:start;gap:10px}
+    .drawer-head{height:38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 4px 9px;margin-bottom:9px}.drawer-head strong{font-size:11px;letter-spacing:.12em;text-transform:uppercase}.drawer-close{border:0;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;width:30px;height:30px;border-radius:7px}.drawer-close:hover{background:var(--panel2);color:var(--text)}
+    .drawer-backdrop{position:fixed;inset:52px 0 0;z-index:45;background:#02070db8;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .22s}.drawer-backdrop.show{opacity:1;pointer-events:auto}
+    .menu-brand{padding:4px 6px 13px;border-bottom:1px solid var(--line);margin-bottom:9px}.menu-brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.14em;text-transform:uppercase}.menu-brand b{display:block;margin-top:4px;font-size:15px}
+    .menu-list{display:grid;gap:5px}.menu-item{display:grid;grid-template-columns:31px 1fr;gap:8px;align-items:center;width:100%;border:1px solid transparent;background:transparent;color:var(--muted);padding:9px;border-radius:9px;text-align:left;cursor:pointer}.menu-item:hover{background:var(--panel2);color:var(--text)}.menu-item.active{border-color:color-mix(in srgb,var(--cyan) 45%,var(--line));background:color-mix(in srgb,var(--cyan) 8%,var(--panel2));color:var(--cyan)}.menu-icon{width:29px;height:29px;display:grid;place-items:center;border-radius:8px;background:var(--panel2);font-weight:900}.menu-copy b{display:block;font-size:11px}.menu-copy small{display:block;color:var(--muted);font-size:8px;margin-top:2px}.menu-footer{margin-top:12px;padding:10px;border-top:1px solid var(--line);font-size:9px;color:var(--muted);line-height:1.5}
+    main{padding:8px 12px 16px}.explore-grid{display:block;max-width:1320px}.explore-grid>.stack{width:100%}
+    .explore-command{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.command-copy{min-width:0}.command-copy b{display:block;font-size:11px}.command-copy span{font-size:9px;color:var(--muted)}.command-actions{display:flex;gap:5px}.command-actions .action{padding:6px 9px}
+    .tree-wrap{height:430px;background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--cyan) 9%,transparent),transparent 52%),linear-gradient(180deg,color-mix(in srgb,var(--panel2) 70%,transparent),transparent)}
+    #treeSvg .level-band{fill:color-mix(in srgb,var(--panel2) 52%,transparent)}#treeSvg .level-band.active{fill:color-mix(in srgb,var(--amber) 6%,transparent)}#treeSvg .branch{fill:none;stroke:url(#branchGradient);stroke-width:1.35;opacity:.72}#treeSvg .branch.omitted{stroke-dasharray:5 5;opacity:.45}#treeSvg .node rect{fill:var(--panel2);stroke:var(--cyan2);stroke-width:1.2}#treeSvg .node text{fill:var(--text);font-size:8px;text-anchor:middle;dominant-baseline:middle;pointer-events:none}#treeSvg .node.active rect{fill:color-mix(in srgb,var(--amber) 19%,var(--panel2));stroke:var(--amber);stroke-width:2;filter:url(#nodeGlow);animation:nodePulse 1.45s ease-in-out infinite}#treeSvg .node.condensed rect{fill:color-mix(in srgb,var(--cyan) 10%,var(--panel2))}#treeSvg .level-label{font-size:9px;fill:var(--muted);letter-spacing:.06em}#treeSvg .level-count{font-size:8px;fill:var(--muted)}#treeSvg .active-label{fill:var(--amber)}
+    @keyframes nodePulse{0%,100%{filter:url(#nodeGlow);opacity:.88}50%{filter:url(#nodeGlowStrong);opacity:1}}
+    .tree-narrative{border-top:1px solid var(--line);padding:9px 12px;display:grid;grid-template-columns:25px 1fr;gap:8px;align-items:start;background:color-mix(in srgb,var(--cyan) 4%,var(--panel));font-size:10px;line-height:1.45;color:var(--muted)}.tree-narrative i{width:24px;height:24px;border-radius:8px;background:color-mix(in srgb,var(--cyan) 14%,var(--panel2));color:var(--cyan);display:grid;place-items:center;font-style:normal;font-weight:900}.tree-narrative b{color:var(--text)}
+    .metrics{grid-template-columns:repeat(5,1fr)}
+    .current-section{font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+    @media(max-width:1120px){.topbar{grid-template-columns:1fr auto}.hero-formula{display:none}.algo-grid{grid-template-columns:1fr 1fr}.explore-grid{display:block}.analysis.drawer{display:grid}.tree-wrap{height:410px}}
+    @media(max-width:760px){.topbar{padding:6px 8px}.brand p,.result-pill,.tool-btn span,.current-section{display:none}.brand h1{font-size:11px}.head-actions{gap:4px}.head-tools .tool-btn{padding:0;width:32px;min-width:32px}.controls.drawer,.analysis.drawer,.menu-drawer{width:min(92vw,340px)}main{padding:7px}.mini-grid,.exercise-grid,.reference-grid{grid-template-columns:1fr}.compare-panels{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.algo-grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}.metric:nth-child(3){border-right:0}.tree-wrap{height:350px}.answer-grid{grid-template-columns:1fr}.head-actions .case-pill{display:none}.tree-hint{display:none}.command-copy span{display:none}}
+  </style>
+</head>
+<body>
+<div class="app" id="app" data-theme="dark">
+  <header class="topbar">
+    <div class="brand"><button class="icon-btn menu-trigger" id="menuBtn" aria-label="Abrir menú">☰</button><div class="logo">T</div><div><h1>Master Lab</h1><p>Teorema Maestro · laboratorio visual</p></div></div>
+    <div class="hero-formula" aria-live="polite"><span id="headerRecurrence"></span><strong id="headerComparison"></strong></div>
+    <div class="head-actions"><span class="current-section" id="currentSection">Explora</span><div class="head-tools"><button class="icon-btn tool-btn" id="openControls" aria-label="Abrir parámetros">⚙ <span>Parámetros</span></button><button class="icon-btn tool-btn" id="openAnalysis" aria-label="Abrir análisis">∑ <span>Análisis</span></button></div><span class="case-pill" id="headerCase">CASO 2</span><span class="result-pill" id="headerResult">Θ(n log n)</span><button class="icon-btn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">☼</button></div>
+  </header>
+  <aside class="drawer menu-drawer left" id="menuDrawer" aria-label="Menú principal">
+    <div class="drawer-head"><strong>Navegación</strong><button class="drawer-close" data-close aria-label="Cerrar menú">×</button></div>
+    <div class="menu-brand"><small>Laboratorio interactivo</small><b>Teorema Maestro</b></div>
+    <nav class="menu-list">
+      <button class="menu-item active" data-view="explore"><span class="menu-icon">⌘</span><span class="menu-copy"><b>Explora</b><small>Árbol, niveles y parámetros</small></span></button>
+      <button class="menu-item" data-view="whatif"><span class="menu-icon">⇄</span><span class="menu-copy"><b>¿Qué cambia?</b><small>Compara un parámetro</small></span></button>
+      <button class="menu-item" data-view="predict"><span class="menu-icon">?</span><span class="menu-copy"><b>Predicción</b><small>Adivina el caso</small></span></button>
+      <button class="menu-item" data-view="exercises"><span class="menu-icon">✎</span><span class="menu-copy"><b>Ejercicios</b><small>Práctica guiada</small></span></button>
+      <button class="menu-item" data-view="compare"><span class="menu-icon">≋</span><span class="menu-copy"><b>Comparador</b><small>Algoritmos clásicos</small></span></button>
+      <button class="menu-item" data-view="reference"><span class="menu-icon">i</span><span class="menu-copy"><b>Referencia</b><small>Teorema y excepciones</small></span></button>
+    </nav>
+    <div class="menu-footer">El menú permanece oculto para dedicar el máximo espacio a las visualizaciones.</div>
+  </aside>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <main>
+    <section id="view-explore" class="view active" role="tabpanel">
+      <div class="explore-grid">
+        <aside class="panel controls drawer left" id="controlsDrawer">
+          <div class="panel-pad">
+            <div class="drawer-head"><strong>Parámetros</strong><button class="drawer-close" data-close aria-label="Cerrar parámetros">×</button></div>
+            <h2 class="panel-title"><strong>Configura la recurrencia</strong><span>T(n)=aT(n/b)+nᵈ</span></h2>
+            <div class="switch-row"><span id="modeLabel">Modo intuitivo</span><label class="switch"><input id="intuitive" type="checkbox" checked><span></span></label></div>
+            <div class="control"><div class="control-head"><label for="aNumber">a</label><input class="number" id="aNumber" type="number" min="1" max="16" step="1" value="2"></div><input class="range" id="aRange" type="range" min="1" max="16" step="1" value="2"><div class="helper" id="aHelp"><strong>2 ramas</strong> nacen de cada nodo.</div></div>
+            <div class="control"><div class="control-head"><label for="bNumber">b</label><input class="number" id="bNumber" type="number" min="2" max="16" step="1" value="2"></div><input class="range" id="bRange" type="range" min="2" max="16" step="1" value="2"><div class="helper" id="bHelp">Cada problema baja a <strong>n/2</strong>.</div></div>
+            <div class="control"><div class="control-head"><label for="dNumber">d</label><input class="number" id="dNumber" type="number" min="0" max="4" step="0.25" value="1"></div><input class="range" id="dRange" type="range" min="0" max="4" step="0.25" value="1"><div class="helper" id="dHelp">El trabajo local es <strong>f(n)=n¹</strong>.</div></div>
+            <div class="control"><div class="control-head"><label>n</label><span class="helper" id="nLabel">1024 elementos</span></div><div class="preset-grid" id="nPresets"></div></div>
+            <div class="control"><h3 class="panel-title">Ejemplos clásicos</h3><div class="examples" id="examples"></div></div>
+            <div class="helper"><span class="kbd">←</span> <span class="kbd">→</span> nivel · <span class="kbd">Espacio</span> animar</div>
+          </div>
+        </aside>
+
+        <div class="stack">
+          <div class="explore-command"><div class="command-copy"><b>Vista del árbol</b><span>Avanza nivel por nivel para observar dónde se acumula el trabajo.</span></div><div class="command-actions"><button class="action" data-open="controlsDrawer">⚙ Parámetros</button><button class="action" data-open="analysisDrawer">∑ Ver análisis</button></div></div>
+          <section class="panel">
+            <div class="tree-head"><h2 class="panel-title"><strong>Árbol de recursión</strong><span id="treeSubtitle">Nivel 0 de 10</span></h2><div class="tree-actions"><button class="icon-btn" id="prevBtn" aria-label="Nivel anterior">‹</button><button class="icon-btn" id="playBtn" aria-label="Reproducir">▶</button><button class="icon-btn" id="nextBtn" aria-label="Siguiente nivel">›</button><button class="icon-btn" id="resetBtn" aria-label="Reiniciar">↺</button><button class="icon-btn" id="zoomOut" aria-label="Alejar">−</button><button class="icon-btn" id="zoomIn" aria-label="Acercar">+</button></div></div>
+            <div class="tree-wrap"><svg id="treeSvg" viewBox="0 0 900 430" role="img" aria-label="Árbol de recursión"></svg><span class="tree-hint">Rueda: zoom · arrastra: desplazar</span></div>
+            <div class="metrics"><div class="metric"><label>Nivel</label><b id="mLevel">i=0</b></div><div class="metric"><label>Nodos</label><b id="mNodes">1</b></div><div class="metric"><label>Tamaño</label><b id="mSize">1024</b></div><div class="metric"><label>Costo/nodo</label><b id="mNodeCost">1024</b></div><div class="metric"><label>Costo nivel</label><b id="mLevelCost">1024</b></div></div>
+            <div class="tree-narrative"><i>i</i><span id="treeNarrative">La raíz representa el problema completo.</span></div>
+          </section>
+          <div class="mini-grid">
+            <section class="panel chart"><h2 class="panel-title"><strong>Trabajo por nivel</strong><span>Wᵢ=nᵈ(a/bᵈ)ⁱ</span></h2><div class="bar-list" id="workBars"></div></section>
+            <section class="panel chart"><h2 class="panel-title"><strong>Crecimiento</strong><span id="growthMode">escala logarítmica</span></h2><svg id="growthSvg" viewBox="0 0 360 128" aria-label="Comparación de crecimiento"></svg><div class="legend"><span><i class="dot" style="background:var(--cyan)"></i>f(n)=nᵈ</span><span><i class="dot" style="background:var(--amber)"></i>n^log_b(a)</span></div></section>
+          </div>
+        </div>
+
+        <aside class="analysis stack drawer right" id="analysisDrawer">
+          <div class="drawer-head"><strong>Análisis del caso</strong><button class="drawer-close" data-close aria-label="Cerrar análisis">×</button></div>
+          <section class="panel panel-pad">
+            <h2 class="panel-title"><strong>Comparador central</strong><span>¿quién domina?</span></h2>
+            <div class="balance"><div class="balance-card cyan"><small>f(n)</small><b id="balanceD">n¹</b></div><div class="vs">VS</div><div class="balance-card amber"><small>n^log_b a</small><b id="balanceP">n¹</b></div></div><div class="scale" id="balanceScale"></div>
+            <div class="case-grid"><div class="case-card" data-case="1"><strong>Caso 1</strong>d &lt; p<br>Dominan hojas</div><div class="case-card" data-case="2"><strong>Caso 2</strong>d = p<br>Pesan igual</div><div class="case-card" data-case="3"><strong>Caso 3</strong>d &gt; p<br>Domina raíz</div></div>
+            <details open><summary>Derivación compacta</summary><ol class="steps" id="derivation"></ol></details>
+          </section>
+          <section class="panel panel-pad big-result"><small>COMPLEJIDAD</small><b id="bigResult">Θ(n log n)</b><span class="case-pill" id="bigCase">CASO 2</span><p id="caseExplanation">Todos los niveles contribuyen aproximadamente lo mismo.</p></section>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-whatif" class="view wide-view" role="tabpanel">
+      <div class="section-head"><div><h2>¿Qué cambia si…?</h2><p>Modifica un solo parámetro y observa la causa, no solo el resultado.</p></div></div>
+      <div class="experiment-buttons" id="experimentButtons"></div>
+      <div class="compare-panels"><article class="panel compare-panel" id="beforePanel"></article><div class="arrow">→</div><article class="panel compare-panel" id="afterPanel"></article></div>
+      <div class="insight" id="whatifInsight"></div>
+    </section>
+
+    <section id="view-predict" class="view" role="tabpanel">
+      <div class="quiz-wrap"><article class="panel quiz-card"><div class="section-head"><div><h2>Predice el caso</h2><p>Decide antes de ver el cálculo.</p></div><span class="score" id="score">Aciertos: 0 / 0</span></div><div class="equation" id="quizEquation"></div><div class="answer-grid"><button class="answer" data-answer="1"><b>Caso 1</b><br><small>d &lt; logᵦa</small></button><button class="answer" data-answer="2"><b>Caso 2</b><br><small>d = logᵦa</small></button><button class="answer" data-answer="3"><b>Caso 3</b><br><small>d &gt; logᵦa</small></button></div><div class="feedback" id="quizFeedback">Compara d con logᵦa.</div><button class="action primary" id="nextQuiz">Nuevo reto</button></article></div>
+    </section>
+
+    <section id="view-exercises" class="view wide-view" role="tabpanel">
+      <div class="section-head"><div><h2>Ejercicios guiados</h2><p>Genera, resuelve y verifica paso a paso.</p></div><button class="action primary" id="newExercise">Nuevo ejercicio</button></div>
+      <div class="exercise-grid"><article class="panel exercise"><h3 class="panel-title"><strong>Tu reto</strong><span id="exerciseDifficulty">intermedio</span></h3><div class="equation" id="exerciseEquation"></div><ol class="checklist"><li>Identifica a, b y d.</li><li>Calcula p = logᵦa.</li><li>Compara d con p.</li><li>Determina el caso y escribe Θ(·).</li></ol><button class="action" id="solutionBtn">Ver solución paso a paso</button><div class="solution" id="solution"></div></article><article class="panel exercise"><h3 class="panel-title"><strong>Plantilla de razonamiento</strong><span>reutilizable</span></h3><ol class="steps"><li><i>1</i><span>Escribe la recurrencia en la forma <b>T(n)=aT(n/b)+nᵈ</b>.</span></li><li><i>2</i><span>Calcula el exponente crítico <b>p=logᵦa</b>.</span></li><li><i>3</i><span>Compara únicamente los exponentes <b>d</b> y <b>p</b>.</span></li><li><i>4</i><span>Elige: hojas, equilibrio o raíz.</span></li><li><i>5</i><span>Comprueba la respuesta con el trabajo por nivel.</span></li></ol><div class="insight">Pista: el cociente r=a/bᵈ revela la tendencia. Si r&gt;1 el trabajo crece hacia las hojas; si r=1 es constante; si r&lt;1 disminuye.</div></article></div>
+    </section>
+
+    <section id="view-compare" class="view wide-view" role="tabpanel">
+      <div class="section-head"><div><h2>Comparador de algoritmos</h2><p>La misma estructura, exponentes muy diferentes.</p></div></div><div class="algo-grid" id="algoGrid"></div><div class="panel delta" id="compareInsight"></div>
+    </section>
+
+    <section id="view-reference" class="view wide-view" role="tabpanel">
+      <div class="section-head"><div><h2>Referencia rápida</h2><p>La versión precisa y los casos en los que no aplica.</p></div></div>
+      <div class="reference-grid"><article class="panel reference-card"><h3>Teorema de un vistazo</h3><div class="equation">T(n)=aT(n/b)+f(n)</div><p class="helper">Compara f(n) con n<sup>logᵦa</sup>. En esta app usamos f(n)=nᵈ.</p><div class="theorem-cases"><div class="theorem-case"><b>Caso 1 · dominan las hojas</b><br>f(n)=O(n<sup>p−ε</sup>) ⇒ T(n)=Θ(n<sup>p</sup>)</div><div class="theorem-case"><b>Caso 2 · equilibrio</b><br>f(n)=Θ(n<sup>p</sup>) ⇒ T(n)=Θ(n<sup>p</sup> log n)</div><div class="theorem-case"><b>Caso 3 · domina la raíz</b><br>f(n)=Ω(n<sup>p+ε</sup>) y regularidad ⇒ T(n)=Θ(f(n))</div></div></article><article class="panel reference-card"><h3>Cuándo no aplica directamente</h3><div class="no-list"><div class="no-item"><b>T(n)=T(n/2)+T(n/3)+n</b><br>Los subproblemas no tienen igual tamaño.</div><div class="no-item"><b>T(n)=2T(n/2)+n log n</b><br>Requiere la versión extendida del caso 2.</div><div class="no-item"><b>T(n)=T(n−1)+n</b><br>La reducción es por resta, no por división.</div><div class="no-item"><b>T(n)=nT(n/2)+n</b><br>a no es constante.</div></div><div class="insight">Alternativas: árbol de recursión, sustitución o Akra–Bazzi.</div></article></div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const fmt = (x, digits=3) => Number.isInteger(x) ? String(x) : x.toFixed(digits).replace(/0+$/,'').replace(/\.$/,'');
+  const compact = x => x >= 1e9 ? (x/1e9).toFixed(1)+'B' : x >= 1e6 ? (x/1e6).toFixed(1)+'M' : x >= 1e3 ? Math.round(x).toLocaleString('es-CO') : fmt(x,1);
+  const sup = x => `<sup>${fmt(x)}</sup>`;
+  const state = {a:2,b:2,d:1,n:1024,level:0,playing:false,timer:null,zoom:1,panX:0,panY:0,intuitive:true,score:0,attempts:0,quiz:null,exercise:null};
+  const examples = [
+    {name:'Búsqueda binaria',short:'Θ(log n)',a:1,b:2,d:0},
+    {name:'Merge Sort',short:'Θ(n log n)',a:2,b:2,d:1},
+    {name:'Karatsuba',short:'Θ(n¹·⁵⁸⁵)',a:3,b:2,d:1},
+    {name:'Matrices clásicas',short:'Θ(n³)',a:8,b:2,d:2},
+    {name:'Strassen',short:'Θ(n²·⁸⁰⁷)',a:7,b:2,d:2},
+    {name:'Raíz dominante',short:'Θ(n²)',a:2,b:2,d:2}
+  ];
+  const quizBank = [
+    {a:7,b:2,d:2},{a:4,b:2,d:2},{a:3,b:2,d:1},{a:2,b:4,d:1},
+    {a:9,b:3,d:1},{a:8,b:2,d:2},{a:1,b:2,d:0},{a:2,b:2,d:2},
+    {a:16,b:4,d:1},{a:5,b:2,d:3}
+  ];
+  const algos = [
+    {name:'Merge Sort',desc:'Dos mitades; combinación lineal.',a:2,b:2,d:1},
+    {name:'Matrices clásicas',desc:'Ocho productos de submatrices.',a:8,b:2,d:2},
+    {name:'Strassen',desc:'Siete productos bajan el exponente.',a:7,b:2,d:2},
+    {name:'Karatsuba',desc:'Tres productos para enteros grandes.',a:3,b:2,d:1},
+    {name:'Búsqueda binaria',desc:'Una mitad y trabajo constante.',a:1,b:2,d:0},
+    {name:'Recurrencia raíz',desc:'La combinación domina al árbol.',a:2,b:2,d:2}
+  ];
+
+  function analyze(a=state.a,b=state.b,d=state.d,n=state.n){
+    const p=Math.log(a)/Math.log(b), eps=.025, which=d<p-eps?1:d>p+eps?3:2;
+    const depth=Math.ceil(Math.log(n)/Math.log(b));
+    const ratio=a/Math.pow(b,d);
+    const complexity=which===1?`Θ(n${sup(p)})`:which===2?(Math.abs(d)<eps?'Θ(log n)':`Θ(n${sup(d)} log n)`):`Θ(n${sup(d)})`;
+    const plain=which===1?`Θ(n^${fmt(p)})`:which===2?(Math.abs(d)<eps?'Θ(log n)':`Θ(n^${fmt(d)} log n)`):`Θ(n^${fmt(d)})`;
+    return {a,b,d,n,p,which,depth,ratio,complexity,plain,leaves:Math.pow(a,depth)};
+  }
+  function recurrence(x=state){return `T(n) = ${fmt(x.a)}T(n/${fmt(x.b)}) + n${sup(x.d)}`}
+  function explanation(which){return which===1?'El trabajo aumenta hacia las hojas: su cantidad domina el costo total.':which===2?'Todos los niveles contribuyen aproximadamente lo mismo.':'El trabajo disminuye hacia las hojas: domina el costo de la raíz.'}
+  function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._id);t._id=setTimeout(()=>t.classList.remove('show'),1800)}
+
+  function syncInputs(){['a','b','d'].forEach(k=>{$(`#${k}Number`).value=state[k];$(`#${k}Range`).value=state[k]});}
+  function update(){
+    const r=analyze(); state.level=Math.min(state.level,r.depth); syncInputs();
+    $('#headerRecurrence').innerHTML=recurrence(); $('#headerComparison').innerHTML=`d=${fmt(r.d)} ${r.which===1?'&lt;':r.which===2?'=':'&gt;'} log<sub>${r.b}</sub>${r.a}=${fmt(r.p)}`;
+    $('#headerCase').textContent=`CASO ${r.which}`; $('#headerResult').innerHTML=r.complexity;
+    $('#aHelp').innerHTML=state.intuitive?`<strong>${r.a} ${r.a===1?'rama':'ramas'}</strong> ${r.a===1?'continúa':'nacen'} de cada nodo.`:`a=${r.a}: número de subproblemas recursivos.`;
+    $('#bHelp').innerHTML=state.intuitive?`Cada problema baja a <strong>n/${r.b}</strong>.`:`b=${r.b}: factor de reducción del tamaño.`;
+    $('#dHelp').innerHTML=state.intuitive?`El trabajo local es <strong>f(n)=n${sup(r.d)}</strong>.`:`d=${fmt(r.d)}: exponente polinómico de f(n).`;
+    $('#modeLabel').textContent=state.intuitive?'Modo intuitivo':'Modo formal'; $('#nLabel').textContent=`${r.n} elementos`;
+    $$('#nPresets .preset').forEach(x=>x.classList.toggle('active',+x.dataset.n===r.n));
+    $('#balanceD').innerHTML=`n${sup(r.d)}`; $('#balanceP').innerHTML=`n${sup(r.p)}`;
+    const pos=Math.max(8,Math.min(92,50+(r.d-r.p)*18)); $('#balanceScale').style.setProperty('--balance-pos',pos+'%');
+    $$('.case-card').forEach(c=>c.classList.toggle('active',+c.dataset.case===r.which));
+    $('#bigResult').innerHTML=r.complexity; $('#bigCase').textContent=`CASO ${r.which}`; $('#caseExplanation').textContent=explanation(r.which);
+    $('#derivation').innerHTML=`<li><i>1</i><span>a=${r.a}, b=${r.b}, f(n)=n${sup(r.d)}</span></li><li><i>2</i><span>p=log<sub>${r.b}</sub>${r.a}=${fmt(r.p)}</span></li><li><i>3</i><span>d=${fmt(r.d)} ${r.which===1?'&lt;':r.which===2?'=':'&gt;'} p=${fmt(r.p)}</span></li><li><i>4</i><span><b>Caso ${r.which}</b> ⇒ ${r.complexity}</span></li>`;
+    renderTree(r); renderBars(r); renderGrowth(r);
+  }
+
+  function renderTree(r){
+    const nodesAt=Math.pow(r.a,state.level), size=r.n/Math.pow(r.b,state.level), nodeCost=Math.pow(size,r.d), levelCost=nodesAt*nodeCost;
+    const svg=$('#treeSvg'),W=900,H=430,maxRows=6;
+    let levels=state.level<maxRows?Array.from({length:state.level+1},(_,i)=>i):[0,...Array.from({length:maxRows-1},(_,i)=>state.level-(maxRows-2)+i)];
+    levels=[...new Set(levels)].filter(x=>x>=0).sort((a,b)=>a-b);
+    const top=44,bottom=370,gap=(bottom-top)/Math.max(1,levels.length-1);
+    let bands='',branches='',nodes='',labels='',previous=null,previousLevel=null;
+    levels.forEach((level,row)=>{
+      const y=levels.length===1?72:top+row*gap,real=Math.pow(r.a,level),count=level===0?1:Math.min(12,Math.max(1,Math.round(real))),active=level===state.level;
+      const left=112,right=788,cur=Array.from({length:count},(_,j)=>({x:count===1?W/2:left+j*((right-left)/(count-1)),y}));
+      bands+=`<rect class="level-band ${active?'active':''}" x="8" y="${y-27}" width="884" height="54" rx="10"/>`;
+      labels+=`<text class="level-label ${active?'active-label':''}" x="20" y="${y-4}">NIVEL ${level}</text><text class="level-count" x="20" y="${y+10}">${compact(real)} ${real===1?'nodo':'nodos'} · W=${compact(Math.pow(r.n,r.d)*Math.pow(r.ratio,level))}</text>`;
+      if(previous){
+        const omitted=level-previousLevel>1;
+        cur.forEach((n,j)=>{const p=previous[Math.min(previous.length-1,Math.floor(j*previous.length/count))],mid=(p.y+n.y)/2;branches+=`<path class="branch ${omitted?'omitted':''}" d="M ${p.x} ${p.y+12} C ${p.x} ${mid}, ${n.x} ${mid}, ${n.x} ${n.y-12}" marker-end="url(#arrow)"/>`});
+        if(omitted)labels+=`<g><rect x="418" y="${(previous[0].y+y)/2-10}" width="64" height="20" rx="10" fill="var(--bg)" stroke="var(--line)"/><text x="450" y="${(previous[0].y+y)/2+3}" text-anchor="middle" fill="var(--muted)" font-size="8">${level-previousLevel-1} niveles</text></g>`;
+      }
+      const condensed=count>8;
+      cur.forEach(n=>nodes+=nodeSvg(n.x,n.y,level,r,condensed,active));
+      if(real>count)labels+=`<g><rect x="806" y="${y-11}" width="68" height="22" rx="11" fill="var(--panel2)" stroke="var(--cyan2)"/><text x="840" y="${y+3}" text-anchor="middle" fill="var(--cyan)" font-size="8">× ${compact(real)}</text></g>`;
+      previous=cur;previousLevel=level;
+    });
+    const footer=state.level<r.depth?`Faltan ${r.depth-state.level} niveles para llegar a las hojas`:`Hojas alcanzadas · ${compact(r.leaves)} subproblemas base`;
+    const defs=`<defs><linearGradient id="branchGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--cyan)"/><stop offset="1" stop-color="var(--amber)"/></linearGradient><filter id="nodeGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="nodeGlowStrong"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--amber)"/></marker></defs>`;
+    svg.innerHTML=`${defs}<g transform="translate(${state.panX} ${state.panY}) scale(${state.zoom})">${bands}${branches}${nodes}${labels}<text x="450" y="411" text-anchor="middle" fill="${state.level===r.depth?'var(--amber)':'var(--muted)'}" font-size="10">${footer}</text></g>`;
+    svg.setAttribute('aria-label',`Árbol de recursión en el nivel ${state.level}: ${compact(nodesAt)} nodos, tamaño ${fmt(size,1)} y costo del nivel ${compact(levelCost)}`);
+    $('#treeSubtitle').textContent=`Nivel ${state.level} de ${r.depth}`; $('#mLevel').textContent=`i=${state.level}`; $('#mNodes').textContent=compact(nodesAt); $('#mSize').textContent=fmt(size,1); $('#mNodeCost').textContent=compact(nodeCost); $('#mLevelCost').textContent=compact(levelCost);
+    const trend=r.ratio>1.025?'crece hacia las hojas':r.ratio<.975?'disminuye hacia las hojas':'permanece constante entre niveles';
+    $('#treeNarrative').innerHTML=state.level===0?`La <b>raíz</b> representa el problema completo de tamaño ${r.n}. Su trabajo local es ${compact(nodeCost)}.`:`En el nivel <b>${state.level}</b> hay <b>${compact(nodesAt)} subproblemas</b> de tamaño <b>${fmt(size,1)}</b>. Cada uno cuesta ${compact(nodeCost)} y juntos aportan <b>${compact(levelCost)}</b>. Como r=${fmt(r.ratio)}, el trabajo ${trend}.`;
+  }
+  function nodeSvg(x,y,level,r,condensed=false,active=false){const size=r.n/Math.pow(r.b,level),w=condensed?28:58,h=condensed?16:24,label=condensed?'':(level===0?'n':`n/${compact(Math.pow(r.b,level))}`);return `<g class="node ${condensed?'condensed':''} ${active?'active':''}"><rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${condensed?8:7}"><title>Nivel ${level}: subproblema de tamaño ${fmt(size,1)}</title></rect>${label?`<text x="${x}" y="${y+1}">${label}</text>`:''}</g>`}
+
+  function renderBars(r){
+    const values=Array.from({length:r.depth+1},(_,i)=>Math.pow(r.n,r.d)*Math.pow(r.ratio,i)); const max=Math.max(...values);
+    $('#workBars').innerHTML=values.map((v,i)=>`<div class="bar-row"><span>${i===r.depth?'Hojas':'N'+i}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2,v/max*100)}%"></div></div><span>${compact(v)}</span></div>`).join('');
+  }
+  function renderGrowth(r){
+    const svg=$('#growthSvg'), pad={l:22,r:8,t:8,b:18},W=360,H=128;
+    const ns=[2,4,8,16,32,64,128,256,512,1024,2048,4096], series=[ns.map(n=>Math.pow(n,r.d)),ns.map(n=>Math.pow(n,r.p))];
+    const all=series.flat().map(v=>Math.log10(Math.max(1,v))), max=Math.max(...all), min=Math.min(...all);
+    const path=vals=>vals.map((v,i)=>`${i?'L':'M'}${pad.l+i*((W-pad.l-pad.r)/(vals.length-1))},${pad.t+(max-Math.log10(Math.max(1,v)))/(Math.max(.001,max-min))*(H-pad.t-pad.b)}`).join(' ');
+    let grid='';for(let i=0;i<4;i++){const y=pad.t+i*(H-pad.t-pad.b)/3;grid+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--line)" stroke-width="1"/><text x="2" y="${y+3}" fill="var(--muted)" font-size="7">10^${Math.round(max-i*(max-min)/3)}</text>`}
+    svg.innerHTML=`${grid}<path d="${path(series[0])}" fill="none" stroke="var(--cyan)" stroke-width="2.5"/><path d="${path(series[1])}" fill="none" stroke="var(--amber)" stroke-width="2.5"/><text x="${W-26}" y="${H-4}" fill="var(--muted)" font-size="8">n</text>`;
+  }
+
+  function setParams(a,b,d,n=state.n){state.a=a;state.b=b;state.d=d;state.n=n;state.level=0;stop();update()}
+  function stop(){state.playing=false;clearInterval(state.timer);state.timer=null;$('#playBtn').textContent='▶';$('#playBtn').setAttribute('aria-label','Reproducir')}
+  function togglePlay(){const depth=analyze().depth;if(state.playing){stop();return} if(state.level>=depth)state.level=0;state.playing=true;$('#playBtn').textContent='Ⅱ';$('#playBtn').setAttribute('aria-label','Pausar');state.timer=setInterval(()=>{if(state.level>=depth){stop();return}state.level++;renderTree(analyze())},650)}
+
+  function initPresets(){
+    $('#nPresets').innerHTML=[64,128,256,512,1024,2048].map(n=>`<button class="preset" data-n="${n}">${n}</button>`).join('');
+    $('#examples').innerHTML=examples.map((e,i)=>`<button class="example" data-example="${i}"><span>${e.name}</span><span>${e.short}</span></button>`).join('');
+    $('#nPresets').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(!b)return;state.n=+b.dataset.n;state.level=0;update()});
+    $('#examples').addEventListener('click',e=>{const b=e.target.closest('[data-example]');if(!b)return;const x=examples[+b.dataset.example];setParams(x.a,x.b,x.d);toast(`${x.name} cargado`)});
+  }
+  function bindControls(){
+    ['a','b','d'].forEach(k=>{const num=$(`#${k}Number`),range=$(`#${k}Range`);const change=v=>{const value=+v;if(!Number.isFinite(value)||value<+num.min||value>+num.max)return;state[k]=value;state.level=0;stop();update()};num.addEventListener('change',()=>change(num.value));range.addEventListener('input',()=>change(range.value))});
+    $('#intuitive').addEventListener('change',e=>{state.intuitive=e.target.checked;update()});
+    $('#prevBtn').onclick=()=>{state.level=Math.max(0,state.level-1);stop();renderTree(analyze())}; $('#nextBtn').onclick=()=>{state.level=Math.min(analyze().depth,state.level+1);stop();renderTree(analyze())}; $('#playBtn').onclick=togglePlay; $('#resetBtn').onclick=()=>{state.level=0;state.zoom=1;state.panX=state.panY=0;stop();renderTree(analyze())};
+    $('#zoomIn').onclick=()=>{state.zoom=Math.min(2.2,state.zoom+.15);renderTree(analyze())}; $('#zoomOut').onclick=()=>{state.zoom=Math.max(.65,state.zoom-.15);renderTree(analyze())};
+    const svg=$('#treeSvg');svg.addEventListener('wheel',e=>{e.preventDefault();state.zoom=Math.max(.65,Math.min(2.2,state.zoom+(e.deltaY<0?.1:-.1)));renderTree(analyze())},{passive:false});let drag=null;svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,px:state.panX,py:state.panY};svg.setPointerCapture(e.pointerId)});svg.addEventListener('pointermove',e=>{if(!drag)return;state.panX=drag.px+(e.clientX-drag.x);state.panY=drag.py+(e.clientY-drag.y);renderTree(analyze())});svg.addEventListener('pointerup',()=>drag=null);
+    document.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if(e.key==='ArrowLeft')$('#prevBtn').click();if(e.key==='ArrowRight')$('#nextBtn').click();if(e.code==='Space'){e.preventDefault();togglePlay()}});
+  }
+  const viewNames={explore:'Explora',whatif:'¿Qué cambia?',predict:'Predicción',exercises:'Ejercicios',compare:'Comparador',reference:'Referencia'};
+  function closeDrawers(){$$('.drawer').forEach(d=>d.classList.remove('open'));$('#drawerBackdrop').classList.remove('show')}
+  function openDrawer(id){closeDrawers();$(`#${id}`).classList.add('open');$('#drawerBackdrop').classList.add('show')}
+  function switchView(view){
+    $$('.menu-item').forEach(x=>x.classList.toggle('active',x.dataset.view===view));
+    $$('.view').forEach(v=>v.classList.remove('active'));$(`#view-${view}`).classList.add('active');$('#currentSection').textContent=viewNames[view];
+    $('.head-tools').style.display=view==='explore'?'flex':'none';closeDrawers();
+    if(view==='whatif')renderWhatIf();if(view==='compare')renderAlgorithms();
+  }
+  function initNavigation(){
+    $$('.menu-item').forEach(t=>t.onclick=()=>switchView(t.dataset.view));
+    $('#menuBtn').onclick=()=>openDrawer('menuDrawer');$('#openControls').onclick=()=>openDrawer('controlsDrawer');$('#openAnalysis').onclick=()=>openDrawer('analysisDrawer');
+    $$('[data-open]').forEach(b=>b.onclick=()=>openDrawer(b.dataset.open));$$('[data-close]').forEach(b=>b.onclick=closeDrawers);$('#drawerBackdrop').onclick=closeDrawers;
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawers()});
+  }
+
+  const experiments=[
+    {label:'Duplicar a',change:x=>({...x,a:Math.min(16,x.a*2)}),insight:'Más ramas ensanchan el árbol. El exponente crítico sube y las hojas ganan peso.'},
+    {label:'Duplicar b',change:x=>({...x,b:Math.min(16,x.b*2)}),insight:'Una reducción más agresiva vuelve el árbol menos profundo y disminuye el exponente crítico.'},
+    {label:'Subir d',change:x=>({...x,d:Math.min(4,x.d+1)}),insight:'Más trabajo local aumenta el peso de la raíz y puede mover la recurrencia al caso 3.'},
+    {label:'Bajar d',change:x=>({...x,d:Math.max(0,x.d-1)}),insight:'Menos trabajo local permite que el costo acumulado de las hojas se vuelva dominante.'}
+  ];let activeExperiment=0;
+  function snapshotPanel(title,x){const r=analyze(x.a,x.b,x.d,x.n);return `<h3 class="panel-title"><strong>${title}</strong><span>CASO ${r.which}</span></h3><div class="equation">${recurrence(x)}</div><div class="facts"><div class="fact">Ramas<b>${r.a}</b></div><div class="fact">Profundidad<b>${r.depth}</b></div><div class="fact">p=logᵦa<b>${fmt(r.p)}</b></div><div class="fact">r=a/bᵈ<b>${fmt(r.ratio)}</b></div></div><div class="big-result"><small>RESULTADO</small><b>${r.complexity}</b><p>${explanation(r.which)}</p></div>`}
+  function renderWhatIf(){
+    $('#experimentButtons').innerHTML=experiments.map((x,i)=>`<button class="action ${i===activeExperiment?'active':''}" data-exp="${i}">${x.label}</button>`).join('');
+    const before={a:state.a,b:state.b,d:state.d,n:state.n},after=experiments[activeExperiment].change(before);$('#beforePanel').innerHTML=snapshotPanel('ANTES',before);$('#afterPanel').innerHTML=snapshotPanel('DESPUÉS',after);$('#whatifInsight').textContent=experiments[activeExperiment].insight;
+    $$('#experimentButtons button').forEach(b=>b.onclick=()=>{activeExperiment=+b.dataset.exp;renderWhatIf()});
+  }
+  function newQuiz(){state.quiz=quizBank[Math.floor(Math.random()*quizBank.length)];const q=state.quiz;$('#quizEquation').innerHTML=recurrence(q);$('#quizFeedback').textContent='Compara d con logᵦa.';$$('.answer').forEach(x=>x.classList.remove('correct','wrong'));}
+  function bindQuiz(){$$('.answer').forEach(b=>b.onclick=()=>{if(!state.quiz||$$('.answer.correct').length)return;const r=analyze(state.quiz.a,state.quiz.b,state.quiz.d,1024),ans=+b.dataset.answer;state.attempts++;if(ans===r.which){state.score++;b.classList.add('correct');$('#quizFeedback').innerHTML=`¡Correcto! p=${fmt(r.p)} y d=${fmt(r.d)}. Resultado: <b>${r.complexity}</b>.`}else{b.classList.add('wrong');$(`.answer[data-answer="${r.which}"]`).classList.add('correct');$('#quizFeedback').innerHTML=`Casi. p=${fmt(r.p)} y d=${fmt(r.d)} ⇒ Caso ${r.which}.`;}$('#score').textContent=`Aciertos: ${state.score} / ${state.attempts}`});$('#nextQuiz').onclick=newQuiz}
+  function newExercise(){let q=quizBank[Math.floor(Math.random()*quizBank.length)];state.exercise=q;$('#exerciseEquation').innerHTML=recurrence(q);$('#solution').classList.remove('show');$('#solutionBtn').textContent='Ver solución paso a paso';$('#exerciseDifficulty').textContent=q.a>8||q.d>2?'avanzado':'intermedio';renderSolution()}
+  function renderSolution(){const q=state.exercise,r=analyze(q.a,q.b,q.d,1024);$('#solution').innerHTML=`<b>1.</b> a=${q.a}, b=${q.b}, d=${fmt(q.d)}.<br><b>2.</b> p=log<sub>${q.b}</sub>${q.a}=${fmt(r.p)}.<br><b>3.</b> d ${r.which===1?'&lt;':r.which===2?'=':'&gt;'} p, por lo tanto corresponde al <b>Caso ${r.which}</b>.<br><b>4.</b> T(n)=${r.complexity}.<br><b>Comprobación:</b> r=a/bᵈ=${fmt(r.ratio)}; ${r.ratio>1?'el trabajo crece hacia las hojas':Math.abs(r.ratio-1)<.025?'el trabajo permanece constante por nivel':'el trabajo disminuye hacia las hojas'}.`}
+  function bindExercises(){$('#newExercise').onclick=newExercise;$('#solutionBtn').onclick=()=>{const s=$('#solution');s.classList.toggle('show');$('#solutionBtn').textContent=s.classList.contains('show')?'Ocultar solución':'Ver solución paso a paso'}}
+  function renderAlgorithms(){
+    $('#algoGrid').innerHTML=algos.map((x,i)=>{const r=analyze(x.a,x.b,x.d,1024);return `<article class="panel algo"><button class="action load-btn" data-load="${i}">Cargar</button><h3>${x.name}</h3><p>${x.desc}</p><div class="equation">${recurrence(x)}</div><span class="case-pill">CASO ${r.which}</span><div class="big-result"><small>COMPLEJIDAD</small><b>${r.complexity}</b><p>p=${fmt(r.p)}</p></div></article>`}).join('');
+    $('#compareInsight').innerHTML=`Cambiar matrices clásicas de <strong>8</strong> a <strong>7</strong> ramas reduce el exponente de <strong>3</strong> a <strong>${fmt(Math.log(7)/Math.log(2))}</strong>. Una sola multiplicación menos modifica todo el orden asintótico.`;
+    $$('#algoGrid [data-load]').forEach(b=>b.onclick=()=>{const x=algos[+b.dataset.load];setParams(x.a,x.b,x.d);switchView('explore');toast(`${x.name} cargado en Explora`)})
+  }
+  function bindTheme(){const app=$('#app');$('#themeBtn').onclick=()=>{const next=app.dataset.theme==='dark'?'light':'dark';app.dataset.theme=next;$('#themeBtn').textContent=next==='dark'?'☼':'☾';localStorage.setItem('master-theme',next)};const saved=localStorage.getItem('master-theme');if(saved)app.dataset.theme=saved;$('#themeBtn').textContent=app.dataset.theme==='dark'?'☼':'☾'}
+
+  initPresets();bindControls();initNavigation();bindQuiz();bindExercises();bindTheme();newQuiz();newExercise();renderAlgorithms();renderWhatIf();update();
+})();
+</script>
+</body>
+</html>
