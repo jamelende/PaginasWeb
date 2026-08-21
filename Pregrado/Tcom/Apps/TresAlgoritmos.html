@@ -130,6 +130,9 @@
     .state-node.processed .state-circle{fill:var(--green-soft);stroke:var(--green)}
     .state-node.eliminated .state-circle{fill:var(--red-soft);stroke:var(--red);opacity:.38}
     .state-node.will-use .state-circle{stroke:var(--cyan);stroke-width:3.5;stroke-dasharray:5 4;animation:ringDash 1.2s linear infinite}
+    .state-node.rip-candidate{cursor:pointer}
+    .state-node.rip-candidate .state-circle{fill:var(--purple-soft);stroke:var(--purple);stroke-width:3.5;stroke-dasharray:6 4;animation:ringDash 1.2s linear infinite}
+    .rip-choice-label{fill:var(--purple);font-size:9px;font-weight:800;text-anchor:middle;letter-spacing:.5px}
     .state-label{font-size:12px;font-weight:800;fill:var(--ink);pointer-events:none;text-anchor:middle;dominant-baseline:middle}
     .state-sub{font-size:9px;fill:var(--muted);pointer-events:none;text-anchor:middle}
     .edge{fill:none;stroke:#7d8ba5;stroke-width:2;transition:.2s}
@@ -439,7 +442,7 @@
   function savedImportedExamples(){
     try{var items=JSON.parse(localStorage.getItem('avl-imported-examples')||'[]');return Array.isArray(items)?items.filter(function(item){return item&&item.id&&item.name&&item.data}):[]}catch(e){return []}
   }
-  var state={algo:'nfa',automaton:null,steps:[],step:0,selected:null,tool:null,edgeStart:null,pendingEdge:null,playing:false,timer:null,zoom:1,zoomOrigin:'50% 50%',nodePositions:{},didactic:true,quiz:true,format:'json',modalMode:'import',importedExamples:savedImportedExamples()};
+  var state={algo:'nfa',automaton:null,steps:[],step:0,selected:null,tool:null,edgeStart:null,pendingEdge:null,playing:false,timer:null,zoom:1,zoomOrigin:'50% 50%',nodePositions:{},didactic:true,quiz:true,format:'json',modalMode:'import',importedExamples:savedImportedExamples(),ripOrder:[]};
   function initialState(){return state.automaton.states.find(function(s){return s.initial})}
   function finals(){return state.automaton.states.filter(function(s){return s.final}).map(function(s){return s.id})}
   function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(function(){t.classList.remove('show')},2200)}
@@ -564,15 +567,16 @@
     if(xs.some(function(x){return x==='∅'}))return '∅';return xs.length?xs.join(''):'ε';
   }
   function star(x){if(!x||x==='∅'||x==='ε')return 'ε';if(x.length===1)return x+'*';return '('+x+')*'}
-  function buildRipSteps(a){
+  function buildRipSteps(a,chosenOrder){
     var S='S',F='F';while(a.states.some(function(s){return s.id===S}))S+='0';while(a.states.some(function(s){return s.id===F}))F+='0';
     var nodes=[S].concat(a.states.map(function(s){return s.id})).concat([F]),R={};
     function setR(i,j,v){var k=i+'→'+j;R[k]=union(R[k]||'∅',v)}
     a.transitions.forEach(function(t){setR(t.from,t.to,t.symbol)});
     var init=a.states.find(function(s){return s.initial});if(init)setR(S,init.id,'ε');
     a.states.filter(function(s){return s.final}).forEach(function(s){setR(s.id,F,'ε')});
-    var steps=[{name:'Normalización',action:'Creamos un nuevo inicio '+S+' y un único final '+F+'.',reason:'RIP necesita que inicio y final no sean eliminados y no tengan conexiones indebidas.',result:S+' apunta con ε al inicio anterior; cada final anterior apunta con ε a '+F+'.',formula:S+' —ε→ '+(init?init.id:'?')+'    finales —ε→ '+F,nodes:nodes.slice(),regex:clone(R),normalized:true}];
-    var order=a.states.map(function(s){return s.id});
+    var allInternal=a.states.map(function(s){return s.id}),order=(chosenOrder||[]).filter(function(id,i,list){return allInternal.indexOf(id)>=0&&list.indexOf(id)===i});
+    var steps=[{name:'Normalización',action:'Creamos un nuevo inicio '+S+' y un único final '+F+'.',reason:'RIP necesita que inicio y final no sean eliminados y no tengan conexiones indebidas.',result:S+' apunta con ε al inicio anterior; cada final anterior apunta con ε a '+F+'.',formula:S+' —ε→ '+(init?init.id:'?')+'    finales —ε→ '+F,nodes:nodes.slice(),regex:clone(R),normalized:true,eliminatedOrder:[]}];
+    var eliminatedOrder=[];
     order.forEach(function(k){
       var previewNodes=nodes.slice(),previewRegex=clone(R),others=nodes.filter(function(x){return x!==k}),updates=[],rk=R[k+'→'+k]||'∅';
       others.forEach(function(i){
@@ -586,15 +590,25 @@
       Object.keys(R).forEach(function(x){if(x.indexOf(k+'→')===0||x.endsWith('→'+k))delete R[x]});
       nodes=others;
       var u=updates[0];
-      steps.push({name:'Eliminar '+k,action:'Reemplazamos todos los caminos que atraviesan '+k+'.',reason:'Entrada · (bucle)* · salida conserva exactamente los recorridos que usaban el estado.',result:updates.length?'Se actualizaron '+updates.length+' conexiones y '+k+' puede desaparecer.':'No había caminos completos a través de '+k+'.',formula:u?(u.old+' + '+u.rin+'('+u.loop+')*'+u.rout+' = '+u.value):'Sin conexiones nuevas',nodes:nodes.slice(),regex:clone(R),previewNodes:previewNodes,previewRegex:previewRegex,activeState:k,current:[k],eliminated:k,updates:updates,target:u?[u.j]:[]});
+      eliminatedOrder.push(k);
+      steps.push({name:'Eliminar '+k,action:'Eliminamos el estado '+k+' elegido por el usuario y reemplazamos todos los caminos que lo atraviesan.',reason:'Entrada · (bucle)* · salida conserva exactamente los recorridos que usaban el estado.',result:updates.length?'Se actualizaron '+updates.length+' conexiones y '+k+' puede desaparecer.':'No había caminos completos a través de '+k+'.',formula:u?(u.old+' + '+u.rin+'('+u.loop+')*'+u.rout+' = '+u.value):'Sin conexiones nuevas',nodes:nodes.slice(),regex:clone(R),previewNodes:previewNodes,previewRegex:previewRegex,activeState:k,current:[k],eliminated:k,eliminatedOrder:eliminatedOrder.slice(),updates:updates,target:u?[u.j]:[],verbal:'Elegiste '+k+'. Calculamos todas las rutas que entran a este estado, recorren su bucle cero o más veces y salen hacia otro estado; después sustituimos esas rutas por nuevas etiquetas.'});
     });
+    var remaining=allInternal.filter(function(id){return eliminatedOrder.indexOf(id)<0});
+    if(remaining.length){
+      steps.push({name:'Elegir el siguiente estado',action:'Haz clic sobre uno de los estados resaltados o usa los botones de la tabla lateral.',reason:'El método RIP permite eliminar los estados internos en cualquier orden; el tamaño de las expresiones intermedias puede cambiar.',result:'Estados disponibles: {'+remaining.join(', ')+'}.',formula:'Elige k ∈ {'+remaining.join(', ')+'}',nodes:nodes.slice(),regex:clone(R),candidates:remaining,awaitingChoice:true,eliminatedOrder:eliminatedOrder.slice(),verbal:'Ahora tú decides qué estado desaparece. Los estados con borde violeta son candidatos válidos; el nuevo inicio y el nuevo final están protegidos.'});
+      return steps;
+    }
     var finalRegex=R[S+'→'+F]||'∅';
-    steps.push({name:'Expresión regular obtenida',action:'Solo quedan el nuevo inicio y el nuevo final.',reason:'La etiqueta entre ellos resume todos los caminos aceptados por el autómata original.',result:'RegEx: '+finalRegex,formula:finalRegex,nodes:[S,F],regex:clone(R),complete:true});
+    steps.push({name:'Expresión regular obtenida',action:'Solo quedan el nuevo inicio y el nuevo final.',reason:'La etiqueta entre ellos resume todos los caminos aceptados por el autómata original.',result:'RegEx: '+finalRegex,formula:finalRegex,nodes:[S,F],regex:clone(R),complete:true,eliminatedOrder:eliminatedOrder.slice()});
     return steps;
+  }
+  function chooseRipNode(id){
+    var step=state.steps[state.step]||{};if(state.algo!=='rip'||!step.awaitingChoice||step.candidates.indexOf(id)<0){toast('Ese estado no puede eliminarse en este paso.');return}
+    state.ripOrder.push(id);state.steps=buildRipSteps(state.automaton,state.ripOrder);state.step=state.ripOrder.length;state.selected='rip-view|'+id;render();toast('Estado '+id+' seleccionado. Revisa cómo se actualizan las expresiones.');
   }
   function prepareAlgorithm(){
     stop();if(!validate()){state.steps=[];state.step=0;render();return}
-    state.steps=state.algo==='nfa'?buildNfaSteps(state.automaton):state.algo==='min'?buildMinSteps(state.automaton):buildRipSteps(state.automaton);
+    state.ripOrder=[];state.steps=state.algo==='nfa'?buildNfaSteps(state.automaton):state.algo==='min'?buildMinSteps(state.automaton):buildRipSteps(state.automaton,state.ripOrder);
     state.step=0;render();
   }
   function autoLayout(doRender){
@@ -653,15 +667,17 @@
       s+='<text class="edge-label" x="'+p.lx+'" y="'+(p.ly-5)+'">'+esc(e.symbol)+'</text>';
     });
     g.states.forEach(function(n){
-      var cl='state-node',isCurrent=currentIds.indexOf(n.id)>=0,isTarget=targetIds.indexOf(n.id)>=0,isNext=nextIds.indexOf(n.id)>=0&&!isCurrent&&!isTarget;
+      var cl='state-node',isCurrent=currentIds.indexOf(n.id)>=0,isTarget=targetIds.indexOf(n.id)>=0,isNext=nextIds.indexOf(n.id)>=0&&!isCurrent&&!isTarget,isRipCandidate=(step.candidates||[]).indexOf(n.id)>=0;
       if(state.selected===space+'|'+n.id&&interactive)cl+=' selected';if(isCurrent)cl+=' processing';if(isTarget)cl+=' processed';if(isNext)cl+=' will-use';if(step.created===n.id)cl+=' created';if((step.unreachable||[]).indexOf(n.id)>=0)cl+=' eliminated';if(step.eliminated===n.id)cl+=' eliminated';
+      if(isRipCandidate)cl+=' rip-candidate';
       if(n.initial)s+='<path class="initial-arrow" d="M '+(n.x-62)+' '+n.y+' L '+(n.x-36)+' '+n.y+'" marker-end="url(#arrowGreen)"/>';
       s+='<g class="'+cl+'" data-node="'+esc(n.id)+'" data-space="'+esc(space)+'" data-ox="'+ox+'" data-oy="'+oy+'" data-scale="'+scale+'" transform="translate('+n.x+' '+n.y+')">';
       s+='<circle class="state-circle" r="31"/>';if(n.final)s+='<circle class="state-circle" r="25" fill="none"/>';
       var label=n.id.length>12?n.id.slice(0,12)+'…':n.id;
       s+='<text class="state-label" y="'+(n.members?-3:1)+'">'+esc(label)+'</text>';
       if(n.members)s+='<text class="state-sub" y="14">'+esc(n.members.join(', '))+'</text>';
-      s+='<title>'+esc(n.id)+(n.final?' · aceptación':'')+(n.initial?' · inicial':'')+'</title></g>';
+      if(isRipCandidate)s+='<text class="rip-choice-label" y="48">ELEGIR</text>';
+      s+='<title>'+esc(n.id)+(n.final?' · aceptación':'')+(n.initial?' · inicial':'')+(isRipCandidate?' · clic para eliminar':'')+'</title></g>';
       if(isCurrent){
         s+='<circle class="node-attention-ring active-ring" cx="'+n.x+'" cy="'+n.y+'" r="41"/>';
         s+='<path class="state-callout-arrow active-arrow" d="M '+n.x+' '+(n.y-76)+' L '+n.x+' '+(n.y-39)+'" marker-end="url(#arrowAmber)"/>';
@@ -741,7 +757,16 @@
   function bindGraphEvents(){
     $$('#graph .state-node').forEach(function(el){
       el.addEventListener('pointerdown',function(ev){
-        var id=el.getAttribute('data-node'),space=el.getAttribute('data-space')||'source',isSource=space==='source';
+        var id=el.getAttribute('data-node'),space=el.getAttribute('data-space')||'source',isSource=space==='source',ripStep=state.steps[state.step]||{};
+        if(state.algo==='rip'&&space==='rip-view'&&ripStep.awaitingChoice){
+          var startX=ev.clientX,startY=ev.clientY,moved=false,choiceSvg=$('#graph'),choiceOx=Number(el.getAttribute('data-ox')||0),choiceOy=Number(el.getAttribute('data-oy')||0),choiceScale=Number(el.getAttribute('data-scale')||1);
+          function moveChoice(e){
+            if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)moved=true;if(!moved)return;
+            var point=choiceSvg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;var loc=point.matrixTransform(choiceSvg.getScreenCTM().inverse());state.nodePositions[space+'|'+id]={x:Math.max(32,Math.min(788,(loc.x-choiceOx)/choiceScale)),y:Math.max(38,Math.min(390,(loc.y-choiceOy)/choiceScale))};render();
+          }
+          function finishChoice(){window.removeEventListener('pointermove',moveChoice);window.removeEventListener('pointerup',finishChoice);if(!moved)chooseRipNode(id)}
+          window.addEventListener('pointermove',moveChoice);window.addEventListener('pointerup',finishChoice);return;
+        }
         if(state.tool&&!isSource){toast('Las herramientas editan el autómata original; este estado transformado sí puede moverse.');clearTool()}
         if(isSource&&state.tool==='edge'){if(!state.edgeStart){state.edgeStart=id;state.selected='source|'+id;render();toast('Origen: '+id+'. Ahora selecciona el destino.');return}else{openTransitionComposer(state.edgeStart,id);return}}
         if(isSource&&state.tool==='initial'){state.automaton.states.forEach(function(s){s.initial=s.id===id});state.selected='source|'+id;clearTool();prepareAlgorithm();toast(id+' es ahora el estado inicial.');return}
@@ -783,9 +808,10 @@
     $('#formulaBox').textContent=step.formula||'ver → manipular → ejecutar → entender';
     var ideas={nfa:'Un estado del DFA representa un conjunto de posibles estados del NFA.',min:'Dos estados se fusionan cuando ningún string futuro permite distinguirlos.',rip:'Eliminar un estado sustituye los caminos que lo atraviesan por una expresión equivalente.'};
     $('#ideaBox').innerHTML='💡 <strong>Idea clave:</strong> '+ideas[state.algo];
-    var active=(step.current&&step.current.length)?'{'+keySet(step.current)+'}':(step.comparing&&step.comparing.length)?step.comparing.join(' ↔ '):(step.activeState||step.eliminated||'—');
+    var active=(step.current&&step.current.length)?'{'+keySet(step.current)+'}':(step.comparing&&step.comparing.length)?step.comparing.join(' ↔ '):(step.activeState||step.eliminated||(step.awaitingChoice?'elige {'+step.candidates.join(', ')+'}':'—'));
     var result=(step.target&&step.target.length)?'{'+keySet(step.target)+'}':(step.created?'crear '+step.created:(step.complete?'completado':'—'));
     var guideSymbol=step.symbol||((step.updates&&step.updates.length)?'Rik(Rkk)*Rkj':'—');
+    if(step.awaitingChoice){guideSymbol='clic';result='próxima eliminación'}
     if(step.signature){guideSymbol=state.automaton.alphabet.join(', ');result=step.formula}
     if(state.algo==='min'&&step.comparing&&step.comparing.length===2&&step.partitions){
       var g1=step.partitions.findIndex(function(p){return p.indexOf(step.comparing[0])>=0}),g2=step.partitions.findIndex(function(p){return p.indexOf(step.comparing[1])>=0});
@@ -841,7 +867,9 @@
     }else if(state.algo==='rip'){
       $('#livePanelTitle').textContent='Expresiones de transición';$('#liveEyebrow').textContent='Etiquetas actuales del autómata';
       var map=step.previewRegex||step.regex||{},keys=Object.keys(map).filter(function(k){return map[k]&&map[k]!=='∅'});
-      box.innerHTML='<div class="regex-list">'+(keys.length?keys.map(function(k){return '<div class="regex-edge"><span>'+esc(k)+'</span><code>'+esc(map[k])+'</code></div>'}).join(''):'<div class="split-explanation">Avanza un paso para ver las expresiones.</div>')+'</div>'+narrative;
+      var choice=step.awaitingChoice?'<div class="split-explanation"><strong>¿Cuál estado eliminamos ahora?</strong><div class="quiz-options">'+step.candidates.map(function(id){return '<button class="btn small" data-rip-choice="'+esc(id)+'">Eliminar '+esc(id)+'</button>'}).join('')+'</div></div>':'';
+      box.innerHTML=choice+'<div class="regex-list">'+(keys.length?keys.map(function(k){return '<div class="regex-edge"><span>'+esc(k)+'</span><code>'+esc(map[k])+'</code></div>'}).join(''):'<div class="split-explanation">Avanza un paso para ver las expresiones.</div>')+'</div>'+narrative;
+      $$('[data-rip-choice]').forEach(function(button){button.onclick=function(){chooseRipNode(button.dataset.ripChoice)}});
     }else if(state.algo==='min'){
       $('#livePanelTitle').textContent='Refinamiento de particiones';$('#liveEyebrow').textContent='P₀ → P₁ → punto fijo';box.innerHTML='<div class="split-explanation">Avanza hasta la partición inicial para comenzar el refinamiento.</div>'+narrative;
     }else{
@@ -866,14 +894,14 @@
     var data;
     if(state.algo==='nfa')data=[['Estados NFA',state.automaton.states.length],['Estados DFA',(step.dfaStates||[]).length],['Subconjuntos',(step.dfaStates||[]).length],['Transiciones',(step.dfaTrans||[]).length]];
     else if(state.algo==='min')data=[['Estados originales',state.automaton.states.length],['Inalcanzables',(step.unreachable||[]).length],['Grupos',(step.partitions||[]).length],['Estados mínimos',step.quotient?step.quotient.states.length:'—']];
-    else data=[['Estados iniciales',state.automaton.states.length],['Eliminados',Math.max(0,state.step-1)],['Restantes',(step.nodes||[]).length],['Longitud RegEx',step.complete?(step.formula||'').length:'—']];
+    else data=[['Estados iniciales',state.automaton.states.length],['Eliminados',(step.eliminatedOrder||[]).length],['Restantes',(step.nodes||[]).length],['Longitud RegEx',step.complete?(step.formula||'').length:'—']];
     $('#metrics').innerHTML=data.map(function(x){return '<div class="metric"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>'}).join('');
   }
   function renderTimeline(){
     var t=$('#timeline'),html='';state.steps.forEach(function(s,i){if(i)html+='<i class="step-link"></i>';html+='<button class="step-dot '+(i<state.step?'done':i===state.step?'current':'')+'" data-step="'+i+'" title="'+esc(s.name)+'">'+(i+1)+'</button>'});t.innerHTML=html;
     $$('.step-dot').forEach(function(b){b.onclick=function(){state.step=Number(b.dataset.step);stop();render()}});
   }
-  function stepTo(n){if(!state.steps.length)return;state.step=Math.max(0,Math.min(state.steps.length-1,n));render();if(state.step===state.steps.length-1){stop();toast('🎉 ¡Proceso completado!')}}
+  function stepTo(n){if(!state.steps.length)return;state.step=Math.max(0,Math.min(state.steps.length-1,n));render();var step=state.steps[state.step]||{};if(step.awaitingChoice){stop();toast('Elige en el autómata el próximo estado que deseas eliminar.')}else if(state.step===state.steps.length-1){stop();toast('🎉 ¡Proceso completado!')}}
   function play(){if(state.playing){stop();return}state.playing=true;$('#playBtn').textContent='⏸';var tick=function(){if(state.step>=state.steps.length-1){stop();return}stepTo(state.step+1);var delay=2150-Number($('#speedRange').value);if(state.algo==='min')delay*=state.didactic?1.65:1.3;state.timer=setTimeout(tick,delay)};tick()}
   function stop(){state.playing=false;clearTimeout(state.timer);if($('#playBtn'))$('#playBtn').textContent='▶'}
   function setAlgo(algo){
