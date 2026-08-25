@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Algoritmo Meléndez - Minimización Didáctica de AFD</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --panel:#ffffff; --ink:#172033; --muted:#667085;
+    --line:#dfe5ee; --accent:#2563eb; --ok:#0f9d58; --warn:#f59e0b; --bad:#dc2626;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  header{padding:28px 22px;background:linear-gradient(135deg,#172554,#312e81);color:#fff}
+  header h1{margin:0 0 6px;font-size:clamp(28px,4vw,46px)}
+  header p{margin:0;opacity:.9;font-size:16px}
+  .wrap{max-width:1420px;margin:0 auto;padding:20px}
+  .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px}
+  .workspace{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(380px,.96fr);gap:18px;align-items:start}
+  @media(max-width:1020px){.workspace,.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 8px 28px rgba(30,41,59,.06)}
+  .card h2{margin:0 0 12px;font-size:21px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+  button,select,input{font:inherit}
+  button{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700;min-height:42px}
+  .primary{background:var(--accent);color:#fff}.secondary{background:#eef2f7;color:#1f2937}.danger{background:#fee2e2;color:#991b1b}
+  .success{background:#dcfce7;color:#166534}.ghost{background:#fff;border:1px solid var(--line)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .note{background:#eef4ff;border-left:5px solid var(--accent);padding:12px 14px;border-radius:10px;margin:10px 0 14px;line-height:1.45}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+  @media(max-width:700px){.steps{grid-template-columns:1fr 1fr}}
+  .step{padding:10px;border-radius:12px;background:#f8fafc;border:1px solid var(--line);text-align:center;font-size:13px}
+  .step.active{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8;font-weight:800}
+  .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse;min-width:620px}
+  th,td{padding:10px;border-bottom:1px solid var(--line);text-align:center}
+  th{background:#f8fafc;position:sticky;top:0;z-index:1}
+  tr:last-child td{border-bottom:0}
+  td input[type=text]{width:90px;padding:7px;border:1px solid #cbd5e1;border-radius:8px;text-align:center}
+  td input[type=checkbox]{transform:scale(1.25)}
+  .state-chip,.eq-chip,.noeq-chip{display:inline-block;padding:5px 9px;border-radius:999px;font-weight:800;margin:2px}
+  .state-chip{background:#e0e7ff;color:#3730a3}.eq-chip{background:#dcfce7;color:#166534}.noeq-chip{background:#fee2e2;color:#991b1b}
+  .panel-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .muted{color:var(--muted)}
+  .big-status{font-size:18px;line-height:1.45;padding:14px;border-radius:12px;background:#f8fafc;border:1px dashed #cbd5e1;min-height:86px}
+  .history{max-height:430px;overflow:auto}
+  .history-item{padding:11px 12px;border-left:4px solid #94a3b8;background:#f8fafc;border-radius:10px;margin-bottom:9px}
+  .history-item strong{display:block;margin-bottom:3px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;margin-top:8px;align-items:center}
+  .mini{font-size:12px;padding:6px 8px;min-height:32px}
+  .formula{font-family:Cambria,Georgia,serif;font-size:18px;text-align:center;padding:10px;background:#fafafa;border-radius:10px;border:1px solid var(--line)}
+  .footer{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+  .result-box{background:#ecfdf3;border:1px solid #bbf7d0;border-radius:12px;padding:12px;margin-top:10px;overflow:auto}
+  .warning-box{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px;margin-top:10px}
+  .success-box{background:#ecfdf3;border:1px solid #bbf7d0;border-radius:12px;padding:12px;margin-top:10px}
+  .hidden{display:none!important}
+  code{background:#f1f5f9;padding:2px 5px;border-radius:6px}
+  #graphWrap{border:1px solid var(--line);border-radius:14px;background:linear-gradient(#fff,#fbfdff);overflow:hidden;min-height:440px;position:relative}
+  #graphSvg{width:100%;height:auto;display:block;touch-action:none}
+  .graph-help{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}
+  .legend-dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:2px solid #334155;vertical-align:-1px;margin-right:4px}
+  .legend-ring{width:16px;height:16px;border-radius:50%;display:inline-block;border:3px solid #16a34a;vertical-align:-3px;margin-right:4px;background:#fff}
+  .legend-double{width:16px;height:16px;border-radius:50%;display:inline-block;border:4px double #334155;vertical-align:-3px;margin-right:4px;background:#fff}
+  .file-label{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700;background:#fff;min-height:42px}
+  .io-line{font-size:13px;color:var(--muted);margin:4px 0 12px}
+  .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700}
+  .graph-titleline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+  .graph-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;margin:8px 0}
+
+  /* Interfaz compacta v3 */
+  header{padding:12px 18px}
+  header h1{font-size:clamp(20px,2.4vw,29px);margin:0 0 2px;line-height:1.1}
+  header p{font-size:13px}
+  .wrap{max-width:1480px;padding:12px}
+  .card{border-radius:14px;padding:12px;box-shadow:0 4px 16px rgba(30,41,59,.05)}
+  .card h2{font-size:17px;margin:0 0 8px}
+  .workspace{grid-template-columns:minmax(0,1.02fr) minmax(340px,.98fr);gap:12px}
+  .grid{gap:12px}
+  .toolbar{gap:6px;margin-bottom:8px}
+  button{border-radius:8px;padding:7px 10px;min-height:34px;font-size:13px}
+  .file-label{border-radius:8px;padding:7px 10px;min-height:34px;font-size:13px}
+  .mini{font-size:11px;padding:5px 7px;min-height:28px}
+  .note{padding:8px 10px;margin:7px 0 9px;font-size:13px}
+  .steps{gap:5px;margin-top:6px}
+  .step{padding:7px;font-size:12px;border-radius:9px}
+  .formula{font-size:15px;padding:7px}
+  th,td{padding:7px;font-size:13px}
+  td input[type=text]{width:76px;padding:5px;border-radius:6px}
+  .io-line,.graph-help,.legend,.graph-legend{font-size:11px}
+  .big-status{font-size:14px;padding:9px;min-height:58px}
+  .history{max-height:260px}
+  .history-item{padding:8px 9px;margin-bottom:6px;font-size:12px}
+  #graphWrap{min-height:330px;border-radius:11px}
+  #graphSvg{max-height:350px}
+  .footer{padding:12px;font-size:11px}
+  .result-box{padding:9px;margin-top:8px}
+
+  /* Ventanas deslizantes */
+  .slide-card{padding:0;overflow:hidden}
+  .slide-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:#fff;cursor:pointer;user-select:none}
+  .slide-head h2{margin:0;font-size:16px}
+  .slide-toggle{min-width:32px;min-height:28px;padding:3px 8px;font-size:15px;line-height:1;background:#eef2f7;color:#334155}
+  .slide-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .28s ease,border-top-color .28s ease;border-top:1px solid var(--line)}
+  .slide-body > .slide-inner{overflow:hidden;min-height:0;padding:10px 12px}
+  .slide-card.is-collapsed .slide-body{grid-template-rows:0fr;border-top-color:transparent}
+  .slide-card.is-collapsed .slide-body > .slide-inner{padding-top:0;padding-bottom:0}
+  .slide-card.is-collapsed .slide-toggle{transform:rotate(-90deg)}
+  .slide-toggle{transition:transform .22s ease}
+  .compact-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  @media(max-width:850px){.compact-row{grid-template-columns:1fr}.workspace{grid-template-columns:1fr}}
+
+  /* Grafo final */
+  .final-layout{display:grid;grid-template-columns:minmax(300px,.9fr) minmax(360px,1.1fr);gap:10px;align-items:start;margin-top:8px}
+  @media(max-width:900px){.final-layout{grid-template-columns:1fr}}
+  #finalGraphWrap{border:1px solid #bbf7d0;border-radius:11px;background:#fff;overflow:hidden;min-height:280px}
+  #finalGraphSvg{width:100%;height:auto;display:block;max-height:320px}
+  .final-caption{font-size:12px;color:#166534;margin:4px 0 8px;font-weight:700}
+
+
+  /* v4 · interfaz comparativa compacta */
+  header{padding:8px 14px}
+  header h1{font-size:20px;margin:0;line-height:1.05}
+  header p{font-size:11px;margin-top:2px}
+  .titleline{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .wrap{max-width:1540px;padding:8px 10px}
+  .main-card{padding:9px}
+  .quick-tools{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:7px}
+  .tool-group{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+  .compact-field{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700}
+  .compact-field input{width:78px;padding:5px 6px;border:1px solid #cbd5e1;border-radius:7px;font-size:12px}
+  button,.file-label{min-height:30px;padding:5px 8px;font-size:11.5px;border-radius:7px}
+  .control-deck{display:grid;grid-template-columns:auto minmax(360px,1fr) minmax(280px,1.15fr);align-items:center;gap:8px;padding:7px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+  .nav-buttons{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+  .next-strong{padding-left:13px;padding-right:13px}
+  .steps-inline{grid-template-columns:repeat(4,minmax(72px,1fr));margin:0;gap:4px}
+  .steps-inline .step{padding:5px 4px;font-size:10.5px}
+  .status-inline{font-size:12px;line-height:1.25;padding:6px 8px;background:#fff;border:1px dashed #cbd5e1;border-radius:8px;min-height:30px}
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .machine-pane{border:1px solid var(--line);border-radius:11px;padding:7px;background:#fff;min-width:0}
+  .machine-head,.table-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  .machine-head{margin-bottom:5px}
+  .machine-head>div{display:flex;align-items:baseline;gap:7px}
+  .machine-head strong{font-size:13px}
+  .machine-head .muted,.table-head span{font-size:10.5px}
+  .graph-box{min-height:240px!important;height:240px;border-radius:8px!important;background:#fbfdff!important}
+  #graphSvg,#finalGraphSvg{height:240px!important;max-height:240px!important;width:100%;display:block}
+  .final-placeholder{border-color:#cfe8d8!important;background:linear-gradient(#fff,#fbfffc)!important}
+  .table-head{margin:5px 1px 4px}
+  .table-head strong{font-size:11.5px}
+  .compact-table-wrap{max-height:190px;border-radius:7px}
+  .compact-table-wrap table{min-width:440px}
+  .compact-table-wrap th,.compact-table-wrap td{padding:3px 4px;font-size:10.5px}
+  .compact-table-wrap td input[type=text]{width:58px;padding:3px 4px;font-size:10.5px;border-radius:5px}
+  .compact-table-wrap td input[type=checkbox]{transform:scale(.95)}
+  .analysis-strip{display:grid;grid-template-columns:1.05fr 1.15fr 1.15fr 1fr;gap:6px;margin:0 0 7px}
+  .analysis-cell{min-width:0;min-height:34px;padding:5px 7px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;font-size:10.5px;overflow:auto}
+  .current-cell{background:#eef4ff;border-color:#c7d7fe}
+  .evolution-badge{display:inline-block;padding:2px 6px;border-radius:999px;background:#ecfdf3;color:#166534;font-weight:800;font-size:10px}
+  .candidate-ring{filter:drop-shadow(0 0 2px rgba(22,163,74,.35))}
+  .state-chip,.eq-chip,.noeq-chip{font-size:10px;padding:3px 6px;margin:1px}
+  .legend{margin-top:0;font-size:10px;gap:5px}
+  .result-summary{font-size:11px;margin-top:5px}
+  .result-box{padding:6px 8px;margin-top:5px;font-size:11px}
+  .lower-grid{display:grid;grid-template-columns:1.4fr .8fr .7fr;gap:8px;margin-top:8px}
+  .lower-grid .card{padding:0}
+  .slide-head{padding:6px 8px}
+  .slide-head h2{font-size:12px}
+  .slide-body > .slide-inner{padding:6px 8px}
+  .compact-work-table{max-height:205px}
+  .compact-work-table table{min-width:560px}
+  .compact-work-table th,.compact-work-table td{padding:4px;font-size:10.5px}
+  .history{max-height:205px}
+  .history-item{font-size:10.5px;padding:5px 6px}
+  .note{font-size:11px;padding:6px 8px}
+  .formula{font-size:12px;padding:5px}
+  .warning-box,.success-box{font-size:11px;padding:6px 8px;margin-top:6px}
+  .footer{padding:8px;font-size:10px}
+  @media(max-width:1120px){
+    .control-deck{grid-template-columns:1fr 1fr}.status-inline{grid-column:1/-1}.lower-grid{grid-template-columns:1fr 1fr}.lower-grid #guidePanel{grid-column:1/-1}
+  }
+  @media(max-width:820px){
+    .compare-grid{grid-template-columns:1fr}.control-deck{grid-template-columns:1fr}.status-inline{grid-column:auto}.analysis-strip{grid-template-columns:1fr 1fr}.lower-grid{grid-template-columns:1fr}.lower-grid #guidePanel{grid-column:auto}.graph-box,#graphSvg,#finalGraphSvg{height:225px!important;min-height:225px!important}
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap" style="padding:0">
+    <div class="titleline">
+      <div><h1>Algoritmo Meléndez</h1><p>Minimización didáctica de AFD por equivalencia iterativa.</p></div>
+      <span class="badge">AFD · JFLAP</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="card main-card">
+    <div class="quick-tools">
+      <div class="tool-group">
+        <button class="secondary" type="button" onclick="loadExample('classic')">Ejemplo</button>
+        <button class="secondary" type="button" onclick="loadExample('cascade')">Cascada</button>
+        <button class="secondary" type="button" onclick="loadExample('finaltrap')">Final / no final</button>
+      </div>
+      <div class="tool-group">
+        <label class="compact-field">Σ <input id="alphabet" type="text" value="a,b"></label>
+        <button class="ghost" type="button" onclick="rebuildTable()">Aplicar</button>
+        <button class="ghost" type="button" onclick="addState()">+ Estado</button>
+        <button class="danger" type="button" onclick="removeState()">− Estado</button>
+      </div>
+      <div class="tool-group io-tools">
+        <label class="file-label" for="jffInput">Importar .jff</label>
+        <input id="jffInput" type="file" accept=".jff,.xml,text/xml,application/xml" class="hidden">
+        <button class="ghost" type="button" onclick="exportCurrentJFF()">Exportar entrada</button>
+        <button class="success" id="exportMinBtn" type="button" onclick="exportMinimizedJFF()" disabled>Exportar mínimo</button>
+      </div>
+    </div>
+
+    <div class="control-deck" id="execPanel">
+      <div class="nav-buttons">
+        <button class="ghost" type="button" onclick="resetAlgorithm()">↺ Reiniciar</button>
+        <button class="primary next-strong" id="nextBtn" type="button" onclick="nextStep()">Siguiente paso ▶</button>
+        <button class="success" type="button" onclick="runAll()">Ejecutar todo</button>
+      </div>
+      <div class="steps steps-inline">
+        <div class="step" id="s1">1 · Separar</div>
+        <div class="step" id="s2">2 · Comparar</div>
+        <div class="step" id="s3">3 · Fusionar</div>
+        <div class="step" id="s4">4 · Punto fijo</div>
+      </div>
+      <div id="status" class="status-inline">Pulsa <b>Siguiente paso</b> para comenzar.</div>
+    </div>
+
+    <div class="analysis-strip">
+      <div id="currentStates" class="analysis-cell current-cell"><b>Estados actuales:</b> <span class="muted">copia original</span></div>
+      <div id="classes" class="analysis-cell"><span class="muted">Clases: aún no calculadas.</span></div>
+      <div id="equiv" class="analysis-cell"><span class="muted">Equivalencias: aún no calculadas.</span></div>
+      <div id="graphClassLegend" class="analysis-cell legend"></div>
+    </div>
+
+    <div class="compare-grid">
+      <section class="machine-pane original-pane">
+        <div class="machine-head">
+          <div><strong>AFD original</strong><span class="muted">editable</span></div>
+          <button class="ghost mini" type="button" onclick="autoLayout(true)">Reorganizar</button>
+        </div>
+        <div id="graphWrap" class="graph-box">
+          <svg id="graphSvg" viewBox="0 0 760 360" role="img" aria-label="Grafo del autómata original">
+            <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#475569"></path></marker></defs>
+            <g id="edgeLayer"></g><g id="nodeLayer"></g>
+          </svg>
+        </div>
+        <div class="table-head"><strong>Tabla original</strong><span>★ inicial · ✓ final</span></div>
+        <div class="table-wrap compact-table-wrap"><table id="inputTable"></table></div>
+      </section>
+
+      <section class="machine-pane minimum-pane">
+        <div class="machine-head">
+          <div><strong>AFD mínimo · evolución</strong><span id="finalStateHint" class="muted">copia original</span></div>
+        </div>
+        <div id="finalGraphWrap" class="graph-box final-placeholder">
+          <svg id="finalGraphSvg" viewBox="0 0 760 340" role="img" aria-label="Grafo del autómata minimizado">
+            <defs><marker id="finalArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#475569"></path></marker></defs>
+            <g id="finalEdgeLayer"></g><g id="finalNodeLayer"></g>
+            <text id="finalPlaceholderText" x="380" y="170" text-anchor="middle" font-size="18" fill="#94a3b8">Copia inicial del AFD original</text>
+          </svg>
+        </div>
+        <div class="table-head"><strong>Tabla de la reducción</strong><span id="finalTableHint">copia original</span></div>
+        <div class="table-wrap compact-table-wrap"><table id="finalTable"></table></div>
+      </section>
+    </div>
+
+
+    <div id="validation" class="warning-box hidden"></div>
+    <div id="ioStatus" class="success-box hidden" aria-live="polite"></div>
+    <div id="result" class="result-summary"></div>
+  </section>
+
+  <div class="lower-grid">
+    <section class="card slide-card" id="tablePanel">
+      <div class="slide-head" data-slide-target="tablePanel"><h2>Tabla de trabajo por clases</h2><button class="slide-toggle" type="button" aria-label="Abrir o cerrar tabla">▼</button></div>
+      <div class="slide-body"><div class="slide-inner"><div class="table-wrap compact-work-table"><table id="workTable"></table></div></div></div>
+    </section>
+
+    <section class="card slide-card is-collapsed" id="historyPanel">
+      <div class="slide-head" data-slide-target="historyPanel"><h2>Historial pedagógico</h2><button class="slide-toggle" type="button" aria-label="Abrir o cerrar historial">▼</button></div>
+      <div class="slide-body"><div class="slide-inner"><div id="history" class="history"><div class="muted">Aún no hay pasos ejecutados.</div></div></div></div>
+    </section>
+
+    <section class="card slide-card is-collapsed" id="guidePanel">
+      <div class="slide-head" data-slide-target="guidePanel"><h2>Guía rápida</h2><button class="slide-toggle" type="button" aria-label="Abrir o cerrar guía">▼</button></div>
+      <div class="slide-body"><div class="slide-inner">
+        <div class="note"><b>Algoritmo Meléndez:</b> separar finales/no finales → comparar filas por clases → fusionar equivalentes → renombrar → repetir hasta punto fijo.</div>
+        <div class="formula">Tabla → equivalencias → fusión → nueva tabla → … → AFD mínimo</div>
+      </div></div>
+    </section>
+  </div>
+</div>
+<div class="footer">Algoritmo Meléndez · AFD original + evolución visual de fusiones hasta el mínimo · JFLAP (.jff)</div>
+<script>
+const PALETTE=['#dbeafe','#dcfce7','#fef3c7','#fce7f3','#ede9fe','#cffafe','#ffedd5','#e2e8f0','#fae8ff','#d1fae5'];
+let model={alphabet:['a','b'],states:[]};
+let algo={phase:0,iteration:0,classes:[],signatures:{},groups:[],visualGroups:[],done:false};
+let dragState=null;
+
+function escHTML(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+function escXML(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&apos;'}[c]));}
+function parseAlphabet(){return [...new Set(document.getElementById('alphabet').value.split(',').map(x=>x.trim()).filter(Boolean))];}
+function defaultStates(){return [
+  {name:'A',initial:true,final:false,t:{a:'C',b:'D'}},
+  {name:'B',initial:false,final:false,t:{a:'E',b:'F'}},
+  {name:'C',initial:false,final:true,t:{a:'C',b:'D'}},
+  {name:'E',initial:false,final:true,t:{a:'C',b:'D'}},
+  {name:'D',initial:false,final:false,t:{a:'D',b:'D'}},
+  {name:'F',initial:false,final:false,t:{a:'D',b:'D'}}
+];}
+function clearPositions(){model.states.forEach(s=>{delete s.x;delete s.y;});}
+function loadExample(type){
+  if(type==='classic') model={alphabet:['a','b'],states:defaultStates()};
+  if(type==='cascade') model={alphabet:['0','1'],states:[
+    {name:'A',initial:true,final:false,t:{'0':'B','1':'C'}},
+    {name:'B',initial:false,final:false,t:{'0':'D','1':'E'}},
+    {name:'C',initial:false,final:false,t:{'0':'F','1':'G'}},
+    {name:'D',initial:false,final:true,t:{'0':'D','1':'D'}},
+    {name:'F',initial:false,final:true,t:{'0':'D','1':'D'}},
+    {name:'E',initial:false,final:false,t:{'0':'E','1':'E'}},
+    {name:'G',initial:false,final:false,t:{'0':'E','1':'E'}}
+  ]};
+  if(type==='finaltrap') model={alphabet:['a','b'],states:[
+    {name:'A',initial:true,final:false,t:{a:'C',b:'C'}},
+    {name:'B',initial:false,final:true,t:{a:'C',b:'C'}},
+    {name:'C',initial:false,final:false,t:{a:'C',b:'C'}}
+  ]};
+  clearPositions(); autoLayout(false); document.getElementById('alphabet').value=model.alphabet.join(','); renderInput(); resetAlgorithm();
+}
+function addState(){
+  syncFromTable(); let base='Q',i=0; const names=new Set(model.states.map(s=>s.name)); while(names.has(base+i))i++;
+  const name=base+i,t={}; parseAlphabet().forEach(a=>t[a]=model.states[0]?.name||name);
+  model.states.push({name,initial:model.states.length===0,final:false,t}); autoLayout(false); renderInput(); resetAlgorithm();
+}
+function removeState(){syncFromTable(); if(model.states.length>1)model.states.pop(); autoLayout(false); renderInput(); resetAlgorithm();}
+function rebuildTable(){syncFromTable(); const alpha=parseAlphabet(); model.alphabet=alpha; model.states.forEach(s=>{const nt={};alpha.forEach(a=>nt[a]=s.t[a]||s.name);s.t=nt;});renderInput();resetAlgorithm();}
+
+function renderInput(){
+  const a=model.alphabet; let h='<tr><th>Estado</th><th>Inicial</th><th>Final</th>'+a.map(x=>`<th>${escHTML(x)}</th>`).join('')+'</tr>';
+  model.states.forEach((s,i)=>{h+=`<tr><td><input type="text" value="${escHTML(s.name)}" data-name="${i}"></td><td><input type="radio" name="initial" ${s.initial?'checked':''} data-initial="${i}"></td><td><input type="checkbox" ${s.final?'checked':''} data-final="${i}"></td>${a.map(x=>`<td><input type="text" value="${escHTML(s.t[x]||'')}" data-tr="${i}" data-sym="${escHTML(x)}"></td>`).join('')}</tr>`;});
+  document.getElementById('inputTable').innerHTML=h;
+  attachTableListeners(); renderGraph();
+}
+function attachTableListeners(){
+  const table=document.getElementById('inputTable');
+  table.querySelectorAll('input').forEach(el=>el.addEventListener('change',()=>{syncFromTable();resetAlgorithm(false);renderGraph();}));
+}
+function syncFromTable(){
+  model.alphabet=parseAlphabet();
+  model.states.forEach((s,i)=>{
+    const n=document.querySelector(`[data-name="${i}"]`); if(n)s.name=n.value.trim()||s.name;
+    const ini=document.querySelector(`[data-initial="${i}"]`); if(ini)s.initial=ini.checked;
+    const fin=document.querySelector(`[data-final="${i}"]`); if(fin)s.final=fin.checked;
+    model.alphabet.forEach(a=>{const sel=[...document.querySelectorAll(`[data-tr="${i}"]`)].find(e=>e.dataset.sym===a);if(sel)s.t[a]=sel.value.trim();});
+  });
+}
+function validate(show=true){
+  syncFromTable(); const names=model.states.map(s=>s.name),errs=[];
+  if(!model.alphabet.length)errs.push('El alfabeto no puede estar vacío.');
+  if(new Set(names).size!==names.length)errs.push('Hay nombres de estados repetidos.');
+  if(!model.states.some(s=>s.initial))errs.push('Debe existir un estado inicial.');
+  if(model.states.filter(s=>s.initial).length>1)errs.push('Un AFD debe tener un único estado inicial.');
+  model.states.forEach(s=>model.alphabet.forEach(a=>{if(!names.includes(s.t[a]))errs.push(`Transición inválida: ${s.name} --${a}--> ${s.t[a]||'∅'}`);}));
+  const box=document.getElementById('validation');
+  if(show){if(errs.length){box.innerHTML='<b>Corrige antes de continuar:</b><br>'+errs.map(escHTML).join('<br>');box.classList.remove('hidden');}else box.classList.add('hidden');}
+  return errs.length===0;
+}
+function resetAlgorithm(render=true){
+  algo={phase:0,iteration:0,classes:[],signatures:{},groups:[],visualGroups:model.states.map(s=>[s.name]),done:false};
+  document.getElementById('status').innerHTML='Pulsa <b>Siguiente paso</b> para comenzar.';
+  document.getElementById('classes').innerHTML='<b>Clases de comparación:</b> <span class="muted">aún no calculadas</span>';
+  document.getElementById('equiv').innerHTML='<b>Equivalencias:</b> <span class="muted">aún no calculadas</span>';
+  document.getElementById('result').innerHTML='';
+  document.getElementById('history').innerHTML='<div class="muted">Aún no hay pasos ejecutados.</div>';document.getElementById('workTable').innerHTML='';
+  document.getElementById('nextBtn').disabled=false;document.getElementById('exportMinBtn').disabled=true;setActiveStep(0);
+  renderEvolution('original');
+  if(render)renderGraph();
+}
+function setActiveStep(n){for(let i=1;i<=4;i++)document.getElementById('s'+i).classList.toggle('active',i===n);}
+function classOf(name){return algo.classes.findIndex(c=>c.includes(name));}
+function computeSignatures(){const sig={};model.states.forEach(s=>{sig[s.name]=[s.final?'F':'N',...model.alphabet.map(a=>classOf(s.t[a]))].join('|');});return sig;}
+function groupBySignature(sig){const m={};model.states.forEach(s=>{const k=sig[s.name];(m[k]??=[]).push(s.name);});return Object.values(m);}
+function showClasses(){document.getElementById('classes').innerHTML='<b>Clases actuales:</b><br>'+algo.classes.map((c,i)=>`<span class="state-chip">C${i} = {${c.map(escHTML).join(', ')}}</span>`).join(' ');}
+function renderWork(){
+  if(!algo.classes.length)return;
+  let h='<tr><th>Estado</th><th>Tipo</th>'+model.alphabet.map(a=>`<th>${escHTML(a)}</th>`).join('')+'<th>Firma</th></tr>';
+  model.states.forEach(s=>{h+=`<tr><td>${s.initial?'★ ':''}${escHTML(s.name)}</td><td>${s.final?'Final':'No final'}</td>${model.alphabet.map(a=>`<td>${escHTML(s.t[a])} <span class="muted">(C${classOf(s.t[a])})</span></td>`).join('')}<td><code>${escHTML(algo.signatures[s.name]||'—')}</code></td></tr>`;});
+  document.getElementById('workTable').innerHTML=h;
+}
+function addHistory(title,text){const h=document.getElementById('history');if(h.querySelector('.muted'))h.innerHTML='';h.innerHTML+=`<div class="history-item"><strong>${escHTML(title)}</strong>${text}</div>`;h.scrollTop=h.scrollHeight;}
+function samePartition(a,b){if(a.length!==b.length)return false;const norm=x=>x.map(g=>[...g].sort().join(',')).sort().join('|');return norm(a)===norm(b);}
+
+function groupsToModel(groups){
+  const safe=(groups&&groups.length)?groups:model.states.map(s=>[s.name]);
+  const names=safe.map(g=>g.length===1?g[0]:'['+g.join('+')+']');
+  const states=safe.map((g,i)=>{
+    const rep=model.states.find(s=>s.name===g[0]);
+    const t={};
+    model.alphabet.forEach(a=>{
+      const dest=rep?.t?.[a];
+      const j=safe.findIndex(x=>x.includes(dest));
+      t[a]=j>=0?names[j]:dest;
+    });
+    return {name:names[i],members:[...g],initial:g.some(n=>model.states.find(s=>s.name===n)?.initial),final:!!rep?.final,t};
+  });
+  return {alphabet:[...model.alphabet],states};
+}
+function renderEvolution(mode='current'){
+  const groups=algo.visualGroups?.length?algo.visualGroups:model.states.map(s=>[s.name]);
+  const em=groupsToModel(groups);
+  const candidates=(mode==='candidates'?algo.groups.filter(g=>g.length>1):[]);
+  renderFinalGraph(em,candidates);
+  renderEvolutionTable(em);
+  const count=em.states.length,original=model.states.length;
+  const hint=document.getElementById('finalStateHint');
+  const th=document.getElementById('finalTableHint');
+  const cur=document.getElementById('currentStates');
+  if(mode==='original'){
+    if(hint)hint.textContent=`${original} → ${count} estados · copia original`;
+    if(th)th.textContent=`${count} estados · original`;
+  }else if(mode==='candidates'){
+    if(hint)hint.textContent=`${original} → ${count} estados · equivalencias marcadas`;
+    if(th)th.textContent=`${count} estados · antes de pegar`;
+  }else if(algo.done){
+    if(hint)hint.textContent=`${original} → ${count} estados · mínimo`;
+    if(th)th.textContent=`${count} estados · mínimo`;
+  }else{
+    if(hint)hint.textContent=`${original} → ${count} estados · reducción en curso`;
+    if(th)th.textContent=`${count} estados · tras fusión`;
+  }
+  if(cur){
+    const chips=em.states.map(s=>`<span class="state-chip">${escHTML(s.name)}</span>`).join(' ');
+    cur.innerHTML=`<b>Estados actuales (${count}):</b><br>${chips}`;
+  }
+}
+function renderEvolutionTable(em){
+  let table='<tr><th>Estado</th><th>Final</th>'+em.alphabet.map(a=>`<th>${escHTML(a)}</th>`).join('')+'</tr>';
+  em.states.forEach(s=>{table+=`<tr><td>${s.initial?'★ ':''}${escHTML(s.name)}</td><td>${s.final?'Sí':'No'}</td>${em.alphabet.map(a=>`<td>${escHTML(s.t[a])}</td>`).join('')}</tr>`;});
+  const ft=document.getElementById('finalTable');if(ft)ft.innerHTML=table;
+  const fp=document.getElementById('finalPlaceholderText');if(fp)fp.style.display='none';
+}
+
+function nextStep(){
+  if(algo.done)return;if(!validate())return;
+  if(algo.phase===0){
+    const nf=model.states.filter(s=>!s.final).map(s=>s.name),f=model.states.filter(s=>s.final).map(s=>s.name);algo.classes=[];if(nf.length)algo.classes.push(nf);if(f.length)algo.classes.push(f);
+    algo.iteration=1;showClasses();algo.signatures=computeSignatures();renderWork();
+    document.getElementById('status').innerHTML='<b>Paso 1:</b> separo estados finales y no finales. Esto evita fusionar estados con distinto comportamiento de aceptación.';
+    addHistory('Paso 1 · Partición inicial',algo.classes.map(c=>`{${c.map(escHTML).join(', ')}}`).join(' · '));setActiveStep(1);algo.phase=1;renderGraph();renderEvolution('current');return;
+  }
+  if(algo.phase===1){
+    algo.signatures=computeSignatures();algo.groups=groupBySignature(algo.signatures);renderWork();
+    const merges=algo.groups.filter(g=>g.length>1);
+    document.getElementById('equiv').innerHTML='<b>Filas equivalentes en esta iteración:</b><br>'+(merges.length?merges.map(g=>`<span class="eq-chip">${g.map(escHTML).join(' ≡ ')}</span>`).join(' '):'<span class="noeq-chip">Ninguna nueva</span>');
+    document.getElementById('status').innerHTML='<b>Paso 2:</b> comparo las filas usando las <u>clases actuales</u> de los estados destino. Dos filas coinciden si tienen el mismo tipo y la misma firma.';
+    addHistory(`Iteración ${algo.iteration} · Comparación`,merges.length?`Equivalencias candidatas: ${merges.map(g=>g.map(escHTML).join(' ≡ ')).join(' ; ')}`:'No aparecen nuevas equivalencias.');setActiveStep(2);algo.phase=2;renderGraph();renderEvolution('candidates');return;
+  }
+  if(algo.phase===2){
+    const old=algo.classes.map(x=>[...x]),next=algo.groups.map(x=>[...x]);
+    if(samePartition(old,next)){
+      algo.visualGroups=next.map(x=>[...x]);algo.done=true;setActiveStep(4);document.getElementById('status').innerHTML='<b>Terminamos:</b> la partición ya no cambia. Se alcanzó el punto fijo.';
+      addHistory('Punto fijo','No hay más estados equivalentes por descubrir. El AFD está minimizado respecto a los estados considerados.');showFinal();document.getElementById('nextBtn').disabled=true;document.getElementById('exportMinBtn').disabled=false;renderGraph();return;
+    }
+    algo.classes=next;algo.visualGroups=next.map(x=>[...x]);algo.iteration++;showClasses();algo.signatures=computeSignatures();renderWork();
+    document.getElementById('status').innerHTML='<b>Paso 3:</b> pego los estados equivalentes en nuevas clases y renombro conceptualmente cada grupo como una sola unidad.';
+    addHistory(`Iteración ${algo.iteration-1} · Fusión`,`Nueva partición: ${algo.classes.map((c,i)=>`C${i}={${c.map(escHTML).join(', ')}}`).join(' · ')}`);setActiveStep(3);algo.phase=1;renderGraph();renderEvolution('current');return;
+  }
+}
+function runAll(){let guard=0;while(!algo.done&&guard<50){nextStep();if(!validate(false))break;guard++;}}
+function minimizedModel(){
+  if(!algo.done)return null;
+  const groups=algo.classes,names=groups.map(g=>g.length===1?g[0]:'['+g.join('+')+']');
+  const states=groups.map((g,i)=>{const rep=model.states.find(s=>s.name===g[0]),t={};model.alphabet.forEach(a=>{const j=groups.findIndex(x=>x.includes(rep.t[a]));t[a]=names[j];});return {name:names[i],initial:g.some(n=>model.states.find(s=>s.name===n)?.initial),final:rep.final,t};});
+  return {alphabet:[...model.alphabet],states};
+}
+function showFinal(){
+  const min=minimizedModel();if(!min)return;
+  let table='<tr><th>Estado</th><th>Final</th>'+min.alphabet.map(a=>`<th>${escHTML(a)}</th>`).join('')+'</tr>';
+  min.states.forEach(s=>{table+=`<tr><td>${s.initial?'★ ':''}${escHTML(s.name)}</td><td>${s.final?'Sí':'No'}</td>${min.alphabet.map(a=>`<td>${escHTML(s.t[a])}</td>`).join('')}</tr>`;});
+  const ft=document.getElementById('finalTable');if(ft)ft.innerHTML=table;
+  const fp=document.getElementById('finalPlaceholderText');if(fp)fp.style.display='none';
+  const fh=document.getElementById('finalStateHint');if(fh)fh.textContent=`${min.states.length} estados`;
+  const fth=document.getElementById('finalTableHint');if(fth)fth.textContent=`${min.states.length} estados`;
+  document.getElementById('result').innerHTML=`<div class="result-box"><b>AFD mínimo listo:</b> ${model.states.length} → ${min.states.length} estados. Los equivalentes quedaron fusionados y dibujados a la derecha.</div>`;
+  algo.visualGroups=algo.classes.map(x=>[...x]);renderEvolution('current');
+}
+function renderFinalGraph(sourceModel,candidateGroups=[]){
+  const edgeLayer=document.getElementById('finalEdgeLayer'),nodeLayer=document.getElementById('finalNodeLayer');
+  if(!edgeLayer||!nodeLayer||!sourceModel.states.length)return;
+  const n=sourceModel.states.length,cx=380,cy=170,rx=Math.min(270,120+n*22),ry=Math.min(105,62+n*8);
+  const states=sourceModel.states.map((s,i)=>{const ang=-Math.PI/2+(i*2*Math.PI/n);return {...s,x:cx+rx*Math.cos(ang),y:cy+ry*Math.sin(ang)};});
+  const byName=new Map(states.map(s=>[s.name,s])),pairMap=new Map();
+  states.forEach(s=>sourceModel.alphabet.forEach(a=>{const to=byName.get(s.t[a]);if(!to)return;const key=s.name+'→'+to.name;if(!pairMap.has(key))pairMap.set(key,{from:s,to,labels:[]});pairMap.get(key).labels.push(a);}));
+  let edges='';
+  pairMap.forEach(({from,to,labels})=>{
+    const label=escHTML(labels.join(', '));
+    if(from===to){
+      edges+=`<path d="M ${from.x-18} ${from.y-27} C ${from.x-55} ${from.y-74}, ${from.x+55} ${from.y-74}, ${from.x+18} ${from.y-27}" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#finalArrow)"/><text x="${from.x}" y="${from.y-70}" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">${label}</text>`;
+    }else{
+      const dx=to.x-from.x,dy=to.y-from.y,dist=Math.hypot(dx,dy)||1,ux=dx/dist,uy=dy/dist;
+      const sx=from.x+ux*31,sy=from.y+uy*31,ex=to.x-ux*35,ey=to.y-uy*35;
+      const reverse=pairMap.has(to.name+'→'+from.name),bend=reverse?24:0,px=-uy,py=ux,qx=(sx+ex)/2+px*bend,qy=(sy+ey)/2+py*bend;
+      edges+=`<path d="M ${sx} ${sy} Q ${qx} ${qy} ${ex} ${ey}" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#finalArrow)"/><text x="${qx+px*9}" y="${qy+py*9-4}" text-anchor="middle" font-size="13" font-weight="700" fill="#334155" paint-order="stroke" stroke="#fff" stroke-width="5">${label}</text>`;
+    }
+  });
+  edgeLayer.innerHTML=edges;
+  const candidateMembers=new Set(candidateGroups.flat());
+  let nodes='';
+  states.forEach((s,i)=>{
+    const fill=PALETTE[i%PALETTE.length];
+    const members=s.members||[s.name];
+    const candidate=members.some(n=>candidateMembers.has(n));
+    if(s.initial)nodes+=`<path d="M ${s.x-67} ${s.y} L ${s.x-36} ${s.y}" stroke="#334155" stroke-width="2.5" marker-end="url(#finalArrow)"/>`;
+    if(candidate)nodes+=`<circle class="candidate-ring" cx="${s.x}" cy="${s.y}" r="36" fill="none" stroke="#16a34a" stroke-width="5" stroke-dasharray="7 4"/>`;
+    nodes+=`<circle cx="${s.x}" cy="${s.y}" r="28" fill="${fill}" stroke="#166534" stroke-width="2.5"/>${s.final?`<circle cx="${s.x}" cy="${s.y}" r="22" fill="none" stroke="#166534" stroke-width="2"/>`:''}<text x="${s.x}" y="${s.y+5}" text-anchor="middle" font-size="13" font-weight="800" fill="#172033">${escHTML(s.name)}</text>`;
+  });
+  nodeLayer.innerHTML=nodes;
+}
+
+function autoLayout(force=true){
+  const n=model.states.length;if(!n)return;
+  const cx=380,cy=180,rx=Math.min(280,120+n*20),ry=Math.min(125,70+n*8);
+  model.states.forEach((s,i)=>{if(force||!Number.isFinite(s.x)||!Number.isFinite(s.y)){const ang=-Math.PI/2+(i*2*Math.PI/n);s.x=cx+rx*Math.cos(ang);s.y=cy+ry*Math.sin(ang);}});renderGraph();
+}
+function equivalentSet(){
+  const set=new Set();
+  if(algo.done){algo.classes.filter(g=>g.length>1).forEach(g=>g.forEach(n=>set.add(n)));return set;}
+  if(algo.phase===2||algo.groups.length){algo.groups.filter(g=>g.length>1).forEach(g=>g.forEach(n=>set.add(n)));}
+  return set;
+}
+function stateColor(name){const i=classOf(name);return i>=0?PALETTE[i%PALETTE.length]:'#e2e8f0';}
+function renderGraph(){
+  if(!model.states.length)return;autoLayoutIfNeeded();
+  const edgeLayer=document.getElementById('edgeLayer'),nodeLayer=document.getElementById('nodeLayer');if(!edgeLayer||!nodeLayer)return;
+  const byName=new Map(model.states.map(s=>[s.name,s]));
+  const pairMap=new Map();
+  model.states.forEach(s=>model.alphabet.forEach(a=>{const to=byName.get(s.t[a]);if(!to)return;const key=s.name+'→'+to.name;if(!pairMap.has(key))pairMap.set(key,{from:s,to,labels:[]});pairMap.get(key).labels.push(a);}));
+  let edges='';
+  pairMap.forEach(({from,to,labels})=>{
+    const label=escHTML(labels.join(', '));
+    if(from===to){
+      const x=from.x,y=from.y;edges+=`<path d="M ${x-18} ${y-27} C ${x-55} ${y-80}, ${x+55} ${y-80}, ${x+18} ${y-27}" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/><text x="${x}" y="${y-76}" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">${label}</text>`;
+    }else{
+      const dx=to.x-from.x,dy=to.y-from.y,dist=Math.hypot(dx,dy)||1,ux=dx/dist,uy=dy/dist;
+      const sx=from.x+ux*31,sy=from.y+uy*31,ex=to.x-ux*35,ey=to.y-uy*35;
+      const reverse=pairMap.has(to.name+'→'+from.name),bend=reverse?28:0,px=-uy,py=ux,cx=(sx+ex)/2+px*bend,cy=(sy+ey)/2+py*bend;
+      edges+=`<path d="M ${sx} ${sy} Q ${cx} ${cy} ${ex} ${ey}" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/><text x="${cx+px*10}" y="${cy+py*10-4}" text-anchor="middle" font-size="14" font-weight="700" fill="#334155" paint-order="stroke" stroke="#fff" stroke-width="5">${label}</text>`;
+    }
+  });
+  edgeLayer.innerHTML=edges;
+  const eq=equivalentSet();let nodes='';
+  model.states.forEach((s,i)=>{
+    const fill=stateColor(s.name),ring=eq.has(s.name);
+    if(s.initial)nodes+=`<path d="M ${s.x-67} ${s.y} L ${s.x-36} ${s.y}" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>`;
+    if(ring)nodes+=`<circle cx="${s.x}" cy="${s.y}" r="36" fill="none" stroke="#16a34a" stroke-width="5" opacity=".9"/>`;
+    nodes+=`<g class="graph-node" data-index="${i}" style="cursor:grab"><circle cx="${s.x}" cy="${s.y}" r="28" fill="${fill}" stroke="#334155" stroke-width="2.5"/>${s.final?`<circle cx="${s.x}" cy="${s.y}" r="22" fill="none" stroke="#334155" stroke-width="2"/>`:''}<text x="${s.x}" y="${s.y+5}" text-anchor="middle" font-size="15" font-weight="800" fill="#172033">${escHTML(s.name)}</text></g>`;
+  });
+  nodeLayer.innerHTML=nodes;attachDragHandlers();renderGraphLegend();
+}
+function autoLayoutIfNeeded(){if(model.states.some(s=>!Number.isFinite(s.x)||!Number.isFinite(s.y))){const n=model.states.length,cx=380,cy=180,rx=Math.min(280,120+n*20),ry=Math.min(125,70+n*8);model.states.forEach((s,i)=>{if(!Number.isFinite(s.x)||!Number.isFinite(s.y)){const ang=-Math.PI/2+(i*2*Math.PI/n);s.x=cx+rx*Math.cos(ang);s.y=cy+ry*Math.sin(ang);}});}}
+function renderGraphLegend(){
+  const el=document.getElementById('graphClassLegend');if(!algo.classes.length){el.innerHTML='<span class="muted">Ejecuta el algoritmo para colorear las clases de equivalencia.</span>';return;}
+  el.innerHTML=algo.classes.map((g,i)=>`<span><span class="legend-dot" style="background:${PALETTE[i%PALETTE.length]}"></span>C${i}: {${g.map(escHTML).join(', ')}}</span>`).join('');
+}
+function svgPoint(evt){const svg=document.getElementById('graphSvg'),pt=svg.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse());}
+function attachDragHandlers(){
+  document.querySelectorAll('.graph-node').forEach(g=>g.addEventListener('pointerdown',e=>{e.preventDefault();const idx=Number(g.dataset.index);dragState={idx,pointerId:e.pointerId};g.setPointerCapture?.(e.pointerId);g.style.cursor='grabbing';}));
+}
+document.getElementById('graphSvg').addEventListener('pointermove',e=>{if(!dragState)return;const p=svgPoint(e),s=model.states[dragState.idx];s.x=Math.max(42,Math.min(718,p.x));s.y=Math.max(42,Math.min(318,p.y));renderGraph();});
+document.getElementById('graphSvg').addEventListener('pointerup',()=>{dragState=null;});
+document.getElementById('graphSvg').addEventListener('pointercancel',()=>{dragState=null;});
+
+function showIO(msg,ok=true){const box=document.getElementById('ioStatus');box.classList.remove('hidden');box.className=(ok?'success-box':'warning-box');box.innerHTML=msg;setTimeout(()=>box.classList.add('hidden'),7000);}
+function importJFF(file){
+  const reader=new FileReader();reader.onload=()=>{
+    try{
+      const xml=new DOMParser().parseFromString(reader.result,'application/xml');if(xml.querySelector('parsererror'))throw new Error('El XML no es válido.');
+      const type=xml.querySelector('structure > type')?.textContent?.trim();if(type!=='fa')throw new Error('El archivo JFLAP no es de tipo autómata finito (fa).');
+      const stateEls=[...xml.querySelectorAll('automaton > state')];if(!stateEls.length)throw new Error('No se encontraron estados en el archivo.');
+      const idMap=new Map();const states=stateEls.map((el,i)=>{const id=el.getAttribute('id')??String(i),name=el.getAttribute('name')||('q'+id);const x=parseFloat(el.querySelector('x')?.textContent),y=parseFloat(el.querySelector('y')?.textContent);const s={name,initial:!!el.querySelector('initial'),final:!!el.querySelector('final'),t:{},x:Number.isFinite(x)?x:undefined,y:Number.isFinite(y)?y:undefined};idMap.set(id,s);return s;});
+      if(states.filter(s=>s.initial).length!==1)throw new Error('Para un AFD debe existir exactamente un estado inicial.');
+      const alphabet=[];const seen=new Map();
+      for(const tr of xml.querySelectorAll('automaton > transition')){
+        const from=idMap.get(tr.querySelector('from')?.textContent?.trim()),to=idMap.get(tr.querySelector('to')?.textContent?.trim());if(!from||!to)throw new Error('Hay una transición que referencia un estado inexistente.');
+        const readEl=tr.querySelector('read'),sym=(readEl?.textContent??'').trim();if(sym==='')throw new Error('El archivo contiene una ε-transición. El Algoritmo Meléndez de esta app requiere un AFD sin ε.');
+        if(!alphabet.includes(sym))alphabet.push(sym);const key=from.name+'\u0000'+sym;
+        if(seen.has(key)&&seen.get(key)!==to.name)throw new Error(`No determinismo detectado: desde ${from.name} con “${sym}” hay más de un destino.`);
+        seen.set(key,to.name);from.t[sym]=to.name;
+      }
+      states.forEach(s=>alphabet.forEach(a=>{if(!(a in s.t))s.t[a]='';}));
+      model={alphabet,states};scaleImportedPositions();document.getElementById('alphabet').value=alphabet.join(',');renderInput();resetAlgorithm();validate();showIO(`<b>JFLAP importado:</b> ${escHTML(file.name)} · ${states.length} estados · alfabeto {${alphabet.map(escHTML).join(', ')}}`,true);
+    }catch(err){showIO(`<b>No se pudo importar:</b> ${escHTML(err.message)}`,false);}
+  };reader.onerror=()=>showIO('<b>No se pudo leer el archivo.</b>',false);reader.readAsText(file);
+}
+function scaleImportedPositions(){
+  const pts=model.states.filter(s=>Number.isFinite(s.x)&&Number.isFinite(s.y));if(pts.length!==model.states.length){autoLayout(false);return;}
+  const xs=pts.map(s=>s.x),ys=pts.map(s=>s.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),w=Math.max(1,maxX-minX),h=Math.max(1,maxY-minY);
+  pts.forEach(s=>{s.x=70+(s.x-minX)/w*620;s.y=70+(s.y-minY)/h*300;});
+}
+document.getElementById('jffInput').addEventListener('change',e=>{const f=e.target.files?.[0];if(f)importJFF(f);e.target.value='';});
+
+function jffString(sourceModel){
+  const states=sourceModel.states;const ids=new Map(states.map((s,i)=>[s.name,String(i)]));
+  const pos=states.map((s,i)=>{if(Number.isFinite(s.x)&&Number.isFinite(s.y))return {x:s.x,y:s.y};const n=states.length,ang=-Math.PI/2+i*2*Math.PI/n;return {x:380+250*Math.cos(ang),y:220+150*Math.sin(ang)};});
+  let xml='<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<structure>\n  <type>fa</type>\n  <automaton>\n';
+  states.forEach((s,i)=>{xml+=`    <state id="${i}" name="${escXML(s.name)}">\n      <x>${pos[i].x.toFixed(1)}</x>\n      <y>${pos[i].y.toFixed(1)}</y>\n${s.initial?'      <initial/>\n':''}${s.final?'      <final/>\n':''}    </state>\n`;});
+  states.forEach(s=>sourceModel.alphabet.forEach(a=>{const to=s.t[a];if(!ids.has(to))return;xml+=`    <transition>\n      <from>${ids.get(s.name)}</from>\n      <to>${ids.get(to)}</to>\n      <read>${escXML(a)}</read>\n    </transition>\n`;}));
+  xml+='  </automaton>\n</structure>\n';return xml;
+}
+function downloadText(name,text){const blob=new Blob([text],{type:'application/xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function exportCurrentJFF(){syncFromTable();if(!validate())return;downloadText('algoritmo_melendez_entrada.jff',jffString(model));showIO('<b>Exportado:</b> autómata de entrada en formato JFLAP (.jff).',true);}
+function exportMinimizedJFF(){const min=minimizedModel();if(!min){showIO('<b>Primero ejecuta la minimización hasta el punto fijo.</b>',false);return;}autoLayoutForModel(min);downloadText('algoritmo_melendez_minimo.jff',jffString(min));showIO('<b>Exportado:</b> autómata minimizado en formato JFLAP (.jff).',true);}
+function autoLayoutForModel(m){const n=m.states.length;m.states.forEach((s,i)=>{const ang=-Math.PI/2+i*2*Math.PI/n;s.x=380+250*Math.cos(ang);s.y=220+150*Math.sin(ang);});}
+
+
+function initSlidingPanels(){
+  document.querySelectorAll('[data-slide-target]').forEach(head=>{
+    head.addEventListener('click',e=>{
+      if(e.target.closest('button')&&e.target.closest('button').classList.contains('slide-toggle')) e.preventDefault();
+      const panel=document.getElementById(head.dataset.slideTarget);if(!panel)return;
+      panel.classList.toggle('is-collapsed');
+    });
+  });
+}
+initSlidingPanels();
+
+loadExample('classic');
+</script>
+</body>
+</html>

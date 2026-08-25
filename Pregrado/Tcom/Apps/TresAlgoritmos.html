@@ -34,6 +34,7 @@
     .head-actions{display:flex;align-items:center;gap:8px}
     .icon-btn,.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:11px;padding:9px 12px;box-shadow:0 3px 10px rgba(25,35,60,.04);transition:.18s}
     .icon-btn:hover,.btn:hover{border-color:var(--blue);transform:translateY(-1px)}
+    button:disabled{opacity:.42;cursor:not-allowed;transform:none!important}
     .icon-btn{width:40px;height:40px;padding:0;display:grid;place-items:center}
     .btn.primary{background:var(--blue);border-color:var(--blue);color:white}
     .btn.soft{background:var(--blue-soft);color:var(--blue);border-color:transparent}
@@ -84,6 +85,11 @@
     .divider{height:1px;background:var(--line);margin:14px 0}
     .status-box{display:flex;gap:8px;align-items:flex-start;padding:10px;border-radius:11px;background:var(--green-soft);color:var(--green);font-size:11px;line-height:1.4}
     .status-box.warn{background:var(--amber-soft);color:var(--amber)}
+    .status-box.error{background:var(--red-soft);color:var(--red)}
+    .validation-list{margin:0;padding-left:17px;display:grid;gap:3px}
+    .simulation-status{padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:10px;line-height:1.45;margin-top:7px}
+    .simulation-status.accept{background:var(--green-soft);color:var(--green)}.simulation-status.reject{background:var(--red-soft);color:var(--red)}
+    .state-node.sim-active .state-circle{fill:var(--cyan);stroke:var(--blue);stroke-width:4;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--cyan) 55%,transparent))}
     .legend{display:grid;gap:6px;font-size:11px;color:var(--muted)}
     .legend-item{display:flex;align-items:center;gap:7px}
     .legend-dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
@@ -246,6 +252,8 @@
         <div><h1>Automata Visual Lab</h1><div class="subtitle">Explora paso a paso cómo se transforman los autómatas</div></div>
       </div>
       <div class="head-actions">
+        <button class="icon-btn" id="undoBtn" aria-label="Deshacer" title="Deshacer (Ctrl+Z)" disabled>↶</button>
+        <button class="icon-btn" id="redoBtn" aria-label="Rehacer" title="Rehacer (Ctrl+Y)" disabled>↷</button>
         <button class="btn small soft" id="theoryBtn">📖 Teoría</button>
         <button class="btn small" id="challengeBtn">🎯 Nuevo reto</button>
         <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema">☾</button>
@@ -270,6 +278,11 @@
       <div class="drawer-head"><div class="panel-title">Editor y ejemplos</div><button class="drawer-close" data-drawer-close aria-label="Cerrar editor">×</button></div>
       <div class="panel-title">Biblioteca de ejemplos</div>
       <div class="field"><label for="exampleSelect">Ejemplo activo</label><select id="exampleSelect"></select></div>
+      <div class="tool-grid" id="exampleManager">
+        <button class="tool-btn" id="renameExampleBtn">✎ Renombrar</button><button class="tool-btn" id="duplicateExampleBtn">⧉ Duplicar</button>
+        <button class="tool-btn danger" id="deleteExampleBtn">⌫ Quitar</button><button class="tool-btn" id="exportExampleBtn">⇧ Exportar</button>
+      </div>
+      <div class="field" style="margin-top:8px"><label for="exampleKindSelect">Clasificación del importado</label><select id="exampleKindSelect"><option value="nfa">NFA / AFND</option><option value="min">DFA / AFD</option><option value="rip">RIP / RegEx</option></select></div>
       <div class="tool-grid">
         <button class="tool-btn" id="newBtn">＋ Nuevo</button><button class="tool-btn" id="runBtn">▶ Preparar</button>
       </div>
@@ -300,6 +313,11 @@
       <div class="switch-row"><span>🎓 Modo didáctico</span><label class="switch"><input id="didacticToggle" type="checkbox" checked><span></span></label></div>
       <div class="switch-row"><span>Preguntas interactivas</span><label class="switch"><input id="quizToggle" type="checkbox" checked><span></span></label></div>
       <div id="validation" class="status-box"><span>✓</span><span>Autómata válido para comenzar.</span></div>
+      <div class="divider"></div>
+      <div class="panel-title">Simular una cadena</div>
+      <div class="field"><label for="simulationInput">Cadena (separa símbolos largos con espacios)</label><input id="simulationInput" placeholder="abba o a b b a"></div>
+      <div class="tool-grid"><button class="tool-btn" id="startSimulationBtn">▶ Iniciar</button><button class="tool-btn" id="nextSimulationBtn">Símbolo →</button><button class="tool-btn" id="prevSimulationBtn">← Anterior</button><button class="tool-btn" id="resetSimulationBtn">↻ Limpiar</button></div>
+      <div class="simulation-status" id="simulationStatus" aria-live="polite">Escribe una cadena para recorrer el autómata.</div>
       <div class="divider"></div>
       <details>
         <summary>Leyenda visual</summary>
@@ -442,36 +460,54 @@
   function savedImportedExamples(){
     try{var items=JSON.parse(localStorage.getItem('avl-imported-examples')||'[]');return Array.isArray(items)?items.filter(function(item){return item&&item.id&&item.name&&item.data}):[]}catch(e){return []}
   }
-  var state={algo:'nfa',automaton:null,steps:[],step:0,selected:null,tool:null,edgeStart:null,pendingEdge:null,playing:false,timer:null,zoom:1,zoomOrigin:'50% 50%',nodePositions:{},didactic:true,quiz:true,format:'json',modalMode:'import',importedExamples:savedImportedExamples(),ripOrder:[]};
+  var state={algo:'nfa',automaton:null,steps:[],step:0,selected:null,tool:null,edgeStart:null,pendingEdge:null,playing:false,timer:null,zoom:1,zoomOrigin:'50% 50%',nodePositions:{},didactic:true,quiz:true,format:'json',modalMode:'import',importedExamples:savedImportedExamples(),ripOrder:[],ripPreview:null,undoStack:[],redoStack:[],historyReady:false,simulation:null};
   function initialState(){return state.automaton.states.find(function(s){return s.initial})}
   function finals(){return state.automaton.states.filter(function(s){return s.final}).map(function(s){return s.id})}
   function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(function(){t.classList.remove('show')},2200)}
+  function historySnapshot(){return {automaton:clone(state.automaton),nodePositions:clone(state.nodePositions)}}
+  function updateHistoryButtons(){$('#undoBtn').disabled=!state.undoStack.length;$('#redoBtn').disabled=!state.redoStack.length}
+  function recordHistory(){if(!state.historyReady||!state.automaton)return;state.undoStack.push(historySnapshot());if(state.undoStack.length>50)state.undoStack.shift();state.redoStack=[];state.simulation=null;renderSimulationStatus();updateHistoryButtons()}
+  function restoreHistory(snapshot){state.automaton=clone(snapshot.automaton);state.nodePositions=clone(snapshot.nodePositions||{});state.selected=null;state.simulation=null;prepareAlgorithm();renderSimulationStatus();updateHistoryButtons()}
+  function undo(){if(!state.undoStack.length)return;state.redoStack.push(historySnapshot());restoreHistory(state.undoStack.pop());toast('Cambio deshecho.')}
+  function redo(){if(!state.redoStack.length)return;state.undoStack.push(historySnapshot());restoreHistory(state.redoStack.pop());toast('Cambio rehecho.')}
+  function persistImportedExamples(){localStorage.setItem('avl-imported-examples',JSON.stringify(state.importedExamples))}
   function loadExample(index){
     var value=String(index),imported=value.indexOf('imported:')===0?state.importedExamples.find(function(item){return item.id===value.slice(9)}):null,example=imported||examples[state.algo][Number(index)||0];
     if(!example)return;
+    recordHistory();
     state.automaton=clone(example.data);state.selected=null;clearTool();state.pendingEdge=null;state.step=0;state.steps=[];state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';
-    if(!imported)autoLayout(false);validate();prepareAlgorithm();render();
+    exitRipEditView();
+    state.simulation=null;if(!imported)autoLayout(false);validate();prepareAlgorithm();render();renderSimulationStatus();updateExampleManager();
   }
   function populateExamples(){
     var sel=$('#exampleSelect');sel.innerHTML='';
     examples[state.algo].forEach(function(example,i){var option=document.createElement('option');option.value=String(i);option.textContent=example.name;sel.appendChild(option)});
-    if(state.importedExamples.length){var group=document.createElement('optgroup');group.label='Importados';state.importedExamples.forEach(function(example){var option=document.createElement('option');option.value='imported:'+example.id;option.textContent='Archivo · '+example.name;group.appendChild(option)});sel.appendChild(group)}
+    if(state.importedExamples.length){var group=document.createElement('optgroup');group.label='Importados';state.importedExamples.forEach(function(example){var option=document.createElement('option');option.value='imported:'+example.id;option.textContent='['+(example.kind||example.format||'FA').toUpperCase()+'] '+example.name;group.appendChild(option)});sel.appendChild(group)}
+    updateExampleManager();
   }
   function rememberImportedExample(name,format,automaton){
-    var item={id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),name:name,format:format,data:clone(automaton)};state.importedExamples.unshift(item);state.importedExamples=state.importedExamples.slice(0,20);
-    try{localStorage.setItem('avl-imported-examples',JSON.stringify(state.importedExamples))}catch(e){toast('El archivo estará disponible durante esta sesión, pero el navegador no pudo guardarlo.')}
-    populateExamples();$('#exampleSelect').value='imported:'+item.id;return item;
+    var item={id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),name:name,format:format,kind:state.algo,data:clone(automaton)};state.importedExamples.unshift(item);state.importedExamples=state.importedExamples.slice(0,20);
+    try{persistImportedExamples()}catch(e){toast('El archivo estará disponible durante esta sesión, pero el navegador no pudo guardarlo.')}
+    populateExamples();$('#exampleSelect').value='imported:'+item.id;updateExampleManager();return item;
   }
+  function selectedImportedExample(){var value=$('#exampleSelect').value;if(value.indexOf('imported:')!==0)return null;return state.importedExamples.find(function(item){return item.id===value.slice(9)})||null}
+  function updateExampleManager(){var item=selectedImportedExample(),disabled=!item;['renameExampleBtn','duplicateExampleBtn','deleteExampleBtn'].forEach(function(id){var el=$('#'+id);if(el)el.disabled=disabled});var kind=$('#exampleKindSelect');if(kind){kind.disabled=disabled;if(item)kind.value=item.kind||'nfa'}}
+  function renameImportedExample(){var item=selectedImportedExample();if(!item)return;var name=prompt('Nuevo nombre del ejemplo:',item.name);if(!name||!name.trim())return;item.name=name.trim();persistImportedExamples();populateExamples();$('#exampleSelect').value='imported:'+item.id;updateExampleManager();toast('Ejemplo renombrado.')}
+  function duplicateImportedExample(){var item=selectedImportedExample();if(!item)return;var copy={id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),name:item.name+' · copia',format:item.format,kind:item.kind,data:clone(item.data)};state.importedExamples.unshift(copy);persistImportedExamples();populateExamples();$('#exampleSelect').value='imported:'+copy.id;loadExample('imported:'+copy.id);toast('Ejemplo duplicado.')}
+  function deleteImportedExample(){var item=selectedImportedExample();if(!item||!confirm('¿Quitar "'+item.name+'" de los ejemplos importados?'))return;state.importedExamples=state.importedExamples.filter(function(x){return x.id!==item.id});persistImportedExamples();populateExamples();$('#exampleSelect').value='0';loadExample(0);toast('Ejemplo importado eliminado.')}
   function validate(){
     var errors=[],a=state.automaton,init=a.states.filter(function(s){return s.initial});
     if(init.length!==1)errors.push(init.length?'Debe existir un solo estado inicial':'Falta el estado inicial');
     if(!a.states.some(function(s){return s.final}))errors.push('No existen estados de aceptación');
-    a.transitions.forEach(function(t){if(t.symbol!=='ε'&&a.alphabet.indexOf(t.symbol)<0)errors.push('Símbolo '+t.symbol+' fuera del alfabeto')});
+    if(!a.states.length)errors.push('El autómata no contiene estados');
+    a.transitions.forEach(function(t){if(!a.states.some(function(s){return s.id===t.from})||!a.states.some(function(s){return s.id===t.to}))errors.push('La transición '+t.from+' → '+t.to+' apunta a un estado inexistente');if(t.symbol!=='ε'&&a.alphabet.indexOf(t.symbol)<0)errors.push('Símbolo '+t.symbol+' fuera del alfabeto')});
     if(state.algo==='min'){
       var seen={};a.transitions.forEach(function(t){var k=t.from+'|'+t.symbol;seen[k]=(seen[k]||0)+1});
-      if(Object.keys(seen).some(function(k){return seen[k]>1})||a.transitions.some(function(t){return t.symbol==='ε'}))errors.push('La minimización requiere un DFA determinista');
+      if(Object.keys(seen).some(function(k){return seen[k]>1}))errors.push('Hay más de una transición para el mismo estado y símbolo');
+      if(a.transitions.some(function(t){return t.symbol==='ε'}))errors.push('Un DFA para minimizar no puede contener transiciones ε');
+      a.states.forEach(function(s){a.alphabet.forEach(function(symbol){if(!a.transitions.some(function(t){return t.from===s.id&&t.symbol===symbol}))errors.push('Falta δ('+s.id+', '+symbol+'): el DFA está incompleto')})});
     }
-    var box=$('#validation');box.className='status-box'+(errors.length?' warn':'');box.innerHTML=errors.length?'<span>⚠</span><span>'+errors[0]+'</span>':'<span>✓</span><span>Autómata válido para comenzar.</span>';
+    errors=errors.filter(function(error,i){return errors.indexOf(error)===i});var box=$('#validation');box.className='status-box'+(errors.length?' error':'');box.innerHTML=errors.length?'<span>⚠</span><div><strong>'+errors.length+' problema'+(errors.length===1?'':'s')+'</strong><ul class="validation-list">'+errors.map(function(error){return '<li>'+esc(error)+'</li>'}).join('')+'</ul></div>':'<span>✓</span><span>Autómata válido para comenzar.</span>';
     return !errors.length;
   }
   function eclosure(ids,a){
@@ -482,6 +518,15 @@
   function move(ids,sym,a){
     var out=new Set();a.transitions.forEach(function(t){if(ids.indexOf(t.from)>=0&&t.symbol===sym)out.add(t.to)});return Array.from(out).sort();
   }
+  function simulationTokens(text){var clean=text.trim();if(!clean)return [];if(/[\s,]/.test(clean))return clean.split(/[\s,]+/).filter(Boolean);return state.automaton.alphabet.every(function(s){return Array.from(s).length===1})?Array.from(clean):[clean]}
+  function startSimulation(){
+    var init=initialState();if(!init){toast('Define un estado inicial antes de simular.');return}var tokens=simulationTokens($('#simulationInput').value),bad=tokens.find(function(symbol){return state.automaton.alphabet.indexOf(symbol)<0});if(bad){toast('El símbolo '+bad+' no pertenece al alfabeto.');return}
+    var active=eclosure([init.id],state.automaton),steps=[{active:active,edges:[],symbol:null}];tokens.forEach(function(symbol){var edges=state.automaton.transitions.filter(function(t){return active.indexOf(t.from)>=0&&t.symbol===symbol}),raw=move(active,symbol,state.automaton),next=eclosure(raw,state.automaton),closureEdges=[];var seen=new Set(raw),queue=raw.slice();while(queue.length){var q=queue.shift();state.automaton.transitions.filter(function(t){return t.from===q&&t.symbol==='ε'}).forEach(function(t){closureEdges.push(t);if(!seen.has(t.to)){seen.add(t.to);queue.push(t.to)}})}active=next;steps.push({active:active,edges:edges.concat(closureEdges).map(function(t){return t.id}),symbol:symbol})});
+    state.simulation={tokens:tokens,steps:steps,index:0};if(state.algo==='rip'){$('#workspace').classList.add('left-open');$('#leftDrawerBtn').classList.add('active')}render();renderSimulationStatus();toast('Simulación preparada. Avanza símbolo por símbolo.');
+  }
+  function moveSimulation(delta){if(!state.simulation){startSimulation();return}state.simulation.index=Math.max(0,Math.min(state.simulation.steps.length-1,state.simulation.index+delta));render();renderSimulationStatus()}
+  function resetSimulation(){state.simulation=null;render();renderSimulationStatus()}
+  function renderSimulationStatus(){var box=$('#simulationStatus');if(!box)return;if(!state.simulation){box.className='simulation-status';box.textContent='Escribe una cadena para recorrer el autómata.';return}var sim=state.simulation,current=sim.steps[sim.index],done=sim.index===sim.steps.length-1,accepted=done&&current.active.some(function(id){return finals().indexOf(id)>=0}),consumed=sim.tokens.slice(0,sim.index).join(' '),pending=sim.tokens.slice(sim.index).join(' ');box.className='simulation-status'+(done?(accepted?' accept':' reject'):'');box.innerHTML='<strong>'+(done?(accepted?'✓ Cadena aceptada':'✕ Cadena rechazada'):'Paso '+sim.index+' de '+sim.tokens.length)+'</strong><br>Activos: {'+esc(current.active.join(', ')||'∅')+'}<br>Consumido: '+esc(consumed||'ε')+(pending?'<br>Pendiente: '+esc(pending):'')}
   function layoutGraph(g,w,h){
     var n=g.states.length;if(!n)return g;
     g.states.forEach(function(s,i){var ang=-Math.PI/2+2*Math.PI*i/n;s.x=w/2+Math.cos(ang)*Math.min(w*.36,155);s.y=h/2+Math.sin(ang)*Math.min(h*.33,140)});
@@ -575,7 +620,8 @@
     var init=a.states.find(function(s){return s.initial});if(init)setR(S,init.id,'ε');
     a.states.filter(function(s){return s.final}).forEach(function(s){setR(s.id,F,'ε')});
     var allInternal=a.states.map(function(s){return s.id}),order=(chosenOrder||[]).filter(function(id,i,list){return allInternal.indexOf(id)>=0&&list.indexOf(id)===i});
-    var steps=[{name:'Normalización',action:'Creamos un nuevo inicio '+S+' y un único final '+F+'.',reason:'RIP necesita que inicio y final no sean eliminados y no tengan conexiones indebidas.',result:S+' apunta con ε al inicio anterior; cada final anterior apunta con ε a '+F+'.',formula:S+' —ε→ '+(init?init.id:'?')+'    finales —ε→ '+F,nodes:nodes.slice(),regex:clone(R),normalized:true,eliminatedOrder:[]}];
+    var ripMeta={startNode:S,finalNode:F};
+    var steps=[{name:'Normalización',action:'Creamos un nuevo inicio '+S+' y un único final '+F+'.',reason:'RIP necesita que inicio y final no sean eliminados y no tengan conexiones indebidas.',result:S+' apunta con ε al inicio anterior; cada final anterior apunta con ε a '+F+'.',formula:S+' —ε→ '+(init?init.id:'?')+'    finales —ε→ '+F,nodes:nodes.slice(),regex:clone(R),normalized:true,startNode:ripMeta.startNode,finalNode:ripMeta.finalNode,eliminatedOrder:[]}];
     var eliminatedOrder=[];
     order.forEach(function(k){
       var previewNodes=nodes.slice(),previewRegex=clone(R),others=nodes.filter(function(x){return x!==k}),updates=[],rk=R[k+'→'+k]||'∅';
@@ -591,28 +637,33 @@
       nodes=others;
       var u=updates[0];
       eliminatedOrder.push(k);
-      steps.push({name:'Eliminar '+k,action:'Eliminamos el estado '+k+' elegido por el usuario y reemplazamos todos los caminos que lo atraviesan.',reason:'Entrada · (bucle)* · salida conserva exactamente los recorridos que usaban el estado.',result:updates.length?'Se actualizaron '+updates.length+' conexiones y '+k+' puede desaparecer.':'No había caminos completos a través de '+k+'.',formula:u?(u.old+' + '+u.rin+'('+u.loop+')*'+u.rout+' = '+u.value):'Sin conexiones nuevas',nodes:nodes.slice(),regex:clone(R),previewNodes:previewNodes,previewRegex:previewRegex,activeState:k,current:[k],eliminated:k,eliminatedOrder:eliminatedOrder.slice(),updates:updates,target:u?[u.j]:[],verbal:'Elegiste '+k+'. Calculamos todas las rutas que entran a este estado, recorren su bucle cero o más veces y salen hacia otro estado; después sustituimos esas rutas por nuevas etiquetas.'});
+      steps.push({name:'Eliminar '+k,action:'Eliminamos el estado '+k+' elegido por el usuario y reemplazamos todos los caminos que lo atraviesan.',reason:'Entrada · (bucle)* · salida conserva exactamente los recorridos que usaban el estado.',result:updates.length?'Se actualizaron '+updates.length+' conexiones y '+k+' puede desaparecer.':'No había caminos completos a través de '+k+'.',formula:u?(u.old+' + '+u.rin+'('+u.loop+')*'+u.rout+' = '+u.value):'Sin conexiones nuevas',nodes:nodes.slice(),regex:clone(R),previewNodes:previewNodes,previewRegex:previewRegex,activeState:k,current:[k],eliminated:k,startNode:ripMeta.startNode,finalNode:ripMeta.finalNode,eliminatedOrder:eliminatedOrder.slice(),updates:updates,target:u?[u.j]:[],verbal:'Elegiste '+k+'. Calculamos todas las rutas que entran a este estado, recorren su bucle cero o más veces y salen hacia otro estado; después sustituimos esas rutas por nuevas etiquetas.'});
     });
     var remaining=allInternal.filter(function(id){return eliminatedOrder.indexOf(id)<0});
     if(remaining.length){
-      steps.push({name:'Elegir el siguiente estado',action:'Haz clic sobre uno de los estados resaltados o usa los botones de la tabla lateral.',reason:'El método RIP permite eliminar los estados internos en cualquier orden; el tamaño de las expresiones intermedias puede cambiar.',result:'Estados disponibles: {'+remaining.join(', ')+'}.',formula:'Elige k ∈ {'+remaining.join(', ')+'}',nodes:nodes.slice(),regex:clone(R),candidates:remaining,awaitingChoice:true,eliminatedOrder:eliminatedOrder.slice(),verbal:'Ahora tú decides qué estado desaparece. Los estados con borde violeta son candidatos válidos; el nuevo inicio y el nuevo final están protegidos.'});
+      steps.push({name:'Elegir el siguiente estado',action:'Haz clic sobre uno de los estados resaltados o usa los botones de la tabla lateral.',reason:'El método RIP permite eliminar los estados internos en cualquier orden; el tamaño de las expresiones intermedias puede cambiar.',result:'Estados disponibles: {'+remaining.join(', ')+'}.',formula:'Elige k ∈ {'+remaining.join(', ')+'}',nodes:nodes.slice(),regex:clone(R),candidates:remaining,awaitingChoice:true,startNode:ripMeta.startNode,finalNode:ripMeta.finalNode,eliminatedOrder:eliminatedOrder.slice(),verbal:'Ahora tú decides qué estado desaparece. Los estados con borde violeta son candidatos válidos; el nuevo inicio y el nuevo final están protegidos.'});
       return steps;
     }
     var finalRegex=R[S+'→'+F]||'∅';
-    steps.push({name:'Expresión regular obtenida',action:'Solo quedan el nuevo inicio y el nuevo final.',reason:'La etiqueta entre ellos resume todos los caminos aceptados por el autómata original.',result:'RegEx: '+finalRegex,formula:finalRegex,nodes:[S,F],regex:clone(R),complete:true,eliminatedOrder:eliminatedOrder.slice()});
+    steps.push({name:'Expresión regular obtenida',action:'Solo quedan el nuevo inicio y el nuevo final.',reason:'La etiqueta entre ellos resume todos los caminos aceptados por el autómata original.',result:'RegEx: '+finalRegex,formula:finalRegex,nodes:[S,F],regex:clone(R),complete:true,startNode:ripMeta.startNode,finalNode:ripMeta.finalNode,eliminatedOrder:eliminatedOrder.slice()});
     return steps;
+  }
+  function previewRipNode(step,id){
+    var R=step.regex||{},nodes=step.nodes||[],others=nodes.filter(function(x){return x!==id}),loop=R[id+'→'+id]||'∅',updates=[];others.forEach(function(i){var rin=R[i+'→'+id]||'∅';if(rin==='∅')return;others.forEach(function(j){var rout=R[id+'→'+j]||'∅';if(rout==='∅')return;var old=R[i+'→'+j]||'∅';updates.push({i:i,j:j,rin:rin,loop:loop,rout:rout,value:union(old,concat(rin,star(loop),rout))})})});return updates;
   }
   function chooseRipNode(id){
     var step=state.steps[state.step]||{};if(state.algo!=='rip'||!step.awaitingChoice||step.candidates.indexOf(id)<0){toast('Ese estado no puede eliminarse en este paso.');return}
-    state.ripOrder.push(id);state.steps=buildRipSteps(state.automaton,state.ripOrder);state.step=state.ripOrder.length;state.selected='rip-view|'+id;render();toast('Estado '+id+' seleccionado. Revisa cómo se actualizan las expresiones.');
+    state.ripPreview=id;state.selected='rip-view|'+id;render();toast('Vista previa de '+id+'. Confirma la eliminación en el panel lateral.');
+  }
+  function confirmRipNode(){var id=state.ripPreview;if(!id)return;state.ripOrder.push(id);state.ripPreview=null;state.steps=buildRipSteps(state.automaton,state.ripOrder);state.step=state.ripOrder.length;state.selected='rip-view|'+id;render();toast('Estado '+id+' eliminado del proceso RIP.')
   }
   function prepareAlgorithm(){
     stop();if(!validate()){state.steps=[];state.step=0;render();return}
-    state.ripOrder=[];state.steps=state.algo==='nfa'?buildNfaSteps(state.automaton):state.algo==='min'?buildMinSteps(state.automaton):buildRipSteps(state.automaton,state.ripOrder);
+    state.ripOrder=[];state.ripPreview=null;state.steps=state.algo==='nfa'?buildNfaSteps(state.automaton):state.algo==='min'?buildMinSteps(state.automaton):buildRipSteps(state.automaton,state.ripOrder);
     state.step=0;render();
   }
   function autoLayout(doRender){
-    if(!state.automaton)return;state.nodePositions={};layoutGraph(state.automaton,480,400);if(doRender!==false){prepareAlgorithm();render()}
+    if(!state.automaton)return;if(doRender!==false)recordHistory();state.nodePositions={};layoutGraph(state.automaton,480,400);if(doRender!==false){prepareAlgorithm();render()}
   }
   function graphFromDfa(step){
     var g={states:(step.dfaStates||[]).map(function(s){return {id:s.id,initial:s.initial,final:s.final,x:0,y:0}}),transitions:clone(step.dfaTrans||[]),alphabet:state.automaton.alphabet};
@@ -622,7 +673,7 @@
   function graphFromRegex(step){
     var originals={};state.automaton.states.forEach(function(s){originals[s.id]=s});
     var nodeList=step.previewNodes||step.nodes||[],regexMap=step.previewRegex||step.regex||{};
-    var states=nodeList.map(function(id,i){var base=originals[id];return {id:id,initial:id==='S'||id.indexOf('S')===0,final:id==='F'||id.indexOf('F')===0,x:base?base.x:60+i*380,y:base?base.y:190}});
+    var states=nodeList.map(function(id,i){var base=originals[id];return {id:id,initial:id===step.startNode,final:id===step.finalNode,x:base?base.x:60+i*380,y:base?base.y:190}});
     var transitions=[];Object.keys(regexMap).forEach(function(k){var p=k.split('→'),v=regexMap[k];if(v&&v!=='∅')transitions.push({id:'r'+transitions.length,from:p[0],to:p[1],symbol:v})});
     var g={states:states,transitions:transitions,alphabet:[]};layoutGraph(g,820,400);return g;
   }
@@ -662,14 +713,15 @@
     g.transitions.forEach(function(e,i){
       var a=nodes[e.from],b=nodes[e.to];if(!a||!b)return;
       var reverse=g.transitions.some(function(x){return x.from===e.to&&x.to===e.from&&e.from!==e.to}),p=edgePath(a,b,i,reverse);
-      var active=(step.traceEdges||[]).indexOf(e.id)>=0||(step.activeState&&(e.from===step.activeState||e.to===step.activeState)),created=step.createdEdge===e.id;
+      var simStep=space==='source'&&state.simulation?state.simulation.steps[state.simulation.index]:null,active=(step.traceEdges||[]).indexOf(e.id)>=0||(step.activeState&&(e.from===step.activeState||e.to===step.activeState))||(simStep&&(simStep.edges||[]).indexOf(e.id)>=0),created=step.createdEdge===e.id;
       s+='<path class="edge'+(active?' active':'')+(created?' created':'')+'" d="'+p.d+'" marker-end="url(#arrow)"/>';
       s+='<text class="edge-label" x="'+p.lx+'" y="'+(p.ly-5)+'">'+esc(e.symbol)+'</text>';
     });
     g.states.forEach(function(n){
-      var cl='state-node',isCurrent=currentIds.indexOf(n.id)>=0,isTarget=targetIds.indexOf(n.id)>=0,isNext=nextIds.indexOf(n.id)>=0&&!isCurrent&&!isTarget,isRipCandidate=(step.candidates||[]).indexOf(n.id)>=0;
+      var cl='state-node',isCurrent=currentIds.indexOf(n.id)>=0,isTarget=targetIds.indexOf(n.id)>=0,isNext=nextIds.indexOf(n.id)>=0&&!isCurrent&&!isTarget,isRipCandidate=(step.candidates||[]).indexOf(n.id)>=0,simActive=space==='source'&&state.simulation&&(state.simulation.steps[state.simulation.index].active||[]).indexOf(n.id)>=0;
       if(state.selected===space+'|'+n.id&&interactive)cl+=' selected';if(isCurrent)cl+=' processing';if(isTarget)cl+=' processed';if(isNext)cl+=' will-use';if(step.created===n.id)cl+=' created';if((step.unreachable||[]).indexOf(n.id)>=0)cl+=' eliminated';if(step.eliminated===n.id)cl+=' eliminated';
       if(isRipCandidate)cl+=' rip-candidate';
+      if(simActive)cl+=' sim-active';
       if(n.initial)s+='<path class="initial-arrow" d="M '+(n.x-62)+' '+n.y+' L '+(n.x-36)+' '+n.y+'" marker-end="url(#arrowGreen)"/>';
       s+='<g class="'+cl+'" data-node="'+esc(n.id)+'" data-space="'+esc(space)+'" data-ox="'+ox+'" data-oy="'+oy+'" data-scale="'+scale+'" transform="translate('+n.x+' '+n.y+')">';
       s+='<circle class="state-circle" r="31"/>';if(n.final)s+='<circle class="state-circle" r="25" fill="none"/>';
@@ -729,7 +781,7 @@
   function addPendingTransition(){
     if(!state.pendingEdge)return;var symbols=$('#transitionSymbolInput').value.split(',').map(function(x){return x.trim()}).filter(Boolean);
     if(!symbols.length)symbols=['ε'];
-    var edge=state.pendingEdge;symbols.forEach(function(symbol){state.automaton.transitions.push(tr(edge.from,symbol,edge.to));if(symbol!=='ε'&&state.automaton.alphabet.indexOf(symbol)<0)state.automaton.alphabet.push(symbol)});
+    recordHistory();var edge=state.pendingEdge;symbols.forEach(function(symbol){state.automaton.transitions.push(tr(edge.from,symbol,edge.to));if(symbol!=='ε'&&state.automaton.alphabet.indexOf(symbol)<0)state.automaton.alphabet.push(symbol)});
     $('#transitionModal').classList.remove('open');state.pendingEdge=null;clearTool();prepareAlgorithm();toast(symbols.length===1?'Transición creada.':'Transiciones creadas.');
   }
   function renderInspector(){
@@ -745,23 +797,23 @@
     $('#applyStateBtn').onclick=function(){
       var oldId=node.id,newId=$('#stateNameInput').value.trim();if(!newId){toast('El nombre del estado no puede estar vacío.');return}
       if(newId!==oldId&&state.automaton.states.some(function(s){return s.id===newId})){toast('Ya existe un estado llamado '+newId+'.');return}
-      node.id=newId;state.automaton.transitions.forEach(function(t){if(t.from===oldId)t.from=newId;if(t.to===oldId)t.to=newId});
+      recordHistory();node.id=newId;state.automaton.transitions.forEach(function(t){if(t.from===oldId)t.from=newId;if(t.to===oldId)t.to=newId});
       if($('#stateInitialInput').checked)state.automaton.states.forEach(function(s){s.initial=s===node});else node.initial=false;node.final=$('#stateFinalInput').checked;
       if(state.nodePositions['source|'+oldId]){state.nodePositions['source|'+newId]=state.nodePositions['source|'+oldId];delete state.nodePositions['source|'+oldId]}
       state.selected='source|'+newId;prepareAlgorithm();toast('Estado actualizado.');
     };
-    $('#deleteStateBtn').onclick=function(){var id=node.id;state.automaton.states=state.automaton.states.filter(function(s){return s.id!==id});state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.from!==id&&t.to!==id});state.selected=null;prepareAlgorithm();toast('Estado '+id+' eliminado.');};
-    $$('[data-transition-symbol]').forEach(function(input){input.onchange=function(){var t=state.automaton.transitions.find(function(edge){return edge.id===input.dataset.transitionSymbol}),symbol=input.value.trim()||'ε';if(!t)return;t.symbol=symbol;input.value=symbol;if(symbol!=='ε'&&state.automaton.alphabet.indexOf(symbol)<0)state.automaton.alphabet.push(symbol);prepareAlgorithm();toast(symbol==='ε'?'Transición actualizada como ε.':'Transición actualizada.')}});
-    $$('[data-transition-delete]').forEach(function(button){button.onclick=function(){var id=button.dataset.transitionDelete;state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.id!==id});prepareAlgorithm();toast('Transición eliminada.')}});
+    $('#deleteStateBtn').onclick=function(){recordHistory();var id=node.id;state.automaton.states=state.automaton.states.filter(function(s){return s.id!==id});state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.from!==id&&t.to!==id});state.selected=null;prepareAlgorithm();toast('Estado '+id+' eliminado.');};
+    $$('[data-transition-symbol]').forEach(function(input){input.onchange=function(){var t=state.automaton.transitions.find(function(edge){return edge.id===input.dataset.transitionSymbol}),symbol=input.value.trim()||'ε';if(!t)return;recordHistory();t.symbol=symbol;input.value=symbol;if(symbol!=='ε'&&state.automaton.alphabet.indexOf(symbol)<0)state.automaton.alphabet.push(symbol);prepareAlgorithm();toast(symbol==='ε'?'Transición actualizada como ε.':'Transición actualizada.')}});
+    $$('[data-transition-delete]').forEach(function(button){button.onclick=function(){recordHistory();var id=button.dataset.transitionDelete;state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.id!==id});prepareAlgorithm();toast('Transición eliminada.')}});
   }
   function bindGraphEvents(){
     $$('#graph .state-node').forEach(function(el){
       el.addEventListener('pointerdown',function(ev){
         var id=el.getAttribute('data-node'),space=el.getAttribute('data-space')||'source',isSource=space==='source',ripStep=state.steps[state.step]||{};
         if(state.algo==='rip'&&space==='rip-view'&&ripStep.awaitingChoice){
-          var startX=ev.clientX,startY=ev.clientY,moved=false,choiceSvg=$('#graph'),choiceOx=Number(el.getAttribute('data-ox')||0),choiceOy=Number(el.getAttribute('data-oy')||0),choiceScale=Number(el.getAttribute('data-scale')||1);
+          var startX=ev.clientX,startY=ev.clientY,moved=false,choiceHistory=false,choiceSvg=$('#graph'),choiceOx=Number(el.getAttribute('data-ox')||0),choiceOy=Number(el.getAttribute('data-oy')||0),choiceScale=Number(el.getAttribute('data-scale')||1);
           function moveChoice(e){
-            if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)moved=true;if(!moved)return;
+            if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)moved=true;if(!moved)return;if(!choiceHistory){recordHistory();choiceHistory=true}
             var point=choiceSvg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;var loc=point.matrixTransform(choiceSvg.getScreenCTM().inverse());state.nodePositions[space+'|'+id]={x:Math.max(32,Math.min(788,(loc.x-choiceOx)/choiceScale)),y:Math.max(38,Math.min(390,(loc.y-choiceOy)/choiceScale))};render();
           }
           function finishChoice(){window.removeEventListener('pointermove',moveChoice);window.removeEventListener('pointerup',finishChoice);if(!moved)chooseRipNode(id)}
@@ -769,13 +821,14 @@
         }
         if(state.tool&&!isSource){toast('Las herramientas editan el autómata original; este estado transformado sí puede moverse.');clearTool()}
         if(isSource&&state.tool==='edge'){if(!state.edgeStart){state.edgeStart=id;state.selected='source|'+id;render();toast('Origen: '+id+'. Ahora selecciona el destino.');return}else{openTransitionComposer(state.edgeStart,id);return}}
-        if(isSource&&state.tool==='initial'){state.automaton.states.forEach(function(s){s.initial=s.id===id});state.selected='source|'+id;clearTool();prepareAlgorithm();toast(id+' es ahora el estado inicial.');return}
-        if(isSource&&state.tool==='final'){var n=state.automaton.states.find(function(s){return s.id===id});n.final=!n.final;state.selected='source|'+id;clearTool();prepareAlgorithm();toast(n.final?id+' es de aceptación.':id+' dejó de ser de aceptación.');return}
-        if(isSource&&state.tool==='delete'){state.automaton.states=state.automaton.states.filter(function(s){return s.id!==id});state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.from!==id&&t.to!==id});state.selected=null;clearTool();prepareAlgorithm();toast('Estado '+id+' eliminado.');return}
+        if(isSource&&state.tool==='initial'){recordHistory();state.automaton.states.forEach(function(s){s.initial=s.id===id});state.selected='source|'+id;clearTool();prepareAlgorithm();toast(id+' es ahora el estado inicial.');return}
+        if(isSource&&state.tool==='final'){recordHistory();var n=state.automaton.states.find(function(s){return s.id===id});n.final=!n.final;state.selected='source|'+id;clearTool();prepareAlgorithm();toast(n.final?id+' es de aceptación.':id+' dejó de ser de aceptación.');return}
+        if(isSource&&state.tool==='delete'){recordHistory();state.automaton.states=state.automaton.states.filter(function(s){return s.id!==id});state.automaton.transitions=state.automaton.transitions.filter(function(t){return t.from!==id&&t.to!==id});state.selected=null;clearTool();prepareAlgorithm();toast('Estado '+id+' eliminado.');return}
         state.selected=space+'|'+id;var node=isSource?state.automaton.states.find(function(s){return s.id===id}):null;
-        var svg=$('#graph'),drag=true,ox=Number(el.getAttribute('data-ox')||0),oy=Number(el.getAttribute('data-oy')||0),sc=Number(el.getAttribute('data-scale')||1);
+        var svg=$('#graph'),drag=true,historyRecorded=false,ox=Number(el.getAttribute('data-ox')||0),oy=Number(el.getAttribute('data-oy')||0),sc=Number(el.getAttribute('data-scale')||1);
         function moveEv(e){
           if(!drag)return;
+          if(!historyRecorded){recordHistory();historyRecorded=true}
           var point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;var loc=point.matrixTransform(svg.getScreenCTM().inverse());
           var maxX=space==='rip-view'?820:space==='source'?480:440,x=Math.max(32,Math.min(maxX-32,(loc.x-ox)/sc)),y=Math.max(38,Math.min(390,(loc.y-oy)/sc));
           if(node){node.x=x;node.y=y}else state.nodePositions[space+'|'+id]={x:x,y:y};
@@ -789,7 +842,7 @@
       if(state.tool==='add'&&!(ev.target.closest&&ev.target.closest('.state-node'))){
         var point=this.createSVGPoint();point.x=ev.clientX;point.y=ev.clientY;var loc=point.matrixTransform(this.getScreenCTM().inverse()),step=state.steps[state.step]||{},ox=10,oy=55,sc=.94;
         if(state.algo==='min'&&!step.quotient){ox=230;oy=50;sc=1.05}else if(state.algo==='rip'){ox=80;oy=55;sc=1}
-        var x=Math.min(448,Math.max(34,(loc.x-ox)/sc)),y=Math.min(390,Math.max(40,(loc.y-oy)/sc)),id='q0',i=0;while(state.automaton.states.some(function(s){return s.id===id}))id='q'+(++i);
+        recordHistory();var x=Math.min(448,Math.max(34,(loc.x-ox)/sc)),y=Math.min(390,Math.max(40,(loc.y-oy)/sc)),id='q0',i=0;while(state.automaton.states.some(function(s){return s.id===id}))id='q'+(++i);
         var first=state.automaton.states.length===0;state.automaton.states.push(st(id,x,y,first,false));state.selected='source|'+id;clearTool();prepareAlgorithm();toast('Estado '+id+' creado'+(first?' y marcado como inicial.':'.'));
       }
     };
@@ -819,6 +872,12 @@
     }
     $('#guideCurrent').textContent=active;$('#guideSymbol').textContent=guideSymbol;$('#guideResult').textContent=result;
     renderTable(step);renderPseudo();renderQuiz(step);
+  }
+  function exitRipEditView(){
+    if(state.algo!=='rip')return;
+    var w=$('#workspace');if(!w)return;
+    w.classList.remove('left-open');w.classList.remove('right-open');
+    var left=$('#leftDrawerBtn'),right=$('#rightDrawerBtn');if(left)left.classList.remove('active');if(right)right.classList.remove('active');
   }
   function closeDrawers(){
     var w=$('#workspace'),wasLeft=w.classList.contains('left-open');w.classList.remove('left-open');w.classList.remove('right-open');$('#leftDrawerBtn').classList.remove('active');$('#rightDrawerBtn').classList.remove('active');if(wasLeft&&state.algo==='rip')render();
@@ -867,9 +926,12 @@
     }else if(state.algo==='rip'){
       $('#livePanelTitle').textContent='Expresiones de transición';$('#liveEyebrow').textContent='Etiquetas actuales del autómata';
       var map=step.previewRegex||step.regex||{},keys=Object.keys(map).filter(function(k){return map[k]&&map[k]!=='∅'});
-      var choice=step.awaitingChoice?'<div class="split-explanation"><strong>¿Cuál estado eliminamos ahora?</strong><div class="quiz-options">'+step.candidates.map(function(id){return '<button class="btn small" data-rip-choice="'+esc(id)+'">Eliminar '+esc(id)+'</button>'}).join('')+'</div></div>':'';
+      var preview=step.awaitingChoice&&state.ripPreview?previewRipNode(step,state.ripPreview):[],choice='';
+      if(step.awaitingChoice&&!state.ripPreview)choice='<div class="split-explanation"><strong>¿Cuál estado eliminamos ahora?</strong><div class="quiz-options">'+step.candidates.map(function(id){return '<button class="btn small" data-rip-choice="'+esc(id)+'">Vista previa de '+esc(id)+'</button>'}).join('')+'</div></div>';
+      if(step.awaitingChoice&&state.ripPreview)choice='<div class="split-explanation"><strong>Antes de eliminar '+esc(state.ripPreview)+'</strong><p>Se crearán '+preview.length+' conexión'+(preview.length===1?'':'es')+' equivalente'+(preview.length===1?'':'s')+'.</p>'+(preview.length?'<div class="table-wrap"><table><thead><tr><th>Entrada</th><th>Bucle*</th><th>Salida</th><th>Nueva etiqueta</th></tr></thead><tbody>'+preview.map(function(u){return '<tr><td>'+esc(u.rin)+'</td><td>'+esc(u.loop)+'</td><td>'+esc(u.rout)+'</td><td>'+esc(u.value)+'</td></tr>'}).join('')+'</tbody></table></div>':'<p>No hay rutas completas que atraviesen este estado.</p>')+'<div class="quiz-options"><button class="btn small" id="cancelRipPreviewBtn">Cancelar</button><button class="btn small primary" id="confirmRipPreviewBtn">Confirmar eliminación</button></div></div>';
       box.innerHTML=choice+'<div class="regex-list">'+(keys.length?keys.map(function(k){return '<div class="regex-edge"><span>'+esc(k)+'</span><code>'+esc(map[k])+'</code></div>'}).join(''):'<div class="split-explanation">Avanza un paso para ver las expresiones.</div>')+'</div>'+narrative;
       $$('[data-rip-choice]').forEach(function(button){button.onclick=function(){chooseRipNode(button.dataset.ripChoice)}});
+      if($('#confirmRipPreviewBtn'))$('#confirmRipPreviewBtn').onclick=confirmRipNode;if($('#cancelRipPreviewBtn'))$('#cancelRipPreviewBtn').onclick=function(){state.ripPreview=null;state.selected=null;render()};
     }else if(state.algo==='min'){
       $('#livePanelTitle').textContent='Refinamiento de particiones';$('#liveEyebrow').textContent='P₀ → P₁ → punto fijo';box.innerHTML='<div class="split-explanation">Avanza hasta la partición inicial para comenzar el refinamiento.</div>'+narrative;
     }else{
@@ -910,7 +972,7 @@
     $('#canvasTitle').textContent=meta[algo][0];$('#canvasHint').textContent=meta[algo][1];populateExamples();loadExample(0);
   }
   function newAutomaton(){
-    state.automaton=A([],['a','b'],[]);state.steps=[];state.step=0;state.selected=null;state.pendingEdge=null;state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';clearTool();validate();render();toast('Lienzo vacío: usa + Estado y haz clic en el lienzo.')
+    recordHistory();state.automaton=A([],['a','b'],[]);state.steps=[];state.step=0;state.selected=null;state.pendingEdge=null;state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';state.simulation=null;clearTool();validate();render();renderSimulationStatus();toast('Lienzo vacío: usa + Estado y haz clic en el lienzo.')
   }
   function exportTargetAutomaton(){
     if(state.modalMode==='export'&&$('#exportTargetSelect').value==='result'){
@@ -965,7 +1027,7 @@
     return A(states,alphabet,transitions);
   }
   function applyImportedAutomaton(automaton,label){
-    state.automaton=automaton;state.selected=null;state.pendingEdge=null;state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';clearTool();prepareAlgorithm();toast(label||'Autómata importado correctamente.');
+    recordHistory();state.automaton=automaton;state.selected=null;state.pendingEdge=null;state.nodePositions={};state.zoom=1;state.zoomOrigin='50% 50%';state.simulation=null;clearTool();exitRipEditView();prepareAlgorithm();renderSimulationStatus();var message=label||'Autómata importado correctamente.';if(state.algo==='rip'&&state.steps[0]&&state.steps[0].normalized)message+=' · Se añadieron '+state.steps[0].startNode+' y '+state.steps[0].finalNode+'.';toast(message);
   }
   function importAutomatonFile(file){
     if(!file)return;var name=file.name||'automata',isJff=/\.jff$/i.test(name)||file.type==='application/xml'||file.type==='text/xml',isJson=/\.json$/i.test(name)||file.type==='application/json';
@@ -993,7 +1055,10 @@
   }
   $$('.algo-tab').forEach(function(b){b.onclick=function(){setAlgo(b.dataset.algo)}});
   $$('[data-tool]').forEach(function(b){b.onclick=function(){if(state.tool===b.dataset.tool){clearTool();if(state.algo==='rip')render();return}state.tool=b.dataset.tool;state.edgeStart=null;$$('[data-tool]').forEach(function(x){x.classList.toggle('active',x===b)});var help={add:'Haz clic en el lienzo para crear un estado.',edge:'Selecciona primero el origen y después el destino.',initial:'Selecciona el estado inicial.',final:'Selecciona un estado para alternar aceptación.',delete:'Selecciona el estado que deseas eliminar.'};$('#toolHelp').textContent=help[state.tool];if(state.algo==='rip')render()}});
-  $('#exampleSelect').onchange=function(){loadExample(this.value)};$('#runBtn').onclick=prepareAlgorithm;$('#newBtn').onclick=newAutomaton;$('#layoutBtn').onclick=function(){autoLayout(true)};$('#exploreBtn').onclick=function(){prepareAlgorithm();toast('Algoritmo recalculado con tus cambios.')};
+  $('#exampleSelect').onchange=function(){loadExample(this.value)};$('#runBtn').onclick=function(){exitRipEditView();prepareAlgorithm()};$('#newBtn').onclick=newAutomaton;$('#layoutBtn').onclick=function(){autoLayout(true)};$('#exploreBtn').onclick=function(){exitRipEditView();prepareAlgorithm();toast('Algoritmo recalculado con tus cambios.')};
+  $('#undoBtn').onclick=undo;$('#redoBtn').onclick=redo;$('#renameExampleBtn').onclick=renameImportedExample;$('#duplicateExampleBtn').onclick=duplicateImportedExample;$('#deleteExampleBtn').onclick=deleteImportedExample;$('#exportExampleBtn').onclick=function(){openData('export')};
+  $('#exampleKindSelect').onchange=function(){var item=selectedImportedExample();if(!item)return;item.kind=this.value;persistImportedExamples();var value='imported:'+item.id;populateExamples();$('#exampleSelect').value=value;updateExampleManager();toast('Clasificación actualizada.')};
+  $('#startSimulationBtn').onclick=startSimulation;$('#nextSimulationBtn').onclick=function(){moveSimulation(1)};$('#prevSimulationBtn').onclick=function(){moveSimulation(-1)};$('#resetSimulationBtn').onclick=resetSimulation;$('#simulationInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();startSimulation()}});
   $('#firstBtn').onclick=function(){stepTo(0)};$('#prevBtn').onclick=function(){stepTo(state.step-1)};$('#nextBtn').onclick=function(){stepTo(state.step+1)};$('#resetBtn').onclick=function(){stepTo(0)};$('#playBtn').onclick=play;
   $('#zoomIn').onclick=function(){state.zoom=Math.min(1.8,state.zoom+.1);state.zoomOrigin='50% 50%';applyZoom()};$('#zoomOut').onclick=function(){state.zoom=Math.max(.55,state.zoom-.1);state.zoomOrigin='50% 50%';applyZoom()};$('#fitBtn').onclick=function(){state.zoom=1;state.zoomOrigin='50% 50%';applyZoom()};
   $('#graphStage').addEventListener('wheel',function(e){e.preventDefault();var rect=this.getBoundingClientRect(),px=Math.max(0,Math.min(100,(e.clientX-rect.left)/rect.width*100)),py=Math.max(0,Math.min(100,(e.clientY-rect.top)/rect.height*100));state.zoomOrigin=px+'% '+py+'%';state.zoom=Math.max(.55,Math.min(1.8,state.zoom+(e.deltaY<0 ? .09 : -.09)));applyZoom()},{passive:false});
@@ -1009,15 +1074,15 @@
   $('#saveBtn').onclick=function(){localStorage.setItem('avl-automaton',JSON.stringify(state.automaton));toast('Ejemplo guardado en este navegador.')};
   $('#copyDataBtn').onclick=function(){navigator.clipboard.writeText($('#dataArea').value).then(function(){toast('Copiado al portapapeles.')})};
   $('#downloadDataBtn').onclick=downloadData;$('#exportTargetSelect').onchange=function(){$('#dataArea').value=dataText(state.format)};
-  $('#applyDataBtn').onclick=function(){try{applyImportedAutomaton(parseData($('#dataArea').value,state.format),'Autómata importado correctamente.');$('#dataModal').classList.remove('open')}catch(e){toast('No fue posible leer el formato: '+e.message)}};
+  $('#applyDataBtn').onclick=function(){try{var automaton=parseData($('#dataArea').value,state.format),label='Datos pegados '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),item=rememberImportedExample(label,state.format,automaton);applyImportedAutomaton(automaton,'Autómata importado y añadido a Ejemplos.');$('#exampleSelect').value='imported:'+item.id;updateExampleManager();$('#dataModal').classList.remove('open')}catch(e){toast('No fue posible leer el formato: '+e.message)}};
   $('#confirmTransitionBtn').onclick=addPendingTransition;$('#cancelTransitionBtn').onclick=closeTransitionComposer;$('#closeTransitionBtn').onclick=closeTransitionComposer;
   $('#transitionSymbolInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addPendingTransition()}if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeTransitionComposer()}});
   $$('[data-format]').forEach(function(b){b.onclick=function(){state.format=b.dataset.format;$$('[data-format]').forEach(function(x){x.classList.toggle('active',x===b)});if(state.modalMode==='export')$('#dataArea').value=dataText(state.format)}});
   $$('[data-close]').forEach(function(b){b.onclick=function(){$('#'+b.dataset.close).classList.remove('open')}});
   $('#theoryBtn').onclick=theory;$('#explainBtn').onclick=explain;$('#challengeBtn').onclick=challenge;
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#transitionModal').classList.contains('open'))closeTransitionComposer();else closeDrawers()}if(e.key==='ArrowRight'&&e.target.tagName!=='INPUT')stepTo(state.step+1);if(e.key==='ArrowLeft'&&e.target.tagName!=='INPUT')stepTo(state.step-1);if(e.key==='+'||e.key==='='){state.zoom=Math.min(1.8,state.zoom+.1);applyZoom()}if(e.key==='-'){state.zoom=Math.max(.55,state.zoom-.1);applyZoom()}if(e.key===' '&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='INPUT'){e.preventDefault();play()}});
+  document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();return}if(e.key==='Escape'){if($('#transitionModal').classList.contains('open'))closeTransitionComposer();else closeDrawers()}if(e.key==='ArrowRight'&&e.target.tagName!=='INPUT')stepTo(state.step+1);if(e.key==='ArrowLeft'&&e.target.tagName!=='INPUT')stepTo(state.step-1);if(e.key==='+'||e.key==='='){state.zoom=Math.min(1.8,state.zoom+.1);applyZoom()}if(e.key==='-'){state.zoom=Math.max(.55,state.zoom-.1);applyZoom()}if(e.key===' '&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='INPUT'){e.preventDefault();play()}});
   if(localStorage.getItem('avl-theme')==='dark'){document.body.classList.add('dark');$('#themeBtn').textContent='☀'}
-  populateExamples();loadExample(0);
+  populateExamples();loadExample(0);state.historyReady=true;state.undoStack=[];state.redoStack=[];updateHistoryButtons();renderSimulationStatus();
 })();
 </script>
 </body>
