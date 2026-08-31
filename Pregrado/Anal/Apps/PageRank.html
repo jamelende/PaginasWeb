@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Laboratorio visual autónomo para comprender PageRank mediante matrices, iteración y un surfista aleatorio.">
+  <title>PageRank Lab Interactivo</title>
+  <style>
+    :root{
+      --bg:#07111f;--panel:#0d1b2c;--panel2:#112338;--line:#253c55;--ink:#ecf6ff;
+      --muted:#93a8bb;--cyan:#38d6d2;--cyan2:#89f1e8;--amber:#ffbd59;--rose:#ff6f91;
+      --green:#5fe0a0;--shadow:0 18px 50px rgba(0,0,0,.28);--r:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:
+      radial-gradient(circle at 80% -10%,rgba(56,214,210,.13),transparent 34rem),
+      linear-gradient(160deg,#07111f 0%,#091522 55%,#07101c 100%);color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,select,input{font:inherit}
+    button,select{color:var(--ink)}
+    button{cursor:pointer}
+    button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid rgba(56,214,210,.35);outline-offset:2px}
+    .shell{max-width:1500px;margin:auto;padding:20px}
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin:4px 0 16px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .brandmark{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),#197a9d);box-shadow:0 10px 30px rgba(56,214,210,.2)}
+    .brandmark svg{width:28px;height:28px}
+    h1{font-size:clamp(1.45rem,2.5vw,2rem);line-height:1.05;margin:0;letter-spacing:-.04em}
+    .subtitle{margin:.35rem 0 0;color:var(--muted);font-size:.92rem}
+    .source-pill{align-self:center;white-space:nowrap;color:var(--muted);font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:rgba(13,27,44,.7)}
+    .workspace{display:grid;grid-template-columns:minmax(270px,320px) minmax(460px,1fr) minmax(280px,360px);gap:14px;align-items:stretch}
+    .panel{background:linear-gradient(180deg,rgba(17,35,56,.96),rgba(11,25,41,.96));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+    .controls{padding:17px;display:flex;flex-direction:column;gap:15px}
+    .eyebrow{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--cyan);font-weight:800}
+    .field{display:grid;gap:7px}
+    .field label,.group-title{font-size:.78rem;font-weight:750;color:#c8d8e7}
+    select{width:100%;background:#091827;border:1px solid #2a435d;border-radius:11px;padding:10px 12px}
+    .graph-note{font-size:.78rem;line-height:1.45;color:var(--muted);min-height:2.3em}
+    .range-row{display:grid;grid-template-columns:1fr 48px;gap:9px;align-items:center}
+    input[type=range]{accent-color:var(--cyan);width:100%}
+    .value-box{font-variant-numeric:tabular-nums;text-align:center;border:1px solid var(--line);border-radius:9px;padding:5px;background:#081724;font-size:.8rem;color:var(--cyan2)}
+    .formula{border:1px solid rgba(56,214,210,.25);background:rgba(56,214,210,.06);border-radius:12px;padding:11px;font-family:Cambria,"Times New Roman",serif;font-size:1rem;text-align:center;color:#ddfffb}
+    .formula small{display:block;font-family:Inter,system-ui,sans-serif;color:var(--muted);font-size:.7rem;margin-top:5px}
+    .stepper{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .btn{border:1px solid #2a435d;border-radius:10px;background:#10253a;padding:9px 10px;font-weight:700;font-size:.8rem;transition:.18s ease}
+    .btn:hover{background:#17324a;border-color:#3b607f;transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(135deg,#1e9b9c,#197395);border-color:transparent}
+    .btn.primary:hover{filter:brightness(1.08)}
+    .btn.warn{color:#ffd490}
+    .status-card{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .metric{padding:9px 10px;border:1px solid var(--line);background:#091827;border-radius:11px}
+    .metric span{display:block;color:var(--muted);font-size:.65rem;text-transform:uppercase;letter-spacing:.08em}
+    .metric strong{display:block;margin-top:3px;font-variant-numeric:tabular-nums;font-size:.94rem}
+    .main-panel{overflow:hidden;display:flex;flex-direction:column;min-height:675px}
+    .mode-tabs{display:flex;gap:4px;padding:10px 10px 0;border-bottom:1px solid var(--line);overflow:auto}
+    .tab{border:0;background:transparent;color:var(--muted);padding:10px 13px;border-bottom:2px solid transparent;font-size:.8rem;font-weight:750;white-space:nowrap}
+    .tab.active{color:var(--cyan2);border-color:var(--cyan)}
+    .stage{position:relative;min-height:465px;flex:1;background:
+      linear-gradient(rgba(49,78,104,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(49,78,104,.12) 1px,transparent 1px),
+      radial-gradient(circle at 50% 40%,rgba(33,115,139,.12),transparent 60%);background-size:28px 28px,28px 28px,100% 100%}
+    #graphSvg{width:100%;height:100%;min-height:465px;display:block;touch-action:none}
+    .edge{fill:none;stroke:#58738d;stroke-width:2;opacity:.72;marker-end:url(#arrow)}
+    .edge.hot{stroke:var(--amber);stroke-width:4;opacity:1;filter:drop-shadow(0 0 6px rgba(255,189,89,.65))}
+    .node-g{cursor:grab}.node-g:active{cursor:grabbing}
+    .node-circle{stroke:#96fff4;stroke-width:2;filter:drop-shadow(0 8px 12px rgba(0,0,0,.25));transition:r .25s,fill .25s}
+    .node-ring{fill:none;stroke:var(--amber);stroke-width:4;opacity:0}
+    .node-g.current .node-ring{opacity:1;animation:pulse 1s infinite}
+    @keyframes pulse{0%{stroke-width:2;opacity:1}100%{stroke-width:12;opacity:0}}
+    .node-label{fill:white;text-anchor:middle;dominant-baseline:middle;font-weight:850;pointer-events:none}
+    .node-value{fill:#a9bdcf;text-anchor:middle;font-size:11px;font-weight:700;pointer-events:none}
+    .stage-badge{position:absolute;left:15px;top:14px;border:1px solid var(--line);background:rgba(7,17,31,.82);backdrop-filter:blur(8px);border-radius:10px;padding:7px 10px;color:var(--muted);font-size:.72rem}
+    .stage-badge b{color:var(--cyan2)}
+    .legend{position:absolute;left:15px;bottom:12px;display:flex;gap:13px;background:rgba(7,17,31,.82);border:1px solid var(--line);border-radius:10px;padding:7px 9px;color:var(--muted);font-size:.68rem}
+    .legend span{display:flex;align-items:center;gap:5px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--cyan)}.dot.amber{background:var(--amber)}
+    .under-stage{padding:13px 16px;border-top:1px solid var(--line);display:grid;gap:10px}
+    .explain-line{display:flex;align-items:flex-start;gap:10px;color:#c8d8e7;font-size:.8rem;line-height:1.45}
+    .step-number{flex:0 0 auto;width:23px;height:23px;border-radius:8px;display:grid;place-items:center;background:rgba(56,214,210,.12);color:var(--cyan2);font-weight:850}
+    .convergence{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center}
+    .convergence span{color:var(--muted);font-size:.7rem}
+    #sparkSvg{width:100%;height:35px;display:block}
+    .rank-panel{padding:17px;display:flex;flex-direction:column;gap:13px;min-width:0}
+    .rank-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+    .rank-head h2{font-size:1rem;margin:3px 0 0}
+    .sum{color:var(--muted);font-size:.7rem;font-variant-numeric:tabular-nums}
+    .rank-list{display:grid;gap:8px}
+    .rank-row{display:grid;grid-template-columns:28px 30px 1fr 52px;gap:7px;align-items:center;font-size:.76rem}
+    .place{color:var(--muted);text-align:center}.page-chip{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;color:#07111f;font-weight:900;background:var(--cyan2)}
+    .bar-track{height:8px;border-radius:99px;background:#071522;overflow:hidden}.bar{height:100%;border-radius:inherit;background:linear-gradient(90deg,#1f8895,var(--cyan));transition:width .3s}
+    .rank-value{text-align:right;font-variant-numeric:tabular-nums;color:#d9e8f4}
+    .insight{margin-top:auto;border:1px solid rgba(255,189,89,.25);background:rgba(255,189,89,.07);border-radius:13px;padding:12px}
+    .insight strong{display:block;color:#ffd18a;font-size:.76rem;margin-bottom:5px}.insight p{margin:0;color:#b5c5d3;font-size:.75rem;line-height:1.45}
+    .walk-controls{display:none;gap:9px;align-items:center;flex-wrap:wrap;padding:11px 15px;border-top:1px solid var(--line);background:#0b1a2a}
+    .walk-controls.show{display:flex}
+    .walk-controls .btn{padding:8px 11px}
+    .speed{margin-left:auto;display:flex;gap:7px;align-items:center;color:var(--muted);font-size:.72rem}
+    .speed input{width:90px}
+    .walk-message{flex-basis:100%;font-size:.75rem;color:#c3d3df;min-height:1.3em}
+    .walk-message .teleport{color:var(--rose)}.walk-message .link{color:var(--green)}
+    .matrix-view{display:none;padding:16px;overflow:auto;min-height:465px}
+    .matrix-view.show{display:block}
+    .matrix-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:650px}
+    .matrix-card{border:1px solid var(--line);border-radius:13px;background:#0a1928;padding:12px}
+    .matrix-card h3{margin:0 0 4px;font-size:.84rem}.matrix-card p{margin:0 0 10px;color:var(--muted);font-size:.7rem;line-height:1.4}
+    table{border-collapse:collapse;width:100%;font-size:.7rem;font-variant-numeric:tabular-nums}th,td{border:1px solid #243b51;text-align:center;padding:5px 4px}th{color:var(--cyan2);background:#102438}td{color:#ccdae5}.matrix-formula{grid-column:1/-1;border:1px solid rgba(56,214,210,.25);border-radius:13px;padding:12px;text-align:center;background:rgba(56,214,210,.06);font-family:Cambria,serif;color:#dffefa}
+    .matrix-formula span{font-family:Inter,sans-serif;color:var(--muted);font-size:.72rem;display:block;margin-top:5px}
+    .footer-note{margin:13px 3px 2px;color:#6f879b;font-size:.69rem;text-align:center}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1120px){.workspace{grid-template-columns:280px 1fr}.rank-panel{grid-column:1/-1}.rank-list{grid-template-columns:repeat(2,1fr)}.insight{margin-top:0}.main-panel{min-height:620px}}
+    @media(max-width:760px){.shell{padding:10px}.topbar{align-items:flex-start}.source-pill{display:none}.workspace{grid-template-columns:1fr}.controls{order:1}.main-panel{order:2;min-height:590px}.rank-panel{order:3}.stepper{grid-template-columns:repeat(4,1fr)}.stepper .btn{padding:9px 4px}.rank-list{grid-template-columns:1fr}.stage,#graphSvg{min-height:410px}.matrix-grid{grid-template-columns:1fr;min-width:540px}.matrix-formula{grid-column:auto}.legend{display:none}.speed{margin-left:0}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brandmark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><circle cx="7" cy="8" r="4" fill="white"/><circle cx="25" cy="7" r="3" fill="white"/><circle cx="20" cy="25" r="5" fill="white"/><path d="M10 9.5 22 8M9 11l8 10m6-11-2 10" stroke="#08304b" stroke-width="2.4"/></svg>
+        </div>
+        <div><h1>PageRank Lab</h1><p class="subtitle">De enlaces a importancia: matrices, iteración y navegación aleatoria.</p></div>
+      </div>
+      <div class="source-pill">Laboratorio autónomo · funciona sin Internet</div>
+    </header>
+
+    <section class="workspace">
+      <aside class="panel controls" aria-label="Controles del laboratorio">
+        <div class="eyebrow">Configura el experimento</div>
+        <div class="field">
+          <label for="graphSelect">Ejemplo de grafo</label>
+          <select id="graphSelect"></select>
+          <div class="graph-note" id="graphNote"></div>
+        </div>
+        <div class="field">
+          <label for="damping">Factor de amortiguación d</label>
+          <div class="range-row"><input id="damping" type="range" min="0" max="1" value="0.85" step="0.01"><output class="value-box" id="dampingOut">0.85</output></div>
+          <div class="graph-note">Probabilidad de seguir un enlace. Con <b>1 − d</b>, el surfista salta a cualquier página.</div>
+        </div>
+        <div class="formula">p<sup>(k+1)</sup> = G · p<sup>(k)</sup><small>G = dS + (1 − d)E</small></div>
+        <div class="group-title">Iteración de potencia</div>
+        <div class="stepper">
+          <button class="btn" id="backBtn" title="Volver a la iteración anterior">← Anterior</button>
+          <button class="btn primary" id="stepBtn" title="Calcular una iteración">Iterar →</button>
+          <button class="btn" id="autoBtn" title="Iterar automáticamente">▶ Auto</button>
+          <button class="btn warn" id="resetBtn" title="Restablecer el experimento">↻ Reiniciar</button>
+        </div>
+        <div class="status-card">
+          <div class="metric"><span>Iteración</span><strong id="iterMetric">0</strong></div>
+          <div class="metric"><span>Cambio L₁</span><strong id="errorMetric">—</strong></div>
+          <div class="metric"><span>Páginas</span><strong id="nodesMetric">4</strong></div>
+          <div class="metric"><span>Enlaces</span><strong id="edgesMetric">5</strong></div>
+        </div>
+        <div class="graph-note">Consejo: arrastra las páginas para reorganizar el dibujo. Las flechas son enlaces; el tamaño revela importancia.</div>
+      </aside>
+
+      <section class="panel main-panel" aria-label="Visualización principal">
+        <nav class="mode-tabs" aria-label="Modos de aprendizaje">
+          <button class="tab active" data-mode="iterate">PageRank paso a paso</button>
+          <button class="tab" data-mode="walk">Surfista aleatorio</button>
+          <button class="tab" data-mode="matrix">Matriz y ecuación</button>
+        </nav>
+        <div class="stage" id="stage">
+          <svg id="graphSvg" role="img" aria-label="Grafo dirigido de páginas web"></svg>
+          <div class="stage-badge" id="stageBadge"><b>k = 0</b> · distribución inicial uniforme</div>
+          <div class="legend"><span><i class="dot"></i>tamaño = PageRank</span><span><i class="dot amber"></i>surfista actual</span></div>
+        </div>
+        <div class="matrix-view" id="matrixView"></div>
+        <div class="walk-controls" id="walkControls">
+          <button class="btn primary" id="walkToggle">▶ Iniciar visitas</button>
+          <button class="btn" id="walkStep">Una visita</button>
+          <button class="btn warn" id="walkReset">↻ Borrar visitas</button>
+          <label class="speed">Velocidad <input id="speedRange" type="range" min="80" max="1100" value="500" step="20"></label>
+          <div class="walk-message" id="walkMessage">Elige “Iniciar visitas” para simular el algoritmo del surfista aleatorio.</div>
+        </div>
+        <div class="under-stage" id="underStage">
+          <div class="explain-line"><span class="step-number" id="explainNum">1</span><span id="explainText">Comenzamos repartiendo la probabilidad por igual entre todas las páginas.</span></div>
+          <div class="convergence"><span>Convergencia</span><svg id="sparkSvg" viewBox="0 0 400 35" preserveAspectRatio="none" aria-label="Historial del cambio entre iteraciones"></svg></div>
+        </div>
+      </section>
+
+      <aside class="panel rank-panel" aria-label="Resultados PageRank">
+        <div class="rank-head"><div><div class="eyebrow" id="rankEyebrow">Ranking actual</div><h2 id="rankTitle">Importancia de las páginas</h2></div><div class="sum" id="sumLabel">Σ = 1.0000</div></div>
+        <div class="rank-list" id="rankList"></div>
+        <div class="insight"><strong id="insightTitle">¿Qué debes observar?</strong><p id="insightText">No basta contar enlaces entrantes: un enlace desde una página importante transmite más autoridad.</p></div>
+      </aside>
+    </section>
+    <p class="footer-note">Inspirado en la actividad “Page Rank como Paseo Aleatorio” del libro interactivo de Álgebra Lineal de Alfonso Meléndez y Mario Gama.</p>
+  </main>
+
+  <script>
+  (()=>{
+    'use strict';
+    const examples={
+      classic:{name:'1. Web clásica (4 páginas)',note:'Un caso pequeño para seguir cada transferencia de importancia.',nodes:['A','B','C','D'],edges:[['A','B'],['A','C'],['B','C'],['C','A'],['D','C']],pos:{A:[24,31],B:[74,22],C:[58,72],D:[18,76]},insight:'C recibe enlaces de A, B y D, pero A recibe toda la autoridad saliente de C. Observa cómo la calidad del enlace compite con la cantidad.'},
+      authority:{name:'2. Estrella de autoridad',note:'Muchas páginas apuntan a un centro: ¿el centro conserva su poder?',nodes:['A','B','C','D','E','F'],edges:[['A','F'],['B','F'],['C','F'],['D','F'],['E','F'],['F','A'],['F','B']],pos:{A:[16,25],B:[42,13],C:[76,23],D:[82,70],E:[38,84],F:[50,50]},insight:'F acumula muchos votos, pero reparte su autoridad entre A y B. PageRank siempre considera la estructura completa, no solo el grado de entrada.'},
+      communities:{name:'3. Dos comunidades',note:'Dos grupos densos conectados por unos pocos puentes.',nodes:['A','B','C','D','E','F','G','H'],edges:[['A','B'],['B','C'],['C','A'],['A','C'],['C','D'],['D','B'],['E','F'],['F','G'],['G','H'],['H','E'],['E','G'],['G','E'],['D','E'],['H','C']],pos:{A:[16,27],B:[34,16],C:[38,50],D:[18,65],E:[64,32],F:[84,19],G:[82,61],H:[61,73]},insight:'Los puentes permiten que la autoridad circule entre comunidades. Cambia d para ver cuánto importan los enlaces frente a los saltos aleatorios.'},
+      dangling:{name:'4. Página sin salida',note:'E no tiene enlaces salientes; PageRank debe evitar que la probabilidad se estanque.',nodes:['A','B','C','D','E'],edges:[['A','B'],['A','C'],['B','D'],['C','D'],['D','A'],['D','E']],pos:{A:[18,48],B:[43,20],C:[43,76],D:[69,48],E:[88,48]},insight:'E es un nodo colgante. El modelo reparte su probabilidad entre todas las páginas, como si el surfista eligiera una nueva dirección al quedar atrapado.'},
+      trap:{name:'5. Trampa de enlaces',note:'Un pequeño ciclo cerrado captura al surfista cuando d se acerca a 1.',nodes:['A','B','C','D','E'],edges:[['A','B'],['A','C'],['B','C'],['C','D'],['D','E'],['E','D']],pos:{A:[15,49],B:[37,22],C:[48,65],D:[73,37],E:[86,68]},insight:'D y E forman una trampa. La teletransportación rompe ese encierro y hace que la cadena sea estable; prueba d = 1 y compáralo.'},
+      extended:{name:'6. Miniweb de noticias',note:'Ocho páginas con portales, blogs y referencias cruzadas.',nodes:['A','B','C','D','E','F','G','H'],edges:[['A','B'],['A','C'],['A','D'],['B','C'],['B','E'],['C','A'],['C','D'],['D','C'],['E','B'],['E','F'],['F','C'],['G','A'],['G','F'],['H','A'],['H','G']],pos:{A:[18,28],B:[43,15],C:[51,48],D:[28,72],E:[69,19],F:[79,52],G:[68,78],H:[91,82]},insight:'Las páginas A y C actúan como portales. G y H aportan autoridad desde la periferia, aunque reciben pocos enlaces de regreso.'}
+    };
+
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    const els={select:$('#graphSelect'),note:$('#graphNote'),d:$('#damping'),dOut:$('#dampingOut'),svg:$('#graphSvg'),stage:$('#stage'),badge:$('#stageBadge'),rank:$('#rankList'),sum:$('#sumLabel'),iter:$('#iterMetric'),err:$('#errorMetric'),nodes:$('#nodesMetric'),edges:$('#edgesMetric'),spark:$('#sparkSvg'),exNum:$('#explainNum'),exText:$('#explainText'),under:$('#underStage'),matrix:$('#matrixView'),walkControls:$('#walkControls'),walkMessage:$('#walkMessage'),walkToggle:$('#walkToggle'),speed:$('#speedRange'),rankEyebrow:$('#rankEyebrow'),rankTitle:$('#rankTitle'),insight:$('#insightText')};
+    let state={key:'classic',d:.85,values:[],history:[],errors:[],iteration:0,auto:null,mode:'iterate',walk:{current:null,previous:null,counts:[],steps:0,timer:null,lastType:null},drag:null};
+
+    function graph(){return examples[state.key]}
+    function uniform(n){return Array(n).fill(1/n)}
+    function outgoing(g,i){const id=g.nodes[i];return g.edges.filter(e=>e[0]===id).map(e=>g.nodes.indexOf(e[1]))}
+    function matrixS(g){
+      const n=g.nodes.length,S=Array.from({length:n},()=>Array(n).fill(0));
+      for(let j=0;j<n;j++){const out=outgoing(g,j);if(!out.length){for(let i=0;i<n;i++)S[i][j]=1/n}else out.forEach(i=>S[i][j]=1/out.length)}
+      return S;
+    }
+    function googleMatrix(g,d=state.d){const S=matrixS(g),n=g.nodes.length;return S.map(row=>row.map(v=>d*v+(1-d)/n))}
+    function multiply(M,v){return M.map(row=>row.reduce((s,x,j)=>s+x*v[j],0))}
+    function nextRank(v){return multiply(googleMatrix(graph()),v)}
+    function exactRank(){let v=uniform(graph().nodes.length);for(let k=0;k<500;k++){const nv=nextRank(v);if(l1(nv,v)<1e-13)return nv;v=nv}return v}
+    function l1(a,b){return a.reduce((s,x,i)=>s+Math.abs(x-b[i]),0)}
+    function fmt(x,d=4){return Number(x).toFixed(d)}
+    function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+    function resetAll(){
+      stopAuto();stopWalk();const n=graph().nodes.length;state.values=uniform(n);state.history=[state.values.slice()];state.errors=[];state.iteration=0;state.walk={current:0,previous:null,counts:Array(n).fill(0),steps:0,timer:null,lastType:null};
+      renderAll();
+    }
+    function stepRank(){const nv=nextRank(state.values),e=l1(nv,state.values);state.values=nv;state.history.push(nv.slice());state.errors.push(e);state.iteration++;renderAll()}
+    function backRank(){if(state.history.length<=1)return;state.history.pop();state.errors.pop();state.values=state.history.at(-1).slice();state.iteration--;renderAll()}
+    function stopAuto(){if(state.auto){clearInterval(state.auto);state.auto=null;$('#autoBtn').textContent='▶ Auto'}}
+    function toggleAuto(){if(state.auto){stopAuto();return}stopWalk();$('#autoBtn').textContent='Ⅱ Pausa';state.auto=setInterval(()=>{stepRank();if(state.errors.at(-1)<1e-9)stopAuto()},480)}
+
+    function dims(){const r=els.stage.getBoundingClientRect();return {w:Math.max(r.width,450),h:Math.max(r.height,410)}}
+    function xy(id){const [px,py]=graph().pos[id],{w,h}=dims();return {x:px*w/100,y:py*h/100}}
+    function edgePath(a,b){
+      const p=xy(a),q=xy(b),dx=q.x-p.x,dy=q.y-p.y,len=Math.max(1,Math.hypot(dx,dy)),nx=-dy/len,ny=dx/len;
+      const reciprocal=graph().edges.some(e=>e[0]===b&&e[1]===a),bend=reciprocal?18:0;
+      const r1=nodeRadius(graph().nodes.indexOf(a)),r2=nodeRadius(graph().nodes.indexOf(b));
+      const sx=p.x+dx/len*(r1+3),sy=p.y+dy/len*(r1+3),ex=q.x-dx/len*(r2+7),ey=q.y-dy/len*(r2+7);
+      return `M ${sx} ${sy} Q ${(sx+ex)/2+nx*bend} ${(sy+ey)/2+ny*bend} ${ex} ${ey}`;
+    }
+    function nodeRadius(i){const n=graph().nodes.length,v=state.mode==='walk'&&state.walk.steps?state.walk.counts[i]/state.walk.steps:state.values[i];const max=Math.max(...(state.mode==='walk'&&state.walk.steps?state.walk.counts.map(x=>x/state.walk.steps):state.values),1/n);return 23+22*(v/max)}
+    function nodeColor(i){const n=graph().nodes.length,v=state.mode==='walk'&&state.walk.steps?state.walk.counts[i]/state.walk.steps:state.values[i],max=Math.max(...(state.mode==='walk'&&state.walk.steps?state.walk.counts.map(x=>x/state.walk.steps):state.values),1/n),t=v/max;return `hsl(${188-18*t} ${62+22*t}% ${30+17*t}%)`}
+
+    function renderGraph(){
+      if(state.mode==='matrix')return;const g=graph(),{w,h}=dims();els.svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+      let html=`<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7.2" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#6f8aa2"/></marker></defs>`;
+      g.edges.forEach(([a,b])=>{const hot=state.mode==='walk'&&state.walk.previous!==null&&g.nodes[state.walk.previous]===a&&g.nodes[state.walk.current]===b;html+=`<path class="edge${hot?' hot':''}" data-edge="${a}-${b}" d="${edgePath(a,b)}"><title>${a} enlaza a ${b}</title></path>`});
+      g.nodes.forEach((id,i)=>{const p=xy(id),r=nodeRadius(i),current=state.mode==='walk'&&state.walk.current===i;let val=state.values[i];if(state.mode==='walk'&&state.walk.steps)val=state.walk.counts[i]/state.walk.steps;html+=`<g class="node-g${current?' current':''}" data-node="${id}" transform="translate(${p.x} ${p.y})"><circle class="node-ring" r="${r+8}"/><circle class="node-circle" r="${r}" fill="${nodeColor(i)}"><title>Página ${id}: ${(100*val).toFixed(2)}%</title></circle><text class="node-label" y="-2" font-size="${Math.max(13,r*.5)}">${id}</text><text class="node-value" y="${r+16}">${(100*val).toFixed(1)}%</text></g>`});
+      els.svg.innerHTML=html;bindDrag();
+    }
+    function bindDrag(){
+      $$('.node-g').forEach(el=>el.addEventListener('pointerdown',ev=>{ev.preventDefault();el.setPointerCapture(ev.pointerId);state.drag={id:el.dataset.node,pointer:ev.pointerId}}));
+    }
+    els.svg.addEventListener('pointermove',ev=>{if(!state.drag)return;const rect=els.svg.getBoundingClientRect(),x=(ev.clientX-rect.left)/rect.width*100,y=(ev.clientY-rect.top)/rect.height*100;graph().pos[state.drag.id]=[Math.max(7,Math.min(93,x)),Math.max(10,Math.min(90,y))];renderGraph()});
+    els.svg.addEventListener('pointerup',()=>state.drag=null);els.svg.addEventListener('pointercancel',()=>state.drag=null);
+
+    function displayValues(){if(state.mode==='walk'&&state.walk.steps)return state.walk.counts.map(x=>x/state.walk.steps);return state.values}
+    function renderRanks(){
+      const vals=displayValues(),g=graph(),order=vals.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v),max=Math.max(...vals,1/g.nodes.length);els.rank.innerHTML=order.map((o,k)=>`<div class="rank-row"><span class="place">${k+1}</span><span class="page-chip">${g.nodes[o.i]}</span><span class="bar-track"><span class="bar" style="display:block;width:${100*o.v/max}%"></span></span><span class="rank-value">${(100*o.v).toFixed(2)}%</span></div>`).join('');
+      els.sum.textContent=`Σ = ${fmt(vals.reduce((a,b)=>a+b,0))}`;els.rankEyebrow.textContent=state.mode==='walk'?'Frecuencia empírica':'Ranking actual';els.rankTitle.textContent=state.mode==='walk'?'Páginas visitadas':'Importancia de las páginas';
+    }
+    function renderStatus(){
+      els.iter.textContent=state.iteration;els.err.textContent=state.errors.length?state.errors.at(-1).toExponential(2):'—';els.nodes.textContent=graph().nodes.length;els.edges.textContent=graph().edges.length;els.badge.innerHTML=state.mode==='walk'?`<b>${state.walk.steps}</b> visitas · actual: ${graph().nodes[state.walk.current]}`:`<b>k = ${state.iteration}</b> · ${state.iteration?'distribución actualizada':'distribución inicial uniforme'}`;
+      els.exNum.textContent=Math.min(4,state.iteration+1);const texts=['Comenzamos repartiendo la probabilidad por igual entre todas las páginas.','Cada página divide su importancia entre sus enlaces salientes.','Sumamos la autoridad recibida y la probabilidad de teletransportación.','Repetimos hasta que el vector casi no cambie: ese límite es PageRank.'];els.exText.textContent=texts[Math.min(3,state.iteration)];
+    }
+    function renderSpark(){if(!state.errors.length){els.spark.innerHTML='<line x1="0" y1="25" x2="400" y2="25" stroke="#284057" stroke-width="1"/><text x="8" y="18" fill="#71889b" font-size="10">Itera para observar cómo disminuye el cambio</text>';return}const logs=state.errors.map(x=>Math.log10(Math.max(x,1e-14))),lo=Math.min(...logs),hi=Math.max(...logs),pts=logs.map((v,i)=>`${i/(Math.max(1,logs.length-1))*400},${5+(hi-v)/(Math.max(.01,hi-lo))*25}`).join(' ');els.spark.innerHTML=`<polyline points="${pts}" fill="none" stroke="#38d6d2" stroke-width="2.5" vector-effect="non-scaling-stroke"/><circle cx="${pts.split(' ').at(-1).split(',')[0]}" cy="${pts.split(' ').at(-1).split(',')[1]}" r="3" fill="#ffbd59"/>`}
+
+    function matrixTable(M,title,desc){const g=graph();return `<section class="matrix-card"><h3>${title}</h3><p>${desc}</p><table><thead><tr><th>destino ↓<br>origen →</th>${g.nodes.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${M.map((row,i)=>`<tr><th>${g.nodes[i]}</th>${row.map(v=>`<td>${fmt(v,3)}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`}
+    function renderMatrix(){const S=matrixS(graph()),G=googleMatrix(graph());els.matrix.innerHTML=`<div class="matrix-grid">${matrixTable(S,'1. Matriz de enlaces S','Cada columna reparte 1 entre los enlaces salientes. Una columna sin salida reparte uniformemente.')}${matrixTable(G,'2. Matriz de Google G',`Mezcla enlaces (${fmt(state.d,2)}) y teletransportación (${fmt(1-state.d,2)}). Todas sus columnas suman 1.`)}<div class="matrix-formula">p<sup>(k+1)</sup> = Gp<sup>(k)</sup> &nbsp; → &nbsp; Gp* = p*<span>PageRank p* es el vector estacionario: un vector propio de G asociado al valor propio 1.</span></div></div>`}
+    function renderAll(){renderGraph();renderRanks();renderStatus();renderSpark();if(state.mode==='matrix')renderMatrix();els.insight.textContent=graph().insight}
+
+    function setMode(mode){
+      stopAuto();stopWalk();state.mode=mode;$$('.tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===mode));const matrix=mode==='matrix';els.stage.style.display=matrix?'none':'block';els.matrix.classList.toggle('show',matrix);els.walkControls.classList.toggle('show',mode==='walk');els.under.style.display=matrix?'none':'grid';if(mode==='walk'&&state.walk.current===null)state.walk.current=0;renderAll();if(mode==='walk')updateWalkCompare()
+    }
+    function randomIndex(n){return Math.floor(Math.random()*n)}
+    function walkOnce(){
+      const g=graph(),n=g.nodes.length,from=state.walk.current??randomIndex(n),out=outgoing(g,from);let to,type;
+      if(!out.length){to=randomIndex(n);type='dangling'}else if(Math.random()<state.d){to=out[randomIndex(out.length)];type='link'}else{to=randomIndex(n);type='teleport'}
+      state.walk.previous=from;state.walk.current=to;state.walk.counts[to]++;state.walk.steps++;state.walk.lastType=type;renderGraph();renderRanks();renderStatus();updateWalkMessage(from,to,type);updateWalkCompare();
+    }
+    function updateWalkMessage(from,to,type){const g=graph(),a=g.nodes[from],b=g.nodes[to],msgs={link:`<span class="link">Siguió un enlace</span>: ${a} → ${b}`,teleport:`<span class="teleport">Se teletransportó</span>: ${a} ⇢ ${b}`,dangling:`<span class="teleport">${a} no tenía salida</span>: saltó aleatoriamente a ${b}`};els.walkMessage.innerHTML=msgs[type]}
+    function updateWalkCompare(){
+      const exact=exactRank();if(!state.walk.steps){els.insight.textContent='Al acumular visitas, la frecuencia de cada página se aproxima al PageRank teórico.';return}const emp=state.walk.counts.map(x=>x/state.walk.steps),err=l1(emp,exact);els.insight.textContent=`Después de ${state.walk.steps} visitas, la distancia L₁ entre la simulación y el PageRank teórico es ${fmt(err,4)}. Más visitas suelen reducirla.`
+    }
+    function toggleWalk(){if(state.walk.timer){stopWalk();return}stopAuto();els.walkToggle.textContent='Ⅱ Pausar visitas';const run=()=>{walkOnce();state.walk.timer=setTimeout(run,1200-Number(els.speed.value))};run()}
+    function stopWalk(){if(state.walk.timer){clearTimeout(state.walk.timer);state.walk.timer=null}if(els.walkToggle)els.walkToggle.textContent='▶ Iniciar visitas'}
+    function resetWalk(){stopWalk();const n=graph().nodes.length;state.walk={current:0,previous:null,counts:Array(n).fill(0),steps:0,timer:null,lastType:null};els.walkMessage.textContent='Visitas borradas. Inicia una nueva simulación.';renderAll();updateWalkCompare()}
+
+    Object.entries(examples).forEach(([k,g])=>els.select.add(new Option(g.name,k)));
+    els.select.addEventListener('change',e=>{state.key=e.target.value;els.note.textContent=graph().note;resetAll()});
+    els.d.addEventListener('input',e=>{state.d=Number(e.target.value);els.dOut.value=fmt(state.d,2);resetAll()});
+    $('#stepBtn').addEventListener('click',stepRank);$('#backBtn').addEventListener('click',backRank);$('#autoBtn').addEventListener('click',toggleAuto);$('#resetBtn').addEventListener('click',resetAll);
+    $$('.tab').forEach(t=>t.addEventListener('click',()=>setMode(t.dataset.mode)));els.walkToggle.addEventListener('click',toggleWalk);$('#walkStep').addEventListener('click',walkOnce);$('#walkReset').addEventListener('click',resetWalk);
+    window.addEventListener('resize',()=>requestAnimationFrame(renderGraph));
+    document.addEventListener('keydown',e=>{if(e.target.matches('select,input'))return;if(e.key==='ArrowRight'){e.preventDefault();state.mode==='walk'?walkOnce():stepRank()}if(e.code==='Space'&&state.mode==='walk'){e.preventDefault();toggleWalk()}});
+    els.note.textContent=graph().note;resetAll();
+  })();
+  </script>
+</body>
+</html>

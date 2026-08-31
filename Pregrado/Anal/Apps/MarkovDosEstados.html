@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadena de Markov de dos estados</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: light-dark(#f8fafc, #111827);
+      --foreground: light-dark(#172033, #f4f7fb);
+      --card: light-dark(#ffffff, #1c2433);
+      --card-foreground: var(--foreground);
+      --popover: var(--card);
+      --popover-foreground: var(--foreground);
+      --primary: light-dark(#1d4ed8, #8bb7ff);
+      --primary-foreground: light-dark(#ffffff, #081424);
+      --secondary: light-dark(#e2e8f0, #263244);
+      --secondary-foreground: var(--foreground);
+      --muted: light-dark(#e9eef5, #273244);
+      --muted-foreground: light-dark(#5d6b7d, #b7c2d3);
+      --accent: light-dark(#dbeafe, #19365e);
+      --accent-foreground: var(--foreground);
+      --destructive: light-dark(#b91c1c, #ff9b9b);
+      --border: light-dark(#cbd5e1, #405069);
+      --input: var(--border);
+      --ring: var(--primary);
+      --viz-series-1: light-dark(#2563eb, #7db0ff);
+      --viz-series-2: light-dark(#dc6b18, #ffb067);
+      --viz-series-3: light-dark(#169b62, #72d6a0);
+      --viz-series-4: light-dark(#b42372, #ef83bd);
+      --viz-series-5: light-dark(#7c3aed, #b69cff);
+      --viz-series-6: light-dark(#ca8a04, #f5d35e);
+      font-family: "Cambria Math", "Latin Modern Math", Georgia, "Times New Roman", serif;
+      font-size: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--background);
+      color: var(--foreground);
+      padding: 24px;
+    }
+    main {
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin: 0 0 14px;
+      letter-spacing: 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: color-mix(in srgb, var(--muted) 60%, transparent);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    .card {
+      background: var(--card);
+      color: var(--card-foreground);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .viz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+    .viz-stat-value {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 4px 0;
+    }
+    .viz-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+    }
+    .form-label {
+      display: grid;
+      gap: 5px;
+      color: var(--foreground);
+      font-weight: 500;
+    }
+    .form-range, .form-select {
+      accent-color: var(--primary);
+    }
+    .form-select {
+      min-height: 36px;
+      border: 1px solid var(--input);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--foreground);
+      padding: 6px 8px;
+      font: inherit;
+    }
+    .btn {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+      font: inherit;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .text-muted { color: var(--muted-foreground); }
+    .text-small { font-size: 0.875rem; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    i[data-lucide] { display: none; }
+    @media (max-width: 520px) {
+      body { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+<div id="markov-lab" class="markov-lab">
+  <style>
+    #markov-lab { color: var(--foreground); font-family: "Cambria Math", "Latin Modern Math", Georgia, "Times New Roman", serif; }
+    #markov-lab .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 12px; }
+    #markov-lab .form-label { display: grid; gap: 5px; min-width: 142px; }
+    #markov-lab .matrix-edit { display: grid; grid-template-columns: repeat(2, 58px); gap: 6px; }
+    #markov-lab .vector-edit { display: grid; grid-template-rows: repeat(2, 34px); gap: 6px; width: 58px; }
+    #markov-lab .mini-input { width: 100%; min-height: 34px; border: 1px solid var(--input); border-radius: 6px; padding: 4px 6px; background: var(--card); color: var(--foreground); font: inherit; font-variant-numeric: tabular-nums; }
+    #markov-lab .layout { display: grid; grid-template-columns: minmax(260px, .9fr) minmax(320px, 1.1fr); gap: 14px; align-items: start; }
+    #markov-lab .col-vector { display: inline-grid; grid-template-rows: repeat(2, auto); gap: 1px; padding: 2px 8px; border-left: 1.5px solid currentColor; border-right: 1.5px solid currentColor; line-height: 1.08; text-align: center; font-variant-numeric: tabular-nums; }
+    #markov-lab .matrix { display: inline-grid; grid-template-columns: repeat(2, 56px); gap: 4px; padding: 2px 7px; border-left: 1.5px solid currentColor; border-right: 1.5px solid currentColor; font-variant-numeric: tabular-nums; }
+    #markov-lab .formula { display: grid; gap: 8px; margin-top: 10px; }
+    #markov-lab .eq-step { display: grid; grid-template-columns: 28px 1fr; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); }
+    #markov-lab .eq-num { width: 24px; height: 24px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: var(--primary-foreground); font-variant-numeric: tabular-nums; }
+    #markov-lab .eq-body { display: grid; gap: 4px; }
+    #markov-lab .eq-main { font-weight: 500; }
+    #markov-lab .compare { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+    #markov-lab .bar-row { display: grid; grid-template-columns: 64px 1fr 54px; gap: 7px; align-items: center; margin: 7px 0; font-variant-numeric: tabular-nums; }
+    #markov-lab .track { height: 12px; background: color-mix(in srgb, var(--muted) 70%, transparent); }
+    #markov-lab .fill-a { height: 100%; background: var(--viz-series-1); }
+    #markov-lab .fill-b { height: 100%; background: var(--viz-series-2); }
+    #markov-lab .pill { display: inline-flex; gap: 6px; align-items: center; padding: 4px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 20%, transparent); font-variant-numeric: tabular-nums; }
+    #markov-lab .swatch { width: 10px; height: 10px; border-radius: 999px; display: inline-block; background: currentColor; }
+    #markov-lab .a-color { color: var(--viz-series-1); }
+    #markov-lab .b-color { color: var(--viz-series-2); }
+    #markov-lab .warn { min-height: 20px; color: var(--destructive); }
+    #markov-lab svg { width: 100%; height: auto; display: block; overflow: visible; }
+    #markov-lab .node { fill: color-mix(in srgb, var(--accent) 28%, transparent); stroke: var(--border); stroke-width: 1.5; }
+    #markov-lab .flow-a { stroke: var(--viz-series-1); fill: none; stroke-width: 4; stroke-linecap: round; }
+    #markov-lab .flow-b { stroke: var(--viz-series-2); fill: none; stroke-width: 4; stroke-linecap: round; }
+    #markov-lab .self { stroke: var(--muted-foreground); fill: none; stroke-width: 2; opacity: .75; }
+    #markov-lab .grid, #markov-lab .frame { stroke: var(--border); stroke-width: 1; fill: none; }
+    #markov-lab .line-a { stroke: var(--viz-series-1); fill: none; stroke-width: 3; }
+    #markov-lab .line-b { stroke: var(--viz-series-2); fill: none; stroke-width: 3; }
+    #markov-lab .dash { stroke: var(--foreground); stroke-dasharray: 5 5; opacity: .7; }
+    #markov-lab .label { fill: var(--foreground); font-size: 12px; }
+    #markov-lab .muted { color: var(--muted-foreground); fill: var(--muted-foreground); }
+    @media (max-width: 760px) { #markov-lab .layout, #markov-lab .compare { grid-template-columns: 1fr; } }
+    @media (max-width: 430px) { #markov-lab .form-label { min-width: 100%; } }
+  </style>
+
+  <h2>Estabilidad de una cadena de Markov de dos estados</h2>
+  <div class="controls" aria-label="Controles de Markov">
+    <label class="form-label">Ejemplo
+      <select id="mk-preset" class="form-select">
+        <option value="natural">8 de 10 se quedan</option>
+        <option value="balanced">7 y 6 de 10</option>
+        <option value="sticky">9 de 10 se quedan</option>
+        <option value="custom">Mi matriz</option>
+      </select>
+    </label>
+    <label class="form-label">Matriz A
+      <span class="matrix-edit" id="mk-inputs"></span>
+    </label>
+    <label class="form-label">x₀
+      <span class="vector-edit">
+        <input id="mk-x1" class="mini-input mk-custom" type="number" min="0" max="1" step="0.01" value="0.80" aria-label="probabilidad inicial estado 1">
+        <input id="mk-x2" class="mini-input mk-custom" type="number" min="0" max="1" step="0.01" value="0.20" aria-label="probabilidad inicial estado 2">
+      </span>
+    </label>
+    <label class="form-label"><span>n: <span id="mk-n-label" class="tabular-nums">30</span></span>
+      <input id="mk-n" class="form-range" type="range" min="1" max="120" step="1" value="30">
+    </label>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div id="mk-warning" class="warn text-small" role="alert"></div>
+      <div class="viz-grid">
+        <div class="card viz-stat">
+          <span class="text-muted">Método iterativo</span>
+          <div class="viz-stat-value" id="mk-iter"></div>
+          <span class="text-muted">Aⁿx₀</span>
+        </div>
+        <div class="card viz-stat">
+          <span class="text-muted">Método analítico</span>
+          <div class="viz-stat-value" id="mk-analytic"></div>
+          <span class="text-muted">π estable</span>
+        </div>
+      </div>
+      <div class="compare" aria-live="polite">
+        <div class="card">
+          <span class="pill a-color"><span class="swatch"></span>Estado 1</span>
+          <div class="bar-row"><span>Aⁿx₀</span><div class="track"><div id="mk-bar-i1" class="fill-a"></div></div><span id="mk-i1"></span></div>
+          <div class="bar-row"><span>π</span><div class="track"><div id="mk-bar-p1" class="fill-a"></div></div><span id="mk-p1"></span></div>
+        </div>
+        <div class="card">
+          <span class="pill b-color"><span class="swatch"></span>Estado 2</span>
+          <div class="bar-row"><span>Aⁿx₀</span><div class="track"><div id="mk-bar-i2" class="fill-b"></div></div><span id="mk-i2"></span></div>
+          <div class="bar-row"><span>π</span><div class="track"><div id="mk-bar-p2" class="fill-b"></div></div><span id="mk-p2"></span></div>
+        </div>
+      </div>
+      <div class="formula">
+        <div class="eq-step"><span class="eq-num">1</span><span class="eq-body"><span class="eq-main">Matriz usada</span><span id="mk-matrix-view"></span></span></div>
+        <div class="eq-step"><span class="eq-num">2</span><span class="eq-body"><span class="eq-main">Sistema estacionario</span><span><code>Aπ = π</code> y <code>π₁ + π₂ = 1</code></span><span id="mk-system"></span></span></div>
+        <div class="eq-step"><span class="eq-num">3</span><span class="eq-body"><span class="eq-main">Solución</span><span id="mk-result"></span></span></div>
+      </div>
+    </div>
+    <svg id="mk-svg" viewBox="0 0 660 500" role="img" aria-label="Cadena de Markov y convergencia">
+      <defs>
+        <marker id="mk-arrow-a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--viz-series-1)"></path></marker>
+        <marker id="mk-arrow-b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--viz-series-2)"></path></marker>
+      </defs>
+      <g id="mk-plot"></g>
+    </svg>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById("markov-lab");
+      const presets = {
+        natural: [[0.8, 0.3], [0.2, 0.7]],
+        balanced: [[0.7, 0.4], [0.3, 0.6]],
+        sticky: [[0.9, 0.1], [0.1, 0.9]]
+      };
+      const fmt = (v) => Math.abs(v) < 0.0005 ? "0.000" : v.toFixed(3);
+      const pct = (v) => `${Math.max(0, Math.min(100, Math.round(v * 100)))}%`;
+      const vec = (v) => `<span class="col-vector"><span>${fmt(v[0])}</span><span>${fmt(v[1])}</span></span>`;
+      const mat = (A) => `<span class="matrix">${A.flat().map(v => `<span>${fmt(v)}</span>`).join("")}</span>`;
+      function renderInputs(A) {
+        root.querySelector("#mk-inputs").innerHTML = [0, 1].flatMap(i => [0, 1].map(j =>
+          `<input id="mk-a${i}${j}" class="mini-input mk-entry" type="number" min="0" step="0.01" value="${A[i][j]}" aria-label="A fila ${i + 1} columna ${j + 1}">`
+        )).join("");
+        root.querySelectorAll(".mk-entry").forEach(input => input.addEventListener("input", () => {
+          root.querySelector("#mk-preset").value = "custom";
+          draw();
+        }));
+      }
+      function readA() {
+        return [0, 1].map(i => [0, 1].map(j => {
+          const value = Number(root.querySelector(`#mk-a${i}${j}`).value);
+          return Number.isFinite(value) ? Math.max(0, value) : 0;
+        }));
+      }
+      function normalizedColumns(A) {
+        const B = [[0, 0], [0, 0]];
+        const warnings = [];
+        for (let j = 0; j < 2; j++) {
+          const sum = A[0][j] + A[1][j];
+          if (sum <= 0) {
+            B[0][j] = j === 0 ? 1 : 0;
+            B[1][j] = j === 0 ? 0 : 1;
+            warnings.push(`columna ${j + 1}`);
+          } else {
+            B[0][j] = A[0][j] / sum;
+            B[1][j] = A[1][j] / sum;
+            if (Math.abs(sum - 1) > 0.001) warnings.push(`columna ${j + 1}`);
+          }
+        }
+        return { A: B, warnings };
+      }
+      function readX() {
+        const raw = [Number(root.querySelector("#mk-x1").value), Number(root.querySelector("#mk-x2").value)].map(v => Number.isFinite(v) ? Math.max(0, v) : 0);
+        const sum = raw[0] + raw[1] || 1;
+        return [raw[0] / sum, raw[1] / sum];
+      }
+      function iterate(A, x0, n) {
+        let x = x0.slice();
+        const rows = [[0, x[0], x[1]]];
+        for (let k = 1; k <= n; k++) {
+          x = [A[0][0] * x[0] + A[0][1] * x[1], A[1][0] * x[0] + A[1][1] * x[1]];
+          rows.push([k, x[0], x[1]]);
+        }
+        return { x, rows };
+      }
+      function make(tag, attrs, text) {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        Object.entries(attrs || {}).forEach(([k, v]) => el.setAttribute(k, v));
+        if (text !== undefined) el.textContent = text;
+        return el;
+      }
+      function linePath(points) {
+        return points.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+      }
+      function draw() {
+        const source = readA();
+        const normed = normalizedColumns(source);
+        const A = normed.A;
+        const x0 = readX();
+        const n = Number(root.querySelector("#mk-n").value);
+        const a = A[1][0], b = A[0][1];
+        const pi = a + b > 0 ? [b / (a + b), a / (a + b)] : [1, 0];
+        const iter = iterate(A, x0, n);
+        root.querySelector("#mk-n-label").textContent = n;
+        root.querySelector("#mk-warning").textContent = normed.warnings.length ? `Se normalizó ${normed.warnings.join(" y ")} para que cada columna sume 1.` : "";
+        root.querySelector("#mk-iter").innerHTML = vec(iter.x);
+        root.querySelector("#mk-analytic").innerHTML = vec(pi);
+        root.querySelector("#mk-matrix-view").innerHTML = `<code>A = ${mat(A)}</code>, <code>x₀ = ${vec(x0)}</code>`;
+        root.querySelector("#mk-system").innerHTML = `<code>${fmt(a)}π₁ = ${fmt(b)}π₂</code>`;
+        root.querySelector("#mk-result").innerHTML = `<code>π₁ = b/(a+b) = ${fmt(pi[0])}</code> y <code>π₂ = a/(a+b) = ${fmt(pi[1])}</code>.`;
+        [["mk-i1", iter.x[0]], ["mk-i2", iter.x[1]], ["mk-p1", pi[0]], ["mk-p2", pi[1]]].forEach(([id, value]) => root.querySelector(`#${id}`).textContent = fmt(value));
+        [["mk-bar-i1", iter.x[0]], ["mk-bar-i2", iter.x[1]], ["mk-bar-p1", pi[0]], ["mk-bar-p2", pi[1]]].forEach(([id, value]) => root.querySelector(`#${id}`).style.width = pct(value));
+
+        const g = root.querySelector("#mk-plot");
+        g.replaceChildren();
+        g.appendChild(make("path", { d: "M215,100 C285,48 375,48 445,100", class: "flow-a", "marker-end": "url(#mk-arrow-a)" }));
+        g.appendChild(make("path", { d: "M445,158 C375,212 285,212 215,158", class: "flow-b", "marker-end": "url(#mk-arrow-b)" }));
+        g.appendChild(make("path", { d: "M130,100 C88,66 86,190 130,160", class: "self" }));
+        g.appendChild(make("path", { d: "M530,100 C572,66 574,190 530,160", class: "self" }));
+        [[170,128,"Estado 1",iter.x[0]],[490,128,"Estado 2",iter.x[1]]].forEach(([x,y,label,p]) => {
+          g.appendChild(make("circle", { cx: x, cy: y, r: 52, class: "node" }));
+          g.appendChild(make("text", { x, y: y - 6, "text-anchor": "middle", class: "label" }, label));
+          g.appendChild(make("text", { x, y: y + 16, "text-anchor": "middle", class: "label" }, `p=${fmt(p)}`));
+        });
+        g.appendChild(make("text", { x: 330, y: 58, "text-anchor": "middle", class: "label" }, `1 → 2: ${fmt(a)}`));
+        g.appendChild(make("text", { x: 330, y: 218, "text-anchor": "middle", class: "label" }, `2 → 1: ${fmt(b)}`));
+        const left = 70, top = 278, width = 530, height = 176;
+        g.appendChild(make("rect", { x: left, y: top, width, height, class: "frame" }));
+        for (let i = 0; i <= 4; i++) {
+          const y = top + height - i * height / 4;
+          g.appendChild(make("line", { x1: left, y1: y, x2: left + width, y2: y, class: "grid" }));
+          g.appendChild(make("text", { x: left - 10, y: y + 4, "text-anchor": "end", class: "label muted" }, (i / 4).toFixed(2)));
+        }
+        const xScale = (k) => left + (k / Math.max(1, n)) * width;
+        const yScale = (v) => top + height - v * height;
+        g.appendChild(make("line", { x1: left, y1: yScale(pi[0]), x2: left + width, y2: yScale(pi[0]), class: "dash" }));
+        g.appendChild(make("path", { d: linePath(iter.rows.map(r => [xScale(r[0]), yScale(r[1])])), class: "line-a" }));
+        g.appendChild(make("path", { d: linePath(iter.rows.map(r => [xScale(r[0]), yScale(r[2])])), class: "line-b" }));
+        g.appendChild(make("text", { x: left + width / 2, y: top + height + 34, "text-anchor": "middle", class: "label" }, "iteraciones n"));
+        g.appendChild(make("text", { x: left + width - 4, y: yScale(pi[0]) - 8, "text-anchor": "end", class: "label" }, `π₁=${fmt(pi[0])}`));
+      }
+      renderInputs(presets.natural);
+      root.querySelector("#mk-preset").addEventListener("change", () => {
+        const key = root.querySelector("#mk-preset").value;
+        if (key !== "custom") renderInputs(presets[key]);
+        draw();
+      });
+      root.querySelectorAll(".mk-custom").forEach(input => input.addEventListener("input", draw));
+      root.querySelector("#mk-n").addEventListener("input", draw);
+      draw();
+    })();
+  </script>
+</div>
+
+  </main>
+</body>
+</html>

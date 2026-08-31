@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laboratorio interactivo para transformar expresiones infijas a posfijas y evaluarlas con una pila.">
+  <title>Laboratorio Infija → Posfija</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --bg-soft: #0c1a2c;
+      --panel: rgba(14, 29, 49, .88);
+      --panel-2: #11243b;
+      --text: #ecf6ff;
+      --muted: #8fa7bd;
+      --line: rgba(150, 185, 211, .18);
+      --cyan: #25d0e6;
+      --blue: #5f8bff;
+      --violet: #ad7cff;
+      --amber: #ffc857;
+      --green: #53e0a1;
+      --red: #ff7085;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .35);
+      --radius: 22px;
+    }
+
+    body.light {
+      color-scheme: light;
+      --bg: #eef5fa;
+      --bg-soft: #e2eef5;
+      --panel: rgba(255, 255, 255, .9);
+      --panel-2: #f3f8fb;
+      --text: #10273a;
+      --muted: #587286;
+      --line: rgba(36, 79, 110, .16);
+      --cyan: #008fa5;
+      --blue: #315ee8;
+      --violet: #7041ce;
+      --amber: #c17a00;
+      --green: #0d9660;
+      --red: #cf3851;
+      --shadow: 0 22px 60px rgba(35, 73, 101, .14);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(37, 208, 230, .14), transparent 30rem),
+        radial-gradient(circle at 90% 10%, rgba(173, 124, 255, .13), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      transition: background .25s, color .25s;
+    }
+
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--cyan) 60%, transparent);
+      outline-offset: 2px;
+    }
+
+    .app { width: min(1500px, 100%); margin: auto; padding: 24px; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      margin-bottom: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      width: 52px; height: 52px; border-radius: 17px; display: grid; place-items: center;
+      color: #03151d; font-size: 24px; font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      box-shadow: 0 12px 35px rgba(37, 208, 230, .25);
+    }
+    h1 { margin: 0; font-size: clamp(1.2rem, 2.6vw, 2rem); letter-spacing: -.04em; }
+    .eyebrow { margin: 0 0 3px; color: var(--cyan); font-size: .72rem; text-transform: uppercase; letter-spacing: .16em; font-weight: 800; }
+    .top-actions { display: flex; gap: 8px; }
+
+    .icon-btn, .btn, select {
+      border: 1px solid var(--line); background: var(--panel); border-radius: 13px;
+      min-height: 42px; cursor: pointer; transition: transform .18s, border-color .18s, background .18s;
+    }
+    .icon-btn { width: 44px; display: grid; place-items: center; font-size: 18px; }
+    .icon-btn:hover, .btn:hover, select:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--cyan) 55%, var(--line)); }
+    .btn { padding: 0 16px; font-weight: 800; }
+    .btn.primary { color: #04151d; border-color: transparent; background: linear-gradient(135deg, var(--cyan), var(--green)); }
+    .btn.ghost { background: transparent; }
+    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    .control-panel {
+      position: relative; overflow: hidden; padding: 20px; margin-bottom: 18px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .control-panel::after {
+      content: ""; position: absolute; width: 260px; height: 260px; right: -120px; top: -160px;
+      border: 38px solid rgba(37, 208, 230, .08); border-radius: 50%; pointer-events: none;
+    }
+    .input-row { display: grid; grid-template-columns: minmax(250px, 1fr) auto auto; gap: 10px; align-items: end; }
+    label { display: block; color: var(--muted); font-size: .77rem; font-weight: 800; letter-spacing: .04em; margin-bottom: 7px; }
+    .expression-input {
+      width: 100%; height: 52px; padding: 0 16px; color: var(--text); background: var(--bg-soft);
+      border: 1px solid var(--line); border-radius: 14px; font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 800;
+    }
+    select { height: 52px; padding: 0 38px 0 14px; color: var(--text); background-color: var(--bg-soft); }
+    .error { display: none; color: var(--red); padding-top: 10px; font-size: .88rem; font-weight: 700; }
+    .error.show { display: block; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 16px; color: var(--muted); font-size: .78rem; }
+    .legend span { display: inline-flex; gap: 6px; align-items: center; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
+
+    .phasebar {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .phase {
+      display: flex; gap: 12px; align-items: center; padding: 13px 16px; border: 1px solid var(--line);
+      border-radius: 16px; background: var(--panel); opacity: .55; transition: .25s;
+    }
+    .phase.active { opacity: 1; border-color: color-mix(in srgb, var(--cyan) 55%, var(--line)); box-shadow: 0 0 0 1px rgba(37, 208, 230, .08) inset; }
+    .phase.done { opacity: .85; border-color: color-mix(in srgb, var(--green) 45%, var(--line)); }
+    .phase-num { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: var(--panel-2); font-weight: 900; }
+    .phase strong { display: block; font-size: .9rem; }
+    .phase small { color: var(--muted); }
+    .phase-arrow { color: var(--muted); font-size: 22px; }
+
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(285px, .65fr); gap: 18px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .stage { min-height: 560px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .stage-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+    .stage-head h2, .side-card h2 { margin: 0; font-size: 1rem; }
+    .step-count { color: var(--muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
+    .mini-label { color: var(--muted); font-size: .7rem; font-weight: 900; text-transform: uppercase; letter-spacing: .13em; margin-bottom: 8px; }
+
+    .token-track {
+      min-height: 92px; display: flex; align-items: center; gap: 9px; overflow-x: auto; padding: 13px;
+      border: 1px dashed var(--line); background: var(--bg-soft); border-radius: 16px; scrollbar-width: thin;
+    }
+    .token {
+      flex: 0 0 auto; min-width: 43px; height: 48px; padding: 0 10px; display: grid; place-items: center;
+      border-radius: 13px; border: 1px solid var(--line); font-family: "SFMono-Regular", Consolas, monospace;
+      font-weight: 900; background: var(--panel-2); position: relative; transition: transform .25s, opacity .25s, box-shadow .25s;
+    }
+    .token.number { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 10%, var(--panel-2)); }
+    .token.operator { color: var(--amber); background: color-mix(in srgb, var(--amber) 10%, var(--panel-2)); }
+    .token.paren { color: var(--violet); background: color-mix(in srgb, var(--violet) 10%, var(--panel-2)); }
+    .token.used { opacity: .26; transform: scale(.92); }
+    .token.current { opacity: 1; transform: translateY(-7px) scale(1.06); box-shadow: 0 10px 28px rgba(37, 208, 230, .2); border-color: var(--cyan); }
+    .token.current::after { content: "actual"; position: absolute; bottom: -21px; color: var(--cyan); font: 700 .58rem Inter, sans-serif; text-transform: uppercase; }
+
+    .transform-zone { flex: 1; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(170px, .55fr); gap: 16px; }
+    .queue-zone, .stack-zone { display: flex; flex-direction: column; min-width: 0; }
+    .queue {
+      flex: 1; min-height: 185px; align-content: flex-start; display: flex; flex-wrap: wrap; gap: 9px;
+      padding: 15px; border: 1px solid var(--line); background: linear-gradient(145deg, var(--bg-soft), transparent);
+      border-radius: 18px; position: relative;
+    }
+    .queue::before { content: "SALIDA →"; position: absolute; right: 12px; bottom: 9px; color: var(--muted); font-size: .6rem; letter-spacing: .12em; }
+    .empty-msg { margin: auto; color: var(--muted); font-size: .82rem; text-align: center; }
+    .stack-shell {
+      flex: 1; min-height: 250px; padding: 12px 12px 4px; display: flex; flex-direction: column-reverse; gap: 7px;
+      border: 2px solid var(--line); border-top: 0; border-radius: 0 0 18px 18px; background: linear-gradient(180deg, transparent, var(--bg-soft));
+    }
+    .stack-item {
+      min-height: 43px; display: grid; place-items: center; padding: 7px 8px; border-radius: 10px;
+      color: var(--amber); background: color-mix(in srgb, var(--amber) 12%, var(--panel-2)); border: 1px solid color-mix(in srgb, var(--amber) 35%, var(--line));
+      font-family: "SFMono-Regular", Consolas, monospace; font-weight: 900; animation: pop .22s ease-out;
+    }
+    .stack-item.value { color: var(--green); background: color-mix(in srgb, var(--green) 12%, var(--panel-2)); border-color: color-mix(in srgb, var(--green) 35%, var(--line)); }
+    .stack-top { text-align: center; color: var(--muted); font-size: .62rem; margin: 5px 0; letter-spacing: .1em; }
+
+    .explanation {
+      min-height: 92px; display: grid; grid-template-columns: 46px 1fr; gap: 13px; align-items: center;
+      padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--bg-soft);
+    }
+    .action-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: color-mix(in srgb, var(--cyan) 13%, var(--panel-2)); color: var(--cyan); font-size: 21px; }
+    .explanation strong { display: block; margin-bottom: 4px; font-size: .92rem; }
+    .explanation p { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.45; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 18px; }
+    .side-card { padding: 18px; }
+    .postfix-box {
+      margin-top: 12px; min-height: 84px; padding: 14px; border-radius: 15px; background: var(--bg-soft);
+      color: var(--cyan); font-family: "SFMono-Regular", Consolas, monospace; font-weight: 900; line-height: 1.8; overflow-wrap: anywhere;
+    }
+    .result {
+      margin-top: 12px; min-height: 105px; display: grid; place-items: center; text-align: center;
+      border: 1px solid color-mix(in srgb, var(--green) 40%, var(--line)); border-radius: 17px;
+      background: radial-gradient(circle, color-mix(in srgb, var(--green) 13%, transparent), transparent 70%);
+    }
+    .result span { display: block; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; }
+    .result strong { display: block; color: var(--green); font-size: clamp(1.6rem, 5vw, 2.6rem); line-height: 1.1; margin-top: 5px; }
+
+    .rules { display: grid; gap: 9px; margin-top: 12px; }
+    .rule { display: grid; grid-template-columns: 34px 1fr; gap: 9px; align-items: center; color: var(--muted); font-size: .76rem; }
+    .rule b { width: 32px; height: 32px; display: grid; place-items: center; color: var(--text); background: var(--panel-2); border-radius: 9px; }
+
+    .player {
+      position: sticky; bottom: 12px; margin-top: 18px; display: grid; grid-template-columns: auto auto auto auto auto 1fr auto;
+      gap: 8px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 18px;
+      background: color-mix(in srgb, var(--panel) 94%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(16px); z-index: 5;
+    }
+    .play-btn { background: linear-gradient(135deg, var(--blue), var(--violet)); color: white; border-color: transparent; }
+    .timeline { width: 100%; accent-color: var(--cyan); cursor: pointer; }
+    .speed { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .75rem; }
+    .speed input { width: 84px; accent-color: var(--violet); }
+    .kbd-hint { margin-top: 8px; color: var(--muted); font-size: .68rem; text-align: center; }
+
+    .flash { animation: flash .5s ease-out; }
+    @keyframes pop { from { transform: translateY(-8px); opacity: 0; } }
+    @keyframes flash { 50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 25%, transparent); } }
+
+    @media (max-width: 950px) {
+      .workspace { grid-template-columns: 1fr; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+      .stage { min-height: auto; }
+    }
+    @media (max-width: 680px) {
+      .app { padding: 12px; }
+      .topbar { align-items: flex-start; }
+      .input-row { grid-template-columns: 1fr; }
+      select, .btn.primary { width: 100%; }
+      .phasebar { grid-template-columns: 1fr; }
+      .phase-arrow { transform: rotate(90deg); text-align: center; line-height: 12px; }
+      .transform-zone { grid-template-columns: 1fr; }
+      .stack-shell { min-height: 160px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .player { grid-template-columns: repeat(5, 1fr); }
+      .player .timeline { grid-column: 1 / -1; grid-row: 1; }
+      .speed { grid-column: 1 / -1; justify-content: center; }
+      .player .icon-btn { width: 100%; }
+      .brand .subtitle { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">⇥</div>
+        <div>
+          <p class="eyebrow">Transformar y conquistar</p>
+          <h1>Laboratorio Infija → Posfija</h1>
+          <div class="subtitle" style="color:var(--muted);font-size:.78rem;margin-top:3px">La representación adecuada hace visible el algoritmo</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">☀</button>
+        <button class="icon-btn" id="helpBtn" title="Mostrar ayuda" aria-label="Mostrar ayuda">?</button>
+      </div>
+    </header>
+
+    <section class="control-panel" aria-label="Entrada de la expresión">
+      <div class="input-row">
+        <div>
+          <label for="expression">EXPRESIÓN INFÍJA</label>
+          <input id="expression" class="expression-input" value="3 + 4 × 2 ÷ (1 - 5) ^ 2" spellcheck="false" autocomplete="off">
+        </div>
+        <div>
+          <label for="examples">EJEMPLOS</label>
+          <select id="examples">
+            <option value="3 + 4 * 2 / (1 - 5) ^ 2">Precedencia completa</option>
+            <option value="(8 + 2) * 3 - 4">Paréntesis</option>
+            <option value="2 ^ 3 ^ 2">Asociatividad de ^</option>
+            <option value="7 + 3 * (10 / (12 / (3 + 1) - 1))">Expresión anidada</option>
+            <option value="-3 + 5 * 2">Menos unario</option>
+            <option value="18 / (3 * 2) + 7">División y producto</option>
+          </select>
+        </div>
+        <button class="btn primary" id="buildBtn">Construir recorrido</button>
+      </div>
+      <div class="error" id="errorBox" role="alert"></div>
+      <div class="legend" aria-label="Leyenda de colores">
+        <span><i class="dot" style="background:var(--cyan)"></i>Número: va a la salida</span>
+        <span><i class="dot" style="background:var(--amber)"></i>Operador: usa la pila</span>
+        <span><i class="dot" style="background:var(--violet)"></i>Paréntesis: controla el alcance</span>
+        <span><i class="dot" style="background:var(--green)"></i>Valor calculado</span>
+      </div>
+    </section>
+
+    <section class="phasebar" aria-label="Fases del algoritmo">
+      <div class="phase active" id="phaseConvert">
+        <div class="phase-num">1</div><div><strong>Transformar</strong><small>Infija → posfija</small></div>
+      </div>
+      <div class="phase-arrow">→</div>
+      <div class="phase" id="phaseEvaluate">
+        <div class="phase-num">2</div><div><strong>Conquistar</strong><small>Evaluar con una pila</small></div>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <section class="card stage" aria-live="polite">
+        <div class="stage-head">
+          <div><div class="mini-label" id="trackLabel">Entrada infija</div><h2 id="stageTitle">Conversión paso a paso</h2></div>
+          <div class="step-count" id="stepCount">Paso 0 de 0</div>
+        </div>
+
+        <div class="token-track" id="tokenTrack"></div>
+
+        <div class="transform-zone">
+          <div class="queue-zone">
+            <div class="mini-label" id="queueLabel">Cola de salida posfija</div>
+            <div class="queue" id="outputQueue"></div>
+          </div>
+          <div class="stack-zone">
+            <div class="mini-label" id="stackLabel">Pila de operadores</div>
+            <div class="stack-top">▲ TOPE</div>
+            <div class="stack-shell" id="stack"></div>
+          </div>
+        </div>
+
+        <div class="explanation" id="explanation">
+          <div class="action-icon" id="actionIcon">◎</div>
+          <div><strong id="actionTitle">Recorrido listo</strong><p id="actionText">Pulsa Siguiente para comenzar la transformación.</p></div>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <section class="card side-card">
+          <div class="mini-label">Nueva representación</div>
+          <h2>Expresión posfija</h2>
+          <div class="postfix-box" id="postfixBox">—</div>
+          <div class="result">
+            <div><span>Resultado final</span><strong id="resultValue">?</strong></div>
+          </div>
+        </section>
+
+        <section class="card side-card" id="rulesCard">
+          <div class="mini-label">Reglas esenciales</div>
+          <h2>¿Qué decide el algoritmo?</h2>
+          <div class="rules">
+            <div class="rule"><b style="color:var(--cyan)">7</b><span>Un número pasa directamente a la salida.</span></div>
+            <div class="rule"><b style="color:var(--amber)">+</b><span>Un operador espera en la pila según su precedencia.</span></div>
+            <div class="rule"><b style="color:var(--violet)">(</b><span>El paréntesis izquierdo marca una nueva zona.</span></div>
+            <div class="rule"><b style="color:var(--violet)">)</b><span>Vacía operadores hasta encontrar “(”.</span></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <nav class="player" aria-label="Controles del recorrido">
+      <button class="icon-btn" id="firstBtn" title="Primer paso" aria-label="Primer paso">↤</button>
+      <button class="icon-btn" id="prevBtn" title="Paso anterior" aria-label="Paso anterior">←</button>
+      <button class="icon-btn play-btn" id="playBtn" title="Reproducir" aria-label="Reproducir">▶</button>
+      <button class="icon-btn" id="nextBtn" title="Paso siguiente" aria-label="Paso siguiente">→</button>
+      <button class="icon-btn" id="lastBtn" title="Último paso" aria-label="Último paso">↦</button>
+      <input class="timeline" id="timeline" type="range" min="0" max="1" value="0" aria-label="Línea de tiempo">
+      <div class="speed"><span>Velocidad</span><input id="speed" type="range" min="350" max="1800" value="950" step="50" aria-label="Velocidad de reproducción"></div>
+    </nav>
+    <div class="kbd-hint">Teclado: ← anterior · → siguiente · espacio reproducir/pausar</div>
+  </main>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const els = {
+        expression: $('expression'), examples: $('examples'), build: $('buildBtn'), error: $('errorBox'),
+        tokenTrack: $('tokenTrack'), queue: $('outputQueue'), stack: $('stack'), postfix: $('postfixBox'),
+        result: $('resultValue'), title: $('stageTitle'), trackLabel: $('trackLabel'), queueLabel: $('queueLabel'),
+        stackLabel: $('stackLabel'), stepCount: $('stepCount'), actionIcon: $('actionIcon'), actionTitle: $('actionTitle'),
+        actionText: $('actionText'), phaseConvert: $('phaseConvert'), phaseEvaluate: $('phaseEvaluate'),
+        first: $('firstBtn'), prev: $('prevBtn'), play: $('playBtn'), next: $('nextBtn'), last: $('lastBtn'),
+        timeline: $('timeline'), speed: $('speed'), theme: $('themeBtn'), help: $('helpBtn'), rules: $('rulesCard')
+      };
+
+      const operators = {
+        '+': { precedence: 1, assoc: 'L', arity: 2, fn: (a, b) => a + b },
+        '-': { precedence: 1, assoc: 'L', arity: 2, fn: (a, b) => a - b },
+        '*': { precedence: 2, assoc: 'L', arity: 2, fn: (a, b) => a * b },
+        '/': { precedence: 2, assoc: 'L', arity: 2, fn: (a, b) => a / b },
+        'neg': { precedence: 3, assoc: 'R', arity: 1, fn: (a) => -a },
+        '^': { precedence: 4, assoc: 'R', arity: 2, fn: (a, b) => Math.pow(a, b) }
+      };
+
+      let steps = [], current = 0, timer = null, postfixTokens = [];
+
+      function displayToken(token) { return token === '*' ? '×' : token === '/' ? '÷' : token === 'neg' ? '−' : token; }
+      function isNumber(token) { return /^(?:\d+(?:\.\d*)?|\.\d+)$/.test(token); }
+      function tokenType(token) { return isNumber(token) ? 'number' : operators[token] ? 'operator' : 'paren'; }
+      function formatNumber(value) {
+        if (!Number.isFinite(value)) return value > 0 ? '∞' : value < 0 ? '−∞' : 'Indefinido';
+        const clean = Math.abs(value) < 1e-12 ? 0 : value;
+        return Number.isInteger(clean) ? String(clean) : String(Number(clean.toFixed(8)));
+      }
+
+      function tokenize(raw) {
+        const normalized = raw.replace(/[×·]/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/,/g, '.');
+        const tokens = [];
+        let i = 0;
+        while (i < normalized.length) {
+          const ch = normalized[i];
+          if (/\s/.test(ch)) { i++; continue; }
+          if (/\d|\./.test(ch)) {
+            let value = '', dots = 0;
+            while (i < normalized.length && /[\d.]/.test(normalized[i])) {
+              if (normalized[i] === '.') dots++;
+              value += normalized[i++];
+            }
+            if (dots > 1 || value === '.') throw new Error('Hay un número decimal mal formado.');
+            tokens.push(value); continue;
+          }
+          if ('+-*/^()'.includes(ch)) { tokens.push(ch); i++; continue; }
+          throw new Error(`El símbolo “${ch}” no está permitido. Usa números, +, −, ×, ÷, ^ y paréntesis.`);
+        }
+        if (!tokens.length) throw new Error('Escribe una expresión para comenzar.');
+
+        const result = [];
+        let balance = 0;
+        for (let k = 0; k < tokens.length; k++) {
+          let t = tokens[k];
+          const prev = result[result.length - 1];
+          if (t === '(') balance++;
+          if (t === ')') { balance--; if (balance < 0) throw new Error('Hay un paréntesis de cierre sin pareja.'); }
+          if (t === '-' && (k === 0 || prev === '(' || operators[prev])) t = 'neg';
+          if (t === '+' && (k === 0 || prev === '(' || operators[prev])) continue;
+          result.push(t);
+        }
+        if (balance !== 0) throw new Error('Los paréntesis no están balanceados.');
+        validateSequence(result);
+        return result;
+      }
+
+      function validateSequence(tokens) {
+        let expectOperand = true;
+        for (const t of tokens) {
+          if (expectOperand) {
+            if (isNumber(t)) expectOperand = false;
+            else if (t === '(' || t === 'neg') {}
+            else throw new Error(`Se esperaba un número o “(”, pero apareció “${displayToken(t)}”.`);
+          } else {
+            if (operators[t] && t !== 'neg') expectOperand = true;
+            else if (t === ')') {}
+            else throw new Error(`Se esperaba un operador, pero apareció “${displayToken(t)}”.`);
+          }
+        }
+        if (expectOperand) throw new Error('La expresión termina con un operador incompleto.');
+      }
+
+      function snap(phase, input, pointer, output, stack, icon, title, text, extra = {}) {
+        steps.push({ phase, input: [...input], pointer, output: [...output], stack: [...stack], icon, title, text, ...extra });
+      }
+
+      function buildConversion(tokens) {
+        const output = [], stack = [];
+        snap('convert', tokens, -1, output, stack, '◎', 'Expresión preparada', 'Recorreremos cada token de izquierda a derecha.');
+        tokens.forEach((token, index) => {
+          if (isNumber(token)) {
+            output.push(token);
+            snap('convert', tokens, index, output, stack, '⇢', `Enviar ${token} a la salida`, 'Los operandos no necesitan esperar: pasan directamente a la expresión posfija.');
+            return;
+          }
+          if (token === '(') {
+            stack.push(token);
+            snap('convert', tokens, index, output, stack, '↓', 'Apilar “(”', 'Abre una zona protegida: ningún operador situado antes puede cruzarla.');
+            return;
+          }
+          if (token === ')') {
+            let found = false;
+            while (stack.length) {
+              const top = stack.pop();
+              if (top === '(') { found = true; break; }
+              output.push(top);
+              snap('convert', tokens, index, output, stack, '↗', `Desapilar ${displayToken(top)}`, 'El paréntesis derecho libera los operadores pendientes de esta zona.');
+            }
+            if (!found) throw new Error('Hay un paréntesis de cierre sin apertura.');
+            snap('convert', tokens, index, output, stack, '×', 'Descartar los paréntesis', 'Los paréntesis guiaron el orden, pero no aparecen en la expresión posfija.');
+            return;
+          }
+          if (token === 'neg') {
+            stack.push(token);
+            snap('convert', tokens, index, output, stack, '↓', 'Apilar menos unario', 'Espera a su operando sin expulsar una potencia pendiente; así 2 ^ −3 se interpreta correctamente.');
+            return;
+          }
+          const op = operators[token];
+          while (stack.length && operators[stack[stack.length - 1]]) {
+            const top = stack[stack.length - 1], topOp = operators[top];
+            const mustPop = op.assoc === 'L' ? op.precedence <= topOp.precedence : op.precedence < topOp.precedence;
+            if (!mustPop) break;
+            stack.pop(); output.push(top);
+            snap('convert', tokens, index, output, stack, '↗', `Sale ${displayToken(top)} antes que ${displayToken(token)}`, 'Su precedencia es mayor, o es igual y el operador actual asocia por la izquierda.');
+          }
+          stack.push(token);
+          const opName = `operador ${displayToken(token)}`;
+          snap('convert', tokens, index, output, stack, '↓', `Apilar ${opName}`, `Queda pendiente hasta que su precedencia determine el momento de salir.`);
+        });
+        while (stack.length) {
+          const top = stack.pop();
+          if (top === '(') throw new Error('Hay un paréntesis de apertura sin cierre.');
+          output.push(top);
+          snap('convert', tokens, tokens.length, output, stack, '↗', `Vaciar ${displayToken(top)}`, 'Terminó la entrada: los operadores restantes pasan a la salida.');
+        }
+        snap('convert', tokens, tokens.length, output, stack, '✓', 'Conversión terminada', `La expresión posfija es: ${output.map(displayToken).join(' ')}`, { conversionDone: true });
+        return output;
+      }
+
+      function buildEvaluation(postfix) {
+        const stack = [];
+        snap('evaluate', postfix, -1, postfix, stack, '◎', 'Comienza la evaluación', 'Ahora cada operador encontrará sus operandos en la pila.', { postfix });
+        postfix.forEach((token, index) => {
+          if (isNumber(token)) {
+            stack.push(Number(token));
+            snap('evaluate', postfix, index, postfix, stack, '↓', `Apilar ${token}`, 'Los números se guardan hasta que un operador los necesite.', { postfix });
+            return;
+          }
+          const op = operators[token];
+          if (stack.length < op.arity) throw new Error('La expresión no contiene suficientes operandos.');
+          if (op.arity === 1) {
+            const a = stack.pop(), value = op.fn(a);
+            snap('evaluate', postfix, index, postfix, stack, '↑', `Extraer ${formatNumber(a)}`, 'El menos unario toma un solo operando.', { postfix });
+            stack.push(value);
+            snap('evaluate', postfix, index, postfix, stack, '=', `Calcular −${formatNumber(a)} = ${formatNumber(value)}`, 'El resultado vuelve a la pila y puede alimentar otra operación.', { postfix });
+          } else {
+            const b = stack.pop(), a = stack.pop();
+            snap('evaluate', postfix, index, postfix, stack, '↑', `Extraer ${formatNumber(a)} y ${formatNumber(b)}`, `El segundo valor extraído queda a la izquierda: ${formatNumber(a)} ${displayToken(token)} ${formatNumber(b)}.`, { postfix });
+            if (token === '/' && b === 0) throw new Error('La expresión intenta dividir entre cero.');
+            const value = op.fn(a, b);
+            stack.push(value);
+            snap('evaluate', postfix, index, postfix, stack, '=', `${formatNumber(a)} ${displayToken(token)} ${formatNumber(b)} = ${formatNumber(value)}`, 'Se reemplazan los operandos por el resultado parcial.', { postfix });
+          }
+        });
+        if (stack.length !== 1) throw new Error('No fue posible reducir la expresión a un único resultado.');
+        snap('evaluate', postfix, postfix.length, postfix, stack, '★', `Resultado: ${formatNumber(stack[0])}`, 'La pila contiene un único valor: la evaluación ha terminado.', { postfix, final: stack[0] });
+      }
+
+      function build() {
+        pause();
+        els.error.classList.remove('show');
+        try {
+          steps = [];
+          const tokens = tokenize(els.expression.value);
+          postfixTokens = buildConversion(tokens);
+          buildEvaluation(postfixTokens);
+          current = 0;
+          els.timeline.max = Math.max(1, steps.length - 1);
+          render();
+        } catch (err) {
+          steps = [];
+          els.error.textContent = err.message;
+          els.error.classList.add('show');
+          els.tokenTrack.innerHTML = '<div class="empty-msg">Corrige la expresión para construir el recorrido.</div>';
+          els.queue.innerHTML = '<div class="empty-msg">Sin salida</div>';
+          els.stack.innerHTML = '';
+          els.postfix.textContent = '—'; els.result.textContent = '?';
+          updateButtons();
+        }
+      }
+
+      function makeToken(token, index, step) {
+        const div = document.createElement('div');
+        div.className = `token ${tokenType(token)}`;
+        if (index < step.pointer || step.pointer >= step.input.length) div.classList.add('used');
+        if (index === step.pointer) div.classList.add('current');
+        div.textContent = displayToken(token);
+        div.title = token === 'neg' ? 'Menos unario' : token;
+        return div;
+      }
+
+      function render() {
+        if (!steps.length) return;
+        const step = steps[current], evaluating = step.phase === 'evaluate';
+        els.tokenTrack.innerHTML = '';
+        step.input.forEach((token, i) => els.tokenTrack.appendChild(makeToken(token, i, step)));
+        const active = els.tokenTrack.querySelector('.current');
+        if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+        els.queue.innerHTML = '';
+        const queueTokens = evaluating ? (step.postfix || postfixTokens) : step.output;
+        if (!queueTokens.length) els.queue.innerHTML = '<div class="empty-msg">La salida aparecerá aquí</div>';
+        else queueTokens.forEach((token, i) => {
+          const node = makeToken(token, -10, { pointer: -1, input: [] });
+          node.classList.remove('used');
+          if (evaluating && i < step.pointer) node.style.opacity = '.35';
+          els.queue.appendChild(node);
+        });
+
+        els.stack.innerHTML = '';
+        step.stack.forEach(value => {
+          const node = document.createElement('div');
+          node.className = `stack-item${evaluating ? ' value' : ''}`;
+          node.textContent = evaluating ? formatNumber(value) : displayToken(value);
+          els.stack.appendChild(node);
+        });
+
+        els.title.textContent = evaluating ? 'Evaluación paso a paso' : 'Conversión paso a paso';
+        els.trackLabel.textContent = evaluating ? 'Recorrido de la posfija' : 'Entrada infija';
+        els.queueLabel.textContent = evaluating ? 'Expresión posfija' : 'Cola de salida posfija';
+        els.stackLabel.textContent = evaluating ? 'Pila de valores' : 'Pila de operadores';
+        els.phaseConvert.classList.toggle('active', !evaluating);
+        els.phaseConvert.classList.toggle('done', evaluating);
+        els.phaseEvaluate.classList.toggle('active', evaluating);
+        els.stepCount.textContent = `Paso ${current} de ${steps.length - 1}`;
+        els.actionIcon.textContent = step.icon;
+        els.actionTitle.textContent = step.title;
+        els.actionText.textContent = step.text;
+        els.postfix.textContent = postfixTokens.map(displayToken).join(' ') || '—';
+        els.result.textContent = step.final !== undefined ? formatNumber(step.final) : '?';
+        els.timeline.value = current;
+        updateButtons();
+      }
+
+      function updateButtons() {
+        const has = steps.length > 0;
+        els.first.disabled = !has || current === 0;
+        els.prev.disabled = !has || current === 0;
+        els.next.disabled = !has || current >= steps.length - 1;
+        els.last.disabled = !has || current >= steps.length - 1;
+        els.play.disabled = !has;
+      }
+      function go(index) { current = Math.max(0, Math.min(steps.length - 1, index)); render(); }
+      function pause() { if (timer) clearInterval(timer); timer = null; els.play.textContent = '▶'; els.play.setAttribute('aria-label', 'Reproducir'); }
+      function play() {
+        if (timer) { pause(); return; }
+        if (current >= steps.length - 1) current = 0;
+        els.play.textContent = 'Ⅱ'; els.play.setAttribute('aria-label', 'Pausar');
+        const delay = 2150 - Number(els.speed.value);
+        timer = setInterval(() => {
+          if (current >= steps.length - 1) { pause(); return; }
+          go(current + 1);
+        }, delay);
+      }
+
+      els.examples.addEventListener('change', () => { els.expression.value = els.examples.value.replace(/\*/g, '×').replace(/\//g, '÷'); build(); });
+      els.build.addEventListener('click', build);
+      els.expression.addEventListener('keydown', (e) => { if (e.key === 'Enter') build(); });
+      els.first.addEventListener('click', () => { pause(); go(0); });
+      els.prev.addEventListener('click', () => { pause(); go(current - 1); });
+      els.play.addEventListener('click', play);
+      els.next.addEventListener('click', () => { pause(); go(current + 1); });
+      els.last.addEventListener('click', () => { pause(); go(steps.length - 1); });
+      els.timeline.addEventListener('input', () => { pause(); go(Number(els.timeline.value)); });
+      els.speed.addEventListener('input', () => { if (timer) { pause(); play(); } });
+      els.theme.addEventListener('click', () => {
+        document.body.classList.toggle('light');
+        const light = document.body.classList.contains('light');
+        els.theme.textContent = light ? '☾' : '☀';
+        try { localStorage.setItem('expr-theme', light ? 'light' : 'dark'); } catch (_) {}
+      });
+      els.help.addEventListener('click', () => {
+        els.rules.classList.remove('flash'); void els.rules.offsetWidth; els.rules.classList.add('flash');
+        els.rules.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      document.addEventListener('keydown', (e) => {
+        if (document.activeElement === els.expression || document.activeElement === els.examples) return;
+        if (e.key === 'ArrowRight') { e.preventDefault(); pause(); go(current + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); pause(); go(current - 1); }
+        if (e.code === 'Space') { e.preventDefault(); play(); }
+      });
+
+      try {
+        if (localStorage.getItem('expr-theme') === 'light') { document.body.classList.add('light'); els.theme.textContent = '☾'; }
+      } catch (_) {}
+      build();
+    })();
+  </script>
+</body>
+</html>

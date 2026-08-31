@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Potencias con vectores propios</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: light-dark(#f8fafc, #111827);
+      --foreground: light-dark(#172033, #f4f7fb);
+      --card: light-dark(#ffffff, #1c2433);
+      --card-foreground: var(--foreground);
+      --popover: var(--card);
+      --popover-foreground: var(--foreground);
+      --primary: light-dark(#1d4ed8, #8bb7ff);
+      --primary-foreground: light-dark(#ffffff, #081424);
+      --secondary: light-dark(#e2e8f0, #263244);
+      --secondary-foreground: var(--foreground);
+      --muted: light-dark(#e9eef5, #273244);
+      --muted-foreground: light-dark(#5d6b7d, #b7c2d3);
+      --accent: light-dark(#dbeafe, #19365e);
+      --accent-foreground: var(--foreground);
+      --destructive: light-dark(#b91c1c, #ff9b9b);
+      --border: light-dark(#cbd5e1, #405069);
+      --input: var(--border);
+      --ring: var(--primary);
+      --viz-series-1: light-dark(#2563eb, #7db0ff);
+      --viz-series-2: light-dark(#dc6b18, #ffb067);
+      --viz-series-3: light-dark(#169b62, #72d6a0);
+      --viz-series-4: light-dark(#b42372, #ef83bd);
+      --viz-series-5: light-dark(#7c3aed, #b69cff);
+      --viz-series-6: light-dark(#ca8a04, #f5d35e);
+      font-family: "Cambria Math", "Latin Modern Math", Georgia, "Times New Roman", serif;
+      font-size: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--background);
+      color: var(--foreground);
+      padding: 24px;
+    }
+    main {
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 500;
+      margin: 0 0 14px;
+      letter-spacing: 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: color-mix(in srgb, var(--muted) 60%, transparent);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+    .card {
+      background: var(--card);
+      color: var(--card-foreground);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .viz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+    .viz-stat-value {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 4px 0;
+    }
+    .viz-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+    }
+    .form-label {
+      display: grid;
+      gap: 5px;
+      color: var(--foreground);
+      font-weight: 500;
+    }
+    .form-range, .form-select {
+      accent-color: var(--primary);
+    }
+    .form-select {
+      min-height: 36px;
+      border: 1px solid var(--input);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--foreground);
+      padding: 6px 8px;
+      font: inherit;
+    }
+    .btn {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+      font: inherit;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .text-muted { color: var(--muted-foreground); }
+    .text-small { font-size: 0.875rem; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    i[data-lucide] { display: none; }
+    @media (max-width: 520px) {
+      body { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+<div id="eig-lab" class="eig-lab">
+  <style>
+    #eig-lab {
+      color: var(--foreground);
+      font-family: "Cambria Math", "Latin Modern Math", Georgia, "Times New Roman", serif;
+    }
+    #eig-lab .top {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.85fr) minmax(300px, 1.15fr);
+      gap: 14px;
+      align-items: start;
+    }
+    #eig-lab .viz-controls {
+      margin: 0 0 12px;
+    }
+    #eig-lab .form-label {
+      min-width: 145px;
+    }
+    #eig-lab .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(54px, 1fr));
+      gap: 6px;
+      max-width: 150px;
+      margin-top: 6px;
+    }
+    #eig-lab .custom-matrix {
+      display: grid;
+      grid-template-columns: minmax(170px, auto) minmax(112px, auto);
+      gap: 10px;
+      align-items: end;
+      margin: 0 0 12px;
+    }
+    #eig-lab .input-matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 58px);
+      gap: 6px;
+    }
+    #eig-lab .input-vector {
+      display: grid;
+      grid-template-columns: repeat(2, 52px);
+      gap: 6px;
+    }
+    #eig-lab .mini-input {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--input);
+      border-radius: 6px;
+      padding: 4px 6px;
+      background: var(--card);
+      color: var(--foreground);
+      font: inherit;
+      font-variant-numeric: tabular-nums;
+    }
+    #eig-lab .warning {
+      margin: 6px 0 10px;
+      color: var(--destructive);
+      min-height: 20px;
+    }
+    #eig-lab .cell {
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+      border-radius: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    #eig-lab .formula {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    #eig-lab .replace-flow {
+      display: grid;
+      gap: 8px;
+      padding: 8px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    #eig-lab .mini-matrices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    #eig-lab .mini-matrix {
+      display: grid;
+      gap: 4px;
+      align-items: center;
+      justify-items: center;
+    }
+    #eig-lab .mini-title {
+      color: var(--muted-foreground);
+    }
+    #eig-lab .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(46px, 1fr));
+      gap: 4px;
+      min-width: 104px;
+    }
+    #eig-lab .mini-cell {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 6px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    #eig-lab .equals {
+      color: var(--muted-foreground);
+      font-weight: 500;
+    }
+    #eig-lab .line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    #eig-lab .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--accent) 22%, transparent);
+      color: var(--accent-foreground);
+      font-variant-numeric: tabular-nums;
+    }
+    #eig-lab .math-line {
+      font-family: "Cambria Math", "Latin Modern Math", Georgia, "Times New Roman", serif;
+    }
+    #eig-lab .col-vector {
+      display: inline-grid;
+      grid-template-rows: repeat(2, auto);
+      gap: 1px;
+      padding: 2px 7px;
+      border-left: 1.5px solid currentColor;
+      border-right: 1.5px solid currentColor;
+      line-height: 1.05;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    #eig-lab .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+      background: currentColor;
+    }
+    #eig-lab .canvas-wrap {
+      min-width: 0;
+    }
+    #eig-lab svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    #eig-lab .axis,
+    #eig-lab .grid {
+      stroke: var(--border);
+      stroke-width: 1;
+    }
+    #eig-lab .axis {
+      stroke-width: 1.5;
+    }
+    #eig-lab .label,
+    #eig-lab .tick {
+      fill: var(--foreground);
+      font-size: 12px;
+    }
+    #eig-lab .muted {
+      fill: var(--muted-foreground);
+      color: var(--muted-foreground);
+    }
+    #eig-lab .v1 {
+      color: var(--viz-series-1);
+      stroke: var(--viz-series-1);
+      fill: var(--viz-series-1);
+    }
+    #eig-lab .v2 {
+      color: var(--viz-series-2);
+      stroke: var(--viz-series-2);
+      fill: var(--viz-series-2);
+    }
+    #eig-lab .x0 {
+      color: var(--viz-series-3);
+      stroke: var(--viz-series-3);
+      fill: var(--viz-series-3);
+    }
+    #eig-lab .xn {
+      color: var(--viz-series-4);
+      stroke: var(--viz-series-4);
+      fill: var(--viz-series-4);
+    }
+    #eig-lab .component {
+      stroke-width: 5;
+      stroke-linecap: round;
+      opacity: 0.62;
+    }
+    #eig-lab .arrow {
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+    #eig-lab .ghost {
+      opacity: 0.23;
+      stroke-width: 2;
+    }
+    #eig-lab .dot {
+      stroke: var(--background);
+      stroke-width: 2;
+    }
+    #eig-lab .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    #eig-lab .step {
+      padding: 8px;
+      border-top: 3px solid var(--border);
+    }
+    #eig-lab .step.is-on {
+      border-top-color: var(--primary);
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
+    }
+    #eig-lab .step b {
+      font-weight: 500;
+      display: block;
+    }
+    @media (max-width: 720px) {
+      #eig-lab .top {
+        grid-template-columns: 1fr;
+      }
+      #eig-lab .steps {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 430px) {
+      #eig-lab .steps {
+        grid-template-columns: 1fr;
+      }
+      #eig-lab .form-label {
+        min-width: 100%;
+      }
+    }
+  </style>
+
+  <h2>Potencias con vectores propios</h2>
+  <div class="viz-controls" aria-label="Controles de ejemplo">
+    <label class="form-label">Ejemplo
+      <select id="eig-example" class="form-select">
+        <option value="stretch">Estira y contrae</option>
+        <option value="stable">Se apaga hacia cero</option>
+        <option value="flip">Alterna signo y crece</option>
+        <option value="custom">Mi propia matriz</option>
+      </select>
+    </label>
+    <label class="form-label"><span>n = <span id="eig-n-label" class="tabular-nums">0</span></span>
+      <input id="eig-n" class="form-range" type="range" min="0" max="12" step="1" value="0">
+    </label>
+    <button id="eig-prev" class="btn" type="button" data-tooltip="Paso anterior"><i data-lucide="arrow-left" aria-hidden="true"></i> Atrás</button>
+    <button id="eig-next" class="btn btn-primary" type="button" data-tooltip="Siguiente paso"><i data-lucide="arrow-right" aria-hidden="true"></i> Siguiente</button>
+  </div>
+  <div class="custom-matrix" aria-label="Matriz y vector inicial editables">
+    <label class="form-label">Matriz A
+      <span class="input-matrix">
+        <input id="eig-a00" class="mini-input eig-custom" type="number" step="0.1" value="2.2" aria-label="A fila 1 columna 1">
+        <input id="eig-a01" class="mini-input eig-custom" type="number" step="0.1" value="-0.6" aria-label="A fila 1 columna 2">
+        <input id="eig-a10" class="mini-input eig-custom" type="number" step="0.1" value="0.8" aria-label="A fila 2 columna 1">
+        <input id="eig-a11" class="mini-input eig-custom" type="number" step="0.1" value="0.8" aria-label="A fila 2 columna 2">
+      </span>
+    </label>
+    <label class="form-label">x0
+      <span class="input-vector">
+        <input id="eig-x00" class="mini-input eig-custom" type="number" step="0.1" value="2.6" aria-label="x0 primera coordenada">
+        <input id="eig-x01" class="mini-input eig-custom" type="number" step="0.1" value="0.4" aria-label="x0 segunda coordenada">
+      </span>
+    </label>
+  </div>
+  <div id="eig-warning" class="warning text-small" role="alert"></div>
+
+  <div class="top">
+    <div>
+      <div class="viz-grid">
+        <div class="card viz-stat">
+          <span class="text-muted">Matriz A</span>
+          <div class="matrix" id="eig-matrix"></div>
+        </div>
+        <div class="card viz-stat">
+          <span class="text-muted">Vector actual</span>
+          <div class="viz-stat-value tabular-nums" id="eig-xn">[0, 0]</div>
+          <span class="text-muted" id="eig-scale-note">A^0 x0</span>
+        </div>
+      </div>
+      <div class="formula" aria-live="polite">
+        <div class="line">
+          <span class="chip x0"><span class="swatch"></span>x0 = <span id="eig-x0"></span></span>
+          <span class="chip v1"><span class="swatch"></span>v1 = <span id="eig-v1"></span></span>
+          <span class="chip v2"><span class="swatch"></span>v2 = <span id="eig-v2"></span></span>
+        </div>
+        <div class="line">
+          <span id="eig-decomp"></span>
+        </div>
+        <div class="line">
+          <span id="eig-power"></span>
+        </div>
+        <div class="replace-flow">
+          <span id="eig-replace-title"></span>
+          <div class="mini-matrices" id="eig-replace"></div>
+          <span id="eig-replace-note" class="text-small muted"></span>
+        </div>
+      </div>
+      <div class="steps" id="eig-steps"></div>
+    </div>
+    <div class="canvas-wrap">
+      <svg id="eig-svg" viewBox="0 0 640 450" role="img" aria-labelledby="eig-title eig-desc">
+        <title id="eig-title">Plano con vectores propios y A elevado a n aplicado a x0</title>
+        <desc id="eig-desc">Flechas coloreadas muestran los vectores propios, el vector inicial, sus componentes y el vector resultante.</desc>
+        <defs>
+          <marker id="eig-arrow-v1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" class="v1"></path>
+          </marker>
+          <marker id="eig-arrow-v2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" class="v2"></path>
+          </marker>
+          <marker id="eig-arrow-x0" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" class="x0"></path>
+          </marker>
+          <marker id="eig-arrow-xn" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" class="xn"></path>
+          </marker>
+        </defs>
+        <g id="eig-plot"></g>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById("eig-lab");
+      const examples = {
+        stretch: {
+          A: [[2, 1], [1, 2]],
+          lambda: [3, 1],
+          vectors: [[1, 1], [1, -1]],
+          x0: [4, 2]
+        },
+        stable: {
+          A: [[3, 0], [0, 2]],
+          lambda: [3, 2],
+          vectors: [[1, 0], [0, 1]],
+          x0: [2, 1]
+        },
+        flip: {
+          A: [[4, 1], [0, 2]],
+          lambda: [4, 2],
+          vectors: [[1, 0], [-0.5, 1]],
+          x0: [3, 2]
+        }
+      };
+      const steps = [
+        ["Base", "Escoge A y x0."],
+        ["Vectores", "Encuentra las direcciones v1 y v2."],
+        ["Reemplazar A", "Escribe A = P D P⁻¹."],
+        ["Elevar", "Cambia D por Dⁿ."],
+        ["Aplicar a x0", "Calcula P Dⁿ P⁻¹ x0."]
+      ];
+      const fmt = (x) => (Math.abs(x) < 0.005 ? "0.00" : x.toFixed(2));
+      const vec = (v) => `<span class="col-vector"><span>${fmt(v[0])}</span><span>${fmt(v[1])}</span></span>`;
+      const add = (a, b) => [a[0] + b[0], a[1] + b[1]];
+      const mul = (s, v) => [s * v[0], s * v[1]];
+      function readNumber(id) {
+        const value = Number(root.querySelector(`#${id}`).value);
+        return Number.isFinite(value) ? value : 0;
+      }
+      function eigenvector(A, lambda) {
+        const a = A[0][0] - lambda;
+        const b = A[0][1];
+        const c = A[1][0];
+        const d = A[1][1] - lambda;
+        let v = Math.abs(b) + Math.abs(a) > Math.abs(d) + Math.abs(c) ? [b, -a] : [d, -c];
+        if (Math.hypot(v[0], v[1]) < 0.000001) v = Math.abs(a) + Math.abs(c) > 0.000001 ? [-c, a] : [1, 0];
+        const norm = Math.hypot(v[0], v[1]) || 1;
+        return [v[0] / norm, v[1] / norm];
+      }
+      function eigFromMatrix(A) {
+        const tr = A[0][0] + A[1][1];
+        const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+        const disc = tr * tr - 4 * det;
+        if (disc < -0.000001) return { error: "Esta matriz tiene valores propios complejos. Prueba una matriz con valores propios reales para ver la descomposición en el plano." };
+        const rootDisc = Math.sqrt(Math.max(0, disc));
+        const lambda = [(tr + rootDisc) / 2, (tr - rootDisc) / 2];
+        if (Math.abs(lambda[0] - lambda[1]) < 0.000001) return { error: "Esta matriz tiene un valor propio repetido. Usa una matriz con dos direcciones propias distintas para esta explicación." };
+        return { lambda, vectors: [eigenvector(A, lambda[0]), eigenvector(A, lambda[1])] };
+      }
+      function syncInputs(ex) {
+        [["eig-a00", ex.A[0][0]], ["eig-a01", ex.A[0][1]], ["eig-a10", ex.A[1][0]], ["eig-a11", ex.A[1][1]], ["eig-x00", ex.x0[0]], ["eig-x01", ex.x0[1]]]
+          .forEach(([id, value]) => root.querySelector(`#${id}`).value = fmt(value));
+      }
+      function inv2(M) {
+        const det = M[0][0] * M[1][1] - M[0][1] * M[1][0];
+        return [[M[1][1] / det, -M[0][1] / det], [-M[1][0] / det, M[0][0] / det]];
+      }
+      function matrix2Html(label, M, cls = "") {
+        return `<span class="mini-matrix ${cls}">
+          <span class="mini-title text-small">${label}</span>
+          <span class="mini-grid">${M.flat().map(v => `<span class="mini-cell">${fmt(v)}</span>`).join("")}</span>
+        </span>`;
+      }
+      function currentExample() {
+        const choice = root.querySelector("#eig-example").value;
+        if (choice !== "custom") return examples[choice];
+        const A = [[readNumber("eig-a00"), readNumber("eig-a01")], [readNumber("eig-a10"), readNumber("eig-a11")]];
+        const eig = eigFromMatrix(A);
+        if (eig.error) return { A, x0: [readNumber("eig-x00"), readNumber("eig-x01")], error: eig.error };
+        return { A, lambda: eig.lambda, vectors: eig.vectors, x0: [readNumber("eig-x00"), readNumber("eig-x01")] };
+      }
+      function solveCoeffs(v1, v2, x) {
+        const det = v1[0] * v2[1] - v2[0] * v1[1];
+        return [(x[0] * v2[1] - v2[0] * x[1]) / det, (v1[0] * x[1] - x[0] * v1[1]) / det];
+      }
+      function point(v, scale) {
+        return [320 + v[0] * scale, 225 - v[1] * scale];
+      }
+      function line(g, a, b, cls, marker) {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        el.setAttribute("x1", a[0]);
+        el.setAttribute("y1", a[1]);
+        el.setAttribute("x2", b[0]);
+        el.setAttribute("y2", b[1]);
+        el.setAttribute("class", cls);
+        if (marker) el.setAttribute("marker-end", marker);
+        g.appendChild(el);
+      }
+      function text(g, p, value, cls = "label") {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        el.setAttribute("x", p[0]);
+        el.setAttribute("y", p[1]);
+        el.setAttribute("class", cls);
+        el.textContent = value;
+        g.appendChild(el);
+      }
+      function circle(g, p, cls) {
+        const el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        el.setAttribute("cx", p[0]);
+        el.setAttribute("cy", p[1]);
+        el.setAttribute("r", 5);
+        el.setAttribute("class", `dot ${cls}`);
+        g.appendChild(el);
+      }
+      function draw() {
+        const ex = currentExample();
+        const n = Number(root.querySelector("#eig-n").value);
+        root.querySelector("#eig-warning").textContent = ex.error || "";
+        root.querySelector("#eig-matrix").innerHTML = ex.A.flat().map(v => `<div class="cell">${fmt(v)}</div>`).join("");
+        if (ex.error) {
+          root.querySelector("#eig-n-label").textContent = n;
+          root.querySelector("#eig-xn").textContent = "--";
+          root.querySelector("#eig-scale-note").textContent = "sin descomposición real";
+          root.querySelector("#eig-x0").innerHTML = vec(ex.x0);
+          root.querySelector("#eig-v1").textContent = "--";
+          root.querySelector("#eig-v2").textContent = "--";
+          root.querySelector("#eig-decomp").innerHTML = "No hay dos vectores propios reales distintos para usar como base.";
+          root.querySelector("#eig-power").innerHTML = "Cambia A para continuar.";
+          root.querySelector("#eig-replace-title").innerHTML = "La sustitución <code>A = P D P⁻¹</code> necesita dos direcciones propias reales.";
+          root.querySelector("#eig-replace").innerHTML = "";
+          root.querySelector("#eig-replace-note").textContent = "";
+          root.querySelector("#eig-steps").innerHTML = steps.map((s, i) => `<div class="step ${i === 0 ? "is-on" : ""}"><b>${i + 1}. ${s[0]}</b><span class="text-small muted">${s[1]}</span></div>`).join("");
+          const g = root.querySelector("#eig-plot");
+          g.replaceChildren();
+          for (let i = -4; i <= 4; i++) {
+            line(g, [60, 225 + i * 40], [580, 225 + i * 40], "grid");
+            line(g, [320 + i * 40, 40], [320 + i * 40, 410], "grid");
+          }
+          line(g, [60, 225], [590, 225], "axis");
+          line(g, [320, 410], [320, 35], "axis");
+          text(g, [115, 78], "Sin base real de vectores propios para dibujar.", "label");
+          return;
+        }
+        const coeff = solveCoeffs(ex.vectors[0], ex.vectors[1], ex.x0);
+        const comp1 = mul(coeff[0] * Math.pow(ex.lambda[0], n), ex.vectors[0]);
+        const comp2 = mul(coeff[1] * Math.pow(ex.lambda[1], n), ex.vectors[1]);
+        const xn = add(comp1, comp2);
+        const P = [[ex.vectors[0][0], ex.vectors[1][0]], [ex.vectors[0][1], ex.vectors[1][1]]];
+        const D = [[ex.lambda[0], 0], [0, ex.lambda[1]]];
+        const Dn = [[Math.pow(ex.lambda[0], n), 0], [0, Math.pow(ex.lambda[1], n)]];
+        const Pinv = inv2(P);
+        const all = [ex.x0, xn, comp1, comp2, ex.vectors[0], ex.vectors[1]];
+        const maxAbs = Math.max(2, ...all.flat().map(Math.abs));
+        const scale = Math.min(70, 180 / maxAbs);
+
+        root.querySelector("#eig-n-label").textContent = n;
+        root.querySelector("#eig-xn").innerHTML = vec(xn);
+        root.querySelector("#eig-scale-note").textContent = `A^${n} x0`;
+        root.querySelector("#eig-x0").innerHTML = vec(ex.x0);
+        root.querySelector("#eig-v1").innerHTML = vec(ex.vectors[0]);
+        root.querySelector("#eig-v2").innerHTML = vec(ex.vectors[1]);
+        root.querySelector("#eig-decomp").innerHTML = `<span class="math-line">Primero se cambia de coordenadas: <code>P⁻¹x₀ = ${vec(coeff)}</code>, es decir <code>x₀ = ${fmt(coeff[0])}v₁ + ${fmt(coeff[1])}v₂</code>.</span>`;
+        root.querySelector("#eig-power").innerHTML = `<span class="math-line">Luego se eleva solo la diagonal: <code>D^${n} = diag(${fmt(Math.pow(ex.lambda[0], n))}, ${fmt(Math.pow(ex.lambda[1], n))})</code>.</span>`;
+        root.querySelector("#eig-replace-title").innerHTML = `Reemplazo central: <code>A = P D P⁻¹</code>, entonces <code>A^${n}x0 = P D^${n} P⁻¹ x0</code>.`;
+        root.querySelector("#eig-replace").innerHTML = [
+          matrix2Html("P = [v1 v2]", P, "c1"),
+          `<span class="equals">×</span>`,
+          matrix2Html("D", D, "c2"),
+          `<span class="equals">×</span>`,
+          matrix2Html("P⁻¹", Pinv, "c3")
+        ].join("");
+        root.querySelector("#eig-replace-note").textContent = `P contiene los vectores propios como columnas; D guarda λ1=${fmt(ex.lambda[0])} y λ2=${fmt(ex.lambda[1])}. Para A^n no se multiplica A muchas veces: se cambia D por D^n.`;
+        root.querySelector("#eig-steps").innerHTML = steps.map((s, i) => `<div class="step ${i <= Math.min(4, n) ? "is-on" : ""}"><b>${i + 1}. ${s[0]}</b><span class="text-small muted">${s[1]}</span></div>`).join("");
+
+        const g = root.querySelector("#eig-plot");
+        g.replaceChildren();
+        for (let i = -4; i <= 4; i++) {
+          line(g, [60, 225 + i * 40], [580, 225 + i * 40], "grid");
+          line(g, [320 + i * 40, 40], [320 + i * 40, 410], "grid");
+        }
+        line(g, [60, 225], [590, 225], "axis");
+        line(g, [320, 410], [320, 35], "axis");
+        text(g, [594, 220], "x", "tick muted");
+        text(g, [326, 34], "y", "tick muted");
+
+        const origin = point([0, 0], scale);
+        line(g, origin, point(mul(3, ex.vectors[0]), scale), "arrow v1 ghost", "url(#eig-arrow-v1)");
+        line(g, origin, point(mul(3, ex.vectors[1]), scale), "arrow v2 ghost", "url(#eig-arrow-v2)");
+        line(g, origin, point(comp1, scale), "component v1", "url(#eig-arrow-v1)");
+        line(g, point(comp1, scale), point(xn, scale), "component v2", "url(#eig-arrow-v2)");
+        line(g, origin, point(ex.x0, scale), "arrow x0", "url(#eig-arrow-x0)");
+        line(g, origin, point(xn, scale), "arrow xn", "url(#eig-arrow-xn)");
+        circle(g, point(ex.x0, scale), "x0");
+        circle(g, point(xn, scale), "xn");
+        text(g, add(point(ex.x0, scale), [8, -8]), "x0");
+        text(g, add(point(xn, scale), [8, 16]), `A^${n}x0`);
+        text(g, add(point(mul(2.5, ex.vectors[0]), scale), [6, -6]), "línea v1", "label v1");
+        text(g, add(point(mul(2.5, ex.vectors[1]), scale), [6, 16]), "línea v2", "label v2");
+      }
+      root.querySelector("#eig-example").addEventListener("change", () => {
+        const selected = root.querySelector("#eig-example").value;
+        if (selected !== "custom") syncInputs(examples[selected]);
+        draw();
+      });
+      root.querySelector("#eig-n").addEventListener("input", draw);
+      root.querySelectorAll(".eig-custom").forEach(input => input.addEventListener("input", () => {
+        root.querySelector("#eig-example").value = "custom";
+        draw();
+      }));
+      root.querySelector("#eig-prev").addEventListener("click", () => {
+        const n = root.querySelector("#eig-n");
+        n.value = Math.max(Number(n.min), Number(n.value) - 1);
+        draw();
+      });
+      root.querySelector("#eig-next").addEventListener("click", () => {
+        const n = root.querySelector("#eig-n");
+        n.value = Math.min(Number(n.max), Number(n.value) + 1);
+        draw();
+      });
+      draw();
+    })();
+  </script>
+</div>
+
+  </main>
+</body>
+</html>
