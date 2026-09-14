@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Data → Network Prediction Lab 5.1</title>
+<style>
+:root{
+  --bg:#08111f;--panel:#0d1a2b;--panel2:#12233a;--card:#102033;--line:#233a55;
+  --text:#ecf5ff;--muted:#93abc5;--accent:#5cc8ff;--accent2:#8b7cff;--good:#4ade80;--warn:#fbbf24;--bad:#fb7185;
+  --table:#0b1626;--shadow:0 18px 45px rgba(0,0,0,.33);
+}
+body.light{
+  --bg:#eef5fb;--panel:#ffffff;--panel2:#f5f9fd;--card:#ffffff;--line:#cbd9e6;
+  --text:#102033;--muted:#5d7186;--accent:#1479b8;--accent2:#6557d9;--good:#169a50;--warn:#b87700;--bad:#cf3656;
+  --table:#f8fbfe;--shadow:0 18px 45px rgba(24,55,82,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,select,input{font:inherit}
+button{cursor:pointer}
+#app{height:100%;display:grid;grid-template-rows:58px 1fr}
+header{display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--panel),var(--panel2));z-index:20}
+.brand{font-weight:850;letter-spacing:.2px;white-space:nowrap}.brand span{color:var(--accent)}
+.pipeline{display:flex;align-items:center;gap:8px;min-width:0;flex:1;justify-content:center}
+.pipe{padding:6px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:12px;font-weight:800;white-space:nowrap}.arrow{color:var(--accent);font-size:18px;font-weight:900}
+.topActions{display:flex;gap:8px}
+.iconBtn,.ghost{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:7px 10px;font-weight:750}.iconBtn:hover,.ghost:hover{border-color:var(--accent)}
+#workspace{position:relative;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:8px}
+.panelMain{min-height:0;border:1px solid var(--line);background:var(--panel);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.panelHead{height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));gap:8px}
+.panelHead h3{font-size:14px;margin:0}.sub{font-size:11px;color:var(--muted)}
+#tableWrap{height:calc(100% - 46px);overflow:auto;background:var(--table)}
+table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:11px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);white-space:nowrap}th{position:sticky;top:0;background:var(--panel2);z-index:3;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px}tr{transition:.15s}tbody tr:hover{background:rgba(92,200,255,.08)}tbody tr.selected{background:rgba(92,200,255,.18);outline:1px solid var(--accent)}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900}.train{background:rgba(74,222,128,.14);color:var(--good)}.test{background:rgba(251,191,36,.14);color:var(--warn)}.y1{background:rgba(251,113,133,.14);color:var(--bad)}.y0{background:rgba(74,222,128,.14);color:var(--good)}
+#graphPanel{position:relative;min-width:0;grid-column:1;grid-row:1}
+#graphArea{height:calc(100% - 46px);position:relative;background:
+radial-gradient(circle at 20% 15%,rgba(92,200,255,.07),transparent 28%),radial-gradient(circle at 80% 75%,rgba(139,124,255,.07),transparent 30%),var(--bg);overflow:hidden}
+#graphSvg{width:100%;height:100%;display:block;touch-action:none;cursor:grab}#graphSvg.panning{cursor:grabbing}
+.legend{position:absolute;left:10px;bottom:10px;display:flex;gap:10px;flex-wrap:wrap;background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:10px;padding:7px 9px;font-size:10px;color:var(--muted);pointer-events:none}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}.dot.good{background:var(--good)}.dot.bad{background:var(--bad)}.dot.entity{background:var(--accent2)}.dot.test{background:var(--warn)}
+.floatingTip{position:absolute;right:10px;top:10px;max-width:290px;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-size:11px;color:var(--muted);pointer-events:none}.floatingTip b{color:var(--text)}
+.drawer{position:absolute;top:8px;bottom:8px;width:320px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);z-index:15;transition:transform .28s ease;overflow:auto;border-radius:16px}
+#leftDrawer{left:8px;transform:translateX(calc(-100% - 10px))}#rightDrawer{right:8px;transform:translateX(calc(100% + 10px))}.drawer.open{transform:translateX(0)!important}
+.drawerHead{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--panel2);border-bottom:1px solid var(--line)}.drawerHead h3{margin:0;font-size:14px}
+.drawerBody{padding:12px}.section{padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:10px}.section h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+label{display:block;font-size:10px;color:var(--muted);margin:8px 0 4px}select,input[type=range]{width:100%}select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px}
+.rangeLine{display:grid;grid-template-columns:1fr 42px;align-items:center;gap:8px}.rangeVal{font-size:11px;font-weight:850;text-align:right;color:var(--accent)}
+.methodGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.methodBtn{min-height:56px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);padding:7px;text-align:left;font-size:10px;line-height:1.22}.methodBtn b{display:block;font-size:11px;margin-bottom:3px}.methodBtn.active{outline:2px solid var(--accent);background:rgba(92,200,255,.09)}
+.toggleLine{display:flex;gap:6px}.toggleLine button{flex:1}
+.drawerTab{position:absolute;z-index:14;border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 10px;font-weight:850;box-shadow:var(--shadow)}#leftTab{left:8px;top:68px;border-radius:0 10px 10px 0}#tableTab{right:8px;top:68px;border-radius:10px 0 0 10px}#rightTab{right:8px;top:110px;border-radius:10px 0 0 10px}#tableDrawer{right:8px;transform:translateX(calc(100% + 10px));width:320px}#tableDrawer.open{transform:translateX(0)!important}#tableDrawer .drawerBody{padding:0;height:calc(100% - 49px)}#tableDrawer #tableWrap{height:100%;overflow:auto;background:var(--table)}
+.metricGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.metric{padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);text-align:center}.metric small{display:block;color:var(--muted);font-size:9px}.metric strong{display:block;font-size:16px;margin-top:2px}.deltaUp{color:var(--good)}.deltaDown{color:var(--bad)}tr.predChanged td:first-child{box-shadow:inset 4px 0 0 var(--warn)}.node.predChanged{stroke:var(--warn)!important;stroke-width:3.5!important}
+.cm{display:grid;grid-template-columns:44px 1fr 1fr;grid-template-rows:24px 1fr 1fr;gap:4px;align-items:stretch}.cm div{display:flex;align-items:center;justify-content:center;font-size:10px;border-radius:8px}.cm .hdr{color:var(--muted);border:none}.cm .cell{min-height:58px;border:1px solid var(--line);font-weight:900;font-size:18px;cursor:pointer}.cm .cell:hover{outline:2px solid var(--accent)}.tp,.tn{background:rgba(74,222,128,.12)}.fp,.fn{background:rgba(251,113,133,.12)}
+#rocSvg{width:100%;height:190px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.compareRow{display:grid;grid-template-columns:94px 1fr 36px;gap:6px;align-items:center;margin:5px 0;font-size:9px}.bar{height:9px;background:rgba(147,171,197,.14);border-radius:999px;overflow:hidden}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}.compareRow b{text-align:right;font-size:9px}
+.note{font-size:10px;line-height:1.35;color:var(--muted)}.note strong{color:var(--text)}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(60px);opacity:0;background:var(--panel2);border:1px solid var(--line);padding:8px 12px;border-radius:999px;font-size:11px;z-index:99;transition:.25s}#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.nodeLabel{font-size:10px;fill:var(--text);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;pointer-events:none}.edge{stroke:rgba(147,171,197,.32);stroke-width:1.35}.edge.strong{stroke:rgba(92,200,255,.68);stroke-width:2.05}.node{stroke:var(--bg);stroke-width:2.4;cursor:grab;transition:r .15s,opacity .15s}.node:active{cursor:grabbing}.node.selected{stroke:var(--warn);stroke-width:4}.node.dim{opacity:.17}.edge.dim{opacity:.08}
+.smallPill{border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:10px;color:var(--muted);background:var(--panel2)}
+@media(max-width:1000px){#workspace{grid-template-columns:1fr}.pipeline{display:none}.drawer{width:min(330px,92vw)}#tableDrawer{width:min(330px,92vw)}}
+
+.graphTools{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.graphTools .ghost{min-width:34px;padding:6px 8px}.zoomReadout{min-width:48px;text-align:center;font-size:10px;color:var(--muted);font-weight:800}.graphHint{position:absolute;left:10px;top:10px;background:color-mix(in srgb,var(--panel) 88%,transparent);border:1px solid var(--line);border-radius:999px;padding:5px 8px;font-size:10px;color:var(--muted);pointer-events:none}.layoutBadge{color:var(--accent);font-weight:900}
+
+.datasetActions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.datasetActions .ghost{padding:8px 6px;font-size:10px}#introBtn{border-color:var(--accent);font-weight:900;background:rgba(92,200,255,.10)}.section.layoutSection{border-color:color-mix(in srgb,var(--accent) 38%,var(--line))}.layoutChoices{display:grid;grid-template-columns:1fr;gap:6px}.layoutChoices select{font-weight:800}.orderTag{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent-bg,rgba(92,200,255,.12));color:var(--accent);font-size:10px;font-weight:900;margin-right:5px}.section h4{display:flex;align-items:center}.flyingRow{position:fixed;z-index:80;pointer-events:none;white-space:nowrap;max-width:270px;overflow:hidden;text-overflow:ellipsis;padding:7px 10px;border:1px solid var(--accent);border-radius:9px;background:color-mix(in srgb,var(--panel2) 94%,transparent);box-shadow:0 10px 28px rgba(0,0,0,.28);font-size:10px;font-weight:800;color:var(--text);transform-origin:left center}.introPulse{animation:introPulse .5s ease both}@keyframes introPulse{0%{filter:brightness(1)}50%{filter:brightness(1.8)}100%{filter:brightness(1)}}#tableDrawer.tableIntro{animation:tableIn .58s cubic-bezier(.2,.8,.2,1) both}@keyframes tableIn{0%{opacity:.08;transform:translateX(34px) scale(.985)}100%{opacity:1;transform:translateX(0) scale(1)}}#introCaption{position:absolute;left:50%;top:58px;transform:translateX(-50%);z-index:12;padding:7px 11px;border:1px solid var(--accent);border-radius:999px;background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--text);font-size:10px;font-weight:850;opacity:0;pointer-events:none;transition:opacity .2s}#introCaption.show{opacity:1}.tableToggleOn{outline:2px solid var(--accent);background:rgba(92,200,255,.10)!important}@media(prefers-reduced-motion:reduce){.flyingRow{display:none!important}#introCaption{transition:none}}
+
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand">Data <span>→ Network</span> Prediction Lab</div>
+  <div class="pipeline">
+    <div class="pipe">1. Tabla</div><div class="arrow">→</div><div class="pipe">2. Construcción de red</div><div class="arrow">→</div><div class="pipe">3. Rasgos relacionales</div><div class="arrow">→</div><div class="pipe">4. Predicción</div>
+  </div>
+  <div class="topActions"><button id="introBtn" class="iconBtn">▶ Datos → Red</button><button id="themeBtn" class="iconBtn">☀/☾</button><button id="resetBtn" class="iconBtn">↻</button></div>
+</header>
+<div id="workspace">
+  <div id="introCaption">Filas de la tabla → nodos de la red</div>
+  <section class="panelMain" id="graphPanel">
+    <div class="panelHead"><div><h3 id="graphTitle">Red construida</h3><div class="sub" id="graphSubtitle">—</div></div><div class="graphTools"><button class="ghost" id="zoomOutBtn" title="Alejar">−</button><span class="zoomReadout" id="zoomReadout">100%</span><button class="ghost" id="zoomInBtn" title="Acercar">+</button><button class="ghost" id="panLeftBtn" title="Mover red a la izquierda">←</button><button class="ghost" id="panRightBtn" title="Mover red a la derecha">→</button><button class="ghost" id="panUpBtn" title="Mover red arriba">↑</button><button class="ghost" id="panDownBtn" title="Mover red abajo">↓</button><button class="ghost" id="fitBtn">Ajustar</button><button class="ghost" id="labelsBtn">Etiquetas</button></div></div>
+    <div id="graphArea">
+      <svg id="graphSvg"></svg>
+      <div class="graphHint">Rueda = zoom · arrastra fondo = mover red · arrastra nodo = reubicar</div>
+      <div class="floatingTip" id="methodTip"><b>Idea:</b> selecciona un método de construcción para ver cómo cambia la estructura y la predicción.</div>
+      <div class="legend"><span><i class="dot good"></i>Clase 0</span><span><i class="dot bad"></i>Clase 1</span><span><i class="dot entity"></i>Entidad</span><span><i class="dot test"></i>Borde dorado = test</span></div>
+    </div>
+  </section>
+
+  <button id="leftTab" class="drawerTab">☰ Construcción</button>
+  <button id="tableTab" class="drawerTab">▦ Tabla</button>
+  <button id="rightTab" class="drawerTab">Analítica ▤</button>
+
+  <aside id="leftDrawer" class="drawer">
+    <div class="drawerHead"><h3>Construir la red</h3><button class="ghost" data-close="left">×</button></div>
+    <div class="drawerBody">
+      <div class="section">
+        <h4><span class="orderTag">1</span>Dataset</h4>
+        <label>Ejemplo</label><select id="datasetSelect"></select>
+        <label>Número de filas/nodos</label><div class="rangeLine"><input id="nSlider" type="range" min="20" max="80" step="5" value="60"><span class="rangeVal" id="nVal">60</span></div>
+        <div class="datasetActions"><button id="tableToggleBtn" class="ghost">▦ Tabla de datos</button></div>
+      </div>
+      <div class="section layoutSection">
+        <h4><span class="orderTag">2</span>Layouts</h4>
+        <div class="layoutChoices"><label>Distribución de la red</label><select id="layoutSelect"><option value="kamada">Kamada–Kawai</option><option value="fruchterman">Fruchterman–Reingold</option><option value="circular">Circular</option><option value="random">Aleatorio</option><option value="community">Por comunidades</option><option value="grid">Cuadrícula</option></select></div>
+      </div>
+      <div class="section">
+        <h4><span class="orderTag">3</span>Modelo</h4>
+        <label>Peso de la señal de red</label><div class="rangeLine"><input id="graphWeight" type="range" min="0" max="85" step="5" value="65"><span id="graphWeightVal" class="rangeVal">65%</span></div>
+        <div class="toggleLine"><button id="baselineBtn" class="ghost">Solo tabla</button><button id="graphBtn" class="ghost">Tabla + red</button></div>
+      </div>
+      <div class="section">
+        <h4><span class="orderTag">4</span>6 maneras de convertir tabla → red</h4>
+        <div id="methodGrid" class="methodGrid"></div>
+      </div>
+      <div class="section">
+        <h4><span class="orderTag">5</span>Parámetros</h4>
+        <label id="p1Label">k vecinos</label><div class="rangeLine"><input id="p1" type="range" min="2" max="10" step="1" value="5"><span id="p1Val" class="rangeVal">5</span></div>
+        <label id="p2Label">Fuerza relacional</label><div class="rangeLine"><input id="p2" type="range" min="0" max="100" step="5" value="55"><span id="p2Val" class="rangeVal">55</span></div>
+        <label>Tamaño de nodos</label><div class="rangeLine"><input id="nodeSize" type="range" min="8" max="22" step="1" value="13"><span id="nodeSizeVal" class="rangeVal">13</span></div>
+      </div>
+      <div class="note"><strong>Diseño del experimento.</strong> La red se construye sin usar la etiqueta objetivo. Para el conjunto de test, la señal vecinal usa únicamente etiquetas de nodos de entrenamiento conectados, imitando clasificación semisupervisada/transductiva.</div>
+    </div>
+  </aside>
+
+  <aside id="tableDrawer" class="drawer open" aria-hidden="false">
+    <div class="drawerHead"><div><h3 id="tableTitle">Riesgo académico</h3><div class="sub" id="tableSubtitle">—</div></div><div style="display:flex;align-items:center;gap:6px"><span class="smallPill" id="splitPill">70% train · 30% test estratificado</span><button class="ghost" data-close="table">×</button></div></div>
+    <div class="drawerBody"><div id="tableWrap"><table id="dataTable"></table></div></div>
+  </aside>
+
+  <aside id="rightDrawer" class="drawer">
+    <div class="drawerHead"><h3>Analítica de predicción</h3><button class="ghost" data-close="right">×</button></div>
+    <div class="drawerBody">
+      <div class="section">
+        <h4>Modelo actual</h4>
+        <div class="metricGrid"><div class="metric"><small>Accuracy</small><strong id="mAcc">—</strong></div><div class="metric"><small>F1</small><strong id="mF1">—</strong></div><div class="metric"><small>AUC</small><strong id="mAuc">—</strong></div><div class="metric"><small>Pred. cambian</small><strong id="mChanged">—</strong></div></div>
+        <div class="note" id="deltaText" style="margin-top:7px">—</div>
+      </div>
+      <div class="section">
+        <h4>Matriz de confusión · clic para resaltar nodos</h4>
+        <div class="cm">
+          <div></div><div class="hdr">Pred 0</div><div class="hdr">Pred 1</div>
+          <div class="hdr">Real 0</div><div class="cell tn" data-cm="TN" id="cmTN">0</div><div class="cell fp" data-cm="FP" id="cmFP">0</div>
+          <div class="hdr">Real 1</div><div class="cell fn" data-cm="FN" id="cmFN">0</div><div class="cell tp" data-cm="TP" id="cmTP">0</div>
+        </div>
+      </div>
+      <div class="section"><h4>Curva ROC</h4><svg id="rocSvg" viewBox="0 0 280 190"></svg></div>
+      <div class="section"><h4>AUC por construcción de red</h4><div id="compare"></div></div>
+      <div class="section"><h4>Qué está ocurriendo</h4><div class="note" id="analysisText">—</div></div>
+    </div>
+  </aside>
+</div>
+<div id="toast"></div>
+</div>
+<script>
+(() => {
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const state={dataset:'students',n:60,method:'knn',p1:5,p2:55,layout:'kamada',nodeSize:13,graphWeight:.65,mode:'graph',labels:true,selected:null,cmFilter:null,zoom:1,panX:0,panY:0,data:[],graph:null,pred:null,allMetrics:{},positions:new Map(),layoutKey:'',tableVisible:true,introRunning:false,introPlayed:false};
+const methods=[
+ {id:'knn',name:'1. k-NN',desc:'Conecta cada fila con sus k vecinos más similares.',tip:'k-NN transforma similitud multivariable en vecindad. Es universal, pero la relación es inferida.'},
+ {id:'sim',name:'2. Similitud',desc:'Arista si la similitud supera un umbral.',tip:'La red aparece sólo cuando dos filas son suficientemente parecidas. El umbral controla densidad y comunidades.'},
+ {id:'shared',name:'3. Atributos compartidos',desc:'Conecta filas que comparten grupo, categoría o contexto.',tip:'Aquí las aristas tienen semántica directa: mismo club, región, ticket, dispositivo o preferencia.'},
+ {id:'bip',name:'4. Bipartita → proyección',desc:'Fila ↔ entidad; luego proyecta filas relacionadas.',tip:'Las entidades intermedias explican por qué dos observaciones quedan conectadas. Es clave en recomendadores y affiliation networks.'},
+ {id:'temporal',name:'5. Temporal / transaccional',desc:'Conecta eventos próximos en tiempo y contexto.',tip:'La proximidad temporal puede revelar ráfagas, campañas, contagio, fraude coordinado o comportamiento grupal.'},
+ {id:'hetero',name:'6. Grafo heterogéneo',desc:'Filas + entidades + varios tipos de arista.',tip:'Un grafo heterogéneo conserva varios tipos de nodos y relaciones en lugar de colapsarlos en una sola proyección.'}
+];
+const datasetDefs={
+ students:{name:'Estudiantes · riesgo académico',target:'Riesgo',cols:['edad','promedio','asistencia','horas','club','cohorte','grupo'],num:['edad','promedio','asistencia','horas'],cat:['club','cohorte','grupo'],positive:'En riesgo'},
+ churn:{name:'Clientes · churn',target:'Churn',cols:['tenure','mensualidad','uso','soporte','region','plan','cluster'],num:['tenure','mensualidad','uso','soporte'],cat:['region','plan','cluster'],positive:'Churn'},
+ fraud:{name:'Transacciones · fraude',target:'Fraude',cols:['monto','frecuencia','antiguedad','riesgoDisp','ciudad','comercio','ring'],num:['monto','frecuencia','antiguedad','riesgoDisp'],cat:['ciudad','comercio','ring'],positive:'Fraude'},
+ titanic:{name:'Titanic · supervivencia',target:'Supervivió',cols:['edad','tarifa','clase','sexo','familia','ticket','cubierta'],num:['edad','tarifa','clase'],cat:['sexo','familia','ticket','cubierta'],positive:'Sobrevive'},
+ movies:{name:'Usuarios · afinidad de película',target:'Afinidad alta',cols:['edad','actividad','rating','diversidad','region','genero','taste'],num:['edad','actividad','rating','diversidad'],cat:['region','genero','taste'],positive:'Afinidad alta'}
+};
+function rng(seed){let t=seed>>>0;return()=>{t+=0x6D2B79F5;let r=Math.imul(t^t>>>15,1|t);r^=r+Math.imul(r^r>>>7,61|r);return((r^r>>>14)>>>0)/4294967296}}
+function choice(r,a){return a[Math.floor(r()*a.length)]}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function sigmoid(x){return 1/(1+Math.exp(-x))}
+function generateData(type,n){const r=rng(1117+n*13+type.length*97),out=[];for(let i=0;i<n;i++){
+  let o={id:'N'+String(i+1).padStart(2,'0'),time:i+r()*1.5,train:true};let wave=[.70,-.62,.52,-.48,.30,-.26][Math.floor(i/5)%6];
+  if(type==='students'){
+    o.edad=Math.round(17+r()*10);o.promedio=+(2.2+r()*2.5).toFixed(2);o.asistencia=Math.round(50+r()*50);o.horas=+(1+r()*6).toFixed(1);o.club=choice(r,['Robótica','Deportes','Arte','Ninguno']);o.cohorte=choice(r,['A','B','C']);o.grupo=choice(r,['G1','G2','G3','G4','G5']);
+    let g={G1:1.35,G2:.75,G3:-.75,G4:-1.25,G5:.1}[o.grupo],pocket=(o.promedio<3.15&&o.horas<3.2)?.62:(o.promedio>3.75&&o.asistencia>82?-.55:0);let z=1.02*(3.15-o.promedio)+.026*(72-o.asistencia)+.09*(3-o.horas)+g+pocket+wave+(o.club==='Ninguno'?.12:0)+(r()-.5)*1.35;o.y=r()<sigmoid(z)?1:0;
+  } else if(type==='churn'){
+    o.tenure=Math.round(1+r()*72);o.mensualidad=Math.round(25+r()*110);o.uso=Math.round(10+r()*90);o.soporte=Math.round(r()*6);o.region=choice(r,['Norte','Centro','Sur']);o.plan=choice(r,['Basic','Plus','Pro']);o.cluster=choice(r,['C1','C2','C3','C4','C5']);
+    let g={C1:1.35,C2:.75,C3:-.7,C4:-1.1,C5:.05}[o.cluster],pocket=(o.tenure<18&&o.mensualidad>80)?.6:(o.tenure>45&&o.uso>60?-.5:0);let z=.016*(o.mensualidad-70)-.018*(o.tenure-26)-.010*(o.uso-50)+.17*o.soporte+g+pocket+wave+(o.plan==='Basic'?.25:0)+(r()-.5)*1.3;o.y=r()<sigmoid(z)?1:0;
+  } else if(type==='fraud'){
+    o.monto=Math.round(10+Math.pow(r(),2)*1900);o.frecuencia=Math.round(1+r()*18);o.antiguedad=Math.round(1+r()*120);o.riesgoDisp=+(r()).toFixed(2);o.ciudad=choice(r,['Bogotá','Medellín','Cali','Barranquilla']);o.comercio=choice(r,['Retail','Gaming','Viajes','Servicios']);o.ring=choice(r,['R1','R2','R3','R4','R5','R6']);
+    let g={R1:2.2,R2:1.35,R3:-1.35,R4:-1.0,R5:-.75,R6:.1}[o.ring],pocket=(o.monto>700&&o.riesgoDisp>.55)?.75:(o.monto<250&&o.antiguedad>65?-.6:0);let z=.0015*(o.monto-450)+1.05*(o.riesgoDisp-.45)+.06*(o.frecuencia-7)-.007*(o.antiguedad-45)+g+pocket+wave+(o.comercio==='Gaming'?.2:0)+(r()-.5)*1.35;o.y=r()<sigmoid(z-1.0)?1:0;
+  } else if(type==='titanic'){
+    o.edad=Math.round(1+r()*74);o.tarifa=Math.round(5+Math.pow(r(),2)*140);o.clase=choice(r,[1,2,3]);o.sexo=choice(r,['F','M']);o.familia=choice(r,['F1','F2','F3','F4','Solo']);o.ticket=choice(r,['T1','T2','T3','T4','T5','T6','T7']);o.cubierta=choice(r,['A/B','C','D/E','Sin dato']);
+    let g={F1:.95,F2:.6,F3:-.55,F4:-.8,Solo:-.1}[o.familia]+({T1:.65,T2:.35,T3:-.45,T4:.5,T5:-.65,T6:.2,T7:0}[o.ticket]),pocket=(o.edad<16||(o.tarifa>80&&o.clase===1))?.5:(o.edad>55&&o.clase===3?-.45:0);let z=(o.sexo==='F'?1.35:-.55)+(o.clase===1?.65:o.clase===3?-.5:.05)-.014*(o.edad-28)+.0045*(o.tarifa-35)+g+pocket+wave+(r()-.5)*1.35;o.y=r()<sigmoid(z)?1:0;
+  } else {
+    o.edad=Math.round(15+r()*55);o.actividad=Math.round(1+r()*30);o.rating=+(2.3+r()*2.5).toFixed(1);o.diversidad=+(r()).toFixed(2);o.region=choice(r,['Andina','Caribe','Pacífico']);o.genero=choice(r,['Drama','SciFi','Comedia','Acción']);o.taste=choice(r,['T1','T2','T3','T4','T5']);
+    let g={T1:1.4,T2:.8,T3:-.75,T4:-1.1,T5:.1}[o.taste],pocket=(o.rating>4.0&&o.actividad>15)?.65:(o.rating<3.2&&o.actividad<8?-.55:0);let z=.075*(o.actividad-12)+.72*(o.rating-3.5)+.35*(o.diversidad-.5)+g+pocket+wave+(o.genero==='SciFi'?.18:0)+(r()-.5)*1.3;o.y=r()<sigmoid(z)?1:0;
+  }
+  out.push(o)
+ }return stratifySplit(out,r,.70)
+}
+function def(){return datasetDefs[state.dataset]}
+function numericRanges(data){const d=def();let R={};d.num.forEach(k=>{let a=data.map(x=>+x[k]),mn=Math.min(...a),mx=Math.max(...a);R[k]=[mn,mx]});return R}
+function normDist(a,b,R){const d=def();let s=0;d.num.forEach(k=>{let [mn,mx]=R[k],den=mx-mn||1;let z=(a[k]-b[k])/den;s+=z*z});return Math.sqrt(s/d.num.length)}
+function mixedSim(a,b,R){const d=def();let num=1-normDist(a,b,R);let cat=d.cat.reduce((s,k)=>s+(a[k]===b[k]?1:0),0)/d.cat.length;return .62*num+.38*cat}
+function pairKey(a,b){return a<b?a+'|'+b:b+'|'+a}
+const methodDefaults={knn:{p1:5,p2:55},sim:{p1:5,p2:45},shared:{p1:5,p2:78},bip:{p1:5,p2:60},temporal:{p1:5,p2:38},hetero:{p1:5,p2:62}};
+function paramsFor(method){if(method===state.method)return{p1:state.p1,p2:state.p2};return methodDefaults[method]||{p1:state.p1,p2:state.p2}}
+function setMethodDefaults(method){let p=methodDefaults[method]||{p1:5,p2:55};state.p1=p.p1;state.p2=p.p2;$('#p1').value=p.p1;$('#p2').value=p.p2}
+function stratifySplit(out,r,trainFrac=.70){
+  [0,1].forEach(y=>{let g=out.filter(x=>x.y===y);for(let i=g.length-1;i>0;i--){let j=Math.floor(r()*(i+1));[g[i],g[j]]=[g[j],g[i]]}let cut=Math.max(1,Math.min(g.length-1,Math.round(g.length*trainFrac)));g.forEach((x,i)=>x.train=i<cut)});
+  return out
+}
+function buildGraph(method=state.method){
+ const data=state.data,R=numericRanges(data),edges=[];let entities=[];const pars=paramsFor(method),p1=pars.p1,p2=pars.p2;
+ const rowAdj=new Map(data.map(x=>[x.id,new Set()]));
+ const rowWeights=new Map(data.map(x=>[x.id,new Map()]));
+ const seen=new Map();
+ const connectRows=(a,b,w=1,accumulate=false)=>{if(!rowAdj.has(a)||!rowAdj.has(b)||a===b)return;rowAdj.get(a).add(b);rowAdj.get(b).add(a);let wa=rowWeights.get(a),wb=rowWeights.get(b),old=wa.get(b)||0,nw=accumulate?old+w:Math.max(old,w);nw=clamp(nw,.02,2.5);wa.set(b,nw);wb.set(a,nw)};
+ const add=(a,b,w=1,type='rel')=>{if(a===b)return;let k=pairKey(a,b),old=seen.get(k);if(old){if(w>old.w){old.w=w;old.type=type}connectRows(a,b,w,false);return}let e={a,b,w,type};seen.set(k,e);edges.push(e);connectRows(a,b,w,false)};
+ if(method==='knn'){
+   data.forEach(a=>{let near=data.filter(b=>b!==a).map(b=>[b,normDist(a,b,R)]).sort((x,y)=>x[1]-y[1]).slice(0,p1);near.forEach(([b,di])=>add(a.id,b.id,clamp(1-di,.08,1),'knn'))});
+ } else if(method==='sim'){
+   const th=.50+p2/250;for(let i=0;i<data.length;i++)for(let j=i+1;j<data.length;j++){let sim=mixedSim(data[i],data[j],R);if(sim>th)add(data[i].id,data[j].id,clamp(.15+(sim-th)/(1-th),.15,1),'similar')}
+ } else if(method==='shared'){
+   const cats=def().cat,needed=p2<50?1:p2<86?2:Math.min(3,cats.length);for(let i=0;i<data.length;i++)for(let j=i+1;j<data.length;j++){let matches=cats.filter(k=>data[i][k]===data[j][k]).length;if(matches>=needed)add(data[i].id,data[j].id,matches/cats.length,'shared')}
+ } else if(method==='bip' || method==='hetero'){
+   const cats=method==='bip'?def().cat.slice(-2):def().cat;let entityMap=new Map();cats.forEach(k=>data.forEach(x=>{let eid='E:'+k+':'+x[k];if(!entityMap.has(eid))entityMap.set(eid,{id:eid,label:String(x[k]),kind:'entity',etype:k});}));entities=[...entityMap.values()];
+   data.forEach(x=>cats.forEach(k=>{let eid='E:'+k+':'+x[k];edges.push({a:x.id,b:eid,w:1,type:k})}));
+   cats.forEach((k,ki)=>{let groups={};data.forEach(x=>(groups[x[k]]??=[]).push(x));let importance=method==='hetero'?(ki===cats.length-1?1.35:1):1.15;Object.values(groups).forEach(g=>{for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++)connectRows(g[i].id,g[j].id,importance/cats.length,true)})});
+ } else if(method==='temporal'){
+   let window=2+Math.round(p2/10);for(let i=0;i<data.length;i++)for(let j=i+1;j<data.length;j++){let dt=Math.abs(data[i].time-data[j].time),shared=def().cat.filter(k=>data[i][k]===data[j][k]).length/def().cat.length;if(dt<=window && (shared>0||dt<window*.40)){let w=(1-dt/(window+1))*(.58+.42*shared);add(data[i].id,data[j].id,clamp(w,.08,1),'time')}}
+ }
+ return {nodes:[...data.map(x=>({id:x.id,label:x.id,kind:'row',row:x})),...entities],edges,rowAdj,rowWeights}
+}
+function baseProb(x){let z=0;if(state.dataset==='students')z=1.30*(3.15-x.promedio)+.032*(72-x.asistencia)+.11*(3-x.horas)+(x.club==='Ninguno'?.12:0)-.1;
+ else if(state.dataset==='churn')z=.019*(x.mensualidad-70)-.021*(x.tenure-26)-.012*(x.uso-50)+.20*x.soporte+(x.plan==='Basic'?.30:0)-.12;
+ else if(state.dataset==='fraud')z=.0019*(x.monto-450)+1.25*(x.riesgoDisp-.45)+.07*(x.frecuencia-7)-.008*(x.antiguedad-45)+(x.comercio==='Gaming'?.22:0)-1.05;
+ else if(state.dataset==='titanic')z=(x.sexo==='F'?1.45:-.62)+(x.clase===1?.72:x.clase===3?-.58:0)-.017*(x.edad-28)+.0055*(x.tarifa-35);
+ else z=.095*(x.actividad-12)+.9*(x.rating-3.5)+.42*(x.diversidad-.5)+(x.genero==='SciFi'?.18:0)-.05;
+ return sigmoid(z)
+}
+function safeLogit(p){p=clamp(p,.015,.985);return Math.log(p/(1-p))}
+function predictForGraph(graph,weight=state.graphWeight){
+ const byId=new Map(state.data.map(x=>[x.id,x])),trainRows=state.data.filter(x=>x.train),prior=(trainRows.reduce((s,x)=>s+x.y,0)+1)/(trainRows.length+2);let preds=[];
+ state.data.forEach(x=>{
+   let base=baseProb(x),wm=graph.rowWeights?.get(x.id)||new Map([...(graph.rowAdj.get(x.id)||[])].map(id=>[id,1]));
+   let trainN=[...wm.entries()].map(([id,w])=>({row:byId.get(id),w})).filter(z=>z.row&&z.row.train),sw=trainN.reduce((s,z)=>s+z.w,0);
+   let peer=sw?(trainN.reduce((s,z)=>s+z.w*z.row.y,0)+1.15*prior)/(sw+1.15):prior;
+   let reliability=1-Math.exp(-sw/2.25),w=weight*(.28+.72*reliability),networkLogit=1.45*safeLogit(peer),p=clamp(sigmoid((1-w)*safeLogit(base)+w*networkLogit),.01,.99);
+   preds.push({id:x.id,y:x.y,train:x.train,base,p,peer,nTrain:trainN.length,relWeight:sw,pred:p>=.5?1:0,basePred:base>=.5?1:0})
+ });return preds
+}
+function metrics(preds,useGraph=true){let arr=preds.filter(x=>!x.train),tp=0,tn=0,fp=0,fn=0;arr.forEach(x=>{let p=useGraph?x.p:x.base,pr=p>=.5?1:0;if(x.y&&pr)tp++;else if(!x.y&&!pr)tn++;else if(!x.y&&pr)fp++;else fn++});let acc=(tp+tn)/(arr.length||1),prec=tp/(tp+fp||1),rec=tp/(tp+fn||1),f1=2*prec*rec/(prec+rec||1);let roc=rocPoints(arr.map(x=>({y:x.y,p:useGraph?x.p:x.base})));return{tp,tn,fp,fn,acc,f1,auc:roc.auc,roc,n:arr.length}}
+function rocPoints(arr){let pts=[];for(let t=1;t>=0;t-=.02){let tp=0,fp=0,tn=0,fn=0;arr.forEach(x=>{let q=x.p>=t?1:0;if(x.y&&q)tp++;else if(!x.y&&!q)tn++;else if(!x.y&&q)fp++;else fn++});pts.push({fpr:fp/(fp+tn||1),tpr:tp/(tp+fn||1)})}pts.sort((a,b)=>a.fpr-b.fpr);let auc=0;for(let i=1;i<pts.length;i++)auc+=(pts[i].fpr-pts[i-1].fpr)*(pts[i].tpr+pts[i-1].tpr)/2;return{pts,auc}}
+function fmt(x){return (100*x).toFixed(1)+'%'}
+function buildAllMetrics(){let out={};methods.forEach(m=>{let g=buildGraph(m.id),p=predictForGraph(g,state.graphWeight);out[m.id]=metrics(p,true)});state.allMetrics=out}
+function renderTable(){const d=def(),predMap=new Map(state.pred.map(x=>[x.id,x]));let cols=['id',...d.cols,'split',d.target,'P(tabla)','P(red)','pred'];let html='<thead><tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr></thead><tbody>';state.data.forEach(x=>{let pr=predMap.get(x.id),sel=state.selected===x.id?'selected':'',changed=(!x.train&&pr.basePred!==pr.pred)?' predChanged':'';html+=`<tr data-id="${x.id}" class="${sel}${changed}"><td><b>${x.id}</b></td>`+d.cols.map(k=>`<td>${x[k]}</td>`).join('')+`<td><span class="badge ${x.train?'train':'test'}">${x.train?'TRAIN':'TEST'}</span></td><td><span class="badge ${x.y?'y1':'y0'}">${x.y}</span></td><td>${pr.base.toFixed(2)}</td><td>${pr.p.toFixed(2)}</td><td>${state.mode==='graph'?pr.pred:pr.basePred}</td></tr>`});html+='</tbody>';$('#dataTable').innerHTML=html;$$('#dataTable tbody tr').forEach(tr=>tr.onclick=()=>{state.selected=tr.dataset.id;state.cmFilter=null;renderTable();renderGraph()});$('#tableTitle').textContent=state.dataset==='students'?'Riesgo académico':d.name;$('#tableSubtitle').textContent=`${d.name} · ${state.n} observaciones · objetivo: ${d.target}`}
+function layoutNodes(graph,forceRecalc=false){
+ const area=$('#graphArea').getBoundingClientRect(),W=Math.max(620,area.width),H=Math.max(460,area.height),cx=W/2,cy=H/2;
+ const key=[state.dataset,state.n,state.method,state.layout,graph.nodes.length,graph.edges.length].join('|');
+ let nodes=graph.nodes.map((n,i)=>({...n,x:cx,y:cy,vx:0,vy:0,index:i}));
+ if(!forceRecalc && state.layoutKey===key && state.positions.size){
+   nodes.forEach(n=>{let q=state.positions.get(n.id);if(q){n.x=q.x;n.y=q.y}});
+   return {nodes,by:new Map(nodes.map(n=>[n.id,n])),W,H};
+ }
+ const by=new Map(nodes.map(n=>[n.id,n])),rows=nodes.filter(n=>n.kind==='row'),ents=nodes.filter(n=>n.kind==='entity');
+ const margin=Math.max(42,state.nodeSize*2.8), rgen=rng(775+state.n+state.layout.length*31+state.method.length*17);
+ const initRandom=()=>nodes.forEach(n=>{n.x=margin+rgen()*(W-2*margin);n.y=margin+rgen()*(H-2*margin);n.vx=n.vy=0});
+ if(state.layout==='circular'){
+   let rad=Math.min(W,H)*.39;rows.forEach((n,i)=>{let a=-Math.PI/2+2*Math.PI*i/Math.max(1,rows.length);n.x=cx+Math.cos(a)*rad;n.y=cy+Math.sin(a)*rad});
+   ents.forEach((n,i)=>{let a=-Math.PI/2+2*Math.PI*i/Math.max(1,ents.length);n.x=cx+Math.cos(a)*Math.min(W,H)*.20;n.y=cy+Math.sin(a)*Math.min(W,H)*.20});
+ } else if(state.layout==='random'){
+   initRandom();
+ } else if(state.layout==='grid'){
+   let c=Math.ceil(Math.sqrt(rows.length)),rr=Math.ceil(rows.length/c);rows.forEach((n,i)=>{n.x=margin+(i%c)*(W-2*margin)/(Math.max(1,c-1));n.y=margin+Math.floor(i/c)*(H-2*margin)/(Math.max(1,rr-1))});
+   ents.forEach((n,i)=>{n.x=margin+(i%Math.max(1,Math.ceil(Math.sqrt(ents.length))))*70;n.y=margin+Math.floor(i/Math.max(1,Math.ceil(Math.sqrt(ents.length))))*42});
+ } else if(state.layout==='community'){
+   let keyc=def().cat.at(-1),groups={};rows.forEach(n=>(groups[n.row[keyc]]??=[]).push(n));let G=Object.values(groups),orbit=Math.min(W,H)*.28;
+   G.forEach((gg,gi)=>{let a=-Math.PI/2+2*Math.PI*gi/Math.max(1,G.length),ccx=cx+Math.cos(a)*orbit,ccy=cy+Math.sin(a)*orbit,rad=Math.min(95,25+gg.length*4);gg.forEach((n,i)=>{let aa=2*Math.PI*i/Math.max(1,gg.length);n.x=ccx+Math.cos(aa)*rad;n.y=ccy+Math.sin(aa)*rad})});
+   ents.forEach((n,i)=>{let a=2*Math.PI*i/Math.max(1,ents.length);n.x=cx+Math.cos(a)*Math.min(W,H)*.12;n.y=cy+Math.sin(a)*Math.min(W,H)*.12});
+ } else if(state.layout==='fruchterman'){
+   initRandom();let links=graph.edges.map(e=>({a:by.get(e.a),b:by.get(e.b)})).filter(e=>e.a&&e.b),N=Math.max(1,nodes.length),areaFR=(W-2*margin)*(H-2*margin),k=Math.sqrt(areaFR/N),temp=Math.min(W,H)*.15;
+   for(let it=0;it<150;it++){
+     nodes.forEach(n=>{n.vx=0;n.vy=0});
+     for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){let a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy)+.01,force=k*k/dist,fx=dx/dist*force,fy=dy/dist*force;a.vx+=fx;a.vy+=fy;b.vx-=fx;b.vy-=fy}
+     links.forEach(l=>{let dx=l.b.x-l.a.x,dy=l.b.y-l.a.y,dist=Math.sqrt(dx*dx+dy*dy)+.01,force=dist*dist/k,fx=dx/dist*force,fy=dy/dist*force;l.a.vx+=fx;l.a.vy+=fy;l.b.vx-=fx;l.b.vy-=fy});
+     nodes.forEach(n=>{let disp=Math.sqrt(n.vx*n.vx+n.vy*n.vy)||1,step=Math.min(disp,temp);n.x=clamp(n.x+n.vx/disp*step,margin,W-margin);n.y=clamp(n.y+n.vy/disp*step,margin,H-margin)});temp*=.965;
+   }
+ } else { // Kamada–Kawai approximation by graph-distance stress
+   initRandom();const N=nodes.length,idx=new Map(nodes.map((n,i)=>[n.id,i])),adj=Array.from({length:N},()=>[]);
+   graph.edges.forEach(e=>{let a=idx.get(e.a),b=idx.get(e.b);if(a==null||b==null)return;adj[a].push(b);adj[b].push(a)});
+   const dist=Array.from({length:N},()=>Array(N).fill(Infinity));
+   for(let s0=0;s0<N;s0++){dist[s0][s0]=0;let q=[s0],qi=0;while(qi<q.length){let u=q[qi++];for(let v of adj[u])if(dist[s0][v]===Infinity){dist[s0][v]=dist[s0][u]+1;q.push(v)}}}
+   let maxD=1;for(let i=0;i<N;i++)for(let j=0;j<N;j++)if(Number.isFinite(dist[i][j]))maxD=Math.max(maxD,dist[i][j]);
+   let L0=Math.min(W,H)*.72/Math.max(2,maxD),lr=.055;
+   for(let it=0;it<180;it++){
+     let gx=Array(N).fill(0),gy=Array(N).fill(0);
+     for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){let dij=dist[i][j];if(!Number.isFinite(dij))dij=maxD+2;let dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,r=Math.sqrt(dx*dx+dy*dy)+.01,ideal=L0*dij,kij=1/(dij*dij),f=kij*(r-ideal),fx=f*dx/r,fy=f*dy/r;gx[i]+=fx;gy[i]+=fy;gx[j]-=fx;gy[j]-=fy}
+     for(let i=0;i<N;i++){gx[i]+=(nodes[i].x-cx)*.002;gy[i]+=(nodes[i].y-cy)*.002;nodes[i].x=clamp(nodes[i].x-lr*gx[i],margin,W-margin);nodes[i].y=clamp(nodes[i].y-lr*gy[i],margin,H-margin)}
+     lr*=.992;
+   }
+ }
+ state.positions=new Map(nodes.map(n=>[n.id,{x:n.x,y:n.y}]));state.layoutKey=key;
+ return {nodes,by:new Map(nodes.map(n=>[n.id,n])),W,H}
+}
+function renderGraph(forceLayout=false){
+ const svg=$('#graphSvg'),graph=state.graph,L=layoutNodes(graph,forceLayout),predMap=new Map(state.pred.map(x=>[x.id,x]));
+ svg.setAttribute('viewBox',`0 0 ${L.W} ${L.H}`);svg.innerHTML='';
+ let g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='graphWorld';g.setAttribute('transform',`translate(${state.panX} ${state.panY}) scale(${state.zoom})`);svg.appendChild(g);
+ const filterIds=state.cmFilter?new Set(state.pred.filter(x=>!x.train&&classOf(x)===state.cmFilter).map(x=>x.id)):null;
+ graph.edges.forEach(e=>{let a=L.by.get(e.a),b=L.by.get(e.b);if(!a||!b)return;let line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);line.setAttribute('class','edge '+(e.w>.72?'strong':'')+((filterIds&&!(filterIds.has(e.a)||filterIds.has(e.b)))?' dim':''));g.appendChild(line)});
+ L.nodes.forEach(n=>{let grp=document.createElementNS('http://www.w3.org/2000/svg','g'),c=document.createElementNS('http://www.w3.org/2000/svg','circle');let isRow=n.kind==='row',pr=isRow?predMap.get(n.id):null,r=isRow?state.nodeSize:Math.max(5,state.nodeSize*.68);c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',r);c.setAttribute('fill',isRow?(n.row.y?'var(--bad)':'var(--good)'):'var(--accent2)');let cl='node';if(isRow&&pr&&!n.row.train&&pr.basePred!==pr.pred)cl+=' predChanged';if(state.selected===n.id)cl+=' selected';if(filterIds&&isRow&&!filterIds.has(n.id))cl+=' dim';c.setAttribute('class',cl);if(isRow&&!n.row.train)c.setAttribute('stroke','var(--warn)');c.dataset.id=n.id;grp.appendChild(c);
+   if(state.labels&&(isRow?state.n<=70:true)){let t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',n.x+r+4);t.setAttribute('y',n.y+3);t.setAttribute('class','nodeLabel');t.textContent=n.label;grp.appendChild(t)}
+   g.appendChild(grp);c.addEventListener('click',ev=>{ev.stopPropagation();if(c.dataset.dragged==='1'){c.dataset.dragged='0';return}if(isRow){state.selected=n.id;state.cmFilter=null;renderTable();renderGraph();let rr=pr;toast(`${n.id}: real=${n.row.y}, P(tabla)=${rr.base.toFixed(2)}, P(red)=${rr.p.toFixed(2)}, vecinos train=${rr.nTrain}`)}});dragNode(c,n,L)
+ });
+ svg.onclick=e=>{if(e.target===svg){state.selected=null;state.cmFilter=null;renderTable();renderGraph()}};enablePanZoom(svg);
+ $('#zoomReadout').textContent=Math.round(state.zoom*100)+'%';
+ $('#graphTitle').textContent=methods.find(m=>m.id===state.method).name+' · '+def().name;
+ const layoutName={kamada:'Kamada–Kawai',fruchterman:'Fruchterman–Reingold',circular:'Circular',random:'Aleatorio',community:'Comunidades',grid:'Cuadrícula'}[state.layout]||state.layout;
+ $('#graphSubtitle').innerHTML=`${state.graph.nodes.length} nodos · ${state.graph.edges.length} aristas · <span class="layoutBadge">${layoutName}</span>`;
+ $('#methodTip').innerHTML='<b>'+methods.find(m=>m.id===state.method).name+':</b> '+methods.find(m=>m.id===state.method).tip
+}
+function updateWorldTransform(){let g=$('#graphWorld');if(g)g.setAttribute('transform',`translate(${state.panX} ${state.panY}) scale(${state.zoom})`);$('#zoomReadout').textContent=Math.round(state.zoom*100)+'%'}
+function dragNode(c,n,L){let dragging=false,moved=false,last=null;c.onpointerdown=e=>{e.stopPropagation();dragging=true;moved=false;c.dataset.dragged='0';last={x:e.clientX,y:e.clientY};c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(!dragging)return;let dx=(e.clientX-last.x)/state.zoom,dy=(e.clientY-last.y)/state.zoom;if(Math.abs(dx)+Math.abs(dy)>.25)moved=true;n.x=clamp(n.x+dx,18,L.W-18);n.y=clamp(n.y+dy,18,L.H-18);state.positions.set(n.id,{x:n.x,y:n.y});last={x:e.clientX,y:e.clientY};let grp=c.parentNode;c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);let txt=grp.querySelector('text');if(txt){let rr=+(c.getAttribute('r')||10);txt.setAttribute('x',n.x+rr+4);txt.setAttribute('y',n.y+3)};let world=$('#graphWorld');if(world){[...world.querySelectorAll('line.edge')].forEach((ln,i)=>{let e0=state.graph.edges[i];if(e0.a===n.id){ln.setAttribute('x1',n.x);ln.setAttribute('y1',n.y)}if(e0.b===n.id){ln.setAttribute('x2',n.x);ln.setAttribute('y2',n.y)}})}};c.onpointerup=e=>{dragging=false;c.dataset.dragged=moved?'1':'0';try{c.releasePointerCapture(e.pointerId)}catch(_){}}}
+let panState=null;function enablePanZoom(svg){
+ svg.onwheel=e=>{e.preventDefault();let rect=svg.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width*svg.viewBox.baseVal.width,my=(e.clientY-rect.top)/rect.height*svg.viewBox.baseVal.height,old=state.zoom,next=clamp(old*(e.deltaY<0?1.12:.89),.35,4.5),ratio=next/old;state.panX=mx-(mx-state.panX)*ratio;state.panY=my-(my-state.panY)*ratio;state.zoom=next;updateWorldTransform()};
+ svg.onpointerdown=e=>{if(e.target===svg){panState={x:e.clientX,y:e.clientY,px:state.panX,py:state.panY};svg.classList.add('panning');svg.setPointerCapture?.(e.pointerId)}};
+ svg.onpointermove=e=>{if(!panState)return;let rect=svg.getBoundingClientRect(),sx=svg.viewBox.baseVal.width/rect.width,sy=svg.viewBox.baseVal.height/rect.height;state.panX=panState.px+(e.clientX-panState.x)*sx;state.panY=panState.py+(e.clientY-panState.y)*sy;updateWorldTransform()};
+ svg.onpointerup=e=>{panState=null;svg.classList.remove('panning');try{svg.releasePointerCapture?.(e.pointerId)}catch(_){}};svg.onpointercancel=svg.onpointerup
+}
+function classOf(x){let p=state.mode==='graph'?x.p:x.base,pr=p>=.5?1:0;return x.y?(pr?'TP':'FN'):(pr?'FP':'TN')}
+function renderAnalytics(){
+ let current=metrics(state.pred,state.mode==='graph'),base=metrics(state.pred,false),changed=state.pred.filter(x=>!x.train&&x.basePred!==x.pred).length;
+ $('#mAcc').textContent=fmt(current.acc);$('#mF1').textContent=fmt(current.f1);$('#mAuc').textContent=current.auc.toFixed(3);$('#mChanged').textContent=state.mode==='graph'?changed:'0';
+ $('#cmTN').textContent=current.tn;$('#cmFP').textContent=current.fp;$('#cmFN').textContent=current.fn;$('#cmTP').textContent=current.tp;
+ let da=current.auc-base.auc,dacc=current.acc-base.acc;
+ $('#deltaText').innerHTML=state.mode==='graph'?`Accuracy: <strong class="${dacc>=0?'deltaUp':'deltaDown'}">${dacc>=0?'+':''}${(dacc*100).toFixed(1)} pp</strong> · AUC: <strong class="${da>=0?'deltaUp':'deltaDown'}">${da>=0?'+':''}${da.toFixed(3)}</strong> · <strong>${changed}</strong> decisiones de test cambian.`:'Mostrando el <strong>baseline tabular</strong> sin señal de red.';
+ renderROC(current.roc,base.roc);renderCompare(base);let m=methods.find(x=>x.id===state.method),avgN=state.pred.filter(x=>!x.train).reduce((s,x)=>s+x.nTrain,0)/(state.pred.filter(x=>!x.train).length||1);
+ $('#analysisText').innerHTML=`<strong>${m.name}</strong> usa una señal vecinal <strong>ponderada</strong>: vecinos más relacionados aportan más y sólo se consultan etiquetas de entrenamiento. En test hay, en promedio, <strong>${avgN.toFixed(1)}</strong> vecinos etiquetados por nodo. La red puede mejorar o empeorar: eso permite discutir si la relación elegida realmente contiene información predictiva.`
+}
+function renderROC(cur,base){let s=$('#rocSvg'),W=280,H=190,pad=28;let path=r=>r.pts.map((q,i)=>(i?'L':'M')+(pad+q.fpr*(W-pad*1.4)).toFixed(1)+','+(H-pad-q.tpr*(H-pad*1.4)).toFixed(1)).join(' ');s.innerHTML=`<line x1="${pad}" y1="${H-pad}" x2="${W-12}" y2="${H-pad}" stroke="var(--line)"/><line x1="${pad}" y1="${H-pad}" x2="${pad}" y2="12" stroke="var(--line)"/><line x1="${pad}" y1="${H-pad}" x2="${W-12}" y2="12" stroke="var(--line)" stroke-dasharray="4 4"/><path d="${path(base)}" fill="none" stroke="var(--muted)" stroke-width="2"/><path d="${path(cur)}" fill="none" stroke="var(--accent)" stroke-width="3"/><text x="34" y="18" fill="var(--muted)" font-size="9">ROC · gris=tabla · azul=actual</text><text x="210" y="180" fill="var(--muted)" font-size="8">FPR</text><text x="5" y="18" fill="var(--muted)" font-size="8">TPR</text>`}
+function renderCompare(base){
+ let html=`<div class="compareRow"><span>Solo tabla</span><div class="bar"><i style="width:${base.auc*100}%"></i></div><b>${base.auc.toFixed(2)} AUC</b></div>`;
+ methods.forEach(m=>{let z=state.allMetrics[m.id],delta=z.acc-base.acc;html+=`<div class="compareRow"><span>${m.name.replace(/^\d\. /,'')}</span><div class="bar"><i style="width:${z.auc*100}%"></i></div><b>${z.auc.toFixed(2)} · ${delta>=0?'+':''}${(delta*100).toFixed(0)}pp</b></div>`});$('#compare').innerHTML=html
+}
+
+
+function applyTableVisibility(){
+ const panel=$('#tableDrawer'),btn=$('#tableToggleBtn');
+ // La clase tableIntro aplica un transform animado con fill:both. Si no se elimina,
+ // puede mantener el panel visible aunque se quite .open.
+ if(!state.tableVisible) panel.classList.remove('tableIntro');
+ panel.classList.toggle('open',state.tableVisible);panel.setAttribute('aria-hidden',state.tableVisible?'false':'true');
+ $('#tableTab').classList.toggle('tableToggleOn',state.tableVisible);
+ btn.textContent=state.tableVisible?'▦ Ocultar tabla':'▦ Tabla de datos';btn.classList.toggle('tableToggleOn',state.tableVisible);
+}
+function nodeCenterOnScreen(id){const c=$(`#graphWorld circle[data-id="${id}"]`);if(!c)return null;const r=c.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2,node:c}}
+function rowFlightText(tr){let cells=[...tr.children].slice(0,4).map(td=>td.innerText.trim().replace(/\s+/g,' '));return cells.join('  ·  ')}
+function animateTableToNetwork(){
+ if(state.introRunning)return;
+ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){toast('Animación reducida por preferencia del sistema');return}
+ if(!state.tableVisible){state.tableVisible=true;$('#rightDrawer').classList.remove('open');applyTableVisibility()}
+ state.introRunning=true;$('#leftDrawer').classList.remove('open');$('#rightDrawer').classList.remove('open');
+ const caption=$('#introCaption'),tablePanel=$('#tableDrawer');caption.classList.add('show');caption.textContent='Primero aparece la tabla de datos…';
+ tablePanel.classList.remove('tableIntro');void tablePanel.offsetWidth;tablePanel.classList.add('tableIntro');
+ setTimeout(()=>{caption.textContent='Cada fila se convierte en un nodo…';requestAnimationFrame(()=>requestAnimationFrame(()=>{
+   const trs=$$('#dataTable tbody tr'),world=$('#graphWorld');if(!trs.length||!world){state.introRunning=false;caption.classList.remove('show');return}
+   const rowGroups=[...world.querySelectorAll('g')].filter(g=>g.querySelector('circle[data-id]'));
+   const edges=[...world.querySelectorAll('line.edge')];
+   rowGroups.forEach(g=>{const c=g.querySelector('circle[data-id]');if(c&&c.dataset.id.startsWith('N'))g.style.opacity='0'});edges.forEach(e=>e.style.opacity='0');
+   const entityGroups=rowGroups.filter(g=>{let c=g.querySelector('circle[data-id]');return c&&!c.dataset.id.startsWith('N')});entityGroups.forEach(g=>g.style.opacity='0');
+   let finished=0,total=trs.length,baseDelay=45;
+   trs.forEach((tr,i)=>{
+     const id=tr.dataset.id,target=nodeCenterOnScreen(id);if(!target){finished++;return}
+     const rr=tr.getBoundingClientRect(),fly=document.createElement('div');fly.className='flyingRow';fly.textContent=rowFlightText(tr);document.body.appendChild(fly);
+     const startX=rr.left+8,startY=rr.top+rr.height/2-14,endX=target.x,endY=target.y;
+     fly.style.left=startX+'px';fly.style.top=startY+'px';
+     tr.style.background='rgba(92,200,255,.16)';
+     const dx=endX-startX,dy=endY-startY,delay=Math.min(1300,i*baseDelay),dur=650;
+     const anim=fly.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.58}px,${dy*.42-18}px) scale(.78)`,opacity:.92,offset:.58},{transform:`translate(${dx}px,${dy}px) scale(.16)`,opacity:.12}],{duration:dur,delay,easing:'cubic-bezier(.2,.75,.2,1)',fill:'forwards'});
+     anim.onfinish=()=>{fly.remove();tr.style.background='';let g=target.node.parentNode;g.style.opacity='1';target.node.classList.add('introPulse');setTimeout(()=>target.node.classList.remove('introPulse'),520);finished++;if(finished>=total)finishIntro()};
+     anim.oncancel=()=>{fly.remove();finished++;if(finished>=total)finishIntro()};
+   });
+   function finishIntro(){
+     edges.forEach((e,i)=>{e.style.opacity='0';setTimeout(()=>{e.style.transition='opacity .45s ease';e.style.opacity='1'},Math.min(i*5,420))});
+     entityGroups.forEach((g,i)=>setTimeout(()=>{g.style.transition='opacity .35s ease';g.style.opacity='1'},120+i*20));
+     caption.textContent='…y las relaciones aparecen como aristas';
+     // Liberar el transform de la animación para que el drawer vuelva a obedecer
+     // exclusivamente a su estado open/cerrado.
+     setTimeout(()=>{tablePanel.classList.remove('tableIntro');caption.classList.remove('show')},1150);
+     state.introRunning=false;state.introPlayed=true;
+   }
+ }))},560)
+}
+function refresh(rebuildData=false){if(rebuildData)state.data=generateData(state.dataset,state.n);state.graph=buildGraph(state.method);state.pred=predictForGraph(state.graph,state.graphWeight);buildAllMetrics();renderTable();renderGraph();renderAnalytics();syncUI()}
+function syncUI(){$$('#methodGrid .methodBtn').forEach(b=>b.classList.toggle('active',b.dataset.id===state.method));$('#nVal').textContent=state.n;$('#p1Val').textContent=state.p1;$('#p2Val').textContent=state.p2;$('#graphWeightVal').textContent=Math.round(state.graphWeight*100)+'%';$('#nodeSizeVal').textContent=state.nodeSize;$('#tableToggleBtn').classList.toggle('tableToggleOn',state.tableVisible);$('#tableToggleBtn').textContent=state.tableVisible?'▦ Ocultar tabla':'▦ Tabla de datos';$('#tableTab').classList.toggle('tableToggleOn',state.tableVisible);$('#baselineBtn').style.outline=state.mode==='base'?'2px solid var(--accent)':'';$('#graphBtn').style.outline=state.mode==='graph'?'2px solid var(--accent)':'';let map={knn:['k vecinos','Fuerza relacional'],sim:['k de respaldo','Umbral de similitud'],shared:['mín. vecinos','Coincidencias requeridas'],bip:['máx. grupos','Densidad de proyección'],temporal:['k de respaldo','Ventana temporal'],hetero:['k de respaldo','Riqueza relacional']};$('#p1Label').textContent=map[state.method][0];$('#p2Label').textContent=map[state.method][1]}
+function toast(t){let x=$('#toast');x.textContent=t;x.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>x.classList.remove('show'),2200)}
+function init(){Object.entries(datasetDefs).forEach(([k,v])=>$('#datasetSelect').insertAdjacentHTML('beforeend',`<option value="${k}">${v.name}</option>`));$('#datasetSelect').value='students';methods.forEach(m=>$('#methodGrid').insertAdjacentHTML('beforeend',`<button class="methodBtn" data-id="${m.id}"><b>${m.name}</b>${m.desc}</button>`));
+ $$('#methodGrid .methodBtn').forEach(b=>b.onclick=()=>{state.method=b.dataset.id;setMethodDefaults(state.method);state.selected=null;state.cmFilter=null;state.positions.clear();state.layoutKey='';refresh(false)});$('#datasetSelect').onchange=e=>{state.dataset=e.target.value;state.selected=null;state.positions.clear();state.layoutKey='';refresh(true)};$('#nSlider').oninput=e=>{state.n=+e.target.value;$('#nVal').textContent=state.n};$('#nSlider').onchange=()=>{state.positions.clear();state.layoutKey='';refresh(true)};$('#p1').oninput=e=>{$('#p1Val').textContent=e.target.value};$('#p1').onchange=e=>{state.p1=+e.target.value;state.positions.clear();state.layoutKey='';refresh(false)};$('#p2').oninput=e=>{$('#p2Val').textContent=e.target.value};$('#p2').onchange=e=>{state.p2=+e.target.value;state.positions.clear();state.layoutKey='';refresh(false)};$('#layoutSelect').onchange=e=>{state.layout=e.target.value;state.positions.clear();state.layoutKey='';state.panX=state.panY=0;state.zoom=1;renderGraph(true)};$('#nodeSize').oninput=e=>{state.nodeSize=+e.target.value;$('#nodeSizeVal').textContent=e.target.value;renderGraph()};$('#tableToggleBtn').onclick=()=>{state.tableVisible=!state.tableVisible;if(state.tableVisible)$('#rightDrawer').classList.remove('open');applyTableVisibility()};$('#introBtn').onclick=animateTableToNetwork;$('#graphWeight').oninput=e=>{$('#graphWeightVal').textContent=e.target.value+'%'};$('#graphWeight').onchange=e=>{state.graphWeight=+e.target.value/100;refresh(false)};$('#baselineBtn').onclick=()=>{state.mode='base';renderAnalytics();renderGraph();syncUI()};$('#graphBtn').onclick=()=>{state.mode='graph';renderAnalytics();renderGraph();syncUI()};$('#fitBtn').onclick=()=>{state.zoom=1;state.panX=state.panY=0;updateWorldTransform()};$('#zoomInBtn').onclick=()=>{state.zoom=clamp(state.zoom*1.18,.35,4.5);updateWorldTransform()};$('#zoomOutBtn').onclick=()=>{state.zoom=clamp(state.zoom/1.18,.35,4.5);updateWorldTransform()};$('#panLeftBtn').onclick=()=>{state.panX-=45;updateWorldTransform()};$('#panRightBtn').onclick=()=>{state.panX+=45;updateWorldTransform()};$('#panUpBtn').onclick=()=>{state.panY-=45;updateWorldTransform()};$('#panDownBtn').onclick=()=>{state.panY+=45;updateWorldTransform()};$('#labelsBtn').onclick=()=>{state.labels=!state.labels;renderGraph()};$('#themeBtn').onclick=()=>{document.body.classList.toggle('light');renderGraph();renderAnalytics()};$('#resetBtn').onclick=()=>{Object.assign(state,{n:60,method:'knn',p1:5,p2:55,layout:'kamada',nodeSize:13,graphWeight:.65,mode:'graph',labels:true,selected:null,cmFilter:null,zoom:1,panX:0,panY:0,positions:new Map(),layoutKey:'',tableVisible:true,introRunning:false,introPlayed:false});$('#nSlider').value=60;$('#p1').value=5;$('#p2').value=55;$('#graphWeight').value=65;$('#layoutSelect').value='kamada';$('#nodeSize').value=13;$('#nodeSizeVal').textContent='13';applyTableVisibility();refresh(true)};
+ $('#leftTab').onclick=()=>$('#leftDrawer').classList.toggle('open');$('#tableTab').onclick=()=>{state.tableVisible=!state.tableVisible;if(state.tableVisible)$('#rightDrawer').classList.remove('open');applyTableVisibility()};$('#rightTab').onclick=()=>{const opening=!$('#rightDrawer').classList.contains('open');if(opening){state.tableVisible=false;applyTableVisibility()}$('#rightDrawer').classList.toggle('open')};$$('[data-close]').forEach(b=>b.onclick=()=>{if(b.dataset.close==='table'){state.tableVisible=false;applyTableVisibility()}else $('#'+b.dataset.close+'Drawer').classList.remove('open')});$$('[data-cm]').forEach(c=>c.onclick=()=>{state.cmFilter=state.cmFilter===c.dataset.cm?null:c.dataset.cm;renderGraph()});window.addEventListener('resize',()=>{state.positions.clear();state.layoutKey='';renderGraph(true)});refresh(true);applyTableVisibility()
+}
+init();
+})();
+</script>
+</body>
+</html>
