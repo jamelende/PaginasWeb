@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Centrality Lab 4× — Grandes Redes</title>
+<title>Centrality Lab 2× — Grandes Redes</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
 <style>
 :root{
@@ -47,22 +47,22 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.badge{font-size:11px;border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:4px 7px;color:#475569}
 #status{margin-top:10px;font-size:12px;color:var(--muted);white-space:pre-wrap;line-height:1.45;background:#f8fafc;border:1px solid var(--line);padding:9px;border-radius:9px}
 .progress{height:6px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:8px}.progress>div{height:100%;width:0;background:var(--pri);transition:width .15s}
-#right{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;padding:8px;min-width:0;min-height:0}
+#right{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr;gap:8px;padding:8px;min-width:0;min-height:0}
 .panel{position:relative;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 2px 10px rgba(15,23,42,.04)}
 .title{position:absolute;left:10px;top:10px;z-index:3;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .leg{position:absolute;right:9px;bottom:9px;z-index:3;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:10px;color:#475569;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .cy{position:absolute;inset:0}
 .err{position:fixed;left:360px;right:16px;bottom:16px;z-index:20;background:#fee2e2;border:1px solid #fecaca;color:#7f1d1d;padding:10px 12px;border-radius:9px;display:none;white-space:pre-wrap}
 .tip{font-size:11px;color:var(--muted);line-height:1.4;margin-top:6px}.metric-note{font-size:10px;color:var(--muted);margin-top:4px}.palette-preview{height:14px;border-radius:999px;border:1px solid var(--line);margin-top:6px;background:linear-gradient(90deg,#2563eb,#22c55e,#ef4444)}
-@media(max-width:900px){#app{display:block;height:auto;min-height:100vh}#left{width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}#right{height:1100px;grid-template-columns:1fr}.err{left:12px}}
+@media(max-width:900px){#app{display:block;height:auto;min-height:100vh}#left{width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}#right{height:1000px;grid-template-columns:1fr;grid-template-rows:1fr 1fr}.err{left:12px}}
 </style>
 </head>
 <body>
 <div id="app">
   <aside id="left">
     <div id="head">
-      <h1>Centrality Lab 4×</h1>
-      <div class="sub">Cuatro vistas sincronizadas • optimizado para GML/GraphML grandes</div>
+      <h1>Centrality Lab 2×</h1>
+      <div class="sub">Dos vistas sincronizadas • compara cualquier par de centralidades</div>
     </div>
     <div id="ctrl">
       <div class="section">
@@ -74,7 +74,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
       </div>
 
       <div class="section">
-        <label>Layout idéntico en las 4 vistas</label>
+        <label>Layout idéntico en las 2 vistas</label>
         <select id="layout">
           <option value="auto">Auto (recomendado)</option>
           <option value="cose">COSE</option>
@@ -99,6 +99,24 @@ button:disabled{opacity:.55;cursor:not-allowed}
         <input id="samples" type="range" min="32" max="1024" value="256" step="32">
         <button id="btnCalc">Recalcular centralidades</button>
         <div class="metric-note">Degree y eigenvector se calculan sobre toda la red. Closeness y betweenness usan muestreo cuando la red es grande.</div>
+      </div>
+
+      <div class="section">
+        <label>Centralidad — vista izquierda</label>
+        <select id="viewMetric0">
+          <option value="degree">Degree</option>
+          <option value="closeness">Closeness</option>
+          <option value="betweenness">Betweenness</option>
+          <option value="eigen">Eigenvector</option>
+        </select>
+        <label>Centralidad — vista derecha</label>
+        <select id="viewMetric1">
+          <option value="degree">Degree</option>
+          <option value="closeness" selected>Closeness</option>
+          <option value="betweenness">Betweenness</option>
+          <option value="eigen">Eigenvector</option>
+        </select>
+        <div class="tip">Cada panel puede mostrar una centralidad diferente manteniendo exactamente el mismo layout.</div>
       </div>
 
       <div class="section">
@@ -145,10 +163,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
   </aside>
 
   <main id="right">
-    <div class="panel"><div class="title">Degree</div><div id="cy0" class="cy"></div><div class="leg" id="mm0">—</div></div>
-    <div class="panel"><div class="title">Closeness</div><div id="cy1" class="cy"></div><div class="leg" id="mm1">—</div></div>
-    <div class="panel"><div class="title">Betweenness</div><div id="cy2" class="cy"></div><div class="leg" id="mm2">—</div></div>
-    <div class="panel"><div class="title">Eigenvector</div><div id="cy3" class="cy"></div><div class="leg" id="mm3">—</div></div>
+    <div class="panel"><div class="title" id="title0">Degree</div><div id="cy0" class="cy"></div><div class="leg" id="mm0">—</div></div>
+    <div class="panel"><div class="title" id="title1">Closeness</div><div id="cy1" class="cy"></div><div class="leg" id="mm1">—</div></div>
   </main>
 </div>
 <div id="err" class="err"></div>
@@ -159,9 +175,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 const S={base:18,scale:1,showLabels:true,showVals:false,large:false,calculating:false,syncing:false,lastMetrics:null,palette:'turbo',theme:'light',useSolid:false,solidColor:'#2563eb',hideEdges:false};
 const P=[
  {id:'cy0',metric:'degree',mm:'mm0',cy:null},
- {id:'cy1',metric:'closeness',mm:'mm1',cy:null},
- {id:'cy2',metric:'betweenness',mm:'mm2',cy:null},
- {id:'cy3',metric:'eigen',mm:'mm3',cy:null}
+ {id:'cy1',metric:'closeness',mm:'mm1',cy:null}
 ];
 const $=id=>document.getElementById(id), statusEl=$('status'), errEl=$('err'), prog=$('prog');
 const nextFrame=()=>new Promise(r=>requestAnimationFrame(()=>r()));
@@ -319,7 +333,7 @@ async function identicalLayout(skipLog=false){
  });
  const pos=new Map();ref.nodes().forEach(nd=>pos.set(nd.id(),nd.position()));
  for(let i=1;i<P.length;i++){const cy=P[i].cy;cy.startBatch();cy.nodes().forEach(nd=>{const q=pos.get(nd.id());if(q)nd.position(q)});cy.endBatch()}
- fitAll();if(!skipLog)log(`Layout ${name} aplicado en las cuatro vistas.`);
+ fitAll();if(!skipLog)log(`Layout ${name} aplicado en las dos vistas.`);
 }
 function fitAll(){P.forEach(p=>{p.cy.resize();p.cy.fit(undefined,30)})}
 
@@ -414,7 +428,11 @@ function findNodes(){
 }
 
 
-function applyAllMetrics(ids,res){const maps={degree:res.degree,closeness:res.closeness,betweenness:res.betweenness,eigen:res.eigen};P.forEach(p=>applyMetricArray(p.cy,p.metric,p.mm,ids,maps[p.metric],res.exact))}
+function metricLabel(m){return ({degree:'Degree',closeness:'Closeness',betweenness:'Betweenness',eigen:'Eigenvector'})[m]||m}
+function applyAllMetrics(ids,res){
+ const maps={degree:res.degree,closeness:res.closeness,betweenness:res.betweenness,eigen:res.eigen};
+ P.forEach((p,i)=>{const m=$('viewMetric'+i).value;p.metric=m;$('title'+i).textContent=metricLabel(m);applyMetricArray(p.cy,m,p.mm,ids,maps[m],res.exact)});
+}
 function applyMetricArray(cy,metric,mmId,ids,arr,exact){
  let min=Infinity,max=-Infinity;for(const v of arr){if(Number.isFinite(v)){if(v<min)min=v;if(v>max)max=v}}if(!Number.isFinite(min)){min=0;max=0}
  const map=new Map(ids.map((id,i)=>[id,i]));$(mmId).textContent=`${min.toFixed(3)} — ${max.toFixed(3)}${exact?'':' ≈'}`;
@@ -438,6 +456,8 @@ $('sz').oninput=e=>{S.base=+e.target.value;$('szLab').textContent=e.target.value
 $('sc').oninput=e=>{S.scale=+e.target.value;$('scLab').textContent=(+e.target.value).toFixed(2)+'×';restyleFromMetrics()};
 $('samples').oninput=e=>$('sampleLab').textContent=e.target.value;
 $('palette').onchange=e=>{S.palette=e.target.value;updatePalettePreview();restyleFromMetrics()};
+$('viewMetric0').onchange=()=>restyleFromMetrics();
+$('viewMetric1').onchange=()=>restyleFromMetrics();
 $('btnTheme').onclick=()=>{S.theme=S.theme==='dark'?'light':'dark';applyTheme()};
 $('useSolid').onchange=e=>{S.useSolid=e.target.checked;updatePalettePreview();restyleFromMetrics()};
 $('solidColor').oninput=e=>{S.solidColor=e.target.value;updatePalettePreview();restyleFromMetrics()};
