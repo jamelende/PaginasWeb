@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Laboratorio del Componente Gigante</title>
+  <style>
+    :root{
+      --ink:#17222c; --muted:#64727d; --line:#dbe4e8; --paper:#f4f7f6;
+      --panel:#ffffff; --navy:#16384b; --teal:#087f7b; --cyan:#16b8aa;
+      --orange:#f2874b; --yellow:#f1c75b; --danger:#df5d63; --shadow:0 14px 35px rgba(23,49,61,.09);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--paper);color:var(--ink);overflow:hidden}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{height:100%;display:grid;grid-template-rows:58px 1fr}
+    header{display:flex;align-items:center;gap:14px;padding:0 22px;background:var(--navy);color:white;border-bottom:3px solid var(--cyan)}
+    .brandmark{width:32px;height:32px;border-radius:10px;background:var(--cyan);display:grid;place-items:center;font-weight:900;color:#073b3d;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+    h1{font-size:16px;line-height:1;margin:0;font-weight:780;letter-spacing:-.01em}
+    .subtitle{font-size:11px;opacity:.72;margin-top:5px}
+    .head-chip{margin-left:auto;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:999px;padding:7px 11px;font-size:11px;display:flex;gap:7px;align-items:center}
+    .head-chip i{width:7px;height:7px;background:#7de0d5;border-radius:50%;box-shadow:0 0 0 4px rgba(125,224,213,.12)}
+    main{min-height:0;display:grid;grid-template-columns:252px minmax(430px,1fr) 294px;gap:10px;padding:10px}
+    .panel,.stage{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);min-height:0}
+    .sidebar{padding:14px;overflow:auto;scrollbar-width:thin}
+    .section{padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+    .section:last-child{border:0;margin:0;padding:0}
+    .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--teal);margin:0 0 10px}
+    .field{margin-bottom:11px}
+    .fieldline{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:650;margin-bottom:6px}
+    .value{font-variant-numeric:tabular-nums;color:var(--teal);font-weight:800}
+    input[type=range]{width:100%;accent-color:var(--teal)}
+    input[type=number],select{width:100%;border:1px solid #cfdadd;border-radius:8px;padding:8px 9px;background:#fff;color:var(--ink);outline:none}
+    input:focus,select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(8,127,123,.1)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .btn{border:0;border-radius:9px;padding:9px 10px;font-weight:750;font-size:11px;background:#edf3f3;color:var(--navy);transition:.16s transform,.16s background}
+    .btn:hover{background:#dfeceb;transform:translateY(-1px)}
+    .btn.primary{background:var(--teal);color:white;box-shadow:0 7px 16px rgba(8,127,123,.2)}
+    .btn.primary:hover{background:#076d6a}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .transport{display:grid;grid-template-columns:42px 42px 1fr 42px;gap:6px}
+    .transport .btn{height:38px;font-size:15px;padding:0}
+    .transport .play{font-size:11px}
+    .progress{height:6px;border-radius:99px;background:#e7eeef;overflow:hidden;margin-top:10px}
+    .progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--cyan),var(--orange));transition:width .16s}
+    .hint{font-size:10px;line-height:1.45;color:var(--muted);margin:8px 0 0}
+    .stage{position:relative;overflow:hidden;background:linear-gradient(180deg,#fcfdfd,#f7faf9)}
+    #network{width:100%;height:100%;display:block}
+    .stage-top{position:absolute;right:14px;top:14px;display:flex;align-items:flex-start;justify-content:flex-end;pointer-events:none}
+    .phase-card{background:rgba(255,255,255,.92);border:1px solid rgba(214,225,228,.95);border-radius:12px;padding:10px 12px;box-shadow:0 8px 24px rgba(31,58,71,.08);backdrop-filter:blur(9px);max-width:360px}
+    .phase-row{display:flex;align-items:center;gap:8px}
+    .phase-dot{width:9px;height:9px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 5px rgba(241,199,91,.18)}
+    #phaseTitle{font-weight:820;font-size:13px}
+    #phaseText{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
+    .canvas-tools{pointer-events:auto;display:flex;gap:5px}
+    .tool{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--navy);font-weight:800;box-shadow:0 6px 18px rgba(31,58,71,.07)}
+    .legend{display:flex;flex-wrap:wrap;gap:8px 12px;background:#f8faf9;border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:9px;color:var(--muted)}
+    .legend span{display:flex;align-items:center;gap:5px}.swatch{width:8px;height:8px;border-radius:50%}.giant{background:var(--orange)}.minor{background:#77a9a7}.isolated{background:#cbd5d8}
+    .threshold{border-radius:10px;background:var(--navy);color:white;padding:9px 11px;font-size:10px;box-shadow:0 8px 20px rgba(22,56,75,.12)}
+    .threshold b{color:#7de0d5}
+    .tooltip{position:absolute;display:none;pointer-events:none;background:#102d3c;color:white;padding:8px 10px;border-radius:8px;font-size:10px;box-shadow:0 9px 25px rgba(0,0,0,.18);z-index:4;line-height:1.5}
+    .rightbar{padding:12px;overflow:auto;scrollbar-width:thin;display:flex;flex-direction:column;gap:10px}
+    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .metric{border:1px solid var(--line);background:#fbfcfc;border-radius:10px;padding:9px}
+    .metric label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:750;margin-bottom:4px}
+    .metric strong{font-size:18px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+    .metric small{font-size:9px;color:var(--muted);margin-left:3px}
+    .metric.accent{border-color:#f3bea0;background:#fff8f4}.metric.accent strong{color:#d85d21}
+    .chart-card{border:1px solid var(--line);border-radius:11px;padding:9px;background:#fff}
+    .chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+    .chart-head b{font-size:10px}.chart-head span{font-size:9px;color:var(--muted)}
+    .chart-card canvas{width:100%;height:130px;display:block}
+    .insight{border-radius:11px;background:#edf7f5;border:1px solid #c9e8e2;padding:10px 11px}
+    .insight b{font-size:10px;color:#075f5c;display:block;margin-bottom:4px}.insight p{font-size:10px;line-height:1.45;color:#3f6867;margin:0}
+    .formula{font-family:Georgia,serif;font-size:11px;color:var(--navy);background:#f5f7f7;border-radius:8px;text-align:center;padding:7px;margin-top:7px}
+    .kbd{font-family:inherit;border:1px solid #cfd9dc;background:white;border-bottom-width:2px;border-radius:4px;padding:1px 4px;font-size:8px}
+    @media(max-width:1050px){main{grid-template-columns:225px minmax(420px,1fr)}.rightbar{position:absolute;right:10px;top:68px;bottom:10px;width:290px;z-index:6;transform:translateX(calc(100% + 14px));transition:.25s}.rightbar.open{transform:none}.app{position:relative}.metrics-toggle{display:block!important}}
+    .sidebar .phase-card{max-width:none;background:#f8fbfa;box-shadow:none;backdrop-filter:none}
+    @media(max-width:760px){body{overflow:auto}.app{height:auto;min-height:100%;grid-template-rows:58px auto}main{grid-template-columns:1fr;padding:7px}.sidebar{order:2}.stage{height:62vh;min-height:460px;order:1}.rightbar{position:static;width:auto;transform:none;order:3}.metrics-toggle{display:none!important}.head-chip{display:none}.legend{flex-direction:column;gap:4px}}
+    .metrics-toggle{display:none}
+  
+    main{grid-template-columns:230px minmax(240px,1fr) 270px;gap:8px;padding:8px}
+    header{padding:0 16px;gap:10px}header #theme{margin-left:auto;background:#264e61;color:white;border-color:#466b7d}.head-chip{margin-left:0}
+    .sidebar{padding:12px}.section{padding-bottom:12px;margin-bottom:12px}.transport{grid-template-columns:30px 30px 1fr 30px;gap:4px}.tool svg{width:16px;height:16px;vertical-align:middle}.check{display:flex;gap:6px;align-items:center}#network{touch-action:none}.check input{accent-color:var(--teal)}
+    .stage-status{position:absolute;top:16px;left:15px;background:var(--panel);border:1px solid var(--line);padding:7px 10px;border-radius:8px;font-size:11px;pointer-events:none;color:var(--muted);max-width:45%}
+    .stage-legend{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:8px 14px;font-size:10px;white-space:nowrap;pointer-events:none}
+    .stage-legend span{display:flex;align-items:center;gap:5px}.stage-legend i{width:16px;height:3px;border-radius:3px}
+    .giant{background:#dc3545}.second{background:#ed8718}.metric.accent{border-color:#eaa4ad;background:#fff5f5}.metric.accent strong{color:#dc3545}
+    .component-card{border:1px solid var(--line);border-radius:11px;padding:9px}.component-row{display:flex;align-items:center;gap:7px;padding:5px 4px;border:0;background:none;color:var(--ink);width:100%;font-size:10px;text-align:left;border-radius:6px}.component-row:hover{background:var(--paper)}.component-row i{width:7px;height:7px;border-radius:50%}.component-row .bar{height:4px;background:var(--line);flex:1;border-radius:4px;overflow:hidden}.component-row .bar b{display:block;height:100%}.component-row.active{outline:1px solid var(--teal)}
+    .chart-card canvas{height:132px}.metrics-toggle{display:block!important}main.hide-controls{grid-template-columns:minmax(240px,1fr) 270px}main.hide-controls>.sidebar{display:none}main.hide-metrics{grid-template-columns:230px minmax(240px,1fr)}main.hide-metrics>.rightbar{display:none}main.hide-controls.hide-metrics{grid-template-columns:1fr}
+    .stage:fullscreen{border-radius:0;background:var(--paper)}
+    body.dark{--ink:#e0e9ed;--muted:#9dafba;--line:#304351;--paper:#101b24;--panel:#182832;--navy:#133748;--shadow:none}
+    body.dark .stage{background:#111e27}body.dark input[type=number],body.dark select{background:var(--paper);color:var(--ink);border-color:var(--line)}body.dark .metric,body.dark .chart-card,body.dark .legend,body.dark .phase-card,body.dark .tool{background:var(--panel);color:var(--ink);border-color:var(--line)}body.dark .btn{background:#294451;color:var(--ink);transition:transform .16s}body.dark .btn:hover{background:#355b6a}body.dark .btn.primary:hover{background:#098c87}body.dark .btn.primary{background:var(--teal)}body.dark .metric.accent{background:#382832;border-color:#7e3c46}body.dark .progress{background:var(--line)}body.dark .insight{background:#203840;border-color:var(--line)}
+    @media(max-width:1150px){main{grid-template-columns:220px minmax(250px,1fr) 240px}.rightbar{position:static;width:auto;transform:none}main.hide-controls{grid-template-columns:1fr 240px}main.hide-metrics{grid-template-columns:220px 1fr}}
+    @media(max-width:850px){main,main.hide-metrics{grid-template-columns:210px 1fr}main>.rightbar{display:none}main.show-metrics>.rightbar{display:flex;position:absolute;right:12px;top:70px;bottom:12px;width:250px;z-index:8}main.hide-controls{grid-template-columns:1fr}.head-chip{display:none}.stage-status{top:60px;max-width:80%}}
+    @media(max-width:650px){main,main.hide-controls,main.hide-metrics{grid-template-columns:1fr}.stage{height:65vh;min-height:360px}.sidebar{order:2}header{padding:0 10px}h1{font-size:13px}.stage-top{right:8px;top:10px}.canvas-tools{gap:3px}.tool{width:30px;height:30px}.stage-legend{gap:9px;font-size:9px}.stage-status{top:52px}.rightbar{order:3}main.show-metrics>.rightbar{position:static;width:auto}.subtitle{font-size:9px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brandmark">G</div>
+    <div><h1>Laboratorio del Componente Gigante</h1><div class="subtitle">Percolación y transición de fase en una red aleatoria</div></div>
+    <button class="tool" id="theme" title="Cambiar tema" aria-label="Cambiar tema">◐</button><div class="head-chip"><i></i> Erdős–Rényi · G(n,m) · sin conexión</div>
+  </header>
+  <main>
+    <aside class="panel sidebar">
+      <section class="section">
+        <p class="eyebrow">01 · Configurar experimento</p>
+        <div class="field"><div class="fieldline"><span>Número de nodos</span><span class="value" id="nOut">100</span></div><input id="nNodes" type="range" min="30" max="3000" step="10" value="100"></div>
+        <div class="field"><div class="fieldline"><span>Grado medio final ⟨k⟩</span><span class="value" id="kMaxOut">5.0</span></div><input id="kMax" type="range" min="2" max="8" step=".5" value="5"></div>
+        <div class="two">
+          <label class="field"><span class="fieldline">Semilla</span><input id="seed" type="number" min="1" max="99999" value="31415"></label>
+          <label class="field"><span class="fieldline">Disposición</span><select id="layout"><option value="random" selected>Aleatoria</option><option value="force">Dinámica</option><option value="components">Componentes</option><option value="circle">Circular</option></select></label>
+        </div>
+        <button class="btn primary" id="generate" style="width:100%">Generar nueva secuencia</button>
+        <p class="hint">La semilla permite repetir exactamente el mismo experimento. Hasta 3000 nodos. Cambie los parámetros y pulse Generar; la semilla repite la secuencia. Aleatoria mantiene los nodos fijos.</p>
+      </section>
+      <section class="section">
+        <p class="eyebrow">02 · Construir la red</p>
+        <div class="transport">
+          <button class="btn" id="reset" title="Volver al inicio">↺</button>
+          <button class="btn" id="back" title="Quitar la última arista">‹</button>
+          <button class="btn primary play" id="play">▶ Animar</button>
+          <button class="btn" id="step" title="Agregar una arista">›</button>
+        </div>
+        <div class="progress"><span id="progressBar"></span></div><div class="field" style="margin-top:10px"><div class="fieldline"><span>Recorrer secuencia</span><span id="stepOut" class="value">0 / 250</span></div><input id="seek" type="range" min="0" max="250" value="0" aria-label="Recorrer secuencia de aristas"></div>
+        <div class="field" style="margin-top:12px"><div class="fieldline"><span>Velocidad</span><span class="value" id="speedOut">10 aristas/s</span></div><input id="speed" type="range" min="1" max="1000" value="10"></div>
+        <button class="btn" id="jumpThreshold" style="width:100%">Saltar cerca de ⟨k⟩ = 1</button>
+        <p class="hint"><span class="kbd">Espacio</span> reproducir · <span class="kbd">←</span>/<span class="kbd">→</span> retroceder/avanzar</p>
+      </section>
+      <section class="section">
+        <p class="eyebrow">03 · Explorar componentes</p><button class="btn primary" id="showComponents" style="width:100%">Visualizar componentes</button><button class="btn" id="restoreNetwork" style="width:100%;margin-top:6px" disabled>Restaurar red</button><p class="hint" id="componentHint">Pause para separar los componentes sin modificar la red.</p><label class="hint check"><input type="checkbox" id="labels"> Mostrar números de los nodos</label><p class="eyebrow" style="margin-top:16px">Fase actual</p>
+        <div class="phase-card"><div class="phase-row"><span class="phase-dot" id="phaseDot"></span><span id="phaseTitle">Régimen subcrítico</span></div><div id="phaseText">Los nodos todavía están aislados. Agregue aristas para iniciar el experimento.</div></div>
+      </section>
+      <section class="section">
+        <p class="eyebrow">04 · Qué observar</p>
+        <p class="hint" style="font-size:11px;margin-top:0"><b style="color:var(--ink)">Antes del umbral:</b> dominan componentes pequeños y aislados.<br><br><b style="color:var(--ink)">Cerca de ⟨k⟩ = 1:</b> varios grupos se fusionan rápidamente.<br><br><b style="color:var(--ink)">Después:</b> una fracción macroscópica de la red pertenece a un único componente.</p>
+      </section>
+    </aside>
+
+    <section class="stage" id="stage">
+      <canvas id="network"></canvas>
+      <div class="stage-top">
+        <div class="canvas-tools"><button class="tool" id="stagePlay" title="Animar red">▶</button><button class="tool" id="controlsToggle" title="Mostrar u ocultar controles">☰</button><button class="tool" id="fullScreen" title="Pantalla completa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg></button><button class="tool" id="saveImage" title="Guardar imagen PNG">↓</button><button class="tool" id="zoomOut" title="Alejar">−</button><button class="tool" id="zoomIn" title="Acercar">+</button><button class="tool" id="fit" title="Centrar vista">⌂</button><button class="tool metrics-toggle" id="metricsToggle" title="Ver métricas">▥</button></div>
+      </div>
+      <div class="stage-status" id="stageStatus">Pausada</div><div class="stage-legend"><span><i style="background:#dc3545"></i>1.º · rojo</span><span><i style="background:#ed8718"></i>2.º · naranja</span><span><i style="background:#6194a6"></i>Otros</span></div><div class="tooltip" id="tooltip"></div>
+    </section>
+
+    <aside class="panel rightbar" id="rightbar">
+      <div><p class="eyebrow">Estado de la red</p><div class="metrics">
+        <div class="metric"><label>Aristas m</label><strong id="mMetric">0</strong></div>
+        <div class="metric"><label>Grado medio</label><strong id="kMetric">0.00</strong></div>
+        <div class="metric"><label>Probabilidad p</label><strong id="pMetric">0.000</strong></div>
+        <div class="metric"><label>Componentes</label><strong id="cMetric">100</strong></div>
+        <div class="metric accent"><label>Componente mayor</label><strong id="gMetric">1</strong><small id="gPct">1%</small></div>
+        <div class="metric"><label>χ sin el mayor</label><strong id="chiMetric">1.00</strong></div>
+      </div></div>
+      <div class="legend"><span><i class="swatch giant"></i> 1.º · rojo</span><span><i class="swatch second"></i>2.º · naranja</span><span><i class="swatch minor"></i> otros componentes</span><span><i class="swatch isolated"></i> aislados</span></div>
+      <div class="threshold">Umbral teórico: <b>⟨k⟩<sub>c</sub> ≈ 1</b></div>
+      <div class="chart-card"><div class="chart-head"><b>Emergencia del gigante</b><span>S₁/N y S₂/N</span></div><canvas id="curveChart"></canvas></div>
+      <div class="chart-card"><div class="chart-head"><b>Tamaño de componentes</b><span>frecuencia</span></div><canvas id="histChart"></canvas></div>
+      <div class="component-card"><div class="chart-head"><b>Componentes por tamaño</b><span>clic para resaltar</span></div><div id="componentList"></div><button class="btn" id="clearFocus" style="width:100%;margin-top:6px" hidden>Mostrar toda la red</button></div><div class="insight"><b id="insightTitle">Punto de partida</b><p id="insightText">Cada nodo forma su propio componente. La curva crecerá cuando las aristas comiencen a unir grupos.</p><div class="formula">p<sub>c</sub> ≈ 1/(N−1) &nbsp; ↔ &nbsp; ⟨k⟩<sub>c</sub> ≈ 1</div></div>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+'use strict';
+const $=s=>document.querySelector(s),canvas=$('#network'),ctx=canvas.getContext('2d'),stage=$('#stage'),curveCanvas=$('#curveChart'),histCanvas=$('#histChart');
+const RED='#dc3545',ORANGE='#ed8718',palette=['#3b91a7','#7162b0','#329279','#b06c9b','#5b88b5','#959339'];
+let n=100,maxK=5,seed=31415,nodes=[],edges=[],curve=[],stepIndex=0,playing=false,lastTick=0,accumulator=0,current={},dsu,degrees,processed=0;
+let scale=1,viewX=0,viewY=0,hovered=-1,dragging=-1,panning=false,lastPointer=null,dirty=true,heat=0,newEdgePulse=0,focusRoot=null;
+let layoutMode="random";
+let separated=false,snapshot=null,regions=[],transition=null,lastFrame=0;
+function rngFromSeed(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+class DSU{constructor(size){this.p=Int32Array.from({length:size},(_,i)=>i);this.s=new Int32Array(size).fill(1);this.min=Int32Array.from({length:size},(_,i)=>i);this.count=size}find(x){while(this.p[x]!==x){this.p[x]=this.p[this.p[x]];x=this.p[x]}return x}union(a,b){a=this.find(a);b=this.find(b);if(a===b)return false;if(this.s[a]<this.s[b]||(this.s[a]===this.s[b]&&this.min[a]>this.min[b]))[a,b]=[b,a];this.p[b]=a;this.s[a]+=this.s[b];this.min[a]=Math.min(this.min[a],this.min[b]);this.count--;return true}}
+function pause(){playing=false;accumulator=0;$('#play').textContent='▶ Animar';updateButtons();dirty=true}
+function buildSequence(){
+ pause();separated=false;snapshot=null;transition=null;regions=[];focusRoot=null;
+ n=+$('#nNodes').value;maxK=+$('#kMax').value;seed=Math.max(1,Math.min(99999,Math.trunc(+$('#seed').value||1)));$('#seed').value=seed;
+ const rng=rngFromSeed(seed),used=new Set(),limit=Math.min(n*(n-1)/2,Math.round(n*maxK/2));edges=[];
+ // Uniform ordered samples without replacement: G(n,m); no self loops or repeated edges.
+ while(edges.length<limit){let a=Math.floor(rng()*n),b=Math.floor(rng()*n);if(a===b)continue;if(a>b)[a,b]=[b,a];const key=a*n+b;if(used.has(key))continue;used.add(key);edges.push({a,b})}
+ const w=canvas.clientWidth||700,h=canvas.clientHeight||650;nodes=[];
+ for(let i=0;i<n;i++){const angle=rng()*Math.PI*2,rad=Math.sqrt((i+.5)/n),x=w/2+Math.cos(angle)*rad*w*.42,y=h/2+Math.sin(angle)*rad*Math.max(40,h*.39);nodes.push({x,y,anchorX:x,anchorY:y,vx:0,vy:0,root:i,degree:0})}
+ // Track the two largest sizes; a union changes only two entries in the size counts.
+ const d=new DSU(n),freq=new Int32Array(n+1);freq[1]=n;let first=1,second=1;
+ curve=[{k:0,s:1/n,s2:1/n}];
+ edges.forEach((e,i)=>{const a=d.find(e.a),b=d.find(e.b);if(a!==b){freq[d.s[a]]--;freq[d.s[b]]--;d.union(a,b);const size=d.s[d.find(a)];freq[size]++;if(size>first){second=Math.max(second,freq[first]>0?first:0);first=size}if(freq[first]>1)second=first;else{second=Math.max(second,size<first?size:0);while(second>0&&(second>=first||freq[second]===0))second--}}curve.push({k:2*(i+1)/n,s:first/n,s2:second/n})});
+ stepIndex=0;processed=0;dsu=new DSU(n);degrees=new Int32Array(n);$('#seek').max=edges.length;fitView();computeState();applyLayout($('#layout').value);updateUI();
+}
+function computeState(){
+ if(processed>stepIndex){dsu=new DSU(n);degrees=new Int32Array(n);processed=0}
+ for(;processed<stepIndex;processed++){const e=edges[processed];dsu.union(e.a,e.b);degrees[e.a]++;degrees[e.b]++}
+ const sizes=new Map(),groups=new Map();nodes.forEach((o,i)=>{const root=dsu.find(i);o.root=root;o.degree=degrees[i];if(!groups.has(root))groups.set(root,[]);groups.get(root).push(i);sizes.set(root,dsu.s[root])});
+ const ranked=[...sizes.keys()].sort((a,b)=>sizes.get(b)-sizes.get(a)||dsu.min[a]-dsu.min[b]);
+ const largestRoot=ranked[0],secondRoot=ranked[1]??null,largestSize=sizes.get(largestRoot);let numer=0,denom=0;
+ sizes.forEach((s,r)=>{if(r!==largestRoot){numer+=s*s;denom+=s}});
+ current={sizes,groups,ranked,largestRoot,secondRoot,largestSize,secondSize:sizes.get(secondRoot)||0,components:sizes.size,chi:denom?numer/denom:0,isolated:ranked.filter(r=>sizes.get(r)===1).length};
+}
+function setStep(next,pulse=true){const target=Math.max(0,Math.min(edges.length,Math.round(next)));if(target===stepIndex)return;if(separated)restoreNetwork();stepIndex=target;focusRoot=null;newEdgePulse=pulse?1:0;computeState();heat=100;updateUI();if(stepIndex===edges.length)pause();dirty=true}
+function rootColor(root){if(current.sizes.get(root)===1)return document.body.classList.contains('dark')?'#637c8a':'#afc0c8';if(root===current.largestRoot)return RED;if(root===current.secondRoot)return ORANGE;return palette[dsu.min[root]%palette.length]}
+function updateButtons(){
+ $('#showComponents').disabled=playing;$('#restoreNetwork').disabled=!separated;$('#showComponents').textContent=separated?'Componentes separados':'Visualizar componentes';
+ $('#componentHint').textContent=playing?'Pause la animación para separar los componentes.':separated?'Restaurar recupera la disposición anterior y mantiene las mismas aristas.':'Separe los componentes conexos y examine su tamaño.';
+ $('#stageStatus').textContent=`${playing?'● Animando':separated?'Componentes separados':'❚❚ Pausada'} · ${n} nodos · ${stepIndex} aristas`;
+ $('#play').textContent=playing?'❚❚ Pausar':'▶ Animar';$('#stagePlay').textContent=playing?'❚❚':'▶';$('#stagePlay').title=playing?'Pausar animación':'Animar red';
+}
+function phaseInfo(k){if(stepIndex===0)return['Régimen subcrítico','Cada nodo es un componente aislado. Inicie la animación.', '#f1c75b'];if(k<.8)return['Régimen subcrítico','Predominan grupos pequeños y aislados.', '#f1c75b'];if(k<=1.2)return['Zona crítica','Una arista puede fusionar grupos y producir un salto en la curva.', ORANGE];return['Régimen supercrítico','Por encima del umbral suele emerger un grupo dominante.','#16b8aa']}
+function updateUI(){const k=2*stepIndex/n,phase=phaseInfo(k),pct=100*current.largestSize/n;
+ $('#mMetric').textContent=stepIndex;$('#kMetric').textContent=k.toFixed(2);$('#pMetric').textContent=(2*stepIndex/(n*(n-1))).toFixed(4);$('#cMetric').textContent=current.components;$('#gMetric').textContent=current.largestSize;$('#gPct').textContent=pct.toFixed(0)+'%';$('#chiMetric').textContent=current.chi.toFixed(2);
+ $('#seek').value=stepIndex;$('#stepOut').textContent=stepIndex+' / '+edges.length;$('#progressBar').style.width=100*stepIndex/edges.length+'%';$('#back').disabled=stepIndex===0;$('#reset').disabled=stepIndex===0;$('#step').disabled=stepIndex===edges.length;
+ $('#phaseTitle').textContent=phase[0];$('#phaseText').textContent=phase[1];$('#phaseDot').style.background=phase[2];
+ $('#insightTitle').textContent=stepIndex===0?'Punto de partida':k<.8?'Muchas islas pequeñas':k<=1.2?'Transición en curso':'Comparar los mayores';
+ $('#insightText').textContent=`El 1.º contiene ${current.largestSize} nodos; el 2.º, ${current.secondSize}. Hay ${current.isolated} aislados. Los colores siguen el tamaño actual: al fusionarse los grupos, se actualizan.`;
+ $('#clearFocus').hidden=focusRoot===null;
+ $('#componentList').innerHTML=current.ranked.slice(0,7).map((r,i)=>`<button class="component-row ${focusRoot===r?'active':''}" data-root="${r}"><i style="background:${rootColor(r)}"></i><span>${i+1}.º</span><span class="bar"><b style="width:${100*current.sizes.get(r)/current.largestSize}%;background:${rootColor(r)}"></b></span><span>${current.sizes.get(r)} nodos</span></button>`).join('')+(current.components>7?`<p class="hint">+ ${current.components-7} componentes · ${current.isolated} aislados</p>`:'');
+ updateButtons();drawCharts();dirty=true;
+}
+function resizeCanvas(c){const r=c.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);if(c.width!==Math.round(r.width*dpr)||c.height!==Math.round(r.height*dpr)){c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr)}return{w:r.width,h:r.height,dpr}}
+function fitView(){scale=1;viewX=viewY=0;dirty=true}
+function zoom(f){const w=canvas.clientWidth,h=canvas.clientHeight,old=scale;scale=Math.max(.15,Math.min(8,scale*f));viewX=w/2-(w/2-viewX)*scale/old;viewY=h/2-(h/2-viewY)*scale/old;dirty=true}
+function applyLayout(mode){if(mode==='components'){pause();showComponents();return}if(separated)restoreNetwork();layoutMode=mode;$('#layout').value=mode;heat=150;
+ if(mode==='force'&&stepIndex>0)relax(nodes.map((_,i)=>i),edges.slice(0,stepIndex),{x:15,y:32,w:canvas.clientWidth-30,h:canvas.clientHeight-65},n>1000?30:90);
+ if(mode==='random')nodes.forEach(o=>{o.x=o.anchorX;o.y=o.anchorY;o.vx=o.vy=0});
+ if(mode==='circle'){const w=canvas.clientWidth,h=canvas.clientHeight,R=Math.min(w,h)*.39;nodes.forEach((o,i)=>{const a=2*Math.PI*i/n;o.x=w/2+R*Math.cos(a);o.y=h/2+R*Math.sin(a);o.vx=o.vy=0})}
+ fitView();dirty=true;
+}
+// Spatial hashing bounds repulsion work and avoids the quadratic pair loop.
+function relax(list,links,box,iterations,bounded=true){const x0=box.x+10,y0=box.y+27,w=Math.max(12,box.w-20),h=Math.max(12,box.h-37),cell=Math.max(12,Math.sqrt(w*h/Math.max(1,list.length))*1.9);const ideal=Math.max(10,Math.min(48,cell*.7));
+ for(let it=0;it<iterations;it++){
+ const grid=new Map();for(const idx of list){const o=nodes[idx];const gx=Math.floor(o.x/cell),gy=Math.floor(o.y/cell),key=gx+','+gy;if(!grid.has(key))grid.set(key,[]);grid.get(key).push(idx);o.vx*=.7;o.vy*=.7}
+ for(const idx of list){const o=nodes[idx],gx=Math.floor(o.x/cell),gy=Math.floor(o.y/cell);for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){const near=grid.get((gx+dx)+','+(gy+dy));if(!near)continue;const skip=Math.max(1,Math.ceil(near.length/35));for(let j=0;j<near.length;j+=skip){const other=near[j];if(other===idx)continue;const p=nodes[other],xx=o.x-p.x,yy=o.y-p.y,d2=xx*xx+yy*yy+4;if(d2>cell*cell*4)continue;const f=ideal*ideal/(d2*20);o.vx+=xx*f;o.vy+=yy*f}}
+ o.vx+=(x0+w/2-o.x)*.003;o.vy+=(y0+h/2-o.y)*.003;}
+ for(const e of links){const a=nodes[e.a],b=nodes[e.b],dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,f=(len-ideal)*.025;a.vx+=dx/len*f;a.vy+=dy/len*f;b.vx-=dx/len*f;b.vy-=dy/len*f}
+ for(const idx of list){if(idx===dragging)continue;const o=nodes[idx],v=Math.hypot(o.vx,o.vy),cap=iterations>1?8*(1-it/iterations)+1.5:4;if(v>cap){o.vx*=cap/v;o.vy*=cap/v}o.x=bounded?Math.max(x0,Math.min(x0+w,o.x+o.vx)):o.x+o.vx;o.y=bounded?Math.max(y0,Math.min(y0+h,o.y+o.vy)):o.y+o.vy}
+ }
+}
+function forceStep(){if(separated||$('#layout').value!=='force'||heat<=0||stepIndex===0)return;relax(nodes.map((_,i)=>i),edges.slice(0,stepIndex),{x:15,y:32,w:canvas.clientWidth-30,h:canvas.clientHeight-65},1);heat--;dirty=true}
+function showComponents(){
+ if(playing||separated)return;
+ snapshot={nodes:nodes.map(o=>({x:o.x,y:o.y,vx:o.vx,vy:o.vy})),scale,viewX,viewY,layout:layoutMode};
+ separated=true;focusRoot=null;const items=[],isolated=[];
+ for(const root of current.ranked){const ids=current.groups.get(root);if(ids.length===1)isolated.push(ids[0]);else items.push({root,ids,weight:ids.length+4,isolated:false})}
+ if(isolated.length)items.push({root:null,ids:isolated,weight:isolated.length+4,isolated:true});
+ regions=[];
+ function split(items,box){if(items.length===1){regions.push({...items[0],...box});return}const total=items.reduce((s,g)=>s+g.weight,0);let k=1,sum=items[0].weight;while(k<items.length-1&&sum+items[k].weight<=total/2){sum+=items[k].weight;k++}const ratio=sum/total;if(box.w>=box.h){const ww=box.w*ratio;split(items.slice(0,k),{...box,w:ww});split(items.slice(k),{...box,x:box.x+ww,w:box.w-ww})}else{const hh=box.h*ratio;split(items.slice(0,k),{...box,h:hh});split(items.slice(k),{...box,y:box.y+hh,h:box.h-hh})}}
+ split(items,{x:14,y:60,w:Math.max(60,canvas.clientWidth-28),h:Math.max(60,canvas.clientHeight-112)});
+ const links=new Map();for(let i=0;i<stepIndex;i++){const e=edges[i],r=nodes[e.a].root;if(!links.has(r))links.set(r,[]);links.get(r).push(e)}
+ for(const b of regions){const bw=Math.max(6,b.w-22),bh=Math.max(6,b.h-42);b.ids.forEach((id,j)=>{const o=nodes[id],cols=Math.max(1,Math.ceil(Math.sqrt(b.ids.length*bw/bh))),rows=Math.ceil(b.ids.length/cols);if(b.isolated){o.x=b.x+11+bw*((j%cols)+.5)/cols;o.y=b.y+30+bh*(Math.floor(j/cols)+.5)/rows}else{const angle=j*2.399963229728653,rad=Math.sqrt((j+.5)/b.ids.length);o.x=b.x+11+bw/2+Math.cos(angle)*rad*bw*.35;o.y=b.y+30+bh/2+Math.sin(angle)*rad*bh*.35}o.vx=o.vy=0});if(!b.isolated&&b.w>45&&b.h>55){relax(b.ids,links.get(b.root)||[],b,n>1000?42:150,false);const xs=b.ids.map(i=>nodes[i].x),ys=b.ids.map(i=>nodes[i].y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),fit=Math.min(bw*.92/Math.max(1,maxX-minX),bh*.92/Math.max(1,maxY-minY));b.ids.forEach(id=>{const o=nodes[id];o.x=b.x+11+bw/2+(o.x-(minX+maxX)/2)*fit;o.y=b.y+30+bh/2+(o.y-(minY+maxY)/2)*fit})}}
+ const to=nodes.map(o=>({x:o.x,y:o.y}));nodes.forEach((o,i)=>Object.assign(o,snapshot.nodes[i]));transition={from:nodes.map(o=>({x:o.x,y:o.y})),to,start:performance.now(),duration:n>1000?350:650};fitView();updateButtons();dirty=true;
+}
+function restoreNetwork(){if(!separated||!snapshot)return;const snap=snapshot;nodes.forEach((o,i)=>Object.assign(o,snap.nodes[i]));scale=snap.scale;viewX=snap.viewX;viewY=snap.viewY;$('#layout').value=snap.layout;layoutMode=snap.layout;separated=false;regions=[];transition=null;snapshot=null;focusRoot=null;heat=0;updateUI();dirty=true}
+function drawNetwork(){const {w,h,dpr}=resizeCanvas(canvas),dark=document.body.classList.contains('dark');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);ctx.save();ctx.translate(viewX,viewY);ctx.scale(scale,scale);
+ if(separated){for(const b of regions){if(b.w<16||b.h<22)continue;ctx.fillStyle=b.isolated?(dark?'#172a35':'#f0f4f6'):rootColor(b.root)+(dark?'18':'09');ctx.strokeStyle=b.isolated?(dark?'#365262':'#c8d6df'):rootColor(b.root)+'60';ctx.lineWidth=1/scale;ctx.beginPath();ctx.roundRect(b.x+3,b.y+3,b.w-6,b.h-6,Math.min(10,b.w/5));ctx.fill();ctx.stroke();if(b.w>80&&b.h>38){ctx.fillStyle=b.isolated?(dark?'#91a9b6':'#607985'):rootColor(b.root);ctx.font=`${11/Math.max(1,scale)}px system-ui`;const rank=current.ranked.indexOf(b.root)+1;ctx.fillText(b.isolated?`Aislados · ${b.ids.length}`:`${rank}.º · ${b.ids.length} nodos`,b.x+10,b.y+19)}}}
+ const batches=new Map();for(let i=0;i<stepIndex;i++){const e=edges[i],root=nodes[e.a].root,key=rootColor(root)+(focusRoot!==null&&focusRoot!==root?'|dim':'');if(!batches.has(key))batches.set(key,[]);batches.get(key).push(e)}
+ for(const [key,links]of batches){const color=key.split('|')[0];ctx.beginPath();for(const e of links){const a=nodes[e.a],b=nodes[e.b];ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}ctx.strokeStyle=color;ctx.globalAlpha=key.includes('|')?.075:n>700?.38:.65;ctx.lineWidth=(color===RED||color===ORANGE?1.55:1.1)/Math.pow(scale,.3);ctx.stroke()}ctx.globalAlpha=1;
+ if(newEdgePulse>.02&&stepIndex>0&&!separated){const e=edges[stepIndex-1],a=nodes[e.a],b=nodes[e.b];ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=rootColor(a.root);ctx.globalAlpha=newEdgePulse;ctx.lineWidth=2.5/Math.pow(scale,.3);ctx.stroke();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(b.x,b.y,6+(1-newEdgePulse)*15,0,Math.PI*2);ctx.stroke();}
+ const base=n>1200?1.7:n>500?2.4:3.5;
+ nodes.forEach((o,i)=>{const hot=i===hovered,dim=focusRoot!==null&&focusRoot!==o.root;ctx.globalAlpha=dim?.14:1;const r=(base+Math.min(2,Math.sqrt(o.degree)*.4)+(hot?2:0))/Math.pow(scale,.28);ctx.beginPath();ctx.arc(o.x,o.y,r,0,Math.PI*2);ctx.fillStyle=rootColor(o.root);ctx.fill();if(n<800||hot||scale>1.7){ctx.lineWidth=(hot?2:1)/scale;ctx.strokeStyle=hot?(dark?'#fff':'#123e54'):(dark?'#172b36':'#fff');ctx.stroke()}
+ if($('#labels').checked&&(n<=500||scale>2)){ctx.font=`${10/Math.pow(scale,.3)}px system-ui`;ctx.fillStyle=dark?'#e5eff5':'#1d3745';ctx.textAlign='center';ctx.fillText(i+1,o.x,o.y+r+11/Math.pow(scale,.3))}});ctx.globalAlpha=1;ctx.restore();
+}
+function chartBase(c){const {w,h,dpr}=resizeCanvas(c),x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);return{x,w,h}}
+function theoretical(k){if(k<=1)return 0;let s=1;for(let i=0;i<200;i++)s=1-Math.exp(-k*s);return s}
+function drawCharts(){drawCurve();drawHistogram()}
+function drawCurve(){const {x,w,h}=chartBase(curveCanvas);if(w<1)return;const L=29,R=8,T=16,B=23,W=w-L-R,H=h-T-B,dark=document.body.classList.contains('dark');x.font='9px system-ui';x.lineWidth=1;
+ [0,.5,1].forEach(v=>{const y=T+H*(1-v);x.strokeStyle=dark?'#304451':'#e4eaec';x.beginPath();x.moveTo(L,y);x.lineTo(L+W,y);x.stroke();x.fillStyle=dark?'#9db2bf':'#758994';x.fillText(v.toFixed(1),2,y+3)});
+ for(let k=0;k<=maxK;k++){x.fillText(k,L+W*k/maxK-2,h-5)}
+ x.setLineDash([3,3]);x.strokeStyle='#af8055';x.beginPath();x.moveTo(L+W/maxK,T);x.lineTo(L+W/maxK,T+H);x.stroke();x.setLineDash([]);
+ x.beginPath();for(let q=0;q<=100;q++){const k=maxK*q/100,xx=L+W*k/maxK,yy=T+H*(1-theoretical(k));q?x.lineTo(xx,yy):x.moveTo(xx,yy)}x.strokeStyle=dark?'#93a7b4':'#9aa9ad';x.setLineDash([4,3]);x.stroke();x.setLineDash([]);
+ for(const [field,color]of [['s',RED],['s2',ORANGE]]){x.beginPath();const stride=Math.max(1,Math.floor(stepIndex/(W*3)));for(let i=0;i<=stepIndex;i+=stride){const p=curve[i];i?x.lineTo(L+W*p.k/maxK,T+H*(1-p[field])):x.moveTo(L,T+H*(1-p[field]))}const p=curve[stepIndex];x.lineTo(L+W*p.k/maxK,T+H*(1-p[field]));x.strokeStyle=color;x.lineWidth=2;x.stroke();x.beginPath();x.arc(L+W*p.k/maxK,T+H*(1-p[field]),3,0,7);x.fillStyle=color;x.fill()}
+ x.font='8px system-ui';x.fillStyle=RED;x.fillText('1.º',L+4,9);x.fillStyle=ORANGE;x.fillText('2.º',L+33,9);x.fillStyle=dark?'#9db2bf':'#718087';x.fillText('– – teoría N→∞',L+62,9);x.fillText('⟨k⟩',w-18,h-5);
+}
+function drawHistogram(){const {x,w,h}=chartBase(histCanvas);if(w<1)return;const L=27,R=7,T=8,B=24,W=w-L-R,H=h-T-B,counts=new Map();current.sizes.forEach(s=>counts.set(s,(counts.get(s)||0)+1));const entries=[...counts].sort((a,b)=>a[0]-b[0]),maxCount=Math.max(1,...entries.map(e=>e[1])),slot=W/entries.length;
+ x.font='9px system-ui';x.strokeStyle='#879da750';x.beginPath();x.moveTo(L,T+H);x.lineTo(L+W,T+H);x.stroke();entries.forEach(([size,count],i)=>{const xx=L+i*slot,bh=H*count/maxCount;x.fillStyle=size===current.largestSize?RED:size===current.secondSize?ORANGE:'#6194a6';x.fillRect(xx+1,T+H-bh,Math.max(1,slot-3),bh);if(entries.length<=10||i%Math.ceil(entries.length/8)===0){x.fillStyle=document.body.classList.contains('dark')?'#9db2bf':'#758994';x.fillText(size,xx,h-7)}});x.fillText(maxCount,1,T+5);x.fillText('0',12,T+H+3);
+}
+function screenToWorld(x,y){const r=canvas.getBoundingClientRect();return{x:(x-r.left-viewX)/scale,y:(y-r.top-viewY)/scale}}
+function findNode(x,y){let best=-1,dist=12/scale;nodes.forEach((o,i)=>{const d=Math.hypot(o.x-x,o.y-y);if(d<dist){dist=d;best=i}});return best}
+function animate(t){const dt=Math.min(100,t-(lastFrame||t));lastFrame=t;
+ if(playing){accumulator+=dt*(+$('#speed').value)/1000;const jumps=Math.floor(accumulator);if(jumps){accumulator-=jumps;setStep(stepIndex+jumps)}}
+ if(transition){const q=Math.min(1,(t-transition.start)/transition.duration),ease=q*q*(3-2*q);nodes.forEach((o,i)=>{o.x=transition.from[i].x+(transition.to[i].x-transition.from[i].x)*ease;o.y=transition.from[i].y+(transition.to[i].y-transition.from[i].y)*ease});dirty=true;if(q===1)transition=null}
+ if(playing)forceStep();
+ if(newEdgePulse>.02){newEdgePulse*=Math.exp(-dt/210);dirty=true}else newEdgePulse=0;
+ if(dirty){drawNetwork();dirty=false}requestAnimationFrame(animate);
+}
+$('#nNodes').oninput=e=>$('#nOut').textContent=e.target.value;$('#kMax').oninput=e=>$('#kMaxOut').textContent=(+e.target.value).toFixed(1);$('#speed').oninput=e=>$('#speedOut').textContent=e.target.value+' aristas/s';
+$('#stagePlay').onclick=()=>$('#play').click();$('#generate').onclick=buildSequence;$('#step').onclick=()=>{pause();setStep(stepIndex+1)};$('#back').onclick=()=>{pause();setStep(stepIndex-1)};$('#reset').onclick=()=>{pause();setStep(0,false)};
+$('#seek').oninput=e=>{pause();setStep(+e.target.value,false)};
+$('#play').onclick=()=>{if(playing){pause();return}if(separated)restoreNetwork();if(stepIndex===edges.length)setStep(0,false);playing=true;lastFrame=performance.now();accumulator=0;heat=100;updateButtons();dirty=true};
+$('#jumpThreshold').onclick=()=>{pause();setStep(Math.round(n/2))};$('#showComponents').onclick=showComponents;$('#restoreNetwork').onclick=restoreNetwork;$('#labels').onchange=()=>dirty=true;
+$('#fit').onclick=fitView;$('#zoomIn').onclick=()=>zoom(1.2);$('#zoomOut').onclick=()=>zoom(1/1.2);$('#layout').onchange=()=>{pause();applyLayout($('#layout').value)};
+$('#componentList').onclick=e=>{const b=e.target.closest('[data-root]');if(!b)return;focusRoot=focusRoot===+b.dataset.root?null:+b.dataset.root;updateUI()};$('#clearFocus').onclick=()=>{focusRoot=null;updateUI()};
+$('#theme').onclick=()=>{document.body.classList.toggle('dark');updateUI()};$('#controlsToggle').onclick=()=>document.querySelector('main').classList.toggle('hide-controls');$('#metricsToggle').onclick=()=>{const main=document.querySelector('main');if(innerWidth<=850)main.classList.toggle('show-metrics');else main.classList.toggle('hide-metrics')};
+$('#fullScreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await stage.requestFullscreen()}catch{$('#stageStatus').textContent='Pantalla completa no disponible en este visor'}};
+$('#saveImage').onclick=()=>{drawNetwork();const out=document.createElement('canvas');out.width=canvas.width;out.height=canvas.height;const x=out.getContext('2d');x.fillStyle=document.body.classList.contains('dark')?'#111e27':'#f8fbfa';x.fillRect(0,0,out.width,out.height);x.drawImage(canvas,0,0);const dpr=out.width/canvas.clientWidth;x.font=`${12*dpr}px system-ui`;x.fillStyle=document.body.classList.contains('dark')?'#e5edf1':'#243c4b';x.fillText(`G(n,m) · N=${n} · m=${stepIndex} · ⟨k⟩=${(2*stepIndex/n).toFixed(2)} · 1.º rojo / 2.º naranja`,14*dpr,out.height-12*dpr);out.toBlob(blob=>{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`Componentes_N${n}_m${stepIndex}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)})};
+canvas.addEventListener('wheel',e=>{e.preventDefault();const before=screenToWorld(e.clientX,e.clientY),r=canvas.getBoundingClientRect();scale=Math.max(.15,Math.min(8,scale*(e.deltaY<0?1.1:1/1.1)));viewX=e.clientX-r.left-before.x*scale;viewY=e.clientY-r.top-before.y*scale;dirty=true},{passive:false});
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);const p=screenToWorld(e.clientX,e.clientY);dragging=findNode(p.x,p.y);panning=dragging<0;lastPointer={x:e.clientX,y:e.clientY};if(transition){nodes.forEach((o,i)=>Object.assign(o,transition.to[i]));transition=null}});
+canvas.addEventListener('pointermove',e=>{const p=screenToWorld(e.clientX,e.clientY);if(dragging>=0){nodes[dragging].x=p.x;nodes[dragging].y=p.y;nodes[dragging].vx=nodes[dragging].vy=0}else if(panning&&lastPointer){viewX+=e.clientX-lastPointer.x;viewY+=e.clientY-lastPointer.y;lastPointer={x:e.clientX,y:e.clientY}}else{hovered=findNode(p.x,p.y);const tip=$('#tooltip');if(hovered>=0){const o=nodes[hovered],r=canvas.getBoundingClientRect(),rank=current.ranked.indexOf(o.root)+1;tip.style.display='block';tip.style.left=Math.min(r.width-170,Math.max(0,e.clientX-r.left+12))+'px';tip.style.top=Math.min(r.height-80,e.clientY-r.top+12)+'px';tip.innerHTML=`<b>Nodo ${hovered+1}</b><br>Grado: ${o.degree}<br>Componente ${rank}.º · ${current.sizes.get(o.root)} nodos`}else tip.style.display='none'}dirty=true});
+function release(){dragging=-1;panning=false;lastPointer=null}canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('pointerleave',()=>{$('#tooltip').style.display='none';hovered=-1;dirty=true});
+window.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea')||(e.target.matches('button')&&e.code==='Space'))return;if(e.code==='Space'){e.preventDefault();$('#play').click()}if(e.key==='ArrowRight')$('#step').click();if(e.key==='ArrowLeft')$('#back').click();if(e.key.toLowerCase()==='c'){pause();showComponents()}if(e.key.toLowerCase()==='r')restoreNetwork()});
+let priorW=0,priorH=0;new ResizeObserver(()=>{const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;if(priorW&&priorH){const wasSeparated=separated;if(wasSeparated)restoreNetwork();nodes.forEach(o=>{o.x*=w/priorW;o.y*=h/priorH;o.anchorX*=w/priorW;o.anchorY*=h/priorH});if(wasSeparated)showComponents()}priorW=w;priorH=h;dirty=true;drawCharts()}).observe(stage);
+new ResizeObserver(()=>{drawCharts();dirty=true}).observe($('#rightbar'));
+// Read-only inspector for reproducibility and diagnostics; no external dependencies.
+window.giantLab={state:()=>({n,m:stepIndex,playing,separated,largest:current.largestSize,second:current.secondSize,components:current.components,ranked:current.ranked.map(r=>({root:r,size:current.sizes.get(r),color:rootColor(r)})),nodes:nodes.map(o=>({x:o.x,y:o.y,root:o.root})),edges:edges.slice(0,stepIndex),curve:curve[stepIndex],view:{scale,viewX,viewY}})};
+buildSequence();requestAnimationFrame(animate);
+})();
+
+</script>
+</body>
+</html>
