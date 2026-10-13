@@ -829,27 +829,89 @@ window.NGML.networkTabs={get tabs(){return globalNetworkTabs.map(t=>({name:t.nam
 
 </script><script id="additionalLayoutsController">
 function additionalLayoutEngine(message){
- const {nodes,edges}=message,n=nodes.length,opt=message.options||{},kind=opt.kind,spacing=Math.max(8,+opt.spacing||32),gap=Math.max(0,+opt.gap||6),pos=nodes.map((v,i)=>[Number.isFinite(v.x)?v.x:Math.cos(i*2.399963)*spacing*Math.sqrt(i),Number.isFinite(v.y)?v.y:Math.sin(i*2.399963)*spacing*Math.sqrt(i)]);
+ const {nodes,edges}=message,n=nodes.length,opt=message.options||{},kind=opt.kind,spacing=Math.max(8,+opt.spacing||32),gap=Math.max(0,Number.isFinite(+opt.gap)?+opt.gap:0),pos=nodes.map((v,i)=>[Number.isFinite(v.x)?v.x:Math.cos(i*2.399963)*spacing*Math.sqrt(i),Number.isFinite(v.y)?v.y:Math.sin(i*2.399963)*spacing*Math.sqrt(i)]);
  const adj=Array.from({length:n},()=>new Set());for(const e of edges)if(e.s>=0&&e.s<n&&e.t>=0&&e.t<n&&e.s!==e.t){adj[e.s].add(e.t);adj[e.t].add(e.s);}
  const degree=adj.map(v=>v.size),order=Array.from({length:n},(_,i)=>i).sort((a,b)=>degree[b]-degree[a]||a-b),circle=(ids,r,cx=0,cy=0)=>ids.forEach((i,j)=>{const a=2*Math.PI*j/Math.max(1,ids.length);pos[i]=[cx+r*Math.cos(a),cy+r*Math.sin(a)];});
  if(kind==='nooverlap'){
-  const scale=Math.max(.001,+opt.scale||1),radii=nodes.map((v,i)=>Math.max(.5,Number(opt.radii?.[i])||Number(v.size)||6)/scale),padding=gap/scale,maxR=Math.max(1,...radii),cell=2*maxR+padding+1e-3,steps=Math.max(1,Math.min(2000,+opt.iterations||250));
-  const cellKey=p=>Math.floor(p[0]/cell)+','+Math.floor(p[1]/cell);let cells=new Map();const put=i=>{const key=cellKey(pos[i]);if(!cells.has(key))cells.set(key,[]);cells.get(key).push(i);};
-  const candidates=p=>{const x=Math.floor(p[0]/cell),y=Math.floor(p[1]/cell),out=[];for(let a=x-1;a<=x+1;a++)for(let b=y-1;b<=y+1;b++)for(const j of cells.get(a+','+b)||[])out.push(j);return out;};
-  // Place identical coordinates in a small deterministic spiral before relaxation.
-  const duplicates=new Map();for(let i=0;i<n;i++){const k=pos[i].join(','),j=duplicates.get(k)||0;duplicates.set(k,j+1);if(j&&!nodes[i].fixed){const a=j*2.399963,rad=cell*Math.sqrt(j);pos[i][0]+=rad*Math.cos(a);pos[i][1]+=rad*Math.sin(a);}}
-  let pass=0;
-  for(;pass<steps;pass++){cells.clear();for(let i=0;i<n;i++)put(i);let count=0;
-   for(let i=0;i<n;i++)for(const j of candidates(pos[i]))if(j<i){let dx=pos[i][0]-pos[j][0],dy=pos[i][1]-pos[j][1],d=Math.hypot(dx,dy),need=radii[i]+radii[j]+padding;if(d>=need-1e-6||nodes[i].fixed&&nodes[j].fixed)continue;count++;if(d<1e-10){const a=(i+1)*2.399963+(j+1);dx=Math.cos(a);dy=Math.sin(a);d=1e-7;}const ux=dx/(d<1e-6?1:d),uy=dy/(d<1e-6?1:d),move=need-d+1e-3,share=nodes[i].fixed||nodes[j].fixed?1:.5;if(!nodes[i].fixed){pos[i][0]+=ux*move*share;pos[i][1]+=uy*move*share;}if(!nodes[j].fixed){pos[j][0]-=ux*move*share;pos[j][1]-=uy*move*share;}}
-   if(pass%10===0)postMessage({progress:pass/steps,text:'No overlap · pasada '+(pass+1)+' · '+count+' colisiones'});if(!count)break;
+  // Local minimum-displacement projections. Contact corrections keep the
+  // original coordinates as the reference instead of accumulating repulsion.
+  const scale=Math.max(.001,+opt.scale||1),padding=gap/scale;
+  const radii=nodes.map((v,i)=>Math.max(.5,Number(opt.radii?.[i])||Number(v.size)||6)/scale);
+  const initial=pos.map(p=>p.slice()),free=nodes.map(v=>!v.fixed);
+  const tolerance=1e-5/scale,guard=2e-5/scale;
+  let maxR=1;for(const r of radii)maxR=Math.max(maxR,r);
+  const cell=2*maxR+padding+guard,contacts=[],known=new Set();
+  const steps=Math.max(1,Math.min(2000,+opt.iterations||250));
+  const tieDirection=(i,j)=>{const a=i*2.399963229728653,b=j*2.399963229728653;
+   const x=Math.sqrt(i+1)*Math.cos(a)-Math.sqrt(j+1)*Math.cos(b),y=Math.sqrt(i+1)*Math.sin(a)-Math.sqrt(j+1)*Math.sin(b),d=Math.hypot(x,y)||1;return[x/d,y/d];};
+  // Rebuild from the current positions; no node is queried in an old cell.
+  const scan=add=>{const cells=new Map();let count=0,fixedCount=0;
+   for(let i=0;i<n;i++){const x=Math.floor(pos[i][0]/cell),y=Math.floor(pos[i][1]/cell);
+    for(let a=x-1;a<=x+1;a++)for(let b=y-1;b<=y+1;b++)for(const j of cells.get(a+','+b)||[]){
+     const need=radii[i]+radii[j]+padding,d=Math.hypot(pos[i][0]-pos[j][0],pos[i][1]-pos[j][1]);
+     if(d>=need-tolerance)continue;if(!free[i]&&!free[j]){fixedCount++;continue;}count++;
+     const key=i+','+j;if(add&&!known.has(key)){known.add(key);contacts.push({i,j,x:0,y:0});}
+    }
+    const key=x+','+y;if(!cells.has(key))cells.set(key,[]);cells.get(key).push(i);
+   }return{count,fixedCount};
+  };
+  let check=scan(true),pass=0,best=null,bestCost=Infinity;
+  const remember=()=>{let cost=0;for(let i=0;i<n;i++)cost+=(pos[i][0]-initial[i][0])**2+(pos[i][1]-initial[i][1])**2;
+   if(cost<bestCost){bestCost=cost;best=pos.map(p=>p.slice());}};
+  if(!check.count)remember();
+  for(;check.count||contacts.length;pass++){
+   if(pass>=steps)break;let change=0;
+   for(let k=0;k<contacts.length;k++){const c=contacts[k],i=c.i,j=c.j,wi=free[i]?1:0,wj=free[j]?1:0,w=wi+wj;
+    // Undo this contact's last correction before its nearest-point projection.
+    const qix=pos[i][0]-wi*c.x,qiy=pos[i][1]-wi*c.y,qjx=pos[j][0]+wj*c.x,qjy=pos[j][1]+wj*c.y;
+    let dx=qix-qjx,dy=qiy-qjy,d=Math.hypot(dx,dy),nx=0,ny=0;
+    const need=radii[i]+radii[j]+padding+guard;
+    if(d<need){let ux,uy;if(d<1e-12){[ux,uy]=tieDirection(i,j);}else{ux=dx/d;uy=dy/d;}
+     const move=(need-d)/w;nx=ux*move;ny=uy*move;
+    }
+    change=Math.max(change,Math.hypot(nx-c.x,ny-c.y));c.x=nx;c.y=ny;
+    if(wi)pos[i]=[qix+nx,qiy+ny];if(wj)pos[j]=[qjx-nx,qjy-ny];
+   }
+   check=scan(true);if(!check.count)remember();
+   if(pass%10===0)postMessage({progress:pass/steps,text:'No overlap · ajuste local '+(pass+1)+' · '+check.count+' colisiones'});
+   if(!check.count&&change<tolerance)break;
   }
-  // Spatial placement guarantees separation for movable nodes, including dense cases.
-  cells.clear();let right=pos.reduce((m,p)=>Math.max(m,p[0]),0)+cell,repositioned=0;
-  const collides=(i,p)=>candidates(p).some(j=>Math.hypot(p[0]-pos[j][0],p[1]-pos[j][1])<radii[i]+radii[j]+padding-1e-6);
-  for(let i=0;i<n;i++)if(nodes[i].fixed)put(i);
-  for(let i=0;i<n;i++)if(!nodes[i].fixed){if(collides(i,pos[i])){const origin=pos[i].slice();let found=false;for(let k=1;k<=160;k++){const a=k*2.399963,rad=cell*.5*Math.sqrt(k),p=[origin[0]+rad*Math.cos(a),origin[1]+rad*Math.sin(a)];if(!collides(i,p)){pos[i]=p;found=true;break;}}if(!found){pos[i]=[right,origin[1]];right+=cell;}repositioned++;}right=Math.max(right,pos[i][0]+cell);put(i);}
-  let anchoredOverlaps=0;for(let i=0;i<n;i++)if(nodes[i].fixed)for(const j of candidates(pos[i]))if(j<i&&nodes[j].fixed&&Math.hypot(pos[i][0]-pos[j][0],pos[i][1]-pos[j][1])<radii[i]+radii[j]+padding-1e-6)anchoredOverlaps++;
-  return {positions:pos,iterations:Math.min(pass+1,steps),repositioned,anchoredOverlaps,note:'No overlap · separación '+gap+' px · '+(anchoredOverlaps?anchoredOverlaps+' superposiciones entre nodos fijados':'nodos sin superposición')+' · zoom conservado'};
+  // If the optimization budget ends, finish with penetration-only movements.
+  // There is no spiral placement, global expansion or far-away fallback.
+  if(check.count&&best){for(let i=0;i<n;i++)pos[i]=best[i].slice();check=scan(true);}
+  // A movable node trapped on the line between fixed obstacles needs a
+  // lateral escape. Choose the closest admissible circle-boundary point,
+  // including exact intersections, rather than pushing it back and forth.
+  if(nodes.some(v=>v.fixed)){
+   const fixedCells=new Map();for(let i=0;i<n;i++)if(!free[i]){const key=Math.floor(pos[i][0]/cell)+','+Math.floor(pos[i][1]/cell);if(!fixedCells.has(key))fixedCells.set(key,[]);fixedCells.get(key).push(i);}
+   const nearby=(p,reach=1)=>{const x=Math.floor(p[0]/cell),y=Math.floor(p[1]/cell),ids=[];for(let a=x-reach;a<=x+reach;a++)for(let b=y-reach;b<=y+reach;b++)for(const j of fixedCells.get(a+','+b)||[])ids.push(j);return ids;};
+   for(let i=0;i<n;i++)if(free[i]){
+    const valid=p=>nearby(p).every(j=>Math.hypot(p[0]-pos[j][0],p[1]-pos[j][1])>=radii[i]+radii[j]+padding-tolerance);
+    const origin=initial[i];if(valid(pos[i])&&valid(origin))continue;const obstacles=nearby(origin,3),candidates=valid(origin)?[origin.slice()]:[];
+    for(const j of obstacles){const r=radii[i]+radii[j]+padding+guard,dx=origin[0]-pos[j][0],dy=origin[1]-pos[j][1],d=Math.hypot(dx,dy),u=d>1e-12?[dx/d,dy/d]:tieDirection(i,j);candidates.push([pos[j][0]+u[0]*r,pos[j][1]+u[1]*r]);}
+    for(let a=0;a<obstacles.length;a++)for(let b=0;b<a;b++){
+     const j=obstacles[a],k=obstacles[b],r=radii[i]+radii[j]+padding+guard,t=radii[i]+radii[k]+padding+guard,dx=pos[k][0]-pos[j][0],dy=pos[k][1]-pos[j][1],d=Math.hypot(dx,dy);
+     if(d<1e-12||d>r+t||d<Math.abs(r-t))continue;const along=(r*r-t*t+d*d)/(2*d),h=Math.sqrt(Math.max(0,r*r-along*along)),x=pos[j][0]+dx/d*along,y=pos[j][1]+dy/d*along;
+     candidates.push([x-dy/d*h,y+dx/d*h],[x+dy/d*h,y-dx/d*h]);
+    }
+    let closest=null,cost=Infinity;for(const p of candidates){const d=(p[0]-origin[0])**2+(p[1]-origin[1])**2;if(d<cost&&valid(p)){closest=p;cost=d;}}
+    if(closest&&(!valid(pos[i])||cost<(pos[i][0]-origin[0])**2+(pos[i][1]-origin[1])**2))pos[i]=closest;
+   }check=scan(true);
+  }
+  const cleanupSteps=Math.min(8000,Math.max(1000,steps*4));let cleanup=0;
+  for(;check.count&&cleanup<cleanupSteps;cleanup++){
+   for(const c of contacts){const i=c.i,j=c.j,wi=free[i]?1:0,wj=free[j]?1:0;
+    let dx=pos[i][0]-pos[j][0],dy=pos[i][1]-pos[j][1],d=Math.hypot(dx,dy),need=radii[i]+radii[j]+padding;
+    if(d>=need-tolerance)continue;let ux,uy;if(d<1e-12){[ux,uy]=tieDirection(i,j);}else{ux=dx/d;uy=dy/d;}
+    const move=(cleanup<500?1:1.7)*(need-d+guard)/(wi+wj);if(wi){pos[i][0]+=ux*move;pos[i][1]+=uy*move;}if(wj){pos[j][0]-=ux*move;pos[j][1]-=uy*move;}
+   }
+   check=scan(true);if(cleanup%20===0)postMessage({progress:.99,text:'No overlap · ajuste fino · '+check.count+' colisiones'});
+  }
+  if(!check.count)remember();if(best){for(let i=0;i<n;i++)pos[i]=best[i].slice();check=scan(false);}
+  let moved=0,total=0,maxMove=0;for(let i=0;i<n;i++){const d=Math.hypot(pos[i][0]-initial[i][0],pos[i][1]-initial[i][1])*scale;if(d>1e-4)moved++;total+=d;maxMove=Math.max(maxMove,d);}
+  const anchoredOverlaps=check.fixedCount,remainingOverlaps=check.count;
+  return{positions:pos,iterations:Math.min(pass+1,steps)+cleanup,repositioned:0,moved,meanDisplacement:n?total/n:0,maxDisplacement:maxMove,anchoredOverlaps,remainingOverlaps,
+   note:'No overlap · '+moved+' nodos ajustados · desplazamiento medio '+(n?total/n:0).toFixed(2)+' px · '+(remainingOverlaps?remainingOverlaps+' colisiones pendientes; aumente las iteraciones':anchoredOverlaps?anchoredOverlaps+' superposiciones entre nodos fijados':'sin superposición')+' · zoom conservado'};
  }
  if(kind==='grid'){const cols=Math.ceil(Math.sqrt(n)),rows=Math.ceil(n/Math.max(1,cols));for(let i=0;i<n;i++)pos[i]=[(i%cols-(cols-1)/2)*spacing,(Math.floor(i/cols)-(rows-1)/2)*spacing];}
  else if(kind==='spiral'){for(let i=0;i<n;i++){const a=i*2.399963,rad=spacing*Math.sqrt(i);pos[i]=[rad*Math.cos(a),rad*Math.sin(a)];}}
@@ -868,15 +930,15 @@ function stopExtraLayout(){extraLayoutSerial++;if(extraLayoutWorker){extraLayout
 function runExtraLayout(nodes,edges,options,onProgress){stopExtraLayout();const token=extraLayoutSerial,uri=URL.createObjectURL(new Blob(['const additionalLayoutEngine='+additionalLayoutEngine.toString()+';onmessage=e=>{try{postMessage({result:additionalLayoutEngine(e.data)})}catch(err){postMessage({error:err.message})}};'],{type:'text/javascript'}));return new Promise((resolve,reject)=>{const w=new Worker(uri);URL.revokeObjectURL(uri);extraLayoutWorker=w;extraLayoutReject=reject;w.onmessage=e=>{if(token!==extraLayoutSerial)return;const m=e.data;if(m.progress!==undefined){onProgress?.(m);return;}w.terminate();extraLayoutWorker=null;extraLayoutReject=null;if(m.error)reject(Error(m.error));else resolve(m.result);};w.onerror=e=>{w.terminate();extraLayoutWorker=null;extraLayoutReject=null;reject(Error(e.message));};w.postMessage({nodes,edges,options});});}
 const additionalLayoutNames={nooverlap:'No overlap · sin superposición',concentric:'Anillos concéntricos por grado',degreeRank:'Cuadrícula ordenada por grado',doubleCircle:'Doble círculo · hubs al centro',bipartite:'Bipartito · dos columnas',grid:'Cuadrícula',spiral:'Espiral de ángulo áureo',components:'Componentes separados',bfsRadial:'Radial por distancia (BFS)'};
 const globalExtraKinds=new Set(['nooverlap','concentric','degreeRank','doubleCircle','bipartite']);
-LAYOUTS.overlap.name='No overlap · sin superposición';LAYOUTS.overlap.description='Separa los círculos según su tamaño visible y conserva el zoom. Respeta los nodos fijados.';
+LAYOUTS.overlap.name='No overlap · sin superposición';LAYOUTS.overlap.description='Ajusta localmente los nodos desde su posición actual con el menor desplazamiento posible. Conserva el zoom y los nodos fijados.';
 for(const kind of globalExtraKinds)if(kind!=='nooverlap')LAYOUTS[kind]={name:additionalLayoutNames[kind],description:kind==='bipartite'?'Dos columnas por partición. Se valida que la red no contenga ciclos impares.':'Distribución topológica reproducible; conserva las medidas y los enlaces.'};
-function injectGlobalLayoutSettings(){if(!$('layout')||$('extraGlobalLayoutSettings'))return;const div=document.createElement('div');div.id='extraGlobalLayoutSettings';div.innerHTML='<label>Separación adicional entre nodos (px)</label><input id="layoutGap" type="number" min="0" max="200" value="'+(state.layoutGap??6)+'"><label>Espaciado de nuevos layouts</label><input id="layoutSpacing" type="number" min="8" max="300" value="'+(state.layoutSpacing??36)+'"><label>Iteraciones para No overlap</label><input id="layoutPasses" type="number" min="1" max="2000" value="'+(state.layoutPasses??250)+'"><div class="subtle">No overlap conserva el zoom y separa los círculos según su tamaño visible.</div>';$('layout').after(div);for(const id of ['layoutGap','layoutSpacing','layoutPasses'])$(id).onchange=()=>state[id]=+$(id).value;}
+function injectGlobalLayoutSettings(){if(!$('layout')||$('extraGlobalLayoutSettings'))return;const div=document.createElement('div');div.id='extraGlobalLayoutSettings';div.innerHTML='<label>Separación adicional entre nodos (px)</label><input id="layoutGap" type="number" min="0" max="200" value="'+(state.layoutGap??0)+'"><label>Espaciado de nuevos layouts</label><input id="layoutSpacing" type="number" min="8" max="300" value="'+(state.layoutSpacing??36)+'"><label>Iteraciones para No overlap</label><input id="layoutPasses" type="number" min="1" max="2000" value="'+(state.layoutPasses??250)+'"><div class="subtle">No overlap minimiza el desplazamiento desde la posición actual. Separación 0: círculos tangentes. Conserva el zoom.</div>';$('layout').after(div);for(const id of ['layoutGap','layoutSpacing','layoutPasses'])$(id).onchange=()=>state[id]=+$(id).value;}
 const globalPreviousLeftControls=leftControls;leftControls=function(type){globalPreviousLeftControls(type);if(type==='layouts')injectGlobalLayoutSettings();};if($('leftMenu').value==='layouts')injectGlobalLayoutSettings();
 const globalPreviousCancel=cancel;cancel=function(){stopExtraLayout();globalPreviousCancel();};
 const globalPreviousApplyLayout=applyLayout;applyLayout=async function(){const requested=$('layout')?.value,kind=requested==='overlap'?'nooverlap':requested;if(!globalExtraKinds.has(kind))return globalPreviousApplyLayout();if(state.layoutBusy)return;state.layoutBusy=true;pause();const g=state.g,version=state.version,token=++layoutSerial;try{
  for(const id of ['layoutGap','layoutSpacing','layoutPasses'])if($(id))state[id]=+$(id).value;
- const radii=g.nodes.map((node,i)=>(Math.max(state.animationView?.sizes?.[i]||0,state.sizes?.[i]||0,Number(node.size)||state.nodeSize,...state.tileData.map(tile=>tile.sizes?.[i]||0))*(g.nodes.length>1000?.75:1))+3);
- const out=await runExtraLayout(g.nodes,g.edges,{kind,radii,scale:state.view.scale,gap:state.layoutGap??6,spacing:state.layoutSpacing??36,iterations:state.layoutPasses??250,root:state.source},m=>busy(m.text||'Calculando layout…',m.progress));
+ const radii=g.nodes.map((node,i)=>Math.max(...(state.tileData.length?state.tileData:[null]).map(tile=>state.animationView?.sizes?.[i]||(tile?.sizes||state.sizes)?.[i]||Number(node.size)||state.nodeSize))*(g.nodes.length>1000?.75:1));
+ const out=await runExtraLayout(g.nodes,g.edges,{kind,radii,scale:state.view.scale,gap:state.layoutGap??0,spacing:state.layoutSpacing??36,iterations:state.layoutPasses??250,root:state.source},m=>busy(m.text||'Calculando layout…',m.progress));
  if(g!==state.g||version!==state.version||token!==layoutSerial)return;
  g.nodes.forEach((node,i)=>{node.x=out.positions[i][0];node.y=out.positions[i][1];});state.layout=requested;if(kind!=='nooverlap')fit();state.dirty=true;scheduleSave();saveGlobalTab();busy(kind==='nooverlap'?out.note:additionalLayoutNames[kind]+' · medidas conservadas');
  }catch(e){if(g===state.g)toast(e.message);}finally{state.layoutBusy=false;}};
