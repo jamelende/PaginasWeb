@@ -116,7 +116,7 @@ body.dark .chart-card.detached{background:#162337!important}.chart-card.detached
       <div class="sidebar-caption"><b>Construcción</b><button id="foldMenusBtn" title="Cerrar todos los menús" aria-label="Cerrar todos los menús">Plegar ▴</button></div>
       <div class="playback-core"><div class="playback-buttons"><div class="transport"><button id="resetBtn" title="Reiniciar (R)">↺</button><button id="backBtn" title="Paso atrás (←)">◀</button><button id="playBtn" class="primary" title="Reproducir o pausar (Espacio)">▶</button><button id="stepBtn" title="Un paso (→)">▶|</button></div><button id="finishBtn" class="complete-network-btn" title="Construir inmediatamente la red completa"><i>⚡</i> Completar</button></div>
         <div class="speedrow"><span>Lento</span><input id="speed" type="range" min="1" max="20" value="6" aria-label="Velocidad de construcción"><span>Rápido</span></div><p class="hint" id="speedLabel">6 pasos/s</p></div><details id="paramsMenu" class="compact-menu" data-zone="left" open><summary><span>Parámetros</span><i aria-hidden="true">⌄</i></summary><div class="menu-body"><section class="section" id="params"></section></div></details><details id="erComponentsMenu" class="compact-menu" open><summary><span>Componentes conexas</span><i aria-hidden="true">⌄</i></summary><div class="menu-body"><label class="hint"><input type="checkbox" id="erComponentsToggle"> Ver colores por componente</label><br><label class="hint"><input type="checkbox" id="erGiantToggle"> Destacar la componente mayor</label><p class="hint" id="erComponentSummary" aria-live="polite"></p><button id="erSeparateBtn" class="btn">Separar componentes</button><div id="erComponentList" style="max-height:190px;overflow:auto;margin-top:10px"></div><p class="hint" id="erThreshold"></p><p class="hint">Cada grupo conectado comparte un color. Los nodos aislados también cuentan como componentes. La mayor se destaca en rojo; su tamaño por sí solo no implica una componente gigante.</p></div></details><details id="layoutMenu" class="compact-menu" data-zone="left"><summary><span>Layout y movimiento</span><i aria-hidden="true">⌄</i></summary><div class="menu-body"><div class="layout-control"><span class="layout-control-icon">⌘</span><select id="layoutSelect" aria-label="Distribución de la red"><option value="force">Fuerzas con colisiones</option><option value="kamada">Kamada–Kawai (hasta 600 nodos)</option><option value="circle">Circular</option><option value="radial">Radial por grado</option><option value="grid">Cuadrícula</option><option value="random">Aleatorio</option><option value="spiral">Espiral de Fibonacci</option><option value="concentric">Anillos por grado</option><option value="components">Por componentes</option><option value="nooverlap">Separar solapamientos</option></select></div>
-        <div class="layout-actions"><button id="freezeBtn" class="left-action-btn">Ⅱ Detener layout</button><button id="unpinBtn" class="left-action-btn">Liberar nodos</button></div><label class="range-line">Velocidad del layout<input id="layoutSpeed" type="range" min="1" max="10" value="5"></label><p class="hint">Arrastre un nodo para fijarlo. Puede liberar todos los nodos o detener el layout.</p></div></details><details id="appearanceMenu" class="compact-menu" data-zone="left"><summary><span>Apariencia</span><i aria-hidden="true">⌄</i></summary><div class="menu-body"><div class="visual-row">
+        <label class="switch-row">Mover nodos con el mouse<span class="switch"><input id="dragNodesToggle" type="checkbox" checked><i></i></span></label><div class="layout-actions"><button id="freezeBtn" class="left-action-btn">Ⅱ Detener layout</button><button id="unpinBtn" class="left-action-btn">Liberar nodos</button></div><label class="range-line">Velocidad del layout<input id="layoutSpeed" type="range" min="1" max="10" value="5"></label><p class="hint">Arrastre cualquier nodo en cualquier momento, incluso durante la generación o con el layout detenido. En Watts–Strogatz puede moverlo en cada vista. Al soltarlo queda fijado; use «Liberar nodos» para restaurar el movimiento automático.</p></div></details><details id="appearanceMenu" class="compact-menu" data-zone="left"><summary><span>Apariencia</span><i aria-hidden="true">⌄</i></summary><div class="menu-body"><div class="visual-row">
           <label><span class="control-label">Tamaño</span><select class="mini-select" id="nodeSizeSelect"><option value="degree">Por grado</option><option value="fixed">Uniforme</option></select></label>
           <label><span class="control-label">Color</span><select class="mini-select" id="colorSelect"><option value="degree">Por grado</option><option value="component">Componente</option><option value="uniform">Un solo color</option><option value="black">Todos negros</option></select></label>
         </div>
@@ -346,7 +346,7 @@ body.dark .chart-card.detached{background:#162337!important}.chart-card.detached
   }
 
   const chartWindows=[];let paneMode=null,wsPositions=new Map(),wsJobKey='',wsWorker=null,wsPending=false,wsQueued=false,wsZ=1100;
-  function nodeScreen(n,w,h){let z=n;if(paneMode==='circle'){const a=2*Math.PI*n.id/Math.max(1,cfg.n)-Math.PI/2;z={x:Math.cos(a)*180,y:Math.sin(a)*180}}else if(paneMode==='kamada')z=wsPositions.get(n.id)||n;const scale=paneMode?Math.max(.1,Math.min(w-60,h-90)/440):1;return {x:w/2+view.panX+z.x*view.zoom*scale,y:h/2+view.panY+z.y*view.zoom*scale}}
+  function nodeScreen(n,w,h){let z=n;if(paneMode==='circle'){const a=2*Math.PI*n.id/Math.max(1,cfg.n)-Math.PI/2;z={x:Math.cos(a)*180,y:Math.sin(a)*180}}else if(paneMode==='kamada')z=wsPositions.get(n.id)||n;if(paneMode&&n.manualPositions?.[paneMode])z=n.manualPositions[paneMode];const scale=paneMode?Math.max(.1,Math.min(w-60,h-90)/440):1;return {x:w/2+view.panX+z.x*view.zoom*scale,y:h/2+view.panY+z.y*view.zoom*scale}}
   function scheduleWS(){
     if(model!=='ws'||!state.nodes.length)return;
     const key=seed+':'+revision;if(key===wsJobKey)return;if(wsPending){wsQueued=true;return}wsJobKey=key;wsPending=true;
@@ -493,10 +493,56 @@ body.dark .chart-card.detached{background:#162337!important}.chart-card.detached
   }
 
   function nodeAt(sx,sy){let w=canvas.clientWidth,h=canvas.clientHeight;if(model==='ws'){paneMode=sx>=w/2?'kamada':'circle';sx%=w/2;w/=2}let found=null;for(let i=state.nodes.length-1;i>=0;i--){const n=state.nodes[i],p=nodeScreen(n,w,h);if(Math.hypot(p.x-sx,p.y-sy)<Math.max(8,nodeRadius(n)*view.zoom+3)){found=n;break}}paneMode=null;return found}
-  canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,n=nodeAt(x,y);canvas.setPointerCapture(e.pointerId);view.lastX=view.downX=x;view.lastY=view.downY=y;pointerMoved=false;pointerDownNode=n;cameraTween=null;layoutTween=null;if(!n){autoFit=false;$('#autoFitToggle').checked=false}if(n)view.drag=n;else view.panning=true});
-  canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(Math.hypot(x-(view.downX??x),y-(view.downY??y))>4)pointerMoved=true;if(view.drag){if(pointerMoved)view.drag.pinned=true;view.drag.x+=(x-view.lastX)/view.zoom;view.drag.y+=(y-view.lastY)/view.zoom;view.drag.vx=view.drag.vy=0}else if(view.panning){view.panX+=x-view.lastX;view.panY+=y-view.lastY}else{const n=nodeAt(x,y);view.hover=n?n.id:null;canvas.style.cursor=n?'pointer':'grab'}view.lastX=x;view.lastY=y;drawNetwork()});
-  canvas.addEventListener('pointerup',()=>{if(!pointerMoved&&pointerDownNode){selectedNode=selectedNode===pointerDownNode.id?null:pointerDownNode.id;updateSelection();drawNetwork()}else if(!pointerMoved&&!pointerDownNode&&selectedNode!=null){selectedNode=null;updateSelection();drawNetwork()}view.drag=null;view.panning=false;pointerDownNode=null});
-  canvas.addEventListener('pointerleave',()=>{view.hover=null;canvas.style.cursor='grab'});canvas.addEventListener('pointercancel',()=>{view.drag=null;view.panning=false;pointerDownNode=null});canvas.addEventListener('dblclick',fit);
+  let activePointer=null,dragContext=null;
+  canvas.addEventListener('pointerdown',e=>{
+    if(e.button!==0||activePointer!==null)return;
+    const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,n=nodeAt(x,y);
+    activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);e.preventDefault();
+    view.lastX=view.downX=x;view.lastY=view.downY=y;pointerMoved=false;pointerDownNode=n;
+    cameraTween=null;layoutTween=null;
+    autoFit=false;$('#autoFitToggle').checked=false;
+    if(n&&$('#dragNodesToggle').checked){
+      view.drag=n;
+      const pane=model==='ws'?(x>=canvas.clientWidth/2?'kamada':'circle'):null;
+      const scale=pane?Math.max(.1,Math.min(canvas.clientWidth/2-60,canvas.clientHeight-90)/440):1;
+      let position=n;
+      if(pane){
+        const angle=2*Math.PI*n.id/Math.max(1,cfg.n)-Math.PI/2;
+        position=n.manualPositions?.[pane]||(pane==='circle'?{x:Math.cos(angle)*180,y:Math.sin(angle)*180}:wsPositions.get(n.id)||n);
+      }
+      dragContext={pane,scale,x:position.x,y:position.y};
+    }else if(!n)view.panning=true;
+    canvas.style.cursor=view.drag||view.panning?'grabbing':'pointer';
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(activePointer!==null&&e.pointerId!==activePointer)return;
+    const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+    if(activePointer!==null&&Math.hypot(x-view.downX,y-view.downY)>4)pointerMoved=true;
+    if(view.drag&&dragContext&&pointerMoved){
+      const n=view.drag,c=dragContext,position={x:c.x+(x-view.downX)/(view.zoom*c.scale),y:c.y+(y-view.downY)/(view.zoom*c.scale)};
+      n.pinned=true;
+      if(c.pane){n.manualPositions??={};n.manualPositions[c.pane]=position}else{n.x=position.x;n.y=position.y}
+      n.vx=n.vy=0;
+    }else if(view.panning){view.panX+=x-view.lastX;view.panY+=y-view.lastY}
+    else if(activePointer===null){const n=nodeAt(x,y);view.hover=n?n.id:null;canvas.style.cursor=n?($('#dragNodesToggle').checked?'grab':'pointer'):'grab'}
+    view.lastX=x;view.lastY=y;drawNetwork();
+  });
+  function endPointer(e){
+    if(e.pointerId!==activePointer)return;
+    if(e.type==='pointerup'&&!pointerMoved){
+      if(pointerDownNode)selectedNode=selectedNode===pointerDownNode.id?null:pointerDownNode.id;
+      else selectedNode=null;
+      updateSelection();
+    }
+    activePointer=null;dragContext=null;view.drag=null;view.panning=false;pointerDownNode=null;
+    if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+    canvas.style.cursor='grab';drawNetwork();
+  }
+  canvas.addEventListener('pointerup',endPointer);
+  canvas.addEventListener('pointercancel',endPointer);
+  canvas.addEventListener('lostpointercapture',endPointer);
+  canvas.addEventListener('pointerleave',()=>{view.hover=null;if(activePointer===null)canvas.style.cursor='grab'});
+  canvas.addEventListener('dblclick',e=>{const r=canvas.getBoundingClientRect();if(!nodeAt(e.clientX-r.left,e.clientY-r.top))fit()});
   canvas.addEventListener('wheel',e=>{e.preventDefault();cameraTween=null;autoFit=false;$('#autoFitToggle').checked=false;const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left-canvas.clientWidth/2-view.panX,my=e.clientY-r.top-canvas.clientHeight/2-view.panY,old=view.zoom;view.zoom=Math.max(.12,Math.min(5,view.zoom*(e.deltaY<0?1.12:.89)));view.panX-=mx*(view.zoom/old-1);view.panY-=my*(view.zoom/old-1);drawNetwork()},{passive:false});
   function exportPNG(){exportRatio=3;drawNetwork();const out=document.createElement('canvas');out.width=canvas.width;out.height=canvas.height;const ox=out.getContext('2d');ox.fillStyle=cssColor('--stage','#f8fbff');ox.fillRect(0,0,out.width,out.height);ox.drawImage(canvas,0,0);const a=document.createElement('a');a.download=`red-${model}.png`;a.href=out.toDataURL('image/png');a.click();exportRatio=0;drawNetwork();toast('Imagen PNG exportada a resolución triple')}
   function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1600)}
@@ -529,7 +575,7 @@ body.dark .chart-card.detached{background:#162337!important}.chart-card.detached
   $('#seedInput').onchange=e=>changeSeed(e.target.value);$('#seedBtn').onclick=()=>{const data=new Uint32Array(1);crypto.getRandomValues(data);changeSeed(data[0]||1)};
   $('#autoFitToggle').onchange=e=>{autoFit=e.target.checked;if(autoFit)fit()};$('#edgeOpacity').oninput=e=>{edgeOpacity=Number(e.target.value)/100;drawNetwork()};$('#gridToggle').onchange=e=>{showGrid=e.target.checked;drawNetwork()};
   $('#freezeBtn').onclick=()=>{layoutPaused=!layoutPaused;$('#freezeBtn').textContent=layoutPaused?'▶ Reanudar layout':'Ⅱ Detener layout';if(!layoutPaused){alpha=1;if(layoutTween)layoutTween.start=performance.now()}drawNetwork()};
-  $('#unpinBtn').onclick=()=>{state.nodes.forEach(n=>n.pinned=false);alpha=1;drawNetwork();toast('Nodos liberados')};
+  $('#unpinBtn').onclick=()=>{state.nodes.forEach(n=>{n.pinned=false;delete n.manualPositions});alpha=1;drawNetwork();toast('Nodos liberados')};
   $('#layoutSpeed').oninput=()=>{if(layout==='force'&&!layoutPaused)alpha=Math.max(.1,alpha)};
   function zoomBy(factor){cameraTween=null;autoFit=false;$('#autoFitToggle').checked=false;view.zoom=Math.max(.12,Math.min(5,view.zoom*factor));drawNetwork()}$('#zoomInBtn').onclick=()=>zoomBy(1.2);$('#zoomOutBtn').onclick=()=>zoomBy(1/1.2);
   $('#focusBtn').onclick=()=>{app.classList.toggle('focus-view');$('#focusBtn').classList.toggle('active',app.classList.contains('focus-view'));setTimeout(fit,310)};
