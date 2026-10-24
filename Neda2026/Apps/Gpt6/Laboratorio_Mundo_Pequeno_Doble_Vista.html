@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explora el modelo de mundo pequeño de Watts–Strogatz. Cambia N, k y p; observa los atajos y mide el agrupamiento y las distancias de tu red.">
+<meta name="theme-color" content="#f5f5f0">
+<title>Mundo pequeño · Laboratorio interactivo</title>
+<meta name="application-version" content="5">
+<style>
+:root{--bg:#f5f5f0;--surface:#fff;--soft:#f4f6f5;--ink:#192d32;--muted:#657574;--border:#dce3de;--teal:#147d78;--tealsoft:#e7f3ef;--coral:#e47851;--coralsoft:#fff0e9;--purple:#7566b7;--shadow:0 10px 30px #142d3210;--edge:#6e9791;--grid:#e1e8e3;--band:#38985d;--bandsoft:#e8f5e9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.5}body.dark{--bg:#101c20;--surface:#18292e;--soft:#203238;--ink:#e1eeeb;--muted:#a0b6b4;--border:#31464b;--teal:#73c8b6;--tealsoft:#233f3e;--coral:#f3a17a;--coralsoft:#48382f;--purple:#c1b1fb;--edge:#6faaa1;--grid:#31464b;--band:#94d79e;--bandsoft:#243e2e;--shadow:0 10px 30px #0002;color-scheme:dark}
+button,input{font:inherit}button,a,input{touch-action:manipulation}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}a{color:var(--teal);text-underline-offset:3px}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--coral);outline-offset:3px}button{border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--ink);padding:9px 12px;font-weight:600;transition:background .15s,transform .15s}button:hover{background:var(--soft)}button:active{transform:translateY(1px)}button.primary{background:var(--teal);color:var(--surface);border-color:var(--teal)}body.dark button.primary{color:#102a2a}.quiet{border-color:transparent;background:transparent}.icon{width:36px;padding:7px;display:inline-flex;align-items:center;justify-content:center}.icon svg{width:18px;height:18px}.shell{max-width:1680px;margin:auto;padding:0 32px}.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:16px}.brand{display:flex;align-items:center;gap:12px;font-weight:720;letter-spacing:-.3px}.brand svg{width:34px;height:34px;color:var(--teal)}.brand small{display:block;color:var(--muted);font-size:10px;font-weight:650;letter-spacing:1.6px;text-transform:uppercase}.header-actions{display:flex;gap:8px}.download-button{display:inline-block;text-decoration:none;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--ink);padding:9px 12px;font-weight:600}.download-button:hover{background:var(--soft)}.intro{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:29px 0 24px}.eyebrow{font-size:10px;letter-spacing:1.8px;font-weight:750;text-transform:uppercase;color:var(--teal);margin-bottom:8px}.intro h1{font-size:34px;line-height:1.15;letter-spacing:-1.25px;margin:0 0 9px;font-weight:720}.intro p{color:var(--muted);max-width:770px;margin:0;font-size:14px}.model-tag{white-space:nowrap;border:1px solid var(--border);border-radius:100px;padding:7px 12px;font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}.model-tag:before{content:"";width:6px;height:6px;background:var(--teal);border-radius:50%}.workspace{display:grid;grid-template-columns:244px minmax(340px,1fr) 342px;gap:18px;align-items:start}.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}.controls{padding:21px 20px}.section-label{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);font-weight:750}.controls h2,.panel-title{font-size:16px;letter-spacing:-.4px;margin:5px 0 0}.control-group{margin-top:23px}.control-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:650}.symbol{font-family:Georgia,serif;font-size:16px;font-style:italic;color:var(--teal);margin-right:6px}.number{width:64px;padding:5px 7px;text-align:right;border:1px solid var(--border);border-radius:7px;background:var(--soft);color:var(--ink);font-weight:650;font-variant-numeric:tabular-nums}.number.p{width:77px}input[type=range]{width:100%;accent-color:var(--teal);height:20px;cursor:pointer;margin:12px 0 3px}.range-limits{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}.hint{font-size:11px;color:var(--muted);margin:8px 0 0;line-height:1.5}.divider{height:1px;background:var(--border);margin:21px 0}.presets{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:13px}.preset{padding:9px 6px;text-align:left;font-size:10px;font-weight:650;line-height:1.4;border-radius:8px}.preset span{display:block;color:var(--muted);font-weight:450;font-size:10px}.preset.active{background:var(--tealsoft);border-color:var(--teal);color:var(--teal)}.play-row{display:grid;grid-template-columns:1fr 40px;gap:7px;margin-top:17px}.play-row button{font-size:12px}.seed-row{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:11px}.seed-row button{padding:2px 0;font-size:10px;color:var(--teal);border:0;background:transparent}.seed-row code{font-size:10px}.switch-row{display:flex;gap:9px;align-items:center;font-size:11px;color:var(--muted);margin:10px 0}.switch-row input{accent-color:var(--teal);width:14px;height:14px;margin:0}.network-card{overflow:hidden}.panel-head{padding:20px 22px 0;display:flex;align-items:start;justify-content:space-between;gap:10px}.panel-head h2{margin:0;font-size:15px;letter-spacing:-.3px}.panel-sub{font-size:11px;color:var(--muted);margin-top:4px}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:100px;background:var(--tealsoft);color:var(--teal);font-size:10px;font-weight:650;padding:5px 9px;white-space:nowrap}.badge:before{content:"";width:5px;height:5px;background:currentColor;border-radius:50%}.network-area{height:484px;position:relative;margin-top:7px}.network-area canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:pan-y}.network-overlay{position:absolute;left:22px;top:12px;pointer-events:none;font-size:10px;color:var(--muted);background:var(--surface);padding:4px 7px;border-radius:6px;opacity:.9}.hover-tip{position:absolute;pointer-events:none;z-index:3;padding:7px 10px;background:var(--ink);color:var(--surface);font-size:11px;border-radius:7px;box-shadow:var(--shadow);white-space:nowrap}.legend{display:flex;flex-wrap:wrap;gap:15px;justify-content:center;padding:0 14px 18px;color:var(--muted);font-size:10px}.legend span{display:flex;gap:6px;align-items:center}.line{display:inline-block;width:17px;height:2px;background:var(--edge);border-radius:2px}.line.coral{background:var(--coral)}.line.purple{background:var(--purple)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);background:var(--soft)}.metric{padding:15px 17px;min-width:0}.metric+.metric{border-left:1px solid var(--border)}.metric-label{font-size:10px;color:var(--muted);display:block}.metric strong{display:block;font-size:23px;line-height:1.5;letter-spacing:-.75px;font-weight:680;font-variant-numeric:tabular-nums}.metric small{display:block;font-size:9px;color:var(--muted)}.route-box{border-top:1px solid var(--border);padding:14px 18px}.route-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px}.route-top strong{font-size:11px}.route-form{display:flex;align-items:center;gap:7px;margin-top:9px}.route-form label{font-size:10px;color:var(--muted)}.route-form input{width:47px;padding:4px}.route-form button{font-size:10px;padding:5px 9px}.route-result{font-size:11px;color:var(--muted);margin:8px 0 0;min-height:17px;overflow-wrap:anywhere}.right-column{display:grid;gap:16px}.chart-card{padding:20px 20px 16px}.chart-head{display:flex;justify-content:space-between;align-items:start;gap:8px}.chart-head h2{font-size:15px;margin:0;letter-spacing:-.3px}.mini-button{font-size:10px;padding:5px 8px}.chart-desc{font-size:11px;color:var(--muted);margin:7px 0 0}.chart-placeholder{height:248px;margin:12px 0;display:grid;place-items:center;text-align:center;padding:24px;border:1px dashed var(--border);border-radius:10px;background:var(--soft);color:var(--muted);font-size:12px}.chart-placeholder strong{display:block;font-size:13px;color:var(--ink);margin-bottom:7px}.mini-button:disabled{cursor:default}.chart-wrap{height:248px;position:relative;margin-top:7px}.chart-wrap canvas{width:100%;height:100%;display:block;cursor:crosshair}.chart-legend{display:flex;gap:16px;font-size:10px;color:var(--muted);margin:2px 0 11px}.chart-legend span{display:flex;align-items:center;gap:5px}.chart-status{font-size:10px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;min-height:41px}.progress-track{height:2px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}.progress-track span{display:block;height:100%;background:var(--teal);width:0;transition:width .1s}.insight-card{padding:19px 20px}.insight-card h2{font-size:14px;line-height:1.4;letter-spacing:-.2px;margin:9px 0}.insight-card p{font-size:11px;line-height:1.65;color:var(--muted);margin:0}.ratio-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.ratio{border:1px solid var(--border);border-radius:10px;padding:10px 12px}.ratio span{display:block;font-size:10px;color:var(--muted)}.ratio strong{font-size:21px;font-weight:650;letter-spacing:-.5px}.ratio:first-child strong{color:var(--teal)}.ratio:last-child strong{color:var(--coral)}.understand{margin:22px 0 0;padding:22px 24px}.understand summary{font-weight:650;font-size:13px;cursor:pointer}.explain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;padding-top:20px}.explain-step{display:flex;gap:13px}.step-number{font-size:11px;background:var(--tealsoft);color:var(--teal);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:750}.explain-step h3{font-size:12px;margin:2px 0 6px}.explain-step p{font-size:11px;color:var(--muted);margin:0;line-height:1.7}.method{font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:17px;margin:20px 0 0;line-height:1.8}.footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:10px;padding:20px 3px 26px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--surface);border-radius:10px;padding:11px 18px;box-shadow:var(--shadow);z-index:30;font-size:12px;max-width:90vw}body:has(.toast:not([hidden])){scroll-padding-bottom:70px}[hidden]{display:none!important}
+
+.band-info{margin:10px 0 12px;padding:10px 11px;background:var(--bandsoft);border-radius:9px;color:var(--muted);font-size:10px;line-height:1.5}.band-info-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.band-key{display:flex;align-items:center;gap:6px;color:var(--band);font-weight:750}.band-swatch{display:inline-block;width:13px;height:13px;border:1px dashed var(--band);background:var(--bandsoft);box-shadow:inset 0 0 0 8px #38985d25;flex-shrink:0}.band-info small{display:block;margin-top:6px;font-size:9px}.band-info button{padding:3px 6px;font-size:9px;white-space:nowrap}.sw-notice{position:fixed;z-index:35;right:22px;bottom:22px;width:374px;max-width:calc(100vw - 28px);max-height:calc(100dvh - 28px);overflow:auto;background:var(--surface);border:1px solid var(--band);border-radius:15px;box-shadow:0 16px 55px #0b2a2840}.sw-notice-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;background:var(--bandsoft);border-radius:14px 14px 0 0;cursor:grab;touch-action:none;user-select:none}.sw-notice-head:active{cursor:grabbing}.sw-notice-head h2{font-size:14px;line-height:1.3;margin:0;color:var(--band);letter-spacing:-.2px}.sw-notice-head h2:before{content:'●';font-size:10px;margin-right:7px}.sw-notice-head button{padding:0;width:27px;height:27px;flex-shrink:0;font-size:19px;line-height:1;background:transparent;border-color:transparent}.sw-notice-body{padding:13px 16px 16px}.sw-parameters{font-size:10px;color:var(--muted);margin:0 0 10px}.sw-notice-body>p{font-size:11px;line-height:1.65;color:var(--muted);margin:11px 0}.sw-evidence{display:grid;grid-template-columns:1fr 1fr;gap:9px}.sw-evidence>div{padding:9px 10px;border:1px solid var(--border);border-radius:9px}.sw-evidence span,.sw-evidence small{display:block;font-size:9px;color:var(--muted)}.sw-evidence strong{font-size:23px;font-weight:700;letter-spacing:-.5px;color:var(--teal)}.sw-evidence>div:last-child strong{color:var(--coral)}.sw-rule{padding-top:9px;border-top:1px solid var(--border);font-size:9px!important;line-height:1.55!important;margin-bottom:0!important}
+
+.force-card{overflow:hidden}.force-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:17px 17px 0}.force-head h2{font-size:14px;letter-spacing:-.3px;margin:0}.force-head .panel-sub{font-size:10px}.force-actions{display:flex;gap:4px;flex-shrink:0}.force-actions button{min-width:26px;padding:3px 6px;font-size:12px}.force-area{position:relative;height:220px;margin:6px 8px 0}.force-area canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}.force-area canvas:active{cursor:grabbing}.force-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px 12px;font-size:8px;line-height:1.4;color:var(--muted)}.force-footer span:first-child{color:var(--teal);white-space:nowrap}
+@media(min-width:1500px){.force-area{height:240px}}
+@media(min-width:701px) and (max-width:1190px){.right-column>.force-card{grid-column:2;grid-row:1}.right-column>.chart-card{grid-column:2;grid-row:2}.right-column>.insight-card{grid-column:1;grid-row:1/span 2}.force-area{height:240px}}
+@media(max-width:700px){.force-area{height:245px}.force-footer{font-size:9px}}
+@media(min-width:1500px){.network-area{height:538px}.chart-wrap{height:277px}.workspace{grid-template-columns:256px minmax(400px,1fr) 368px}.controls{padding:23px}.control-group{margin-top:26px}}
+@media(max-width:1190px){.workspace{grid-template-columns:224px minmax(320px,1fr)}.right-column{grid-column:1/-1;grid-template-columns:1.3fr 1fr}.chart-wrap{height:225px}.insight-card{align-self:start}.model-tag{display:none}.network-area{height:460px}.controls{padding:18px}}
+@media(max-width:700px){.shell{padding:0 15px}.topbar{height:62px}.brand{font-size:12px;gap:8px}.brand small{font-size:8px}.brand svg{width:27px}.download-label{display:none}.intro{padding:24px 0 20px}.intro h1{font-size:30px}.intro p{font-size:12px}.workspace{grid-template-columns:1fr;gap:14px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}.controls>header{grid-column:1/-1}.control-group{margin:0}.control-group.probability{grid-column:1/-1}.controls .divider{display:none}.presets{grid-template-columns:repeat(4,1fr)}.play-section{grid-column:1/-1}.play-row{margin-top:0;grid-template-columns:1fr 40px}.control-options{grid-column:1/-1;display:flex;gap:18px}.switch-row{margin:0}.seed-row{margin-top:10px}.network-area{height:400px}.right-column{grid-column:auto;grid-template-columns:1fr}.panel-head{padding:18px 16px 0}.network-overlay{left:16px}.badge{font-size:9px}.metric{padding:13px 12px}.metric strong{font-size:21px}.metric-label{font-size:9px}.route-box{padding:13px}.route-top{align-items:start;flex-direction:column}.route-form{flex-wrap:wrap}.explain-grid{grid-template-columns:1fr;gap:20px}.understand{padding:20px}.footer{font-size:9px;gap:8px}.chart-wrap{height:260px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><svg viewBox="0 0 36 36" aria-hidden="true" fill="none"><path d="M8 10L27 7 29 27 10 29 8 10 29 27M10 29L27 7" stroke="currentColor" stroke-width="1.5" opacity=".5"/><g fill="currentColor"><circle cx="8" cy="10" r="3.5"/><circle cx="27" cy="7" r="3.5"/><circle cx="29" cy="27" r="3.5"/><circle cx="10" cy="29" r="3.5"/></g><circle cx="19" cy="18" r="3" fill="var(--coral)"/></svg><div>Conexiones que acercan<small>Laboratorio de ciencia de redes</small></div></div>
+    <div class="header-actions"><button class="icon" id="themeBtn" title="Cambiar tema" aria-label="Cambiar a tema oscuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button><a class="download-button" id="downloadBtn" href="Laboratorio_Mundo_Pequeno_Doble_Vista.html" download="Laboratorio_Mundo_Pequeno_Doble_Vista.html" title="Descargar la app para usarla sin conexión">↓ <span class="download-label">Descargar HTML</span></a></div>
+  </header>
+  <section class="intro"><div><div class="eyebrow">Exploración interactiva · Watts–Strogatz</div><h1>Mundo pequeño</h1><p>Muchos vecinos en común. Pocos pasos entre todos. Descubra cómo unos cuantos atajos transforman una red.</p></div><div class="model-tag">Un modelo, tres parámetros</div></section>
+  <main class="workspace">
+    <aside class="card controls" aria-label="Parámetros del modelo">
+      <header><div class="section-label">01 / Construya la red</div><h2>Elija sus parámetros</h2></header>
+      <div class="control-group"><div class="control-label"><label for="nNumber"><span class="symbol">N</span>Número de nodos</label><input class="number" id="nNumber" type="number" min="12" max="400" step="1" value="200"></div><input id="nRange" type="range" min="12" max="400" value="200" aria-label="Número de nodos"><div class="range-limits"><span>12</span><span>400</span></div></div>
+      <div class="control-group"><div class="control-label"><label for="kNumber"><span class="symbol">k</span>Vecinos iniciales</label><input class="number" id="kNumber" type="number" min="2" max="198" step="2" value="8"></div><input id="kRange" type="range" min="2" max="198" step="2" value="8" aria-label="Número total de vecinos iniciales"><div class="range-limits"><span>2</span><span id="kMaxLabel">198</span></div><p class="hint" id="kHelp">4 vecinos a cada lado del anillo. k es el total y debe ser par.</p></div>
+      <div class="divider"></div>
+      <div class="control-group probability"><div class="control-label"><label for="pNumber"><span class="symbol">p</span>Prob. de reconexión</label><input class="number p" id="pNumber" type="number" min="0" max="1" step="0.001" value="0"></div><input id="pRange" type="range" min="0" max="1000" value="0" aria-label="Probabilidad de reconexión, escala no lineal"><div class="range-limits"><span>0</span><span>0,01</span><span>0,1</span><span>1</span></div><p class="hint">Mayor precisión cerca de cero. Cada enlace puede reconectarse con probabilidad p.</p><div class="presets" aria-label="Escenarios de reconexión"><button class="preset" data-p="0">Regular<span>p = 0</span></button><button class="preset" data-p="0.03">Pocos atajos<span>p = 0,03</span></button><button class="preset" data-p="0.1">Más atajos<span>p = 0,1</span></button><button class="preset" data-p="1">Reconectada<span>p = 1</span></button></div></div>
+      <div class="play-section"><div class="play-row"><button class="primary" id="playBtn">▶ Animar reconexión</button><button class="icon" id="resetBtn" title="Restaurar N = 200, k = 8 y p = 0" aria-label="Restaurar parámetros">↺</button></div><div class="seed-row"><span>Semilla <code id="seedLabel">42</code></span><button id="seedBtn">↻ Nueva realización</button></div></div>
+      <div class="divider"></div><div class="control-options"><label class="switch-row"><input id="localEdges" type="checkbox" checked>Enlaces conservados</label><label class="switch-row"><input id="nodeLabels" type="checkbox">Números de nodos</label></div>
+    </aside>
+    <section class="card network-card" aria-labelledby="networkTitle">
+      <div class="panel-head"><div><h2 id="networkTitle">La red, enlace a enlace</h2><div class="panel-sub" id="networkSubtitle">200 nodos · 800 enlaces · no dirigida</div></div><span class="badge" id="stateBadge">p = 0</span></div>
+      <div class="network-area" id="networkArea"><canvas id="networkCanvas" role="img" aria-label="Red circular de Watts–Strogatz. Los enlaces reconectados aparecen en naranja. Use los campos de origen y destino para explorar caminos."></canvas><div class="network-overlay" id="rewireLabel">Calculando…</div><div class="hover-tip" id="nodeTooltip" hidden></div></div>
+      <div class="legend"><span><i class="line"></i>Enlace conservado</span><span><i class="line coral"></i>Enlace reconectado</span><span><i class="line purple"></i>Camino elegido</span></div>
+      <div class="metrics" aria-live="polite" aria-atomic="true"><div class="metric"><span class="metric-label">Agrupamiento C</span><strong id="metricC">—</strong><small id="metricCNote">Promedio local</small></div><div class="metric"><span class="metric-label">Distancia media L</span><strong id="metricL">—</strong><small id="metricLNote">Pasos entre dos nodos</small></div><div class="metric"><span class="metric-label">Componentes</span><strong id="metricComponents">—</strong><small id="metricComponentsNote">Conectividad de la red</small></div></div>
+      <div class="route-box"><div class="route-top"><strong>Explore el camino más corto</strong><span style="color:var(--muted);font-size:10px">Elija dos nodos en el anillo o use sus números.</span></div><form id="routeForm" class="route-form"><label for="routeFrom">De</label><input class="number" id="routeFrom" type="number" min="1" max="200" value="1" required><label for="routeTo">a</label><input class="number" id="routeTo" type="number" min="1" max="200" value="101" required><button type="submit">Ver camino</button><button type="button" class="quiet" id="clearRoute">Limpiar</button></form><p id="routeResult" class="route-result" aria-live="polite">Un atajo puede acercar nodos que estaban lejos en el anillo.</p></div>
+    </section>
+    <aside class="right-column" aria-label="Vista de fuerzas, medidas y explicación">
+      <section class="card force-card" aria-labelledby="forceTitle"><div class="force-head"><div><h2 id="forceTitle">La misma red, con fuerzas</h2><div class="panel-sub" id="forceSubtitle">200 nodos · 800 enlaces · p = 0</div></div><div class="force-actions"><button class="mini-button" id="forcePause" aria-label="Pausar layout de fuerzas" title="Pausar layout">Ⅱ</button><button class="mini-button" id="forceRestart" aria-label="Reorganizar layout de fuerzas" title="Reorganizar layout">↻</button></div></div><div class="force-area" id="forceArea"><canvas id="forceCanvas" role="img" aria-label="Vista de la misma red con un layout de fuerzas."></canvas><div class="hover-tip" id="forceTooltip" hidden></div></div><div class="force-footer"><span id="forceStatus">Calculando fuerzas…</span><span>Arrastre nodos · clic para elegir un camino</span></div></section>
+      <section class="card chart-card"><div class="chart-head"><h2>De lo local a lo global</h2><button class="mini-button" id="curveBtn" disabled title="Vaciar la gráfica y llevar p a cero">Borrar trazo</button></div><p class="chart-desc">La gráfica se activa con el deslizador p o con Animar reconexión. Después muestra solo el tramo recorrido.</p><div class="chart-placeholder" id="chartPlaceholder"><div><strong>Mueva el deslizador de reconexión</strong>La gráfica aparecerá cuando cambie p con el deslizador.</div></div><div class="chart-wrap" id="chartPlot" hidden><canvas id="chartCanvas" role="img" aria-label="Gráfica vacía. Mueva el deslizador de reconexión p para dibujar las curvas."></canvas><div class="hover-tip" id="chartTooltip" hidden></div></div><div class="chart-legend" id="chartLegend" hidden><span><i class="line" style="background:var(--teal)"></i>Agrupamiento C/C₀</span><span><i class="line coral"></i>Distancia L/L₀</span></div><div class="band-info" id="smallWorldBandInfo" hidden><div class="band-info-head"><span class="band-key"><i class="band-swatch"></i>Banda de mundo pequeño</span><button id="smallWorldExplain" hidden>Ver explicación</button></div><small>Criterio didáctico: C/C₀ ≥ 0,50 y L/L₀ ≤ 0,50.</small><small id="smallWorldBandRange">La banda crecerá con el tramo recorrido.</small></div><div class="chart-status" id="chartStatus" aria-live="polite">Mueva el deslizador p o pulse Animar reconexión para activar la gráfica.</div><div class="progress-track" id="chartProgress" hidden><span id="curveProgress"></span></div></section>
+      <section class="card insight-card"><div class="section-label">02 / Lea el resultado</div><h2 id="insightTitle">Los atajos cambian las distancias</h2><p id="insightText">El agrupamiento mide qué tan conectados están los vecinos entre sí; L cuenta los pasos de los caminos más cortos.</p><div class="ratio-grid"><div class="ratio"><span>Agrupamiento conservado</span><strong id="cRatio">—</strong></div><div class="ratio"><span>Reducción de distancia</span><strong id="lReduction">—</strong></div></div></section>
+    </aside>
+  </main>
+  <details class="card understand" open><summary>¿Cómo funciona este laboratorio?</summary><div class="explain-grid"><div class="explain-step"><div class="step-number">1</div><div><h3>Empiece con un vecindario</h3><p>Distribuya N nodos en un anillo. Cada nodo se conecta con k/2 vecinos a la izquierda y k/2 a la derecha: hay N·k/2 enlaces.</p></div></div><div class="explain-step"><div class="step-number">2</div><div><h3>Abra caminos inesperados</h3><p>Con probabilidad p, sustituya un extremo de cada enlace por otro nodo elegido al azar. Se evitan autoenlaces y enlaces repetidos; el número total de enlaces se conserva.</p></div></div><div class="explain-step"><div class="step-number">3</div><div><h3>Busque lo pequeño en el mundo</h3><p>Con algunos atajos, L puede caer mucho mientras C permanece alto. Ese equilibrio ilustra el fenómeno de mundo pequeño. Compare p = 0, p = 0,03 y p = 1.</p></div></div></div><p class="method"><strong>Cómo se mide.</strong> C es el promedio del agrupamiento local (los nodos con grado menor que 2 aportan cero). L promedia las distancias mínimas entre todos los pares: se calcula de forma exacta con búsquedas en anchura. Si la red está desconectada, L global no es finita y se muestra ∞. C₀ y L₀ corresponden al anillo con los mismos N y k. Con k = 2, C₀ = 0 y C/C₀ no está definido. La gráfica permanece oculta hasta mover el deslizador p o iniciar explícitamente la animación. Los botones de ejemplo y la casilla numérica no la activan. Las curvas muestran solo el tramo hasta el valor actual del deslizador, con una realización por punto y la misma semilla. No son promedios de múltiples redes. Cambiar N, k o la semilla limpia el trazo. p = 1 es el extremo reconectado de Watts–Strogatz, no el modelo de Erdős–Rényi. La banda verde usa el criterio didáctico C/C₀ ≥ 0,50 y L/L₀ ≤ 0,50 en una red conectada. Se obtiene solo del tramo recorrido, interpolando entre puntos calculados, y sus límites son aproximados. El aviso compara los valores exactos de la red actual con el anillo. La segunda vista usa repulsión entre nodos y atracción en los enlaces para distribuir la misma red. Cambiar el layout solo cambia posiciones: N, enlaces y medidas siguen siendo los mismos. La firma visual es orientativa; no constituye una prueba estadística ni una definición universal de mundo pequeño.</p></details>
+  <footer class="footer"><span>Inspirado en <a href="https://mathinsight.org/applet/small_world_network" target="_blank" rel="noopener">Small world model network · Math Insight / D. Q. Nykamp</a>.</span><span>Watts &amp; Strogatz, 1998 · <a href="https://doi.org/10.1038/30918" target="_blank" rel="noopener">Artículo original</a> · Funciona sin conexión · v5</span></footer>
+</div>
+<aside class="sw-notice" id="smallWorldNotice" role="dialog" aria-modal="false" aria-labelledby="smallWorldTitle" hidden>
+  <div class="sw-notice-head" id="smallWorldDrag" title="Arrastre para mover el aviso"><h2 id="smallWorldTitle">¡La red está en mundo pequeño!</h2><button id="smallWorldClose" aria-label="Cerrar explicación de mundo pequeño" title="Cerrar aviso">×</button></div>
+  <div class="sw-notice-body"><div class="sw-parameters" id="smallWorldP"></div><div class="sw-evidence"><div><span>Agrupamiento conservado</span><strong id="smallWorldC"></strong><small id="smallWorldCDetails"></small></div><div><span>Distancia media reducida</span><strong id="smallWorldL"></strong><small id="smallWorldLDetails"></small></div></div><p id="smallWorldExplanation"></p><p id="smallWorldLinks"></p><p class="sw-rule"><strong>Por eso aparece en la banda verde:</strong> conserva al menos la mitad del agrupamiento y necesita, como máximo, la mitad de los pasos del anillo original. Este criterio didáctico ilustra el fenómeno; sus umbrales no constituyen una definición universal.</p></div>
+</aside>
+<div id="toast" class="toast" role="status" hidden></div>
+<script id="modelCore">
+'use strict';
+function randomSource(seed){let a=seed>>>0;return function(){a+=0x6D2B79F5;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
+function generateGraph(n,k,p,seed){
+  const adj=Array.from({length:n},()=>new Set()),edges=[],choose=randomSource(seed),scores=[];
+  for(let u=0;u<n;u++)for(let d=1;d<=k/2;d++){const v=(u+d)%n;adj[u].add(v);adj[v].add(u);edges.push({u,v,original:v,id:edges.length,rewired:false});scores.push(choose());}
+  let changed=0,attempts=0;
+  for(let i=0;i<edges.length;i++){
+    if(scores[i]>=p)continue;
+    const e=edges[i],u=e.u;
+    if(adj[u].size>=n-1)continue;
+    attempts++;
+    const next=randomSource((seed^Math.imul(i+1,0x9e3779b1)^0xa5a5a5a5)>>>0);
+    let v=-1;
+    // Uniformly sample eligible endpoints; bounded rejection then uniform fallback.
+    for(let tries=0;tries<24;tries++){const candidate=Math.floor(next()*n);if(candidate!==u&&!adj[u].has(candidate)){v=candidate;break;}}
+    if(v<0){const eligible=[];for(let j=0;j<n;j++)if(j!==u&&!adj[u].has(j))eligible.push(j);v=eligible[Math.floor(next()*eligible.length)];}
+    adj[u].delete(e.v);adj[e.v].delete(u);adj[u].add(v);adj[v].add(u);e.v=v;e.rewired=true;changed++;
+  }
+  return{n,k,p,seed,edges,adj:adj.map(s=>Array.from(s)),changed,attempts};
+}
+function measureGraph(g){
+  const n=g.n,adj=g.adj,matrix=new Uint8Array(n*n);let c=0;
+  for(let u=0;u<n;u++)for(const v of adj[u])matrix[u*n+v]=1;
+  for(let u=0;u<n;u++){const ns=adj[u],d=ns.length;if(d<2)continue;let triangles=0;for(let i=0;i<d;i++){const row=ns[i]*n;for(let j=i+1;j<d;j++)triangles+=matrix[row+ns[j]];}c+=2*triangles/(d*(d-1));}
+  let total=0,pairs=0,components=0;const queue=new Int32Array(n),dist=new Int32Array(n),seen=new Uint8Array(n);
+  for(let s=0;s<n;s++){dist.fill(-1);dist[s]=0;let h=0,t=1;queue[0]=s;const isNew=!seen[s];if(isNew)components++;
+    while(h<t){const u=queue[h++];if(isNew)seen[u]=1;for(const v of adj[u])if(dist[v]<0){dist[v]=dist[u]+1;queue[t++]=v;total+=dist[v];pairs++;}}
+  }
+  return{C:c/n,L:pairs===n*(n-1)?total/pairs:null,reachableMean:pairs?total/pairs:null,reach:pairs/(n*(n-1)),components};
+}
+function shortestPath(g,from,to){const prev=new Int32Array(g.n);prev.fill(-1);prev[from]=from;const q=[from];for(let i=0;i<q.length&&prev[to]<0;i++)for(const v of g.adj[q[i]])if(prev[v]<0){prev[v]=q[i];q.push(v);}if(prev[to]<0)return null;const path=[to];while(path[path.length-1]!==from)path.push(prev[path[path.length-1]]);return path.reverse();}
+// An explicit teaching criterion, not a universal statistical definition.
+function assessSmallWorld(m,b){
+  if(!m||!b)return{qualifies:false,reason:'pending'};
+  if(!Number.isFinite(b.C)||b.C<=1e-12||!Number.isFinite(b.L)||b.L<=0)return{qualifies:false,reason:'baseline'};
+  if(m.L===null||!Number.isFinite(m.L)||(m.components!==undefined&&m.components!==1))return{qualifies:false,reason:'disconnected'};
+  const cRatio=m.C/b.C,lRatio=m.L/b.L;
+  return{qualifies:Number.isFinite(cRatio)&&cRatio>=.5&&lRatio<=.5,cRatio,lRatio,reason:'measured'};
+}
+function smallWorldBands(points,b){
+  if(!b||b.C<=1e-12||!Number.isFinite(b.L)||b.L<=0)return[];
+  const bands=[],scale=p=>Math.log10(1+999*p)/3,inverse=x=>(Math.pow(10,3*x)-1)/999;
+  for(let i=1;i<points.length;i++){
+    const a=points[i-1],z=points[i];if(a.L===null||z.L===null||(a.components!==undefined&&a.components!==1)||(z.components!==undefined&&z.components!==1))continue;
+    let lo=0,hi=1;const constraints=[[a.C/b.C,z.C/b.C,.5,1],[a.L/b.L,z.L/b.L,.5,-1]];
+    for(const[start,end,limit,sign]of constraints){const value=sign*(start-limit),delta=sign*(end-start);if(Math.abs(delta)<1e-12){if(value<0)hi=-1;}else if(delta>0)lo=Math.max(lo,-value/delta);else hi=Math.min(hi,-value/delta);}
+    lo=Math.max(0,lo);hi=Math.min(1,hi);if(hi-lo<=1e-9)continue;
+    const x0=scale(a.p),span=scale(z.p)-x0,band={from:inverse(x0+lo*span),to:inverse(x0+hi*span)};
+    const last=bands[bands.length-1];if(last&&Math.abs(last.to-band.from)<1e-9)last.to=band.to;else bands.push(band);
+  }
+  return bands;
+}
+function forceGraphLinks(g){const links=new Int32Array(g.edges.length*2);for(let i=0;i<g.edges.length;i++){links[i*2]=g.edges[i].u;links[i*2+1]=g.edges[i].v;}return links;}
+function createForceLayout(n,seed,previous){
+  const positions=new Float64Array(n*2),next=randomSource(seed);
+  if(previous&&previous.length===n*2)positions.set(previous);
+  else for(let i=0;i<n;i++){const a=next()*Math.PI*2,r=Math.sqrt(next())*.9;positions[i*2]=Math.cos(a)*r;positions[i*2+1]=Math.sin(a)*r;}
+  return{positions,alpha:1,iteration:0,pin:null};
+}
+function stepForceLayout(layout,g,steps=1){
+  const n=g.n,p=layout.positions,forces=new Float64Array(n*2),optimal=1.65/Math.sqrt(n),spring=1/Math.max(1,Math.sqrt(g.k)/2);
+  for(let step=0;step<steps&&layout.iteration<360;step++){
+    forces.fill(0);
+    for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+      let dx=p[i*2]-p[j*2],dy=p[i*2+1]-p[j*2+1];if(Math.abs(dx)+Math.abs(dy)<1e-8){dx=(i%2?1:-1)*.001;dy=(j%2?1:-1)*.001;}
+      const d2=dx*dx+dy*dy+.00005,repulsion=optimal*optimal/d2;
+      const fx=dx*repulsion,fy=dy*repulsion;forces[i*2]+=fx;forces[i*2+1]+=fy;forces[j*2]-=fx;forces[j*2+1]-=fy;
+    }
+    for(let e=0;e<g.links.length;e+=2){const u=g.links[e],v=g.links[e+1],dx=p[v*2]-p[u*2],dy=p[v*2+1]-p[u*2+1],d=Math.hypot(dx,dy),attraction=d/optimal*spring;forces[u*2]+=dx*attraction;forces[u*2+1]+=dy*attraction;forces[v*2]-=dx*attraction;forces[v*2+1]-=dy*attraction;}
+    const temperature=.055*layout.alpha+.00015;
+    for(let i=0;i<n;i++){
+      if(layout.pin&&layout.pin.index===i){p[i*2]=layout.pin.x;p[i*2+1]=layout.pin.y;continue;}
+      const fx=forces[i*2]-p[i*2]*.12,fy=forces[i*2+1]-p[i*2+1]*.12,d=Math.hypot(fx,fy),s=Math.min(1,temperature/Math.max(d,1e-9));
+      p[i*2]=Math.max(-12,Math.min(12,p[i*2]+fx*s));p[i*2+1]=Math.max(-12,Math.min(12,p[i*2+1]+fy*s));
+    }
+    layout.alpha*=.985;layout.iteration++;
+  }
+  return layout;
+}
+</script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),nf=new Intl.NumberFormat('es-CO',{maximumFractionDigits:3}),fmt=x=>nf.format(x);
+const state={n:200,k:8,p:0,seed:42,graph:null,metrics:null,baseline:null,curve:[],curveBusy:false,traceStarted:false,smallWorldInside:false,smallWorldDismissed:false,hover:-1,from:null,to:null,path:[],pathSet:new Set(),showLocal:true,labels:false};
+let metricWorker=null,curveWorker=null,metricTicket=0,curveTicket=0,metricTimer,curveTimer=null,toastTimer,playTimer=null,raf=0,transition=null,plotDims=null;
+const forceState={worker:null,version:0,positions:null,graph:null,layout:null,timer:null,drawFrame:0,projection:null,paused:false,settled:false,layoutSeed:0,drag:null,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches};
+const workerCode=$('modelCore').textContent+`\nself.onmessage=function(e){const d=e.data;if(d.type==='metric'){const g=generateGraph(d.n,d.k,d.p,d.seed);const m=measureGraph(g);const b=d.needBaseline?measureGraph(generateGraph(d.n,d.k,0,d.seed)):null;self.postMessage({type:'metric',m,b});}else{for(let i=0;i<d.points.length;i++){const p=d.points[i],m=measureGraph(generateGraph(d.n,d.k,p,d.seed));self.postMessage({type:'point',p,m,i,total:d.points.length});}}};`;
+let workerURL;try{workerURL=URL.createObjectURL(new Blob([workerCode],{type:'text/javascript'}));}catch(e){}
+const toSlider=p=>Math.log10(1+999*p)/3*1000,fromSlider=v=>(Math.pow(10,v/1000*3)-1)/999;
+function toast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3700);}
+function colors(){const s=getComputedStyle(document.body);return Object.fromEntries(['surface','ink','muted','teal','coral','purple','edge','grid','border','band'].map(k=>[k,s.getPropertyValue('--'+k).trim()]));}
+function stopPlay(){if(playTimer){clearInterval(playTimer);playTimer=null;}$('playBtn').textContent='▶ Animar reconexión';$('playBtn').setAttribute('aria-pressed','false');}
+function syncControls(){
+  const maxK=2*Math.floor((state.n-1)/2);
+  $('nNumber').value=$('nRange').value=state.n;$('kNumber').max=$('kRange').max=maxK;$('kMaxLabel').textContent=maxK;$('kNumber').value=$('kRange').value=state.k;
+  $('kHelp').textContent=`${state.k/2} ${state.k===2?'vecino':'vecinos'} a cada lado del anillo. k es el total y debe ser par.`;
+  $('pNumber').value=Number(state.p.toFixed(5));$('pRange').value=toSlider(state.p);$('pRange').setAttribute('aria-valuetext',fmt(state.p));$('seedLabel').textContent=state.seed;
+  document.querySelectorAll('.preset').forEach(b=>{b.classList.toggle('active',Math.abs(Number(b.dataset.p)-state.p)<.00001);b.setAttribute('aria-pressed',Math.abs(Number(b.dataset.p)-state.p)<.00001);});
+  $('routeFrom').max=$('routeTo').max=state.n;if(Number($('routeFrom').value)>state.n)$('routeFrom').value=1;if(Number($('routeTo').value)>state.n)$('routeTo').value=state.n;
+}
+function setParams(changes,{animated=false,structural=false,trace=false}={}){
+  if(!animated)stopPlay();let{n,k,p}=state;const oldN=n,oldK=k,oldSeed=state.seed;
+  if('n'in changes)n=Math.round(Math.max(12,Math.min(400,Number(changes.n)||12)));
+  if('k'in changes)k=Number(changes.k)||2;
+  const adjusted=Math.max(2,Math.min(2*Math.floor((n-1)/2),2*Math.round(k/2)));
+  if('k'in changes&&adjusted!==k)toast(`k se ajustó a ${adjusted}: debe ser par y menor que N.`);
+  if('p'in changes)p=Math.max(0,Math.min(1,Number(changes.p)||0));
+  Object.assign(state,{...changes,n,k:adjusted,p});state.metrics=null;
+  const topologyChanged=oldN!==n||oldK!==adjusted||oldSeed!==state.seed||structural;
+  if(topologyChanged){state.baseline=null;clearTrace();state.from=null;state.to=null;state.path=[];state.pathSet.clear();state.hover=-1;$('routeResult').textContent='Elija dos nodos para explorar un camino mínimo.';}
+  if('p'in changes){if(trace&&!topologyChanged)state.traceStarted=true;else if(!trace)clearTrace();}
+  $('chartTooltip').hidden=true;syncControls();updateGraph(animated);scheduleMetrics(animated?80:140);queueCurve();drawChart();
+}
+function updateGraph(animated=false){
+  const old=state.graph;state.graph=generateGraph(state.n,state.k,state.p,state.seed);
+  transition=old&&old.n===state.n&&old.k===state.k&&!matchMedia('(prefers-reduced-motion: reduce)').matches?{old,start:performance.now(),duration:animated?180:420}:null;
+  $('networkSubtitle').textContent=`${state.n} nodos · ${fmt(state.graph.edges.length)} enlaces · no dirigida`;
+  $('stateBadge').textContent=`p = ${fmt(state.p)}`;
+  $('rewireLabel').textContent=`${fmt(state.graph.changed)} / ${fmt(state.graph.edges.length)} enlaces reconectados`;
+  $('networkCanvas').setAttribute('aria-label',`Red de ${state.n} nodos, ${state.graph.edges.length} enlaces y ${state.graph.changed} enlaces reconectados; N=${state.n}, k=${state.k}, p=${state.p}.`);
+  updateForceGraph();
+  if(state.from!==null&&state.to!==null)updateRoute();
+  ['metricC','metricL','metricComponents','cRatio','lReduction'].forEach(id=>$(id).textContent='…');
+  $('insightTitle').textContent='Midiendo la red actual…';$('insightText').textContent='Se calculan el agrupamiento y los caminos mínimos entre todos los pares de nodos.';
+  drawNetwork();
+}
+function scheduleMetrics(delay){clearTimeout(metricTimer);if(metricWorker){metricWorker.terminate();metricWorker=null;}const ticket=++metricTicket;metricTimer=setTimeout(()=>{
+  const done=d=>{if(ticket!==metricTicket)return;if(d.b)state.baseline=d.b;state.metrics=d.m;if(state.traceStarted){if(state.baseline)saveCurvePoint(0,state.baseline);saveCurvePoint(state.p,d.m);}renderMetrics();drawChart();};
+  const data={type:'metric',n:state.n,k:state.k,p:state.p,seed:state.seed,needBaseline:!state.baseline};
+  if(workerURL){try{metricWorker=new Worker(workerURL);metricWorker.onmessage=e=>{done(e.data);metricWorker?.terminate();metricWorker=null;};metricWorker.onerror=()=>{metricWorker?.terminate();metricWorker=null;done({m:measureGraph(state.graph),b:data.needBaseline?measureGraph(generateGraph(state.n,state.k,0,state.seed)):null});};metricWorker.postMessage(data);return;}catch(e){}}
+  done({m:measureGraph(state.graph),b:data.needBaseline?measureGraph(generateGraph(state.n,state.k,0,state.seed)):null});
+},delay);}
+function renderMetrics(){
+  const m=state.metrics,b=state.baseline;if(!m||!b)return;
+  const c=b.C>1e-12?m.C/b.C:null,l=m.L===null?null:m.L/b.L;
+  $('metricC').textContent=fmt(m.C);$('metricCNote').textContent=`Anillo C₀ = ${fmt(b.C)}`;
+  $('metricL').textContent=m.L===null?'∞':fmt(m.L);$('metricLNote').textContent=m.L===null?'Sin camino entre todos los pares':`Anillo L₀ = ${fmt(b.L)}`;
+  $('metricComponents').textContent=m.components;$('metricComponentsNote').textContent=m.components===1?'Todos los nodos conectados':`${fmt(m.reach*100)} % de pares alcanzables`;
+  $('cRatio').textContent=c===null?'No definido':`${Math.round(c*100)} %`;$('cRatio').style.fontSize=c===null?'14px':'';
+  $('lReduction').textContent=l===null?'No definida':`${fmt(Math.round((1-l)*100))} %`;$('lReduction').style.fontSize=l===null?'14px':'';
+  if(m.L===null){$('insightTitle').textContent='La red se ha fragmentado';$('insightText').textContent=`Hay ${m.components} componentes. No existe un camino para todos los pares, por lo que la distancia media global es infinita. Pruebe aumentar k.`;}
+  else if(c===null){$('insightTitle').textContent='Un anillo sin triángulos';$('insightText').textContent=`Con k = 2, el agrupamiento del anillo es cero. C/C₀ no está definido. Aumente k a 4 o más para comparar agrupamiento y distancias.`;}
+  else if(state.p===0){$('insightTitle').textContent='Todo empieza cerca de casa';$('insightText').textContent=`El anillo tiene agrupamiento ${fmt(m.C)} y requiere ${fmt(m.L)} pasos en promedio. Introduzca algunos atajos y observe qué cambia primero.`;}
+  else if(state.k>=state.n-2){$('insightTitle').textContent='Casi todos ya son vecinos';$('insightText').textContent='En una red tan densa, los caminos ya son muy cortos. Reduzca k respecto a N para que el efecto de los atajos sea más visible.';}
+  else if(assessSmallWorld(m,b).qualifies){$('insightTitle').textContent='Vecindarios unidos, distancias cortas';$('insightText').textContent=`Esta realización conserva el ${Math.round(c*100)} % del agrupamiento inicial y reduce la distancia un ${Math.round((1-l)*100)} %. Cumple las dos condiciones de la banda didáctica de mundo pequeño.`;}
+  else if(state.graph.changed===0){$('insightTitle').textContent='Aún no aparecieron atajos';$('insightText').textContent='p es una probabilidad: un valor positivo no garantiza reconexiones en una red finita. Aumente p o pruebe una nueva realización.';}
+  else if(c<.5){$('insightTitle').textContent='Más mezcla, menos vecindario';$('insightText').textContent='Muchas reconexiones dispersan los enlaces por la red. Los caminos pueden seguir siendo cortos, pero se pierden numerosos triángulos entre vecinos.';}
+  else{$('insightTitle').textContent='Observe la llegada de los atajos';$('insightText').textContent='Compare la caída de L/L₀ con el cambio de C/C₀. El efecto depende de N, k y de los enlaces que se reconectan en esta realización.';}
+}
+function cancelCurve(){curveTicket++;if(curveWorker){curveWorker.terminate();curveWorker=null;}clearTimeout(curveTimer);curveTimer=null;state.curveBusy=false;}
+function clearTrace(){cancelCurve();state.curve=[];state.traceStarted=false;state.smallWorldInside=false;state.smallWorldDismissed=false;$('smallWorldNotice').hidden=true;$('smallWorldExplain').hidden=true;$('chartTooltip').hidden=true;const canvas=$('chartCanvas');canvas.width=canvas.width;}
+function saveCurvePoint(p,m){const point={p,...m},i=state.curve.findIndex(d=>Math.abs(d.p-p)<1e-12);if(i<0)state.curve.push(point);else state.curve[i]=point;state.curve.sort((a,b)=>a.p-b.p);}
+function visibleCurve(){return state.traceStarted?state.curve.filter(d=>d.p<=state.p+1e-12):[];}
+function missingCurvePoints(){const limit=state.p;return[0,.0003,.001,.003,.006,.01,.02,.03,.05,.08,.13,.22,.4,.65,1,limit].filter((p,i,a)=>p<=limit+1e-12&&a.indexOf(p)===i&&!state.curve.some(d=>Math.abs(d.p-p)<1e-12)).sort((a,b)=>a-b);}
+function queueCurve(){if(!state.traceStarted||state.curveBusy||curveTimer!==null)return;curveTimer=setTimeout(()=>{curveTimer=null;startCurve();},60);}
+function startCurve(){
+  if(!state.traceStarted||state.curveBusy)return;const points=missingCurvePoints();if(!points.length){drawChart();return;}
+  const ticket=curveTicket,n=state.n,k=state.k,seed=state.seed;let completed=0;state.curveBusy=true;drawChart();
+  const receive=d=>{if(ticket!==curveTicket)return;completed++;saveCurvePoint(d.p,d.m);if(d.p===0&&!state.baseline){state.baseline=d.m;if(state.metrics)renderMetrics();}if(completed===points.length){state.curveBusy=false;if(curveWorker){curveWorker.terminate();curveWorker=null;}if(missingCurvePoints().length)queueCurve();}drawChart();};
+  if(workerURL){try{curveWorker=new Worker(workerURL);curveWorker.onmessage=e=>receive(e.data);curveWorker.onerror=()=>{curveWorker?.terminate();curveWorker=null;fallback();};curveWorker.postMessage({type:'curve',n,k,seed,points});return;}catch(e){}}
+  function fallback(){let i=completed;const next=()=>{if(ticket!==curveTicket)return;receive({p:points[i],m:measureGraph(generateGraph(n,k,points[i],seed))});i++;if(i<points.length)setTimeout(next,10);};setTimeout(next,10);}fallback();
+}
+function fitCanvas(canvas){const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);if(canvas.width!==Math.round(rect.width*dpr)||canvas.height!==Math.round(rect.height*dpr)){canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,rect.width,rect.height);return{ctx,w:rect.width,h:rect.height};}
+function nodePosition(i,n,w,h){const r=Math.max(30,Math.min(w/2-43,h/2-32)),angle=2*Math.PI*i/n-Math.PI/2;return{x:w/2+r*Math.cos(angle),y:h/2+r*Math.sin(angle)};}
+function edgeKey(a,b){return a<b?`${a}:${b}`:`${b}:${a}`;}
+function drawNetwork(){
+  cancelAnimationFrame(raf);const{ctx,w,h}=fitCanvas($('networkCanvas')),g=state.graph;if(!g||w===0)return;const col=colors(),pos=Array.from({length:g.n},(_,i)=>nodePosition(i,g.n,w,h));
+  const t=transition?Math.min(1,(performance.now()-transition.start)/transition.duration):1,ease=1-Math.pow(1-t,3),dense=g.edges.length>4000;
+  ctx.beginPath();ctx.arc(w/2,h/2,Math.max(30,Math.min(w/2-43,h/2-32))+14,0,2*Math.PI);ctx.strokeStyle=col.grid;ctx.lineWidth=1;ctx.setLineDash([2,6]);ctx.stroke();ctx.setLineDash([]);
+  const focus=state.hover>=0?state.hover:state.to===null?state.from:null,neighbors=focus!==null&&focus>=0?new Set(g.adj[focus]):null;
+  const paint=(e,stroke,alpha,width)=>{const a=pos[e.u],end=pos[e.v],oe=transition?.old.edges[e.id],v=oe?pos[oe.v]:end,b={x:v.x+(end.x-v.x)*ease,y:v.y+(end.y-v.y)*ease};ctx.globalAlpha=alpha;ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();};
+  if(state.showLocal)for(const e of g.edges)if(!e.rewired)paint(e,col.edge,(e.u===focus||e.v===focus) ? .5 : (dense ? .065 : .23),.75);
+  for(const e of g.edges)if(e.rewired)paint(e,col.coral,focus!==null&&e.u!==focus&&e.v!==focus ? .12 : (dense ? .1 : .45),dense?.65:1.05);
+  if(focus!==null&&focus>=0)for(const e of g.edges)if(e.u===focus||e.v===focus)paint(e,e.rewired?col.coral:col.teal,.85,1.6);
+  if(state.path.length>1)for(let i=1;i<state.path.length;i++)paint({u:state.path[i-1],v:state.path[i],id:-1},col.purple,1,2.8);
+  ctx.globalAlpha=1;const radius=g.n>260?2.7:g.n>130?3.2:g.n>60?4.1:5.2;
+  for(let i=0;i<g.n;i++){const p=pos[i],onPath=state.pathSet.has(i),selected=i===state.from||i===state.to||i===state.hover;ctx.beginPath();ctx.arc(p.x,p.y,selected?radius+2.3:radius,0,Math.PI*2);ctx.fillStyle=onPath?col.purple:col.teal;ctx.globalAlpha=neighbors&&i!==focus&&!neighbors.has(i)&&!onPath ? .34 : 1;ctx.fill();if(selected||g.n<160){ctx.strokeStyle=col.surface;ctx.lineWidth=selected?2:1.1;ctx.stroke();}}
+  ctx.globalAlpha=1;
+  if(state.labels){ctx.fillStyle=col.muted;ctx.font=`${g.n>200?7:9}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';for(let i=0;i<g.n;i++){const p=pos[i],dx=p.x-w/2,dy=p.y-h/2,mag=Math.hypot(dx,dy);ctx.fillText(i+1,p.x+dx/mag*15,p.y+dy/mag*15);}}
+  requestForceDraw();if(t<1)raf=requestAnimationFrame(drawNetwork);else transition=null;
+}
+function ensureForceWorker(){
+  if(forceState.worker)return true;
+  const source=$('modelCore').textContent+`\nlet graph=null,layout=null,version=0,paused=false,timer=null,reduced=false;
+function publish(){const positions=new Float32Array(layout.positions);self.postMessage({version,positions,settled:layout.iteration>=360},[positions.buffer]);}
+function tick(){timer=null;if(!graph||!layout||paused)return;stepForceLayout(layout,graph,reduced?18:graph.n>240?2:3);if(!reduced||layout.iteration>=360)publish();if(layout.iteration<360)timer=setTimeout(tick,reduced?0:25);}
+self.onmessage=function(e){const d=e.data;if(d.type==='graph'){graph={n:d.n,k:d.k,links:d.links};version=d.version;reduced=d.reduced;paused=d.paused;layout=createForceLayout(graph.n,d.seed,d.restart?null:layout?.positions);clearTimeout(timer);timer=null;publish();if(!paused)tick();}else if(d.type==='pause'){paused=d.paused;clearTimeout(timer);timer=null;if(!paused)tick();}else if(d.type==='pin'&&layout){layout.pin=d.pin;layout.alpha=Math.max(layout.alpha,.45);layout.iteration=Math.min(layout.iteration,180);if(d.pin){layout.positions[d.pin.index*2]=d.pin.x;layout.positions[d.pin.index*2+1]=d.pin.y;}publish();if(!paused&&timer===null)tick();}};`;
+  try{const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'})),worker=new Worker(url);URL.revokeObjectURL(url);forceState.worker=worker;
+    worker.onmessage=e=>{if(e.data.version!==forceState.version)return;forceState.positions=e.data.positions;forceState.settled=e.data.settled;updateForceStatus();requestForceDraw();};
+    worker.onerror=()=>{worker.terminate();forceState.worker=null;startForceFallback();};return true;
+  }catch(e){return false;}
+}
+function updateForceGraph(restart=false){
+  const g=state.graph;if(!g)return;forceState.version++;forceState.settled=false;forceState.drag=null;forceState.graph={n:g.n,k:g.k,links:forceGraphLinks(g)};
+  if(restart||forceState.positions?.length!==g.n*2){forceState.positions=createForceLayout(g.n,(state.seed+forceState.layoutSeed)>>>0).positions;forceState.projection=null;}
+  $('forceSubtitle').textContent=`${g.n} nodos · ${fmt(g.edges.length)} enlaces · p = ${fmt(state.p)}`;
+  $('forceCanvas').setAttribute('aria-label',`La misma red en un layout de fuerzas: ${g.n} nodos y ${g.edges.length} enlaces. Los colores y caminos corresponden a la vista circular.`);
+  $('forceCanvas').dataset.nodes=g.n;$('forceCanvas').dataset.edges=g.edges.length;$('forceCanvas').dataset.p=state.p;
+  clearTimeout(forceState.timer);forceState.timer=null;
+  if(ensureForceWorker()){const links=forceState.graph.links.slice();forceState.worker.postMessage({type:'graph',version:forceState.version,n:g.n,k:g.k,links,seed:(state.seed+forceState.layoutSeed)>>>0,restart,paused:forceState.paused,reduced:forceState.reduced},[links.buffer]);}
+  else startForceFallback();
+  updateForceStatus();requestForceDraw();
+}
+function updateForceStatus(){
+  $('forceStatus').textContent=forceState.paused?'Layout pausado':forceState.settled?'Layout estabilizado':'Calculando fuerzas…';
+  $('forcePause').textContent=forceState.paused?'▶':'Ⅱ';$('forcePause').setAttribute('aria-label',forceState.paused?'Continuar layout de fuerzas':'Pausar layout de fuerzas');$('forcePause').title=forceState.paused?'Continuar layout':'Pausar layout';
+}
+function startForceFallback(preserve=false){
+  clearTimeout(forceState.timer);const g=forceState.graph;if(!g)return;if(!preserve||!forceState.layout)forceState.layout=createForceLayout(g.n,(state.seed+forceState.layoutSeed)>>>0,forceState.positions);forceState.positions=forceState.layout.positions;
+  const version=forceState.version;function tick(){forceState.timer=null;if(version!==forceState.version||forceState.paused)return;stepForceLayout(forceState.layout,g,forceState.reduced?18:g.n>240?2:3);forceState.positions=forceState.layout.positions;forceState.settled=forceState.layout.iteration>=360;if(!forceState.reduced||forceState.settled)requestForceDraw();updateForceStatus();if(!forceState.settled)forceState.timer=setTimeout(tick,forceState.reduced?0:30);}forceState.timer=setTimeout(tick,0);
+}
+function requestForceDraw(){if(!forceState.drawFrame)forceState.drawFrame=requestAnimationFrame(()=>{forceState.drawFrame=0;drawForce();});}
+function drawForce(){
+  const canvas=$('forceCanvas'),{ctx,w,h}=fitCanvas(canvas),g=state.graph,p=forceState.positions;if(!g||!p||p.length!==g.n*2||!w)return;
+  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;for(let i=0;i<g.n;i++){minX=Math.min(minX,p[i*2]);maxX=Math.max(maxX,p[i*2]);minY=Math.min(minY,p[i*2+1]);maxY=Math.max(maxY,p[i*2+1]);}
+  const target={scale:Math.min((w-28)/Math.max(.25,maxX-minX),(h-28)/Math.max(.25,maxY-minY)),cx:(minX+maxX)/2,cy:(minY+maxY)/2};
+  if(!forceState.drag)forceState.projection={...target,w,h};
+  const view=forceState.projection||{...target,w,h},pos=Array.from({length:g.n},(_,i)=>({x:w/2+(p[i*2]-view.cx)*view.scale,y:h/2+(p[i*2+1]-view.cy)*view.scale})),c=colors(),focus=state.hover>=0?state.hover:state.to===null?state.from:null,neighbors=focus!==null?new Set(g.adj[focus]):null,dense=g.edges.length>4000;
+  const paint=(u,v,color,alpha,width)=>{ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(pos[u].x,pos[u].y);ctx.lineTo(pos[v].x,pos[v].y);ctx.stroke();};
+  for(const rewired of[false,true]){if(!rewired&&!state.showLocal)continue;ctx.beginPath();ctx.globalAlpha=rewired?(dense?.08:.55):(dense?.035:.2);ctx.strokeStyle=rewired?c.coral:c.edge;ctx.lineWidth=rewired?.8:.65;for(const e of g.edges)if(e.rewired===rewired){ctx.moveTo(pos[e.u].x,pos[e.u].y);ctx.lineTo(pos[e.v].x,pos[e.v].y);}ctx.stroke();}
+  if(focus!==null)for(const e of g.edges)if(e.u===focus||e.v===focus)paint(e.u,e.v,e.rewired?c.coral:c.teal,.9,1.7);
+  for(let i=1;i<state.path.length;i++)paint(state.path[i-1],state.path[i],c.purple,1,2.2);
+  const radius=g.n>260?2:g.n>120?2.6:3.5;for(let i=0;i<g.n;i++){const selected=state.pathSet.has(i),highlight=i===focus||i===state.from||i===state.to;ctx.globalAlpha=neighbors&&i!==focus&&!neighbors.has(i)&&!selected ? .25 : 1;ctx.fillStyle=selected?c.purple:c.teal;ctx.beginPath();ctx.arc(pos[i].x,pos[i].y,highlight?radius+1.6:radius,0,2*Math.PI);ctx.fill();if(highlight||g.n<150){ctx.strokeStyle=c.surface;ctx.lineWidth=1;ctx.stroke();}if(state.labels){ctx.font='8px system-ui';ctx.fillStyle=c.ink;ctx.fillText(i+1,pos[i].x+5,pos[i].y-4);}}ctx.globalAlpha=1;
+  canvas.dataset.renderedNodes=g.n;canvas.dataset.fittedNodes=pos.filter(q=>q.x>=0&&q.x<=w&&q.y>=0&&q.y<=h).length;canvas.dataset.layout='forces';
+}
+function hitForceNode(e){const rect=$('forceCanvas').getBoundingClientRect(),v=forceState.projection,p=forceState.positions;let node=-1,distance=12;const x=e.clientX-rect.left,y=e.clientY-rect.top;if(!v||!p)return{node,x,y,rect};for(let i=0;i<state.n;i++){const px=rect.width/2+(p[i*2]-v.cx)*v.scale,py=rect.height/2+(p[i*2+1]-v.cy)*v.scale,d=Math.hypot(px-x,py-y);if(d<distance){node=i;distance=d;}}return{node,x,y,rect};}
+function pinForceNode(pin){if(forceState.worker)forceState.worker.postMessage({type:'pin',pin});else if(forceState.layout){forceState.layout.pin=pin;forceState.layout.iteration=Math.min(forceState.layout.iteration,180);forceState.layout.alpha=.45;if(pin){forceState.layout.positions[pin.index*2]=pin.x;forceState.layout.positions[pin.index*2+1]=pin.y;requestForceDraw();}if(!forceState.paused&&forceState.timer===null)startForceFallback(true);}}
+function selectNodeForPath(node){if(node<0)return;if(state.from===null||state.to!==null){state.from=node;state.to=null;state.path=[];state.pathSet.clear();$('routeFrom').value=node+1;$('routeResult').textContent=`Origen: nodo ${node+1}. Elija el nodo de destino.`;}else{state.to=node;updateRoute();}drawNetwork();}
+function drawChart(){
+  const active=state.traceStarted,points=visibleCurve(),b=state.baseline,canvas=$('chartCanvas');
+  const current=state.metrics||state.curve.find(d=>Math.abs(d.p-state.p)<1e-12),assessment=assessSmallWorld(current,b),bands=smallWorldBands(points,b);
+  updateSmallWorldNotice(active,current,assessment);
+  $('chartPlot').hidden=!active;$('chartLegend').hidden=!active;$('chartProgress').hidden=!active;$('chartPlaceholder').hidden=active;$('curveBtn').disabled=!active;
+  $('smallWorldBandInfo').hidden=!active;
+  $('smallWorldBandRange').textContent=b?.C<=1e-12?'C₀ = 0: este criterio no puede evaluarse.':bands.length?`Tramo observado: ${bands.map(d=>`p ≈ ${fmt(d.from)}–${fmt(d.to)}`).join('; ')}.`:'La banda aparecerá al cumplirse ambas condiciones.';
+  $('chartStatus').textContent=!active?'Mueva el deslizador p o pulse Animar reconexión para activar la gráfica.':`${points.length} puntos visibles · hasta p = ${fmt(state.p)}${state.curveBusy?' · calculando tramo…':'. Al retroceder, el trazo se acorta.'}${b?.C<1e-12?' C₀ = 0: C/C₀ no está definido.':''}`;
+  $('curveProgress').style.width=active?`${toSlider(state.p)/10}%`:'0';
+  canvas.dataset.pointCount=points.length;canvas.dataset.maxP=points.length?points[points.length-1].p:'';canvas.dataset.active=String(active);canvas.dataset.bandCount=bands.length;canvas.dataset.inSmallWorld=String(active&&assessment.qualifies);
+  canvas.setAttribute('aria-label',active?`Curvas de C/C₀ y L/L₀ hasta p = ${fmt(state.p)}; ${points.length} puntos visibles y ${bands.length} bandas verdes de mundo pequeño. Criterio didáctico: C/C₀ ≥ 0,50 y L/L₀ ≤ 0,50.`:'Gráfica oculta hasta mover el deslizador de reconexión p.');
+  if(!active){plotDims=null;return;}
+  const{ctx,w,h}=fitCanvas(canvas);if(!w)return;const c=colors(),left=34,top=20,right=w-13,bottom=h-37,pw=right-left,ph=bottom-top;
+  const ratios=points.flatMap(d=>[b?.C>1e-12?d.C/b.C:0,d.L!==null&&b?d.L/b.L:0]),ymax=Math.max(1.08,...ratios.filter(Number.isFinite).map(v=>v*1.04));
+  const x=p=>left+Math.log10(1+999*p)/3*pw,y=v=>bottom-v/ymax*ph;plotDims={left,top,right,bottom,x,y,w,h};
+  for(const band of bands){const bx=x(band.from),width=x(band.to)-bx;ctx.fillStyle=c.band;ctx.globalAlpha=.13;ctx.fillRect(bx,top,width,ph);ctx.globalAlpha=.5;ctx.strokeStyle=c.band;ctx.setLineDash([2,3]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(bx,top);ctx.lineTo(bx,bottom);ctx.moveTo(bx+width,top);ctx.lineTo(bx+width,bottom);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;if(width>78){ctx.fillStyle=c.band;ctx.font='bold 9px system-ui';ctx.textAlign='center';ctx.fillText('Mundo pequeño',bx+width/2,top+12,width-6);}}
+  ctx.font='9px system-ui';ctx.textAlign='right';ctx.fillStyle=c.muted;
+  for(let i=0;i<=4;i++){const v=i/4;ctx.beginPath();ctx.strokeStyle=c.grid;ctx.lineWidth=1;ctx.moveTo(left,y(v));ctx.lineTo(right,y(v));ctx.stroke();ctx.fillText(fmt(v),left-7,y(v)+3);}
+  ctx.textAlign='center';for(const p of [0,.001,.01,.1,1]){ctx.fillStyle=c.muted;ctx.fillText(p===.001?'10⁻³':p===.01?'10⁻²':p===.1?'10⁻¹':String(p),x(p),bottom+15);ctx.beginPath();ctx.strokeStyle=c.grid;ctx.moveTo(x(p),bottom);ctx.lineTo(x(p),bottom+4);ctx.stroke();}
+  ctx.textAlign='left';ctx.fillText('Valor relativo',left,top-8);ctx.textAlign='center';ctx.fillText('Probabilidad p · escala no lineal',(left+right)/2,h-4);
+  if(b&&points.length){const series=[{color:c.teal,key:'C',base:b.C},{color:c.coral,key:'L',base:b.L}];for(const s of series){if(s.base<1e-12)continue;ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.beginPath();let connected=false;for(const d of points){if(d[s.key]===null){connected=false;continue;}const xx=x(d.p),yy=y(d[s.key]/s.base);if(connected)ctx.lineTo(xx,yy);else ctx.moveTo(xx,yy);connected=true;}ctx.stroke();for(const d of points){if(d[s.key]===null)continue;ctx.beginPath();ctx.arc(x(d.p),y(d[s.key]/s.base),2.3,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();}}}
+  const marker=x(state.p);ctx.setLineDash([3,4]);ctx.strokeStyle=assessment.qualifies?c.teal:c.muted;ctx.globalAlpha=.8;ctx.lineWidth=assessment.qualifies?1.6:1;ctx.beginPath();ctx.moveTo(marker,top);ctx.lineTo(marker,bottom);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+  if(state.traceStarted&&state.metrics&&b){for(const [key,color]of[['C',c.teal],['L',c.coral]]){if(b[key]<1e-12||state.metrics[key]===null)continue;ctx.beginPath();ctx.arc(marker,y(state.metrics[key]/b[key]),4.5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle=c.surface;ctx.lineWidth=2;ctx.stroke();}}
+  if(!points.length){ctx.fillStyle=c.muted;ctx.textAlign='center';ctx.font='11px system-ui';ctx.fillText('Calculando el tramo recorrido…',(left+right)/2,(top+bottom)/2);}
+}
+function updateSmallWorldNotice(active,m,a){
+  const notice=$('smallWorldNotice'),button=$('smallWorldExplain');
+  $('stateBadge').textContent=`p = ${fmt(state.p)}${active&&a.qualifies?' · Mundo pequeño':''}`;
+  if(!active){notice.hidden=true;button.hidden=true;state.smallWorldInside=false;state.smallWorldDismissed=false;return;}
+  if(a.reason==='pending'){notice.hidden=true;button.hidden=true;return;}
+  if(!a.qualifies){notice.hidden=true;button.hidden=true;state.smallWorldInside=false;state.smallWorldDismissed=false;return;}
+  if(!state.smallWorldInside)state.smallWorldDismissed=false;state.smallWorldInside=true;button.hidden=false;
+  const retained=Math.round(100*a.cRatio),reduction=Math.round(100*(1-a.lRatio));
+  $('smallWorldP').textContent=`p = ${fmt(state.p)} · ${state.n} nodos · k = ${state.k}`;
+  $('smallWorldC').textContent=`${retained} %`;$('smallWorldL').textContent=`${reduction} %`;
+  $('smallWorldCDetails').textContent=`C/C₀ = ${fmt(a.cRatio)} ≥ 0,50`;$('smallWorldLDetails').textContent=`L/L₀ = ${fmt(a.lRatio)} ≤ 0,50`;
+  $('smallWorldExplanation').textContent=`Los vecinos siguen formando grupos muy conectados: se conserva el ${retained} % del agrupamiento inicial. Al mismo tiempo, los caminos requieren ${fmt(m.L)} pasos en promedio, frente a ${fmt(state.baseline.L)} en el anillo. Los enlaces reconectados introducen atajos entre zonas de la red.`;
+  $('smallWorldLinks').textContent=`${fmt(state.graph.changed)} de ${fmt(state.graph.edges.length)} enlaces reconectados; una sola componente.`;
+  notice.hidden=state.smallWorldDismissed;
+}
+function updateRoute(){
+  if(state.from===null||state.to===null)return;const path=shortestPath(state.graph,state.from,state.to);state.path=path||[];state.pathSet=new Set(state.path);$('routeFrom').value=state.from+1;$('routeTo').value=state.to+1;
+  if(!path){$('routeResult').textContent=`Los nodos ${state.from+1} y ${state.to+1} están en componentes distintas. No existe un camino.`;return;}
+  const gap=Math.min(Math.abs(state.to-state.from),state.n-Math.abs(state.to-state.from)),baseline=Math.ceil(gap/(state.k/2));
+  const routeText=path.length>14?path.slice(0,6).map(v=>v+1).join(' → ')+' → … → '+path.slice(-4).map(v=>v+1).join(' → '):path.map(v=>v+1).join(' → ');
+  $('routeResult').textContent=`${routeText} · ${path.length-1} ${path.length===2?'paso':'pasos'} ahora; ${baseline} en el anillo original.`;
+}
+function hitNode(event){const rect=$('networkCanvas').getBoundingClientRect(),x=event.clientX-rect.left,y=event.clientY-rect.top;let best=-1,dist=14;for(let i=0;i<state.n;i++){const p=nodePosition(i,state.n,rect.width,rect.height),d=Math.hypot(x-p.x,y-p.y);if(d<dist){dist=d;best=i;}}return{node:best,x,y,rect};}
+function initialize(){
+  try{if(localStorage.getItem('sw-theme')==='dark')document.body.classList.add('dark');}catch(e){}
+  $('themeBtn').setAttribute('aria-label',document.body.classList.contains('dark')?'Cambiar a tema claro':'Cambiar a tema oscuro');
+  function bindNumber(key,id){let timer,edited=false;const apply=()=>{clearTimeout(timer);if(!edited)return;edited=false;const value=$(id).value;if(value!==''&&Number(value)!==state[key])setParams({[key]:value});};$(id).addEventListener('input',()=>{edited=true;clearTimeout(timer);timer=setTimeout(apply,500);});$(id).addEventListener('change',apply);$(id).addEventListener('blur',apply);$(id).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();apply();}});}
+  for(const [key,range,number]of[['n','nRange','nNumber'],['k','kRange','kNumber']]){$(range).addEventListener('input',e=>setParams({[key]:e.target.value}));bindNumber(key,number);}
+  $('pRange').addEventListener('input',e=>{if(e.isTrusted)setParams({p:fromSlider(Number(e.target.value))},{trace:true});});bindNumber('p','pNumber');
+  document.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>setParams({p:Number(b.dataset.p)})));
+  $('seedBtn').onclick=()=>setParams({seed:(state.seed+137)>>>0},{structural:true});
+  $('resetBtn').onclick=()=>{state.showLocal=true;state.labels=false;$('localEdges').checked=true;$('nodeLabels').checked=false;setParams({n:200,k:8,p:0,seed:42},{structural:true});toast('Parámetros iniciales restaurados.');};
+  $('playBtn').onclick=()=>{if(playTimer){stopPlay();scheduleMetrics(0);return;}clearTrace();setParams({p:0},{trace:true});$('playBtn').textContent='Ⅱ Pausar animación';$('playBtn').setAttribute('aria-pressed','true');let step=0;playTimer=setInterval(()=>{step++;setParams({p:fromSlider(step/45*1000)},{animated:true,trace:true});if(step>=45){stopPlay();scheduleMetrics(0);}},230);};
+  $('curveBtn').onclick=()=>{clearTrace();setParams({p:0},{trace:false});};$('localEdges').onchange=e=>{state.showLocal=e.target.checked;drawNetwork();};$('nodeLabels').onchange=e=>{state.labels=e.target.checked;drawNetwork();};
+  $('forceRestart').onclick=()=>{forceState.layoutSeed+=7919;forceState.paused=false;updateForceGraph(true);};
+  $('forcePause').onclick=()=>{forceState.paused=!forceState.paused;if(forceState.worker)forceState.worker.postMessage({type:'pause',paused:forceState.paused});else if(forceState.paused){clearTimeout(forceState.timer);forceState.timer=null;}else startForceFallback(true);updateForceStatus();};
+  const forceCanvas=$('forceCanvas');
+  forceCanvas.addEventListener('pointerdown',e=>{const hit=hitForceNode(e);if(hit.node<0)return;e.preventDefault();forceCanvas.setPointerCapture(e.pointerId);forceState.drag={node:hit.node,startX:e.clientX,startY:e.clientY,moved:false};state.hover=hit.node;const p=forceState.positions;pinForceNode({index:hit.node,x:p[hit.node*2],y:p[hit.node*2+1]});drawNetwork();});
+  forceCanvas.addEventListener('pointermove',e=>{const drag=forceState.drag;if(drag){if(Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY)>4)drag.moved=true;const rect=forceCanvas.getBoundingClientRect(),v=forceState.projection;pinForceNode({index:drag.node,x:Math.max(-12,Math.min(12,(e.clientX-rect.left-rect.width/2)/v.scale+v.cx)),y:Math.max(-12,Math.min(12,(e.clientY-rect.top-rect.height/2)/v.scale+v.cy))});return;}if(e.pointerType==='touch')return;const hit=hitForceNode(e);if(state.hover!==hit.node){state.hover=hit.node;drawNetwork();}const tip=$('forceTooltip');tip.hidden=hit.node<0;if(hit.node>=0){tip.textContent=`Nodo ${hit.node+1} · grado ${state.graph.adj[hit.node].length}`;tip.style.left=Math.max(2,Math.min(hit.x+10,hit.rect.width-140))+'px';tip.style.top=Math.max(2,hit.y-30)+'px';}});
+  forceCanvas.addEventListener('pointerup',e=>{const drag=forceState.drag;forceState.drag=null;pinForceNode(null);if(forceCanvas.hasPointerCapture(e.pointerId))forceCanvas.releasePointerCapture(e.pointerId);if(drag&&!drag.moved)selectNodeForPath(drag.node);});
+  forceCanvas.addEventListener('pointercancel',()=>{forceState.drag=null;pinForceNode(null);});
+  forceCanvas.addEventListener('pointerleave',()=>{if(!forceState.drag){state.hover=-1;$('forceTooltip').hidden=true;drawNetwork();}});
+  const dismissSmallWorld=()=>{state.smallWorldDismissed=true;$('smallWorldNotice').hidden=true;};
+  $('smallWorldClose').onclick=dismissSmallWorld;$('smallWorldExplain').onclick=()=>{state.smallWorldDismissed=false;drawChart();};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('smallWorldNotice').hidden)dismissSmallWorld();});
+  const dragHandle=$('smallWorldDrag');let noticeDrag=null;
+  dragHandle.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const rect=$('smallWorldNotice').getBoundingClientRect();noticeDrag={dx:e.clientX-rect.left,dy:e.clientY-rect.top};dragHandle.setPointerCapture(e.pointerId);});
+  dragHandle.addEventListener('pointermove',e=>{if(!noticeDrag)return;const box=$('smallWorldNotice'),rect=box.getBoundingClientRect();box.style.left=Math.max(10,Math.min(innerWidth-rect.width-10,e.clientX-noticeDrag.dx))+'px';box.style.top=Math.max(10,Math.min(innerHeight-rect.height-10,e.clientY-noticeDrag.dy))+'px';box.style.right='auto';box.style.bottom='auto';});
+  const endNoticeDrag=()=>{noticeDrag=null;};dragHandle.addEventListener('pointerup',endNoticeDrag);dragHandle.addEventListener('pointercancel',endNoticeDrag);
+  $('themeBtn').onclick=()=>{document.body.classList.toggle('dark');const dark=document.body.classList.contains('dark');$('themeBtn').setAttribute('aria-label',dark?'Cambiar a tema claro':'Cambiar a tema oscuro');try{localStorage.setItem('sw-theme',dark?'dark':'light');}catch(e){}drawNetwork();drawChart();};
+  $('downloadBtn').onclick=e=>{if(location.protocol!=='file:')return;e.preventDefault();const clone=document.documentElement.cloneNode(true);clone.querySelectorAll('.hover-tip,.toast').forEach(e=>e.hidden=true);const blob=new Blob(['<!DOCTYPE html>\n',clone.outerHTML],{type:'text/html;charset=utf-8'}),url=location.protocol==='file:'?URL.createObjectURL(blob):new URL('Laboratorio_Mundo_Pequeno.html',location.href).href,a=document.createElement('a');a.href=url;a.download='Laboratorio_Mundo_Pequeno_Doble_Vista.html';document.body.appendChild(a);a.click();a.remove();if(location.protocol==='file:')setTimeout(()=>URL.revokeObjectURL(url),10000);toast('Descarga iniciada. Abra el HTML en su navegador para usarlo sin conexión.');};
+  $('routeForm').onsubmit=e=>{e.preventDefault();state.from=Math.max(0,Math.min(state.n-1,Math.round(Number($('routeFrom').value))-1));state.to=Math.max(0,Math.min(state.n-1,Math.round(Number($('routeTo').value))-1));updateRoute();drawNetwork();};
+  $('clearRoute').onclick=()=>{state.from=null;state.to=null;state.path=[];state.pathSet.clear();$('routeResult').textContent='Elija dos nodos para explorar un camino mínimo.';drawNetwork();};
+  $('networkCanvas').addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const hit=hitNode(e);if(hit.node!==state.hover){state.hover=hit.node;drawNetwork();}const tip=$('nodeTooltip');tip.hidden=hit.node<0;if(hit.node>=0){tip.textContent=`Nodo ${hit.node+1} · grado ${state.graph.adj[hit.node].length}`;tip.style.left=Math.min(hit.x+12,hit.rect.width-145)+'px';tip.style.top=Math.max(4,hit.y-32)+'px';}});
+  $('networkCanvas').addEventListener('pointerleave',()=>{state.hover=-1;$('nodeTooltip').hidden=true;drawNetwork();});
+  $('networkCanvas').addEventListener('click',e=>selectNodeForPath(hitNode(e).node));
+  $('chartCanvas').addEventListener('pointermove',e=>{const points=visibleCurve();if(!points.length||!plotDims)return;const rect=e.target.getBoundingClientRect(),px=e.clientX-rect.left,nearest=points.reduce((a,b)=>Math.abs(plotDims.x(a.p)-px)<Math.abs(plotDims.x(b.p)-px)?a:b),b=state.baseline,tip=$('chartTooltip');if(!b)return;tip.textContent=`p ${fmt(nearest.p)} · C/C₀ ${b.C>1e-12?fmt(nearest.C/b.C):'—'} · L/L₀ ${nearest.L===null?'∞':fmt(nearest.L/b.L)}`;tip.hidden=false;tip.style.left='4px';tip.style.top='2px';});$('chartCanvas').addEventListener('pointerleave',()=>$('chartTooltip').hidden=true);
+  const resize=new ResizeObserver(()=>{transition=null;drawNetwork();drawChart();});resize.observe($('networkArea'));resize.observe($('forceArea'));resize.observe($('chartCanvas').parentElement);
+  syncControls();updateGraph();scheduleMetrics(0);drawChart();
+}
+window.smallWorld={generateGraph,measureGraph,shortestPath,getState:()=>state,setParams};
+initialize();
+</script>
+</body>
+</html>
