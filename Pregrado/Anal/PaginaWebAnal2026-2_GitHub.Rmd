@@ -1,0 +1,2080 @@
+---
+title: ""
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    toc: false
+    # Necesario para publicar solamente el HTML en GitHub Pages.
+    self_contained: true
+    df_print: paged
+  pdf_document:
+    toc: false
+date: ""
+---
+
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --uv-red: #F4B223;
+  --uv-blue: #003B71;
+  --uv-navy: #00264D;
+  --uv-ink: #24364B;
+  --uv-muted: #63758A;
+  --uv-bg: #f6f8fb;
+  --uv-card: rgba(255,255,255,0.94);
+  --uv-line: #e6edf5;
+  --uv-soft-blue: #eaf4ff;
+  --uv-soft-red: #FFF8E5;
+  --shadow-sm: 0 8px 24px rgba(0,38,77,.08);
+  --shadow-md: 0 18px 55px rgba(0,38,77,.14);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--uv-ink);
+  background:
+    radial-gradient(circle at top left, rgba(244,178,35,.12), transparent 34rem),
+    radial-gradient(circle at top right, rgba(0,59,113,.12), transparent 34rem),
+    linear-gradient(180deg, #ffffff 0%, var(--uv-bg) 40%, #ffffff 100%);
+  line-height: 1.65;
+}
+
+.main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 18px 26px 80px;
+}
+
+h1, h2, h3, h4 { color: var(--uv-navy); font-weight: 800; letter-spacing: -0.02em; }
+h2 {
+  margin-top: 34px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--uv-line);
+  position: relative;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 92px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--uv-red), var(--uv-blue));
+}
+
+p { font-size: 1.04rem; }
+
+.hero-section {
+  margin: 18px 0 34px;
+  padding: 34px;
+  border-radius: 32px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(0,38,77,.95), rgba(0,59,113,.93)),
+    url('https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: relative;
+}
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 15%, rgba(255,255,255,.18), transparent 22rem);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; max-width: 980px; }
+.hero-logo {
+  width: 120px;
+  max-width: 32%;
+  background: #fff;
+  padding: 12px;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.16);
+  margin-bottom: 22px;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid rgba(255,255,255,.34);
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: .78rem;
+  letter-spacing: .08em;
+}
+.hero-section h1 {
+  color: #fff;
+  margin: 18px 0 10px;
+  font-size: clamp(2.15rem, 4vw, 4.8rem);
+  line-height: 1.03;
+}
+.hero-subtitle {
+  max-width: 800px;
+  font-size: clamp(1.08rem, 1.8vw, 1.45rem);
+  color: rgba(255,255,255,.88);
+  margin-bottom: 22px;
+}
+.hero-badges, .hero-actions, .quick-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.badge-soft {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  color: #fff;
+  font-weight: 700;
+}
+.hero-actions { margin-top: 24px; }
+.hero-actions a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: #fff;
+  color: var(--uv-blue);
+  box-shadow: 0 8px 22px rgba(0,0,0,.12);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.hero-actions a:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+
+.quick-facts {
+  margin: -8px 0 30px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.fact-card {
+  border: 1px solid var(--uv-line);
+  background: var(--uv-card);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.fact-label { color: var(--uv-muted); font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.fact-value { color: var(--uv-navy); font-size: 1.1rem; font-weight: 800; margin-top: 4px; }
+
+.intro-card, .profile-card, .resource-card {
+  border: 1px solid var(--uv-line);
+  background: var(--uv-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 26px;
+  margin: 22px 0;
+}
+.intro-card {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.intro-card img {
+  width: 100%;
+  border-radius: 24px;
+  box-shadow: 0 12px 28px rgba(0,38,77,.12);
+}
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.resource-tile {
+  text-decoration: none !important;
+  border: 1px solid var(--uv-line);
+  border-radius: 18px;
+  padding: 16px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  color: var(--uv-navy) !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.resource-tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); border-color: #b8d8f4; }
+.resource-tile strong { display: block; font-size: 1.02rem; margin-bottom: 4px; }
+.resource-tile span { color: var(--uv-muted); font-size: .92rem; }
+
+.profile-card {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 26px;
+  align-items: center;
+}
+.profile-card img {
+  width: 210px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 8px solid #fff;
+  box-shadow: 0 14px 36px rgba(0,38,77,.16);
+}
+.profile-card h3 { margin: 0 0 6px; font-size: 1.65rem; }
+.profile-card p { color: var(--uv-muted); margin-bottom: 16px; }
+.profile-card a, .main-container > p a {
+  color: var(--uv-blue);
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.nav-pills {
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 28px;
+  padding: 12px !important;
+  background: rgba(255,255,255,.74);
+  border: 1px solid var(--uv-line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.nav-pills > li { margin: 0 !important; }
+.nav-pills > li > a {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 999px !important;
+  color: var(--uv-blue) !important;
+  font-weight: 800;
+  padding: 10px 14px !important;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li > a:hover {
+  background: linear-gradient(135deg, var(--uv-red), var(--uv-blue)) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+.tab-content {
+  background: rgba(255,255,255,.76);
+  border: 1px solid var(--uv-line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 22px 0 34px;
+  border-radius: 22px;
+  border: 1px solid var(--uv-line);
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
+table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 0 !important;
+  background: #fff;
+  overflow: hidden;
+  font-size: .95rem;
+}
+th, td {
+  border: 0 !important;
+  border-bottom: 1px solid var(--uv-line) !important;
+  vertical-align: top !important;
+  padding: 16px !important;
+}
+th {
+  background: linear-gradient(135deg, var(--uv-navy), var(--uv-blue)) !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  min-width: 150px;
+}
+tr:nth-child(even) td { background: #fbfdff; }
+tr:hover td { background: #f2f8ff; }
+td a {
+  display: inline-block;
+  margin: 3px 4px 6px 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d9e8f6;
+  background: #f7fbff;
+  color: var(--uv-blue) !important;
+  font-weight: 700;
+  text-decoration: none !important;
+  line-height: 1.25;
+}
+td a:hover { background: var(--uv-soft-blue); border-color: #b8d8f4; }
+
+center img, p img {
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(0,38,77,.12);
+}
+
+blockquote {
+  border-left: 5px solid var(--uv-red);
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.floating-top {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, var(--uv-red), var(--uv-blue));
+  color: #fff;
+  box-shadow: var(--shadow-md);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .main-container { padding: 12px 14px 70px; }
+  .hero-section { padding: 24px; border-radius: 24px; }
+  .quick-facts, .resource-grid, .intro-card, .profile-card { grid-template-columns: 1fr; }
+  .profile-card img { width: 170px; height: 170px; }
+  .tab-content { padding: 14px; }
+  th, td { padding: 12px !important; }
+}
+</style>
+
+<style type="text/css">
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@600;700;800&display=swap');
+
+/* Ajustes de legibilidad: fuente clara, cómoda y de tamaño moderado para lectura en pantalla */
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Atkinson Hyperlegible', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.70;
+}
+
+.main-container {
+  max-width: 1180px;
+}
+
+p, li, td, th, blockquote,
+.intro-card p,
+.profile-card p,
+.resource-card p,
+.tab-content,
+.hero-subtitle {
+  font-size: 1.02rem;
+}
+
+h1, h2, h3, h4,
+.hero-section h1,
+.fact-label,
+.fact-value,
+.badge-soft,
+.hero-actions a,
+.resource-tile strong,
+.nav-pills > li > a {
+  font-family: 'Inter', 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+h2 {
+  font-size: 1.72rem;
+  line-height: 1.22;
+  margin-top: 42px;
+}
+
+h3 {
+  font-size: 1.34rem;
+  line-height: 1.28;
+}
+
+.profile-card h3 {
+  font-size: 1.72rem;
+}
+
+.hero-section h1 {
+  font-size: clamp(2.35rem, 4vw, 4.85rem);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.10rem, 1.75vw, 1.42rem);
+  line-height: 1.58;
+}
+
+.badge-soft,
+.hero-actions a,
+.fact-value {
+  font-size: 1.03rem;
+}
+
+.resource-tile strong {
+  font-size: 1.03rem;
+}
+
+.resource-tile span,
+.fact-label,
+.eyebrow {
+  font-size: .92rem;
+}
+
+.nav-pills {
+  gap: 10px;
+  padding: 14px !important;
+}
+
+.nav-pills > li > a {
+  font-size: .96rem;
+  padding: 11px 15px !important;
+}
+
+.tab-content {
+  padding: 24px;
+}
+
+table {
+  font-size: .98rem;
+}
+
+th, td {
+  padding: 15px !important;
+}
+
+td a {
+  font-size: .96rem;
+  padding: 7px 10px;
+}
+
+.floating-top {
+  font-size: 1rem;
+  padding: 12px 15px;
+}
+
+@media (min-width: 1200px) {
+  html { font-size: 17px; }
+}
+
+@media (max-width: 900px) {
+  html { font-size: 15.5px; }
+  body { line-height: 1.66; }
+  p, li, td, th, blockquote, .tab-content { font-size: 1rem; }
+  .tab-content { padding: 16px; }
+  .nav-pills > li > a { font-size: .95rem; padding: 10px 13px !important; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function ensureMainContainer() {
+    if (document.querySelector('.main-container')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'main-container';
+    var nodes = Array.from(document.body.childNodes).filter(function (node) {
+      if (node.nodeType === 1 && ['SCRIPT', 'STYLE', 'LINK'].indexOf(node.tagName) !== -1) return false;
+      if (node.nodeType === 1 && node.classList.contains('floating-top')) return false;
+      if (node.nodeType === 3 && !node.textContent.trim()) return false;
+      return true;
+    });
+    document.body.insertBefore(wrapper, document.body.firstChild);
+    nodes.forEach(function (node) { wrapper.appendChild(node); });
+  }
+
+  function activateCustomTab(nav, panels, index) {
+    Array.from(nav.children).forEach(function (item, itemIndex) {
+      item.classList.toggle('active', itemIndex === index);
+      var link = item.querySelector('a');
+      if (link) link.setAttribute('aria-selected', itemIndex === index ? 'true' : 'false');
+    });
+    panels.forEach(function (panel, panelIndex) {
+      var active = panelIndex === index;
+      panel.classList.toggle('active', active);
+      panel.hidden = !active;
+      panel.style.display = active ? 'block' : 'none';
+    });
+  }
+
+  function buildFallbackTabset() {
+    /*
+       R Markdown genera las pestañas mediante JavaScript. Cuando las librerías
+       auxiliares no se publican, este respaldo crea las pestañas sin depender
+       de Bootstrap ni de jQuery.
+    */
+    window.setTimeout(function () {
+      var tabsetRoot = document.querySelector(
+        'div.section.level1.tabset, section.level1.tabset, h1.tabset, h1.tabset-pills'
+      );
+      if (!tabsetRoot) return;
+
+      var containerMode = !tabsetRoot.matches('h1.tabset, h1.tabset-pills');
+      var root = containerMode ? tabsetRoot : tabsetRoot.parentElement;
+
+      /* Si el tabset nativo de R Markdown ya fue creado, no intervenir. */
+      if (root.querySelector('.nav.nav-pills, .nav.nav-tabs, .tab-content > .tab-pane')) return;
+
+      var titleHeading = containerMode
+        ? Array.from(tabsetRoot.children).find(function (el) { return el.tagName === 'H1'; })
+        : tabsetRoot;
+
+      var entries = [];
+
+      if (containerMode) {
+        Array.from(tabsetRoot.children).forEach(function (section) {
+          if (!section.matches('div.section.level2, section.section.level2, section.level2')) return;
+          var heading = Array.from(section.children).find(function (el) { return el.tagName === 'H2'; });
+          if (!heading) return;
+          entries.push({
+            title: heading.textContent.trim() || 'Sección',
+            node: section,
+            sourceId: section.id || ''
+          });
+        });
+      } else {
+        var node = tabsetRoot.nextElementSibling;
+        while (node && node.tagName !== 'H1') {
+          if (node.tagName === 'H2') {
+            var heading = node;
+            var items = [];
+            node = heading.nextElementSibling;
+            while (node && node.tagName !== 'H2' && node.tagName !== 'H1') {
+              var next = node.nextElementSibling;
+              items.push(node);
+              node = next;
+            }
+            entries.push({
+              title: heading.textContent.trim() || 'Sección',
+              heading: heading,
+              items: items,
+              sourceId: heading.id || ''
+            });
+          } else {
+            node = node.nextElementSibling;
+          }
+        }
+      }
+
+      if (!entries.length || !titleHeading) return;
+
+      var nav = document.createElement('ul');
+      nav.className = 'nav nav-pills custom-tabset';
+      nav.setAttribute('role', 'tablist');
+
+      var content = document.createElement('div');
+      content.className = 'tab-content custom-tab-content';
+
+      titleHeading.insertAdjacentElement('afterend', content);
+      titleHeading.insertAdjacentElement('afterend', nav);
+
+      var panels = [];
+      entries.forEach(function (entry, index) {
+        var panelId = 'curso-tab-' + index;
+        var li = document.createElement('li');
+        li.setAttribute('role', 'presentation');
+
+        var link = document.createElement('a');
+        link.href = '#' + panelId;
+        link.textContent = entry.title;
+        link.setAttribute('role', 'tab');
+        link.setAttribute('aria-controls', panelId);
+        link.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+        li.appendChild(link);
+        nav.appendChild(li);
+
+        var panel = document.createElement('div');
+        panel.id = panelId;
+        panel.className = 'tab-pane';
+        panel.setAttribute('role', 'tabpanel');
+
+        if (entry.node) {
+          panel.appendChild(entry.node);
+        } else {
+          panel.appendChild(entry.heading);
+          entry.items.forEach(function (item) { panel.appendChild(item); });
+        }
+
+        content.appendChild(panel);
+        panels.push(panel);
+
+        link.addEventListener('click', function (event) {
+          event.preventDefault();
+          activateCustomTab(nav, panels, index);
+          if (history.replaceState) history.replaceState(null, '', '#' + panelId);
+          window.scrollTo({
+            top: nav.getBoundingClientRect().top + window.pageYOffset - 18,
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      var initialIndex = 0;
+      var hash = window.location.hash.replace('#', '');
+      if (hash) {
+        var matchIndex = entries.findIndex(function (entry) {
+          return entry.sourceId === hash;
+        });
+        if (matchIndex >= 0) initialIndex = matchIndex;
+      }
+
+      activateCustomTab(nav, panels, initialIndex);
+      titleHeading.style.display = 'none';
+    }, 0);
+  }
+
+  ensureMainContainer();
+  buildFallbackTabset();
+
+  document.querySelectorAll('table').forEach(function (table) {
+    if (!table.parentElement.classList.contains('table-wrap')) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
+
+  document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+  });
+
+  var topButton = document.createElement('button');
+  topButton.className = 'floating-top';
+  topButton.textContent = '↑';
+  topButton.title = 'Volver arriba';
+  topButton.onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  document.body.appendChild(topButton);
+});
+</script>
+
+<style type="text/css">
+
+/* Tablas de módulos más compactas */
+.tab-content .table-wrap,
+.course-tabs-panels .table-wrap {
+  margin: 12px 0 20px;
+  border-radius: 14px;
+}
+
+.tab-content table,
+.course-tabs-panels table {
+  font-size: .84rem;
+  line-height: 1.32;
+}
+
+.tab-content th,
+.tab-content td,
+.course-tabs-panels th,
+.course-tabs-panels td {
+  padding: 8px 10px !important;
+}
+
+.tab-content td p,
+.course-tabs-panels td p {
+  margin: 0 0 6px;
+  font-size: .86rem;
+  line-height: 1.32;
+}
+
+.tab-content td a,
+.course-tabs-panels td a {
+  padding: 3px 7px;
+  margin: 2px 3px 4px 0;
+  font-size: .82rem;
+  line-height: 1.2;
+}
+
+.tab-content th,
+.course-tabs-panels th {
+  min-width: 120px;
+}
+
+.tab-content br,
+.course-tabs-panels br {
+  line-height: 1.15;
+}
+
+</style>
+
+<style type="text/css">
+.hero-section {
+  background:
+    linear-gradient(135deg, rgba(0,38,77,.95), rgba(0,59,113,.93)),
+    url('https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+}
+.course-objectives { margin: 16px 0 0; padding-left: 1.25rem; }
+.course-objectives li { margin-bottom: 10px; }
+.institution-note { color: var(--uv-muted); font-weight: 700; }
+</style>
+
+```{=html}
+<section class="hero-section">
+  <div class="hero-content">
+    <img class="hero-logo" src="https://www.dropbox.com/scl/fi/80cyc74xbca9es561ugey/LogoJaveriana.PNG?rlkey=grenf8p5d8jj4k2pgh0itxzpi&dl=1" alt="Logo Pontificia Universidad Javeriana">
+    <div class="eyebrow">Curso de pregrado · 2026-2</div>
+    <h1>Análisis de Algoritmos</h1>
+    <p class="hero-subtitle">Diseño, análisis y comparación de algoritmos eficientes para resolver problemas computacionales con rigor y criterio.</p>
+    <div class="hero-badges">
+      <span class="badge-soft">🏛️ Pontificia Universidad Javeriana</span>
+      <span class="badge-soft">💻 Departamento de Ingeniería de Sistemas</span>
+      <span class="badge-soft">📚 Semestre 2026-2</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://www.dropbox.com/scl/fi/xqylznpmk83pm0xo6e9sw/Levitin3Ed.pdf?rlkey=soaeczl7hf9cbin9omq8h9g3p&dl=1">📘 Texto del curso: Levitin</a>
+      <a href="https://www.dropbox.com/scl/fi/nwsgmps3n16wulw502d5g/ExamenesAnterioresDef.zip?rlkey=lk94w680jynys9v4gn1mmco3d&dl=1">🗂️ Exámenes y proyectos anteriores</a>
+      <a href="https://www.dropbox.com/scl/fi/v3sgn6g975gb8j601rexc/CodigoQrGrupoWappLunes.jpeg?rlkey=l1jg8axyd4f0cxgin82uvkl4s&dl=1">🗂️Código QR Luness</a>
+      <a href="https://www.dropbox.com/scl/fi/x2nun185dlhrh7h5678ye/CodigoQrWappMartes.jpeg?rlkey=pdnnbg0k10i5nkm7gzlz6tmpd&dl=1">🗂Código QR Martes</a>
+      <a href="https://www.dropbox.com/scl/fi/z3pbvynkeklhzhu9zsc16/Coleccion_Levitin_Completa_Capitulos_01_al_12.pdf?rlkey=etptqzfu4el878bkxdrk9ieey&dl=0">📘Comic Book</a>
+      <a href="https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Libro_Interactivo_Analisis_Algoritmos_Completo.html">📘Libro Interactivos</a>
+      <a href="https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/AlgPuzzlesTutorials.html">📘Puzzles Lab</a>
+
+      
+
+    </div>
+  </div>
+</section>
+```
+
+# Pestañas {.tabset .tabset-pills}
+
+## Información General
+
+```{=html}
+<div class="intro-card">
+  <img src="https://www.dropbox.com/scl/fi/eeghddt91ho7hsoylnk0c/MasterTheorem.jpeg?rlkey=qtgkgll2jriurlwcvkmvfxfjl&dl=1" alt="Imagen representativa del curso Análisis de Algoritmos">
+  <div>
+    <h3>Propósito del curso</h3>
+    <p>El curso de pregrado en Análisis de Algoritmos se centra en proporcionar a los estudiantes una comprensión profunda de la eficiencia y el rendimiento de los algoritmos utilizados en la resolución de problemas computacionales. A lo largo del curso, los estudiantes aprenderán a evaluar la complejidad temporal y espacial de los algoritmos, considerando aspectos prácticos como el tiempo de ejecución y el consumo de memoria. Se explorarán técnicas avanzadas de diseño y optimización de algoritmos, incluyendo estrategias de programación dinámica, algoritmos de búsqueda y clasificación, y técnicas de aproximación. Además, se abordarán conceptos fundamentales de teoría de grafos y estructuras de datos eficientes para proporcionar a los estudiantes las herramientas necesarias para desarrollar algoritmos eficaces y resolver problemas computacionales de manera efectiva.</p>
+    <p>El objetivo principal del curso es capacitar a los estudiantes para analizar críticamente algoritmos y tomar decisiones fundamentadas sobre la selección y aplicación de enfoques algorítmicos en diversos contextos. Se fomentará el pensamiento analítico y la habilidad para evaluar el rendimiento de un algoritmo en términos de eficiencia y escalabilidad. A través de ejercicios prácticos y proyectos, los estudiantes desarrollarán habilidades esenciales para diseñar algoritmos eficientes y comprenderán cómo estas habilidades son cruciales en la resolución de problemas en campos como inteligencia artificial, optimización y análisis de datos a gran escala.</p>
+    <h3>Objetivos</h3>
+    <ul class="course-objectives">
+      <li>Analizar la Complejidad Computacional: Explorar la teoría de la complejidad computacional para comprender la diferencia entre problemas de fácil resolución y aquellos que son intrínsecamente difíciles. Esto incluye el estudio de clases de complejidad, como P, NP y NP-completo.</li>
+      <li>Aplicar Conceptos Teóricos en el Diseño de Algoritmos: Capacitar a los estudiantes para aplicar los conocimientos teóricos en el diseño y análisis de algoritmos eficientes, considerando restricciones de tiempo y espacio.</li>
+      <li>Desarrollar Habilidades de Pensamiento Lógico y Analítico: Fomentar el desarrollo de habilidades de pensamiento lógico y analítico al abordar problemas computacionales desde una perspectiva teórica, preparando a los estudiantes para resolver desafíos algorítmicos complejos.</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Profesor
+
+```{=html}
+<div class="profile-card">
+  <img src="https://github.com/jamelende/PaginasWeb/raw/main/FotoAlf.png" alt="Alfonso Meléndez">
+  <div>
+    <h3>M.Sc. Alfonso Meléndez</h3>
+    <p>Profesor Titular · Escuela Colombiana de Ingeniería</p>
+    <a href="https://jamelende.github.io/PaginasWeb/HojadeVida/HojaDeVida2026.html">Ver hoja de vida</a>
+  </div>
+</div>
+```
+
+## Periodo 1
+
+<br> </br>
+
+<center> ![](https://www.dropbox.com/scl/fi/eeghddt91ho7hsoylnk0c/MasterTheorem.jpeg?rlkey=qtgkgll2jriurlwcvkmvfxfjl&dl=1){width=30%}</center>
+<br> </br>
+
+<center> [¡¡¡¡Nuevo!!!! Examenes y Proyectos Semesteres Anteriores](https://www.dropbox.com/scl/fi/nwsgmps3n16wulw502d5g/ExamenesAnterioresDef.zip?rlkey=lk94w680jynys9v4gn1mmco3d&dl=1)<br> </center>
+
+
+<center> [Texto del Curso Anany Levitin, The Design and analysis of Algorithms](https://www.dropbox.com/scl/fi/xqylznpmk83pm0xo6e9sw/Levitin3Ed.pdf?rlkey=soaeczl7hf9cbin9omq8h9g3p&dl=1)<br> </center>
+
+<center> [Video: Biggest Breakthroughs in Computer Science (Hashing)](https://www.youtube.com/watch?v=DFwppvrL_pE)<br> </center>
+
+
+<br> </br>
+
+
+<td>
+
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Diapositivas</th>
+    <th> Lecturas y Talleres</th>
+    <th> Material Adicional</th>
+  </tr>
+  
+ <tr>
+    
+    
+<th>**Semana 1** </th>
+
+
+
+
+    
+ <td> 
+      **Introducción** <br>
+
+ </td>
+    
+<td>
+
+
+
+**12 Acertijos Algorítmicos**<br>
+
+[Acertijos Algorítmicos](https://www.dropbox.com/scl/fi/400a006fhzr4ajvjzppj8/AcertijosANAL2026.zip?rlkey=7lmvyd320vp07v6g03oeqmese&dl=1)<br>
+[Estrategias  Diseño de Algoritmos (TutorialLevitin)](https://www.dropbox.com/scl/fi/wx2egfu0deaprdj8livqs/LecturaPrimeraSemana.pdf?rlkey=vl25y4e5kq4qj3ayjcdzizn5z&dl=1)<br>
+
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+[Historia de los Algoritmos, Levitin](https://www.dropbox.com/scl/fi/i6wl6sz3sfuz8dddkilo6/Algoritmos-Historia-Articulo-levitin.pptx?rlkey=1aaz7tekrm7eu7wh2coemdvwz&dl=1)<br>
+
+
+
+
+
+
+</td>
+<td> 
+
+**PlayGrounds:**<br>
+[PlayGrounds Tutorial Levitin](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/AlgPuzzlesTutorials.html)<br>
+<!-- [1. Algoritmo Siamés Cuadrados Mágicos](https://www.dropbox.com/scl/fi/554xbrkvqrsxxptjyxwed/siames.html?rlkey=e3ch1tz7c63t1zq11p5an0wg2&st=mwarysp0&dl=1)<br> -->
+<!-- [2. Problema de las 8 damas](https://www.dropbox.com/scl/fi/z0rvdh84bnbsm7saowerm/QueensDef.html?rlkey=jd18hlx9vf18nd1tt7epmjnou&st=bl1jgyz0&dl=1)<br> -->
+<!-- [3. Algoritmo Trominos](https://www.dropbox.com/scl/fi/ugnmzzknjr8l9efziccf4/TrominosDef_split_quadrants.html?rlkey=nbftw2t7vkdt8lysywsh6wazx&st=eitlqde8&dl=1)<br> -->
+<!-- [3.1 Algoritmo Trominos lovable](https://tromino-joinery-magic.lovable.app)<br> -->
+<!-- [4. Robot Coins (Dynamic Prog)](https://www.dropbox.com/scl/fi/r99utbawkfdxygai7sw9a/RobotCoinsDef.html?rlkey=bg8vlwwpr5xtlxv1c0b1alt4t&st=c5aez6ib&dl=1)<br> -->
+
+
+
+
+
+
+
+
+
+
+
+
+   
+ </td>
+ </tr>
+ 
+ 
+<th>**Semana 2** </th>
+
+
+
+
+    
+ <td> 
+      **Análisis de Algoritmos** <br>
+
+ </td>
+    
+<td>
+
+[Cap 1 Algoritmos](https://www.dropbox.com/scl/fi/vwbr9w45skluerh5nmrbr/Cap1-Algorithmic_Architecture.pptx?rlkey=6jb6ng425vjpkud1747tg7fg8&dl=1)<br>
+[Cap 2 Eficiencia](https://www.dropbox.com/scl/fi/4b5dqvkx32xxrxyb6s2yj/Cap2-Algorithm_Efficiency_Analysis.pptx?rlkey=mqei0mn31uoegd2uqkappgonk&dl=1)<br>
+[Audio Capítulo 1](https://www.dropbox.com/scl/fi/ia6g43ul10nurqiwsizbn/Cap1-Dise-o_l-gico_de_algoritmos_y_estructuras.m4a?rlkey=xeedcotpic5qttvvdvhgun92k&dl=1)<br>
+[Audio Capítulo 2](https://www.dropbox.com/scl/fi/mtt2io4290pyu846g8vc3/Medir_la_eficiencia_real_de_los_algoritmos-5min.m4a?rlkey=1cl7b292helhfdunrv3cdnwza&dl=1)<br>
+<!-- [Audio 2 16 min](https://www.dropbox.com/scl/fi/l07ipvo4amiu2n269hshz/Cap2-Las_matem-ticas_siempre_ganan_al_silicio_16Min.m4a?rlkey=y1snzaun125ibkw7wn34lvk1w&dl=1)<br> -->
+
+**Slides Levitin**<br>
+
+
+[Diseño y Análisis de Algoritmos](https://www.dropbox.com/scl/fi/y4jc12q3t9mfpai82g6cr/1.-Design-and-Analysis-of-Algorithms.pptx?rlkey=djf7jtqgjvi6crmcpbu6hdndg&st=4kq5np8x&dl=1)<br>
+[Eficiencia de Algoritmos](https://www.dropbox.com/scl/fi/4incaiw6pyr4nwk7hantw/2.-Algorithms-Efficiency.pptx?rlkey=zug0usvavhic7dm6gfiv4xy17&st=78pltt31&dl=1)<br>
+[Notación Asintótica](https://www.dropbox.com/scl/fi/9ygxjx9hmgah9ob4w0xx5/3.-Asymptotic-Notations-and-Basic-Efficiency-Classes.pptx?rlkey=7vv6nh43gm5hpppbrkbds6f2r&st=s9c57uo9&dl=1)<br>
+
+<!-- [Slides Levitin Ch1](https://www.dropbox.com/scl/fi/ohmiyy6ntve3j4ab33tis/ch01.ppt?rlkey=bguwh3yykf7slnsfek3grg4yq&dl=1)<br> -->
+
+
+<!-- [Análisis y Diseño de Algoritmos](https://www.dropbox.com/scl/fi/8zk05ey14j3ki1iqgjfg9/1.-Analisis-y-Diseno-de-Algoritmos.pptx?rlkey=d7x51vj0cg7ej055ng8pnu9cs&dl=1)<br> -->
+<!-- [Análisis de Eficiencia de Algoritmos](https://www.dropbox.com/scl/fi/mtzt4aborsqd8gu3orbei/2.-Fundamentos-del-Analisis-de-la-Eficiencia-de-Algoritmos-1.pptx?rlkey=b2kv908o1u5mwg2nxdsb18rtp&dl=1)<br> -->
+
+
+[Análisis de Algoritmos no Recursivos](https://www.dropbox.com/scl/fi/xkerbjpap3f3qwrevl60k/4.-Analysis-of-Nonrecursive-Algorithms.pptx?rlkey=7nsdenv9stmy5tfh49yywy11o&st=zsqz7xla&dl=1)<br>
+[Análisis de Algoritmos Recursivos](https://www.dropbox.com/scl/fi/o6fdsfhpmxm7kkeyfjdfm/5.-Analysis-of-Recursive-Algorithms.pptx?rlkey=2hiu5gvafekdeh2h9kcrvm1vc&st=piioa2u1&dl=1)<br>
+[Fibonacci](https://www.dropbox.com/scl/fi/9jna5kqppgqt98v5gyjiq/6.-Fibonacci.pptx?rlkey=s0t1468k8nxflak7b49dwzdvc&st=tj59yd06&dl=1)<br>
+
+<!-- [Slides Levitin Ch2](https://www.dropbox.com/scl/fi/idzv52hrfyy0jjdsewgpf/ch02.ppt?rlkey=1bgjym9qpx6nbt3aoq9c899ey&dl=1)<br> -->
+<!-- [Slides Levitin Ch3 (Fuerza Bruta)](https://www.dropbox.com/scl/fi/idzv52hrfyy0jjdsewgpf/ch02.ppt?rlkey=1bgjym9qpx6nbt3aoq9c899ey&dl=1)<br> -->
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+[Levitin Capítulo 1]()
+[Levitin Capítulo 2](https://www.dropbox.com/scl/fi/xmisqos7vukc2swvz9bge/LecturaLevitin-Semana2.pdf?rlkey=wkppqiejou5ywa02rw388234r&dl=1)<br>
+
+**Comic Books**<br>
+[Cap 1 Int a los algoritmos](https://www.dropbox.com/scl/fi/3z3isknw1gs2gdkunw5ia/Levitin_Libro_01_Introduccion_a_los_algoritmos_Ilustrado.pdf?rlkey=rwqbmzvg11cfib6hidob4hyhy&dl=0)<br>
+[Cap 2 Fundamentos de Análisis](https://www.dropbox.com/scl/fi/p6nzgv0x8lmg6fgpjst7f/Levitin_Libro_02_Fundamentos_del_analisis_de_eficiencia_Ilustrado.pdf?rlkey=97akdj3wila416kaubnra6qmb&dl=1)<br>
+[Cap 1 Qué es un algoritmo?](https://www.dropbox.com/scl/fi/78oqyt79ndmdmuzuhysmt/Capitulo_01_Levitin.pdf?rlkey=0km95fk18m3htv1wxm2qswnst&dl=1)<br>
+[Cap 2 Análisis de Eficiencia](https://www.dropbox.com/scl/fi/1r3n4dgqjv5p5hfw5yvaw/Capitulo_02_Levitin.pdf?rlkey=adzt2878pm2su6akihlr5cgh7&dl=1)
+<br>
+</td>
+<td> 
+
+**Videos**<br>
+[Cristobal Vila, Nature by Numbers](https://www.youtube.com/watch?v=W-AHBiU7Ac4&list=PL1CE28FDADC9852E8&index=17)<br>
+
+**Simuladores**<br>
+
+   
+ </td>
+ </tr>
+
+ 
+ <th>**Semana 3** </th>
+
+
+
+
+    
+ <td> 
+      **Fuerza Bruta** <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+[The Brute Force Engine](https://www.dropbox.com/scl/fi/szcat0rt31tm1aw7apb43/The_Brute_Force_Engine.pptx?rlkey=namzx98lpzmvl565c20pe65g4&dl=1)<br>
+[Audio](https://www.dropbox.com/scl/fi/d6a1qeew1jtpbs6zpgukw/La_fuerza_bruta_en_los_algoritmos_5min_dialogo.m4a?rlkey=4036iafu2p9dmks47h991soxx&dl=1)<br>
+
+**PlayGrounds**<br>
+[Algolab Lovable](https://puzzle-algo-visualizer.lovable.app/)<br>
+**Questic Capítulo 3**<br>
+[Selección Multiple](https://open-prompt-ai-eval.lovable.app/join/EE6-LW9G)<br>
+[Preguntas Abiertas](https://open-prompt-ai-eval.lovable.app/join/KW8-UNYU)<br>
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+[Levitin Capítulo 3 Fuerza Bruta](https://www.dropbox.com/scl/fi/25gkoox9p589xsykfggte/LecturaLevitinSemana1.pdf?rlkey=90m3crbib5b34d1ybt577v28u&dl=)<br>
+
+**Comic Books**<br>
+
+[Fuerza Bruta 1](https://www.dropbox.com/scl/fi/zml7nni5ji3iniucrz1h2/Levitin_Libro_03_Fuerza_bruta_y_busqueda_exhaustiva_Ilustrado.pdf?rlkey=ko72903mtoknqo82ar91vznjj&dl=1)<br>
+[Fuerza Bruta 2](https://www.dropbox.com/scl/fi/k3be5hikdpqr3bbg2k3sw/Capitulo_03_Levitin.pdf?rlkey=v9f1of9jbwh4namgfn8q1dffs&dl=1)<br>
+
+
+<!-- **Talleres**<br> -->
+
+<!-- [Taller Decrementar y Conquistar(Jupyter NoteBook)](https://www.dropbox.com/scl/fi/yuo0yi0jmumn48d1x8lbt/Lab_Decrementar_y_Conquistar.ipynb?rlkey=sdru5mxrcqa1ksywne5czd80p&dl=0)<br> -->
+
+<!-- **Laboratorio Colab**<br> -->
+
+<!-- [Laboratorio Decrementar y Conquistar](https://www.dropbox.com/scl/fi/8us20k8s90r2bd0tmby23/Lab_Decrementar_y_Conquistar.ipynb?rlkey=xmwdgbqrihorzvke530y1oip9&dl=1)<br> -->
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+<!-- [Karatsuba Algorithm](https://www.youtube.com/watch?v=yWI2K4jOjFQ&list=PL3edoBgC7ScV9WPytQ2dtso21YrTuUSBd&index=9)<br> -->
+<!-- [Recursive Insertion Sort](https://www.youtube.com/watch?v=uwV80JaZrPs&t=257s)<br> -->
+
+
+**PlayGrounds**<br>
+[Algoritmos Básicos  Fuerza Bruta](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Laboratorio_Fuerza_Bruta_Levitin.html)<br>
+
+<!-- **Interactivos en Linea**<br> -->
+<!-- [Ordenamiento Topológico](https://see-algorithms.com/graph/TopSort)<br> -->
+<!-- [Wolfram: Russian Multiplication](https://demonstrations.wolfram.com/RussianMultiplication/)<br> -->
+
+
+   
+ </td>
+ </tr>
+
+ 
+ <th>**Semana 4** </th>
+
+
+
+
+    
+ <td> 
+      **Disminuir y Dividir y Conquistar** <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+[Disminución y Conquista](https://www.dropbox.com/scl/fi/ikcumdvnuvngqonmm2p0b/Decrease_and_Conquer.pptx?rlkey=o7jbuj5p0ttzxnoj0eplf7yvd&dl=1)<br>
+[Audio](https://www.dropbox.com/scl/fi/iaxfpodrqa8s437ywt3ef/C-mo_funciona_la_disminuci-n_y_conquista.m4a?rlkey=mvv3m8p8x5iocdi1binp0v67c&dl=1)<br>
+[Dividir y Conquistar](https://www.dropbox.com/scl/fi/rulmj44y6sgfonl2wyx95/Divide_and_Conquer_Blueprint.pptx?rlkey=3avixiylgdczo41sviqifqoqf&dl=1)<br>
+[Audio](https://www.dropbox.com/scl/fi/6fxj1j7b2a7ulf37l4opk/Atajos_imposibles_del_divide_y_vencer-s.m4a?rlkey=g08m1rgq9ljpspgep1v6gfqzw&dl=1)<br>
+
+**PlayGrounds**<br>
+
+[Libro Interactivo Dividir y Conquistar Levitin](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Levitin-DividirConquistar.html)<br>
+[Teorema Maestro](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Master_Theorem_Lab.html)<br>
+[Lab Dividir y Conquistar](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/dividir-y-conquistar.html)<br>
+[Máximo SubArreglo](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Maximo-SubArreglo.html)<br>
+
+<!-- [Convex Hull](https://see-algorithms.com/other/ConvexHull)<br> -->
+<!-- [Quick Hull Lovable](https://quickhull-explorer.lovable.app/)<br> -->
+<!-- [Max Subarray Divide and Conquer Lovable](https://max-subarray-explorer.lovable.app/)<br> -->
+<!-- [Max Subarray Kadane Algorithm](https://www.dropbox.com/scl/fi/140u1hp80mz8uipg3hp8y/kadane.html?rlkey=ps9c3yvx0wk5098wbkp4et5ys&dl=1)<br> -->
+<!-- [Kadane Dynamic programming](https://www.dropbox.com/scl/fi/ke5eega0ey9gvajxmcgke/Kadanedp.html?rlkey=m0s99yasaxm8qqi0jxzy2ymye&dl=1)<br> -->
+
+
+
+<!-- [Disminuir y Conquistar, Parte Uno](https://www.dropbox.com/scl/fi/piksm4g2ria4udkhrrq8h/1.-Disminuir-y-Conquistar.pptx?rlkey=dh2nh3a8g5aqzjn29a1tpbir6&dl=1)<br> -->
+<!-- [Disminuir y Conquistar, Parte Dos](https://www.dropbox.com/scl/fi/hmwss9vs82yd5atxgqiq2/2.-Disminuir-y-Conquistar-2.pptx?rlkey=vase9ew3pyteejeoyxp0kjqv5&dl=1)<br> -->
+
+<!-- [Slides Levitin Ch4 ](https://www.dropbox.com/scl/fi/yo4mbs3vr1bk6dzarpbhn/ch04.pptx?rlkey=ny86wgqnl4hsmrnc5wspr0ocd&dl=1)<br> -->
+
+<!-- [Divide y Vencerás](https://www.dropbox.com/scl/fi/tn7sdpjfiojysnkl0izlk/3.-Divide-y-Venceras.pptx?rlkey=3qza2u2tit26nsp9nq1c64sf9&dl=1)<br> -->
+
+
+<!-- [Slides Levitin Ch5](https://www.dropbox.com/scl/fi/r1hfl3yyy2zjdom3fww6q/ch05.ppt?rlkey=lxlpi50cqrv7xw20ga4k599ay&dl=1)<br> -->
+
+<!-- [Slides How to Solve Recurrences(Nima Anari)](https://www.dropbox.com/scl/fi/ns0gc820e0v9pi13jpjl3/HowToSolveRecurrences.pptx?rlkey=97w2tb7w5hrkd5ascg8gpqci3&dl=1)<br> -->
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+[Levitin Capítulo 4](https://www.dropbox.com/scl/fi/bnbs5zk43rv1x81ouensm/LecturaLevitinSemana3.pdf?rlkey=7gvgnvw5u8x3duke44687cr1h&dl=1)<br>
+[Preguntas Selección Multiple](https://open-prompt-ai-eval.lovable.app/join/YG7-M8SD)<br>
+[Preguntas Abiertas](https://open-prompt-ai-eval.lovable.app/join/H46-SCS4)<br>
+[Levitin Capítulo 5](https://www.dropbox.com/scl/fi/h6zrz1lf0cndc11ln7ce5/LecturaLevitinSemana4.pdf?rlkey=kp96dwpfmdiydozlgtsc4rcof&dl=1)<br>
+[Preguntas Selección Multiple](https://open-prompt-ai-eval.lovable.app/join/JF3-KE6W)<br>
+[Preguntas Abiertas](https://open-prompt-ai-eval.lovable.app/join/QFP-T46J)<br>
+
+**Taller**<br>
+[Taller Dividir y Conquistar](https://www.dropbox.com/scl/fi/5ovcvhwripjbeem0ko00v/Taller_Dividir_y_Conquistar.pdf?rlkey=xo4l0gx74tylom630ru4t3499&dl=1)<br>
+[Enlace para entrega del taller](https://jflap-grader-ai.lovable.app/entrega/c624f4c54fe8634e5b48a4b6)<br>
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+[Closest pair of points in nlogn time, Inside Code](https://www.youtube.com/watch?v=ldHA8UcQI9Q&list=PL3edoBgC7ScV9WPytQ2dtso21YrTuUSBd&index=7)<br>
+[Convex Hull (Graham Scan), Inside Code](https://www.youtube.com/watch?v=SBdWdT_5isI&t=1s)<br>
+[Quick Hull Animation](https://www.youtube.com/watch?v=wwuUMAVmNhc)<br>
+
+<!-- [Strassen Algorithm , Inside Code](https://www.youtube.com/watch?v=OSelhO6Qnlc&list=PL3edoBgC7ScV9WPytQ2dtso21YrTuUSBd&index=5)<br> -->
+<!-- [The fastest matrix multiplication algorithm](https://www.youtube.com/watch?v=sZxjuT1kUd0)<br> -->
+<!-- [Inside Code : How can we Multiply Numbers Quickly (10 min)](https://www.youtube.com/watch?v=yWI2K4jOjFQ&t=208s)<br> -->
+
+
+
+**PlayGrounds**<br>
+[Teorema Maestro](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/MasterTheoremChatGpt.html)<br>
+[Ordenamiento Topológico](https://sort-wizard.lovable.app/)<br>
+[Torres de Hanoi (Cortesía Samuel Gantiva)](https://torreshanoigantiva.lovable.app/)
+[Problema de Josephus](https://josefo-visual-lab.lovable.app/par)<br>
+[Regla de Horner](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Horners_Rule_Lab.html)<br>
+
+<!-- [Problema de Josephus](https://josefo-visual-lab.lovable.app/)<br> -->
+<!-- [Juego de Nim: Una pila](https://www.dropbox.com/scl/fi/eahmrlrjt6r3r0p4oe3ld/nimUnaPilaGanaRecojeUltima.html?rlkey=x4u89fcwd4lecmapud74nb6m5&dl=1)<br> -->
+<!-- [Juego de Nim, 3 Pilas](https://www.dropbox.com/scl/fi/0fqhi48hfr17yavtauh3e/nim3PilasGanaNoRecojeUltima.html?rlkey=cu3m7p11nlub0jvhpjzgx4vum&dl=1)<br> -->
+<!-- [Lab Ordenamiento Topológico](https://sort-wizard.lovable.app/)<br> -->
+
+
+<!-- [Post Office Location Visualizer](https://www.dropbox.com/scl/fi/4ubkctbchib9csguqtpr4/post_office_location_visualizer.html?rlkey=rdhxo0u8lt5zs54fpo1yt15zd&dl=1)<br> -->
+<!-- [Closest Pair Divide Conquer](https://www.dropbox.com/scl/fi/owbcrrodl1n2fjiskrbhn/closest_pair_divide_conquer.html?rlkey=v44vsm5h9dwuoh5eqm53imi8z&dl=1)<br> -->
+<!-- [Quick Hull Visualizer](https://www.dropbox.com/scl/fi/9p99fza7legh2fl9htpf0/quickhull_visualizer.html?rlkey=924kk4p62au8mukkfv9ndppry&dl=1)<br> -->
+<!-- [SkyLine Divide Conquer](https://www.dropbox.com/scl/fi/udq0fkol6pv929rmryok0/skyline_divide_conquer.html?rlkey=2f5tlp8ivvnjt45vtvh55xzr5&dl=1)<br> -->
+<!-- [SkyLine Divide Conquer 2](https://www.dropbox.com/scl/fi/pf9pjbwb423v65lo6nzat/skyline_divide_conquer_visualizer.html?rlkey=94s2038y67gvp9w02xslvq8k8&dl=1)<br> -->
+
+
+
+
+
+   
+ </td>
+ </tr>
+
+
+<th>**Semana 5** </th>
+
+
+
+
+    
+ <td> 
+      **Transformar  y Conquistar** <br>
+
+ </td>
+    
+<td>
+
+
+**Slides**<br>
+
+[Transformar y Conquistar](https://www.dropbox.com/scl/fi/7p8ns9ip834cyglf4tjyv/Transform_and_Conquer.pptx?rlkey=m88daeq3jz555laznciz3c6oz&dl=1)<br>
+[Audio](https://www.dropbox.com/scl/fi/2dbw2yjux8qukyq8oufj6/C-mo_los_algoritmos_transforman_y_conquistan_problemas.m4a?rlkey=admrgf9i8rufwa58v9shmh9gj&dl=1)<br>
+
+**PlayGrounds**<br>
+
+[Levitin: Transformar Conquistar](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Levitin-TransformarConquistar.html)<br>
+
+
+<!-- [Transformar y Conquistar, Parte Uno](https://www.dropbox.com/scl/fi/w5wnu02jrh1kohagpashk/4.-Transformar-y-Conquistar.pptx?rlkey=qfbt3odytasiyo8loxbeio1rr&dl=1)<br> -->
+<!-- [Transformar y Conquistar, Parte Dos](https://www.dropbox.com/scl/fi/90xf82wkzl7ni43508v0v/5.-Transformar-y-Conquistar-2.pptx?rlkey=00l778hc6uoqt3sv6n09gof93&dl=1)<br> -->
+
+<!-- [Slides Levitin Ch6](https://www.dropbox.com/scl/fi/qacpdtpzqq8cq08l36qf6/ch06.ppt?rlkey=qbiopc2wxvb1c4tambn3jgh4q&dl=1)<br> -->
+**Interactivos en Linea**<br>
+[Arboles AVL](https://see-algorithms.com/data-structures/AVL)<br>
+[Binary Heap](https://see-algorithms.com/data-structures/BinaryHeap)<br>
+[Wolf, Goat and Cabbage](https://anim.ide.sk/crossing.php)<br>
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+[Levitin Capítulo 6](https://www.dropbox.com/scl/fi/9ngfw6ir8u70lz3mphj7v/LecturalevitinSemana5.pdf?rlkey=0uqg7tn3dtwuhw1v1vrje8jfe&dl=1)<br>
+[Preguntas Selección Multiple](https://open-prompt-ai-eval.lovable.app/join/DDT-AXSG)<br>
+[Preguntas Abiertas](https://open-prompt-ai-eval.lovable.app/join/5NE-LBVB)<br>
+
+**Taller**<br>
+[Taller Exámenes](https://www.dropbox.com/scl/fi/hl3f980lqf44iaipc3dm9/TallerSemana5ExamenesAnteriores.pdf?rlkey=9k0465x0hl12oba73cjd6qvor&dl=1)<br>
+[Exámenes para taller](https://www.dropbox.com/scl/fi/8z2bjz8ysb5hhxs2u3l2s/Examensparataller2026-1.zip?rlkey=kafll77ke5ebuyvq3pbjo7f5o&dl=1)<br>
+
+</td>
+<td>
+
+**Videos:**<br>
+
+**Algoritmia**<br>
+[1. Estrategias para construir algoritmos](https://www.youtube.com/watch?v=ojTvwUP82rA)<br>
+[2. Tecnicas de Diseño de Algoritmos](https://www.youtube.com/watch?v=kjalIWrgTRo)
+[3. Introducción a Diseño de Algoritmos](https://www.youtube.com/watch?v=xNxyQ5VOOWg)<br>
+
+**Simuladores**<br>
+[Gauss Fondo Negro](https://www.dropbox.com/scl/fi/j8q0uhwm13czymfc1t5sq/GaussBlack.html?rlkey=8i7bdoi4wmpmpml6xycyht6wh&dl=1)<br>
+[Gauss Fondo Blanco](https://www.dropbox.com/scl/fi/bnjaxh2nq4x39a41gjbk3/GaussWhite.html?rlkey=9rcsdok9ufphbn9fy68mwfrlv&dl=1)<br>
+[Programación Lineal (simplex)](https://www.dropbox.com/scl/fi/nftzmjs2fmkynx8omt9r3/simplex2.html?rlkey=8au2tme368hbwsgdw0orme7xh&dl=1)<br>
+[Horners Rule Visualizer](https://www.dropbox.com/scl/fi/ck42v7b89olgo57pzxfjj/horner_visualizer.html?rlkey=esy36a0g3tqyheb6ylu7k6lk6&dl=1)<br>
+[Horners Rule Visualizer Compact](https://www.dropbox.com/scl/fi/j4vxqzreow5icl8a2h395/horner_visualizer_compact.html?rlkey=i1odbunzen7toa4sy1232kl3l&dl=1)<br>
+
+
+
+<!-- **Videos**<br> -->
+<!-- [Gaussian Elimination](https://www.youtube.com/watch?v=eDb6iugi6Uk)<br> -->
+<!-- [Horners Rule](https://www.youtube.com/watch?v=Sj2seJl9F_4)<br> -->
+
+
+
+   
+ </td>
+ </tr>
+  </tr>
+ 
+ 
+ </table>
+ 
+ 
+ <br> </br>
+<br> </br>
+
+## Periodo 2
+
+<br> </br>
+
+<td>
+
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Diapositivas</th>
+    <th> Lecturas y Talleres</th>
+    <th> Material Adicional</th>
+  </tr>
+  
+ <tr>
+    
+<th>**Semana 1** </th>
+
+
+
+
+    
+ <td> 
+      **Examen Primer Periodo** <br>
+
+ </td>
+    
+<td>
+
+
+**Examen Primer Periodo** <br>
+**Sustentación Examen Primer Periodo** <br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+
+
+
+  **Examen Primer Periodo** <br>
+**Sustentación Examen Primer Periodo** <br>
+
+
+
+</td>
+<td> 
+
+  **Examen Primer Periodo** <br>
+**Sustentación Examen Primer Periodo** <br>
+
+
+
+   
+ </td>
+ </tr>
+ 
+ 
+<th>**Semana 2** </th>
+
+
+
+
+    
+ <td> 
+      **Algoritmos Greedy** <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+[Slides Sesión 1](https://www.dropbox.com/scl/fi/d7a3agj4ahez3m1ev66qs/Sesi-n1.zip?rlkey=pv46y1eq35qu0ubwsk47ff122&dl=1)<br>
+
+[Slides Greedy (zip)](https://www.dropbox.com/scl/fi/rb8rfapzgpf7xc5bhej51/SlidesGreedy.zip?rlkey=li92b6qn8ja7fpj6hdsni517b&st=n49fw3a2&dl=1)<br>
+
+[Ejemplos Básicos Greedy](https://www.dropbox.com/scl/fi/tt5igt5jd5qv12u08rw0d/Ejemplos-B-sicos-Greedy.pptx?rlkey=u81r0ijea89rn0lofv8lf0b5m&st=v282zecd&dl=1)<br>
+
+[Slides Sesión 1.5 Taller](https://www.dropbox.com/scl/fi/6vetpzpxipy36981oel4v/TallerSesi-n15.zip?rlkey=2x4ghknoot7a888t9mqnnr54r&dl=1)<br>
+
+
+
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+[Levitin Capítulo 9](https://www.dropbox.com/scl/fi/e5yzasfxcr4e4gklir6kd/LecturaLevitinSemana8Greedy.pdf?rlkey=p9fpr80o2nclbelmo0qpip1yf&dl=1)<br>
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+**Interactivos**<br>
+
+[DSA Greedy Algorithms](https://www.w3schools.com/dsa/dsa_ref_greedy.php)<br>
+[Interactivos Greedy](https://www.dropbox.com/scl/fi/599fp3z34cmq3crq1urzy/00-interactivos-html-chatgpt.zip?rlkey=iv9mxkrrrt5i2imols91rflcq&dl=1)<br>
+
+
+   
+ </td>
+ </tr>
+
+ 
+ <th>**Semana 3** </th>
+
+
+
+
+    
+ <td> **Algoritmos Greedy**<br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+[Slides Sesión 2](https://www.dropbox.com/scl/fi/j6fe5569h0xk5ngfhhsjy/Sesi-n2.zip?rlkey=w0fjpbfxfuq4u7phoqc5n2yj0&dl=1)<br>
+
+[Slides Sesión 2.5 Taller](https://www.dropbox.com/scl/fi/mhf9xs27duu1azrzdfdxl/Sesi-n2.5Taller.zip?rlkey=j0nicj70kjqsnn2ky781ka30e&dl=1)<br>
+
+
+[Greedy Huffman](https://www.dropbox.com/scl/fi/bar75t3sxtzhm321ylztl/GreedyHuffman.ppt?rlkey=5nu8722p89vssiex32okfxioc&st=3gbvcal2&dl=1)<br>
+
+**Slides NotebookLM**<br>
+[Algorithm Evolution](https://www.dropbox.com/scl/fi/fqjop9ehnpljzu2gh48hb/Greedy_Algorithm_Evolution.pptx?rlkey=8u77gq5edpyyv33fn4ygitfin&dl=1)<br>
+[Logic Illuminated](https://www.dropbox.com/scl/fi/ds9nzz3w1i657kjxnx4s1/Greedy_Logic_Illuminated.pptx?rlkey=22vj2gj9o4w66oubs5w8w7neb&dl=1)<br>
+
+**PlayGrounds**<br>
+[Lavitin Greedy](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Levitin-Greedy.html)<br>
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+[Levitin Capítulo 9](https://www.dropbox.com/scl/fi/e5yzasfxcr4e4gklir6kd/LecturaLevitinSemana8Greedy.pdf?rlkey=p9fpr80o2nclbelmo0qpip1yf&dl=1)<br>
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+**Sitios Interactivos**<br>
+
+[Greedy Algortihms Tutorial FreeCodeCamp](https://www.youtube.com/watch?v=bC7o8P_Ste4)<br>
+[DSA Huffman Coding](https://www.w3schools.com/dsa/dsa_ref_huffman_coding.php)<br>
+[Better than Huffman](https://www.youtube.com/watch?v=RFWJM8JMXBs&t=311s)<br>
+
+[Mit 2015: Greedy Algortihms (Demostraciones)](https://www.youtube.com/watch?v=-QcPo_DWJk4&t=424s)<br>
+
+
+
+
+
+
+
+
+   
+ </td>
+ </tr>
+
+ <th>**Semana 4** </th>
+
+
+
+
+    
+ <td> 
+      **Programación Dinámica** <br>
+
+ </td>
+    
+<td>
+
+
+**Slides**<br>
+
+
+[Slides  NotebookLM Seis patrones](https://www.dropbox.com/scl/fi/pdeew4z0lzjl1zl8mpuhg/Dynamic_Programming_Blueprint.pptx?rlkey=5i4vcwuvpyl3p6j65x9v5xtpz&dl=1)<br>
+[Slides Seis Ejemplos Patrones](https://www.dropbox.com/scl/fi/g3w7mxd67f26tlfkyvdec/SixExamplesOfPatterns.pptx?rlkey=4qgns497vhx0tz7jroth7pz20&dl=1)<br>
+[Video Seis Patrones](https://www.youtube.com/watch?v=66hDgWottdA&t=1671s)<br>
+[Lovable Seis Ejemplos](https://my-grid-solver.lovable.app/)
+
+**PlayGrounds**<br>
+[Lavitin Prog Dinámica](https://jamelende.github.io/PaginasWeb/Pregrado/Anal/Apps/Levitin-ProgDinamica.html)<br>
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+[Levitin Capítulo 8](https://www.dropbox.com/scl/fi/d19nbpqohg2yo9f2ve84v/LecturaLevitinSemana6ProgDin.pdf?rlkey=rvdb9ywokc87295sdl2fb4ba5&dl=1)<br>
+
+**Nuevo Examen 2 2026-1**<br>
+
+[Enunciado Examen](https://www.dropbox.com/scl/fi/bd53ymp0bz12hlk45jga0/EnunciadoExamen.jpeg?rlkey=fuxswnvk6m51sie2l4sebwtju&dl=1)<br
+[Solución ChatGpt 5.5 V5](https://www.dropbox.com/scl/fi/d89e0drp2d057zf99z1io/Examen2-V5.html?rlkey=aq0ayoa6mdbfapwxosmbhad6n&dl=1)<br>
+[ChatGpt Balanced partition](https://www.dropbox.com/scl/fi/d46y961fjhzcoaz1h777a/BalancedPartition.html?rlkey=jv45kdrov5j98v0jpzbhd9xlp&dl=1)<br>
+[ChatGpt Subset Sum](https://www.dropbox.com/scl/fi/5u39klfynqnmy2hifszz9/SubsetSum.html?rlkey=27mf0qn34k0ys0asu87vekym8&dl=1)<br>
+
+**Colecciónes de Problemas**<br>
+
+[1. Seis problemas DP, una sola intuición](https://clever-knapsack-hug.lovable.app/)<br>
+[2. Otros Trece Problemas](https://enigmas-del-algoritmo.lovable.app/)<br>
+[3. Otros Seis Problemas](https://snuggle-muse-engine.lovable.app/)<br>
+[4. Diez Problemas Especiales](https://viz-learn-solve.lovable.app/)
+
+
+**Patrones**<br>
+
+**Patrón 0**<br>
+
+[Lovable 3d Remove Boxes](https://box-builder-visualizer.lovable.app/)<br>
+
+**Patrón 1 Transición Constante**<br>
+
+
+
+[Lovable Min Cost Climbing Stairs](https://clever-knapsack-hug.lovable.app/min-cost-stairs)<br>
+[Lovable House Robber](https://clever-knapsack-hug.lovable.app/house-robber)<br>
+[10 Variantes de House Robber](https://www.dropbox.com/scl/fi/kfa14dohobzmrbcnctl90/house_robber_variants_interactive.html?rlkey=wovgeamwpifbwv755phzzueuq&dl=1)<br>
+[Minimum Jumps to End](https://snuggle-muse-engine.lovable.app/min-jumps)<br>
+[Minimum Jumps Dual izq-der der-izq](https://www.dropbox.com/scl/fi/mmjdxc2curmeex3v0ed76/minimum_jumps_dual_dp.html?rlkey=1yfuj01lb0qwplrxsgdmnhioo&dl=1)<br>
+
+**Patrón 2  Cuadrícula 2D**<br>
+
+[Lovable Robot Collecting max Coins](https://viz-path-traced.lovable.app/)<br>
+[Lovable Gold Mine](https://mine-quest-solver.lovable.app/)<br>
+[1. Lovable el Caballero y la princesa](https://enigmas-del-algoritmo.lovable.app/dungeon-game)<br>
+[2. ChatGpt Caballero Princesa Mejor y Peor Caso](https://www.dropbox.com/scl/fi/nuofr8ogtsl1bremzshwa/knight_princess_random_route_simultaneous.html?rlkey=yq9xklkv2r5o43ei0snji85xn&dl=1)<br>
+[Enunciado Caballero Princesa Punto Examen](https://www.dropbox.com/scl/fi/stlcie5egomo3ghuol7lo/candidato-parcial-2-pasr.pdf?rlkey=58vu25bq32z4w4q6c66y026ho&dl=1)<br>
+[Lovable largest submatrix of ones](https://enigmas-del-algoritmo.lovable.app/maximal-square)<br>
+
+**Patrón 3  Dos Secuencias **<br>
+
+[Lovable Longest Common Subsequence](https://snuggle-muse-engine.lovable.app/lcs)<br>
+[Edit Distance](https://snuggle-muse-engine.lovable.app/edit-distance)<br>
+
+
+**Talleres**<br>
+
+
+[Taller Patrones  1 y 2](https://www.dropbox.com/scl/fi/y6m15mj4dtm5x68pe479u/Taller-Uno-Programaci-n-Din-mica.pdf?rlkey=dciz15rl4rz9sl32czni79dge&dl=1)<br>
+
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+[What is Dynamic Programming? Inside Code](https://www.youtube.com/watch?v=tOYZcy2IzJA)<br>
+
+[5 Simple Examples of Dynamic Programming](https://www.youtube.com/watch?v=aPQY__2H3tE)<br>
+
+[Canal Abdul Bari, Algorithms 82 Videos](https://www.youtube.com/watch?v=0IAPZzGSbME&list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O)<br>
+
+[Learn Dynamic Programming with animations](https://www.youtube.com/watch?v=66hDgWottdA&t=5896s)<br>
+
+**Interactivos**<br>
+
+[DSA Dynamic Programming](https://www.w3schools.com/dsa/dsa_ref_dynamic_programming.php)<br>
+
+[DSA 0-1 Knapsack](https://www.w3schools.com/dsa/dsa_ref_knapsack.php)<br>
+
+[Interactivos prog Dinámica](https://www.dropbox.com/scl/fi/egj9gqovbe1kvw75ryv29/00-interactivos-html-chatgpt.zip?rlkey=3y2u42tq0y449ulz75q2aafp8&dl=1)<br>
+ 
+
+
+
+  
+ </td>
+ </tr>
+ <th>**Semana 5** </th>
+
+
+
+
+    
+ <td> 
+      **Programación Dinámica** <br>
+
+ </td>
+    
+<td>
+**Slides**<br>
+
+[Cinco Problemas Básicos(zip)](https://www.dropbox.com/scl/fi/nzngzmndqr2orvbjfq4kr/ProgDinCincoB-sicosPPT.zip?rlkey=jrt49j6mffr88o4i9e9he3iqv&dl=1)<br>
+[Cinco Problemas Clásicos(zip)](https://www.dropbox.com/scl/fi/o4ss6nykileehonkq1xqy/ProgDinCincoCl-sicosPPT.zip?rlkey=kp4fdkoepssun0wtymdd2q44u&dl=1)<br>
+[Veinte Problemas Típicos](https://www.dropbox.com/scl/fi/n0cz8c26defigt8nx6k9p/DynamicProgramming20Examples.zip?rlkey=d89d1z1xljlrz8gz11buyo4xo&dl=1)<br>
+[Arboles](https://www.dropbox.com/scl/fi/e2jv8ss97azpsqeruyjvv/3.-Trees.zip?rlkey=kgn31mgoshs3avovazj2o5auv&dl=1)<br>
+[Algoritmos Clásicos](https://www.dropbox.com/scl/fi/e2jv8ss97azpsqeruyjvv/3.-Trees.zip?rlkey=kgn31mgoshs3avovazj2o5auv&dl=1)<br>
+
+
+[1. Conceptos Básicos de Grafos](https://www.dropbox.com/scl/fi/v64gri9y97y1buvfqxndv/1.GraphBasicConcepts.zip?rlkey=6h7stboy8a3hpj5ojs6d75xo0&dl=1)<br>
+[2. Recorridos en Grafos](https://www.dropbox.com/scl/fi/r31tuihme4p2pyc1ko1mh/2.-GraphTraversals.zip?rlkey=vyr2erzyglqir2zks6pln1jgk&dl=1)<br>
+[3. Interactivo 10 Problemas Grafos (Archivo zip)](https://www.dropbox.com/scl/fi/p0lfy0ywek39698p0fk9w/10ProblemasProgDinGrafos.zip?rlkey=mdeggesaekxkmeryvf27pvppr&dl=1)<br>
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+[Levitin Capítulo 8](https://www.dropbox.com/scl/fi/d19nbpqohg2yo9f2ve84v/LecturaLevitinSemana6ProgDin.pdf?rlkey=rvdb9ywokc87295sdl2fb4ba5&dl=1)<br>
+
+**Patrón 4  Intervalos**<br>
+
+<!-- [Lovable Longest palindromic Subsequence](https://trace-and-solve-grid.lovable.app/) -->
+<!-- [Lovable Longest palindromic Subsequence](https://dp-guide.lovable.app/) -->
+[Lovable Longest palindromic Subsequence](https://snuggle-muse-engine.lovable.app/lps)<br>
+[Minimum Insertions to Make a String a Palindrome](https://pal-joy-explore.lovable.app/min-insertions)<br>
+
+**Patrón 5  Transición no Constante 2D**<br>
+
+
+[Coin Change](https://clever-knapsack-hug.lovable.app/coin-change)<br>
+[Lovable Min Cost Tickets](https://clever-knapsack-hug.lovable.app/min-cost-tickets)<br>
+[Longest Increasing Subsequence](https://clever-knapsack-hug.lovable.app/lis)<br>
+[Cutting Rod biDimensional](https://happy-hug-circle.lovable.app/rod-cutting)<br>
+[Cutting Rod UniDimensional](https://snuggle-muse-engine.lovable.app/rod-cutting)<br>
+[Lovable Egg Dropping Problem](https://enigmas-del-algoritmo.lovable.app/egg-drop)<br>
+
+**Patrón 6  Tipo Mochila**<br>
+
+[0/1 Knapsack](https://clever-knapsack-hug.lovable.app/)<br>
+[Lovable Partition Equal Subset Sum](https://trace-and-solve-grid.lovable.app/)<br>
+[Lovable Subset sum (Style Tushar Roy)](https://huggables-joy-hub.lovable.app/)<br>
+
+
+**Talleres**<br>
+[Taller 2 Lunes: 6 Problemas de PD](https://www.dropbox.com/scl/fi/fp4rbunv134hhjh3gix40/TallerProgDin-mica6ProblemasLunes.pdf?rlkey=rhvsrn2umx6a63kgytwm8n3kp&dl=1)<br>
+[Taller 2 Martes: 6 Problemas de PD](https://www.dropbox.com/scl/fi/5m72qb6q9tgncob5sswok/Taller2ProgDinamica6Problemas.pdf?rlkey=at8stngelz2m1tnankj0xcae6&dl=1)<br>
+
+</td>
+<td> 
+**Videos:**<br>
+
+[Canal Tushar Roy, Coding made Simple (42 Videos)](https://www.youtube.com/watch?v=8LusJS5-AGo&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr)<br>
+
+**Interactivos**<br>
+
+
+[Interactivos prog Dinámica](https://www.dropbox.com/scl/fi/egj9gqovbe1kvw75ryv29/00-interactivos-html-chatgpt.zip?rlkey=3y2u42tq0y449ulz75q2aafp8&dl=1)<br>
+ 
+[Algoritmos de Grafos](https://graphonline.top/en/)<br>
+
+   
+ </td>
+ </tr>
+
+ 
+ </table>
+
+ 
+<br> </br>
+<br> </br>
+
+## Periodo 3
+
+<br> </br>
+
+<td>
+
+
+</td>
+
+<table border="1">
+ <tr> 
+    <th> </th>
+    <th>Descripción</th>
+    <th>Diapositivas</th>
+    <th> Lecturas y Talleres</th>
+    <th> Material Adicional</th>
+  </tr>
+  
+ <tr>
+
+
+
+<th>**Semana 1** </th>
+
+
+
+
+    
+ <td> 
+      **Examen Segundo Periodo** <br>
+
+ </td>
+    
+<td>
+
+
+**Examen Segundo Periodo** <br>
+**Sustentación Examen Segundo Periodo** <br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+
+
+
+  **Examen Segundo Periodo** <br>
+**Sustentación Examen Segundo Periodo** <br>
+
+
+
+</td>
+<td> 
+
+  **Examen Segundo Periodo** <br>
+**Sustentación Examen Segundo Periodo** <br>
+
+
+
+   
+ </td>
+ </tr>
+ 
+
+
+ 
+<th>**Semana 2** </th>
+
+
+
+
+    
+ <td> 
+      **Computabilidad y Tractabilidad** <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+**Questique P vs Np Videos**<br>
+
+
+[Video 1: P vs Np an Introduction](https://www.youtube.com/watch?v=OY41QYPI8cw&t=2s)<br>
+[Video 2: The Formal Definition of P](https://www.youtube.com/watch?v=Of_cpDNoZtE&list=PLlwsleWT767dnN25K_QgvdKkovK_t4K6-&index=3)<br>
+[Video 3: What makes P vs Np so Hard](https://www.youtube.com/watch?v=XV6f7XYUMg8&list=PLlwsleWT767dnN25K_QgvdKkovK_t4K6-&index=5)<br>
+
+<!-- [Videos Prueba  1](https://www.youtube.com/watch?v=2CHUiFcz47M)<br> -->
+[Preguntas Selección Multiple](https://open-prompt-ai-eval.lovable.app/join/LZN-GHPU)<br>
+[Preguntas Abiertas](https://open-prompt-ai-eval.lovable.app/join/XDM-UD67)<br>
+
+[Video 4: Np Complete Explained](https://www.youtube.com/watch?v=W9G_1xG77LE&list=PLlwsleWT767dnN25K_QgvdKkovK_t4K6-&index=6)<br>
+[Video 5: What makes Mario NP Hard](https://www.youtube.com/watch?v=oS8m9fSk-Wk&list=PLlwsleWT767dnN25K_QgvdKkovK_t4K6-&index=7)<br>
+<!-- [Videos Prueba  2](https://youtu.be/qXnYG9Fk0ag)<br> -->
+[Preguntas Selección Multiple](https://open-prompt-ai-eval.lovable.app/join/9K3-H9L8)<br>
+[Preguntas Abiertas](https://open-prompt-ai-eval.lovable.app/join/YED-AA4M)<br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+[Levitin Capítulo 10](https://www.dropbox.com/scl/fi/k2883y42pb625u3qu72lr/LecturaLevitinSemana9IterativeImprov.pdf?rlkey=k5dmhdehmjnlts3bvbs6r85s3&dl=1)<br>
+
+**Interactivos Problemas NP**<br>
+
+**1.  Programación Dinámica**<br>
+
+[1.Problema de la Mochila 0-1 ](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/1. Mochila.html)<br>
+[2. Problema Subset Sum](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/2. SubsetSum.html)<br>
+
+**2. Grafos y otros temas**<br>
+
+[1.SAT](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/3. SAT.html)<br>
+[2. Set Cover](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/5. SetCover.html)<br>
+[3. Vertex Cover](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/4. VertexCover.html)<br>
+[4. Travelling Salesman ](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/6. TSP.html)<br>
+[5. Coloración](https://jamelende.github.io/PaginasWeb/Pregrado/HTMLS/7. Coloración.html)<br>
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+[Iterative Improvement, Cat Can Code 13 min](https://www.youtube.com/watch?v=FWEj0jNu1uQ)<br>
+
+[P vs NP: Introducción 10 min](https://www.youtube.com/watch?v=OY41QYPI8cw)<br>
+[P vs NP Up and atom 15 min](https://www.youtube.com/watch?v=OY41QYPI8cw)<br>
+
+
+
+   
+ </td>
+ </tr>
+ 
+ 
+<th>**Semana 3** </th>
+
+
+
+
+    
+ <td> 
+      **Computabilidad y Tractabilidad** <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+
+[P vs NP Complexity zoo 10 min](https://www.youtube.com/watch?v=YX40hbAHx3s)<br>
+[Np Completeness Up and Atom 30 min](https://www.youtube.com/watch?v=ctwX--JEzSA&t=8s)<br>
+
+
+   
+ </td>
+ </tr>
+
+ 
+ <th>**Semana 4** </th>
+
+
+
+
+    
+ <td> 
+      **Computabilidad y Tractabilidad**  <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+
+
+
+   
+ </td>
+ </tr>
+
+ 
+ <th>**Semana 5** </th>
+
+
+
+
+    
+ <td> 
+      **Computabilidad y Tractabilidad**  <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+
+
+
+   
+ </td>
+ </tr>
+
+
+<th>**Semana 6** </th>
+
+
+
+
+    
+ <td> 
+      **Computabilidad y Tractabilidad**  <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+
+
+
+   
+ </td>
+ </tr>
+ 
+ <th>**Semana 6** </th>
+
+
+
+
+    
+ <td> 
+      **Computabilidad y Tractabilidad** <br>
+
+ </td>
+    
+<td>
+
+**Slides**<br>
+
+
+
+
+
+
+
+ 
+</td>
+
+<td>
+**Lecturas**<br>
+
+
+
+
+
+
+</td>
+<td> 
+**Videos:**<br>
+
+
+
+
+   
+ </td>
+ </tr>
+  </tr>
+ 
+ 
+ </table>
+
+
+<br> </br>
+<br> </br>
+
+ 
+## Libros
+
+<center> ![](https://github.com/jamelende/PaginasWeb/raw/main/Libros.jpg){width=20%} </center>
+
+[1. Anany Levitin, Algorithmic Puzzles](https://www.dropbox.com/scl/fi/ohtvkvde4y1k8n2epfgsf/Algorithmic-Puzzles-Levitin-Anany-Levitin-Maria-2020-2011-Oxford-University-Press-9780199740444-ecf78b0903aebe9.pdf?rlkey=nm7yprg79jwzk2pqnpg2gr0wj&dl=1)<br>
+[2. Thomas Cormen, Int to Algorithms Fourth Edition 2022](https://www.dropbox.com/scl/fi/ofhl18kdhk7b37zdt5rvj/Introduction-to-Algorithms-Fourth-Edition-Thomas-H_-Cormen-Charles-E_-Leiserson-Ronald-L_-Rivest-4th-2022-The-MIT-Press-9780262046305-b673e31b940f42bfd9d919831af9c20b-Anna-s-Archive.pdf?rlkey=j4dnh0pxnbc5udt6ywhenrmoy&dl=1)<br>
+
+
+[3. Learning Algorithms Through Problem Solving](https://www.dropbox.com/scl/fi/ncidspapr6u4gocqx6k3p/Learning-Algorithms-Through-Programming-and-Puzzle-Solving-PDFDrive.com-1.pdf?rlkey=2w7v91gbxd1orwytdvj39yruj&dl=1)<br>
+[4. Grokking Algorithms](https://www.dropbox.com/scl/fi/qr6rkd9m9y8oaap4t8xzm/Grokking-Algorithms-Aditya-Y_-Bhargava.pdf?rlkey=dxdimi6iuinzoa68xsgwai66f&dl=1)<br>
+
+
+## Artículos
+
+<center> ![](https://github.com/jamelende/PaginasWeb/raw/main/Articulos.jpg){width=20%} </center>
+
+ 
+
+
+## Cursos en Línea
+
+<center>  ![](https://www.dropbox.com/scl/fi/tqtp4bz9i35awg8wgjlca/Clusters.gif?rlkey=mpoj07q3obr5b4z2b52xckvxd&dl=1){width=25%}  </center>
+
+[A Second Course in Algorithms,Tim RoughGarden](https://www.youtube.com/watch?v=dorq_YA6plQ&list=PLEGCF-WLh2RJh2yDxlJJjnKswWdoO8gAc)<br>
+[Approximation Algorithms Course](https://www.csa.iisc.ac.in/~arindamkhan/courses/ApproxAlgo22/ApproxAlgo.html)<br>
+
+
+
+
+
+
+## Videos
+
+
+<center>  ![](https://www.dropbox.com/scl/fi/ma38u1l9na3o87ypo41py/5.-Videos-ChatGpt.png?rlkey=6ddj6k3492aczfpgnm4es57j6&dl=1){width=20%}  </center>
+
+
+**Dancing Algorithms**<br>
+
+[Quicksort](https://www.youtube.com/watch?v=3San3uKKHgg&t=3s)<br>
+[BubbleSort](https://www.youtube.com/watch?v=Iv3vgjM8Pv4&t=1s)<br>
+[InsertionSort](https://www.youtube.com/watch?v=ROalU379l3U)<br>
+[SelectionSort](https://www.youtube.com/watch?v=Ns4TPTC8whw)<br>
+[All Algorithms](https://www.youtube.com/watch?v=INHF_5RIxTE)<br>
+
+**Master Theorem**<br>
+
+[Master Theorem Explained, ByteQuest 7 min](https://www.youtube.com/watch?v=SLsHKh_OUEM)<br>
+[1. What is the master theorem? 5 min]
+[2. Proof of the Master Theorem 10 min](https://www.youtube.com/watch?v=LlFBRDO5gNQ)<br>
+[Master Theorem Visually Explained](https://www.youtube.com/watch?v=d-gIGFxewW4)<br>
+
+
+
+
+
+ 
+
+
+
+
+## Sitios Interactivos
+
+
+<center> ![](https://www.dropbox.com/scl/fi/6y0ol4ziczafz06w09y21/ia.gif?rlkey=fed842j2xz8wvhc6srl41ix2r&dl=1){width=20%} </center>
+
+
+[See Algorithms](https://see-algorithms.com)<br>
+[Visualizador de Algoritmos](https://visualgo.net/en)<br>
+[Algorithms Animations and Visualizations](https://algoanim.ide.sk/)<br>
+[Sitio de David Galles, Muy Completo](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)<br>
+[Algoritmos de Ordenamiento](https://www.toptal.com/developers/sorting-algorithms)<br>
+[The sound of Sorting](https://panthema.net/2013/sound-of-sorting/)
+[Pedagogical Resources Gabriel Robbins](https://www.cs.virginia.edu/~robins/CS_readings.html)<br>
+
+
+
+
+<br></br><br></br><br></br>
+<br></br><br></br><br></br>
