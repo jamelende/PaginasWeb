@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Puentes · Laboratorio de reducciones</title>
+<style>
+:root{--bg:#f3f5f8;--panel:#fff;--ink:#17263c;--muted:#59697e;--line:#dce3ec;--accent:#275fd6;--light:#edf3ff;--teal:#087e78;--good:#13754d;--bad:#ae3e28;--soft:#e5f4ef;--shadow:0 12px 36px #142a4610}*{box-sizing:border-box}body{margin:0;font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}body.dark{--bg:#101824;--panel:#192536;--ink:#edf3ff;--muted:#b1bfd1;--line:#334256;--accent:#84adff;--light:#233954;--teal:#6ce0d0;--good:#7be0ac;--bad:#ffad96;--soft:#1a3b36;--shadow:none}button,input,select{font:inherit}button,a,input,select,summary{outline-offset:4px}button{cursor:pointer;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:650;transition:background .15s,transform .15s}button:hover:not(:disabled){background:var(--light);transform:translateY(-1px)}button:disabled{opacity:.42;cursor:default}button.primary{background:var(--accent);color:var(--panel);border-color:var(--accent)}body.dark button.primary{color:#102039}button.ghost{background:transparent}input,select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:9px;max-width:100%}a{color:var(--accent)}h1,h2,h3,p{margin:0}h1{font-size:clamp(29px,4vw,48px);line-height:1.12;letter-spacing:-1.8px}h2{font-size:clamp(22px,3vw,30px);line-height:1.25;letter-spacing:-.7px}h3{font-size:17px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:800;text-transform:uppercase;color:var(--teal)}.muted,small{color:var(--muted)}.top{height:70px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;border-bottom:1px solid var(--line);background:var(--panel);gap:15px}.brand{font-size:21px;letter-spacing:-.6px;font-weight:850;cursor:pointer}.brand span{color:var(--accent)}.tools{display:flex;gap:8px;align-items:center}.tools button{padding:6px 11px;font-size:13px}.layout{display:grid;grid-template-columns:270px minmax(0,1fr);min-height:calc(100vh - 70px)}aside{padding:25px 17px;border-right:1px solid var(--line);background:var(--panel)}aside .eyebrow{padding:0 10px}nav{display:grid;gap:5px;margin-top:12px}nav button{text-align:left;border:0;background:transparent;padding:10px;font-size:13px;display:flex;gap:10px;align-items:center;font-weight:550}nav button.active{background:var(--light);color:var(--accent)}.num{font-size:11px;border:1px solid var(--line);width:25px;height:25px;border-radius:8px;display:grid;place-items:center;flex-shrink:0}.group{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;margin:17px 10px 5px}.sidebar-foot{margin:26px 10px;font-size:12px}.progress{height:5px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--teal);transition:width .3s}main{padding:30px;max-width:1480px;width:100%;margin:auto;align-self:start}.hero{background:var(--panel);padding:clamp(24px,4vw,48px);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero p{max-width:690px;margin:20px 0;color:var(--muted);font-size:17px}.hero .eyebrow{margin-bottom:17px}.pipeline{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:28px 0}.pipe{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}.pipe strong{display:block;margin:6px 0}.pipe small{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:15px;margin-top:20px}.card{padding:22px;border-radius:15px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;align-items:start;gap:12px}.card h3{line-height:1.4}.card p{font-size:13px;color:var(--muted);flex:1}.pill{display:inline-block;font-size:10px;letter-spacing:.8px;text-transform:uppercase;border:1px solid var(--line);padding:3px 7px;border-radius:6px;color:var(--teal);font-weight:750}.intro{display:flex;justify-content:space-between;gap:20px;margin-bottom:18px}.intro p{color:var(--muted);margin-top:8px;max-width:850px}.panel{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:22px;margin-bottom:17px;box-shadow:var(--shadow)}.input-row{display:flex;align-items:end;flex-wrap:wrap;gap:12px}.input-row label{display:grid;gap:4px;font-size:12px;font-weight:700}.input-row input{width:245px;font-weight:450;font-size:14px}.input-row .short{width:90px}.hint{font-size:12px;color:var(--muted);margin-top:10px}.stagebar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:18px 0}.stagebar div{min-width:0;overflow-wrap:anywhere;font-size:11px;padding:10px 5px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:9px;color:var(--muted)}.stagebar div.on{background:var(--light);color:var(--accent);border-color:var(--accent);font-weight:750}.lab-grid{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:18px}.canvas{min-height:300px;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 8px}.caption{padding:14px 16px;background:var(--light);border-radius:10px;border-left:3px solid var(--accent);min-height:78px}.caption strong{display:block}.caption p{font-size:14px;margin-top:4px}.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:17px}.controls small{margin-left:auto}.sidebox{border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:18px;margin-bottom:14px}.sidebox p{margin-top:8px;font-size:13px;color:var(--muted)}.formula{padding:16px;background:var(--light);border-radius:10px;text-align:center;font-size:clamp(17px,2.5vw,24px);font-weight:700;margin:14px 0;overflow:auto}.quiz{border:1px solid var(--line);background:var(--panel);padding:22px;border-radius:15px;margin-bottom:17px}.answers{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.answers button{font-size:13px}.feedback{margin-top:10px;font-size:13px;min-height:20px}.ok{color:var(--good)}.err{color:var(--bad)}.challenge{margin-top:20px;border-top:1px solid var(--line);padding-top:20px}.challenge p{font-size:14px;color:var(--muted);margin:7px 0 12px}.tokens{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:14px 0}.token{display:inline-grid;place-items:center;min-width:46px;min-height:45px;padding:6px 9px;border:1px solid var(--line);border-radius:10px;background:var(--light);font-weight:750;font-variant-numeric:tabular-nums}.token.hit{background:var(--soft);border-color:var(--teal);color:var(--teal)}.token.bad{border-color:var(--bad);color:var(--bad)}.rowlabel{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:center;margin-top:9px}.matrix-group{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:15px}.matrix{display:grid;gap:4px;border-left:2px solid var(--muted);border-right:2px solid var(--muted);padding:8px}.cell{width:43px;height:38px;display:grid;place-items:center;background:var(--bg);border-radius:4px;font-variant-numeric:tabular-nums;font-size:13px}.cell.blue{background:var(--light);color:var(--accent);font-weight:750}.cell.green{background:var(--soft);color:var(--teal);font-weight:750}.mini{font-size:12px}.graph-grid{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:14px}.graphwrap{width:100%;text-align:center}.graphwrap svg{max-width:100%;width:360px;height:auto;touch-action:manipulation}.edge{stroke:var(--muted);stroke-width:2}.edge.dim{opacity:.16}.edge.hl{stroke:var(--teal);stroke-width:5}.edge.fail{stroke:var(--bad);stroke-width:4}.edge-hit{stroke:transparent;stroke-width:17;cursor:pointer}.node{fill:var(--panel);stroke:var(--accent);stroke-width:2;cursor:pointer}.node.sel{fill:var(--accent)}.ntext{fill:var(--ink);font-size:15px;font-weight:750;pointer-events:none;dominant-baseline:middle;text-anchor:middle}.ntext.sel{fill:var(--panel)}.weight{fill:var(--ink);font-size:12px;paint-order:stroke;stroke:var(--panel);stroke-width:5px;stroke-linejoin:round}.tag{font-size:11px;color:var(--muted)}details{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:16px;margin:14px 0}summary{cursor:pointer;font-weight:750}details p,details li{color:var(--muted);font-size:14px;margin-top:9px}.note{padding:14px;border-radius:10px;background:var(--soft);font-size:13px;margin-top:18px}.footer{color:var(--muted);font-size:12px;margin:30px 0 5px}dialog{max-width:800px;max-height:85vh;overflow:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:27px}dialog::backdrop{background:#06122488}dialog p,dialog li{margin:12px 0;color:var(--muted)}.empty{padding:30px;text-align:center;color:var(--muted)}.splitnum{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.bignum{padding:18px;border:1px solid var(--line);border-radius:12px;text-align:center;min-width:125px;font-size:25px;font-weight:800}.bignum small{display:block;font-size:11px;letter-spacing:1px;font-weight:600}.badgecheck{margin-left:auto;color:var(--teal)}.poly-note{font-size:12px;text-align:center;max-width:550px;color:var(--muted)}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}@media(min-width:1500px){main{padding:38px}}@media(max-width:1100px){.lab-grid{grid-template-columns:1fr}.reason{display:grid;grid-template-columns:1fr 1fr;gap:14px}.layout{grid-template-columns:225px minmax(0,1fr)}main{padding:22px}}@media(max-width:800px){.layout{display:block}aside{border-right:0;border-bottom:1px solid var(--line);padding:13px}aside nav{display:flex;overflow-x:auto;margin:6px 0 0}nav button{min-width:160px;max-width:200px}.group,aside .eyebrow,.sidebar-foot{display:none}main{padding:16px}.top{padding:0 15px}.top .tag{display:none}.hero{padding:25px}.pipeline{gap:7px}.pipe{padding:12px;font-size:13px}.graph-grid{grid-template-columns:1fr}.reason{grid-template-columns:1fr}.stagebar div{font-size:10px}.intro{display:block}.tools{gap:4px}.tools button{font-size:11px;padding:6px 8px}}@media print{aside,.top,.controls,.input-row,.answers,button{display:none}.layout{display:block}.panel,.hero,.sidebox{box-shadow:none;break-inside:avoid}body{background:white;color:black}.lab-grid{display:block}main{padding:0}}
+:root{--purple:#6742b4;--lavender:#f1ebfd;--h0:#275fd6;--h1:#ab3a86;--h2:#087e78;--h3:#9b5a0a;--h4:#6742b4}
+body.dark{--purple:#bf9fff;--lavender:#342951;--h0:#4e7ef0;--h1:#b44f9d;--h2:#167c73;--h3:#9a5a0a;--h4:#7c53be}
+body{font-size:14px;line-height:1.5}h1{font-size:clamp(24px,4vw,37px);letter-spacing:-.9px}h2{font-size:clamp(21px,3vw,28px)}.top{height:52px;padding:0 19px}.tools button{padding:5px 9px}.layout{display:block;min-height:calc(100vh - 52px)}aside{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:7px 19px;border-right:0;border-bottom:1px solid var(--line)}aside .sidebar-foot{display:flex;align-items:center;gap:7px;margin:0;font-size:11px;white-space:nowrap}aside .progress{width:60px;margin:0}nav{margin:0;display:flex;gap:7px;min-width:0;flex:1;align-items:center;overflow:visible}nav label{min-width:0}nav button{background:var(--bg);border:1px solid var(--line);padding:6px 10px;min-width:0}nav select{padding:6px 8px;font-size:13px;font-weight:650;width:100%}nav .lab-select{flex:1;max-width:440px}main{max-width:1230px;padding:17px 22px 28px}.hero,.panel,details{box-shadow:none}.compact-hero{padding:20px 23px}.compact-hero .eyebrow{margin-bottom:6px}.compact-hero p{margin:7px 0 12px;font-size:14px}.bridge{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bridge span{padding:6px 10px;border-radius:8px;font-weight:700}.bridge b,.arrow{color:var(--teal);font-weight:900;font-size:20px}.bridge-a{background:var(--light);color:var(--accent)}.bridge-transform{background:var(--lavender);color:var(--purple)}.bridge-b{background:var(--soft);color:var(--teal)}.bridge-result{background:var(--bg)}.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.catalogue{padding:16px;margin-bottom:0}.catalogue h2{margin:3px 0 5px}.catalogue>p{font-size:13px;margin-bottom:8px}.catalogue.sat{border-top:3px solid var(--purple)}.catalogue:not(.sat){border-top:3px solid var(--accent)}.lesson-list{display:grid;gap:4px}.lesson-link{display:flex;justify-content:space-between;align-items:center;text-align:left;gap:6px;width:100%;padding:6px 9px;font-size:13px}.sat .lesson-link{background:var(--lavender);border-color:transparent}.sat .lesson-link:hover{border-color:var(--purple)}.lesson-link small{flex-shrink:0;font-size:10px}.chain-line{display:flex;align-items:center;gap:6px}.chain-label{color:var(--purple);font-weight:750;font-size:11px;margin:7px 0 3px}.workspace-head{margin-bottom:9px}.workspace-head h2{margin:3px 0}.workspace-head a{color:inherit}.sat-lab .workspace-head .eyebrow{color:var(--purple)}.config{display:grid;grid-template-columns:minmax(145px,1fr) minmax(0,3fr);gap:8px;margin-bottom:8px}.config details,.explain-grid details{margin:0;padding:8px 11px;font-size:13px}.config details[open]:first-child{grid-column:1/-1}.config summary{cursor:pointer}.config .input-row{margin-top:9px}.config button,.controls button{padding:5px 10px;font-size:13px}.config .answers{gap:4px;margin-top:6px}.config .answers button{font-size:12px}.config .feedback{min-height:0;margin-top:5px;font-size:12px}.config .quiz-inner{padding-top:6px}.config #quiz-status{margin-left:6px;font-size:11px;color:var(--teal)}.config .input-row input{width:clamp(170px,48vw,390px)}.config .input-row .short{width:105px}.workbench{padding:12px;margin-bottom:8px}.stagebar{margin:0;gap:5px}.stagebar button{position:relative;min-width:0;text-align:center;font-size:12px;line-height:1.25;padding:6px 3px;border-radius:8px;white-space:normal}.stagebar button b{display:inline-grid;place-items:center;width:17px;height:17px;margin-right:2px;border-radius:50%;background:var(--bg);font-size:10px}.stagebar button:not(:last-child)::after{content:'›';position:absolute;right:-6px;top:50%;transform:translateY(-50%);color:var(--teal);z-index:1;font-size:15px}.stagebar button.on{background:var(--light);color:var(--accent);border-color:var(--accent)}.stagebar button.on[data-stage="1"]{background:var(--lavender);color:var(--purple);border-color:var(--purple)}.stagebar button.on[data-stage="4"]{background:var(--soft);color:var(--teal);border-color:var(--teal)}.playback{margin:8px 0;gap:5px}.playback select{padding:5px;font-size:12px}.caption{min-height:0;padding:8px 11px}.caption p{font-size:13px;margin-top:2px}.canvas{min-height:0;padding:8px 3px;overflow:auto;max-width:100%}.canvas .formula{margin:5px 0}.tokens{margin:6px 0;gap:6px}.token{min-height:34px;min-width:36px;font-size:13px}.rowlabel{margin-top:4px}.challenge{margin-top:6px;padding-top:9px}.challenge p{margin:5px 0 6px}.challenge .controls{margin-top:7px}.explain-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;align-items:start}.footer{margin:12px 0 0}.graphwrap svg{width:min(100%,305px)}.lesson-controls{margin-top:8px}.np-svg{display:block;width:min(100%,650px);height:auto;margin:4px auto}.np-svg [role=button]{cursor:pointer}.occ-edge{stroke:var(--muted);stroke-width:1.1;opacity:.20}.selected-edge{stroke:var(--teal);stroke-width:3;opacity:1}.cnf{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0;align-items:stretch;justify-content:center}.clause{--clause:var(--h0);display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-left:4px solid var(--clause);border-radius:7px;padding:5px 7px;background:var(--bg);font-size:13px}.clause small{color:var(--clause);font-weight:800}.clause.valid{background:var(--soft)}.clause.invalid{border-bottom-color:var(--bad)}.clause.hue1{--clause:var(--h1)}.clause.hue2{--clause:var(--h2)}.clause.hue3{--clause:var(--h3)}.clause.hue4{--clause:var(--h4)}.circuit{display:grid;gap:5px;margin:6px auto;width:fit-content;max-width:100%}.circuit>div{display:flex;gap:5px;align-items:center;justify-content:center}.signal,.gate{padding:4px 6px;background:var(--bg);border:1px solid var(--line);border-radius:6px;font-size:12px}.gate{color:var(--purple);background:var(--lavender)}.signal.on{color:var(--teal);background:var(--soft)}.route-base,.route-detour,.route-walk{fill:none;stroke:var(--muted);stroke-width:1.1;opacity:.58}.route-detour{stroke:var(--purple);stroke-width:1.6;opacity:.85}.route-walk{stroke:var(--teal);stroke-width:2.8;opacity:1}.route-control{display:flex;gap:8px;align-items:center;justify-content:center;font-size:12px}.route-control input{width:min(55%,300px)}.workbench .matrix-group{max-width:100%}.workbench input,.workbench select{padding:5px 7px}
+@media(max-width:750px){.top{padding:0 9px}.top .tag{display:none}aside{padding:5px 8px;gap:4px}aside .sidebar-foot{display:none}nav{display:grid;grid-template-columns:auto minmax(0,1fr);margin:0}nav button{padding:5px;font-size:12px}nav button span{display:none}nav select{font-size:11px;padding:5px}.home-grid{grid-template-columns:1fr}.compact-hero{padding:13px}.bridge{gap:4px}.bridge span{font-size:11px;padding:4px}.config{grid-template-columns:1fr}.config details[open]:first-child{grid-column:auto}.stagebar button{font-size:10px;padding:4px 1px}.stagebar button b{display:block;margin:auto auto 2px;line-height:17px}.workbench{padding:8px}.explain-grid{grid-template-columns:1fr}.graph-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}main{padding:10px}.formula{max-width:100%;font-size:16px}.answers button{white-space:normal}.canvas .matrix-group .matrix{max-width:100%}.playback small{margin-left:0}}
+/* Keep the visualization and its guidance in separate columns. */
+main:has(.lesson-layout){max-width:1440px;padding-top:12px}
+.workspace-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:9px}
+.workspace-head .muted{font-size:13px}
+.workspace-head h2{margin:2px 0}
+.lesson-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(235px,295px);gap:12px;align-items:start}
+.workbench{min-width:0;margin-bottom:0;padding:10px}
+.lesson-notes{min-width:0;position:sticky;top:55px;max-height:calc(100dvh - 66px);overflow:auto;padding-bottom:2px}
+.lesson-notes .eyebrow{display:block;margin:0 0 6px 2px}
+.lesson-notes details{margin:0 0 6px;padding:8px 10px;border-radius:9px}
+.lesson-notes summary{font-size:13px}
+.lesson-notes details p{font-size:13px;margin-top:6px}
+.lesson-notes details[open]{border-color:var(--accent)}
+.sat-lab .lesson-notes details[open]{border-color:var(--purple)}
+.lesson-notes #step-label{margin-left:5px;font-size:11px;color:var(--teal);font-weight:650}
+.lesson-notes .flow-note{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:4px;margin-top:8px}
+.flow-note span{padding:5px;border-radius:6px;font-size:10px;font-weight:750;overflow-wrap:anywhere}
+.flow-note .flow-arrow{color:var(--teal);font-weight:900}
+.lesson-notes .answers{margin-top:7px;gap:4px;display:grid}
+.lesson-notes .answers button{text-align:left;padding:5px 7px;font-size:12px;line-height:1.35}
+.lesson-notes .feedback{min-height:0;margin-top:6px}
+.optional{margin-left:5px;color:var(--muted);font-weight:500;font-size:11px}
+.entry-menu{margin:0;padding:6px 9px;flex:0 0 auto;min-width:126px}
+.entry-menu summary{font-size:12px}
+.entry-menu[open]{padding:8px 10px;margin-bottom:8px}
+.entry-menu .input-row{margin-top:8px}
+.entry-menu input{width:min(100%,330px)}
+.entry-menu .short{width:95px}
+.entry-menu button{padding:5px 8px;font-size:12px}
+.stage-title{display:flex;align-items:center;justify-content:space-between;gap:7px;border-top:1px solid var(--line);padding:8px 2px 2px;font-size:14px}
+.stage-title button{font-size:11px;padding:4px 7px;flex-shrink:0}
+.stage-title button[aria-pressed=true]{background:var(--lavender);color:var(--purple);border-color:var(--purple)}
+.playback{margin:6px 0;gap:4px}.playback .secondary{margin-left:auto}
+.speed-menu{display:inline-block;padding:2px 7px;border:0;margin:0;font-size:12px}
+.speed-menu[open]{border:1px solid var(--line)}.speed-menu select{margin-top:2px}
+.workbench .canvas{padding:7px 2px 4px;min-height:88px}
+.workbench .graphwrap svg{width:min(100%,348px);max-height:300px}
+.workbench .np-svg{width:min(100%,680px);max-height:390px}
+.compare-grid{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;width:100%}
+.compare-card{min-width:0;border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:9px;background:var(--bg);padding:5px}
+.compare-card:last-child{border-top-color:var(--purple)}
+.compare-card .rowlabel{font-size:11px;font-weight:720;margin:3px 0;color:var(--ink)}
+.compare-card .graphwrap svg{max-height:252px}
+.compare-arrow{color:var(--teal);font-weight:900;font-size:23px}
+.compare-status{font-size:12px;text-align:center;margin:6px 0 1px}
+.compare-status p{margin:2px 0}
+.compare-grid .edge.pair-focus{stroke:var(--teal);stroke-width:5;opacity:1}
+.compare-grid .node{cursor:pointer}
+.compare-grid g:focus-visible .node{stroke:var(--accent);stroke-width:4}
+.compare-grid .node.sel{stroke:var(--teal)}
+.formula-source{width:100%;margin-bottom:5px;border-bottom:1px solid var(--line);text-align:center}
+.lesson-controls{justify-content:space-between}
+@media(max-width:820px){
+  .lesson-layout{grid-template-columns:1fr;gap:8px}
+  .lesson-notes{position:static;max-height:none;overflow:visible}
+  .workspace-head{align-items:flex-start}
+}
+@media(max-width:520px){
+  main:has(.lesson-layout){padding-top:8px}
+  .workspace-head{display:block}
+  .workspace-head .muted{font-size:12px}
+  .entry-menu{min-width:auto;margin-top:5px;width:fit-content}
+  .entry-menu[open]{width:100%}
+  .entry-menu .input-row label{min-width:0;max-width:100%}
+  .compare-grid{gap:3px}.compare-card{padding:2px}.compare-arrow{font-size:15px}
+  .compare-card .rowlabel{font-size:9px}
+  .stage-title{font-size:13px}
+  .stagebar button span{overflow-wrap:anywhere}
+  .playback .secondary{margin-left:0}
+  .workbench .graphwrap svg{max-height:237px}
+}
+</style></head><body>
+<header class="top"><div class="brand" onclick="home()" role="button" tabindex="0" onkeydown="if(event.key==='Enter')home()">puentes<span>↗</span> <span class="tag">LABORATORIO DE REDUCCIONES</span></div><div class="tools"><button onclick="showGuide()">Guía docente</button><button id="theme" onclick="theme()" aria-label="Cambiar tema">◐ Tema</button><button onclick="full()" aria-label="Pantalla completa">⛶</button></div></header>
+<div class="layout"><aside><nav id="nav" aria-label="Familia y laboratorio"></nav><div class="sidebar-foot"><span>Retos</span><strong id="score"></strong><div class="progress"><i id="progress"></i></div></div></aside><main id="main"></main></div>
+<dialog id="guide">
+  <button style="float:right" onclick="document.getElementById('guide').close()">Cerrar</button>
+  <div class="eyebrow">Análisis de algoritmos</div><h2>Guía docente</h2>
+  <ol><li><b>Elementales.</b> Compara emparejar → ordenar con ordenar → emparejar. Pide una explicación de qué cota viaja en cada dirección.</li>
+  <li><b>Familia SAT.</b> Empieza con las compuertas y las cláusulas. Después compara los certificados de 3-SAT → clique y 3-SAT → ciclo hamiltoniano.</li>
+  <li><b>Dos complementos.</b> Contrasta clique → independiente con independiente → cobertura. En el primero cambia el grafo. En el segundo se toman los vértices restantes.</li>
+  <li><b>Instancias negativas.</b> En Editar entrada pulsa Otra instancia. Prueba fórmulas con una cláusula que exige a y otra que exige ¬a.</li></ol>
+  <p>Abre Predicción cuando quieras formular una hipótesis. Puedes avanzar por todos los pasos desde el principio. Las flechas ← y → avanzan o retroceden fuera de los campos de entrada. El progreso se guarda en el navegador cuando el almacenamiento local está disponible.</p>
+  <p>Las cajas negras usan búsqueda exacta en instancias pequeñas. En 3-SAT → ciclo hamiltoniano el testigo se construye desde una asignación y después se verifica sobre el grafo dirigido. En las transformaciones de grafos, selecciona dos vértices y observa qué sucede con su arista en la instancia de destino.</p>
+  <p>El capítulo de OpenDSA presenta las construcciones de las secciones 6.2, 6.8 y 6.14–6.19. Los laboratorios usan explicaciones y visualizaciones propias.</p>
+  <p><a href="https://opendsa-server.cs.vt.edu/OpenDSA/Books/CS4104/html/LimComp.html" target="_blank" rel="noopener">Capítulo 6 · OpenDSA</a> · OpenDSA Project Contributors.</p>
+  <button onclick="exportProgress()">Descargar progreso</button>
+</dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sort=a=>[...a].sort((a,b)=>a-b), rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), shuffle=a=>[...a].sort(()=>Math.random()-.5), uniq=a=>[...new Set(a)], eq=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+let saved={};try{saved=JSON.parse(localStorage.getItem('puentes-v1')||'{}')}catch{};let current=-1,step=0,timer=null,data={},snap=[],chosen=[],edgeChosen=[],polyOrder=[];let feedback='', traceIndex=0;
+const lessons=[
+{title:'Emparejar → ordenar',a:'PAIRING',b:'SORTING',origin:true,level:'Primer puente',desc:'Dos listas; empareja los elementos que ocupan el mismo rango.',q:'¿Cuántas llamadas a SORTING hace esta construcción?',opts:['Una','Dos','n llamadas'],ans:1,why:'Se ordenan las dos listas por separado. Luego se emparejan sus posiciones.',proof:'Si x e y ocupan el rango i en sus respectivas listas ordenadas, forman exactamente el par requerido. Con valores repetidos, los elementos iguales pueden intercambiarse sin cambiar la validez.',cost:'Dos llamadas de tamaño n. Preparar y reconstruir: O(n). Con ordenación por comparaciones O(n log n), PAIRING tiene cota superior O(n log n).',trap:'Usar ordenación da una cota superior para emparejar. Por sí solo, esto no demuestra una cota inferior.',challenge:'Construye la lista de parejas, de menor a mayor rango. Escribe las parejas como x:y separadas por comas.'},
+{title:'Ordenar → emparejar',a:'SORTING',b:'PAIRING',origin:true,level:'Cota inferior',desc:'Una lista auxiliar de rangos convierte parejas en posiciones.',q:'¿Qué lista auxiliar permite reconstruir el orden en O(n)?',opts:['0, 1, …, n−1','Una segunda copia desordenada','Una lista de ceros'],ans:0,why:'Los índices 0…n−1 actúan como etiquetas de destino. Depositar cada valor en su casilla cuesta O(1).',proof:'El elemento de rango i de A queda emparejado con i. Aunque la caja negra entregue los pares en cualquier orden, basta escribir salida[i] = valor. Los empates pueden ocupar rangos consecutivos indistintamente.',cost:'Una llamada de tamaño n a PAIRING y O(n) de transformación. En el modelo de comparaciones, una solución o(n log n) para PAIRING daría una para SORTING, contradiciendo su cota Ω(n log n).',trap:'No ordenes de nuevo los pares para decodificarlos: usa acceso directo por el índice auxiliar.',challenge:'Decodifica los pares de la caja negra. Escribe la lista ordenada, separada por comas.'},
+{title:'Multiplicar → elevar al cuadrado',a:'MULTIPLICACIÓN',b:'CUADRADO',origin:true,level:'Identidad algebraica',desc:'Dos cuadrados bastan para recuperar cualquier producto entero.',q:'Si X < Y, ¿deja de funcionar la identidad?',opts:['Sí, porque X−Y es negativo','No; se puede usar |X−Y|','Solo funciona con X=Y'],ans:1,why:'(X−Y)² = |X−Y|². El cuadrado elimina el signo, y la identidad conserva el producto.',proof:'(X+Y)² − (X−Y)² = 4XY por expansión algebraica. Por tanto la diferencia dividida entre cuatro es exactamente XY; no hay redondeo.',cost:'Dos llamadas a CUADRADO con O(n) dígitos y O(n) de sumas, resta y división por 4. T_mult(n) ≤ 2T_cuad(n+1)+O(n), para enteros no negativos de n dígitos.',trap:'No confundas «la multiplicación escolar cuesta Θ(n²)» con una cota inferior Θ(n²) para el problema general.',challenge:'Sin usar la tecla de multiplicación, recupera XY con los resultados de los cuadrados. Escribe el entero final.'},
+{title:'Matrices → matrices simétricas',a:'PRODUCTO DE MATRICES',b:'PRODUCTO DE SIMÉTRICAS',origin:true,level:'Construcción por bloques',desc:'Amplía la dimensión y esconde AB en un bloque del resultado.',q:'¿Dónde debe ir B en la segunda matriz simétrica?',opts:['En el bloque superior derecho','En el bloque inferior izquierdo','En ambos bloques sin transponer'],ans:1,why:'Con S=[0 A; Aᵀ 0] y T=[0 Bᵀ; B 0], el bloque superior izquierdo de ST es AB.',proof:'S y T son simétricas por construcción. La regla de multiplicación por bloques produce ST=[AB 0; 0 AᵀBᵀ]. Extraer su bloque superior izquierdo recupera el producto buscado.',cost:'Se pasa de matrices n×n a 2n×2n. Preparación y extracción O(n²); una llamada al producto simétrico. T_general(n) ≤ T_sim(2n)+O(n²).',trap:'El producto de dos matrices simétricas no tiene por qué ser simétrico. Tampoco esta reducción prueba que el producto general requiera Ω(n³).',challenge:'Calcula la entrada (fila 1, columna 2) del bloque AB: producto de la primera fila de A por la segunda columna de B.'},
+{title:'Ordenar → polígono simple',a:'SORTING',b:'SIMPLE POLYGON',origin:true,level:'Geometría y cotas',desc:'Convierte valores distintos en puntos sobre una semicircunferencia.',q:'Un polígono simple sobre puntos de una circunferencia debe seguir…',opts:['Cualquier permutación','El orden circular o su inverso','El orden de entrada'],ans:1,why:'Con puntos distintos en posición estrictamente convexa, saltarse el orden circular obliga a cruzar aristas.',proof:'Se transforma xᵢ en (xᵢ, √(M²−xᵢ²)), con M=max|xᵢ|+1. Todos los puntos son distintos y están sobre la semicircunferencia superior. Un ciclo simple sigue el orden de su frontera. Desde el mínimo, se elige el sentido que visita los puntos interiores antes del máximo y se leen las abscisas crecientes; no hace falta ordenar de nuevo.',cost:'Transformar y recorrer la frontera: O(n), en el modelo geométrico de operaciones exactas a costo unitario. La cota Ω(n log n) se transfiere en modelos compatibles con la cota de ordenación; no se interpreta como una cota de complejidad binaria de raíces.',trap:'Se usan valores distintos y al menos 3 puntos. Si se admiten repetidos aparecen puntos coincidentes y esta construcción requiere un tratamiento adicional.',challenge:'Dibuja un polígono sin cruces: pulsa todos los puntos una vez siguiendo el borde. El ciclo se cierra automáticamente.'},
+{title:'Detectar duplicados → ordenar',a:'DUPLICADOS',b:'SORTING',level:'Exploración de listas',desc:'Una coincidencia lejana se convierte en una pareja de vecinos.',q:'Tras ordenar, ¿dónde buscarías una repetición?',opts:['Solo en los extremos','Entre posiciones consecutivas','En todas las n! permutaciones'],ans:1,why:'Todas las copias de un mismo valor quedan juntas; si hay una repetición, hay dos vecinos iguales.',proof:'Si dos vecinos son iguales, existe un duplicado. Si existe un duplicado, sus apariciones forman un bloque en la lista ordenada, que contiene dos vecinos iguales. Se cumplen ambas direcciones.',cost:'Una llamada a SORTING y un barrido O(n). Esta solución cuesta O(n log n) con un ordenamiento por comparaciones. No excluye otros métodos, como hashing esperado O(n).',trap:'Esta reducción no prueba que toda detección de duplicados necesite ordenar.',challenge:'Pulsa dos casillas consecutivas con el mismo valor en la salida ordenada. Si no hay ninguna, usa «No hay duplicados».'},
+{title:'Suma de dos → ordenar',a:'TWO-SUM',b:'SORTING',level:'Dos punteros',desc:'Ordena y acerca dos extremos sin perder ninguna solución posible.',q:'Si a[L]+a[R] < objetivo, ¿qué movimiento es seguro?',opts:['Disminuir R','Aumentar L','Descartar ambos extremos'],ans:1,why:'Ni siquiera el mayor compañero disponible alcanza el objetivo con a[L]. Se puede descartar ese valor.',proof:'Tras ordenar, si la suma es pequeña, ningún compañero de L en el intervalo sirve y se incrementa L. Si es grande, ningún compañero de R sirve y se decrementa R. Al encontrar igualdad se tienen dos posiciones diferentes; si los punteros se encuentran no hay solución.',cost:'Una llamada a SORTING y O(n) movimientos de punteros. Tiempo O(n log n) con ordenación por comparaciones. Si se necesitan índices originales, se ordenan registros (valor, índice).',trap:'Un solo elemento no puede usarse dos veces. Dos apariciones distintas del mismo número sí pueden formar la pareja.',challenge:'Escoge dos posiciones distintas en la lista original que sumen el objetivo. Si no existe solución, usa «No hay pareja».'},
+{title:'Alcanzabilidad → camino mínimo',a:'REACHABILITY',b:'SHORTEST PATH',level:'Grafos sin pesos',desc:'Da peso uno a cada arista y pregunta por una distancia.',q:'Si el destino es inalcanzable, ¿qué devuelve la distancia?',opts:['0','−1 como peso de una arista','∞, por convención'],ans:2,why:'La distancia infinita representa que no existe camino. Distancia cero corresponde al origen mismo.',proof:'Un camino original de r aristas se transforma en un camino de peso r. Todas las aristas mantienen los mismos extremos. Existe camino de s a t si y solo si la distancia mínima es finita.',cost:'Construir los pesos: O(V+E). Una consulta de camino mínimo. En este grafo sin pesos, BFS calcula directamente distancias en O(V+E).',trap:'Convertir a un grafo completo crearía caminos que antes no existían. Solo se añaden pesos a las aristas presentes.',challenge:'Construye un camino desde A hasta F pulsando nodos en orden. Si no existe, usa «Inalcanzable».'},
+{title:'Independiente → clique',a:'INDEPENDENT SET',b:'CLIQUE',level:'Reducción de decisión',desc:'Convierte ausencias en aristas; conserva el tamaño k.',q:'Al pasar de G a su complemento, el parámetro k…',opts:['Se conserva','Se convierte en n−k','Siempre es 2'],ans:0,why:'El mismo conjunto de k vértices pasa de no tener aristas internas a tenerlas todas.',proof:'Para todo par de vértices distintos u,v: uv no es arista de G si y solo si uv es arista del complemento. Así, S es independiente en G si y solo si S es clique en el complemento. Esto conserva la existencia de una solución de tamaño al menos k.',cost:'Construcción del complemento O(n²), una instancia (Ḡ,k) de CLIQUE. Es una reducción polinómica many-one de decisión.',trap:'No se incluyen lazos en el complemento. Complementar las aristas no significa complementar el conjunto de vértices seleccionado.',challenge:'Selecciona al menos k nodos que formen un conjunto independiente en G. Observa las mismas selecciones en el complemento.'},
+{title:'Clique → cobertura de vértices',a:'CLIQUE',b:'VERTEX COVER',level:'Complemento doble',desc:'Complementa el grafo y cambia k por n−k.',q:'Una clique de tamaño ≥k en G corresponde a una cobertura en Ḡ de tamaño…',opts:['≥k','≤n−k','Exactamente n'],ans:1,why:'La clique es independiente en el complemento; todos los vértices restantes cubren sus aristas.',proof:'S es clique en G ⇔ S es independiente en Ḡ ⇔ V∖S cubre todas las aristas de Ḡ. Si |S|≥k, entonces |V∖S|≤n−k, y viceversa. Los umbrales se invierten al complementar el conjunto.',cost:'Se construye Ḡ en O(n²) y b=n−k en O(1). Una instancia (Ḡ,b) de VERTEX COVER. Reducción polinómica de decisión.',trap:'Tomar V∖S dentro de G no basta: la cobertura debe comprobarse sobre el grafo complementario.',challenge:'Selecciona a lo sumo n−k nodos que cubran todas las aristas del complemento. Sus nodos restantes deben formar una clique en G.'},
+{title:'Ciclo hamiltoniano → TSP',a:'HAMILTONIAN CYCLE',b:'TSP (DECISIÓN)',level:'De estructura a costo',desc:'Completa el grafo con pesos 0 y 1 y usa umbral cero.',q:'¿Qué peso recibe una pareja que NO era arista de G?',opts:['0','1','2'],ans:1,why:'Cada arista artificial suma 1 al costo. Un tour cuesta cero exactamente cuando todas sus aristas eran originales.',proof:'Un ciclo hamiltoniano de G usa exclusivamente aristas de peso 0. A la inversa, un tour de costo cero usa solo aristas originales porque cada arista añadida cuesta 1.',cost:'Se construye el grafo completo ponderado en O(n²). La instancia de TSP de decisión usa B=0. Para TSP métrico se puede sumar 1 a todos los pesos y usar B=n.',trap:'No se pregunta por un camino que omita nodos: el tour debe visitar cada vértice una vez y regresar al inicio.',challenge:'Pulsa todos los nodos en el orden de un tour. Se añade el regreso automáticamente. Busca costo cero. Si es imposible, pulsa «No existe tour de costo cero».'}
+];
+const defaults=[{x:[7,2,9,4],y:[30,10,40,20]},{x:[8,3,6,1,5]},{x:13,y:8},{A:[[2,1],[3,4]],B:[[1,5],[2,3]]},{x:[-7,3,8,-2,5]},{x:[8,3,5,2,8,6]},{x:[9,2,7,4,6,3],target:10}];
+function save(){try{localStorage.setItem('puentes-v1',JSON.stringify(saved))}catch{}updateScore()}
+function stop(){clearInterval(timer);timer=null;let b=$('play');if(b)b.textContent='▶ Auto'}
+function initial(i){if(usesAdvanced(i))return newLabData(i);if(i<7)return structuredClone(defaults[i]);let n=6;let edges=i===7?[[0,1],[0,2],[1,3],[2,3],[3,4],[4,5]]:i===10?[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[1,4]]:[[0,1],[1,2],[2,3],[3,4],[4,5],[0,5],[1,4]];if(i===9)edges.push([0,2]);return{n,edges,k:3}}
+function openLesson(i){stop();resetAdvanced();comparedNodes=[];current=i;step=0;feedback='';chosen=[];edgeChosen=[];polyOrder=[];data=initial(i);nav();render();window.scrollTo(0,0)}
+function fields(){let i=current;if(i===11||isFormulaLab(i))return advancedFields();if(i===0)return '<label>Lista X'+inp('x',data.x.join(', '))+'</label><label>Lista Y'+inp('y',data.y.join(', '))+'</label>';if([1,4,5,6].includes(i))return '<label>Valores'+inp('x',data.x.join(', '))+'</label>'+(i===6?'<label>Objetivo'+inp('target',data.target,'short')+'</label>':'');if(i===2)return '<label>X (0…999999)'+inp('x',data.x,'short')+'</label><label>Y (0…999999)'+inp('y',data.y,'short')+'</label>';if(i===3)return '<label>Matriz A: filas separadas por ;'+inp('A',data.A.map(x=>x.join(',')).join(';'))+'</label><label>Matriz B: filas separadas por ;'+inp('B',data.B.map(x=>x.join(',')).join(';'))+'</label>';return '<label>Aristas: AB, BC, …'+inp('edges',data.edges.map(e=>e.map(v=>String.fromCharCode(65+v)).join('')).join(', '))+'</label>'+([8,9,14,16].includes(i)?'<label>Umbral k (1…6)'+inp('k',data.k,'short')+'</label>':'')}
+function inp(id,value,cl=''){return `<input id="in-${id}" class="${cl}" value="${esc(value)}" autocomplete="off">`}
+function answer(j){const l=lessons[current],ok=j===l.ans;$('qfeedback').className='feedback '+(ok?'ok':'err');$('qfeedback').textContent=(ok?'✓ Correcto. ':'Ajusta tu intuición: ')+l.why;saved[current]={...saved[current],prediction:ok};save();$('quiz-status').textContent='respondida'}
+function drawControls(){refreshStageButtons();$('prev').disabled=step===0;$('next').disabled=step===4;$('play').disabled=step===4;$('stepcount').textContent=`Paso ${step+1} de 5`}
+function move(d){step=Math.min(4,Math.max(0,step+d));editFirst=null;draw();if(step===4)stop()}
+function resetSteps(){stop();resetAdvanced();comparedNodes=[];step=0;chosen=[];edgeChosen=[];polyOrder=[];feedback='';draw()}
+function play(){if(timer){stop();return}if(step===4)return;timer=setInterval(()=>move(1),Number($('speed').value));$('play').textContent='Ⅱ Pausar'}
+function draw() {
+  snap=build();
+  const stage=snap[step];
+  $('stitle').textContent=stage.title;
+  $('stext').textContent=stage.text;
+  $('step-label').textContent=phaseNames[step];
+  drawStageVisual(stage);
+  drawControls();
+  renderChallenge();
+}
+function parseList(id){let s=$('in-'+id).value.trim();if(!/^-?\d+(\s*[,; ]\s*-?\d+)*$/.test(s))throw Error('Usa enteros separados por comas o espacios.');let a=s.split(/[,; ]+/).map(Number);if(a.length<3||a.length>8||a.some(x=>x< -50||x>50))throw Error('Se requieren entre 3 y 8 enteros, de −50 a 50.');return a}
+function apply(){if(current===11||isFormulaLab(current))return useAdvancedInput();try{let n={};if([0,1,4,5,6].includes(current)){n.x=parseList('x');if(current===0){n.y=parseList('y');if(n.x.length!==n.y.length)throw Error('Las listas deben tener igual longitud.')}if(current===4&&(uniq(n.x).length!==n.x.length||n.x.some(x=>Math.abs(x)>20)))throw Error('Usa valores distintos de −20 a 20.');if(current===6){n.target=Number($('in-target').value);if(!Number.isInteger(n.target)||Math.abs(n.target)>100)throw Error('El objetivo debe ser un entero entre −100 y 100.')}}else if(current===2){for(let id of ['x','y']){let s=$('in-'+id).value;if(!/^\d{1,6}$/.test(s))throw Error('X e Y deben ser enteros de 0 a 999999.');n[id]=Number(s)}}else if(current===3){for(let id of ['A','B']){let rows=$('in-'+id).value.split(';');if(rows.length!==2)throw Error('Cada matriz debe tener exactamente dos filas separadas por ;.');n[id]=rows.map(r=>{let t=r.split(',').map(v=>v.trim());if(t.length!==2||t.some(v=>!/^[-+]?\d+$/.test(v)))throw Error('Cada fila debe tener dos enteros separados por coma.');return t.map(Number)});if(n[id].flat().some(x=>Math.abs(x)>9))throw Error('Usa entradas entre −9 y 9.')}}else{n.n=6;n.edges=[];let str=$('in-edges').value.trim().toUpperCase();if(str){for(let t of str.split(/[,; ]+/)){if(!/^[A-F]{2}$/.test(t)||t[0]===t[1])throw Error('Usa aristas como AB, BC, DF; sin lazos, entre A y F.');let e=sort([...t].map(c=>c.charCodeAt(0)-65));if(!n.edges.some(p=>eq(p,e)))n.edges.push(e)}}n.k=Number($('in-k')?.value||3);if(!Number.isInteger(n.k)||n.k<1||n.k>6)throw Error('k debe ser entero entre 1 y 6.')};data=n;restartData()}catch(e){$('inputerror').textContent=e.message}}
+function restartData(){stop();resetAdvanced();comparedNodes=[];step=0;chosen=[];edgeChosen=[];polyOrder=[];feedback='';render()}
+let previousExample={};
+function randomize(){if(current===11||isFormulaLab(current)){const index=((previousExample[current]||0)+1)%3;previousExample[current]=index;data=newLabData(current,index);restartData();return}if(current===0){let n=rand(3,7);data={x:Array.from({length:n},()=>rand(-9,30)),y:Array.from({length:n},()=>rand(-9,30))}}else if([1,4,5,6].includes(current)){let x=Array.from({length:6},()=>rand(-9,15));if(current===4)x=shuffle(Array.from({length:31},(_,i)=>i-15)).slice(0,6);data={x,target:rand(-8,25)}}else if(current===2)data={x:rand(0,999),y:rand(0,999)};else if(current===3)data={A:[[rand(-3,5),rand(-3,5)],[rand(-3,5),rand(-3,5)]],B:[[rand(-3,5),rand(-3,5)],[rand(-3,5),rand(-3,5)]]};else{let e=[];for(let a=0;a<6;a++)for(let b=a+1;b<6;b++)if(Math.random()<.37)e.push([a,b]);data={n:6,edges:e,k:rand(2,4)}}restartData()}
+function tokens(a,hit=[],click=''){return '<div class="tokens">'+a.map((x,i)=>click?`<button class="token ${hit.includes(i)?'hit':''}" onclick="${click}(${i})" aria-label="Posición ${i}, valor ${esc(x)}">${esc(x)}<small style="display:block;font-size:9px">[${i}]</small></button>`:`<span class="token ${hit.includes(i)?'hit':''}">${esc(x)}</span>`).join('')+'</div>'}
+function row(a,label,hit=[]){return `<div class="rowlabel">${label}</div>${tokens(a,hit)}`}
+function pairView(a,b){return '<div class="tokens">'+a.map((x,i)=>`<div class="token">${x}<span style="font-size:12px;color:var(--teal)">↕</span>${b[i]}</div>`).join('')+'</div>'}
+function matrix(m,label='',colorFn=()=> ''){return `<div><div class="rowlabel">${label}</div><div class="matrix" style="grid-template-columns:repeat(${m[0].length},43px)">${m.flatMap((r,i)=>r.map((x,j)=>`<div class="cell ${colorFn(i,j)}">${x}</div>`)).join('')}</div></div>`}
+function mm(A,B){return A.map(r=>B[0].map((_,j)=>r.reduce((s,v,k)=>s+v*B[k][j],0)))}
+function matrices(){let{A,B}=data, S=Array.from({length:4},(_,i)=>Array.from({length:4},(_,j)=>i<2&&j>=2?A[i][j-2]:i>=2&&j<2?A[j][i-2]:0)),T=Array.from({length:4},(_,i)=>Array.from({length:4},(_,j)=>i<2&&j>=2?B[j-2][i]:i>=2&&j<2?B[i-2][j]:0));return{A,B,S,T,P:mm(S,T),AB:mm(A,B)}}
+const st=(title,text,html)=>({title,text,html});
+function build(){if(usesAdvanced(current))return advancedStage();let i=current,d=data,l=lessons[i];if(i===0){let a=sort(d.x),b=sort(d.y);return[st('El objetivo es emparejar por rango','Los pares no tienen que salir ordenados; deben asociar mínimo con mínimo, segundo con segundo, etc.',row(d.x,'X original')+row(d.y,'Y original')),st('1. Separa dos instancias de SORTING','Cada lista es una entrada independiente para la misma herramienta.',row(d.x,'Instancia 1 de SORTING')+row(d.y,'Instancia 2 de SORTING')),st('2. La caja negra ordena dos veces','Aquí se ejecuta SORTING; el costo principal está dentro de estas dos llamadas.',row(a,'SORTING(X)')+row(b,'SORTING(Y)')),st('3. Empareja posiciones iguales','Recorre las dos salidas simultáneamente. No compares todas las parejas posibles.',pairView(a,b)),st('Comprueba los rangos','El primer par contiene los dos mínimos; cada par siguiente tiene el mismo rango en las dos listas.',pairView(a,b))]}
+if(i===1){let a=sort(d.x),b=a.map((_,j)=>j),pairs=a.map((x,j)=>[x,j]);pairs=[...pairs.slice(2),...pairs.slice(0,2)];return[st('Queremos una lista ordenada','La herramienta disponible es PAIRING, que entrega un conjunto de parejas sin un orden prometido.',row(d.x,'A original')),st('1. Crea una lista de etiquetas','Construir 0…n−1 no exige ordenar A. Son casillas de destino.',row(d.x,'Primera lista')+row(b,'Lista auxiliar B')),st('2. Consulta PAIRING(A,B)','Los pares aparecen desordenados a propósito. La segunda componente indica el rango de la primera.',tokens(pairs.map(p=>`(${p[0]}, ${p[1]})`))),st('3. Deposita por índice','Por cada (valor, índice), ejecuta salida[índice] = valor. Una pasada, sin ordenar de nuevo.',tokens(a.map((x,j)=>`[${j}] = ${x}`))),st('Una cota inferior viaja hacia la herramienta','Si emparejar fuera o(n log n) en el modelo de comparaciones, este puente permitiría ordenar en o(n log n).',row(a,'Lista ordenada recuperada'))]}
+if(i===2){let x=BigInt(d.x),y=BigInt(d.y),u=x+y,v=x>y?x-y:y-x,a=u*u,b=v*v;return[st('Queremos X × Y','Solo disponemos de una rutina que eleva un entero al cuadrado.',`<div class="splitnum"><div class="bignum">${x}<small>X</small></div>×<div class="bignum">${y}<small>Y</small></div></div>`),st('1. Prepara suma y diferencia absoluta','Las dos entradas de CUADRADO se calculan en tiempo lineal en el número de dígitos.',`<div class="splitnum"><div class="bignum">${u}<small>X + Y</small></div><div class="bignum">${v}<small>|X − Y|</small></div></div>`),st('2. Consulta CUADRADO dos veces','Cada resultado puede tener aproximadamente el doble de dígitos que su entrada.',`<div class="formula">${u}² = ${a}<br>${v}² = ${b}</div>`),st('3. Resta y divide entre cuatro','Los términos X² e Y² se cancelan. Queda exactamente 4XY.',`<div class="formula">(${a} − ${b}) / 4 = ${(a-b)/4n}</div>`),st('Comprueba la identidad','Prueba X=0, X=Y o X<Y. La misma transformación sigue funcionando.',`<div class="formula">XY = ${(a-b)/4n}</div><div class="poly-note">(X+Y)² − (X−Y)² = 4XY</div>`)]}
+if(i===3){let m=matrices(),pair=(a,b,la,lb,c)=>'<div class="matrix-group">'+matrix(a,la,c)+'×'+matrix(b,lb,c)+'</div>';return[st('Queremos AB con matrices arbitrarias','Edita A y B. No necesitan ser simétricas ni conmutar.',pair(m.A,m.B,'A','B')),st('1. Construye dos matrices simétricas','Atención a B: en T, el bloque superior derecho es Bᵀ y el inferior izquierdo es B.',pair(m.S,m.T,'S = [0 A; Aᵀ 0]','T = [0 Bᵀ; B 0]',(r,c)=>r<2&&c>=2?'blue':r>=2&&c<2?'green':'')),st('2. Multiplica S por T','La caja negra recibe dos matrices simétricas 4×4. Su producto no tiene por qué ser simétrico.',matrix(m.P,'ST',(r,c)=>r<2&&c<2?'blue':'')),st('3. Extrae el bloque superior izquierdo','La esquina superior izquierda es AB. Los otros tres bloques no son necesarios para responder.',matrix(m.AB,'AB recuperado',()=> 'blue')),st('Comprueba una entrada del bloque','La entrada (1,2) proviene de la primera fila de A y la segunda columna de B.',pair(m.A,m.B,'A','B')+`<div class="formula">${m.A[0][0]} · (${m.B[0][1]}) + ${m.A[0][1]} · (${m.B[1][1]}) = ${m.AB[0][1]}</div>`)]}
+if(i===4){let x=d.x,M=Math.max(...x.map(Math.abs))+1;let ordered=sort(x);return[st('Queremos ordenar valores distintos','Un algoritmo de polígono simple será nuestra herramienta geométrica.',row(x,'Valores originales')),st('1. Coloca cada x en una semicircunferencia',`Radio M=${M}. Cada punto pᵢ=(xᵢ, √(M²−xᵢ²)). Se conserva su identidad original.`,polygon(false)),st('2. La caja negra devuelve un ciclo sin cruces','Todos los puntos son extremos. Un ciclo simple tiene que recorrer la frontera, en cualquiera de sus dos sentidos.',polygon(true)),st('3. Lee las abscisas por la frontera','Desde el mínimo, elige el sentido que recorre los puntos interiores antes del máximo. Esta lectura cuesta O(n).',polygon(true)+row(ordered,'Abscisas recuperadas')),st('Comprueba el puente geométrico','En el reto, un recorrido que salta sobre puntos produce cruces. La app comprueba intersecciones y cierre.',polygon(true))]}
+if(i===5){let a=sort(d.x),hit=a.map((x,j)=>j>0&&x===a[j-1]?[j-1,j]:[]).flat();return[st('¿Se repite algún valor?','La entrada puede contener duplicados distantes, negativos o todos distintos.',row(d.x,'Entrada')),st('1. Entrega la misma lista a SORTING','No eliminamos valores ni los convertimos en un conjunto, porque perderíamos multiplicidades.',row(d.x,'Instancia de SORTING')),st('2. Ordena para reunir las copias','Una misma clave queda en un bloque de posiciones consecutivas.',row(a,'Salida ordenada')),st('3. Recorre pares vecinos','Compara a[j−1] con a[j], para j=1…n−1. Una igualdad certifica una repetición.',row(a,'Vecinos iguales resaltados',hit)),st(hit.length?'Sí hay duplicados':'No hay duplicados',hit.length?'Cada pareja resaltada es un certificado. Basta una coincidencia para responder sí.':'Ninguna pareja consecutiva es igual, así que todos los valores son diferentes.',row(a,'Certificado',hit))]}
+if(i===6){let a=sort(d.x),trace=twoSum(a,d.target);return[st(`¿Dos posiciones suman ${d.target}?`,'Se buscan dos posiciones distintas. Dos copias de un mismo valor sí están permitidas.',row(d.x,'Lista original')),st('1. Prepara la instancia de ordenación','Para devolver índices originales se adjunta a cada valor su posición.',tokens(d.x.map((v,j)=>`${v} [${j}]`))),st('2. La caja negra ordena','Sitúa L al principio y R al final. La ordenación permite descartar candidatos.',row(a,'Salida ordenada',[0,a.length-1])),st('3. Mueve los dos punteros','La traza muestra cada descarte seguro; el barrido es lineal.',`<div style="width:100%">${trace.steps.map(t=>`<div class="mini" style="padding:6px;border-bottom:1px solid var(--line)">L=${t.l}, R=${t.r}: ${a[t.l]} + (${a[t.r]}) = ${t.sum} → <b>${t.sum===d.target?'encontrado':t.sum<d.target?'L aumenta':'R disminuye'}</b></div>`).join('')}</div>`),st(trace.pair?'Existe una pareja':'No existe pareja',trace.pair?'Los valores encontrados corresponden a dos posiciones distintas en la entrada.':'Los punteros se encontraron sin una igualdad. Se agotaron todos los candidatos viables.',trace.pair?tokens(trace.pair.map(j=>a[j])):row(a,'L y R ya no delimitan una pareja'))]}
+return graphStages()}
+function twoSum(a,t){let l=0,r=a.length-1,steps=[];while(l<r){let sum=a[l]+a[r];steps.push({l,r,sum});if(sum===t)return{steps,pair:[l,r]};if(sum<t)l++;else r--}return{steps,pair:null}}
+function has(E,u,v){return E.some(e=>e.includes(u)&&e.includes(v))}function allPairs(n){let e=[];for(let u=0;u<n;u++)for(let v=u+1;v<n;v++)e.push([u,v]);return e}function complement(E,n=6){return allPairs(n).filter(([u,v])=>!has(E,u,v))}function subsets(n){return Array.from({length:1<<n},(_,m)=>Array.from({length:n},(_,i)=>i).filter(i=>m>>i&1))}function isClique(S,E){return S.every((u,i)=>S.slice(i+1).every(v=>has(E,u,v)))}function isIndependent(S,E){return S.every((u,i)=>S.slice(i+1).every(v=>!has(E,u,v)))}function isCover(S,E){return E.every(([u,v])=>S.includes(u)||S.includes(v))}function bfs(E,n=6){let dist=Array(n).fill(Infinity),parent=Array(n).fill(-1),q=[0];dist[0]=0;for(let h=0;h<q.length;h++){let u=q[h];for(let v=0;v<n;v++)if(has(E,u,v)&&dist[v]===Infinity){dist[v]=dist[u]+1;parent[v]=u;q.push(v)}}let path=[];if(Number.isFinite(dist[n-1])){for(let v=n-1;v!==-1;v=parent[v])path.push(v);path.reverse()}return{dist,path}}
+function permutations(a){if(!a.length)return[[]];return a.flatMap((v,j)=>permutations(a.filter((_,k)=>k!==j)).map(p=>[v,...p]))}
+function tsp(E,n=6){let best=Infinity,tour=null;for(let p of permutations(Array.from({length:n-1},(_,i)=>i+1))){let s=[0,...p],cost=s.reduce((v,u,j)=>v+(has(E,u,s[(j+1)%n])?0:1),0);if(cost<best){best=cost;tour=s}}return{best,tour}}
+function letters(a){return a.map(i=>String.fromCharCode(65+i)).join(' → ')}
+function graph(E,label,opts={}){let n=data.n||6,W=360,H=290,pos=Array.from({length:n},(_,i)=>[180+110*Math.cos(i*2*Math.PI/n-Math.PI/2),144+108*Math.sin(i*2*Math.PI/n-Math.PI/2)]);let selected=opts.selected||(opts.edit&&editFirst!==null?[editFirst]:[]), path=opts.path||[],edges=opts.complete?allPairs(n):E;let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}"><title>${esc(label)}</title>`;for(let[u,v]of edges){let[x,y]=pos[u],[x2,y2]=pos[v],hl=path.some((p,j)=>j&&((path[j-1]===u&&p===v)||(path[j-1]===v&&p===u)));if(opts.cycle&&path.length===n&&((path[0]===u&&path[n-1]===v)||(path[0]===v&&path[n-1]===u)))hl=true;let original=has(data.edges,u,v);svg+=`<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" class="edge ${hl?'hl':''} ${opts.pair?.length===2&&opts.pair.includes(u)&&opts.pair.includes(v)?'pair-focus':''} ${opts.complete&&!original&&!hl?'dim':''}" ${opts.complete&&!original?'stroke-dasharray="5 5"':''}/>`;if(opts.edit)svg+=`<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" class="edge-hit" onclick="toggleEdge(${u},${v})"><title>Quitar ${letters([u,v])}</title></line>`;if(opts.weight){let mx=(x+x2)/2,my=(y+y2)/2;svg+=`<text x="${mx}" y="${my-4}" text-anchor="middle" class="weight">${opts.complete?(original?0:1):1}</text>`}}
+for(let i=0;i<n;i++){let[x,y]=pos[i],sel=selected.includes(i);svg+=`<g data-vertex="${i}" ${opts.click?`onclick="${opts.click}(${i})" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${opts.click}(${i})}"`:''} ${opts.edit?`onclick="editNode(${i})" role="button" tabindex="0" onkeydown="if(event.key==='Enter')editNode(${i})"`:''} aria-label="Nodo ${String.fromCharCode(65+i)}${sel?', seleccionado':''}"><circle class="node ${sel?'sel':''}" cx="${x}" cy="${y}" r="20"/><text class="ntext ${sel?'sel':''}" x="${x}" y="${y}">${String.fromCharCode(65+i)}</text></g>`;if(opts.dist)svg+=`<text x="${x}" y="${y+35}" text-anchor="middle" class="weight">d=${Number.isFinite(opts.dist[i])?opts.dist[i]:'∞'}</text>`}svg+='</svg>';return `<div class="graphwrap"><div class="rowlabel">${label}</div>${svg}</div>`}
+let editFirst=null;function editNode(v){if(current<7||step!==0)return;if(editFirst===null){editFirst=v;draw();$('stext').textContent='Primer extremo: '+String.fromCharCode(65+v)+'. Selecciona el segundo extremo.'}else{if(editFirst!==v)toggleEdge(editFirst,v);else{editFirst=null;draw()}}}
+function toggleEdge(u,v){if(step!==0)return;let e=data.edges.findIndex(x=>x.includes(u)&&x.includes(v));if(e<0)data.edges.push(sort([u,v]));else data.edges.splice(e,1);editFirst=null;restartData()}
+function graphStages(){let {edges:E,n,k}=data,C=complement(E,n),i=current,base=graph(E,'G · entrada',{edit:true});if(i===7){let b=bfs(E,n),path=b.path;return[st('¿Se puede llegar de A a F?','Edita la estructura para conectar o aislar F. La pregunta no pide todavía un camino mínimo.',base),st('1. Asigna peso 1 a cada arista','Las conexiones se conservan exactamente. Las parejas sin arista siguen desconectadas.',graph(E,'G′ · pesos unitarios',{weight:true})),st('2. Consulta camino mínimo desde A','La caja negra devuelve distancias; ∞ indica un destino inalcanzable.',graph(E,'Distancias desde A',{dist:b.dist,weight:true})),st('3. Interpreta la distancia de F',path.length?`d(A,F)=${b.dist[n-1]}, finita. Un camino testigo: ${letters(path)}.`:'d(A,F)=∞. La respuesta a alcanzabilidad es NO.',graph(E,path.length?'Camino mínimo testigo':'F es inalcanzable',{path,selected:path})),st(path.length?'Respuesta: SÍ':'Respuesta: NO','En el reto basta cualquier camino válido; no se exige que sea el más corto.',graph(E,'Misma estructura, otra pregunta',{path}))]}
+if(i===8){let s=subsets(n).filter(S=>S.length>=k&&isClique(S,C)).sort((a,b)=>a.length-b.length)[0];return[st(`¿Existe un independiente de tamaño ≥${k}?`,'Un conjunto independiente no tiene aristas entre sus propios vértices.',base),st('1. Construye el complemento','Cada no-arista entre nodos distintos se vuelve arista y cada arista desaparece. k se conserva.',`<div class="graph-grid">${graph(E,'G')}${graph(C,'Ḡ · entrada de CLIQUE')}</div>`),st(`2. Pregunta por una clique de tamaño ≥${k}`,s?'La caja negra encuentra una clique. Seleccionar los mismos nodos explica la correspondencia.':'La caja negra no encuentra una clique suficientemente grande.',graph(C,s?'Clique testigo en Ḡ':'No hay clique de ese tamaño',{selected:s||[]})),st('3. Conserva los mismos vértices',s?'Esos nodos no tienen aristas internas en G; ya son el independiente buscado.':'La equivalencia también conserva las respuestas negativas.',`<div class="graph-grid">${graph(E,'Independiente en G',{selected:s||[]})}${graph(C,'Clique en Ḡ',{selected:s||[]})}</div>`),st(s?'Ambas instancias responden SÍ':'Ambas instancias responden NO','La transformación preserva exactamente la existencia de soluciones.',`<div class="formula">IS(G, ${k}) ⇔ CLIQUE(Ḡ, ${k})</div>`)]}
+if(i===9){let budget=n-k,cover=subsets(n).filter(S=>S.length<=budget&&isCover(S,C)).sort((a,b)=>a.length-b.length)[0],clique=cover?Array.from({length:n},(_,j)=>j).filter(v=>!cover.includes(v)):[];return[st(`¿Hay una clique de tamaño ≥${k} en G?`,'Buscamos vértices conectados todos con todos. La herramienta resolverá cobertura.',base),st(`1. Complementa el grafo y usa b = ${n}−${k} = ${budget}`,'La instancia de destino pide cubrir TODAS las aristas del complemento con a lo sumo b vértices.',graph(C,`Ḡ · presupuesto b=${budget}`)),st('2. Consulta VERTEX COVER',cover?`Una cobertura válida usa ${cover.length} vértices.`:'No existe cobertura dentro del presupuesto.',graph(C,cover?'Cobertura encontrada':'Presupuesto insuficiente',{selected:cover||[]})),st('3. Toma los nodos que NO están en la cobertura',cover?'Los restantes son independientes en Ḡ y por ello forman una clique en G.':'Si hubiera una clique válida, su complemento sería una cobertura dentro del presupuesto, una contradicción.',`<div class="graph-grid">${graph(C,'Cobertura en Ḡ',{selected:cover||[]})}${graph(E,'Clique en G',{selected:clique})}</div>`),st(cover?'Las dos respuestas son SÍ':'Las dos respuestas son NO',`k=${k}; b=${budget}. Conserva la dirección correcta de las desigualdades.`,`<div class="formula">CLIQUE(G, k) ⇔ VC(Ḡ, n−k)</div>`)]}
+let t=tsp(E,n),cy=t.best===0;return[st('¿Tiene G un ciclo hamiltoniano?','Debe visitar todos los nodos una vez y regresar al inicio usando solo aristas de G.',base),st('1. Completa y asigna pesos 0/1',`Aristas originales: peso 0. Aristas nuevas: peso 1. Umbral B=0.`,graph(E,'K₆ ponderado',{complete:true,weight:true})),st('2. Consulta TSP de decisión',`La simulación enumera tours y encuentra costo mínimo ${t.best}; ¿es cero? ${cy?'SÍ':'NO'}.`,graph(E,`Mejor tour · costo ${t.best}`,{complete:true,weight:true,path:t.tour,cycle:true,selected:t.tour})),st('3. Interpreta el costo',cy?'El tour usa exclusivamente aristas de peso cero, así que es un ciclo hamiltoniano de G.':'Todo tour usa alguna arista artificial de peso 1. No hay ciclo hamiltoniano en G.',graph(E,cy?'Ciclo recuperado en G':'El mejor tour requiere aristas artificiales',{complete:!cy,weight:!cy,path:t.tour,cycle:true})),st(cy?'Las dos instancias responden SÍ':'Las dos instancias responden NO','Una sola arista artificial hace que el costo sea mayor que cero.',`<div class="formula">HC(G) ⇔ TSP(Kₙ,w) ≤ 0</div><div class="poly-note">Costo mínimo de esta instancia: ${t.best}. Tamaño del grafo original: ${n}.</div>`)]}
+function polyPoints(){let M=Math.max(...data.x.map(Math.abs))+1;return data.x.map((x,i)=>({x,y:Math.sqrt(M*M-x*x),i})).map(p=>({...p,sx:300+p.x/M*225,sy:260-p.y/M*225}))}
+function polygon(solved=false,interactive=false){let p=polyPoints(),order=interactive?polyOrder:solved?p.map((_,i)=>i).sort((a,b)=>p[a].x-p[b].x):[];let svg='<svg viewBox="0 0 600 310" style="max-width:600px;width:100%;height:auto" aria-label="Puntos en una semicircunferencia"><path d="M75 260 A225 225 0 0 1 525 260" fill="none" stroke="var(--line)" stroke-dasharray="6 6"/><line x1="50" y1="260" x2="550" y2="260" stroke="var(--line)"/>';
+for(let j=1;j<order.length+(order.length===p.length?1:0);j++){let a=p[order[j-1]],b=p[order[j%order.length]];svg+=`<line x1="${a.sx}" y1="${a.sy}" x2="${b.sx}" y2="${b.sy}" stroke="var(--teal)" stroke-width="3"/>`}
+p.forEach((v,i)=>{let sel=order.includes(i);svg+=`<g ${interactive?`onclick="pickPoly(${i})" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){pickPoly(${i})}"`:''} aria-label="Punto con abscisa ${v.x}"><circle cx="${v.sx}" cy="${v.sy}" r="14" class="node ${interactive&&sel?'sel':''}"/><text x="${v.sx}" y="${v.sy}" class="ntext ${interactive&&sel?'sel':''}" style="font-size:10px">${i+1}</text><text x="${v.sx}" y="${v.sy-22}" text-anchor="middle" class="weight">x=${v.x}</text></g>`});return svg+'</svg>'}
+function pickPoly(i){if(polyOrder.includes(i)){feedback='Ese punto ya está en el recorrido. Usa Deshacer para corregir.'}else{polyOrder.push(i);feedback=''}renderChallenge()}
+function pick(i){if([7,10].includes(current)){if(chosen.includes(i)){feedback='Ese nodo ya está en el recorrido; deshaz el último paso para cambiarlo.'}else{chosen.push(i);feedback=''}}else{if(chosen.includes(i))chosen=chosen.filter(v=>v!==i);else chosen.push(i);feedback=''}renderChallenge()}
+function renderChallenge(){let priorResponse=$('response')?.value;let el=$('challenge');if(!el)return;if(step!==4){el.innerHTML='';return}if(usesAdvanced(current)){el.innerHTML=advancedChallenge();return}let i=current,l=lessons[i],h='';if(i<4){h=`<label class="mini">Tu respuesta <input id="response" aria-label="Tu respuesta al reto" placeholder="${i===0?'2:10, 4:20, …':i===1?'1, 3, …':'Un entero'}"></label>`}else if(i===4){h=polygon(false,true)+`<div class="poly-note">Orden actual: ${polyOrder.map(j=>data.x[j]).join(' → ')||'pulsa un primer punto'}</div>`}else if(i===5){h=tokens(sort(data.x),chosen,'pick')+`<button onclick="check('none')">No hay duplicados</button>`}else if(i===6){h=tokens(data.x,chosen,'pick')+`<button onclick="check('none')">No hay pareja</button>`}else if(i===7){h=graph(data.edges,'Tu camino A → F',{selected:chosen,path:chosen,click:'pick'})+`<div class="poly-note">${letters(chosen)||'Empieza por A'}</div><button onclick="check('none')">Inalcanzable</button>`}else if(i===8){h=`<div class="graph-grid">${graph(data.edges,`G · elige ≥${data.k} nodos`,{selected:chosen,click:'pick'})}${graph(complement(data.edges),'Ḡ · mismos nodos',{selected:chosen,click:'pick'})}</div><div class="poly-note">Seleccionados: ${chosen.length}; objetivo: ≥${data.k}</div><button onclick="check('none')">No existe independiente ≥k</button>`}else if(i===9){let rest=Array.from({length:6},(_,j)=>j).filter(j=>!chosen.includes(j));h=`<div class="graph-grid">${graph(complement(data.edges),`Ḡ · elige cobertura ≤${6-data.k}`,{selected:chosen,click:'pick'})}${graph(data.edges,'G · nodos que quedan',{selected:rest})}</div><div class="poly-note">Seleccionados en Ḡ: ${chosen.length}; presupuesto: ${6-data.k}</div><button onclick="check('none')">No existe cobertura ≤n−k</button>`}else if(i===10){let c=chosen.reduce((s,u,j)=>s+(j?(has(data.edges,chosen[j-1],u)?0:1):0),0);if(chosen.length===6)c+=has(data.edges,chosen[5],chosen[0])?0:1;h=graph(data.edges,'Tu tour en el grafo completo',{complete:true,weight:true,selected:chosen,path:chosen,cycle:true,click:'pick'})+`<div class="poly-note">${letters(chosen)||'Elige el primer nodo'}${chosen.length===6?' → '+String.fromCharCode(65+chosen[0]):''}<br>Costo ${chosen.length===6?'cerrado':'parcial'}: ${c}; umbral: 0.</div><button onclick="check('none')">No existe tour de costo cero</button>`}
+el.innerHTML=`<div class="challenge"><span class="pill">Tu turno · reto ${String(i+1).padStart(2,'0')}</span><h3 style="margin-top:8px">Reconstruye y comprueba</h3><p>${l.challenge}</p>${h}<div class="controls"><button class="primary" onclick="check()">Comprobar respuesta</button>${i>=4?'<button onclick="undo()">Deshacer</button><button onclick="clearChoice()">Limpiar selección</button>':''}<button onclick="hint()">Una pista</button></div><div id="cfeedback" class="feedback" aria-live="polite">${esc(feedback)}</div></div>`;if(priorResponse!==undefined&&$('response'))$('response').value=priorResponse}
+function undo(){if(current===4)polyOrder.pop();else chosen.pop();feedback='';renderChallenge()}function clearChoice(){chosen=[];polyOrder=[];feedback='';renderChallenge()}
+function hint(){let hints=['Ordena ambas listas. El par i usa la posición i de cada salida.','La segunda coordenada de cada par es una dirección donde escribir el valor.','Resta los dos cuadrados y divide entre 4.','Usa A[0][0]·B[0][1] + A[0][1]·B[1][1].','Empieza en el punto más a la izquierda y avanza por el arco hacia la derecha.','Busca una pareja de vecinos iguales en la lista ordenada.','Prueba con el menor y el mayor; si la suma es pequeña, cambia el menor.','Empieza por A y continúa únicamente por conexiones existentes hasta F.','En G, ningún par de tus nodos elegidos debe estar conectado.','Cada arista de Ḡ debe tener al menos uno de sus extremos seleccionado.','Un recorrido de costo cero usa únicamente conexiones originales.'];feedback='Pista: '+hints[current];renderChallenge()}
+function crossings(order){let p=polyPoints();let orient=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);let seg=[];for(let i=0;i<order.length;i++)seg.push([order[i],order[(i+1)%order.length]]);for(let i=0;i<seg.length;i++)for(let j=i+1;j<seg.length;j++){let[a,b]=seg[i],[c,d]=seg[j];if(new Set([a,b,c,d]).size<4)continue;if(orient(p[a],p[b],p[c])*orient(p[a],p[b],p[d])<0&&orient(p[c],p[d],p[a])*orient(p[c],p[d],p[b])<0)return true}return false}
+function check(mode){let i=current,ok=false,msg='',s=$('response')?.value.trim();try{if(i===0){let pairs=s.split(',').map(x=>x.trim().split(':').map(Number));ok=eq(pairs,sort(data.x).map((x,j)=>[x,sort(data.y)[j]]));msg='Comprueba que cada pareja use el mismo rango en ambas listas.'}else if(i===1){ok=eq(s.split(/[, ]+/).map(Number),sort(data.x));msg='Escribe cada valor en la posición indicada por su etiqueta auxiliar.'}else if(i===2){ok=/^\d+$/.test(s)&&BigInt(s)===BigInt(data.x)*BigInt(data.y);msg='Usa (cuadrado de la suma − cuadrado de la diferencia) / 4.'}else if(i===3){ok=/^[-+]?\d+$/.test(s)&&Number(s)===mm(data.A,data.B)[0][1];msg='Multiplica la primera fila de A por la segunda columna de B y suma.'}else if(i===4){ok=polyOrder.length===data.x.length&&!crossings(polyOrder);msg=polyOrder.length!==data.x.length?'Todavía faltan puntos. Visítalos todos una vez.':'Tu ciclo tiene cruces. Sigue el borde de la semicircunferencia.'}else if(i===5){let a=sort(data.x);ok=mode==='none'?uniq(a).length===a.length:chosen.length===2&&Math.abs(chosen[0]-chosen[1])===1&&a[chosen[0]]===a[chosen[1]];msg='Necesitas dos posiciones vecinas e iguales, o demostrar que ninguna lo es.'}else if(i===6){ok=mode==='none'?!twoSum(sort(data.x),data.target).pair:chosen.length===2&&data.x[chosen[0]]+data.x[chosen[1]]===data.target;msg='Escoge exactamente dos posiciones distintas cuya suma sea el objetivo.'}else if(i===7){ok=mode==='none'?!bfs(data.edges).path.length:chosen.length>=2&&chosen[0]===0&&chosen.at(-1)===5&&chosen.every((v,j)=>!j||has(data.edges,chosen[j-1],v));msg='Empieza por A, termina en F y comprueba cada arista del recorrido.'}else if(i===8){ok=mode==='none'?!subsets(6).some(S=>S.length>=data.k&&isIndependent(S,data.edges)):chosen.length>=data.k&&isIndependent(chosen,data.edges);msg='No debe existir ninguna arista original entre tus nodos y necesitas al menos k.'}else if(i===9){let C=complement(data.edges);ok=mode==='none'?!subsets(6).some(S=>S.length<=6-data.k&&isCover(S,C)):chosen.length<=6-data.k&&isCover(chosen,C);msg='Revisa el presupuesto y cada arista del complemento: una arista sin extremos elegidos está descubierta.'}else if(i===10){ok=mode==='none'?tsp(data.edges).best>0:chosen.length===6&&chosen.every((v,j)=>has(data.edges,v,chosen[(j+1)%6]));msg='Visita los seis nodos una vez, cierra el tour y evita todas las aristas de peso 1.'}}catch{msg='Revisa el formato de la respuesta.'}
+feedback=ok?'✓ Reto resuelto. Has reconstruido un certificado válido para esta instancia.':(mode==='none'?'La caja negra sí encuentra una solución válida en esta instancia. Prueba a construirla.':msg);let el=$('cfeedback');el.textContent=feedback;el.className='feedback '+(ok?'ok':'err');if(ok){saved[current]={...saved[current],challenge:true};save();nav()}}
+
+function pointerLab(j){let a=sort(data.x),t=twoSum(a,data.target),r=t.steps[Math.min(j,t.steps.length-1)];traceIndex=j;return `<div style="width:100%"><div class="rowlabel">Mueve el control para explorar cada decisión</div><div class="tokens">${a.map((v,i)=>`<span class="token ${i===r.l||i===r.r?'hit':''}" style="opacity:${i<r.l||i>r.r?.25:1}">${v}<small style="font-size:10px">${i===r.l?'L':i===r.r?'R':''}</small></span>`).join('')}</div><div class="formula">${a[r.l]} + (${a[r.r]}) = ${r.sum} ${r.sum===data.target?'=':r.sum<data.target?'&lt;':'&gt;'} ${data.target}</div><p class="poly-note" style="margin:auto">${r.sum===data.target?'Igualdad: encontramos dos posiciones distintas.':r.sum<data.target?'Descarta L: ni el compañero más grande alcanza el objetivo.':'Descarta R: incluso el compañero más pequeño supera el objetivo.'}</p><label class="mini" style="display:block;margin-top:20px">Movimiento ${j+1} de ${t.steps.length}<input aria-label="Movimiento de dos punteros" type="range" min="0" max="${t.steps.length-1}" value="${j}" style="width:100%" oninput="document.getElementById('visual').innerHTML=pointerLab(Number(this.value))"></label></div>`}
+function matrixExplorer(){let ab=mm(data.A,data.B);return `<div style="width:100%;margin-top:15px;border-top:1px solid var(--line);padding-top:15px"><div class="rowlabel">Pulsa una celda de AB para abrir su cálculo</div><div class="tokens">${ab.flatMap((r,i)=>r.map((v,j)=>`<button onclick="inspectCell(${i},${j})" class="token">(${i+1},${j+1}) = ${v}</button>`)).join('')}</div><div id="cell-detail" class="poly-note" style="margin:auto" aria-live="polite">Elige una de las cuatro entradas.</div></div>`}
+function inspectCell(i,j){let A=data.A,B=data.B;$('cell-detail').innerHTML=`Fila ${i+1} de A: [${A[i].join(', ')}]; columna ${j+1} de B: [${B.map(r=>r[j]).join(', ')}].<br><b>${A[i][0]} · (${B[0][j]}) + ${A[i][1]} · (${B[1][j]}) = ${mm(A,B)[i][j]}</b>`}
+
+function theme(){document.body.classList.toggle('dark');try{localStorage.setItem('puentes-theme',document.body.classList.contains('dark')?'dark':'light')}catch{}}function full(){if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{})}function showGuide(){$('guide').showModal()}
+function exportProgress(){let text='PUENTES · PROGRESO DEL LABORATORIO\n'+new Date().toLocaleString('es-CO')+'\n\n'+lessons.map((l,i)=>`${i+1}. ${l.title}\n   Reto: ${saved[i]?.challenge?'resuelto':'pendiente'} · Predicción: ${saved[i]?.prediction===true?'correcta':saved[i]?.prediction===false?'revisada':'sin registrar'}`).join('\n\n');let url=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));let a=document.createElement('a');a.href=url;a.download='Progreso_Reducciones.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+const openDSABase = 'https://opendsa-server.cs.vt.edu/OpenDSA/Books/CS4104/html/';
+const npSources = {
+  10:['6.19','hamiltonianCycle_to_TSP'], 11:['6.14','circuitSAT_to_SAT'],
+  12:['6.8','SAT_to_threeSAT'], 13:['6.15','threeSAT_to_clique'],
+  14:['6.16','independentSet_to_vertexCover'], 15:['6.17','threeSAT_to_hamiltonianCycle'],
+  16:['6.18','clique_to_independentSet']
+};
+lessons.push(
+  {title:'Circuito SAT → SAT',a:'CIRCUITO SAT',b:'SAT',level:'Compuertas a cláusulas',
+    desc:'Dale una variable a cada señal y exige que la salida sea 1.',
+    q:'¿Qué obliga a la fórmula a aceptar solo entradas que encienden el circuito?',opts:['La cláusula unitaria de salida','Tener una variable por entrada','Que todas las compuertas sean AND'],ans:0,
+    why:'Las restricciones locales fijan los valores de las señales. La cláusula de salida obliga a que la última valga 1.',
+    proof:'Las cláusulas de cada compuerta equivalen a su tabla de verdad. Una entrada que enciende el circuito se extiende con sus señales internas. Toda asignación que satisface las cláusulas respeta las señales y fuerza la salida a 1.',
+    cost:'Cada compuerta de hasta dos entradas aporta a lo sumo tres cláusulas. El tamaño de la fórmula es lineal en el tamaño del circuito.',
+    trap:'Una implicación en una sola dirección puede aceptar valores de salida incompatibles con la compuerta. Impón la equivalencia completa.',
+    challenge:'Cambia las entradas hasta que todas las cláusulas, incluida la de salida, se cumplan.'},
+  {title:'SAT → 3-SAT',a:'SAT',b:'3-SAT',level:'Variables auxiliares',
+    desc:'Parte cláusulas largas en una cadena de cláusulas de tres literales.',
+    q:'¿Qué propiedad conserva la fórmula con variables nuevas?',opts:['El mismo número de asignaciones','La existencia de una asignación satisfactoria','El mismo número de cláusulas'],ans:1,
+    why:'Una asignación de las variables originales satisface la fórmula si y solo si admite una extensión que satisface la nueva.',
+    proof:'Si todos los literales de una cláusula larga son falsos, la cadena fuerza sucesivamente sus auxiliares a 1 y contradice la última cláusula. Si algún literal es verdadero, se puede activar la cadena hasta encontrarlo y apagarla desde ahí. Para una cláusula corta se generan todas las combinaciones de signos de uno o dos auxiliares. Si sus literales originales son falsos, alguna cláusula del grupo siempre falla.',
+    cost:'Una cláusula de r≥4 literales produce r−2 cláusulas y r−3 auxiliares exclusivos. En la app la entrada de SAT está en FNC. Para SAT con fórmulas generales se puede obtener una FNC equisatisfacible usando variables para subfórmulas.',
+    trap:'Usa auxiliares distintos para cada cláusula original. Los auxiliares se crean tanto para separar cláusulas largas como para completar las cortas.',
+    challenge:'Encuentra una asignación que haga verdaderas todas las cláusulas originales y las de tres literales.'},
+  {title:'3-SAT → clique',a:'3-SAT',b:'CLIQUE',level:'Compatibilidad entre cláusulas',
+    desc:'Cada aparición de un literal es un vértice. Busca uno compatible por cláusula.',
+    q:'¿Cuándo se unen dos apariciones por una arista?',opts:['Si pertenecen a la misma cláusula','Si son x y ¬x','Si son de cláusulas distintas y no se contradicen'],ans:2,
+    why:'Una clique de tamaño m debe tomar un vértice por cada una de las m cláusulas, y sus literales pueden ser verdaderos simultáneamente.',
+    proof:'Una asignación que satisface la fórmula permite tomar un literal verdadero por cláusula. Esas apariciones forman una clique. Una clique de tamaño m cubre todas las cláusulas y no contiene signos opuestos de la misma variable. Asigna sus literales a verdadero y completa las demás variables libremente.',
+    cost:'Para m cláusulas se crean 3m vértices y se consideran O(m²) pares. El umbral es k=m.',
+    trap:'Dos apariciones de x en cláusulas distintas son vértices distintos y pueden unirse. Dentro de una cláusula no hay aristas.',
+    challenge:'Elige una aparición de cada color para formar una clique. Pulsa dos apariciones para inspeccionar si son compatibles.'},
+  {title:'Independiente → cobertura',a:'INDEPENDENT SET',b:'VERTEX COVER',level:'Complemento del conjunto',
+    desc:'Conserva el grafo y cambia el umbral de k a n−k.',
+    q:'¿Qué se complementa en esta reducción?',opts:['El conjunto de vértices del certificado','Las aristas del grafo','Tanto el grafo como el conjunto'],ans:0,
+    why:'En el mismo G, S es independiente si y solo si V∖S cubre cada arista.',
+    proof:'Si S es independiente, cada arista tiene un extremo fuera de S. Si V∖S cubre todas las aristas, no puede haber una arista con ambos extremos en S. Así, |S|≥k equivale a |V∖S|≤n−k.',
+    cost:'Se reutiliza G y se calcula el umbral n−k. Reconstruir el certificado por complemento cuesta O(n).',
+    trap:'Aquí el grafo conserva todas sus aristas. El complemento se aplica al certificado.',
+    challenge:'Marca una cobertura de tamaño a lo sumo n−k y observa el conjunto independiente que dejan los demás vértices.'},
+  {title:'3-SAT → ciclo hamiltoniano',a:'3-SAT',b:'CICLO HAMILTONIANO DIRIGIDO',level:'Filas y desvíos',
+    desc:'La dirección de cada fila codifica una variable. Cada cláusula requiere un desvío.',
+    q:'Si una fila se recorre de derecha a izquierda, ¿qué literal de esa variable puede justificar un desvío?',opts:['El literal positivo','El literal negado','Ambos signos indistintamente'],ans:1,
+    why:'Recorrer hacia la izquierda representa falso. Los arcos de un literal negado permiten salir hacia la cláusula y regresar en ese sentido.',
+    proof:'Una asignación satisfactoria fija la dirección de cada fila y un literal verdadero por cláusula da su desvío. A la inversa, los nodos separadores obligan a recorrer cada fila de extremo a extremo. Un desvío que entra en una cláusula debe regresar al par de la misma fila. De otro modo quedan vértices que no pueden incorporarse al ciclo. Las direcciones del ciclo dan una asignación y cada cláusula visitada tiene un literal verdadero.',
+    cost:'Para n variables y m cláusulas hay n(3m+3) nodos en las filas, más m nodos de cláusula y n+1 de enlace. Los arcos se construyen en O(nm).',
+    trap:'Esta construcción usa arcos dirigidos. Para continuar con TSP dirigido se da peso 1 a cada arco presente y peso 2 a los demás. Para un TSP simétrico se puede pasar primero a un ciclo hamiltoniano no dirigido mediante el gadget entrada–medio–salida.',
+    challenge:'Fija la dirección de las filas y elige por qué literal visitar cada cláusula. Comprueba que el recorrido visita cada nodo una vez y cierra el ciclo.'},
+  {title:'Clique → independiente',a:'CLIQUE',b:'INDEPENDENT SET',level:'Complemento del grafo',
+    desc:'Invierte las aristas. Los mismos k vértices cambian de papel.',
+    q:'¿Qué conjunto recupera la clique en G desde un independiente S en Ḡ?',opts:['V∖S','El mismo S','Todos los vértices de G'],ans:1,
+    why:'Los pares sin arista dentro de S en Ḡ son aristas dentro del mismo S en G.',
+    proof:'S es clique en G si y solo si cada par distinto de S es una arista. Equivale a que ningún par distinto de S sea una arista en Ḡ, es decir, a que S sea independiente en Ḡ.',
+    cost:'Se construye Ḡ en O(n²) y se conserva k. La recuperación reutiliza el mismo conjunto S.',
+    trap:'El complemento del grafo intercambia aristas y no aristas sin introducir lazos. El umbral k se mantiene.',
+    challenge:'Escoge al menos k vértices sin aristas internas en Ḡ y comprueba que son una clique en G.'}
+);
+const npFormulaExamples = {
+  12:['a b c d e; !a; !b c', 'a b c d; !a; !b; !c; !d', 'a; !a b; !b c d e'],
+  13:['a b !c; !a b c; a !b d', 'a a a; !a !a !a; b c d', 'a !b c; !a b c; !c d e; !d b e'],
+  15:['a b !c; !a b c', 'a a a; !a !a !a', 'a !b c; !a b c; !c a b']
+};
+const circuits = [
+  {label:'AND con negación', inputs:['a','b'], gates:[['p','NOT','b'],['q','AND','a','p']]},
+  {label:'Contradicción a ∧ ¬a', inputs:['a'], gates:[['p','NOT','a'],['q','AND','a','p']]},
+  {label:'OR de dos ramas', inputs:['a','b','c'], gates:[['p','AND','a','b'],['r','NOT','c'],['q','OR','p','r']]}
+];
+let workValues = {}, hcChoices = {}, npMessage = '', npInspect = [], npClause = 0, routeCursor = 0;
+
+function isFormulaLab(i) { return Object.hasOwn(npFormulaExamples, i); }
+function isNewGraph(i) { return i === 14 || i === 16; }
+function usesAdvanced(i) { return i >= 11; }
+function newLabData(i, example = 0) {
+  if (i === 11) return {example};
+  if (isFormulaLab(i)) return {clauses:parseFormula(npFormulaExamples[i][example], i)};
+  const edges = [[0,1],[0,2],[1,2],[2,3],[3,4],[4,5],[0,5]];
+  return {n:6, edges, k:3};
+}
+function resetAdvanced() {
+  workValues = {};
+  hcChoices = {};
+  npMessage = '';
+  npInspect = [];
+  npClause = 0;
+  routeCursor = 0;
+  editFirst = null;
+}
+function parseFormula(text, lab) {
+  const clauses = text.trim().toLowerCase().replaceAll('¬','!').split(';')
+    .map(part => part.trim().split(/[\s,∨|]+/));
+  if (clauses.length > 5 || clauses.some(c => c.some(l => !/^!?[a-e]$/.test(l)))) {
+    throw Error('Usa de 1 a 5 cláusulas separadas por punto y coma. Variables a…e. Escribe !a para negar a.');
+  }
+  if (clauses.some(c => lab === 12 ? c.length > 8 : c.length !== 3)) {
+    throw Error(lab === 12 ? 'Cada cláusula admite de 1 a 8 literales.' : 'Cada cláusula debe tener exactamente tres literales. Puedes repetirlos.');
+  }
+  return clauses;
+}
+function variablesOf(clauses) { return uniq(clauses.flat().map(l => l.replace('!',''))).sort(); }
+function neg(l) { return l.startsWith('!') ? l.slice(1) : '!' + l; }
+function litOK(l, values) { return l.startsWith('!') ? !values[l.slice(1)] : !!values[l]; }
+function satOK(clauses, values) { return clauses.every(c => c.some(l => litOK(l, values))); }
+function findAssignment(vars, predicate) {
+  for (let mask=0; mask < 2**vars.length; mask++) {
+    const values = Object.fromEntries(vars.map((v,j) => [v, Boolean(mask & (1 << j))]));
+    if (predicate(values)) return values;
+  }
+  return null;
+}
+function literalText(l) { return l.replace('!','¬'); }
+function showCNF(clauses, values, inspect = false) {
+  return '<div class="cnf">'+clauses.map((c,j) => {
+    const result = values ? c.some(l => litOK(l,values)) : null;
+    return '<div class="clause hue'+j%5+(values ? (result ? ' valid' : ' invalid'):'')+'">'
+      + '<small>C'+(j+1)+(values ? (result?' ✓':' ×'):'')+'</small>'
+      + (inspect ? c.map((l,k) => '<button class="lit" onclick="inspectOccurrence('+ (j*3+k) +')">'+literalText(l)+'</button>').join('')
+        : '<span>'+c.map(l => values ? '<b class="'+(litOK(l,values)?'ok':'err')+'">'+literalText(l)+'</b>' : literalText(l)).join(' ∨ ')+'</span>')
+      +'</div>';
+  }).join('')+'</div>';
+}
+function valueButtons(vars, values=workValues) {
+  return '<div class="tokens">'+vars.map(v =>
+    '<button class="token '+(values[v]?'hit':'')+'" aria-pressed="'+!!values[v]+'" onclick="flipValue(\''+v+'\')">'+v+' = '+Number(!!values[v])+'</button>'
+  ).join('')+'</div>';
+}
+function flipValue(v) { workValues[v]=!workValues[v]; npMessage=''; routeCursor=0; refreshInteractive(); }
+function refreshInteractive() {
+  if (step === 4) renderChallenge();
+  else draw();
+}
+function showValues(values, vars=Object.keys(values||{})) {
+  return values ? tokens(vars.map(v => v+' = '+Number(!!values[v]))) : '<p class="err">Sin asignación satisfactoria</p>';
+}
+function circuitEvaluation(c, inputs) {
+  const values={...inputs}, clauses=[];
+  const gateClauses=[];
+  for (const [out, op, a, b] of c.gates) {
+    let local;
+    if (op === 'NOT') {
+      values[out] = !values[a];
+      local = [[a,out],[neg(a),neg(out)]];
+    } else if (op === 'AND') {
+      values[out] = !!values[a] && !!values[b];
+      local = [[neg(out),a],[neg(out),b],[out,neg(a),neg(b)]];
+    } else {
+      values[out] = !!values[a] || !!values[b];
+      local = [[out,neg(a)],[out,neg(b)],[neg(out),a,b]];
+    }
+    gateClauses.push(local);
+    clauses.push(...local);
+  }
+  const output=c.gates.at(-1)[0];
+  clauses.push([output]);
+  return {values,clauses,gateClauses,output};
+}
+function circuitPicture(c, values) {
+  return '<div class="circuit">'+c.gates.map(([out,op,a,b]) =>
+    '<div><span class="signal">'+a+' = '+Number(!!values[a])+(b?' · '+b+' = '+Number(!!values[b]):'')+'</span>'
+    +'<span class="arrow">→</span><b class="gate">'+op+'</b><span class="arrow">→</span><span class="signal '+(values[out]?'on':'')+'">'+out+' = '+Number(!!values[out])+'</span></div>'
+  ).join('')+'</div>';
+}
+function transform3CNF(clauses) {
+  let next=0;
+  const freshVariable=()=> 'y'+(++next);
+  const groups=clauses.map(c=>{
+    if(c.length===1) {
+      const a=freshVariable(), b=freshVariable();
+      return [[c[0],a,b],[c[0],a,neg(b)],[c[0],neg(a),b],[c[0],neg(a),neg(b)]];
+    }
+    if(c.length===2) {
+      const a=freshVariable();
+      return [[...c,a],[...c,neg(a)]];
+    }
+    if(c.length===3) return [c];
+    const fresh=Array.from({length:c.length-3},freshVariable);
+    const result=[[c[0],c[1],fresh[0]]];
+    for(let j=1;j<fresh.length;j++) result.push([neg(fresh[j-1]),c[j+1],fresh[j]]);
+    result.push([neg(fresh.at(-1)),c.at(-2),c.at(-1)]);
+    return result;
+  });
+  return {groups,all:groups.flat()};
+}
+function extend3CNF(clauses, values) {
+  const extended={...values};
+  const {groups}=transform3CNF(clauses);
+  groups.forEach((group,j)=>{
+    if(clauses[j].length<=3) return;
+    for (const c of group.slice(0,-1)) extended[c[2]] = !c.slice(0,2).some(l=>litOK(l,extended));
+  });
+  return extended;
+}
+function occurrenceCompatible(clauses,u,v) {
+  return Math.floor(u/3)!==Math.floor(v/3) && clauses.flat()[u]!==neg(clauses.flat()[v]);
+}
+function cliqueWitness(clauses) {
+  function search(row, selected) {
+    if(row===clauses.length) return selected;
+    for(let v=3*row;v<3*row+3;v++) {
+      if(selected.every(u=>occurrenceCompatible(clauses,u,v))) {
+        const answer=search(row+1,[...selected,v]);
+        if(answer) return answer;
+      }
+    }
+    return null;
+  }
+  return search(0,[]);
+}
+function occurrenceSVG(clauses, selected=[], interactive=false) {
+  const rows=clauses.length, flat=clauses.flat();
+  const positions=flat.map((_,i)=>[105+(i%3)*177,42+Math.floor(i/3)*62]);
+  const groupColor=i=>'var(--h'+Math.floor(i/3)%5+')';
+  let svg='<svg class="np-svg" viewBox="0 0 565 '+(rows*62+24)+'" aria-label="Grafo de apariciones de literales">';
+  for (const [u,v] of allPairs(flat.length)) {
+    if(!occurrenceCompatible(clauses,u,v)) continue;
+    const [x,y]=positions[u], [xx,yy]=positions[v];
+    const hit=selected.includes(u)&&selected.includes(v);
+    svg+='<line x1="'+x+'" y1="'+y+'" x2="'+xx+'" y2="'+yy+'" class="occ-edge '+(hit?'selected-edge':'')+'"/>';
+  }
+  flat.forEach((l,i)=>{
+    const [x,y]=positions[i];
+    const action=interactive?' tabindex="0" role="button" onclick="inspectOccurrence('+i+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();inspectOccurrence('+i+')}"':'';
+    svg+='<g'+action+' aria-label="Cláusula '+(Math.floor(i/3)+1)+', '+literalText(l)+'"><circle cx="'+x+'" cy="'+y+'" r="20" fill="'+(selected.includes(i)?groupColor(i):'var(--panel)')+'" stroke="'+groupColor(i)+'" stroke-width="3"/><text x="'+x+'" y="'+y+'" class="ntext" style="fill:'+(selected.includes(i)?'white':'var(--ink)')+'">'+literalText(l)+'</text></g>';
+  });
+  for(let j=0;j<rows;j++) svg+='<text x="23" y="'+(47+j*62)+'" fill="'+groupColor(j*3)+'" font-weight="750">C'+(j+1)+'</text>';
+  return svg+'</svg>';
+}
+function inspectOccurrence(i) {
+  if(step===4) {
+    const row=Math.floor(i/3);
+    const currentPick=chosen.includes(i);
+    chosen=chosen.filter(v=>Math.floor(v/3)!==row);
+    if(!currentPick) chosen.push(i);
+    npInspect=[...chosen.slice(-2)];
+  } else {
+    npInspect=npInspect.includes(i) ? npInspect.filter(v=>v!==i) : [...npInspect.slice(-1),i];
+  }
+  npMessage='';
+  refreshInteractive();
+}
+function compatibilityText() {
+  if(npInspect.length!==2) return 'Pulsa dos apariciones para ver la regla de conexión.';
+  const [u,v]=npInspect, lits=data.clauses.flat();
+  return Math.floor(u/3)===Math.floor(v/3) ? 'Sin arista: las dos apariciones son de la misma cláusula.'
+    : occurrenceCompatible(data.clauses,u,v) ? 'Con arista: cláusulas distintas y literales compatibles.'
+    : 'Sin arista: '+literalText(lits[u])+' contradice a '+literalText(lits[v])+'.';
+}
+function stageCircuit() {
+  const c=circuits[data.example];
+  const demo=circuitEvaluation(c,workValues);
+  const witness=findAssignment(c.inputs, v=>circuitEvaluation(c,v).values[demo.output]);
+  return [
+    st('Circuito de entrada','Pulsa las variables para ver cómo se propagan las señales.',valueButtons(c.inputs)+circuitPicture(c,demo.values)),
+    st('Una variable por señal','Selecciona una compuerta para ver sus restricciones. Cada grupo codifica una tabla de verdad.', '<div class="tokens">'+c.gates.map(([out,op],j)=>'<button onclick="showGroup('+j+')" class="'+(npClause===j?'primary':'')+'">'+out+' · '+op+'</button>').join('')+'</div>'+showCNF(demo.gateClauses[Math.min(npClause,c.gates.length-1)])+'<p class="hint">Al final se añade la cláusula ('+demo.output+') para exigir salida 1.</p>'),
+    st('La fórmula SAT','Compara el valor de cada cláusula con las señales del circuito.',valueButtons(c.inputs)+showCNF(demo.clauses,demo.values)),
+    st('Recupera las entradas',witness?'Proyecta la asignación sobre las señales de entrada.':'Ninguna combinación enciende la salida.',witness?circuitPicture(c,circuitEvaluation(c,witness).values):showValues(null)),
+    st(witness?'Ambas instancias responden SÍ':'Ambas instancias responden NO','El reto te permite comprobar una asignación o la ausencia de una.', '<div class="formula">Circuito encendido ⇔ fórmula satisfacible</div>')
+  ];
+}
+function showGroup(i) { npClause=i; draw(); }
+function stageThreeCNF() {
+  const clauses=data.clauses, vars=variablesOf(clauses), transformed=transform3CNF(clauses);
+  const demo=extend3CNF(clauses,workValues);
+  const witness=findAssignment(vars,v=>satOK(clauses,v));
+  const picker='<label>Cláusula original <select onchange="showGroup(Number(this.value))">'+clauses.map((_,i)=>'<option value="'+i+'" '+(npClause===i?'selected':'')+'>C'+(i+1)+'</option>').join('')+'</select></label>';
+  return [
+    st('Fórmula en FNC','Prueba los valores y observa qué cláusulas quedan falsas.',valueButtons(vars)+showCNF(clauses,workValues)),
+    st('Una cadena por cláusula larga','Selecciona una cláusula. Las cortas se completan con auxiliares de ambos signos.',picker+showCNF([clauses[npClause]])+'<span class="arrow">↓</span>'+showCNF(transformed.groups[npClause])),
+    st('Propaga las variables auxiliares','Al cambiar una variable original la app calcula una extensión. Si la original es falsa, la cadena deja alguna cláusula falsa.',valueButtons(vars)+showValues(demo,variablesOf(transformed.all).filter(v=>v.startsWith('y')))+showCNF(transformed.all,demo)),
+    st('Elimina las auxiliares del certificado',witness?'La asignación de la nueva fórmula se proyecta sobre a…e.':'La fórmula original no tiene asignación y ninguna extensión puede satisfacer la transformada.',showValues(witness,vars)),
+    st(witness?'Las dos fórmulas son satisfacibles':'Las dos fórmulas son insatisfacibles',clauses.length+' cláusulas originales producen '+transformed.all.length+' cláusulas de tres literales.','<div class="formula">∃ x : Φ(x) ⇔ ∃ x,y : Ψ(x,y)</div>')
+  ];
+}
+function stageClique() {
+  const clauses=data.clauses, k=clauses.length, witness=cliqueWitness(clauses);
+  const values=witness&&Object.fromEntries(witness.map(i=>{const l=clauses.flat()[i]; return [l.replace('!',''), !l.startsWith('!')]}));
+  return [
+    st('Una cláusula, un color','Un literal repetido crea tantas apariciones como posiciones tenga.',showCNF(clauses)),
+    st('Conecta apariciones compatibles','Examina dos vértices. Las aristas solo conectan cláusulas distintas.',occurrenceSVG(clauses,npInspect,true)+'<p class="hint">'+compatibilityText()+'</p>'),
+    st('Busca una clique de tamaño '+k,witness?'El certificado usa una aparición por color.':'Ninguna elección de un vértice por cláusula forma una clique.',occurrenceSVG(clauses,witness||[])),
+    st('Lee una asignación desde los vértices',witness?'Cada literal elegido se hace verdadero. Las variables que faltan son libres.':'Si existiera una asignación satisfactoria, elegir un literal verdadero por cláusula daría una clique.',showValues(values)),
+    st(witness?'Existe una clique de tamaño '+k:'No existe una clique de tamaño '+k,'En el reto puedes armar otra clique o confirmar que el grafo no la tiene.','<div class="formula">3-SAT(Φ) ⇔ CLIQUE(G, '+k+')</div>')
+  ];
+}
+function stageGraphDual() {
+  const {edges:E,n,k}=data, C=complement(E,n), budget=n-k;
+  const coverLab=current===14;
+  const witness=subsets(n).find(S=>coverLab ? S.length<=budget&&isCover(S,E) : S.length>=k&&isIndependent(S,C));
+  const original=coverLab&&witness ? allPairsNodes(n).filter(v=>!witness.includes(v)) : witness;
+  const target=coverLab ? E : C;
+  return [
+    st('Instancia de '+lessons[current].a,'Umbral k='+k+'. Edita el grafo o prueba otro umbral.',graph(E,'G · entrada',{edit:true})),
+    st(coverLab?'Mantén G y calcula n−k':'Complementa G y conserva k',coverLab?'Las aristas no cambian. La cobertura tiene presupuesto '+budget+'.':'Cada par distinto cambia de arista a no arista, o viceversa.',graph(target,coverLab?'G · presupuesto '+budget:'Ḡ · umbral '+k)),
+    st('Consulta '+lessons[current].b,witness?'La caja negra devuelve un conjunto testigo.':'No hay un conjunto con las propiedades y el tamaño requeridos.',graph(target,'Instancia transformada',{selected:witness||[]})),
+    st(coverLab?'Recupera los vértices restantes':'Reutiliza los mismos vértices','El conjunto recuperado cumple el umbral de la instancia original.',graph(E,'Instancia original',{selected:original||[]})),
+    st(witness?'Las dos instancias responden SÍ':'Las dos instancias responden NO','En el reto los dos grafos se actualizan en paralelo.','<div class="formula">'+(coverLab?'IS(G, k) ⇔ VC(G, n−k)':'CLIQUE(G, k) ⇔ IS(Ḡ, k)')+'</div>')
+  ];
+}
+function allPairsNodes(n) { return Array.from({length:n},(_,i)=>i); }
+function hamiltonianModel(clauses) {
+  const vars=variablesOf(clauses), m=clauses.length, width=3*m+3;
+  const rows=vars.map(v=>Array.from({length:width},(_,j)=>v+(j+1)));
+  const links=Array.from({length:vars.length+1},(_,i)=>i===0?'s':i===vars.length?'t':'p'+i);
+  const nodes=[...rows.flat(),...links,...clauses.map((_,j)=>'C'+(j+1))];
+  const base=[], detours=[];
+  rows.forEach((row,i)=>{
+    for(let j=0;j<width-1;j++) base.push([row[j],row[j+1]],[row[j+1],row[j]]);
+    base.push([links[i],row[0]],[links[i],row.at(-1)],[row[0],links[i+1]],[row.at(-1),links[i+1]]);
+  });
+  base.push(['t','s']);
+  clauses.forEach((clause,j)=>{
+    const pairs=[];
+    for (const l of uniq(clause)) {
+      const row=rows[vars.indexOf(l.replace('!',''))];
+      const a=row[3*j+2], b=row[3*j+3], middle='C'+(j+1);
+      pairs.push({literal:l, path:l.startsWith('!')?[b,middle,a]:[a,middle,b]});
+    }
+    detours.push(pairs);
+  });
+  return {vars,rows,links,nodes,base,detours};
+}
+function hamiltonianRoute(model, values, choices) {
+  const route=['s'];
+  model.rows.forEach((row,i)=>{
+    const v=model.vars[i], forward=!!values[v];
+    const order=forward?row:[...row].reverse();
+    order.forEach((node,j)=>{
+      route.push(node);
+      model.detours.forEach((pairs,k)=>{
+        if(!choices[k] || !litOK(choices[k],values)) return;
+        const match=pairs.find(d=>d.literal===choices[k]);
+        if(match && match.path[0]===node && match.path[2]===order[j+1]) route.push(match.path[1]);
+      });
+    });
+    route.push(model.links[i+1]);
+  });
+  return [...route,'s'];
+}
+function verifyHamiltonian(model,route) {
+  if (route.length!==model.nodes.length+1 || route[0]!==route.at(-1)) return false;
+  if (new Set(route.slice(0,-1)).size!==model.nodes.length || model.nodes.some(v=>!route.includes(v))) return false;
+  const arcs=new Set(model.base.map(([u,v])=>u+'>'+v));
+  for (const pairs of model.detours) for (const {path:[a,c,b]} of pairs) {
+    arcs.add(a+'>'+c);
+    arcs.add(c+'>'+b);
+  }
+  return route.slice(1).every((v,j)=>arcs.has(route[j]+'>'+v));
+}
+function rowDiagram(model, {clause=null, route=[], bare=false, cursor=null}={}) {
+  const pos={}, columns=model.rows[0].length, height=model.rows.length*68+65;
+  model.rows.forEach((r,i)=>r.forEach((node,j)=>pos[node]=[82+j*(514/(columns-1)),70+i*68]));
+  model.links.forEach((node,i)=>pos[node]=[339,35+68*i]);
+  model.detours.forEach((_,j)=>pos['C'+(j+1)]=[82+(3*j+2.5)*(514/(columns-1)),12]);
+  
+  const marker=(name,color)=>'<marker id="'+name+'" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="'+color+'"/></marker>';
+  let svg='<svg class="np-svg rows-svg" viewBox="0 0 660 '+height+'" aria-label="Grafo dirigido de filas y cláusulas"><defs>'
+    +marker('gray-tip','var(--muted)')+marker('green-tip','var(--teal)')+marker('purple-tip','var(--purple)')+'</defs>';
+  function arrow(u,v,kind,both=false) {
+    const [x,y]=pos[u], [xx,yy]=pos[v], d=Math.hypot(xx-x,yy-y);
+    const a=kind==='walk'?'green-tip':kind==='detour'?'purple-tip':'gray-tip';
+    if(u==='t'&&v==='s') {
+      return '<path d="M'+(x-12)+' '+y+' H38 V'+yy+' H'+(xx-13)+'" class="route-'+kind+'" marker-end="url(#'+a+')"/>';
+    }
+    const s=12/d;
+    return '<line x1="'+(x+(xx-x)*s)+'" y1="'+(y+(yy-y)*s)+'" x2="'+(xx+(x-xx)*s)+'" y2="'+(yy+(y-yy)*s)+'" class="route-'+kind+'" marker-end="url(#'+a+')" '+(both?'marker-start="url(#'+a+')"':'')+'/>';
+  }
+  model.rows.forEach((r,i)=>{
+    const [,y]=pos[r[0]];
+    svg+='<text x="55" y="'+(y+5)+'" text-anchor="middle" fill="var(--ink)" font-weight="800">'+model.vars[i]+'</text>';
+    r.slice(1).forEach((v,j)=>{svg+=arrow(r[j],v,'base',true)});
+  });
+  const rowNodes=new Set(model.rows.flat());
+  model.base.filter(([u,v])=>!rowNodes.has(u)||!rowNodes.has(v)).forEach(([u,v])=>{svg+=arrow(u,v,'base')});
+  if(!bare&&clause!==null) for(const {path:[a,c,b]} of model.detours[clause]) {
+    svg+=arrow(a,c,'detour')+arrow(c,b,'detour');
+  }
+  if(route.length) route.slice(1).forEach((v,j)=>{svg+=arrow(route[j],v,'walk')});
+  for(const node of model.nodes) {
+    if(bare&&node.startsWith('C')) continue;
+    const [x,y]=pos[node], isClause=node.startsWith('C');
+    svg+='<g><circle cx="'+x+'" cy="'+y+'" r="'+(cursor===node?11:isClause?10:8)+'" fill="'+(cursor===node?'var(--accent)':isClause?'var(--purple)':route.includes(node)?'var(--soft)':'var(--panel)')+'" stroke="'+(isClause?'var(--purple)':'var(--muted)')+'"/><title>'+node+'</title>';
+    if(isClause||!rowNodes.has(node)) svg+='<text x="'+x+'" y="'+y+'" class="ntext" style="font-size:9px;'+(isClause||cursor===node?'fill:white':'')+'">'+node+'</text>';
+    svg+='</g>';
+  }
+  return svg+'</svg>';
+}
+function stageHamiltonian() {
+  const clauses=data.clauses, model=hamiltonianModel(clauses);
+  const witness=findAssignment(model.vars,v=>satOK(clauses,v));
+  const choices=witness&&clauses.map(c=>c.find(l=>litOK(l,witness)));
+  const route=witness?hamiltonianRoute(model,witness,choices):[];
+  const picker='<label>Ver arcos de <select onchange="showGroup(Number(this.value))">'+clauses.map((_,i)=>'<option value="'+i+'" '+(npClause===i?'selected':'')+'>C'+(i+1)+'</option>').join('')+'</select></label>';
+  return [
+    st('Instancia de 3-SAT','Cada variable tendrá una fila. Cada cláusula tendrá un vértice de paso obligatorio.',showCNF(clauses)),
+    st('Filas de '+model.rows[0].length+' nodos','Los arcos dobles permiten recorrer en ambos sentidos. Los enlaces encadenan las filas de s a t y un arco regresa de t a s.',rowDiagram(model,{bare:true})),
+    st('Agrega los desvíos dirigidos','Cada cláusula tiene un par reservado de nodos por fila. El signo determina si el desvío avanza hacia la derecha o hacia la izquierda.',picker+rowDiagram(model,{clause:npClause})),
+    st(witness?'Un ciclo testigo':'No hay ciclo hamiltoniano','El testigo se construye desde una asignación encontrada por enumeración. Revisa el orden de los nodos con el control.',witness?routePanel(model,route):showValues(null)),
+    st(witness?'Las dos instancias responden SÍ':'Las dos instancias responden NO','Una fila hacia la derecha codifica 1. Cada cláusula visitada certifica un literal verdadero.', '<div class="formula">3-SAT(Φ) ⇔ HC dirigido(G)</div><p class="hint">'+model.nodes.length+' vértices en la instancia de destino</p>')
+  ];
+}
+function routePanel(model,route) {
+  const pos=Math.min(routeCursor,route.length-1);
+  return rowDiagram(model,{route,cursor:route[pos]})+'<label class="route-control">Nodo '+(pos+1)+' de '+route.length+' · '+route[pos]+' <input type="range" min="0" max="'+(route.length-1)+'" value="'+pos+'" aria-label="Posición en el ciclo" onchange="seekRoute(Number(this.value))"></label>';
+}
+function seekRoute(i) { routeCursor=i; refreshInteractive(); }
+function setDetour(j,l) { hcChoices[j]=l; npMessage=''; routeCursor=0; renderChallenge(); }
+function advancedStage() {
+  if(current===11) return stageCircuit();
+  if(current===12) return stageThreeCNF();
+  if(current===13) return stageClique();
+  if(current===15) return stageHamiltonian();
+  return stageGraphDual();
+}
+function advancedChallenge() {
+  let body='';
+  if(current===11) {
+    const c=circuits[data.example], demo=circuitEvaluation(c,workValues);
+    body=valueButtons(c.inputs)+circuitPicture(c,demo.values)+showCNF(demo.clauses,demo.values);
+  } else if(current===12) {
+    const vars=variablesOf(data.clauses), transformed=transform3CNF(data.clauses).all;
+    body='<span class="rowlabel">Variables originales</span>'+valueButtons(vars)+showCNF(data.clauses,workValues)
+      +'<span class="rowlabel">Variables auxiliares y fórmula transformada</span>'+valueButtons(variablesOf(transformed).filter(v=>v.startsWith('y')))
+      +showCNF(transformed,workValues)+'<button onclick="workValues=extend3CNF(data.clauses,workValues);npMessage=\'\';renderChallenge()">Propagar auxiliares</button>';
+  } else if(current===13) {
+    body=occurrenceSVG(data.clauses,chosen,true)+'<p class="hint">'+chosen.length+' de '+data.clauses.length+' cláusulas cubiertas · '+compatibilityText()+'</p>';
+  } else if(current===15) {
+    const model=hamiltonianModel(data.clauses),route=hamiltonianRoute(model,workValues,hcChoices);
+    body=valueButtons(model.vars)+'<div class="input-row">'+data.clauses.map((c,j)=>
+      '<label>Desvío C'+(j+1)+'<select onchange="setDetour('+j+',this.value)"><option value="">Sin desvío</option>'
+      +uniq(c).map(l=>'<option value="'+l+'" '+(hcChoices[j]===l?'selected':'')+'>'+literalText(l)+(litOK(l,workValues)?' ✓':' ×')+'</option>').join('')
+      +'</select></label>').join('')+'</div>'+routePanel(model,route)
+      +'<p class="hint">Visitados '+new Set(route.slice(0,-1)).size+' de '+model.nodes.length+' vértices. El recorrido usa únicamente desvíos compatibles con la dirección de cada fila.</p>';
+  } else {
+    const {edges:E,n,k}=data, coverLab=current===14, C=coverLab?E:complement(E,n);
+    const source=coverLab?allPairsNodes(n).filter(v=>!chosen.includes(v)):chosen;
+    const path=coverLab?E.filter(([u,v])=>!chosen.includes(u)&&!chosen.includes(v)).flat():[];
+    body='<div class="graph-grid">'+graph(C,coverLab?'G · selecciona una cobertura':'Ḡ · selecciona un independiente',{selected:chosen,click:'advancedPick'})
+      +graph(E,'G · certificado recuperado',{selected:source})+'</div>'
+      +'<p class="hint">Seleccionados '+chosen.length+(coverLab?' · máximo '+(n-k)+' · aristas descubiertas '+path.length/2:' · mínimo '+k)+'</p>';
+  }
+  return '<div class="challenge"><span class="pill">Tu turno</span><p>'+lessons[current].challenge+'</p>'+body
+    +'<div class="controls"><button class="primary" onclick="checkAdvanced()">Comprobar</button><button onclick="checkAdvanced(true)">No hay solución</button><button onclick="advancedHint()">Pista</button><button onclick="chosen=[];resetAdvanced();renderChallenge()">Limpiar</button></div>'
+    +'<div id="cfeedback" class="feedback" aria-live="polite">'+esc(npMessage)+'</div></div>';
+}
+function advancedPick(i) {
+  chosen=chosen.includes(i)?chosen.filter(v=>v!==i):[...chosen,i];
+  npMessage='';
+  renderChallenge();
+}
+function advancedHint() {
+  const hints={11:'La última cláusula exige que q valga 1.',12:'Satisface primero la fórmula original. Luego prueba Propagar auxiliares.',13:'Busca un literal por cláusula. Una variable nunca puede aparecer con ambos signos en la selección.',14:'Cada arista debe tocar algún vértice marcado.',15:'Cada cláusula necesita un desvío por un literal verdadero según la dirección de su fila.',16:'Si tus nodos se tocan en Ḡ, falta esa arista en la clique de G.'};
+  $('cfeedback').textContent=hints[current];
+}
+function checkAdvanced(noSolution=false) {
+  let exists, valid, explanation;
+  if(current===11) {
+    const c=circuits[data.example], m=circuitEvaluation(c,workValues);
+    exists=!!findAssignment(c.inputs,v=>circuitEvaluation(c,v).values[m.output]);
+    valid=satOK(m.clauses,m.values);
+    explanation='La salida debe valer 1.';
+  } else if(current===12 || current===15) {
+    const clauses=data.clauses;
+    exists=!!findAssignment(variablesOf(clauses),v=>satOK(clauses,v));
+    if(current===12) {
+      valid=satOK(transform3CNF(clauses).all,workValues);
+      explanation='Revisa las cláusulas marcadas con × y las variables auxiliares.';
+    } else {
+      const m=hamiltonianModel(clauses);
+      valid=verifyHamiltonian(m,hamiltonianRoute(m,workValues,hcChoices));
+      explanation='Falta visitar al menos una cláusula. Revisa los desvíos y la dirección de sus filas.';
+    }
+  } else if(current===13) {
+    exists=!!cliqueWitness(data.clauses);
+    valid=chosen.length===data.clauses.length && chosen.every((u,j)=>chosen.slice(j+1).every(v=>occurrenceCompatible(data.clauses,u,v)));
+    explanation='Elige una aparición por cláusula y evita pares contradictorios.';
+  } else {
+    const {edges:E,n,k}=data;
+    const coverLab=current===14, C=coverLab?E:complement(E,n);
+    const test=S=>coverLab?S.length<=n-k&&isCover(S,C):S.length>=k&&isIndependent(S,C);
+    exists=subsets(n).some(test);
+    valid=test(chosen);
+    explanation=coverLab?'Revisa que todas las aristas estén cubiertas y que respetes n−k.':'Revisa el tamaño k y las aristas internas del conjunto.';
+  }
+  const ok=noSolution?!exists:valid;
+  npMessage=ok?(noSolution?'✓ Respuesta correcta. La instancia es negativa.':'✓ Certificado válido. Reto resuelto.'):noSolution?'Existe un certificado válido. Intenta construirlo.':explanation;
+  $('cfeedback').textContent=npMessage;
+  $('cfeedback').className='feedback '+(ok?'ok':'err');
+  if(ok) {
+    saved[current]={...saved[current],challenge:true};
+    save();
+    nav();
+  }
+}
+
+const labGroups = [
+  {name:'Elementales', id:'base', labs:[0,1,2,3,4,5,6,7]},
+  {name:'Familia SAT · NP-completitud', id:'sat', labs:[11,12,13,16,14,15,10,8,9]}
+];
+const phaseNames=['Entrada','Transformar','Resolver B','Recuperar','Reto'];
+function groupIndex(i) { return labGroups.findIndex(g=>g.labs.includes(i)); }
+function sourceInfo(i) {
+  if(i<5) return ['6.2','Reduction'];
+  return npSources[i];
+}
+function sourceLink(i) {
+  const s=sourceInfo(i);
+  return s ? '<a href="'+openDSABase+s[1]+'.html" target="_blank" rel="noopener">OpenDSA §'+s[0]+' ↗</a>' : 'Extensión didáctica';
+}
+function updateScore() {
+  const n=lessons.filter((_,i)=>saved[i]?.challenge).length;
+  $('score').textContent=n+' / '+lessons.length;
+  $('progress').style.width=n/lessons.length*100+'%';
+}
+function nav() {
+  const options = labGroups.map(group =>
+    '<optgroup label="'+esc(group.name)+'">'+group.labs.map(i =>
+      '<option value="'+i+'" '+(current===i?'selected':'')+'>'
+      +(saved[i]?.challenge?'✓ ':'')+esc(lessons[i].title)+'</option>'
+    ).join('')+'</optgroup>'
+  ).join('');
+  $('nav').innerHTML = '<button onclick="home()" aria-label="Volver al inicio">⌂ <span>Inicio</span></button>'
+    +'<label class="lab-select"><span class="sr">Elegir reducción</span><select onchange="if(this.value)openLesson(Number(this.value))">'
+    +'<option value="" disabled '+(current<0?'selected':'')+'>Elegir reducción…</option>'+options+'</select></label>';
+  updateScore();
+}
+function home() {
+  stop();
+  current=-1;
+  $('main').classList.remove('sat-lab');
+  nav();
+  $('main').innerHTML=`
+  <section class="hero compact-hero">
+    <div class="eyebrow">Análisis de algoritmos · ${lessons.length} laboratorios</div>
+    <h1>Laboratorio de reducciones</h1>
+    <p>A → B transforma una instancia de A en otra que puede resolver B. Después recuperamos la respuesta de A. Abre <b>Elegir reducción…</b> arriba a la izquierda para empezar.</p>
+    <div class="bridge" aria-label="Flujo de una reducción">
+      <span class="bridge-a">Entrada A</span><b>→</b><span class="bridge-transform">Transformación</span><b>→</b><span class="bridge-b">Solucionador B</span><b>→</b><span class="bridge-result">Respuesta de A</span>
+    </div>
+  </section>
+  <details><summary>Cómo leer una reducción y el papel de Cook–Levin</summary><p>Cook–Levin sitúa a SAT como problema NP-completo. Las flechas del menú representan reducciones concretas. Entre problemas NP-completos existen reducciones polinómicas en ambos sentidos, aunque la transformación que ilustra cada laboratorio tiene su propia dirección.</p><p>Los ejemplos elementales también usan transformaciones para reutilizar algoritmos o estudiar cotas. Algunos consultan la herramienta de destino más de una vez.</p></details>
+  <div class="footer">Adaptación interactiva del <a href="${openDSABase}LimComp.html" target="_blank" rel="noopener">capítulo 6 de OpenDSA</a>. Funciona sin conexión. Las fuentes se pueden abrir con internet.</div>`;
+  window.scrollTo(0,0);
+}
+let compareGraph = true;
+let comparedNodes = [];
+const comparableLabs = new Set([7, 8, 9, 10, 14, 16]);
+const preserved = [
+  'Un elemento de rango r en la primera lista se empareja con el de rango r en la segunda.',
+  'El número asociado por el emparejamiento indica el puesto de cada valor en el orden final.',
+  'La diferencia de los cuadrados elimina los términos comunes y deja cuatro veces el producto.',
+  'El producto de las dos matrices simétricas contiene AB en su bloque superior izquierdo.',
+  'En el arco superior, recorrer los puntos de izquierda a derecha equivale a ordenar sus abscisas.',
+  'Dos valores son iguales antes de ordenar si y solo si aparecen dos copias contiguas después.',
+  'Ordenar cambia las posiciones y conserva qué pares de valores pueden sumar el objetivo.',
+  'El destino es alcanzable si y solo si su distancia es finita.',
+  'Los mismos vértices pasan de no tener aristas internas en G a tener todas sus aristas en Ḡ.',
+  'Una clique de tamaño al menos k corresponde a una cobertura de tamaño a lo sumo n−k en Ḡ.',
+  'Un tour de costo cero visita todos los vértices y usa solo aristas del grafo original.',
+  'Una entrada enciende el circuito si y solo si admite señales internas que satisfacen las cláusulas.',
+  'Una asignación de las variables originales satisface la fórmula si y solo si se puede extender a los auxiliares.',
+  'Una clique de tamaño m elige exactamente un literal por cláusula y todas esas elecciones son compatibles.',
+  'En el mismo grafo, un conjunto es independiente si y solo si los vértices restantes cubren las aristas.',
+  'Una asignación satisfactoria permite orientar las filas y visitar cada cláusula por un desvío válido.',
+  'Los mismos vértices pasan de formar una clique en G a ser independientes en Ḡ.'
+];
+function toggleGraphComparison() {
+  compareGraph = !compareGraph;
+  comparedNodes = [];
+  draw();
+}
+function selectComparedNode(v) {
+  const cards = [...document.querySelectorAll('.compare-card')];
+  const focusedCard = cards.indexOf(document.activeElement.closest('.compare-card'));
+  const first = comparedNodes[0];
+  if (comparedNodes.length === 1 && first === v) comparedNodes = [];
+  else if (comparedNodes.length === 1) comparedNodes = [first, v];
+  else comparedNodes = [v];
+  draw();
+  if (focusedCard >= 0) {
+    document.querySelectorAll('.compare-card')[focusedCard]
+      .querySelector('[data-vertex="'+v+'"]')?.focus({preventScroll:true});
+  }
+}
+function comparisonMarkup() {
+  const {edges, n, k} = data;
+  const flipsEdges = [8, 9, 16].includes(current);
+  const addsEdges = current === 10;
+  const usesWeights = addsEdges || current === 7;
+  const target = flipsEdges ? complement(edges,n) : addsEdges ? allPairs(n) : edges;
+  const leftLabel = current === 7 ? 'G · origen A, destino F' : current === 10 ? 'G · ciclo hamiltoniano' : 'G · k = '+k;
+  const rightLabels = {
+    7:'G′ · pesos unitarios', 8:'Ḡ · clique ≥ '+k, 9:'Ḡ · cobertura ≤ '+(n-k),
+    10:'K₆ · tour de costo 0', 14:'G · cobertura ≤ '+(n-k), 16:'Ḡ · independiente ≥ '+k
+  };
+  let description = 'Pulsa dos vértices para seguir su par en ambos grafos.';
+  if (comparedNodes.length === 1) {
+    description = 'Primer vértice: '+letters(comparedNodes)+'. Pulsa otro para comparar.';
+  } else if (comparedNodes.length === 2) {
+    const [u,v] = comparedNodes;
+    const original = has(edges,u,v), transformed = has(target,u,v);
+    const before = original ? 'arista' : 'sin arista';
+    let after = transformed ? 'arista' : 'sin arista';
+    if (transformed && usesWeights) after += ' de peso '+(addsEdges && original ? 0 : 1);
+    description = letters(comparedNodes).replace(' → ','–')+': '+before+' → '+after+'.';
+  }
+  const inspect = {selected:comparedNodes, pair:comparedNodes, click:'selectComparedNode'};
+  return `<div class="compare-grid">
+    <div class="compare-card">${graph(edges,leftLabel,inspect)}</div>
+    <span class="compare-arrow" aria-hidden="true">→</span>
+    <div class="compare-card">${graph(target,rightLabels[current],{...inspect,complete:addsEdges,weight:usesWeights})}</div>
+  </div>
+  <div class="compare-status">
+    <small>${edges.length} aristas → ${target.length} aristas</small>
+    <p aria-live="polite">${description}</p>
+  </div>`;
+}
+function drawStageVisual(stage) {
+  const showComparison = step === 1 && comparableLabs.has(current);
+  const toggle = $('compare-toggle');
+  toggle.hidden = !showComparison;
+  toggle.setAttribute('aria-pressed', String(compareGraph));
+  toggle.textContent = compareGraph ? 'Ver solo B' : 'Comparar A y B';
+  let visual = stage.html;
+  if (showComparison && compareGraph) {
+    visual = comparisonMarkup();
+  } else if (showComparison && current===8) {
+    visual = graph(complement(data.edges,data.n),'Ḡ · entrada de CLIQUE');
+  } else if ([13,15].includes(current) && [1,2,3].includes(step)) {
+    visual = '<div class="formula-source"><span class="rowlabel">Fórmula de origen</span>'+showCNF(data.clauses)+'</div>'+visual;
+  }
+  $('visual').innerHTML = visual;
+  if (current===6 && step===3) $('visual').innerHTML = pointerLab(0);
+  if (current===3 && step>=2) $('visual').insertAdjacentHTML('beforeend',matrixExplorer());
+}
+function render() {
+  const lesson = lessons[current];
+  const index = groupIndex(current);
+  const group = labGroups[index];
+  const pos = group.labs.indexOf(current);
+  $('main').classList.toggle('sat-lab',index===1);
+  $('main').innerHTML = `
+    <section class="workspace-head">
+      <div>
+        <div class="eyebrow">${group.name} · ${lesson.level} · ${sourceLink(current)}</div>
+        <h2>${lesson.title}</h2>
+        <p class="muted">${lesson.desc}</p>
+      </div>
+      <details id="entry-box" class="entry-menu">
+        <summary>Editar entrada</summary>
+        <div class="input-row">${fields()}<button class="primary" onclick="apply()">Aplicar</button><button onclick="randomize()">↻ Otra instancia</button></div>
+        <p class="hint">${inputHint()}</p>
+        <div id="inputerror" class="err" role="alert"></div>
+      </details>
+    </section>
+    <div class="lesson-layout">
+      <section class="panel workbench" aria-label="Visualización y reto">
+        <div class="stagebar" aria-label="Etapas de la reducción">
+          ${phaseNames.map((name,j)=>`<button data-stage="${j}" onclick="jumpStage(${j})"><b>${j+1}</b> <span>${name}</span></button>`).join('')}
+        </div>
+        <div class="controls playback">
+          <button id="prev" onclick="move(-1)" aria-label="Paso anterior">←</button>
+          <button id="next" class="primary" onclick="move(1)">Siguiente →</button>
+          <button onclick="resetSteps()" title="Volver al principio de la reducción">↤ Reiniciar</button>
+          <button id="play" class="secondary" onclick="play()">▶ Auto</button>
+          <details class="speed-menu"><summary>Velocidad</summary><select aria-label="Pausa entre pasos" id="speed">
+            <option value="2500">2,5 s</option><option value="4500" selected>4,5 s</option><option value="7000">7 s</option>
+          </select></details>
+          <small id="stepcount"></small>
+        </div>
+        <div class="stage-title"><strong id="stitle" aria-live="polite"></strong>
+          <button id="compare-toggle" onclick="toggleGraphComparison()" hidden>Comparar A y B</button>
+        </div>
+        <div id="visual" class="canvas"></div>
+        <div id="challenge"></div>
+      </section>
+      <section class="lesson-notes" aria-label="Explicaciones">
+        <span class="eyebrow">Explicaciones</span>
+        <details open><summary>Guía del paso <span id="step-label"></span></summary>
+          <p id="stext" aria-live="polite"></p>
+        </details>
+        <details><summary>Qué se conserva</summary>
+          <div class="flow-note"><span class="bridge-a">${lesson.a}</span><b class="flow-arrow">→</b><span class="bridge-transform">${lesson.b}</span></div>
+          <p>${preserved[current]}</p>
+        </details>
+        <details><summary>Por qué funciona</summary><p>${lesson.proof}</p></details>
+        <details><summary>Costo de la transformación</summary><p>${lesson.cost}</p></details>
+        <details><summary>Error frecuente</summary><p>${lesson.trap}</p></details>
+        <details id="quiz-box">
+          <summary>Predicción <span id="quiz-status" class="optional">opcional</span></summary>
+          <p><strong>${lesson.q}</strong></p>
+          <div class="answers">${lesson.opts.map((a,j)=>`<button onclick="answer(${j})">${a}</button>`).join('')}</div>
+          <div id="qfeedback" class="feedback" aria-live="polite"></div>
+        </details>
+      </section>
+    </div>
+    <div class="controls lesson-controls">
+      ${pos>0?`<button onclick="openLesson(${group.labs[pos-1]})">← Reducción anterior</button>`:'<button onclick="home()">← Inicio</button>'}
+      ${pos<group.labs.length-1?`<button onclick="openLesson(${group.labs[pos+1]})">Siguiente reducción →</button>`:'<button onclick="home()">Volver al inicio</button>'}
+    </div>`;
+  draw();
+}
+
+function jumpStage(j) {
+  stop();
+  step=j;
+  editFirst=null;
+  draw();
+}
+function inputHint() {
+  if(isFormulaLab(current)) return 'Ejemplo: a b !c; !a b c. Espacios para OR, punto y coma para AND y ! para negar. Hasta 5 cláusulas y variables a…e.'+(current===12?' De 1 a 8 literales por cláusula.':' Tres literales por cláusula.');
+  if(current===11) return 'Escoge un circuito, aplica y cambia sus entradas en la simulación.';
+  if(current>=7) return 'Grafo simple de 6 nodos (A…F). Escribe aristas como AB, BC. También puedes quitar una arista pulsándola o alternarla eligiendo dos vértices en Entrada.';
+  if(current===0) return 'Dos listas de igual longitud, de 3 a 8 enteros entre −50 y 50.';
+  if(current===2) return 'Enteros no negativos hasta 999999.';
+  if(current===3) return 'Matrices 2×2. Separa filas con punto y coma y columnas con comas.';
+  if(current===4) return 'De 3 a 8 enteros distintos entre −20 y 20.';
+  return 'De 3 a 8 enteros entre −50 y 50.';
+}
+function advancedFields() {
+  if(current===11) {
+    return '<label>Circuito<select id="in-example">'+circuits.map((c,i)=>'<option value="'+i+'" '+(i===data.example?'selected':'')+'>'+c.label+'</option>').join('')+'</select></label>';
+  }
+  if(isFormulaLab(current)) return '<label>Fórmula'+inp('formula',data.clauses.map(c=>c.join(' ')).join('; '))+'</label>';
+  return '';
+}
+function useAdvancedInput() {
+  try {
+    data=current===11?{example:Number($('in-example').value)}:{clauses:parseFormula($('in-formula').value,current)};
+    restartData();
+  } catch(e) { $('inputerror').textContent=e.message; }
+}
+function refreshStageButtons() {
+  document.querySelectorAll('[data-stage]').forEach((button,j)=>{
+    button.classList.toggle('on',j===step);
+    button.setAttribute('aria-current',j===step?'step':'false');
+  });
+}
+
+document.addEventListener('keydown',e=>{if(current<0||['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||$('guide').open)return;if(e.key==='ArrowRight'){e.preventDefault();move(1)}if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}});try{if(localStorage.getItem('puentes-theme')==='dark')document.body.classList.add('dark')}catch{}home();
+</script></body></html>
